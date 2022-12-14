@@ -4,26 +4,22 @@
  */
 package com.wynntils.core.managers;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class UpdateManager extends CoreManager {
-    private static final String LAST_BUILD_CHECK_PATH = "https://athena.wynntils.com/version/latest/ce";
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 
@@ -32,59 +28,54 @@ public class UpdateManager extends CoreManager {
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        try {
-            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
-            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-            String version = jsonObject.getAsJsonPrimitive("version").getAsString();
-            future.complete(version);
-
-            return future;
-        } catch (IOException e) {
-            WynntilsMod.error("Exception while trying to fetch update.", e);
-            future.complete(null);
-            return future;
-        }
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        apiResponse.handleJsonObject(
+                json -> {
+                    String version = json.getAsJsonPrimitive("version").getAsString();
+                    future.complete(version);
+                },
+                onError -> {
+                    WynntilsMod.error("Exception while trying to fetch update.");
+                    future.complete(null);
+                });
+        return future;
     }
 
     public static CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
-        try {
-            File updateFile = getUpdateFile();
-            if (updateFile.exists()) {
-                future.complete(UpdateResult.UPDATE_PENDING);
-                return future;
-            }
-
-            URLConnection st = WebManager.generateURLRequest(LAST_BUILD_CHECK_PATH);
-            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-            JsonObject jsonObject = JsonParser.parseReader(stInputReader).getAsJsonObject();
-
-            String latestMd5 = jsonObject.getAsJsonPrimitive("md5").getAsString();
-
-            String currentMd5 = getCurrentMd5();
-            if (Objects.equals(currentMd5, latestMd5)) {
-                future.complete(UpdateResult.ALREADY_ON_LATEST);
-                return future;
-            }
-
-            if (latestMd5 == null) {
-                future.complete(UpdateResult.ERROR);
-                return future;
-            }
-
-            String latestDownload = jsonObject.getAsJsonPrimitive("url").getAsString();
-
-            tryFetchNewUpdate(latestDownload, future);
-
-            return future;
-        } catch (IOException e) {
-            WynntilsMod.error("Exception while trying to load new update.", e);
-            future.complete(UpdateResult.ERROR);
+        File updateFile = getUpdateFile();
+        if (updateFile.exists()) {
+            future.complete(UpdateResult.UPDATE_PENDING);
             return future;
         }
+
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        apiResponse.handleJsonObject(
+                json -> {
+                    String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
+
+                    String currentMd5 = getCurrentMd5();
+                    if (Objects.equals(currentMd5, latestMd5)) {
+                        future.complete(UpdateResult.ALREADY_ON_LATEST);
+                        return;
+                    }
+
+                    if (latestMd5 == null) {
+                        future.complete(UpdateResult.ERROR);
+                        return;
+                    }
+
+                    String latestDownload = json.getAsJsonPrimitive("url").getAsString();
+
+                    tryFetchNewUpdate(latestDownload, future);
+                },
+                onError -> {
+                    WynntilsMod.error("Exception while trying to load new update.");
+                    future.complete(UpdateResult.ERROR);
+                });
+
+        return future;
     }
 
     private static String getCurrentMd5() {
