@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class SearchOverlayPropertyModel extends Model {
@@ -14,10 +14,10 @@ public class SearchOverlayPropertyModel extends Model {
             new ItemPropertyWriter(itemstack -> true, SearchOverlayProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(SEARCH_OVERLAY_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.registerProperty(SEARCH_OVERLAY_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(SEARCH_OVERLAY_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(SEARCH_OVERLAY_WRITER);
     }
 }

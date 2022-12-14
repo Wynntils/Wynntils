@@ -9,6 +9,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -18,7 +19,6 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.HighlightProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -141,7 +141,7 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return ItemStackTransformManager.HIGHLIGHT_PROPERTIES;
+        return Managers.ITEM_STACK_TRANSFORM.HIGHLIGHT_PROPERTIES;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

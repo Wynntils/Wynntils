@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.item;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
@@ -14,10 +15,10 @@ public class ServerItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
 
     public static void init() {
-        ItemStackTransformManager.registerTransformer(SERVER_TRANSFORMER);
+        Managers.ITEM_STACK_TRANSFORM.registerTransformer(SERVER_TRANSFORMER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterTransformer(SERVER_TRANSFORMER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(SERVER_TRANSFORMER);
     }
 }

@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class DailyRewardMultiplierPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class DailyRewardMultiplierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.registerProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.item;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
@@ -14,10 +15,10 @@ public class UnidentifiedItemStackModel extends Model {
             new ItemStackTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
 
     public static void init() {
-        ItemStackTransformManager.registerTransformer(UNIDENTIFIED_TRANSFORMER);
+        Managers.ITEM_STACK_TRANSFORM.registerTransformer(UNIDENTIFIED_TRANSFORMER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterTransformer(UNIDENTIFIED_TRANSFORMER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterTransformer(UNIDENTIFIED_TRANSFORMER);
     }
 }

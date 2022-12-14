@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class GatheringToolPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class GatheringToolPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(GATHERING_TOOL_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.registerProperty(GATHERING_TOOL_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(GATHERING_TOOL_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(GATHERING_TOOL_WRITER);
     }
 }

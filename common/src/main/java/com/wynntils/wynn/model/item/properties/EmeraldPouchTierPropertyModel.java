@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class EmeraldPouchTierPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class EmeraldPouchTierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(EMERALD_POUCH_TIER_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.registerProperty(EMERALD_POUCH_TIER_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(EMERALD_POUCH_TIER_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(EMERALD_POUCH_TIER_WRITER);
     }
 }

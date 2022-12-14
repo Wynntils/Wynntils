@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class SkillPointPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class SkillPointPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(SKILL_POINT_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.registerProperty(SKILL_POINT_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(SKILL_POINT_WRITER);
+        Managers.ITEM_STACK_TRANSFORM.unregisterProperty(SKILL_POINT_WRITER);
     }
 }
