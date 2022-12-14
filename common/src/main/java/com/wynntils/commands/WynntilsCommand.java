@@ -12,12 +12,12 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.ItemProfilesManager;
-import com.wynntils.wynn.model.SplashManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -90,7 +90,7 @@ public class WynntilsCommand extends CommandBase {
         ItemProfilesManager.reset();
         UrlManager.reloadUrls();
         ItemProfilesManager.init();
-        SplashManager.init();
+        Managers.SPLASH.init();
         WynntilsAccountManager.init();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be

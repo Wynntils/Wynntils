@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -19,7 +20,6 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.SplashManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -229,7 +229,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
 
-        String currentSplash = SplashManager.getCurrentSplash();
+        String currentSplash = Managers.SPLASH.getCurrentSplash();
         currentSplash = currentSplash == null ? "" : currentSplash;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
