@@ -27,7 +27,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -218,7 +217,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(TerritoryManager.getTerritoryPois());
+            pois.addAll(Managers.TERRITORY.getTerritoryPois());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them

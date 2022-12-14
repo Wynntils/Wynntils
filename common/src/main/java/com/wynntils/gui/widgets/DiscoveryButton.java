@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -16,7 +17,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -124,7 +124,7 @@ public class DiscoveryButton extends AbstractButton {
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
-                || TerritoryManager.getTerritoryProfile(discoveryInfo.getName()) != null) {
+                || Managers.TERRITORY.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(TextComponent.EMPTY);
             lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)
