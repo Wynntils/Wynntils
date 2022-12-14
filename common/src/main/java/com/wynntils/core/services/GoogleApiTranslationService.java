@@ -6,10 +6,11 @@ package com.wynntils.core.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
-import com.wynntils.utils.StringUtils;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -18,8 +19,6 @@ import java.util.function.Consumer;
  * sufficient for NPCs translation, but not for general chat messages, at least not in chatty areas like Detlas.
  */
 public class GoogleApiTranslationService extends CachingTranslationService {
-    private static final AtomicInteger requestNumber = new AtomicInteger();
-
     @Override
     protected void translateNew(String message, String toLanguage, Consumer<String> handleTranslation) {
         if (toLanguage == null || toLanguage.isEmpty()) {
@@ -27,31 +26,26 @@ public class GoogleApiTranslationService extends CachingTranslationService {
             return;
         }
 
-        String encodedMessage = StringUtils.encodeUrl(message);
-        String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=" + toLanguage
-                + "&dt=t&q=" + encodedMessage;
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("lang", toLanguage);
+        arguments.put("text", message);
 
-        RequestHandler handler = new RequestHandler();
-        handler.addAndDispatch(
-                new RequestBuilder(url, "translate-" + requestNumber.getAndIncrement())
-                        .handleJsonArray(json -> {
-                            StringBuilder builder = new StringBuilder();
-                            JsonArray array = json.get(0).getAsJsonArray();
-                            for (JsonElement elem : array) {
-                                String part = elem.getAsJsonArray().get(0).getAsString();
-                                builder.append(part);
-                            }
-                            String translatedMessage = builder.toString();
-                            saveTranslation(toLanguage, message, translatedMessage);
-                            handleTranslation.accept(translatedMessage);
-
-                            return true;
-                        })
-                        .onError(() -> {
-                            // If Google translate return no data ( 500 error ), display default lang
-                            handleTranslation.accept(null);
-                        })
-                        .build(),
-                true);
+        ApiResponse apiResponse = NetManager.callApi(UrlId.API_GOOGLE_TRANSLATION, arguments);
+        apiResponse.handleJsonArray(
+                json -> {
+                    StringBuilder builder = new StringBuilder();
+                    JsonArray array = json.get(0).getAsJsonArray();
+                    for (JsonElement elem : array) {
+                        String part = elem.getAsJsonArray().get(0).getAsString();
+                        builder.append(part);
+                    }
+                    String translatedMessage = builder.toString();
+                    saveTranslation(toLanguage, message, translatedMessage);
+                    handleTranslation.accept(translatedMessage);
+                },
+                onError -> {
+                    // If Google translate return no data ( 500 error ), display default lang
+                    handleTranslation.accept(null);
+                });
     }
 }
