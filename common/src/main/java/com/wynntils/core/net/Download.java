@@ -15,8 +15,6 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -66,8 +64,8 @@ public class Download extends NetResult {
     }
 
     private CompletableFuture<HttpResponse<Path>> getDownloadInputStreamFuture() {
-        CompletableFuture<HttpResponse<Path>> future = NetManager.HTTP_CLIENT
-                .sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
+        CompletableFuture<HttpResponse<Path>> future =
+                NetManager.HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofFile(localFile.toPath()));
 
         // We must save the response so we can get the timestamp
         this.httpResponse = future;
