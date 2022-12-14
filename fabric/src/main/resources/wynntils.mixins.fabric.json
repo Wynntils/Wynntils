@@ -1,7 +1,6 @@
 {
   "client": [
-    "RenderTargetMixin",
-    "ItemRendererMixin"
+    "RenderTargetMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {},
