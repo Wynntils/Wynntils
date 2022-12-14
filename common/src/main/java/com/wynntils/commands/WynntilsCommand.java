@@ -12,9 +12,12 @@ import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.ItemProfilesManager;
+import com.wynntils.wynn.model.SplashManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -79,9 +82,14 @@ public class WynntilsCommand extends CommandBase {
             feature.disable();
         }
 
-        WebManager.reset();
+        // Try to reload data from the web. Likely to be broken, see
+        // https://github.com/Wynntils/Artemis/issues/824
         ItemProfilesManager.reset();
-        WebManager.init(); // reloads api urls as well as web manager
+        // reloads api urls as well as web manager
+        UrlManager.reloadUrls();
+        ItemProfilesManager.init();
+        SplashManager.init();
+        WynntilsAccountManager.init();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {
@@ -109,11 +117,12 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent("https://www.patreon.com/Wynntils")
+        MutableComponent url = new TextComponent(UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.patreon.com/Wynntils"))
+                        .withClickEvent(new ClickEvent(
+                                ClickEvent.Action.OPEN_URL, UrlManager.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -149,18 +158,14 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = WebManager.getApiUrls().isEmpty()
-                ? null
-                : WebManager.getApiUrls().get().get("DiscordInvite");
-        MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
-        if (discordInvite != null) {
-            link.setStyle(link.getStyle()
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
-                    .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new TextComponent("Click here to join our Discord" + " server."))));
-        }
+        String discordInvite = UrlManager.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
+        MutableComponent link =
+                new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+        link.setStyle(link.getStyle()
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
+                .withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        new TextComponent("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }
