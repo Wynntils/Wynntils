@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features.overlays;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import java.util.Arrays;
@@ -92,11 +93,11 @@ public class OverlayPosition {
         // 1. Get the best section (section with the center point of overlay)
         AnchorSection section = Arrays.stream(AnchorSection.values())
                 .filter(anchorSection ->
-                        OverlayManager.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
+                        Managers.OVERLAY.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
                 .findAny()
                 .orElse(AnchorSection.Middle);
 
-        SectionCoordinates sectionCoordinates = OverlayManager.getSection(section);
+        SectionCoordinates sectionCoordinates = Managers.OVERLAY.getSection(section);
 
         // 2. Calculate the best alignment inside the section
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;

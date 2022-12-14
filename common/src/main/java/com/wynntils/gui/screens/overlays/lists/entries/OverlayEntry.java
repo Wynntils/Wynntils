@@ -7,7 +7,6 @@ package com.wynntils.gui.screens.overlays.lists.entries;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -58,7 +57,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         poseStack.pushPose();
         poseStack.translate(left + PADDING, top + PADDING, 0);
 
-        boolean enabled = OverlayManager.isEnabled(this.overlay);
+        boolean enabled = Managers.OVERLAY.isEnabled(this.overlay);
         int y = index != 0 ? 2 : 0;
 
         CustomColor borderColor = overlay.isParentEnabled()

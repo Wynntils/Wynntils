@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
@@ -67,7 +66,7 @@ public abstract class Feature extends AbstractConfigurable
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation, this);
+                Managers.OVERLAY.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
@@ -146,7 +145,7 @@ public abstract class Feature extends AbstractConfigurable
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
-        OverlayManager.enableOverlays(this.overlays, false);
+        Managers.OVERLAY.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
             Managers.KEY_BIND.registerKeybind(keyBind);
         }
@@ -174,7 +173,7 @@ public abstract class Feature extends AbstractConfigurable
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
         }
-        OverlayManager.disableOverlays(this.overlays);
+        Managers.OVERLAY.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
             Managers.KEY_BIND.unregisterKeybind(keyBind);
         }

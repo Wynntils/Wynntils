@@ -153,7 +153,7 @@ public class OverlayManagementScreen extends Screen {
                 renderSections(poseStack);
             }
 
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
+            Set<Overlay> overlays = Managers.OVERLAY.getOverlays().stream()
                     .filter(OverlayManager::isEnabled)
                     .collect(Collectors.toSet());
 
@@ -255,7 +255,7 @@ public class OverlayManagementScreen extends Screen {
         resetSelection();
 
         if (!fixedSelection) {
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
+            Set<Overlay> overlays = Managers.OVERLAY.getOverlays().stream()
                     .filter(OverlayManager::isEnabled)
                     .collect(Collectors.toSet());
 
@@ -639,7 +639,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void renderSections(PoseStack poseStack) {
-        for (SectionCoordinates section : OverlayManager.getSections()) {
+        for (SectionCoordinates section : Managers.OVERLAY.getSections()) {
             RenderUtils.drawRectBorders(
                     poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
         }
@@ -687,8 +687,9 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        for (Overlay overlay :
-                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).toList()) {
+        for (Overlay overlay : Managers.OVERLAY.getOverlays().stream()
+                .filter(Overlay::isEnabled)
+                .toList()) {
             if (overlay == selectedOverlay) continue;
 
             for (Edge edge : Edge.values()) {
