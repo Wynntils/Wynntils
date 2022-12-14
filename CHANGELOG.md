@@ -1,9 +1,21 @@
+## [0.0.1-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.156...v0.0.1-alpha.157) (2022-12-14)
+
+
+### Code Refactoring
+
+* item transformer model rework ([#794](https://github.com/Wynntils/Artemis/issues/794)) ([14f7163](https://github.com/Wynntils/Artemis/commit/14f7163504e67fc8bb3982553eb6457ee1102a99))
+
 ## [0.0.1-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.155...v0.0.1-alpha.156) (2022-12-13)
 
 
 ### New Features
 
 * Add used slots inventory function and fix free slots ([#813](https://github.com/Wynntils/Artemis/issues/813)) ([2967474](https://github.com/Wynntils/Artemis/commit/296747463888770514feaa8c10f2b9577117a850))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.156 [skip ci] ([ee892dc](https://github.com/Wynntils/Artemis/commit/ee892dc150226aa2faa1e3f454912c821ab3bc1c))
 
 ## [0.0.1-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.154...v0.0.1-alpha.155) (2022-12-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.153 [skip ci] ([0681a43](https://github.com/Wynntils/Artemis/commit/0681a43b2fe25ba5b7010ed7685a8a4804d53c51))
-
-## [0.0.1-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.151...v0.0.1-alpha.152) (2022-12-12)
-
-
-### Bug Fixes
-
-* Fix ChatTabModel NPE ([#817](https://github.com/Wynntils/Artemis/issues/817)) ([08fb571](https://github.com/Wynntils/Artemis/commit/08fb5712f343d0a89055c904c48912f6afd9649a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.152 [skip ci] ([9c7cf0f](https://github.com/Wynntils/Artemis/commit/9c7cf0fef6c5bcf383dde9e8397efd402b583322))
 
