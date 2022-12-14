@@ -7,6 +7,7 @@ package com.wynntils.core.net;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Managers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,7 @@ public class NetManager extends CoreManager {
     public static void init() {}
 
     public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
-        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+        UrlManager.UrlInfo urlInfo = Managers.URL.getUrlInfo(urlId);
         return createApiResponse(urlInfo, arguments);
     }
 
@@ -64,7 +65,7 @@ public class NetManager extends CoreManager {
     }
 
     public static Download download(UrlId urlId) {
-        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+        UrlManager.UrlInfo urlInfo = Managers.URL.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
         String localFileName = urlId.getId();
 
@@ -83,7 +84,7 @@ public class NetManager extends CoreManager {
     }
 
     public static void openLink(UrlId urlId, Map<String, String> arguments) {
-        URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+        URI uri = URI.create(Managers.URL.buildUrl(urlId, arguments));
         openLink(uri);
     }
 
@@ -107,7 +108,7 @@ public class NetManager extends CoreManager {
 
     private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
-            URI uri = URI.create(UrlManager.buildUrl(urlInfo, arguments));
+            URI uri = URI.create(Managers.URL.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
             return new ApiResponse(request);
         } else {
