@@ -23,9 +23,8 @@ public class ItemRendererMixin {
             method = "render",
             at =
                     @At(
-                            target =
-                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
-                            shift = At.Shift.AFTER,
+                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+                            shift = At.Shift.BEFORE,
                             value = "INVOKE"))
     public void onRenderItem(
             ItemStack itemStack,
