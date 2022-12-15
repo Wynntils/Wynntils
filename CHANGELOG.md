@@ -1,9 +1,17 @@
+## [0.0.1-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.164...v0.0.1-alpha.165) (2022-12-15)
+
+
+### New Features
+
+* Redirects "Potion Already Active" message to overlay ([#831](https://github.com/Wynntils/Artemis/issues/831)) ([6a39d3d](https://github.com/Wynntils/Artemis/commit/6a39d3d4cfb47b1914e69bcf1b97200cbe288bb7))
+
 ## [0.0.1-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.163...v0.0.1-alpha.164) (2022-12-15)
 
 
 ### Miscellaneous Chores
 
 * Rebuild with new fixes ([71fd2da](https://github.com/Wynntils/Artemis/commit/71fd2da94ad528ed4e48df9106e29ed7232cf427))
+* **release:** v0.0.1-alpha.164 [skip ci] ([6694f52](https://github.com/Wynntils/Artemis/commit/6694f524da53e5717beacff36c3adf6538322ee5))
 
 ## [0.0.1-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.162...v0.0.1-alpha.163) (2022-12-15)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.161 [skip ci] ([7c7ab65](https://github.com/Wynntils/Artemis/commit/7c7ab656d832a2723b01ac6788445d523d321036))
-
-## [0.0.1-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.159...v0.0.1-alpha.160) (2022-12-14)
-
-
-### Code Refactoring
-
-* ItemRendererMixin now only exists on common side ([#828](https://github.com/Wynntils/Artemis/issues/828)) ([62f2ad6](https://github.com/Wynntils/Artemis/commit/62f2ad6a86a1a91caf10b884768e16180baf5f4d)), closes [#822](https://github.com/Wynntils/Artemis/issues/822)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.160 [skip ci] ([4f06e90](https://github.com/Wynntils/Artemis/commit/4f06e90062695a9c471df98530ca2965dd113e7c))
 
