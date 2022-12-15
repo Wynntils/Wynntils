@@ -26,8 +26,18 @@ public enum TerritoryDefenseLevel {
         return asColoredString;
     }
 
-    public TerritoryDefenseLevel next() {
-        return values()[(ordinal() + 1) % values().length];
+    public TerritoryDefenseLevel next(boolean limited) {
+        if (limited) {
+            if (ordinal() == 0) {
+                return values()[2];
+            } else if (ordinal() == 4) {
+                return values()[0];
+            } else {
+                return values()[ordinal() + 1];
+            }
+        } else {
+            return values()[(ordinal() + 1) % values().length];
+        }
     }
 
     public int getLevel() {

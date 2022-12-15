@@ -92,18 +92,23 @@ public class GuildMapScreen extends AbstractMapScreen {
                 Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
-                    territoryDefenseFilterLevel = (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
-                            ? TerritoryDefenseLevel.OFF
-                            : territoryDefenseFilterLevel.next();
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
+                    }
 
                     // Holding shift filters higher, ctrl filters lower
-                    if (territoryDefenseFilterLevel == TerritoryDefenseLevel.OFF) { // set to default if OFF
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                    } else if (KeyboardUtils.isShiftDown()) {
+                    if (KeyboardUtils.isShiftDown()) {
                         territoryDefenseFilterType = TerritoryDefenseFilterType.HIGHER;
                     } else if (KeyboardUtils.isControlDown()) {
                         territoryDefenseFilterType = TerritoryDefenseFilterType.LOWER;
                     } else {
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                    }
+
+                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.next(
+                            territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+
+                    if (territoryDefenseFilterLevel == TerritoryDefenseLevel.OFF) { // Reset to default if OFF
                         territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
                     }
 
