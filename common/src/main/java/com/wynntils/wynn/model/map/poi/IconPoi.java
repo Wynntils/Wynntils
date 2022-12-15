@@ -33,7 +33,7 @@ public abstract class IconPoi implements Poi {
     // Return -1 to always render without fading
     public abstract float getMinZoomForRender();
 
-    protected float getIconAlpha(float zoom) {
+    public float getIconAlpha(float zoom) {
         if (getMinZoomForRender() <= -1) return 1f;
 
         return MathUtils.map(

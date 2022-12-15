@@ -22,6 +22,7 @@ import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
+import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +169,13 @@ public abstract class AbstractMapScreen extends Screen {
         // Filter and find hovered
         for (int i = pois.size() - 1; i >= 0; i--) {
             Poi poi = pois.get(i);
+
+            if (poi instanceof IconPoi iconPoi) {
+                // Check if the poi is visible
+                if (iconPoi.getIconAlpha(currentZoom) < 0.1f) {
+                    continue;
+                }
+            }
 
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
