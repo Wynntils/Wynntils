@@ -89,7 +89,7 @@ public class GuildMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_ADD_BUTTON, // TODO: Add new cycle texture
+                Texture.MAP_DEFENSE_FILTER_BUTTON, // TODO: Add new cycle texture
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
