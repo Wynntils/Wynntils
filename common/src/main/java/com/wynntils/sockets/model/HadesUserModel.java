@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class HadesUserModel extends Model {
+public final class HadesUserModel extends Model {
     private static Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
     public static void init() {

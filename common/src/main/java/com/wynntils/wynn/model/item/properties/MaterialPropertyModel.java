@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.MaterialProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class MaterialPropertyModel extends Model {
+public final class MaterialPropertyModel extends Model {
     private static final ItemPropertyWriter MATERIAL_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isMaterial, MaterialProperty::new);
 

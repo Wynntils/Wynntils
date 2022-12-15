@@ -8,10 +8,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -26,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * This model handles the player's in-game relations, like friends, party info, guild info.
  */
-public class PlayerRelationsModel extends Model {
+public final class PlayerRelationsModel extends Model {
     private static final Pattern FRIEND_LIST_MESSAGE_PATTERN = Pattern.compile(".+'s friends \\(.+\\): (.*)");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 = Pattern.compile("§eWe couldn't find any friends.");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_2 =
@@ -71,7 +71,7 @@ public class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public static void onWorldStateChange(WorldStateEvent event) {
-        HadesUserModel.getHadesUserMap().clear();
+        Models.HadesUser.getHadesUserMap().clear();
 
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             requestFriendListUpdate();

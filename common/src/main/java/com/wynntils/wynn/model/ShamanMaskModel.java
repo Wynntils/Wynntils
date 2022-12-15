@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ShamanMaskModel extends Model {
+public final class ShamanMaskModel extends Model {
     private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
 
     private static ShamanMaskType currentMaskType = ShamanMaskType.NONE;

@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class DailyRewardMultiplierPropertyModel extends Model {
+public final class DailyRewardMultiplierPropertyModel extends Model {
     private static final ItemPropertyWriter DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
 

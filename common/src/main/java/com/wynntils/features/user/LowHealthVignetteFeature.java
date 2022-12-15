@@ -8,12 +8,12 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.ActionBarModel;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,7 +39,7 @@ public class LowHealthVignetteFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class);
+        return List.of(Models.ActionBar.getClass());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -52,7 +52,7 @@ public class LowHealthVignetteFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.Start event) {
-        float healthPercent = (float) ActionBarModel.getCurrentHealth() / ActionBarModel.getMaxHealth();
+        float healthPercent = (float) Models.ActionBar.getCurrentHealth() / Models.ActionBar.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;
 

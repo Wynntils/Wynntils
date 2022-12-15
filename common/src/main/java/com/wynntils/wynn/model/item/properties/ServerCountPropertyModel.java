@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class ServerCountPropertyModel extends Model {
+public final class ServerCountPropertyModel extends Model {
     private static final ItemPropertyWriter SERVER_COUNT_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isServerItem, ServerCountProperty::new);
 

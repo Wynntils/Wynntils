@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.AmplifierTierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class AmplifierTierPropertyModel extends Model {
+public final class AmplifierTierPropertyModel extends Model {
     private static final ItemPropertyWriter AMPLIFIER_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
 

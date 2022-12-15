@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TabModel extends Model {
+public final class TabModel extends Model {
     /**
      * CG1 is the color and symbol used for the effect, and the strength modifier string (e.g. "79%")
      * NCG1 is for strength modifiers without a decimal, and the % sign

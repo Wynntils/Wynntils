@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class ItemTierPropertyModel extends Model {
+public final class ItemTierPropertyModel extends Model {
     private static final ItemPropertyWriter ITEM_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
 

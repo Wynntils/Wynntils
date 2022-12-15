@@ -11,9 +11,11 @@ import com.wynntils.sockets.model.HadesModel;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.BombBellModel;
+import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.LootChestModel;
+import com.wynntils.wynn.model.LootrunModel;
 import com.wynntils.wynn.model.PlayerInventoryModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
 import com.wynntils.wynn.model.RemoteWynntilsUserInfoModel;
@@ -55,6 +57,7 @@ public class Models {
     public static final HadesUserModel HadesUser = new HadesUserModel();
     public static final HadesModel Hades = new HadesModel();
     public static final ChatModel Chat = new ChatModel();
+    public static final ChatItemModel ChatItem = new ChatItemModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final RemoteWynntilsUserInfoModel RemoteWynntilsUserInfo = new RemoteWynntilsUserInfoModel();
     public static final LootChestModel LootChest = new LootChestModel();
@@ -98,4 +101,5 @@ public class Models {
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final TeleportScrollPropertyModel TeleportScrollProperty = new TeleportScrollPropertyModel();
     public static final ServerListModel ServerList = new ServerListModel();
+    public static final LootrunModel Lootrun = new LootrunModel();
 }

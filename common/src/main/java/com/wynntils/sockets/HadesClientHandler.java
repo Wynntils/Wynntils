@@ -6,6 +6,7 @@ package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -18,7 +19,6 @@ import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -60,7 +60,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
         WynntilsMod.info("Disconnected from HadesServer.");
 
-        HadesUserModel.getHadesUserMap().clear();
+        Models.HadesUser.getHadesUserMap().clear();
     }
 
     @Override
@@ -101,11 +101,11 @@ public class HadesClientHandler implements IHadesClientAdapter {
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
         if (!HadesFeature.INSTANCE.getOtherPlayerInfo) return;
 
-        Optional<HadesUser> userOptional = HadesUserModel.getUser(packet.getUser());
+        Optional<HadesUser> userOptional = Models.HadesUser.getUser(packet.getUser());
         if (userOptional.isPresent()) {
             userOptional.get().updateFromPacket(packet);
         } else {
-            HadesUserModel.putUser(packet.getUser(), new HadesUser(packet));
+            Models.HadesUser.putUser(packet.getUser(), new HadesUser(packet));
         }
     }
 
@@ -116,7 +116,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleClearMutual(HSPacketClearMutual packet) {
-        HadesUserModel.removeUser(packet.getUser());
+        Models.HadesUser.removeUser(packet.getUser());
     }
 
     @Override
@@ -128,6 +128,6 @@ public class HadesClientHandler implements IHadesClientAdapter {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        HadesUserModel.getHadesUserMap().clear();
+        Models.HadesUser.getHadesUserMap().clear();
     }
 }

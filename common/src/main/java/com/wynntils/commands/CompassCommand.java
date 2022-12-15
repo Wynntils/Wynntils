@@ -9,12 +9,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
@@ -91,7 +90,7 @@ public class CompassCommand extends CommandBase {
     }
 
     private int shareCompass(CommandContext<CommandSourceStack> context) {
-        Optional<Location> compassLocation = CompassModel.getCompassLocation();
+        Optional<Location> compassLocation = Models.Compass.getCompassLocation();
 
         if (compassLocation.isEmpty()) {
             context.getSource()
@@ -117,7 +116,7 @@ public class CompassCommand extends CommandBase {
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
-        CompassModel.setCompassLocation(location);
+        Models.Compass.setCompassLocation(location);
 
         MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
@@ -133,7 +132,7 @@ public class CompassCommand extends CommandBase {
             return 0;
         }
 
-        CompassModel.setCompassLocation(location.get());
+        Models.Compass.setCompassLocation(location.get());
 
         MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(new TextComponent(location.get().toString()).withStyle(ChatFormatting.WHITE));
@@ -168,7 +167,7 @@ public class CompassCommand extends CommandBase {
         ServiceKind selectedKind = matchedKinds.get(0);
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = MapModel.getServicePois().stream()
+        Optional<ServicePoi> closestServiceOptional = Models.Map.getServicePois().stream()
                 .filter(poi -> poi.getKind().equals(selectedKind))
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
@@ -182,7 +181,7 @@ public class CompassCommand extends CommandBase {
             return 0;
         }
         Poi closestService = closestServiceOptional.get();
-        CompassModel.setCompassLocation(
+        Models.Compass.setCompassLocation(
                 closestService.getLocation().asLocation(),
                 closestServiceOptional.get().getIcon());
 
@@ -196,7 +195,7 @@ public class CompassCommand extends CommandBase {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Map.getLabelPois().stream()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
@@ -228,7 +227,7 @@ public class CompassCommand extends CommandBase {
             place = places.get(0);
         }
 
-        CompassModel.setCompassLocation(place.getLocation().asLocation());
+        Models.Compass.setCompassLocation(place.getLocation().asLocation());
 
         MutableComponent response =
                 new TextComponent("Setting compass to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
@@ -238,7 +237,7 @@ public class CompassCommand extends CommandBase {
     }
 
     private int compassClear(CommandContext<CommandSourceStack> context) {
-        CompassModel.reset();
+        Models.Compass.reset();
 
         MutableComponent response = new TextComponent("Compass cleared").withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);

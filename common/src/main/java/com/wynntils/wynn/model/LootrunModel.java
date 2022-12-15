@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
@@ -52,7 +53,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public final class LootrunModel {
+public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -595,14 +596,14 @@ public final class LootrunModel {
     }
 
     public static boolean tryLoadFile(String fileName) {
-        String lootrun = fileName + ".json";
-        File lootrunFile = new File(LOOTRUNS, lootrun);
+        String lootrunFileName = fileName + ".json";
+        File lootrunFile = new File(LOOTRUNS, lootrunFileName);
         if (lootrunFile.exists()) {
             try {
                 FileReader file = new FileReader(lootrunFile, StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
-                LootrunModel.lootrun = compile(uncompiled, false);
+                lootrun = compile(uncompiled, false);
                 state = LootrunState.LOADED;
                 LootrunFeature.INSTANCE.enable();
                 file.close();
@@ -646,13 +647,13 @@ public final class LootrunModel {
     }
 
     public static boolean addChest(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+        LootrunUncompiled current = getActiveLootrun();
         if (current == null) return false;
         return current.chests().add(pos);
     }
 
     public static boolean removeChest(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+        LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return false;
 
@@ -660,7 +661,7 @@ public final class LootrunModel {
     }
 
     public static Note deleteNoteAt(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+        LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return null;
 
@@ -820,8 +821,8 @@ public final class LootrunModel {
 
         private LootrunSaveResult saveLootrun(String name) {
             try {
-                File file = new File(LootrunModel.LOOTRUNS, name + ".json");
-                LootrunModel.uncompiled = new LootrunUncompiled(this, file);
+                File file = new File(LOOTRUNS, name + ".json");
+                uncompiled = new LootrunUncompiled(this, file);
 
                 boolean result = file.createNewFile();
 

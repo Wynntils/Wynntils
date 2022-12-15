@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class EmeraldPouchTierPropertyModel extends Model {
+public final class EmeraldPouchTierPropertyModel extends Model {
     private static final ItemPropertyWriter EMERALD_POUCH_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
 

@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.IntelligenceSkillPointsItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class IntelligenceSkillPointsItemStackModel extends Model {
+public final class IntelligenceSkillPointsItemStackModel extends Model {
     private static final ItemStackTransformer INTELLIGENCE_SKILL_POINTS_TRANSFORMER = new ItemStackTransformer(
             WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 

@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class HorsePropertyModel extends Model {
+public final class HorsePropertyModel extends Model {
     private static final ItemPropertyWriter HORSE_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isHorse, HorseProperty::new);
 
