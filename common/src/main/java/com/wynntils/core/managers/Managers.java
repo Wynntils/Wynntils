@@ -6,6 +6,7 @@ package com.wynntils.core.managers;
 
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
@@ -32,7 +33,7 @@ public final class Managers {
     public static final CharacterManager Character = new CharacterManager();
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
-    public static final ConfigManager Config = new ConfigManager();
+    public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerQueryManager ContainerQuery = new ContainerQueryManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
@@ -41,6 +42,7 @@ public final class Managers {
     public static final WorldStateManager WorldState = new WorldStateManager();
 
     // Managers with dependencies, ordered by dependency and then alphabetically
+    public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
     public static final FunctionManager Function = new FunctionManager(ItemStackTransform);
     public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
