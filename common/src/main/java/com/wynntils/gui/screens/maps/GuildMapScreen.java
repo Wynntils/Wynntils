@@ -20,10 +20,10 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.map.TerritoryDefenseFilterType;
-import com.wynntils.wynn.model.map.TerritoryDefenseLevel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
+import com.wynntils.wynn.model.territory.objects.GuildResourceValues;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
@@ -36,7 +36,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
-    private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
+    private boolean territoryDefenseFilterEnabled = false;
+    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryLow;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
@@ -89,11 +90,14 @@ public class GuildMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_DEFENSE_FILTER_BUTTON, // TODO: Add new cycle texture
+                Texture.MAP_DEFENSE_FILTER_BUTTON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                        territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
+                        territoryDefenseFilterEnabled = false;
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                        territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
+                        return;
                     }
 
                     // Holding shift filters higher, ctrl filters lower
@@ -105,12 +109,9 @@ public class GuildMapScreen extends AbstractMapScreen {
                         territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
                     }
 
-                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.next(
+                    territoryDefenseFilterEnabled = true;
+                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
                             territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
-
-                    if (territoryDefenseFilterLevel == TerritoryDefenseLevel.OFF) { // Reset to default if OFF
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                    }
 
                     territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },
@@ -351,7 +352,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
         List<Poi> pois = Managers.Territory.getTerritoryPoisFromAdvancement();
 
-        if (territoryDefenseFilterLevel != TerritoryDefenseLevel.OFF) {
+        if (territoryDefenseFilterEnabled) {
             pois.removeIf( // Remove territories that do not match the filtered defense level
                     poi -> {
                         // Do not filter anything if the poi is not a territory (shouldn't happen)
@@ -400,6 +401,14 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private List<Component> getCompleteFilterTooltip() {
+        Component lastLine = territoryDefenseFilterEnabled
+                ? new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(territoryDefenseFilterLevel.asColoredString())
+                        .append(territoryDefenseFilterType.asComponent())
+                : new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append("Off");
         return List.of(
                 new TextComponent("[>] ")
                         .withStyle(ChatFormatting.BLUE)
@@ -410,9 +419,6 @@ public class GuildMapScreen extends AbstractMapScreen {
                         .withStyle(ChatFormatting.GRAY),
                 new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
                         .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(territoryDefenseFilterLevel.asColoredString())
-                        .append(territoryDefenseFilterType.asComponent()));
+                lastLine);
     }
 }
