@@ -1,9 +1,21 @@
+## [0.0.1-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.163...v0.0.1-alpha.164) (2022-12-15)
+
+
+### Miscellaneous Chores
+
+* Rebuild with new fixes ([71fd2da](https://github.com/Wynntils/Artemis/commit/71fd2da94ad528ed4e48df9106e29ed7232cf427))
+
 ## [0.0.1-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.162...v0.0.1-alpha.163) (2022-12-15)
 
 
 ### Code Refactoring
 
 * Fully convert Managers to singletons ([#833](https://github.com/Wynntils/Artemis/issues/833)) ([f395811](https://github.com/Wynntils/Artemis/commit/f3958111b38587ea137c34907b77c00b6b0a26e7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.163 [skip ci] ([c5b3a67](https://github.com/Wynntils/Artemis/commit/c5b3a67e26825833335db025488e10360070fd0e))
 
 ## [0.0.1-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.161...v0.0.1-alpha.162) (2022-12-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.160 [skip ci] ([4f06e90](https://github.com/Wynntils/Artemis/commit/4f06e90062695a9c471df98530ca2965dd113e7c))
-
-## [0.0.1-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.158...v0.0.1-alpha.159) (2022-12-14)
-
-
-### New Features
-
-* Introduce NetManager and UrlManager ([#825](https://github.com/Wynntils/Artemis/issues/825)) ([001395f](https://github.com/Wynntils/Artemis/commit/001395fb797c71cb6e61aae6b0813a5321d04b1a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.159 [skip ci] ([3d9b097](https://github.com/Wynntils/Artemis/commit/3d9b0975c0fd11495d34b06a0aa19069f2930de7))
 
