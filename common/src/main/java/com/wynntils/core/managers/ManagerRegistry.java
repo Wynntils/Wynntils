@@ -60,7 +60,7 @@ public final class ManagerRegistry {
         Class<? extends CoreManager> manager = managerInstance.getClass();
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
-        tryInitManager(manager);
+        WynntilsMod.registerEventListener(manager);
     }
 
     private static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
