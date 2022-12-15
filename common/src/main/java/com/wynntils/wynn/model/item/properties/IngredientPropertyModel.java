@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.IngredientProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class IngredientPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class IngredientPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isIngredient, IngredientProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(INGREDIENT_WRITER);
+        Managers.ItemStackTransform.registerProperty(INGREDIENT_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(INGREDIENT_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(INGREDIENT_WRITER);
     }
 }

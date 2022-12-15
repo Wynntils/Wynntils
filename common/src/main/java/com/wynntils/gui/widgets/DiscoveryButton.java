@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -13,10 +14,8 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -86,11 +85,11 @@ public class DiscoveryButton extends AbstractButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            DiscoveryManager.setDiscoveryCompass(discoveryInfo);
+            Managers.Discovery.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            DiscoveryManager.openDiscoveryOnMap(discoveryInfo);
+            Managers.Discovery.openDiscoveryOnMap(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.getType() == DiscoveryType.SECRET) {
-            DiscoveryManager.openSecretDiscoveryWiki(discoveryInfo);
+            Managers.Discovery.openSecretDiscoveryWiki(discoveryInfo);
         }
 
         return true;
@@ -109,7 +108,7 @@ public class DiscoveryButton extends AbstractButton {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> DiscoveryManager.getAllDiscoveries()
+                    .filter(requirement -> Managers.Discovery.getAllDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 
@@ -124,7 +123,7 @@ public class DiscoveryButton extends AbstractButton {
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
-                || TerritoryManager.getTerritoryProfile(discoveryInfo.getName()) != null) {
+                || Managers.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(TextComponent.EMPTY);
             lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)

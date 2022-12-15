@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.item;
 
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
@@ -33,10 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends CoreManager {
-    private static final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
-    private static final Set<ItemPropertyWriter> PROPERTIES = ConcurrentHashMap.newKeySet();
-
+public class ItemStackTransformManager extends Manager {
     public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
             CosmeticTierPropertyModel.class,
             EmeraldPouchItemStackModel.class,
@@ -57,31 +54,35 @@ public class ItemStackTransformManager extends CoreManager {
             SkillPointPropertyModel.class,
             TeleportScrollPropertyModel.class);
 
-    public static void registerTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.add(transformer);
+    private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
+    private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
+
+    public ItemStackTransformManager() {
+        super(List.of());
     }
 
-    public static void unregisterTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.remove(transformer);
+    public void registerTransformer(ItemStackTransformer transformer) {
+        transformers.add(transformer);
     }
 
-    public static void registerProperty(ItemPropertyWriter writer) {
-        PROPERTIES.add(writer);
+    public void unregisterTransformer(ItemStackTransformer transformer) {
+        transformers.remove(transformer);
     }
 
-    public static void unregisterProperty(ItemPropertyWriter writer) {
-        PROPERTIES.remove(writer);
+    public void registerProperty(ItemPropertyWriter writer) {
+        properties.add(writer);
     }
 
-    // required for manager
-    public static void init() {}
+    public void unregisterProperty(ItemPropertyWriter writer) {
+        properties.remove(writer);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetSlot(SetSlotEvent.Pre event) {
+    public void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack stack = event.getItem();
 
         // itemstack transformers
-        for (ItemStackTransformer t : TRANSFORMERS) {
+        for (ItemStackTransformer t : transformers) {
             if (t.test(stack)) {
                 stack = t.transform(stack);
                 break;
@@ -89,7 +90,7 @@ public class ItemStackTransformManager extends CoreManager {
         }
 
         // itemstack properties
-        for (ItemPropertyWriter w : PROPERTIES) {
+        for (ItemPropertyWriter w : properties) {
             if (w.test(stack)) {
                 if (!(stack instanceof WynnItemStack)) stack = new WynnItemStack(stack);
 

@@ -6,7 +6,7 @@ package com.wynntils.gui.screens.overlays.lists;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -42,8 +42,9 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 ITEM_HEIGHT);
 
-        List<Overlay> overlays =
-                OverlayManager.getOverlays().stream().sorted(Overlay::compareTo).toList();
+        List<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                .sorted(Overlay::compareTo)
+                .toList();
 
         for (Overlay overlay : overlays) {
             this.addEntry(new OverlayEntry(overlay));
@@ -64,7 +65,8 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
                 helpModified.add(new TextComponent(""));
                 helpModified.add(new TextComponent("Feature: "
-                        + OverlayManager.getOverlayParent(hovered.getOverlay()).getTranslatedName()));
+                        + Managers.Overlay.getOverlayParent(hovered.getOverlay())
+                                .getTranslatedName()));
 
                 RenderUtils.drawTooltipAt(
                         poseStack,

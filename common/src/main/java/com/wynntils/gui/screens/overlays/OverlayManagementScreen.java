@@ -6,14 +6,13 @@ package com.wynntils.gui.screens.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -153,8 +152,8 @@ public class OverlayManagementScreen extends Screen {
                 renderSections(poseStack);
             }
 
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
@@ -255,8 +254,8 @@ public class OverlayManagementScreen extends Screen {
         resetSelection();
 
         if (!fixedSelection) {
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
@@ -371,7 +370,7 @@ public class OverlayManagementScreen extends Screen {
         animationLengthRemaining = 0;
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
             McUtils.mc().setScreen(new OverlaySelectionScreen());
             onClose();
             return true;
@@ -460,8 +459,8 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void reloadConfigForOverlay() {
-        ConfigManager.loadConfigFile();
-        ConfigManager.loadAllConfigOptions(true);
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadAllConfigOptions(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
@@ -639,7 +638,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void renderSections(PoseStack poseStack) {
-        for (SectionCoordinates section : OverlayManager.getSections()) {
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
             RenderUtils.drawRectBorders(
                     poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
         }
@@ -687,8 +686,9 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        for (Overlay overlay :
-                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).toList()) {
+        for (Overlay overlay : Managers.Overlay.getOverlays().stream()
+                .filter(Overlay::isEnabled)
+                .toList()) {
             if (overlay == selectedOverlay) continue;
 
             for (Edge edge : Edge.values()) {
@@ -744,7 +744,7 @@ public class OverlayManagementScreen extends Screen {
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.applySettings"),
                 button -> {
-                    ConfigManager.saveConfig();
+                    Managers.Config.saveConfig();
                     McUtils.mc().setScreen(new OverlaySelectionScreen());
                     onClose();
                 },

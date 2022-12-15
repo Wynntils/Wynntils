@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.WorldStateManager;
 
 public final class WynnUtils {
     /**
@@ -26,18 +26,18 @@ public final class WynnUtils {
     }
 
     public static boolean onServer() {
-        return WorldStateManager.onServer();
+        return Managers.WorldState.onServer();
     }
 
     public static boolean onWorld() {
-        return WorldStateManager.onWorld();
+        return Managers.WorldState.onWorld();
     }
 
     public static CharacterManager.CharacterInfo getCharacterInfo() {
-        return CharacterManager.getCharacterInfo();
+        return Managers.Character.getCharacterInfo();
     }
 
     public static boolean hasCharacterInfo() {
-        return CharacterManager.hasCharacter();
+        return Managers.Character.hasCharacter();
     }
 }

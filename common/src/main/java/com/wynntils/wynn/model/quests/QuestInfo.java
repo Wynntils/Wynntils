@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.model.quests;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +143,7 @@ public class QuestInfo {
         tooltipLines.add(new TextComponent(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
+            tooltipLines.add((Managers.Character.getCharacterInfo().getLevel() >= questInfo.getLevel()
                             ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
                             : new TextComponent("✖").withStyle(ChatFormatting.RED))
                     .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -151,7 +151,7 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = CharacterManager.getCharacterInfo()
+            MutableComponent base = Managers.Character.getCharacterInfo()
                                     .getProfessionInfo()
                                     .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()

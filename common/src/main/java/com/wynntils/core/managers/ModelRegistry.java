@@ -1,0 +1,136 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.core.managers;
+
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.ModelDependant;
+import com.wynntils.core.features.Translatable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.reflect.MethodUtils;
+
+public final class ModelRegistry {
+    private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
+    private static final Collection<Class<? extends Model>> ENABLED_MODELS = new HashSet<>();
+
+    public static void init() {
+        addCrashCallbacks();
+    }
+
+    private static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
+
+        // first dependency, enable model
+        if (modelDependencies == null) {
+            modelDependencies = new ArrayList<>();
+            MODEL_DEPENDENCIES.put(dependency, modelDependencies);
+
+            ENABLED_MODELS.add(dependency);
+            tryInitModel(dependency);
+        }
+
+        modelDependencies.add(dependant);
+    }
+
+    private static void removeDependency(ModelDependant dependant, Class<? extends Model> dependency) {
+        List<ModelDependant> modelDependencies = MODEL_DEPENDENCIES.get(dependency);
+
+        // Check if present and try to remove
+        if (modelDependencies == null || !modelDependencies.remove(dependant)) {
+            WynntilsMod.warn(
+                    String.format("Could not remove dependency of %s for %s when lacking", dependant, dependency));
+            return;
+        }
+
+        // Check if should disable model
+        if (modelDependencies.isEmpty()) {
+            // remove empty list
+            MODEL_DEPENDENCIES.remove(dependency);
+
+            ENABLED_MODELS.remove(dependency);
+            tryDisableModel(dependency);
+        }
+    }
+
+    public static void addAllDependencies(ModelDependant dependant) {
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            addDependency(dependant, dependency);
+        }
+    }
+
+    public static void removeAllDependencies(ModelDependant dependant) {
+        for (Class<? extends Model> dependency : dependant.getModelDependencies()) {
+            removeDependency(dependant, dependency);
+        }
+    }
+
+    private static void tryInitModel(Class<? extends Model> model) {
+        WynntilsMod.registerEventListener(model);
+
+        try {
+            MethodUtils.invokeExactStaticMethod(model, "init");
+        } catch (IllegalAccessException | NoSuchMethodException e) {
+            WynntilsMod.error("Misconfigured init() on model " + model, e);
+            throw new RuntimeException();
+        } catch (InvocationTargetException e) {
+            WynntilsMod.error("Exception during init of model " + model, e.getTargetException());
+        }
+    }
+
+    private static void tryDisableModel(Class<? extends Model> model) {
+        WynntilsMod.unregisterEventListener(model);
+
+        try {
+            MethodUtils.invokeExactStaticMethod(model, "disable");
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            // ignored, it is fine to not have a disable method
+        }
+    }
+
+    private static void addCrashCallbacks() {
+        CrashReportManager.registerCrashContext(new ModelCrashContext());
+    }
+
+    public static boolean isEnabled(Class<? extends Model> model) {
+        return ENABLED_MODELS.contains(model);
+    }
+
+    private static class ModelCrashContext extends CrashReportManager.ICrashContext {
+        public ModelCrashContext() {
+            super("Loaded Models");
+        }
+
+        @Override
+        public Object generate() {
+            StringBuilder result = new StringBuilder();
+
+            for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
+                    MODEL_DEPENDENCIES.entrySet()) {
+                if (!ENABLED_MODELS.contains(dependencyEntry.getKey())) continue;
+
+                result.append("\n\t\t")
+                        .append(dependencyEntry.getKey().getName())
+                        .append(": ")
+                        .append(dependencyEntry.getValue().stream()
+                                .map(t -> {
+                                    if (t instanceof Translatable translatable) {
+                                        return translatable.getTranslatedName();
+                                    } else {
+                                        return t.toString();
+                                    }
+                                })
+                                .collect(Collectors.joining(", ")));
+            }
+
+            return result.toString();
+        }
+    }
+}

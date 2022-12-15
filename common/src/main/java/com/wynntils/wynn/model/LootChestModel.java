@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
@@ -30,7 +30,7 @@ public class LootChestModel extends Model {
             nextExpectedLootContainerId = event.getContainerId();
 
             DataStorageFeature.INSTANCE.dryCount++;
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 
@@ -52,7 +52,7 @@ public class LootChestModel extends Model {
             DataStorageFeature.INSTANCE.dryBoxes += 1;
         }
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
     }
 
     @SubscribeEvent

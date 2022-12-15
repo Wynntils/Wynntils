@@ -5,8 +5,7 @@
 package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.net.NetManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
@@ -75,7 +74,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            NetManager.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
+            Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
@@ -84,7 +83,7 @@ public class GuideIngredientItemStack extends AbstractButton {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
             }
 
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
 
         return true;

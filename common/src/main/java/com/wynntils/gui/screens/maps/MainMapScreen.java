@@ -6,7 +6,7 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -27,7 +27,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -218,7 +217,7 @@ public class MainMapScreen extends AbstractMapScreen {
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
         CompassModel.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(TerritoryManager.getTerritoryPois());
+            pois.addAll(Managers.Territory.getTerritoryPois());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
@@ -280,7 +279,7 @@ public class MainMapScreen extends AbstractMapScreen {
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
-                    ConfigManager.saveConfig();
+                    Managers.Config.saveConfig();
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);
