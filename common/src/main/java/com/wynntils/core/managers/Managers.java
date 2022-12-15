@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.managers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.OverlayManager;
@@ -23,6 +24,7 @@ import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.territory.TerritoryManager;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -52,6 +54,17 @@ public final class Managers {
     public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, MinecraftScheduler);
 
     public static void init() {
-        // We don't need to do anything here, but make sure the class is loaded
+        // Register all manager singletons as event listeners
+
+        FieldUtils.getAllFieldsList(Managers.class).stream()
+                .filter(field -> Manager.class.isAssignableFrom(field.getType()))
+                .forEach(field -> {
+                    try {
+                        WynntilsMod.registerEventListener(field.get(null));
+                    } catch (IllegalAccessException e) {
+                        WynntilsMod.error("Internal error in Managers", e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }
