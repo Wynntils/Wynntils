@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class CharacterSelectionManager extends Manager {
+public final class CharacterSelectionManager extends Manager {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§a\\[\\+\\] Create a new character");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§6\\[>\\] Select (.+)");
     private static final Pattern CLASS_ITEM_CLASS_PATTERN =
