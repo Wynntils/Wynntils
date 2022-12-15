@@ -5,11 +5,11 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.wynn.model.CharacterSelectionManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -36,7 +36,7 @@ public class PlayButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getSelected() != null) {
             int slot = characterSelectorScreen.getSelected().getClassInfo().slot();
-            CharacterSelectionManager.playWithCharacter(slot);
+            Managers.CharacterSelection.playWithCharacter(slot);
         }
     }
 

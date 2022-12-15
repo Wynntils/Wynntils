@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.net;
 
+import com.wynntils.core.managers.Managers;
 import java.io.InputStream;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -15,7 +16,7 @@ public class ApiResponse extends NetResult {
     }
 
     protected CompletableFuture<InputStream> getInputStreamFuture() {
-        CompletableFuture<InputStream> future = NetManager.HTTP_CLIENT
+        CompletableFuture<InputStream> future = Managers.Net.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(HttpResponse::body);
 

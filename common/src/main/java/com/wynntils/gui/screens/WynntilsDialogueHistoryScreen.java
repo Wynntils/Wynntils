@@ -6,6 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -61,7 +62,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @Override
     protected void init() {
-        QuestManager.rescanDialogueHistory();
+        Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -177,7 +178,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(QuestManager.getDialogueHistory());
+        this.setDialogues(Managers.Quest.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

@@ -7,12 +7,11 @@ package com.wynntils.wynn.model.discoveries;
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
@@ -20,7 +19,6 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
@@ -58,7 +56,7 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -73,7 +71,7 @@ public class DiscoveryManager extends CoreManager {
             return;
         }
 
-        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -83,7 +81,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
+        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
     private static void queryDiscoveries() {
@@ -125,7 +123,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        ApiResponse apiResponse = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
@@ -169,7 +167,7 @@ public class DiscoveryManager extends CoreManager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    MinecraftSchedulerManager.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
                 }
                 case COMPASS -> {
                     CompassModel.setCompassLocation(new Location(x, 0, z));
@@ -179,7 +177,7 @@ public class DiscoveryManager extends CoreManager {
     }
 
     private static void updateDiscoveriesResource() {
-        Download dl = NetManager.download(UrlId.DATA_STATIC_DISCOVERIES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_DISCOVERIES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);

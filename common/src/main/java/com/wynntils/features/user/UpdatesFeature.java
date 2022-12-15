@@ -7,8 +7,8 @@ package com.wynntils.features.user;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.UpdateManager;
-import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -41,8 +41,8 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        CompletableFuture.runAsync(() -> UpdateManager.getLatestBuild()
-                .whenCompleteAsync((version, throwable) -> MinecraftSchedulerManager.queueRunnable(() -> {
+        CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
+                .whenCompleteAsync((version, throwable) -> Managers.MinecraftScheduler.queueRunnable(() -> {
                     if (version == null) {
                         WynntilsMod.info(
                                 "Couldn't fetch latest version, not attempting update reminder or auto-update.");
@@ -69,7 +69,7 @@ public class UpdatesFeature extends UserFeature {
                         McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
+                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {

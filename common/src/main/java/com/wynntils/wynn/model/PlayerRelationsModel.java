@@ -6,6 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.MessageType;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -62,7 +63,7 @@ public class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public static void onAuth(SocketEvent.Authenticated event) {
-        if (!WorldStateManager.onWorld()) return;
+        if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
         requestPartyListUpdate();

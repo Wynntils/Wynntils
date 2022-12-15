@@ -5,8 +5,8 @@
 package com.wynntils.sockets.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -26,8 +26,6 @@ import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -56,7 +54,7 @@ public class HadesModel extends Model {
     }
 
     private static void tryCreateConnection() {
-        if (!WynntilsAccountManager.isLoggedIn()) {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
             return;
         }
@@ -132,7 +130,7 @@ public class HadesModel extends Model {
     @SubscribeEvent
     public static void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
-        if (!WorldStateManager.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -185,8 +183,8 @@ public class HadesModel extends Model {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                WorldStateManager.getCurrentWorldName(),
-                CharacterManager.getCharacterInfo().getId()));
+                Managers.WorldState.getCurrentWorldName(),
+                Managers.Character.getCharacterInfo().getId()));
     }
 
     public static void resetSocialType(SocialType socialType) {

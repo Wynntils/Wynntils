@@ -9,9 +9,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,7 +27,7 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) ->
-                                SharedSuggestionProvider.suggest(TerritoryManager.getTerritoryNames(), builder))
+                                SharedSuggestionProvider.suggest(Managers.Territory.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -44,7 +44,7 @@ public class TerritoryCommand extends CommandBase {
     private int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
 
-        TerritoryProfile territoryProfile = TerritoryManager.getTerritoryProfile(territoryArg);
+        TerritoryProfile territoryProfile = Managers.Territory.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {
             context.getSource()

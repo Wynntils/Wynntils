@@ -5,7 +5,7 @@
 package com.wynntils.sockets;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -20,7 +20,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -35,10 +34,10 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onConnect() {
-        if (!WynntilsAccountManager.isLoggedIn()) {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             hadesConnection.disconnect();
 
-            if (WorldStateManager.onServer()) {
+            if (Managers.WorldState.onServer()) {
                 McUtils.sendMessageToClient(
                         new TextComponent("Could not connect to HadesServer because you are not logged in on Athena.")
                                 .withStyle(ChatFormatting.RED));
@@ -47,14 +46,14 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(WynntilsAccountManager.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Managers.WynntilsAccount.getToken()));
     }
 
     @Override
     public void onDisconnect() {
         WynntilsMod.postEvent(new SocketEvent.Disconnected());
 
-        if (WorldStateManager.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(
                     new TextComponent("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
         }
@@ -87,7 +86,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             }
         }
 
-        if (WorldStateManager.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(userComponent);
         }
     }
@@ -124,7 +123,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
     public void handleDisconnect(HSPacketDisconnect packet) {
         WynntilsMod.info("Disconnected from HadesServer. Reason: " + packet.getReason());
 
-        if (WorldStateManager.onServer()) {
+        if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis] Disconnected from HadesServer.")
                     .withStyle(ChatFormatting.YELLOW));
         }

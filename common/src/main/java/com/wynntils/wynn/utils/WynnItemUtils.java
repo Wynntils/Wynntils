@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
@@ -16,7 +17,6 @@ import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
@@ -311,7 +311,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return ItemProfilesManager.getTranslatedReferences()
+        return Managers.ItemProfiles.getTranslatedReferences()
                 .getOrDefault(unformattedItemName, unformattedItemName)
                 .replace("֎", "");
     }
@@ -340,7 +340,7 @@ public final class WynnItemUtils {
             return itemStack;
         }
 
-        ItemProfile itemProfile = ItemProfilesManager.getItemsMap().get(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
 
         if (itemProfile == null) {
             return null;
@@ -368,7 +368,7 @@ public final class WynnItemUtils {
 
                 // get wynntils name from internal wynncraft name
                 String translatedId =
-                        ItemProfilesManager.getInternalIdentifications().get(id);
+                        Managers.ItemProfiles.getInternalIdentifications().get(id);
                 if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value
