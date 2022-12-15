@@ -43,26 +43,26 @@ public final class ManagerRegistry {
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
-        registerPersistentDependency(NetManager.class);
-        registerPersistentDependency(UrlManager.class);
-        registerPersistentDependency(ConfigManager.class);
-        registerPersistentDependency(CharacterManager.class);
-        registerPersistentDependency(CharacterSelectionManager.class);
-        registerPersistentDependency(ClientCommandManager.class);
-        registerPersistentDependency(ContainerQueryManager.class);
-        registerPersistentDependency(DiscoveryManager.class);
-        registerPersistentDependency(FunctionManager.class);
-        registerPersistentDependency(KeyBindManager.class);
-        registerPersistentDependency(MinecraftSchedulerManager.class);
-        registerPersistentDependency(OverlayManager.class);
-        registerPersistentDependency(QuestManager.class);
-        registerPersistentDependency(UpdateManager.class);
-        registerPersistentDependency(WynntilsAccountManager.class);
-        registerPersistentDependency(ItemProfilesManager.class);
-        registerPersistentDependency(ItemStackTransformManager.class);
-        registerPersistentDependency(SplashManager.class);
-        registerPersistentDependency(WorldStateManager.class);
-        registerPersistentDependency(TerritoryManager.class);
+        registerPersistentDependency(Managers.Net);
+        registerPersistentDependency(Managers.Url);
+        registerPersistentDependency(Managers.Config);
+        registerPersistentDependency(Managers.Character);
+        registerPersistentDependency(Managers.CharacterSelection);
+        registerPersistentDependency(Managers.ClientCommand);
+        registerPersistentDependency(Managers.ContainerQuery);
+        registerPersistentDependency(Managers.Discovery);
+        registerPersistentDependency(Managers.Function);
+        registerPersistentDependency(Managers.KeyBind);
+        registerPersistentDependency(Managers.MinecraftScheduler);
+        registerPersistentDependency(Managers.Overlay);
+        registerPersistentDependency(Managers.Quest);
+        registerPersistentDependency(Managers.Update);
+        registerPersistentDependency(Managers.WynntilsAccount);
+        registerPersistentDependency(Managers.ItemProfiles);
+        registerPersistentDependency(Managers.ItemStackTransform);
+        registerPersistentDependency(Managers.Splash);
+        registerPersistentDependency(Managers.WorldState);
+        registerPersistentDependency(Managers.Territory);
 
         addCrashCallbacks();
     }
@@ -75,7 +75,8 @@ public final class ManagerRegistry {
      * <p>
      * Do not use this if you don't know what you are doing. Instead, register the manager as a feature dependency.
      * */
-    private static void registerPersistentDependency(Class<? extends CoreManager> manager) {
+    private static void registerPersistentDependency(CoreManager managerInstance) {
+        Class<? extends CoreManager> manager = managerInstance.getClass();
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
         tryInitManager(manager);
