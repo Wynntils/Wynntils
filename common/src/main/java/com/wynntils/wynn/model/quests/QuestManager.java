@@ -162,14 +162,14 @@ public class QuestManager extends CoreManager {
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
-        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
+        private final Vec3 playerLocation = McUtils.player().position();
 
         private double getDistance(Optional<Location> loc) {
             // Quests with no location always counts as closest
             if (loc.isEmpty()) return 0f;
 
             Location location = loc.get();
-            return PLAYER_LOCATION.distanceToSqr(location.toVec3());
+            return playerLocation.distanceToSqr(location.toVec3());
         }
 
         @Override
