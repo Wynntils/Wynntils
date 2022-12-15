@@ -490,8 +490,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionAlreadyActiveRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("^§cYou already have that potion active...$");
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§cYou already have that potion active...$");
 
         @Override
         protected Pattern getSystemPattern() {
