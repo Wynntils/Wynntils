@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatCoordinatesFeature extends UserFeature {
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Compass);
     }
 

@@ -74,25 +74,12 @@ public final class ModelRegistry {
 
     private static void tryInitModel(Model model) {
         WynntilsMod.registerEventListener(model);
-
-        try {
-            MethodUtils.invokeExactMethod(model, "init");
-        } catch (IllegalAccessException | NoSuchMethodException e) {
-            WynntilsMod.error("Misconfigured init() on model " + model, e);
-            throw new RuntimeException();
-        } catch (InvocationTargetException e) {
-            WynntilsMod.error("Exception during init of model " + model, e.getTargetException());
-        }
+        model.init();
     }
 
     private static void tryDisableModel(Model model) {
         WynntilsMod.unregisterEventListener(model);
-
-        try {
-            MethodUtils.invokeExactMethod(model, "disable");
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            // ignored, it is fine to not have a disable method
-        }
+        model.disable();
     }
 
     private static void addCrashCallbacks() {

@@ -42,7 +42,7 @@ public class ItemCompareFeature extends UserFeature {
     private boolean compareToEquipped = false;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.GearItemStack);
     }
 

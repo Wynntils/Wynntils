@@ -32,7 +32,7 @@ public class DurabilityArcFeature extends UserFeature {
     public boolean renderDurabilityArcHotbar = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.DurabilityProperty);
     }
 

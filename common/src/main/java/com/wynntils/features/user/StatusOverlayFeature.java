@@ -32,7 +32,7 @@ public class StatusOverlayFeature extends UserFeature {
     public final StatusOverlay statusOverlay = new StatusOverlay();
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Tab);
     }
 

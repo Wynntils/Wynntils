@@ -22,7 +22,7 @@ public class DataStorageFeature extends StateManagedFeature {
     public int dryBoxes = 0;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.LootChest);
     }
 }

@@ -45,7 +45,7 @@ public class ItemStatInfoFeature extends UserFeature {
     public boolean groupIdentifications = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.GearItemStack);
     }
 }

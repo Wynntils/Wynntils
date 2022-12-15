@@ -21,7 +21,7 @@ public class ItemGuessFeature extends UserFeature {
     public boolean showGuessesPrice = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.UnidentifiedItemStack);
     }
 }

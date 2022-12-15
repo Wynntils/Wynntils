@@ -15,7 +15,7 @@ import java.util.List;
 public class SoulPointTimerFeature extends UserFeature {
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.SoulPointItemStack);
     }
 

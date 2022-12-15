@@ -8,5 +8,5 @@ import com.wynntils.core.managers.Model;
 import java.util.List;
 
 public interface ModelDependant {
-    List<? extends Model> getModelDependencies();
+    List<Model> getModelDependencies();
 }

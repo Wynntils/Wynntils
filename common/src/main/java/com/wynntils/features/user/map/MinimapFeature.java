@@ -52,7 +52,7 @@ public class MinimapFeature extends UserFeature {
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Map);
     }
 

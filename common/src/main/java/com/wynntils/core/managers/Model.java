@@ -16,4 +16,7 @@ package com.wynntils.core.managers;
  * <p>
  * Models are automatically registered to event bus, use static event methods.
  */
-public abstract class Model {}
+public abstract class Model {
+    public abstract void init();
+    public void disable() {}
+}

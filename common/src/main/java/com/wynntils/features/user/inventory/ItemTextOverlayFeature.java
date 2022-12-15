@@ -106,7 +106,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean hotbarTextOverlayEnabled = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return TEXT_OVERLAY_PROPERTIES;
     }
 

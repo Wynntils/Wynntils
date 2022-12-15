@@ -49,7 +49,7 @@ public class ChatTabsFeature extends UserFeature {
     private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Chat, Models.ChatTab);
     }
 

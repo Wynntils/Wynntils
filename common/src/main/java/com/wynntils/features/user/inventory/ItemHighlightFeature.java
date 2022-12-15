@@ -148,7 +148,7 @@ public class ItemHighlightFeature extends UserFeature {
     public float hotbarOpacity = .5f;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return HIGHLIGHT_PROPERTIES;
     }
 

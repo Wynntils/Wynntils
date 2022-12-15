@@ -45,7 +45,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
     public boolean autoTrackQuestCoordinates = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Scoreboard, Models.Compass);
     }
 

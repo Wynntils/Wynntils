@@ -62,7 +62,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     private Vec3 screenCoord;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Compass);
     }
 

@@ -29,7 +29,7 @@ public class ChatTimestampFeature extends UserFeature {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.Chat);
     }
 

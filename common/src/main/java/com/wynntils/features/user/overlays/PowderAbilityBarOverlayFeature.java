@@ -36,7 +36,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
     private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.ActionBar, Models.GearItemStack);
     }
 

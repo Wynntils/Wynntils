@@ -28,7 +28,7 @@ public class HadesFeature extends UserFeature {
     public boolean shareWithGuild = true;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         // SocketModel
         //      needs ActionBarModel for updating player info
         //      HadesUserModel for storing remote HadesUser info

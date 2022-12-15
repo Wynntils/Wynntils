@@ -194,7 +194,7 @@ public abstract class Feature extends AbstractConfigurable
     }
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of();
     }
 

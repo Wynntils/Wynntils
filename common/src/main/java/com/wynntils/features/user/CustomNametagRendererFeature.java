@@ -117,7 +117,7 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.RemoteWynntilsUserInfo);
     }
 }

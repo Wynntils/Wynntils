@@ -26,7 +26,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.UnidentifiedItemStack);
     }
 

@@ -38,7 +38,7 @@ public class LowHealthVignetteFeature extends UserFeature {
     private boolean shouldRender = false;
 
     @Override
-    public List<? extends Model> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of(Models.ActionBar);
     }
 
