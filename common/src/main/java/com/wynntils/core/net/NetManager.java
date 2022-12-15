@@ -33,6 +33,9 @@ public class NetManager extends Manager {
             WynntilsMod.getModLoader());
 
     public NetManager(UrlManager urlManager) {
+        // NetManager is involved in a circular dependency with UrlManager. This means
+        // it will be instantiated twice, first as a throw-away instance local to UrlManager
+        // bootstrapping only, then as the real instance for Managers.
         super(List.of(urlManager));
     }
 
