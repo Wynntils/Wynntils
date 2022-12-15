@@ -17,9 +17,6 @@ public class MinecraftSchedulerManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     public void queueRunnable(Runnable runnable) {
         queue.add(runnable);
     }

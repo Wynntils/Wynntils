@@ -61,9 +61,6 @@ public class ItemStackTransformManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     public void registerTransformer(ItemStackTransformer transformer) {
         transformers.add(transformer);
     }

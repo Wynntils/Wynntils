@@ -60,9 +60,6 @@ public class CharacterManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     public boolean hasCharacter() {
         return currentCharacter != null;
     }

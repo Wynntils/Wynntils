@@ -42,10 +42,6 @@ public final class FunctionManager extends CoreManager {
 
     public FunctionManager() {
         super(List.of());
-    }
-
-    @Override
-    public void init() {
         registerAllFunctions();
     }
 

@@ -33,9 +33,6 @@ public final class KeyBindManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent
     public void onTick(ClientTickEvent.End e) {
         triggerKeybinds();

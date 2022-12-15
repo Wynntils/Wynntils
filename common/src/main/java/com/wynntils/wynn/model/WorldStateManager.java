@@ -46,9 +46,6 @@ public class WorldStateManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     public boolean onServer() {
         return currentState != State.NOT_CONNECTED;
     }

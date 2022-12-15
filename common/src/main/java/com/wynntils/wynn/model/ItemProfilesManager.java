@@ -43,10 +43,6 @@ public class ItemProfilesManager extends CoreManager {
 
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
-    }
-
-    @Override
-    public void init() {
         loadCommonObjects();
     }
 
@@ -67,6 +63,7 @@ public class ItemProfilesManager extends CoreManager {
         internalIdentifications = null;
         majorIds = null;
         materialTypes = null;
+        loadCommonObjects();
     }
 
     private void tryLoadItemGuesses() {

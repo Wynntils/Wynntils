@@ -13,8 +13,7 @@ import java.util.List;
  */
 public abstract class CoreManager extends Manager {
     protected CoreManager(List<CoreManager> dependencies) {
-        init();
+        // dependencies are technically not used, but only required
+        // as a reminder for implementers to be wary about dependencies
     }
-
-    protected abstract void init();
 }

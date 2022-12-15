@@ -52,9 +52,6 @@ public class DiscoveryManager extends CoreManager {
         super(List.of(netManager, territoryManager, minecraftSchedulerManager));
     }
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         discoveries = List.of();

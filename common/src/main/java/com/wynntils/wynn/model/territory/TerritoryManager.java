@@ -54,10 +54,6 @@ public class TerritoryManager extends CoreManager {
 
     public TerritoryManager(NetManager netManager) {
         super(List.of(netManager));
-    }
-
-    @Override
-    public void init() {
         timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }

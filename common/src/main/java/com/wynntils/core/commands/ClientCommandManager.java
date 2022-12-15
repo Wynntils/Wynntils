@@ -51,10 +51,6 @@ public final class ClientCommandManager extends CoreManager {
 
     public ClientCommandManager() {
         super(List.of());
-    }
-
-    @Override
-    public void init() {
         registerAllCommands();
     }
 

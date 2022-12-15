@@ -47,9 +47,6 @@ public class CharacterSelectionManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent event) {
         if (event.getScreen() instanceof CharacterSelectorScreen characterSelectorScreen) {

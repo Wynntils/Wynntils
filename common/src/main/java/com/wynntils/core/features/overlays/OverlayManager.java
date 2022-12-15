@@ -36,10 +36,6 @@ public final class OverlayManager extends CoreManager {
 
     public OverlayManager() {
         super(List.of());
-    }
-
-    @Override
-    public void init() {
         addCrashCallbacks();
     }
 

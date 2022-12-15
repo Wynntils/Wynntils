@@ -28,9 +28,6 @@ public class UpdateManager extends CoreManager {
         super(List.of(netManager));
     }
 
-    @Override
-    public void init() {}
-
     public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 

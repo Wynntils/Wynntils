@@ -85,9 +85,8 @@ public class WynntilsCommand extends CommandBase {
 
         Managers.ItemProfiles.reset();
         Managers.Url.reloadUrls();
-        Managers.ItemProfiles.init();
-        Managers.Splash.init();
-        Managers.WynntilsAccount.init();
+        Managers.Splash.reset();
+        Managers.WynntilsAccount.reset();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {

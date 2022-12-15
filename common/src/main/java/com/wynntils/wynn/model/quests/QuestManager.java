@@ -37,9 +37,6 @@ public class QuestManager extends CoreManager {
         super(List.of(netManager));
     }
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         quests = List.of();

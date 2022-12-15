@@ -29,10 +29,6 @@ public final class UrlManager extends CoreManager {
 
     public UrlManager() {
         super(List.of());
-    }
-
-    @Override
-    public void init() {
         loadUrls();
     }
 

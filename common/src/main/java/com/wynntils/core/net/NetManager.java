@@ -36,9 +36,6 @@ public class NetManager extends CoreManager {
         super(List.of(urlManager));
     }
 
-    @Override
-    public void init() {}
-
     public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         return createApiResponse(urlInfo, arguments);

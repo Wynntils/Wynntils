@@ -25,10 +25,10 @@ public class SplashManager extends CoreManager {
 
     public SplashManager(NetManager netManager) {
         super(List.of(netManager));
+        updateCurrentSplash();
     }
 
-    @Override
-    public void init() {
+    public void reset() {
         updateCurrentSplash();
     }
 

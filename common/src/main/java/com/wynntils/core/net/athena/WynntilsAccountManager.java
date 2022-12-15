@@ -43,10 +43,10 @@ public class WynntilsAccountManager extends CoreManager {
 
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
+        login();
     }
 
-    @Override
-    public void init() {
+    public void reset() {
         login();
     }
 

@@ -52,10 +52,6 @@ public final class ConfigManager extends CoreManager {
 
     public ConfigManager() {
         super(List.of());
-    }
-
-    @Override
-    public void init() {
         loadConfigFile();
     }
 

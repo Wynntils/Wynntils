@@ -39,9 +39,6 @@ public class ContainerQueryManager extends CoreManager {
         super(List.of());
     }
 
-    @Override
-    public void init() {}
-
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
             // Only add if it is not already enqueued
