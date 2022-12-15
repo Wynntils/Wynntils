@@ -24,14 +24,16 @@ public class SplashManager extends CoreManager {
     private static String currentSplash = DEFAULT_SPLASH;
 
     public SplashManager(NetManager netManager) {
+        super(List.of(netManager));
+    }
+
+    @Override
+    public void init() {
+        updateCurrentSplash();
     }
 
     public static String getCurrentSplash() {
         return currentSplash;
-    }
-
-    public static void init() {
-        updateCurrentSplash();
     }
 
     private static void updateCurrentSplash() {

@@ -5,6 +5,7 @@
 package com.wynntils.mc;
 
 import com.wynntils.core.managers.CoreManager;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -12,7 +13,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class MinecraftSchedulerManager extends CoreManager {
     private static final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
-    public static void init() {}
+    public MinecraftSchedulerManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     public static void queueRunnable(Runnable runnable) {
         queue.add(runnable);

@@ -37,6 +37,15 @@ public final class FunctionManager extends CoreManager {
     private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
     private static final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
 
+    public FunctionManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {
+        registerAllFunctions();
+    }
+
     private static void registerFunction(Function<?> function) {
         FUNCTIONS.add(function);
         if (function instanceof ActiveFunction<?> activeFunction) {
@@ -295,7 +304,7 @@ public final class FunctionManager extends CoreManager {
     }
     // endregion
 
-    public static void init() {
+    private static void registerAllFunctions() {
         registerFunction(new WorldFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());

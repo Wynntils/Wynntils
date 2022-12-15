@@ -27,7 +27,12 @@ import java.util.function.Function;
 public final class UrlManager extends CoreManager {
     private static Map<UrlId, UrlInfo> urlMap = Map.of();
 
-    public static void init() {
+    public UrlManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {
         loadUrls();
     }
 

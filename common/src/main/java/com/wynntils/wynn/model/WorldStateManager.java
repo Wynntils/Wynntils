@@ -16,6 +16,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -41,8 +42,12 @@ public class WorldStateManager extends CoreManager {
 
     private static State currentState = State.NOT_CONNECTED;
 
-    /** Needed for all Models */
-    public static void init() {}
+    public WorldStateManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     public static boolean onServer() {
         return currentState != State.NOT_CONNECTED;

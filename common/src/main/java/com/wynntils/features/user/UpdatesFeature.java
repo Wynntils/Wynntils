@@ -41,8 +41,7 @@ public class UpdatesFeature extends UserFeature {
 
         firstJoin = false;
 
-        CompletableFuture.runAsync(() -> Managers.Update
-                .getLatestBuild()
+        CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
                 .whenCompleteAsync((version, throwable) -> Managers.MinecraftScheduler.queueRunnable(() -> {
                     if (version == null) {
                         WynntilsMod.info(

@@ -57,6 +57,13 @@ public class ItemStackTransformManager extends CoreManager {
             SkillPointPropertyModel.class,
             TeleportScrollPropertyModel.class);
 
+    public ItemStackTransformManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
+
     public static void registerTransformer(ItemStackTransformer transformer) {
         TRANSFORMERS.add(transformer);
     }
@@ -72,9 +79,6 @@ public class ItemStackTransformManager extends CoreManager {
     public static void unregisterProperty(ItemPropertyWriter writer) {
         PROPERTIES.remove(writer);
     }
-
-    // required for manager
-    public static void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onSetSlot(SetSlotEvent.Pre event) {

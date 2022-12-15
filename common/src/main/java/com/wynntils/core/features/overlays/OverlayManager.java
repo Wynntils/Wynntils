@@ -34,6 +34,15 @@ public final class OverlayManager extends CoreManager {
 
     private static final List<SectionCoordinates> sections = new ArrayList<>(9);
 
+    public OverlayManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {
+        addCrashCallbacks();
+    }
+
     public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
         overlayInfoMap.put(overlay, overlayInfo);
         overlayParent.put(overlay, parent);
@@ -120,10 +129,6 @@ public final class OverlayManager extends CoreManager {
         for (Overlay overlay : crashedOverlays) {
             overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
-    }
-
-    public static void init() {
-        addCrashCallbacks();
     }
 
     private static void addCrashCallbacks() {

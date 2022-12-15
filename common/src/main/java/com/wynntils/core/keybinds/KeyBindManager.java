@@ -29,8 +29,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class KeyBindManager extends CoreManager {
     private static final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
 
-    /** Needed for all Models */
-    public static void init() {}
+    public KeyBindManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     @SubscribeEvent
     public static void onTick(ClientTickEvent.End e) {

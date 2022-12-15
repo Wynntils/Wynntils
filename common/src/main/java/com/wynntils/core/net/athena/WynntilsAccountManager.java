@@ -16,6 +16,7 @@ import com.wynntils.mc.utils.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -41,9 +42,11 @@ public class WynntilsAccountManager extends CoreManager {
     private static final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public WynntilsAccountManager(NetManager netManager) {
+        super(List.of(netManager));
     }
 
-    public static void init() {
+    @Override
+    public void init() {
         login();
     }
 

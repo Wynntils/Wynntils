@@ -50,6 +50,15 @@ public final class ConfigManager extends CoreManager {
     private static File userConfig;
     private static JsonObject configObject;
 
+    public ConfigManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {
+        loadConfigFile();
+    }
+
     public static void registerFeature(Feature feature) {
         for (Overlay overlay : feature.getOverlays()) {
             registerConfigOptions(overlay);
@@ -64,10 +73,6 @@ public final class ConfigManager extends CoreManager {
         configurable.addConfigOptions(configOptions);
         loadConfigOptions(configOptions, false);
         CONFIG_HOLDERS.addAll(configOptions);
-    }
-
-    public static void init() {
-        loadConfigFile();
     }
 
     public static void loadConfigFile() {

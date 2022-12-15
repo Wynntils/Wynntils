@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class ItemProfilesManager extends CoreManager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
@@ -41,9 +42,11 @@ public class ItemProfilesManager extends CoreManager {
     private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
 
     public ItemProfilesManager(NetManager netManager) {
+        super(List.of(netManager));
     }
 
-    public static void init() {
+    @Override
+    public void init() {
         loadCommonObjects();
     }
 

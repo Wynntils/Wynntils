@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -32,9 +33,11 @@ public class NetManager extends CoreManager {
             WynntilsMod.getModLoader());
 
     public NetManager(UrlManager urlManager) {
+        super(List.of(urlManager));
     }
 
-    public static void init() {}
+    @Override
+    public void init() {}
 
     public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);

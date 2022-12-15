@@ -11,6 +11,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,12 @@ public class ContainerQueryManager extends CoreManager {
     private static int lastHandledContentId = NO_CONTAINER;
     private static int ticksRemaining;
 
-    public static void init() {}
+    public ContainerQueryManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     public static void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {

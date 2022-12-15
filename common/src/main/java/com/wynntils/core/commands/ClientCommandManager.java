@@ -49,23 +49,17 @@ public final class ClientCommandManager extends CoreManager {
     private static final Set<CommandBase> commandInstanceSet = new HashSet<>();
     private static final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
-    public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
-        return clientDispatcher;
+    public ClientCommandManager() {
+        super(List.of());
     }
 
-    public static void init() {
-        registerCommand(new BombBellCommand());
-        registerCommand(new CompassCommand());
-        registerCommand(new ConfigCommand());
-        registerCommand(new FeatureCommand());
-        registerCommand(new FunctionCommand());
-        registerCommand(new LocateCommand());
-        registerCommand(new LootrunCommand());
-        registerCommand(new UpdateCommand());
-        registerCommand(new ServerCommand());
-        registerCommand(new TerritoryCommand());
-        registerCommand(new TokenCommand());
-        registerCommand(new WynntilsCommand());
+    @Override
+    public void init() {
+        registerAllCommands();
+    }
+
+    public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
+        return clientDispatcher;
     }
 
     private static void registerCommand(CommandBase command) {
@@ -173,5 +167,20 @@ public final class ClientCommandManager extends CoreManager {
 
     public static Set<CommandBase> getCommandInstanceSet() {
         return commandInstanceSet;
+    }
+
+    private static void registerAllCommands() {
+        registerCommand(new BombBellCommand());
+        registerCommand(new CompassCommand());
+        registerCommand(new ConfigCommand());
+        registerCommand(new FeatureCommand());
+        registerCommand(new FunctionCommand());
+        registerCommand(new LocateCommand());
+        registerCommand(new LootrunCommand());
+        registerCommand(new UpdateCommand());
+        registerCommand(new ServerCommand());
+        registerCommand(new TerritoryCommand());
+        registerCommand(new TokenCommand());
+        registerCommand(new WynntilsCommand());
     }
 }

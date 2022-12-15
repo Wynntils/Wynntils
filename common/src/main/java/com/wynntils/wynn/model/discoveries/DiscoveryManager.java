@@ -45,10 +45,15 @@ public class DiscoveryManager extends CoreManager {
     private static List<Component> discoveriesTooltip = List.of();
     private static List<Component> secretDiscoveriesTooltip = List.of();
 
-    public DiscoveryManager(NetManager netManager, TerritoryManager territoryManager, MinecraftSchedulerManager minecraftSchedulerManager) {
+    public DiscoveryManager(
+            NetManager netManager,
+            TerritoryManager territoryManager,
+            MinecraftSchedulerManager minecraftSchedulerManager) {
+        super(List.of(netManager, territoryManager, minecraftSchedulerManager));
     }
 
-    public static void init() {}
+    @Override
+    public void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onWorldStateChanged(WorldStateEvent e) {
@@ -173,8 +178,7 @@ public class DiscoveryManager extends CoreManager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    Managers.MinecraftScheduler.queueRunnable(
-                            () -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
                 }
                 case COMPASS -> {
                     CompassModel.setCompassLocation(new Location(x, 0, z));

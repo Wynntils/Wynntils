@@ -53,9 +53,11 @@ public class TerritoryManager extends CoreManager {
     private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public TerritoryManager(NetManager netManager) {
+        super(List.of(netManager));
     }
 
-    public static void init() {
+    @Override
+    public void init() {
         timerExecutor.scheduleWithFixedDelay(
                 TerritoryManager::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }

@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,9 +25,11 @@ public class UpdateManager extends CoreManager {
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 
     public UpdateManager(NetManager netManager) {
+        super(List.of(netManager));
     }
 
-    public static void init() {}
+    @Override
+    public void init() {}
 
     public static CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();

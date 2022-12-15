@@ -43,7 +43,12 @@ public class CharacterSelectionManager extends CoreManager {
     private static int firstNewCharacterSlot = -1;
     private static final List<ClassInfo> classInfoList = new ArrayList<>();
 
-    public static void init() {}
+    public CharacterSelectionManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     @SubscribeEvent
     public static void onScreenOpened(ScreenOpenedEvent event) {

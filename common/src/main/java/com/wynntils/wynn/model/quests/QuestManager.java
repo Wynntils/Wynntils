@@ -34,9 +34,11 @@ public class QuestManager extends CoreManager {
     private static QuestInfo currentQuest = null;
 
     public QuestManager(NetManager netManager) {
+        super(List.of(netManager));
     }
 
-    public static void init() {}
+    @Override
+    public void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onWorldStateChanged(WorldStateEvent e) {

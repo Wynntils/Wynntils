@@ -56,8 +56,12 @@ public class CharacterManager extends CoreManager {
     private static CharacterInfo currentCharacter;
     private static boolean inCharacterSelection;
 
-    /** Needed for all Models */
-    public static void init() {}
+    public CharacterManager() {
+        super(List.of());
+    }
+
+    @Override
+    public void init() {}
 
     public static boolean hasCharacter() {
         return currentCharacter != null;

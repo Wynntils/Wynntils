@@ -4,9 +4,17 @@
  */
 package com.wynntils.core.managers;
 
+import java.util.List;
+
 /**
  * CoreManagers are managers that are always loaded during mod initialization.
  * Currently, core manager load order is defined in {@link ManagerRegistry#init}.
  * <p>The init and disable methods work like {@link Manager}'s.
  */
-public abstract class CoreManager extends Manager {}
+public abstract class CoreManager extends Manager {
+    protected CoreManager(List<CoreManager> dependencies) {
+        init();
+    }
+
+    protected abstract void init();
+}
