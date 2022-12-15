@@ -6,6 +6,7 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -22,7 +23,6 @@ import com.wynntils.wynn.model.map.TerritoryDefenseFilterType;
 import com.wynntils.wynn.model.map.TerritoryDefenseLevel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.model.territory.objects.GuildResource;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
@@ -173,7 +173,7 @@ public class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = TerritoryManager.getTerritoryPoiFromAdvancement(tradingRoute);
+                TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
                 if (routePoi != null) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
@@ -349,7 +349,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = TerritoryManager.getTerritoryPoisFromAdvancement();
+        List<Poi> pois = Managers.Territory.getTerritoryPoisFromAdvancement();
 
         if (territoryDefenseFilterLevel != TerritoryDefenseLevel.OFF) {
             pois.removeIf( // Remove territories that do not match the filtered defense level

@@ -5,16 +5,16 @@
 package com.wynntils.wynn.model.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -304,8 +304,8 @@ public final class ScoreboardModel extends Model {
 
     public static void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        registerHandler(QuestManager.SCOREBOARD_HANDLER, SegmentType.Quest);
-        registerHandler(GuildAttackTimerModel.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
+        registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
+        registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
         startThread();
     }
@@ -360,11 +360,11 @@ public final class ScoreboardModel extends Model {
     }
 
     public enum SegmentType {
-        Quest(ScoreboardModel.QUEST_TRACK_PATTERN),
-        Party(ScoreboardModel.PARTY_PATTERN),
-        Objective(ScoreboardModel.OBJECTIVE_HEADER_PATTERN),
-        GuildObjective(ScoreboardModel.GUILD_OBJECTIVE_HEADER_PATTERN),
-        GuildAttackTimer(ScoreboardModel.GUILD_ATTACK_UPCOMING_PATTERN);
+        Quest(Models.Scoreboard.QUEST_TRACK_PATTERN),
+        Party(Models.Scoreboard.PARTY_PATTERN),
+        Objective(Models.Scoreboard.OBJECTIVE_HEADER_PATTERN),
+        GuildObjective(Models.Scoreboard.GUILD_OBJECTIVE_HEADER_PATTERN),
+        GuildAttackTimer(Models.Scoreboard.GUILD_ATTACK_UPCOMING_PATTERN);
 
         private final Pattern headerPattern;
 

@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -70,7 +71,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+            LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
@@ -137,7 +138,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
     }
 
     protected void renderDescription(PoseStack poseStack) {
-        LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -251,7 +252,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(LootrunModel.getLootruns().stream()
+        elements.addAll(Models.Lootrun.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

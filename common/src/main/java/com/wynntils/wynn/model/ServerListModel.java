@@ -7,9 +7,9 @@ package com.wynntils.wynn.model;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ServerListModel extends Model {
+public final class ServerListModel extends Model {
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
 
     private static Map<String, ServerProfile> availableServers = new HashMap<>();
@@ -89,7 +89,7 @@ public class ServerListModel extends Model {
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
 
-        Download dl = NetManager.download(UrlId.DATA_ATHENA_SERVER_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_SERVER_LIST);
         dl.handleJsonObject(json -> {
             JsonObject servers = json.getAsJsonObject("servers");
             Map<String, ServerProfile> newMap = new HashMap<>();

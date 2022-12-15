@@ -4,21 +4,21 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class ServerCountPropertyModel extends Model {
+public final class ServerCountPropertyModel extends Model {
     private static final ItemPropertyWriter SERVER_COUNT_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isServerItem, ServerCountProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(SERVER_COUNT_WRITER);
+        Managers.ItemStackTransform.registerProperty(SERVER_COUNT_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(SERVER_COUNT_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(SERVER_COUNT_WRITER);
     }
 }

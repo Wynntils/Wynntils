@@ -7,7 +7,8 @@ package com.wynntils.wynn.model.territory;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
@@ -34,50 +35,51 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TerritoryManager extends CoreManager {
+public class TerritoryManager extends Manager {
     private static final int TERRITORY_UPDATE_MS = 15000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
 
     // This is territory POIs as returned by the advancement from Wynncraft
-    private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
+    private Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
     // This is the profiles as downloaded from Athena
-    private static Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
+    private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
 
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
-    private static Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
+    private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
-    private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
-    public static void init() {
+    public TerritoryManager(NetManager netManager) {
+        super(List.of(netManager));
         timerExecutor.scheduleWithFixedDelay(
-                TerritoryManager::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+                this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
-    public static TerritoryProfile getTerritoryProfile(String name) {
+    public TerritoryProfile getTerritoryProfile(String name) {
         return territoryProfileMap.get(name);
     }
 
-    public static Stream<String> getTerritoryNames() {
+    public Stream<String> getTerritoryNames() {
         return territoryProfileMap.keySet().stream();
     }
 
-    public static Set<TerritoryPoi> getTerritoryPois() {
+    public Set<TerritoryPoi> getTerritoryPois() {
         return allTerritoryPois;
     }
 
-    public static List<Poi> getTerritoryPoisFromAdvancement() {
+    public List<Poi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    public static TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
+    public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
     }
 
     @SubscribeEvent
-    public static void onAdvancementUpdate(AdvancementUpdateEvent event) {
+    public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Advancement.Builder> added :
@@ -120,7 +122,7 @@ public class TerritoryManager extends CoreManager {
         }
     }
 
-    private static void updateTerritoryProfileMap() {
+    private void updateTerritoryProfileMap() {
         // dataAthenaTerritoryList is based on
         // https://api.wynncraft.com/public_api.php?action=territoryList
         // but guild prefix is injected based on
@@ -128,7 +130,7 @@ public class TerritoryManager extends CoreManager {
         // and guild color is injected based on values maintained on Athena, and a constant
         // level = 1 is also injected.
 
-        Download dl = NetManager.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
         dl.handleJsonObject(json -> {
             if (!json.has("territories")) return;
 

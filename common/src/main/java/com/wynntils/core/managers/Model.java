@@ -5,8 +5,15 @@
 package com.wynntils.core.managers;
 
 /**
- * Models are managers that are dependencies to features / functions.
+ * Models are like managers that can be dependent upon by features / functions.
  * They are lazy loaded and only enabled when they are a dependency to an enabled feature / function.
- * <p>The init and disable methods work like {@link Manager}'s.
+ *
+ * Models can have two static methods:
+ * <p>
+ * init: Called when manager is enabled
+ * <p>
+ * disable: Called when manager is disabled
+ * <p>
+ * Models are automatically registered to event bus, use static event methods.
  */
-public abstract class Model extends Manager {}
+public abstract class Model {}

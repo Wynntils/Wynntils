@@ -14,7 +14,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.FileUtils;
@@ -36,7 +36,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public final class ConfigManager extends CoreManager {
+public final class ConfigManager extends Manager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
@@ -47,10 +47,15 @@ public final class ConfigManager extends CoreManager {
             .create();
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
 
-    private static File userConfig;
-    private static JsonObject configObject;
+    private File userConfig;
+    private JsonObject configObject;
 
-    public static void registerFeature(Feature feature) {
+    public ConfigManager() {
+        super(List.of());
+        loadConfigFile();
+    }
+
+    public void registerFeature(Feature feature) {
         for (Overlay overlay : feature.getOverlays()) {
             registerConfigOptions(overlay);
         }
@@ -58,7 +63,7 @@ public final class ConfigManager extends CoreManager {
         registerConfigOptions(feature);
     }
 
-    private static void registerConfigOptions(Configurable configurable) {
+    private void registerConfigOptions(Configurable configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);
@@ -66,11 +71,7 @@ public final class ConfigManager extends CoreManager {
         CONFIG_HOLDERS.addAll(configOptions);
     }
 
-    public static void init() {
-        loadConfigFile();
-    }
-
-    public static void loadConfigFile() {
+    public void loadConfigFile() {
         // create config directory if necessary
         FileUtils.mkdir(CONFIGS);
 
@@ -111,11 +112,11 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void loadAllConfigOptions(boolean resetIfNotFound) {
+    public void loadAllConfigOptions(boolean resetIfNotFound) {
         loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
     }
 
-    public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
+    public void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");
             return; // nothing to load from
@@ -137,7 +138,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void saveConfig() {
+    public void saveConfig() {
         try {
             // create file if necessary
             if (!userConfig.exists()) {
@@ -164,7 +165,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void saveDefaultConfig() {
+    public void saveDefaultConfig() {
         try {
             // create file if necessary
             if (!DEFAULT_CONFIG.exists()) {
@@ -191,7 +192,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static Type findFieldTypeOverride(Configurable parent, Field configField) {
+    private Type findFieldTypeOverride(Configurable parent, Field configField) {
         Optional<Field> typeField = Arrays.stream(
                         FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
                 .filter(field ->
@@ -209,7 +210,7 @@ public final class ConfigManager extends CoreManager {
         return null;
     }
 
-    private static List<ConfigHolder> getConfigOptions(Configurable parent) {
+    private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
@@ -239,11 +240,11 @@ public final class ConfigManager extends CoreManager {
         return options;
     }
 
-    public static List<ConfigHolder> getConfigHolders() {
+    public List<ConfigHolder> getConfigHolders() {
         return CONFIG_HOLDERS;
     }
 
-    public static Object deepCopy(Object value, Type fieldType) {
+    public Object deepCopy(Object value, Type fieldType) {
         return CONFIG_GSON.fromJson(CONFIG_GSON.toJson(value), fieldType);
     }
 }

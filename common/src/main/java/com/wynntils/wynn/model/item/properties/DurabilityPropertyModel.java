@@ -4,21 +4,21 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class DurabilityPropertyModel extends Model {
+public final class DurabilityPropertyModel extends Model {
     private static final ItemPropertyWriter DURABILITY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(DURABILITY_WRITER);
+        Managers.ItemStackTransform.registerProperty(DURABILITY_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(DURABILITY_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(DURABILITY_WRITER);
     }
 }

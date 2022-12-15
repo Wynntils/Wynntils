@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
@@ -36,7 +37,7 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
             }
         }
 
-        Optional<QuestInfo> questInfoOpt = QuestManager.getQuestFromName(
+        Optional<QuestInfo> questInfoOpt = Managers.Quest.getQuestFromName(
                 WynnUtils.normalizeBadString(questName.toString().trim()));
         if (questInfoOpt.isEmpty()) {
             WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + questName);
@@ -46,16 +47,16 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
         QuestInfo questInfo = questInfoOpt.get();
         questInfo.setNextTask(nextTask.toString().trim());
 
-        QuestManager.setCurrentQuest(questInfo);
+        Managers.Quest.setCurrentQuest(questInfo);
     }
 
     @Override
     public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-        QuestManager.setCurrentQuest(null);
+        Managers.Quest.setCurrentQuest(null);
     }
 
     @Override
     public void resetHandler() {
-        QuestManager.setCurrentQuest(null);
+        Managers.Quest.setCurrentQuest(null);
     }
 }

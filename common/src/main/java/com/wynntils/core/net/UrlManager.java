@@ -6,7 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,18 +25,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class UrlManager extends CoreManager {
-    private static Map<UrlId, UrlInfo> urlMap = Map.of();
+public final class UrlManager extends Manager {
+    private Map<UrlId, UrlInfo> urlMap = Map.of();
 
-    public static void init() {
-        loadUrls();
+    public UrlManager() {
+        super(List.of());
+        // This is a way of resolving the circular dependencies between UrlManager and
+        // NetManager. UrlManager needs Net to download the urls.json file, but NetManager
+        // needs UrlManager to resolve the URL for the source urls.json file to download.
+        loadUrls(new NetManager(this));
     }
 
-    public static UrlInfo getUrlInfo(UrlId urlId) {
+    public UrlInfo getUrlInfo(UrlId urlId) {
         return urlMap.get(urlId);
     }
 
-    public static String getUrl(UrlId urlId) {
+    public String getUrl(UrlId urlId) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
         // This is only valid for POST URLs, or GET URLs with no arguments
@@ -43,13 +49,13 @@ public final class UrlManager extends CoreManager {
         return urlInfo.url();
     }
 
-    public static String buildUrl(UrlId urlId, Map<String, String> arguments) {
+    public String buildUrl(UrlId urlId, Map<String, String> arguments) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
         return buildUrl(urlInfo, arguments);
     }
 
-    public static String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
+    public String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
         // Verify that arguments match with what is specified
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
@@ -64,13 +70,14 @@ public final class UrlManager extends CoreManager {
                                 StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
     }
 
-    public static void reloadUrls() {
-        loadUrls();
+    public void reloadUrls() {
+        // If we reload URLs after initial bootstrapping, use normal manager
+        loadUrls(Managers.Net);
     }
 
-    private static void loadUrls() {
+    private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially
-        try (InputStream inputStream = getLocalInputStream()) {
+        try (InputStream inputStream = getLocalInputStream(netManager)) {
             readUrls(inputStream);
         } catch (IOException e) {
             // We can't load the url list from local disk. This is a catastrophic failure.
@@ -80,7 +87,13 @@ public final class UrlManager extends CoreManager {
         }
 
         // Then trigger a (re-)download from the net to the cache
-        Download dl = NetManager.download(UrlId.DATA_STATIC_URLS);
+        // We need to do the urlInfo lookup ourself, since we might have
+        // a embryonic netManager which can't do much.
+        UrlManager.UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+        URI uri = URI.create(urlInfo.url());
+        String localFileName = UrlId.DATA_STATIC_URLS.getId();
+
+        Download dl = netManager.download(uri, localFileName);
         dl.handleInputStream(inputStream -> {
             try {
                 readUrls(inputStream);
@@ -90,9 +103,9 @@ public final class UrlManager extends CoreManager {
         });
     }
 
-    private static InputStream getLocalInputStream() {
+    private InputStream getLocalInputStream(NetManager netManager) {
         // First check if there is a copy in the local cache
-        File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+        File cacheFile = netManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {
@@ -108,7 +121,7 @@ public final class UrlManager extends CoreManager {
         }
     }
 
-    private static void readUrls(InputStream inputStream) throws IOException {
+    private void readUrls(InputStream inputStream) throws IOException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();

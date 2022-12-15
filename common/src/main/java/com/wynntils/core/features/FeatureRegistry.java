@@ -5,13 +5,13 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -206,10 +206,10 @@ public final class FeatureRegistry {
         registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         // save/create default config file containing all config holders
-        ConfigManager.saveDefaultConfig();
+        Managers.Config.saveDefaultConfig();
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
@@ -280,7 +280,7 @@ public final class FeatureRegistry {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        ConfigManager.registerFeature(feature);
+        Managers.Config.registerFeature(feature);
 
         // initialize & enable
         feature.init();

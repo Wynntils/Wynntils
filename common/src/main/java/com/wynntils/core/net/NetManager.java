@@ -6,7 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,11 +16,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class NetManager extends CoreManager {
+public class NetManager extends Manager {
     protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
@@ -30,22 +32,27 @@ public class NetManager extends CoreManager {
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
-    public static void init() {}
+    public NetManager(UrlManager urlManager) {
+        // NetManager is involved in a circular dependency with UrlManager. This means
+        // it will be instantiated twice, first as a throw-away instance local to UrlManager
+        // bootstrapping only, then as the real instance for Managers.
+        super(List.of(urlManager));
+    }
 
-    public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
-        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+        UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         return createApiResponse(urlInfo, arguments);
     }
 
-    public static ApiResponse callApi(UrlId urlId) {
+    public ApiResponse callApi(UrlId urlId) {
         return callApi(urlId, Map.of());
     }
 
-    public static Download download(URI uri, File file) {
+    public Download download(URI uri, File file) {
         return new Download(file, createGetRequest(uri));
     }
 
-    public static Download download(URI uri, File file, String expectedHash) {
+    public Download download(URI uri, File file, String expectedHash) {
         if (checkLocalHash(file, expectedHash)) {
             return new Download(file);
         }
@@ -53,18 +60,18 @@ public class NetManager extends CoreManager {
         return download(uri, file);
     }
 
-    public static Download download(URI uri, String localFileName) {
+    public Download download(URI uri, String localFileName) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile);
     }
 
-    public static Download download(URI uri, String localFileName, String expectedHash) {
+    public Download download(URI uri, String localFileName, String expectedHash) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, expectedHash);
     }
 
-    public static Download download(UrlId urlId) {
-        UrlManager.UrlInfo urlInfo = UrlManager.getUrlInfo(urlId);
+    public Download download(UrlId urlId) {
+        UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
         String localFileName = urlId.getId();
 
@@ -74,20 +81,20 @@ public class NetManager extends CoreManager {
         return download(uri, localFileName);
     }
 
-    public static File getCacheFile(String localFileName) {
+    public File getCacheFile(String localFileName) {
         return new File(CACHE_DIR, localFileName);
     }
 
-    public static void openLink(URI url) {
+    public void openLink(URI url) {
         Util.getPlatform().openUri(url);
     }
 
-    public static void openLink(UrlId urlId, Map<String, String> arguments) {
-        URI uri = URI.create(UrlManager.buildUrl(urlId, arguments));
+    public void openLink(UrlId urlId, Map<String, String> arguments) {
+        URI uri = URI.create(Managers.Url.buildUrl(urlId, arguments));
         openLink(uri);
     }
 
-    private static HttpRequest createGetRequest(URI uri) {
+    private HttpRequest createGetRequest(URI uri) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
@@ -95,7 +102,7 @@ public class NetManager extends CoreManager {
                 .build();
     }
 
-    private static HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
+    private HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
@@ -105,9 +112,9 @@ public class NetManager extends CoreManager {
                 .build();
     }
 
-    private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
+    private ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
-            URI uri = URI.create(UrlManager.buildUrl(urlInfo, arguments));
+            URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
             return new ApiResponse(request);
         } else {
@@ -122,7 +129,7 @@ public class NetManager extends CoreManager {
         }
     }
 
-    private static boolean checkLocalHash(File localFile, String expectedHash) {
+    private boolean checkLocalHash(File localFile, String expectedHash) {
         if (!localFile.exists()) return false;
 
         try (InputStream is = Files.newInputStream(localFile.toPath())) {

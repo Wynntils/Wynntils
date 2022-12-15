@@ -4,21 +4,21 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class GatheringToolPropertyModel extends Model {
+public final class GatheringToolPropertyModel extends Model {
     private static final ItemPropertyWriter GATHERING_TOOL_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(GATHERING_TOOL_WRITER);
+        Managers.ItemStackTransform.registerProperty(GATHERING_TOOL_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(GATHERING_TOOL_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(GATHERING_TOOL_WRITER);
     }
 }

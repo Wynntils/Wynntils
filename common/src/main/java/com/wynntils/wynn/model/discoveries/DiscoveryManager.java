@@ -6,7 +6,9 @@ package com.wynntils.wynn.model.discoveries;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
@@ -17,7 +19,6 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import com.wynntils.wynn.model.territory.TerritoryManager;
@@ -34,31 +35,36 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DiscoveryManager extends CoreManager {
+public class DiscoveryManager extends Manager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
 
-    private static List<DiscoveryInfo> discoveries = List.of();
-    private static List<DiscoveryInfo> secretDiscoveries = List.of();
-    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
+    private List<DiscoveryInfo> discoveries = List.of();
+    private List<DiscoveryInfo> secretDiscoveries = List.of();
+    private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
-    private static List<Component> discoveriesTooltip = List.of();
-    private static List<Component> secretDiscoveriesTooltip = List.of();
+    private List<Component> discoveriesTooltip = List.of();
+    private List<Component> secretDiscoveriesTooltip = List.of();
 
-    public static void init() {}
+    public DiscoveryManager(
+            NetManager netManager,
+            TerritoryManager territoryManager,
+            MinecraftSchedulerManager minecraftSchedulerManager) {
+        super(List.of(netManager, territoryManager, minecraftSchedulerManager));
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onWorldStateChanged(WorldStateEvent e) {
+    public void onWorldStateChanged(WorldStateEvent e) {
         discoveries = List.of();
         secretDiscoveries = List.of();
     }
 
-    public static void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
+    public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
         if (discoveryInfo.getType() == DiscoveryType.SECRET) {
             locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.MAP);
             return;
         }
 
-        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -67,65 +73,65 @@ public class DiscoveryManager extends CoreManager {
         }
     }
 
-    public static void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
+    public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
         if (discoveryInfo.getType() == DiscoveryType.SECRET) {
             locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.COMPASS);
             return;
         }
 
-        TerritoryProfile guildTerritory = TerritoryManager.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            CompassModel.setCompassLocation(new Location(centerX, 0, centerZ));
+            Models.Compass.setCompassLocation(new Location(centerX, 0, centerZ));
         }
     }
 
-    public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        NetManager.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
+    public void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
+        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
-    private static void queryDiscoveries() {
+    private void queryDiscoveries() {
         CONTAINER_QUERIES.queryDiscoveries();
     }
 
-    public static void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    public void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
         discoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Normal());
     }
 
-    public static void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    public void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
         secretDiscoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
     }
 
-    public static void setDiscoveriesTooltip(List<Component> newTooltip) {
+    public void setDiscoveriesTooltip(List<Component> newTooltip) {
         discoveriesTooltip = newTooltip;
     }
 
-    public static void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
+    public void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
         secretDiscoveriesTooltip = newTooltip;
     }
 
-    public static List<Component> getDiscoveriesTooltip() {
+    public List<Component> getDiscoveriesTooltip() {
         return discoveriesTooltip;
     }
 
-    public static List<Component> getSecretDiscoveriesTooltip() {
+    public List<Component> getSecretDiscoveriesTooltip() {
         return secretDiscoveriesTooltip;
     }
 
-    public static Stream<DiscoveryInfo> getAllDiscoveries() {
+    public Stream<DiscoveryInfo> getAllDiscoveries() {
         return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
     }
 
-    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+    public List<DiscoveryInfo> getDiscoveryInfoList() {
         return discoveryInfoList;
     }
 
-    private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
-        ApiResponse apiResponse = NetManager.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
+    private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
                 McUtils.sendMessageToClient(new TextComponent(
@@ -169,17 +175,17 @@ public class DiscoveryManager extends CoreManager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    MinecraftSchedulerManager.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
                 }
                 case COMPASS -> {
-                    CompassModel.setCompassLocation(new Location(x, 0, z));
+                    Models.Compass.setCompassLocation(new Location(x, 0, z));
                 }
             }
         });
     }
 
-    private static void updateDiscoveriesResource() {
-        Download dl = NetManager.download(UrlId.DATA_STATIC_DISCOVERIES);
+    private void updateDiscoveriesResource() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_DISCOVERIES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
             List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);
@@ -187,7 +193,7 @@ public class DiscoveryManager extends CoreManager {
         });
     }
 
-    public static void reloadDiscoveries() {
+    public void reloadDiscoveries() {
         updateDiscoveriesResource();
         queryDiscoveries();
     }

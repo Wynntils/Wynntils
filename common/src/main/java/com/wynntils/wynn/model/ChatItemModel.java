@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.model;
 
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -29,7 +31,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ChatItemModel {
+public final class ChatItemModel extends Model {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -143,8 +145,8 @@ public final class ChatItemModel {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = ItemProfilesManager.getItemsMap() != null
-                ? ItemProfilesManager.getItemsMap().get(name)
+        ItemProfile item = Managers.ItemProfiles.getItemsMap() != null
+                ? Managers.ItemProfiles.getItemsMap().get(name)
                 : null;
         if (item == null) return null;
 

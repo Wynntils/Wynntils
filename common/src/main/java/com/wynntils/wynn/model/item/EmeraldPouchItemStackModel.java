@@ -4,20 +4,21 @@
  */
 package com.wynntils.wynn.model.item;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class EmeraldPouchItemStackModel extends Model {
+public final class EmeraldPouchItemStackModel extends Model {
     private static final ItemStackTransformer EMERALD_POUCH_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
 
     public static void init() {
-        ItemStackTransformManager.registerTransformer(EMERALD_POUCH_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterTransformer(EMERALD_POUCH_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 }

@@ -4,20 +4,20 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class SearchOverlayPropertyModel extends Model {
+public final class SearchOverlayPropertyModel extends Model {
     private static final ItemPropertyWriter SEARCH_OVERLAY_WRITER =
             new ItemPropertyWriter(itemstack -> true, SearchOverlayProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(SEARCH_OVERLAY_WRITER);
+        Managers.ItemStackTransform.registerProperty(SEARCH_OVERLAY_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(SEARCH_OVERLAY_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(SEARCH_OVERLAY_WRITER);
     }
 }

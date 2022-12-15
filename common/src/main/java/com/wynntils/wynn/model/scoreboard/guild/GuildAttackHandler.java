@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.scoreboard.guild;
 
-import com.wynntils.wynn.model.GuildAttackTimerModel;
+import com.wynntils.core.managers.Models;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
@@ -12,16 +12,16 @@ import com.wynntils.wynn.model.scoreboard.Segment;
 public class GuildAttackHandler implements ScoreboardHandler {
     @Override
     public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
-        GuildAttackTimerModel.processChanges(newValue);
+        Models.GuildAttackTimer.processChanges(newValue);
     }
 
     @Override
     public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-        GuildAttackTimerModel.resetTimers();
+        Models.GuildAttackTimer.resetTimers();
     }
 
     @Override
     public void resetHandler() {
-        GuildAttackTimerModel.resetTimers();
+        Models.GuildAttackTimer.resetTimers();
     }
 }

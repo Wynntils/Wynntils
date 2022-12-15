@@ -14,6 +14,7 @@ import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import java.util.List;
@@ -74,8 +75,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
             // This is done so all state checks run in order
-            OverlayManager.disableOverlays(List.of(this));
-            OverlayManager.enableOverlays(List.of(this), false);
+            Managers.Overlay.disableOverlays(List.of(this));
+            Managers.Overlay.enableOverlays(List.of(this), false);
         }
 
         onConfigUpdate(configHolder);
@@ -126,11 +127,11 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             return this.isUserEnabled();
         }
 
-        return OverlayManager.getOverlayInfo(this).enabled();
+        return Managers.Overlay.getOverlayInfo(this).enabled();
     }
 
     public final boolean isParentEnabled() {
-        return OverlayManager.getOverlayParent(this).isEnabled();
+        return Managers.Overlay.getOverlayParent(this).isEnabled();
     }
 
     public float getWidth() {
@@ -164,7 +165,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public float getRenderX(OverlayPosition position) {
-        final SectionCoordinates section = OverlayManager.getSection(position.getAnchorSection());
+        final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getHorizontalAlignment()) {
             case Left -> section.x1() + position.getHorizontalOffset();
             case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
@@ -173,7 +174,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public float getRenderY(OverlayPosition position) {
-        final SectionCoordinates section = OverlayManager.getSection(position.getAnchorSection());
+        final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getVerticalAlignment()) {
             case Top -> section.y1() + position.getVerticalOffset();
             case Middle -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();

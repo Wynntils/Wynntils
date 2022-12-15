@@ -4,25 +4,9 @@
  */
 package com.wynntils.wynn.model.item;
 
-import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.model.item.properties.AmplifierTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.ConsumableChargePropertyModel;
-import com.wynntils.wynn.model.item.properties.CosmeticTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.properties.DungeonKeyPropertyModel;
-import com.wynntils.wynn.model.item.properties.EmeraldPouchTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.GatheringToolPropertyModel;
-import com.wynntils.wynn.model.item.properties.IngredientPropertyModel;
-import com.wynntils.wynn.model.item.properties.ItemTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.MaterialPropertyModel;
-import com.wynntils.wynn.model.item.properties.PowderTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.ServerCountPropertyModel;
-import com.wynntils.wynn.model.item.properties.SkillIconPropertyModel;
-import com.wynntils.wynn.model.item.properties.SkillPointPropertyModel;
-import com.wynntils.wynn.model.item.properties.TeleportScrollPropertyModel;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,55 +17,36 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends CoreManager {
-    private static final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
-    private static final Set<ItemPropertyWriter> PROPERTIES = ConcurrentHashMap.newKeySet();
+public class ItemStackTransformManager extends Manager {
+    private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
+    private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
 
-    public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
-            CosmeticTierPropertyModel.class,
-            EmeraldPouchItemStackModel.class,
-            MaterialPropertyModel.class,
-            IngredientPropertyModel.class,
-            ItemTierPropertyModel.class,
-            PowderTierPropertyModel.class);
-    public static final List<Class<? extends Model>> TEXT_OVERLAY_PROPERTIES = List.of(
-            AmplifierTierPropertyModel.class,
-            ConsumableChargePropertyModel.class,
-            DailyRewardMultiplierPropertyModel.class,
-            DungeonKeyPropertyModel.class,
-            EmeraldPouchTierPropertyModel.class,
-            GatheringToolPropertyModel.class,
-            PowderTierPropertyModel.class,
-            ServerCountPropertyModel.class,
-            SkillIconPropertyModel.class,
-            SkillPointPropertyModel.class,
-            TeleportScrollPropertyModel.class);
-
-    public static void registerTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.add(transformer);
+    public ItemStackTransformManager() {
+        super(List.of());
     }
 
-    public static void unregisterTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.remove(transformer);
+    public void registerTransformer(ItemStackTransformer transformer) {
+        transformers.add(transformer);
     }
 
-    public static void registerProperty(ItemPropertyWriter writer) {
-        PROPERTIES.add(writer);
+    public void unregisterTransformer(ItemStackTransformer transformer) {
+        transformers.remove(transformer);
     }
 
-    public static void unregisterProperty(ItemPropertyWriter writer) {
-        PROPERTIES.remove(writer);
+    public void registerProperty(ItemPropertyWriter writer) {
+        properties.add(writer);
     }
 
-    // required for manager
-    public static void init() {}
+    public void unregisterProperty(ItemPropertyWriter writer) {
+        properties.remove(writer);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetSlot(SetSlotEvent.Pre event) {
+    public void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack stack = event.getItem();
 
         // itemstack transformers
-        for (ItemStackTransformer t : TRANSFORMERS) {
+        for (ItemStackTransformer t : transformers) {
             if (t.test(stack)) {
                 stack = t.transform(stack);
                 break;
@@ -89,7 +54,7 @@ public class ItemStackTransformManager extends CoreManager {
         }
 
         // itemstack properties
-        for (ItemPropertyWriter w : PROPERTIES) {
+        for (ItemPropertyWriter w : properties) {
             if (w.test(stack)) {
                 if (!(stack instanceof WynnItemStack)) stack = new WynnItemStack(stack);
 

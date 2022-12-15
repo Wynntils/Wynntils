@@ -11,13 +11,13 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.managers.Managers;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -142,7 +142,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
@@ -188,7 +188,7 @@ public class FeatureCommand extends CommandBase {
             return 1;
         }
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(

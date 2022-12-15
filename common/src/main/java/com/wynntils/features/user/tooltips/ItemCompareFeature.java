@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -19,7 +20,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.model.item.GearItemStackModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -43,7 +43,7 @@ public class ItemCompareFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(GearItemStackModel.class);
+        return List.of(Models.GearItemStack.getClass());
     }
 
     @SubscribeEvent

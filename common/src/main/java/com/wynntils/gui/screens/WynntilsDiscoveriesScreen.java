@@ -6,6 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,7 +22,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
-import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -75,7 +75,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     protected void init() {
-        DiscoveryManager.reloadDiscoveries();
+        Managers.Discovery.reloadDiscoveries();
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
@@ -200,7 +200,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                DiscoveryManager::reloadDiscoveries));
+                Managers.Discovery::reloadDiscoveries));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -268,9 +268,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
             tooltipLines = discoveryButton.getTooltipLines();
         } else if (this.hovered instanceof DiscoveryProgressButton progressButton) {
             if (progressButton.isSecretDiscoveryButton()) {
-                tooltipLines = DiscoveryManager.getSecretDiscoveriesTooltip();
+                tooltipLines = Managers.Discovery.getSecretDiscoveriesTooltip();
             } else {
-                tooltipLines = DiscoveryManager.getDiscoveriesTooltip();
+                tooltipLines = Managers.Discovery.getDiscoveriesTooltip();
             }
         }
 
@@ -343,20 +343,21 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        DiscoveryManager.getDiscoveryInfoList().stream()
+                        Managers.Discovery.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
                                 })
-                                .filter(discoveryInfo -> DiscoveryManager.getAllDiscoveries()
+                                .filter(discoveryInfo -> Managers.Discovery.getAllDiscoveries()
                                         .noneMatch(
                                                 discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        DiscoveryManager.getAllDiscoveries().filter(discoveryInfo -> switch (discoveryInfo.getType()) {
-                            case TERRITORY -> showFoundTerritory;
-                            case WORLD -> showFoundWorld;
-                            case SECRET -> showFoundSecrets;
-                        }))
+                        Managers.Discovery.getAllDiscoveries()
+                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                                    case TERRITORY -> showFoundTerritory;
+                                    case WORLD -> showFoundWorld;
+                                    case SECRET -> showFoundSecrets;
+                                }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());

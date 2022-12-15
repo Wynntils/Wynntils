@@ -6,7 +6,8 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -14,12 +15,9 @@ import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.sockets.objects.HadesUser;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.PlayerMainMapPoi;
@@ -27,7 +25,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -127,8 +124,8 @@ public class MainMapScreen extends AbstractMapScreen {
                         return;
                     }
 
-                    if (CompassModel.getCompassLocation().isPresent()) {
-                        Location location = CompassModel.getCompassLocation().get();
+                    if (Models.Compass.getCompassLocation().isPresent()) {
+                        Location location = Models.Compass.getCompassLocation().get();
                         updateMapCenter((float) location.x, (float) location.z);
                     }
                 },
@@ -201,13 +198,13 @@ public class MainMapScreen extends AbstractMapScreen {
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
         List<Poi> pois = new ArrayList<>();
 
-        pois.addAll(MapModel.getServicePois());
-        pois.addAll(MapModel.getCombatPois());
-        pois.addAll(MapModel.getLabelPois());
+        pois.addAll(Models.Map.getServicePois());
+        pois.addAll(Models.Map.getCombatPois());
+        pois.addAll(Models.Map.getLabelPois());
 
         pois.addAll(MapFeature.INSTANCE.customPois);
 
-        List<HadesUser> renderedPlayers = HadesUserModel.getHadesUserMap().values().stream()
+        List<HadesUser> renderedPlayers = Models.HadesUser.getHadesUserMap().values().stream()
                 .filter(
                         hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
                                 || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
@@ -216,9 +213,9 @@ public class MainMapScreen extends AbstractMapScreen {
 
         // Make sure compass and player pois are on top
         pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
-        CompassModel.getCompassWaypoint().ifPresent(pois::add);
+        Models.Compass.getCompassWaypoint().ifPresent(pois::add);
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(TerritoryManager.getTerritoryPois());
+            pois.addAll(Managers.Territory.getTerritoryPois());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
@@ -237,8 +234,8 @@ public class MainMapScreen extends AbstractMapScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (McUtils.mc().player.isShiftKeyDown()
-                    && CompassModel.getCompassLocation().isPresent()) {
-                Location location = CompassModel.getCompassLocation().get();
+                    && Models.Compass.getCompassLocation().isPresent()) {
+                Location location = Models.Compass.getCompassLocation().get();
                 updateMapCenter((float) location.x, (float) location.z);
                 return true;
             }
@@ -246,7 +243,7 @@ public class MainMapScreen extends AbstractMapScreen {
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
-                CompassModel.reset();
+                Models.Compass.reset();
                 return true;
             }
 
@@ -254,13 +251,13 @@ public class MainMapScreen extends AbstractMapScreen {
                 McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
                     if (hovered instanceof IconPoi iconPoi) {
-                        CompassModel.setCompassLocation(new Location(hovered.getLocation()), iconPoi.getIcon());
+                        Models.Compass.setCompassLocation(new Location(hovered.getLocation()), iconPoi.getIcon());
                     } else {
-                        CompassModel.setCompassLocation(new Location(hovered.getLocation()));
+                        Models.Compass.setCompassLocation(new Location(hovered.getLocation()));
                     }
                 } else {
                     final Poi finalHovered = hovered;
-                    CompassModel.setDynamicCompassLocation(
+                    Models.Compass.setDynamicCompassLocation(
                             () -> finalHovered.getLocation().asLocation());
                 }
                 return true;
@@ -280,7 +277,7 @@ public class MainMapScreen extends AbstractMapScreen {
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
                     MapFeature.INSTANCE.customPois.remove(customPoi);
-                    ConfigManager.saveConfig();
+                    Managers.Config.saveConfig();
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);
@@ -294,14 +291,14 @@ public class MainMapScreen extends AbstractMapScreen {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
         Location compassLocation = new Location(gameX, 0, gameZ);
-        CompassModel.setCompassLocation(compassLocation);
+        Models.Compass.setCompassLocation(compassLocation);
 
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {
-        boolean shareCompass =
-                KeyboardUtils.isShiftDown() && CompassModel.getCompassLocation().isPresent();
+        boolean shareCompass = KeyboardUtils.isShiftDown()
+                && Models.Compass.getCompassLocation().isPresent();
 
         String target = null;
 
@@ -314,7 +311,8 @@ public class MainMapScreen extends AbstractMapScreen {
         if (target == null) return;
 
         if (shareCompass) {
-            LocationUtils.shareCompass(target, CompassModel.getCompassLocation().get());
+            LocationUtils.shareCompass(
+                    target, Models.Compass.getCompassLocation().get());
         } else {
             LocationUtils.shareLocation(target);
         }

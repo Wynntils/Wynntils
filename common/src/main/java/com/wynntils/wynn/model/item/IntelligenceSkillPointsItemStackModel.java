@@ -4,20 +4,21 @@
  */
 package com.wynntils.wynn.model.item;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.IntelligenceSkillPointsItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class IntelligenceSkillPointsItemStackModel extends Model {
+public final class IntelligenceSkillPointsItemStackModel extends Model {
     private static final ItemStackTransformer INTELLIGENCE_SKILL_POINTS_TRANSFORMER = new ItemStackTransformer(
             WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
     public static void init() {
-        ItemStackTransformManager.registerTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
+        Managers.ItemStackTransform.registerTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
+        Managers.ItemStackTransform.unregisterTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 }

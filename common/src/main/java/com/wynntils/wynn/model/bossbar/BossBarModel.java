@@ -5,12 +5,12 @@
 package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class BossBarModel extends Model {
+public final class BossBarModel extends Model {
 
     public static void init() {}
 
@@ -64,7 +64,7 @@ public class BossBarModel extends Model {
             TrackedBar trackedBar = null;
             Matcher matcher = null;
 
-            ClassType userClass = CharacterManager.getCharacterInfo().getClassType();
+            ClassType userClass = Managers.Character.getCharacterInfo().getClassType();
 
             for (TrackedBar potentialTrackedBar :
                     Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar)) {

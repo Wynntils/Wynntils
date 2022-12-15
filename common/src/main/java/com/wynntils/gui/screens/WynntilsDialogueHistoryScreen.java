@@ -6,6 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -20,7 +21,6 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -61,7 +61,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @Override
     protected void init() {
-        QuestManager.rescanDialogueHistory();
+        Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -74,7 +74,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                QuestManager::rescanDialogueHistory));
+                Managers.Quest::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -177,7 +177,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(QuestManager.getDialogueHistory());
+        this.setDialogues(Managers.Quest.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

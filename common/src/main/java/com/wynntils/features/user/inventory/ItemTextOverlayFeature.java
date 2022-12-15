@@ -11,19 +11,32 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
+    public static final List<Class<? extends Model>> TEXT_OVERLAY_PROPERTIES = List.of(
+            Models.AmplifierTierProperty.getClass(),
+            Models.ConsumableChargeProperty.getClass(),
+            Models.DailyRewardMultiplierProperty.getClass(),
+            Models.DungeonKeyProperty.getClass(),
+            Models.EmeraldPouchTierProperty.getClass(),
+            Models.GatheringToolProperty.getClass(),
+            Models.PowderTierProperty.getClass(),
+            Models.ServerCountProperty.getClass(),
+            Models.SkillIconProperty.getClass(),
+            Models.SkillPointProperty.getClass(),
+            Models.TeleportScrollProperty.getClass());
+
     public static ItemTextOverlayFeature INSTANCE;
 
     @Config
@@ -94,7 +107,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return ItemStackTransformManager.TEXT_OVERLAY_PROPERTIES;
+        return TEXT_OVERLAY_PROPERTIES;
     }
 
     @SubscribeEvent
