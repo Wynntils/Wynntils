@@ -63,6 +63,11 @@ public final class ClientCommandManager extends CoreManager {
         command.register(clientDispatcher);
     }
 
+    private void registerCommandWithCommandSet(WynntilsCommand command) {
+        command.registerWithCommands(clientDispatcher, commandInstanceSet);
+        commandInstanceSet.add(command);
+    }
+
     public boolean handleCommand(String message) {
         assert message.startsWith("/");
 
@@ -175,6 +180,9 @@ public final class ClientCommandManager extends CoreManager {
         registerCommand(new ServerCommand());
         registerCommand(new TerritoryCommand());
         registerCommand(new TokenCommand());
-        registerCommand(new WynntilsCommand());
+
+        // The WynntilsCommand must be registered last, since it
+        // need the above commands as aliases
+        registerCommandWithCommandSet(new WynntilsCommand());
     }
 }
