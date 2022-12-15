@@ -32,8 +32,8 @@ public class StatusOverlayFeature extends UserFeature {
     public final StatusOverlay statusOverlay = new StatusOverlay();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Tab.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.Tab);
     }
 
     @SubscribeEvent

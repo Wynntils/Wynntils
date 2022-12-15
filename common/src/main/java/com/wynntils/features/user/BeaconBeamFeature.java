@@ -26,8 +26,8 @@ public class BeaconBeamFeature extends UserFeature {
     public CustomColor waypointBeamColor = CommonColors.RED;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Compass.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent

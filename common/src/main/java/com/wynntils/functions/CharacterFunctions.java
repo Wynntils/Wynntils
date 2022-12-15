@@ -125,8 +125,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -143,8 +143,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -160,8 +160,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -172,8 +172,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -189,8 +189,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -206,8 +206,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.PlayerInventory.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.PlayerInventory);
         }
     }
 
@@ -218,8 +218,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 
@@ -230,8 +230,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 
@@ -242,8 +242,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 
@@ -254,8 +254,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 
@@ -268,8 +268,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 
@@ -282,8 +282,8 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.ActionBar.getClass());
+        public List<? extends Model> getModelDependencies() {
+            return List.of(Models.ActionBar);
         }
     }
 

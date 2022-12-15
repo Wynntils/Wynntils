@@ -39,8 +39,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomBarsOverlayFeature extends UserFeature {
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.ActionBar.getClass(), Models.BossBar.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.ActionBar, Models.BossBar);
     }
 
     @SubscribeEvent

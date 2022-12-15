@@ -28,16 +28,12 @@ public class HadesFeature extends UserFeature {
     public boolean shareWithGuild = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
+    public List<? extends Model> getModelDependencies() {
         // SocketModel
         //      needs ActionBarModel for updating player info
         //      HadesUserModel for storing remote HadesUser info
         //      PlayerRelationsModel to parse player relations
-        return List.of(
-                Models.Hades.getClass(),
-                Models.PlayerRelations.getClass(),
-                Models.HadesUser.getClass(),
-                Models.ActionBar.getClass());
+        return List.of(Models.Hades, Models.PlayerRelations, Models.HadesUser, Models.ActionBar);
     }
 
     @Override

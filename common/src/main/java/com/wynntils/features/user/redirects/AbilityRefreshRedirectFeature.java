@@ -23,8 +23,8 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

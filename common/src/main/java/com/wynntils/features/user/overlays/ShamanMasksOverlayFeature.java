@@ -35,8 +35,8 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     public boolean hideMaskTitles = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.ShamanMask.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.ShamanMask);
     }
 
     @SubscribeEvent

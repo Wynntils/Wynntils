@@ -26,13 +26,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
-            Models.CosmeticTierProperty.getClass(),
-            Models.EmeraldPouchItemStack.getClass(),
-            Models.MaterialProperty.getClass(),
-            Models.IngredientProperty.getClass(),
-            Models.ItemTierProperty.getClass(),
-            Models.PowderTierProperty.getClass());
+    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(
+            Models.CosmeticTierProperty,
+            Models.EmeraldPouchItemStack,
+            Models.MaterialProperty,
+            Models.IngredientProperty,
+            Models.ItemTierProperty,
+            Models.PowderTierProperty);
 
     public static ItemHighlightFeature INSTANCE;
 
@@ -148,7 +148,7 @@ public class ItemHighlightFeature extends UserFeature {
     public float hotbarOpacity = .5f;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
+    public List<? extends Model> getModelDependencies() {
         return HIGHLIGHT_PROPERTIES;
     }
 

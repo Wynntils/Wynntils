@@ -28,8 +28,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatCoordinatesFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Compass.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -44,11 +44,8 @@ public class ItemFavoriteFeature extends UserFeature {
     private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(
-                Models.GearItemStack.getClass(),
-                Models.IngredientItemStack.getClass(),
-                Models.UnidentifiedItemStack.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.GearItemStack, Models.IngredientItemStack, Models.UnidentifiedItemStack);
     }
 
     @SubscribeEvent

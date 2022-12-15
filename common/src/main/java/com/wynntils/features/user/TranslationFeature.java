@@ -48,8 +48,8 @@ public class TranslationFeature extends UserFeature {
     public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Translation.getClass());
+    public List<? extends Model> getModelDependencies() {
+        return List.of(Models.Translation);
     }
 
     @SubscribeEvent
