@@ -9,4 +9,4 @@ package com.wynntils.core.managers;
  * They are lazy loaded and only enabled when they are a dependency to an enabled feature / function.
  * <p>The init and disable methods work like {@link Manager}'s.
  */
-public abstract class Model extends Manager {}
+public abstract class Model {}

@@ -11,7 +11,7 @@ import java.util.List;
  * Currently, core manager load order is defined in {@link ManagerRegistry#init}.
  * <p>The init and disable methods work like {@link Manager}'s.
  */
-public abstract class CoreManager extends Manager {
+public abstract class CoreManager {
     protected CoreManager(List<CoreManager> dependencies) {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies

@@ -20,7 +20,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 public final class ManagerRegistry {
     private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
     private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
-    private static final Collection<Class<? extends Manager>> ENABLED_MANAGERS = new HashSet<>();
+    private static final Collection<Class<? extends Model>> ENABLED_MANAGERS = new HashSet<>();
 
     public static void init() {
         // Bootstrapping order is important, take care if reordering
@@ -59,7 +59,7 @@ public final class ManagerRegistry {
     private static void registerPersistentDependency(CoreManager managerInstance) {
         Class<? extends CoreManager> manager = managerInstance.getClass();
         PERSISTENT_CORE_MANAGERS.add(manager);
-        ENABLED_MANAGERS.add(manager);
+//        ENABLED_MANAGERS.add(manager);
         // FIXME: Remove the class registration when all static methods are gone
         WynntilsMod.registerEventListener(manager);
         WynntilsMod.registerEventListener(managerInstance);
@@ -120,7 +120,7 @@ public final class ManagerRegistry {
         }
     }
 
-    private static void tryInitManager(Class<? extends Manager> manager) {
+    private static void tryInitManager(Class<? extends Model> manager) {
         WynntilsMod.registerEventListener(manager);
 
         try {
@@ -133,7 +133,7 @@ public final class ManagerRegistry {
         }
     }
 
-    private static void tryDisableManager(Class<? extends Manager> manager) {
+    private static void tryDisableManager(Class<? extends Model> manager) {
         WynntilsMod.unregisterEventListener(manager);
 
         try {
@@ -147,7 +147,7 @@ public final class ManagerRegistry {
         CrashReportManager.registerCrashContext(new ManagerCrashContext());
     }
 
-    public static boolean isEnabled(Class<? extends Manager> manager) {
+    public static boolean isEnabled(Class<? extends Model> manager) {
         return ENABLED_MANAGERS.contains(manager);
     }
 
@@ -160,7 +160,7 @@ public final class ManagerRegistry {
         public Object generate() {
             StringBuilder result = new StringBuilder();
 
-            for (Class<? extends Manager> persistentManager : PERSISTENT_CORE_MANAGERS) {
+            for (Class<? extends CoreManager> persistentManager : PERSISTENT_CORE_MANAGERS) {
                 result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
             }
 
