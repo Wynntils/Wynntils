@@ -1,9 +1,21 @@
+## [0.0.1-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.166...v0.0.1-alpha.167) (2022-12-15)
+
+
+### Bug Fixes
+
+* Resolve the UrlManager/NetManager circularity ([#837](https://github.com/Wynntils/Artemis/issues/837)) ([8cbb2af](https://github.com/Wynntils/Artemis/commit/8cbb2af94b64a2790c870e3663587df31699a37d))
+
 ## [0.0.1-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.165...v0.0.1-alpha.166) (2022-12-15)
 
 
 ### Code Refactoring
 
 * Access models through Models instance, not directly through class name ([#835](https://github.com/Wynntils/Artemis/issues/835)) ([6c9ae0e](https://github.com/Wynntils/Artemis/commit/6c9ae0ee634b6ab60deae783c3f795a314e7e006))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.166 [skip ci] ([a761dd3](https://github.com/Wynntils/Artemis/commit/a761dd3696078e3ffcf283fe4f52209170f03fed))
 
 ## [0.0.1-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.164...v0.0.1-alpha.165) (2022-12-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.163 [skip ci] ([c5b3a67](https://github.com/Wynntils/Artemis/commit/c5b3a67e26825833335db025488e10360070fd0e))
-
-## [0.0.1-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.161...v0.0.1-alpha.162) (2022-12-15)
-
-
-### New Features
-
-* Add POI fading and POI visibility configs ([#832](https://github.com/Wynntils/Artemis/issues/832)) ([c6299fd](https://github.com/Wynntils/Artemis/commit/c6299fd1783b5e180f0169f013df946386fb30c6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.162 [skip ci] ([d5f1910](https://github.com/Wynntils/Artemis/commit/d5f1910cf4648d7e19949c6ce698c2130119c4d7))
 
