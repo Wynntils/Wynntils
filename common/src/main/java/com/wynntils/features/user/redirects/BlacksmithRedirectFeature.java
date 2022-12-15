@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
@@ -31,7 +31,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class);
+        return List.of(Models.Chat.getClass());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

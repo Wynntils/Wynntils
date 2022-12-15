@@ -9,8 +9,8 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
@@ -26,6 +26,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
+    public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
+            Models.CosmeticTierProperty.getClass(),
+            Models.EmeraldPouchItemStack.getClass(),
+            Models.MaterialProperty.getClass(),
+            Models.IngredientProperty.getClass(),
+            Models.ItemTierProperty.getClass(),
+            Models.PowderTierProperty.getClass());
+
     public static ItemHighlightFeature INSTANCE;
 
     @Config
@@ -141,7 +149,7 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return Managers.ItemStackTransform.HIGHLIGHT_PROPERTIES;
+        return HIGHLIGHT_PROPERTIES;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -15,7 +15,7 @@ import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PlayerInventoryModel extends Model {
+public final class PlayerInventoryModel extends Model {
 
     private static int emeralds = 0;
     private static int openSlots = 0;

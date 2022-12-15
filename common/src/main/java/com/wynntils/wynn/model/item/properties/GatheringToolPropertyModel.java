@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class GatheringToolPropertyModel extends Model {
+public final class GatheringToolPropertyModel extends Model {
     private static final ItemPropertyWriter GATHERING_TOOL_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
 

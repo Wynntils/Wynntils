@@ -10,6 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerCloseEvent;
@@ -20,9 +21,6 @@ import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.model.item.GearItemStackModel;
-import com.wynntils.wynn.model.item.IngredientItemStackModel;
-import com.wynntils.wynn.model.item.UnidentifiedItemStackModel;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -47,7 +45,10 @@ public class ItemFavoriteFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(GearItemStackModel.class, IngredientItemStackModel.class, UnidentifiedItemStackModel.class);
+        return List.of(
+                Models.GearItemStack.getClass(),
+                Models.IngredientItemStack.getClass(),
+                Models.UnidentifiedItemStack.getClass());
     }
 
     @SubscribeEvent

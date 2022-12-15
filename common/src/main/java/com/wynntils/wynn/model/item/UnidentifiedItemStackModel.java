@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class UnidentifiedItemStackModel extends Model {
+public final class UnidentifiedItemStackModel extends Model {
     private static final ItemStackTransformer UNIDENTIFIED_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
 

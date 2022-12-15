@@ -6,10 +6,10 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
-import com.wynntils.wynn.model.item.properties.HorsePropertyModel;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ public class HorseFunctions {
 
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(HorsePropertyModel.class);
+            return List.of(Models.HorseProperty.getClass());
         }
 
         @Override
@@ -53,7 +53,7 @@ public class HorseFunctions {
 
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(HorsePropertyModel.class);
+            return List.of(Models.HorseProperty.getClass());
         }
 
         @Override
@@ -72,7 +72,7 @@ public class HorseFunctions {
 
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(HorsePropertyModel.class);
+            return List.of(Models.HorseProperty.getClass());
         }
 
         @Override
@@ -91,7 +91,7 @@ public class HorseFunctions {
 
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(HorsePropertyModel.class);
+            return List.of(Models.HorseProperty.getClass());
         }
 
         @Override
@@ -111,7 +111,7 @@ public class HorseFunctions {
 
         @Override
         public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(HorsePropertyModel.class);
+            return List.of(Models.HorseProperty.getClass());
         }
 
         @Override

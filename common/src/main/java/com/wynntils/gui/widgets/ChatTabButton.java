@@ -6,7 +6,7 @@ package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.tabs.ChatTab;
-import com.wynntils.core.chat.tabs.ChatTabModel;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -31,9 +31,9 @@ public class ChatTabButton extends AbstractButton {
 
         RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
 
-        CustomColor color = ChatTabModel.getFocusedTab() == tab
+        CustomColor color = Models.ChatTab.getFocusedTab() == tab
                 ? CommonColors.GREEN
-                : (ChatTabModel.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
+                : (Models.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -51,7 +51,7 @@ public class ChatTabButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        ChatTabModel.setFocusedTab(tab);
+        Models.ChatTab.setFocusedTab(tab);
     }
 
     @Override
