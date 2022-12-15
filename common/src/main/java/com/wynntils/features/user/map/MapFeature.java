@@ -53,6 +53,30 @@ public class MapFeature extends UserFeature {
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
 
     @Config
+    public float poiFadeDistance = 0.6f;
+
+    @Config
+    public float combatPoiMinZoom = 0.1f;
+
+    @Config
+    public float servicePoiMinZoom = 1f;
+
+    @Config
+    public float customPoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier1PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier2PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.1f;
+
+    @Config
     public PointerType pointerType = PointerType.Arrow;
 
     @Config
@@ -132,7 +156,11 @@ public class MapFeature extends UserFeature {
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
-                location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
+                location,
+                tier.getWaypointName(),
+                CommonColors.WHITE,
+                tier.getWaypointTexture(),
+                CustomPoi.Visibility.DEFAULT);
 
         if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
             MapFeature.INSTANCE.customPois.add(newPoi);

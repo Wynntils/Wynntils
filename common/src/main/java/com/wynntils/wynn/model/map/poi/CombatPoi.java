@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
+import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
 
 public class CombatPoi extends StaticIconPoi {
@@ -19,6 +20,11 @@ public class CombatPoi extends StaticIconPoi {
     @Override
     public Texture getIcon() {
         return kind.getIcon();
+    }
+
+    @Override
+    public float getMinZoomForRender() {
+        return MapFeature.INSTANCE.combatPoiMinZoom;
     }
 
     @Override
