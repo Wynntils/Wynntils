@@ -17,7 +17,7 @@ import com.wynntils.wynn.screens.WynnScreenMatchers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LootChestModel extends Model {
+public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     public static void init() {}

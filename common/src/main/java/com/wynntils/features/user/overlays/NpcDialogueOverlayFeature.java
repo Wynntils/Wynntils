@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -19,6 +18,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -76,7 +76,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class);
+        return List.of(Models.Chat.getClass());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -171,9 +171,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                ChatModel.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Models.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
-                ChatModel.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Models.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
                 currentDialogue = null;
             }
         }

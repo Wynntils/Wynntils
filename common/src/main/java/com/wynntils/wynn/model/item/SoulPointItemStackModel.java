@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class SoulPointItemStackModel extends Model {
+public final class SoulPointItemStackModel extends Model {
     private static final ItemStackTransformer SOUL_POINT_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
 

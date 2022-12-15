@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class IngredientItemStackModel extends Model {
+public final class IngredientItemStackModel extends Model {
     private static final ItemStackTransformer INGREDIENT_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
 

@@ -9,7 +9,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class SearchOverlayPropertyModel extends Model {
+public final class SearchOverlayPropertyModel extends Model {
     private static final ItemPropertyWriter SEARCH_OVERLAY_WRITER =
             new ItemPropertyWriter(itemstack -> true, SearchOverlayProperty::new);
 

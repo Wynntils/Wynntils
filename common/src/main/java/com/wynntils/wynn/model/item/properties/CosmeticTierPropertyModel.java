@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class CosmeticTierPropertyModel extends Model {
+public final class CosmeticTierPropertyModel extends Model {
     private static final ItemPropertyWriter COSMETIC_TIER_PROPERTY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
 

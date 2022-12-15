@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class ConsumableChargePropertyModel extends Model {
+public final class ConsumableChargePropertyModel extends Model {
     private static final ItemPropertyWriter CONSUMABLE_CHARGE_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
 

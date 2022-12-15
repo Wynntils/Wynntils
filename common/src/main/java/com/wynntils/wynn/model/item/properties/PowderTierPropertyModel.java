@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.PowderTierProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class PowderTierPropertyModel extends Model {
+public final class PowderTierPropertyModel extends Model {
     private static final ItemPropertyWriter POWDER_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isPowder, PowderTierProperty::new);
 

@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class ServerItemStackModel extends Model {
+public final class ServerItemStackModel extends Model {
     private static final ItemStackTransformer SERVER_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
 

@@ -9,9 +9,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class LocateCommand extends CommandBase {
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(MapModel.getLabelPois().stream().map(Poi::getName), builder);
+            SharedSuggestionProvider.suggest(Models.Map.getLabelPois().stream().map(Poi::getName), builder);
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
@@ -84,7 +84,7 @@ public class LocateCommand extends CommandBase {
 
         ServiceKind selectedKind = matchedKinds.get(0);
 
-        List<Poi> services = new ArrayList<>(MapModel.getServicePois().stream()
+        List<Poi> services = new ArrayList<>(Models.Map.getServicePois().stream()
                 .filter(poi -> poi.getKind().equals(selectedKind))
                 .toList());
 
@@ -121,7 +121,7 @@ public class LocateCommand extends CommandBase {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Map.getLabelPois().stream()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 

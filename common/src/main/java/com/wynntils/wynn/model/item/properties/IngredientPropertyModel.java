@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class IngredientPropertyModel extends Model {
+public final class IngredientPropertyModel extends Model {
     private static final ItemPropertyWriter INGREDIENT_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isIngredient, IngredientProperty::new);
 

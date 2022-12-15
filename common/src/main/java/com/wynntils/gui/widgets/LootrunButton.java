@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -70,15 +71,15 @@ public class LootrunButton extends AbstractButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isLoaded()) {
-                LootrunModel.clearCurrentLootrun();
+                Models.Lootrun.clearCurrentLootrun();
             } else {
-                LootrunModel.tryLoadFile(lootrun.name());
+                Models.Lootrun.tryLoadFile(lootrun.name());
             }
             return true;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(LootrunModel.LOOTRUNS);
+            Util.getPlatform().openFile(Models.Lootrun.LOOTRUNS);
             return true;
         }
 
@@ -108,13 +109,13 @@ public class LootrunButton extends AbstractButton {
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void tryDeleteLootrun() {
-        File file = new File(LootrunModel.LOOTRUNS, lootrun.name() + ".json");
+        File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");
         file.delete();
         screen.reloadElements();
     }
 
     private boolean isLoaded() {
-        LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         return currentLootrun != null && Objects.equals(currentLootrun.name(), lootrun.name());
     }
 
