@@ -1,9 +1,21 @@
+## [0.0.1-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.162...v0.0.1-alpha.163) (2022-12-15)
+
+
+### Code Refactoring
+
+* Fully convert Managers to singletons ([#833](https://github.com/Wynntils/Artemis/issues/833)) ([f395811](https://github.com/Wynntils/Artemis/commit/f3958111b38587ea137c34907b77c00b6b0a26e7))
+
 ## [0.0.1-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.161...v0.0.1-alpha.162) (2022-12-15)
 
 
 ### New Features
 
 * Add POI fading and POI visibility configs ([#832](https://github.com/Wynntils/Artemis/issues/832)) ([c6299fd](https://github.com/Wynntils/Artemis/commit/c6299fd1783b5e180f0169f013df946386fb30c6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.162 [skip ci] ([d5f1910](https://github.com/Wynntils/Artemis/commit/d5f1910cf4648d7e19949c6ce698c2130119c4d7))
 
 ## [0.0.1-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.160...v0.0.1-alpha.161) (2022-12-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.159 [skip ci] ([3d9b097](https://github.com/Wynntils/Artemis/commit/3d9b0975c0fd11495d34b06a0aa19069f2930de7))
-
-## [0.0.1-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.157...v0.0.1-alpha.158) (2022-12-14)
-
-
-### New Features
-
-* Sends an Overlay Message Whenever You Gain Combat XP ([#811](https://github.com/Wynntils/Artemis/issues/811)) ([4536ada](https://github.com/Wynntils/Artemis/commit/4536adaa758f1c927dc781913b3032e95986ff93))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.158 [skip ci] ([be3a282](https://github.com/Wynntils/Artemis/commit/be3a2823dc26a5c1333fb5e4746e4ba919a0d1a5))
 
