@@ -4,11 +4,7 @@
  */
 package com.wynntils.wynn.model.map;
 
-import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public enum TerritoryDefenseLevel {
     OFF(ChatFormatting.GRAY + "Off", 0),
@@ -36,21 +32,5 @@ public enum TerritoryDefenseLevel {
 
     public int getLevel() {
         return level;
-    }
-
-    public List<Component> getTerritoryDefenseLevelFilterTooltip() {
-        return List.of(
-                new TextComponent("[>] ")
-                        .withStyle(ChatFormatting.BLUE)
-                        .append(new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description1")
-                        .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
-                        .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
-                        .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(asColoredString));
     }
 }

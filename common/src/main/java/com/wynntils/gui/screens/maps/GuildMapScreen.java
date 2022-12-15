@@ -18,6 +18,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.wynn.model.map.TerritoryDefenseFilterType;
 import com.wynntils.wynn.model.map.TerritoryDefenseLevel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
@@ -28,6 +29,7 @@ import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
@@ -35,6 +37,7 @@ import org.lwjgl.glfw.GLFW;
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private TerritoryDefenseLevel territoryDefenseFilterLevel = TerritoryDefenseLevel.OFF;
+    private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
 
@@ -92,10 +95,21 @@ public class GuildMapScreen extends AbstractMapScreen {
                     territoryDefenseFilterLevel = (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
                             ? TerritoryDefenseLevel.OFF
                             : territoryDefenseFilterLevel.next();
-                    territoryDefenseFilterButton.setTooltip(
-                            territoryDefenseFilterLevel.getTerritoryDefenseLevelFilterTooltip());
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (territoryDefenseFilterLevel == TerritoryDefenseLevel.OFF) { // set to default if OFF
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                    } else if (KeyboardUtils.isShiftDown()) {
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.LOWER;
+                    } else {
+                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                    }
+
+                    territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },
-                territoryDefenseFilterLevel.getTerritoryDefenseLevelFilterTooltip()));
+                getCompleteFilterTooltip()));
     }
 
     @Override
@@ -335,16 +349,35 @@ public class GuildMapScreen extends AbstractMapScreen {
         if (territoryDefenseFilterLevel != TerritoryDefenseLevel.OFF) {
             pois.removeIf( // Remove territories that do not match the filtered defense level
                     poi -> {
-                        // Do not filter anything if the filter is off or if the poi is not a territory (shouldn't
-                        // happen)
+                        // Do not filter anything if the poi is not a territory (shouldn't happen)
                         if (!(poi instanceof TerritoryPoi)) return false;
 
-                        return !territoryDefenseFilterLevel
-                                .asColoredString()
-                                .equals(((TerritoryPoi) poi)
-                                        .getTerritoryInfo()
-                                        .getDefences()
-                                        .asColoredString());
+                        switch (territoryDefenseFilterType) {
+                                // All these checks are reversed since we're checking for which territories to remove
+                                // instead of which to keep
+                            case LOWER -> {
+                                return ((TerritoryPoi) poi)
+                                                .getTerritoryInfo()
+                                                .getDefences()
+                                                .getLevel()
+                                        > territoryDefenseFilterLevel.getLevel();
+                            }
+                            case HIGHER -> {
+                                return ((TerritoryPoi) poi)
+                                                .getTerritoryInfo()
+                                                .getDefences()
+                                                .getLevel()
+                                        < territoryDefenseFilterLevel.getLevel();
+                            }
+                            case DEFAULT -> {
+                                return ((TerritoryPoi) poi)
+                                                .getTerritoryInfo()
+                                                .getDefences()
+                                                .getLevel()
+                                        != territoryDefenseFilterLevel.getLevel();
+                            }
+                        }
+                        return false;
                     });
         }
 
@@ -359,5 +392,22 @@ public class GuildMapScreen extends AbstractMapScreen {
 
     public boolean isResourceMode() {
         return resourceMode;
+    }
+
+    private List<Component> getCompleteFilterTooltip() {
+        return List.of(
+                new TextComponent("[>] ")
+                        .withStyle(ChatFormatting.BLUE)
+                        .append(new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.name")),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                        .withStyle(ChatFormatting.GRAY),
+                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(territoryDefenseFilterLevel.asColoredString())
+                        .append(territoryDefenseFilterType.asComponent()));
     }
 }
