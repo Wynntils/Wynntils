@@ -77,10 +77,6 @@ public final class ChatModel extends Model {
     private String lastRealChat = null;
     private List<Component> lastNpcDialog = List.of();
 
-    /** Needed for all Models */
-    @Override
-    public void init() {}
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatPacketReceivedEvent e) {
         if (e.getType() == ChatType.GAME_INFO) return;

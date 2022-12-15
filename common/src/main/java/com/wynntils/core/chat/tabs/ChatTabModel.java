@@ -28,9 +28,6 @@ public final class ChatTabModel extends Model {
     private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
 
     @Override
-    public void init() {}
-
-    @Override
     public void disable() {
         chatTabData.clear();
         unreadMessages.clear();

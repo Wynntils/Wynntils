@@ -23,9 +23,6 @@ public final class BombBellModel extends Model {
     private final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
 
     @Override
-    public void init() {}
-
-    @Override
     public void disable() {
         BOMB_BELLS.clear();
     }

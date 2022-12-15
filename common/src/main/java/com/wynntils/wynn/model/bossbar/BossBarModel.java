@@ -25,10 +25,6 @@ import net.minecraft.world.BossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class BossBarModel extends Model {
-
-    @Override
-    public void init() {}
-
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();

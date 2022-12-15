@@ -20,9 +20,6 @@ public final class ShamanMaskModel extends Model {
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent
     public void onTitle(SubtitleSetTextEvent event) {
         String title = ComponentUtils.getCoded(event.getComponent());

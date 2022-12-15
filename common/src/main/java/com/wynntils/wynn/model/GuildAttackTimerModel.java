@@ -29,9 +29,6 @@ public final class GuildAttackTimerModel extends Model {
 
     private List<TerritoryAttackTimer> attackTimers = List.of();
 
-    @Override
-    public void init() {}
-
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
