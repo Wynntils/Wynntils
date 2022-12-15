@@ -33,7 +33,7 @@ public class CustomPoi extends StaticIconPoi {
 
     @Override
     public float getMinZoomForRender() {
-        return switch (visibility) {
+        return switch (getVisibility()) {
             case ALWAYS -> -1;
             case HIDDEN -> Integer.MAX_VALUE;
             case DEFAULT -> switch (getIcon()) {
@@ -56,7 +56,9 @@ public class CustomPoi extends StaticIconPoi {
     }
 
     public Visibility getVisibility() {
-        return visibility;
+        // Visibility is null for configs that have the old format (minZoom float)
+        // This null check is here to provide some kind of backwards compatibility and prevent crashes
+        return visibility == null ? Visibility.DEFAULT : visibility;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class CustomPoi extends StaticIconPoi {
 
         CustomPoi customPoi = (CustomPoi) other;
         return location.equals(customPoi.location)
-                && visibility.equals(customPoi.visibility)
+                && Objects.equals(visibility, customPoi.visibility)
                 && name.equals(customPoi.name)
                 && color.equals(customPoi.color)
                 && icon == customPoi.icon;
