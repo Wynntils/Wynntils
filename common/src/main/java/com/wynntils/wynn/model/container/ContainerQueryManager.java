@@ -5,12 +5,13 @@
 package com.wynntils.wynn.model.container;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -18,24 +19,27 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ContainerQueryManager extends CoreManager {
+public class ContainerQueryManager extends Manager {
     private static final int NO_CONTAINER = -2;
-    private static final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
 
-    private static ContainerQueryStep currentStep;
-    private static String firstStepName;
-    private static ContainerQueryStep lastStep;
+    private final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
 
-    private static Component currentTitle;
-    private static MenuType<?> currentMenuType;
-    private static int containerId = NO_CONTAINER;
-    private static int lastHandledContentId = NO_CONTAINER;
-    private static int ticksRemaining;
+    private ContainerQueryStep currentStep;
+    private String firstStepName;
+    private ContainerQueryStep lastStep;
 
-    public static void init() {}
+    private Component currentTitle;
+    private MenuType<?> currentMenuType;
+    private int containerId = NO_CONTAINER;
+    private int lastHandledContentId = NO_CONTAINER;
+    private int ticksRemaining;
 
-    public static void runQuery(ContainerQueryStep firstStep) {
+    public ContainerQueryManager() {
+        super(List.of());
+    }
+
+    public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
             // Only add if it is not already enqueued
             if (queuedQueries.stream()
@@ -70,7 +74,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (currentStep == null) {
             if (lastStep != null) {
                 // We're in a possibly bad state. We have failed a previous call, but
@@ -93,7 +97,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuForcefullyClosed(MenuEvent.MenuClosedEvent e) {
+    public void onMenuForcefullyClosed(MenuEvent.MenuClosedEvent e) {
         if (currentStep == null) return;
 
         // Server closed our container window. This should not happen
@@ -102,7 +106,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onContainerSetContent(ContainerSetContentEvent.Pre e) {
+    public void onContainerSetContent(ContainerSetContentEvent.Pre e) {
         if (currentStep == null) return;
         // We got an inventory update, can happen all the time
         if (e.getContainerId() == 0) return;
@@ -156,7 +160,7 @@ public class ContainerQueryManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.Start event) {
+    public void onTick(ClientTickEvent.Start event) {
         if (currentStep == null) return;
 
         ticksRemaining--;
@@ -166,7 +170,7 @@ public class ContainerQueryManager extends CoreManager {
         }
     }
 
-    private static void raiseError(String errorMsg) {
+    private void raiseError(String errorMsg) {
         if (currentStep == null) {
             WynntilsMod.error("Internal error in ContainerQueryManager: handleError called with no currentStep");
             return;
@@ -176,17 +180,17 @@ public class ContainerQueryManager extends CoreManager {
         endQuery();
     }
 
-    private static void endQuery() {
+    private void endQuery() {
         containerId = NO_CONTAINER;
         lastHandledContentId = NO_CONTAINER;
         currentStep = null;
     }
 
-    private static void resetTimer() {
+    private void resetTimer() {
         ticksRemaining = OPERATION_TIMEOUT_TICKS;
     }
 
-    private static void handleFailedOpen(MenuEvent.MenuOpenedEvent e) {
+    private void handleFailedOpen(MenuEvent.MenuOpenedEvent e) {
         boolean matches = lastStep.verifyContainer(e.getTitle(), e.getMenuType());
         if (matches) {
             // This was the container we were supposed to be looking for

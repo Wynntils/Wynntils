@@ -15,6 +15,7 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -27,10 +28,14 @@ import net.minecraft.network.chat.TextComponent;
 public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        throw new UnsupportedOperationException("WynntilsCommand need special treatment");
+    }
+
+    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, Set<CommandBase> commands) {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : Managers.ClientCommand.getCommandInstanceSet()) {
+        for (CommandBase commandInstance : commands) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
@@ -85,9 +90,8 @@ public class WynntilsCommand extends CommandBase {
 
         Managers.ItemProfiles.reset();
         Managers.Url.reloadUrls();
-        Managers.ItemProfiles.init();
-        Managers.Splash.init();
-        Managers.WynntilsAccount.init();
+        Managers.Splash.reset();
+        Managers.WynntilsAccount.reset();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {

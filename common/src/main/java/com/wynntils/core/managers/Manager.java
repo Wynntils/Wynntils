@@ -4,15 +4,20 @@
  */
 package com.wynntils.core.managers;
 
+import com.wynntils.core.WynntilsMod;
+import java.util.List;
+
 /**
- * Managers can have two static methods:
- * <p>
- * init: Called when manager is enabled
- * <p>
- * disable: Called when manager is disabled
- * <p>
- * Managers are automatically registered to event bus, use static event methods.
- * <p>
- * See {@link Model} and {@link CoreManager} for the different manager types.
- * */
-public abstract class Manager {}
+ * Managers constitute the core functionality of Wynntils. They are created
+ * as singletons in the {@link Managers} holding class.
+ */
+public abstract class Manager {
+    protected Manager(List<Manager> dependencies) {
+        // dependencies are technically not used, but only required
+        // as a reminder for implementers to be wary about dependencies
+
+        // In theory it is a bit scary to let "this" escape, but we will
+        // not start sending events until all managers are properly constructed
+        WynntilsMod.registerEventListener(this);
+    }
+}

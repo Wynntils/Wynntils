@@ -21,7 +21,6 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -75,7 +74,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                QuestManager::rescanDialogueHistory));
+                Managers.Quest::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,

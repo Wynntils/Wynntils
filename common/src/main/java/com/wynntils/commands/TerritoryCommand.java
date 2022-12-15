@@ -8,8 +8,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
@@ -60,7 +60,7 @@ public class TerritoryCommand extends CommandBase {
         MutableComponent territoryComponent = new TextComponent(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
-        if (!ManagerRegistry.isEnabled(CompassModel.class)) {
+        if (!ModelRegistry.isEnabled(CompassModel.class)) {
             MutableComponent success = territoryComponent
                     .append(": ")
                     .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));

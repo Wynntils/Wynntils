@@ -6,6 +6,7 @@ package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
@@ -15,16 +16,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class UpdateManager extends CoreManager {
+public class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 
-    public static void init() {}
+    public UpdateManager(NetManager netManager) {
+        super(List.of(netManager));
+    }
 
-    public static CompletableFuture<String> getLatestBuild() {
+    public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
@@ -40,7 +44,7 @@ public class UpdateManager extends CoreManager {
         return future;
     }
 
-    public static CompletableFuture<UpdateResult> tryUpdate() {
+    public CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
         File updateFile = getUpdateFile();
@@ -77,19 +81,19 @@ public class UpdateManager extends CoreManager {
         return future;
     }
 
-    private static String getCurrentMd5() {
+    private String getCurrentMd5() {
         MD5Verification verification = new MD5Verification(WynntilsMod.getModJar());
         return verification.getMd5();
     }
 
-    private static File getUpdateFile() {
+    private File getUpdateFile() {
         File updatesDir =
                 new File(WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER).toURI());
         FileUtils.mkdir(updatesDir);
         return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
     }
 
-    private static void tryFetchNewUpdate(String latestUrl, CompletableFuture<UpdateResult> future) {
+    private void tryFetchNewUpdate(String latestUrl, CompletableFuture<UpdateResult> future) {
         File oldJar = WynntilsMod.getModJar();
         File newJar = getUpdateFile();
 
@@ -113,7 +117,7 @@ public class UpdateManager extends CoreManager {
         }
     }
 
-    private static void addShutdownHook(File oldJar, File newJar) {
+    private void addShutdownHook(File oldJar, File newJar) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 if (oldJar == null || !oldJar.exists() || oldJar.isDirectory()) {

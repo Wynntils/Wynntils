@@ -25,24 +25,33 @@ import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.territory.TerritoryManager;
 
 public final class Managers {
-    public static final NetManager Net = new NetManager();
+    // Start with UrlManager to give it chance to update URLs in background
     public static final UrlManager Url = new UrlManager();
-    public static final ConfigManager Config = new ConfigManager();
+
+    // Managers with no dependencies, alphabetically sorted
     public static final CharacterManager Character = new CharacterManager();
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
+    public static final ConfigManager Config = new ConfigManager();
     public static final ContainerQueryManager ContainerQuery = new ContainerQueryManager();
-    public static final DiscoveryManager Discovery = new DiscoveryManager();
-    public static final FunctionManager Function = new FunctionManager();
+    public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
     public static final OverlayManager Overlay = new OverlayManager();
-    public static final QuestManager Quest = new QuestManager();
-    public static final UpdateManager Update = new UpdateManager();
-    public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager();
-    public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager();
-    public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
-    public static final SplashManager Splash = new SplashManager();
     public static final WorldStateManager WorldState = new WorldStateManager();
-    public static final TerritoryManager Territory = new TerritoryManager();
+
+    // Managers with dependencies, ordered by dependency and then alphabetically
+    public static final NetManager Net = new NetManager(Url);
+    public static final FunctionManager Function = new FunctionManager(ItemStackTransform);
+    public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
+    public static final QuestManager Quest = new QuestManager(Net);
+    public static final SplashManager Splash = new SplashManager(Net);
+    public static final TerritoryManager Territory = new TerritoryManager(Net);
+    public static final UpdateManager Update = new UpdateManager(Net);
+    public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
+    public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, MinecraftScheduler);
+
+    public static void init() {
+        // We don't need to do anything here, but make sure the class is loaded
+    }
 }

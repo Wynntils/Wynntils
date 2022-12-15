@@ -8,9 +8,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
@@ -22,34 +23,36 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
-public class ItemProfilesManager extends CoreManager {
+public class ItemProfilesManager extends Manager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
 
-    private static HashMap<String, ItemProfile> items = new HashMap<>();
-    private static Collection<ItemProfile> directItems = new ArrayList<>();
-    private static HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private static HashMap<String, String> translatedReferences = new HashMap<>();
-    private static HashMap<String, String> internalIdentifications = new HashMap<>();
-    private static HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private static HashMap<ItemType, String[]> materialTypes = new HashMap<>();
-    private static HashMap<String, IngredientProfile> ingredients = new HashMap<>();
-    private static Collection<IngredientProfile> directIngredients = new ArrayList<>();
-    private static HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+    private HashMap<String, ItemProfile> items = new HashMap<>();
+    private Collection<ItemProfile> directItems = new ArrayList<>();
+    private HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
+    private HashMap<String, String> translatedReferences = new HashMap<>();
+    private HashMap<String, String> internalIdentifications = new HashMap<>();
+    private HashMap<String, MajorIdentification> majorIds = new HashMap<>();
+    private HashMap<ItemType, String[]> materialTypes = new HashMap<>();
+    private HashMap<String, IngredientProfile> ingredients = new HashMap<>();
+    private Collection<IngredientProfile> directIngredients = new ArrayList<>();
+    private HashMap<String, String> ingredientHeadTextures = new HashMap<>();
 
-    public static void init() {
+    public ItemProfilesManager(NetManager netManager) {
+        super(List.of(netManager));
         loadCommonObjects();
     }
 
-    private static void loadCommonObjects() {
+    private void loadCommonObjects() {
         tryLoadItemList();
         tryLoadItemGuesses();
         tryLoadIngredientList();
     }
 
-    public static void reset() {
+    public void reset() {
         // tryLoadItemGuesses
         itemGuesses = null;
 
@@ -60,9 +63,10 @@ public class ItemProfilesManager extends CoreManager {
         internalIdentifications = null;
         majorIds = null;
         materialTypes = null;
+        loadCommonObjects();
     }
 
-    private static void tryLoadItemGuesses() {
+    private void tryLoadItemGuesses() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
@@ -73,7 +77,7 @@ public class ItemProfilesManager extends CoreManager {
         // Check for success
     }
 
-    private static void tryLoadItemList() {
+    private void tryLoadItemList() {
         // dataAthenaItemList is based on
         // https://api.wynncraft.com/public_api.php?action=itemDB&category=all
         // but the data is massaged into another form, and wynnBuilderID is injected from
@@ -113,7 +117,7 @@ public class ItemProfilesManager extends CoreManager {
         // Check for success
     }
 
-    private static void tryLoadIngredientList() {
+    private void tryLoadIngredientList() {
         // dataAthenaIngredientList is based on
         // https://api.wynncraft.com/v2/ingredient/search/skills/%5Etailoring,armouring,jeweling,cooking,woodworking,weaponsmithing,alchemism,scribing
         // but the data is massaged into another form, and additional "head textures" are added, which are hard-coded
@@ -137,43 +141,43 @@ public class ItemProfilesManager extends CoreManager {
         });
     }
 
-    public static HashMap<String, ItemGuessProfile> getItemGuesses() {
+    public HashMap<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
 
-    public static Collection<ItemProfile> getItemsCollection() {
+    public Collection<ItemProfile> getItemsCollection() {
         return directItems;
     }
 
-    public static HashMap<String, ItemProfile> getItemsMap() {
+    public HashMap<String, ItemProfile> getItemsMap() {
         return items;
     }
 
-    public static HashMap<ItemType, String[]> getMaterialTypes() {
+    public HashMap<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
 
-    public static HashMap<String, MajorIdentification> getMajorIds() {
+    public HashMap<String, MajorIdentification> getMajorIds() {
         return majorIds;
     }
 
-    public static HashMap<String, String> getInternalIdentifications() {
+    public HashMap<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
 
-    public static HashMap<String, String> getTranslatedReferences() {
+    public HashMap<String, String> getTranslatedReferences() {
         return translatedReferences;
     }
 
-    public static Collection<IngredientProfile> getIngredientsCollection() {
+    public Collection<IngredientProfile> getIngredientsCollection() {
         return directIngredients;
     }
 
-    public static HashMap<String, IngredientProfile> getIngredients() {
+    public HashMap<String, IngredientProfile> getIngredients() {
         return ingredients;
     }
 
-    public static HashMap<String, String> getIngredientHeadTextures() {
+    public HashMap<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
     }
 }

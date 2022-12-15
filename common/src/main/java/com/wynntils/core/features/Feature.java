@@ -13,9 +13,9 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -140,7 +140,7 @@ public abstract class Feature extends AbstractConfigurable
         onEnable();
         state = FeatureState.ENABLED;
 
-        ManagerRegistry.addAllDependencies(this);
+        ModelRegistry.addAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.registerEventListener(this);
@@ -168,7 +168,7 @@ public abstract class Feature extends AbstractConfigurable
 
         state = FeatureState.DISABLED;
 
-        ManagerRegistry.removeAllDependencies(this);
+        ModelRegistry.removeAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
