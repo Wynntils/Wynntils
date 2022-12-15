@@ -11,6 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
@@ -185,6 +186,7 @@ public final class WynntilsMod {
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
+        Managers.init();
         ModelRegistry.init();
     }
 

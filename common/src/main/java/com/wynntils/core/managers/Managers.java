@@ -50,4 +50,8 @@ public final class Managers {
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
     public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, MinecraftScheduler);
+
+    public static void init() {
+        // We don't need to do anything here, but make sure the class is loaded
+    }
 }

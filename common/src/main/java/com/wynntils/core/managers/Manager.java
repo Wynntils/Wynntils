@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.managers;
 
+import com.wynntils.core.WynntilsMod;
 import java.util.List;
 
 /**
@@ -14,5 +15,9 @@ public abstract class Manager {
     protected Manager(List<Manager> dependencies) {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies
+
+        // In theory it is a bit scary to let "this" escape, but we will
+        // not start sending events until all managers are properly constructed
+        WynntilsMod.registerEventListener(this);
     }
 }
