@@ -6,6 +6,7 @@ package com.wynntils.core.managers;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MD5Verification;
