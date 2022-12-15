@@ -202,7 +202,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     private Vec3 worldToScreen(Vector3f delta, Matrix4f projection) {
         Vector4f clipCoords = new Vector4f(delta.x(), delta.y(), delta.z(), 1.0f);
-        clipCoords.mulTranspose(projection);
+        projection.transform(clipCoords);
 
         // stands for Normalized Device Coordinates
         Vector3d ndc = new Vector3d(
