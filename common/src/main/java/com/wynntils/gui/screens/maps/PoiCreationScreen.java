@@ -61,7 +61,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private Button saveButton;
 
     private int selectedIconIndex = 0;
-    private Visibility selectedVisiblity = Visibility.DEFAULT;
+    private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
     private final MainMapScreen oldMapScreen;
@@ -226,18 +226,18 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // region Visibility
         this.addRenderableWidget(
                 new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, new TextComponent("<"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() - 1 + Visibility.values().length)
-                                    % Visibility.values().length];
+                    selectedVisiblity = CustomPoi.Visibility.values()[
+                            (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                                    % CustomPoi.Visibility.values().length];
                 }));
         this.addRenderableWidget(
                 new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, new TextComponent(">"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() + 1 + Visibility.values().length)
-                                    % Visibility.values().length];
+                    selectedVisiblity = CustomPoi.Visibility.values()[
+                            (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                                    % CustomPoi.Visibility.values().length];
                 }));
         if (oldPoi != null && firstSetup) {
-            selectedVisiblity = Visibility.fromMinZoom(oldPoi.getMinZoom());
+            selectedVisiblity = oldPoi.getVisibility();
         }
         // endregion
 
@@ -351,7 +351,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
+                        I18n.get("screens.wynntils.poiCreation.CustomPoi.Visibility") + ":",
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
@@ -457,7 +457,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
                 POI_ICONS.get(selectedIconIndex),
-                selectedVisiblity.getMinZoom());
+                selectedVisiblity);
 
         if (oldPoi != null) {
             MapFeature.INSTANCE.customPois.remove(oldPoi);
@@ -466,35 +466,5 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         MapFeature.INSTANCE.customPois.add(poi);
 
         Managers.Config.saveConfig();
-    }
-
-    public enum Visibility {
-        DEFAULT("screens.wynntils.poiCreation.visibility.default", 1.5f),
-        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible", Integer.MIN_VALUE),
-        HIDDEN("screens.wynntils.poiCreation.visibility.hidden", Integer.MAX_VALUE);
-
-        private final String translationKey;
-        private final float minZoom;
-
-        Visibility(String translationKey, float minZoom) {
-            this.translationKey = translationKey;
-            this.minZoom = minZoom;
-        }
-
-        public String getTranslationKey() {
-            return translationKey;
-        }
-
-        public float getMinZoom() {
-            return minZoom;
-        }
-
-        public static Visibility fromMinZoom(float value) {
-            for (Visibility v : values()) {
-                if (v.getMinZoom() == value) return v;
-            }
-
-            return DEFAULT;
-        }
     }
 }

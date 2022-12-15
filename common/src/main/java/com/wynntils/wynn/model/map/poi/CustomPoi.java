@@ -6,6 +6,7 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.objects.CustomColor;
 import java.util.Objects;
@@ -14,20 +15,35 @@ public class CustomPoi extends StaticIconPoi {
     private String name;
     private CustomColor color;
     private Texture icon;
-    private float minZoom;
+    private Visibility visibility;
 
-    public CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, float minZoom) {
+    public CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, Visibility visibility) {
         super(location);
 
         this.name = name;
         this.color = color;
         this.icon = icon;
-        this.minZoom = minZoom;
+        this.visibility = visibility;
     }
 
     @Override
     public Texture getIcon() {
         return icon;
+    }
+
+    @Override
+    public float getMinZoomForRender() {
+        return switch (getVisibility()) {
+            case ALWAYS -> -1;
+            case HIDDEN -> Integer.MAX_VALUE;
+            case DEFAULT -> switch (getIcon()) {
+                case CHEST_T1 -> MapFeature.INSTANCE.lootChestTier1PoiMinZoom;
+                case CHEST_T2 -> MapFeature.INSTANCE.lootChestTier2PoiMinZoom;
+                case CHEST_T3 -> MapFeature.INSTANCE.lootChestTier3PoiMinZoom;
+                case CHEST_T4 -> MapFeature.INSTANCE.lootChestTier4PoiMinZoom;
+                default -> MapFeature.INSTANCE.customPoiMinZoom;
+            };
+        };
     }
 
     @Override
@@ -39,8 +55,10 @@ public class CustomPoi extends StaticIconPoi {
         return color;
     }
 
-    public float getMinZoom() {
-        return minZoom;
+    public Visibility getVisibility() {
+        // Visibility is null for configs that have the old format (minZoom float)
+        // This null check is here to provide some kind of backwards compatibility and prevent crashes
+        return visibility == null ? Visibility.DEFAULT : visibility;
     }
 
     @Override
@@ -51,9 +69,6 @@ public class CustomPoi extends StaticIconPoi {
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
-        // TODO: Fading
-        if (mapZoom < minZoom) return;
-
         float[] color = this.color.asFloatArray();
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
@@ -69,7 +84,7 @@ public class CustomPoi extends StaticIconPoi {
 
         CustomPoi customPoi = (CustomPoi) other;
         return location.equals(customPoi.location)
-                && Float.compare(customPoi.minZoom, minZoom) == 0
+                && Objects.equals(visibility, customPoi.visibility)
                 && name.equals(customPoi.name)
                 && color.equals(customPoi.color)
                 && icon == customPoi.icon;
@@ -77,6 +92,22 @@ public class CustomPoi extends StaticIconPoi {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, name, color, icon, minZoom);
+        return Objects.hash(location, name, color, icon, visibility);
+    }
+
+    public enum Visibility {
+        DEFAULT("screens.wynntils.poiCreation.visibility.default"),
+        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible"),
+        HIDDEN("screens.wynntils.poiCreation.visibility.hidden");
+
+        private final String translationKey;
+
+        Visibility(String translationKey) {
+            this.translationKey = translationKey;
+        }
+
+        public String getTranslationKey() {
+            return translationKey;
+        }
     }
 }
