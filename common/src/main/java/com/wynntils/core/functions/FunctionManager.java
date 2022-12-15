@@ -33,9 +33,12 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends CoreManager {
-    private final List<Function<?>> FUNCTIONS = new ArrayList<>();
-    private final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
-    private final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
+    private static final Pattern INFO_VARIABLE_PATTERN =
+            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
+
+    private final List<Function<?>> functions = new ArrayList<>();
+    private final Set<ActiveFunction<?>> enabledFunctions = new HashSet<>();
+    private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
     public FunctionManager() {
         super(List.of());
@@ -47,7 +50,7 @@ public final class FunctionManager extends CoreManager {
     }
 
     private void registerFunction(Function<?> function) {
-        FUNCTIONS.add(function);
+        functions.add(function);
         if (function instanceof ActiveFunction<?> activeFunction) {
             activeFunction.init();
         }
@@ -59,14 +62,14 @@ public final class FunctionManager extends CoreManager {
     }
 
     public List<Function<?>> getFunctions() {
-        return FUNCTIONS;
+        return functions;
     }
 
     public boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
         // try to recover, worst case we disable it again
-        CRASHED_FUNCTIONS.remove(function);
+        crashedFunctions.remove(function);
 
         WynntilsMod.registerEventListener(activeFunction);
 
@@ -75,7 +78,7 @@ public final class FunctionManager extends CoreManager {
         if (!enableSucceeded) {
             WynntilsMod.unregisterEventListener(activeFunction);
         }
-        ENABLED_FUNCTIONS.add(activeFunction);
+        enabledFunctions.add(activeFunction);
         return enableSucceeded;
     }
 
@@ -84,13 +87,13 @@ public final class FunctionManager extends CoreManager {
 
         WynntilsMod.unregisterEventListener(activeFunction);
         activeFunction.onDisable();
-        ENABLED_FUNCTIONS.remove(activeFunction);
+        enabledFunctions.remove(activeFunction);
     }
 
     public boolean isEnabled(Function<?> function) {
         if (!(function instanceof ActiveFunction<?>)) return true;
 
-        return (ENABLED_FUNCTIONS.contains(function));
+        return (enabledFunctions.contains(function));
     }
 
     public Optional<Function<?>> forName(String functionName) {
@@ -112,7 +115,7 @@ public final class FunctionManager extends CoreManager {
     }
 
     private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
-        if (CRASHED_FUNCTIONS.contains(function)) {
+        if (crashedFunctions.contains(function)) {
             return Optional.empty();
         }
 
@@ -126,7 +129,7 @@ public final class FunctionManager extends CoreManager {
                     .withStyle(ChatFormatting.RED));
 
             Managers.Function.disableFunction(function);
-            CRASHED_FUNCTIONS.add(function);
+            crashedFunctions.add(function);
         }
 
         return Optional.empty();
@@ -224,9 +227,6 @@ public final class FunctionManager extends CoreManager {
     }
 
     // region Legacy formatting
-
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
     public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
         List<Function<?>> dependencies = new ArrayList<>();

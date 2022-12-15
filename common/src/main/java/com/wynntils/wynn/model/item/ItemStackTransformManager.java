@@ -34,9 +34,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemStackTransformManager extends CoreManager {
-    private final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
-    private final Set<ItemPropertyWriter> PROPERTIES = ConcurrentHashMap.newKeySet();
-
     public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
             CosmeticTierPropertyModel.class,
             EmeraldPouchItemStackModel.class,
@@ -57,6 +54,9 @@ public class ItemStackTransformManager extends CoreManager {
             SkillPointPropertyModel.class,
             TeleportScrollPropertyModel.class);
 
+    private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
+    private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
+
     public ItemStackTransformManager() {
         super(List.of());
     }
@@ -65,19 +65,19 @@ public class ItemStackTransformManager extends CoreManager {
     public void init() {}
 
     public void registerTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.add(transformer);
+        transformers.add(transformer);
     }
 
     public void unregisterTransformer(ItemStackTransformer transformer) {
-        TRANSFORMERS.remove(transformer);
+        transformers.remove(transformer);
     }
 
     public void registerProperty(ItemPropertyWriter writer) {
-        PROPERTIES.add(writer);
+        properties.add(writer);
     }
 
     public void unregisterProperty(ItemPropertyWriter writer) {
-        PROPERTIES.remove(writer);
+        properties.remove(writer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -85,7 +85,7 @@ public class ItemStackTransformManager extends CoreManager {
         ItemStack stack = event.getItem();
 
         // itemstack transformers
-        for (ItemStackTransformer t : TRANSFORMERS) {
+        for (ItemStackTransformer t : transformers) {
             if (t.test(stack)) {
                 stack = t.transform(stack);
                 break;
@@ -93,7 +93,7 @@ public class ItemStackTransformManager extends CoreManager {
         }
 
         // itemstack properties
-        for (ItemPropertyWriter w : PROPERTIES) {
+        for (ItemPropertyWriter w : properties) {
             if (w.test(stack)) {
                 if (!(stack instanceof WynnItemStack)) stack = new WynnItemStack(stack);
 

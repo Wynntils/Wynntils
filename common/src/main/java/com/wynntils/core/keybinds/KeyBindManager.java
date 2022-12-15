@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
-    private final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
+    private final Set<KeyBind> keyBinds = ConcurrentHashMap.newKeySet();
 
     public KeyBindManager() {
         super(List.of());
@@ -68,7 +68,7 @@ public final class KeyBindManager extends CoreManager {
         KeyMapping keyMapping = toAdd.getKeyMapping();
 
         synchronized (McUtils.options()) {
-            KEY_BINDS.add(toAdd);
+            keyBinds.add(toAdd);
 
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -85,7 +85,7 @@ public final class KeyBindManager extends CoreManager {
     }
 
     public void unregisterKeybind(KeyBind toRemove) {
-        if (!KEY_BINDS.remove(toRemove)) return;
+        if (!keyBinds.remove(toRemove)) return;
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
 
@@ -119,7 +119,7 @@ public final class KeyBindManager extends CoreManager {
     private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
         List<KeyBind> crashedKeyBinds = new LinkedList<>();
 
-        for (KeyBind keyBind : KEY_BINDS) {
+        for (KeyBind keyBind : keyBinds) {
             try {
                 checkKeybind.accept(keyBind);
             } catch (Throwable t) {
@@ -140,7 +140,7 @@ public final class KeyBindManager extends CoreManager {
     }
 
     private boolean hasName(String name) {
-        return KEY_BINDS.stream().anyMatch(k -> k.getName().equals(name));
+        return keyBinds.stream().anyMatch(k -> k.getName().equals(name));
     }
 
     public void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
