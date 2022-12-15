@@ -16,8 +16,7 @@ public abstract class Manager {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies
 
-        // In theory it is a bit scary to let "this" escape, but we will
-        // not start sending events until all managers are properly constructed
-        WynntilsMod.registerEventListener(this);
+        // A manager is responsible for never accessing another manager except
+        // those listed in the dependencies, due to bootstrapping ordering
     }
 }
