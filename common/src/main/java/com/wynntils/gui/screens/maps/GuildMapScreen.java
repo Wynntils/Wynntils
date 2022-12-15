@@ -93,9 +93,9 @@ public class GuildMapScreen extends AbstractMapScreen {
                             ? TerritoryDefenseLevel.OFF
                             : territoryDefenseFilterLevel.next();
                     territoryDefenseFilterButton.setTooltip(
-                            territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip());
+                            territoryDefenseFilterLevel.getTerritoryDefenseLevelFilterTooltip());
                 },
-                territoryDefenseFilterLevel.getTerritoryDefenseFilterButtonTooltip()));
+                territoryDefenseFilterLevel.getTerritoryDefenseLevelFilterTooltip()));
     }
 
     @Override

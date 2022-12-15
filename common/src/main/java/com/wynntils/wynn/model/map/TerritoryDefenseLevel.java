@@ -11,17 +11,19 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public enum TerritoryDefenseLevel {
-    OFF(ChatFormatting.GRAY + "Off"),
-    VERY_LOW(ChatFormatting.DARK_GREEN + "Very Low"),
-    LOW(ChatFormatting.GREEN + "Low"),
-    MEDIUM(ChatFormatting.YELLOW + "Medium"),
-    HIGH(ChatFormatting.RED + "High"),
-    VERY_HIGH(ChatFormatting.DARK_RED + "Very High");
+    OFF(ChatFormatting.GRAY + "Off", 0),
+    VERY_LOW(ChatFormatting.DARK_GREEN + "Very Low", 1),
+    LOW(ChatFormatting.GREEN + "Low", 2),
+    MEDIUM(ChatFormatting.YELLOW + "Medium", 3),
+    HIGH(ChatFormatting.RED + "High", 4),
+    VERY_HIGH(ChatFormatting.DARK_RED + "Very High", 5);
 
     private final String asColoredString;
+    private final int level;
 
-    TerritoryDefenseLevel(String asColoredString) {
+    TerritoryDefenseLevel(String asColoredString, int level) {
         this.asColoredString = asColoredString;
+        this.level = level;
     }
 
     public String asColoredString() {
@@ -32,7 +34,11 @@ public enum TerritoryDefenseLevel {
         return values()[(ordinal() + 1) % values().length];
     }
 
-    public List<Component> getTerritoryDefenseFilterButtonTooltip() {
+    public int getLevel() {
+        return level;
+    }
+
+    public List<Component> getTerritoryDefenseLevelFilterTooltip() {
         return List.of(
                 new TextComponent("[>] ")
                         .withStyle(ChatFormatting.BLUE)
