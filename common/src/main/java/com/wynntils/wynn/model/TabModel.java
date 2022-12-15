@@ -34,12 +34,12 @@ public final class TabModel extends Model {
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
-    private static List<StatusTimer> timers = new ArrayList<>();
+    private List<StatusTimer> timers = new ArrayList<>();
 
-    public static void init() {}
+    public void init() {}
 
     @SubscribeEvent
-    public static void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
+    public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
         String footer = event.getFooter();
 
         if (footer.isEmpty()) {
@@ -71,7 +71,7 @@ public final class TabModel extends Model {
         WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
-    public static List<StatusTimer> getTimers() {
+    public List<StatusTimer> getTimers() {
         return timers;
     }
 }

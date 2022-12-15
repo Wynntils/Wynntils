@@ -75,7 +75,7 @@ public final class ChatItemModel extends Model {
      * modified without also changing the encoding in legacy.
      *
      */
-    public static String encodeItem(GearItemStack item) {
+    public String encodeItem(GearItemStack item) {
         String itemName = item.getSimpleName();
 
         // get identification data - ordered for consistency
@@ -136,7 +136,7 @@ public final class ChatItemModel extends Model {
         return encoded.toString();
     }
 
-    private static GearItemStack decodeItem(String encoded) {
+    private GearItemStack decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 
@@ -215,11 +215,11 @@ public final class ChatItemModel extends Model {
         return new GearItemStack(item, idContainers, powderList, rerolls);
     }
 
-    public static Matcher chatItemMatcher(String text) {
+    public Matcher chatItemMatcher(String text) {
         return ENCODED_PATTERN.matcher(text);
     }
 
-    public static Component insertItemComponents(Component message) {
+    public Component insertItemComponents(Component message) {
         // no item tooltips to insert
         if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
@@ -267,7 +267,7 @@ public final class ChatItemModel extends Model {
         return temp;
     }
 
-    private static Component createItemComponent(GearItemStack item) {
+    private Component createItemComponent(GearItemStack item) {
         MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());
@@ -279,7 +279,7 @@ public final class ChatItemModel extends Model {
         return itemComponent;
     }
 
-    private static String encodeString(String text) {
+    private String encodeString(String text) {
         StringBuilder encoded = new StringBuilder();
         for (char c : text.toCharArray()) {
             int value = c - 32; // offset by 32 to ignore ascii control characters
@@ -288,11 +288,11 @@ public final class ChatItemModel extends Model {
         return encoded.toString();
     }
 
-    private static String encodeNumber(int value) {
+    private String encodeNumber(int value) {
         return new String(Character.toChars(value + OFFSET));
     }
 
-    private static String decodeString(String text) {
+    private String decodeString(String text) {
         StringBuilder decoded = new StringBuilder();
         for (int i = 0; i < text.length(); i += 2) {
             int value = text.codePointAt(i) - OFFSET + 32;
@@ -301,7 +301,7 @@ public final class ChatItemModel extends Model {
         return decoded.toString();
     }
 
-    private static int[] decodeNumbers(String text) {
+    private int[] decodeNumbers(String text) {
         int[] decoded = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i += 2) {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;

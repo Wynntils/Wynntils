@@ -14,11 +14,11 @@ public final class DurabilityPropertyModel extends Model {
     private static final ItemPropertyWriter DURABILITY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(DURABILITY_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(DURABILITY_WRITER);
     }
 }

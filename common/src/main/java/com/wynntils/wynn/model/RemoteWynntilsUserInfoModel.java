@@ -21,12 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class RemoteWynntilsUserInfoModel extends Model {
-    public static void init() {}
+    public void init() {}
 
-    private static final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
-    private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
+    private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
-    public static void loadUser(UUID uuid) {
+    public void loadUser(UUID uuid) {
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads
@@ -43,23 +43,23 @@ public final class RemoteWynntilsUserInfoModel extends Model {
         });
     }
 
-    public static WynntilsUser getUser(UUID uuid) {
+    public WynntilsUser getUser(UUID uuid) {
         return users.getOrDefault(uuid, null);
     }
 
-    private static void clearUserCache() {
+    private void clearUserCache() {
         users.clear();
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
             case NOT_CONNECTED, CONNECTING -> clearUserCache();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerJoinedWorldEvent event) {
+    public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         if (event.getPlayerId() == null || event.getPlayerInfo() == null) return;
         String name = event.getPlayerInfo().getProfile().getName();
         if (WynnPlayerUtils.isNpc(name)) return; // avoid player npcs

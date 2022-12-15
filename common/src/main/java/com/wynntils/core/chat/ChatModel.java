@@ -73,15 +73,15 @@ public final class ChatModel extends Model {
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
-    private static final Set<Feature> dialogExtractionDependents = new HashSet<>();
-    private static String lastRealChat = null;
-    private static List<Component> lastNpcDialog = List.of();
+    private final Set<Feature> dialogExtractionDependents = new HashSet<>();
+    private String lastRealChat = null;
+    private List<Component> lastNpcDialog = List.of();
 
     /** Needed for all Models */
-    public static void init() {}
+    public void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onChatReceived(ChatPacketReceivedEvent e) {
+    public void onChatReceived(ChatPacketReceivedEvent e) {
         if (e.getType() == ChatType.GAME_INFO) return;
 
         Component message = e.getMessage();
@@ -107,7 +107,7 @@ public final class ChatModel extends Model {
         }
     }
 
-    private static void handleMultilineMessage(Component message) {
+    private void handleMultilineMessage(Component message) {
         List<Component> lines = ComponentUtils.splitComponentInLines(message);
         // From now on, we'll work on reversed lists
         Collections.reverse(lines);
@@ -183,13 +183,13 @@ public final class ChatModel extends Model {
         }
 
         // Register all new chat lines
-        newChatLines.forEach(ChatModel::handleFakeChatLine);
+        newChatLines.forEach(this::handleFakeChatLine);
 
         // Update the new dialog
         handleNpcDialog(dialog);
     }
 
-    private static void handleFakeChatLine(Component chatMsg) {
+    private void handleFakeChatLine(Component chatMsg) {
         // This is a normal, single line chat
         saveLastChat(chatMsg);
         String coded = ComponentUtils.getCoded(chatMsg);
@@ -201,7 +201,7 @@ public final class ChatModel extends Model {
         McUtils.sendMessageToClient(updatedMessage);
     }
 
-    private static void saveLastChat(Component chatMsg) {
+    private void saveLastChat(Component chatMsg) {
         String plainText = chatMsg.getString();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
@@ -210,7 +210,7 @@ public final class ChatModel extends Model {
         }
     }
 
-    private static RecipientType getRecipientType(Component message, MessageType messageType) {
+    private RecipientType getRecipientType(Component message, MessageType messageType) {
         String msg = ComponentUtils.getCoded(message);
 
         // Check if message match a recipient category
@@ -236,7 +236,7 @@ public final class ChatModel extends Model {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private static Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
+    private Component handleChatLine(Component message, String codedMessage, MessageType messageType) {
         RecipientType recipientType = getRecipientType(message, messageType);
 
         ChatMessageReceivedEvent event =
@@ -246,7 +246,7 @@ public final class ChatModel extends Model {
         return event.getMessage();
     }
 
-    private static void handleNpcDialog(List<Component> dialog) {
+    private void handleNpcDialog(List<Component> dialog) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
@@ -259,11 +259,11 @@ public final class ChatModel extends Model {
         }
     }
 
-    public static void addNpcDialogExtractionDependent(Feature feature) {
+    public void addNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.add(feature);
     }
 
-    public static void removeNpcDialogExtractionDependent(Feature feature) {
+    public void removeNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.remove(feature);
     }
 }

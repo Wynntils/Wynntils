@@ -27,27 +27,27 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ServerListModel extends Model {
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
 
-    private static Map<String, ServerProfile> availableServers = new HashMap<>();
+    private Map<String, ServerProfile> availableServers = new HashMap<>();
 
-    public static void init() {
+    public void init() {
         updateServerList();
     }
 
-    public static List<String> getWynnServerTypes() {
+    public List<String> getWynnServerTypes() {
         return SERVER_TYPES;
     }
 
-    public static Set<String> getServers() {
+    public Set<String> getServers() {
         return availableServers.keySet();
     }
 
-    public static List<String> getServersSortedOnUptime() {
+    public List<String> getServersSortedOnUptime() {
         return getServers().stream()
                 .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
                 .toList();
     }
 
-    public static List<String> getServersSortedOnNameOfType(String serverType) {
+    public List<String> getServersSortedOnNameOfType(String serverType) {
         return getServers().stream()
                 .filter(server -> server.startsWith(serverType))
                 .sorted((o1, o2) -> {
@@ -59,11 +59,11 @@ public final class ServerListModel extends Model {
                 .toList();
     }
 
-    public static ServerProfile getServer(String worldId) {
+    public ServerProfile getServer(String worldId) {
         return availableServers.get(worldId);
     }
 
-    public static boolean forceUpdate(int timeOutMs) {
+    public boolean forceUpdate(int timeOutMs) {
         CompletableFuture<Boolean> future = updateServerList();
         try {
             future.get(timeOutMs, TimeUnit.MILLISECONDS);
@@ -75,14 +75,14 @@ public final class ServerListModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
         updateServerList();
     }
 
-    private static CompletableFuture<Boolean> updateServerList() {
+    private CompletableFuture<Boolean> updateServerList() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         // dataAthenaServerList is based on

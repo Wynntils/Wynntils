@@ -14,11 +14,11 @@ public final class SkillIconPropertyModel extends Model {
     private static final ItemPropertyWriter SKILL_ICON_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(SKILL_ICON_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(SKILL_ICON_WRITER);
     }
 }

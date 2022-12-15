@@ -14,11 +14,11 @@ public final class PowderTierPropertyModel extends Model {
     private static final ItemPropertyWriter POWDER_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isPowder, PowderTierProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(POWDER_TIER_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(POWDER_TIER_WRITER);
     }
 }

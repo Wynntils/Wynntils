@@ -14,11 +14,11 @@ public final class GearItemStackModel extends Model {
     private static final ItemStackTransformer GEAR_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerTransformer(GEAR_TRANSFORMER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(GEAR_TRANSFORMER);
     }
 }

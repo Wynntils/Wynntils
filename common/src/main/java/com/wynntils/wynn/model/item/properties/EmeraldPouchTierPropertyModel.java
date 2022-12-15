@@ -14,11 +14,11 @@ public final class EmeraldPouchTierPropertyModel extends Model {
     private static final ItemPropertyWriter EMERALD_POUCH_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(EMERALD_POUCH_TIER_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(EMERALD_POUCH_TIER_WRITER);
     }
 }

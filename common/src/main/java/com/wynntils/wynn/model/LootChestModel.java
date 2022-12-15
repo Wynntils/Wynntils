@@ -20,12 +20,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
-    public static void init() {}
+    public void init() {}
 
-    private static int nextExpectedLootContainerId = -2;
+    private int nextExpectedLootContainerId = -2;
 
     @SubscribeEvent
-    public static void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
         if (WynnScreenMatchers.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
@@ -35,7 +35,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onSetSlot(ContainerSetSlotEvent event) {
+    public void onSetSlot(ContainerSetSlotEvent event) {
         if (event.getContainerId() != nextExpectedLootContainerId) return;
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
@@ -56,7 +56,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onQuickMove(ChestMenuQuickMoveEvent event) {
+    public void onQuickMove(ChestMenuQuickMoveEvent event) {
         if (event.getContainerId() == nextExpectedLootContainerId) {
             nextExpectedLootContainerId = -2;
         }

@@ -14,11 +14,11 @@ public final class CosmeticTierPropertyModel extends Model {
     private static final ItemPropertyWriter COSMETIC_TIER_PROPERTY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(COSMETIC_TIER_PROPERTY_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(COSMETIC_TIER_PROPERTY_WRITER);
     }
 }

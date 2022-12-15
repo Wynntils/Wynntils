@@ -54,19 +54,19 @@ public final class ScoreboardModel extends Model {
     // 250 -> 4 times a second
     private static final int CHANGE_PROCESS_RATE = 250;
 
-    private static List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
+    private List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
 
-    private static List<Segment> segments = new ArrayList<>();
+    private List<Segment> segments = new ArrayList<>();
 
-    private static final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
+    private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private static final List<Pair<ScoreboardHandler, Set<SegmentType>>> scoreboardHandlers = new ArrayList<>();
+    private final List<Pair<ScoreboardHandler, Set<SegmentType>>> scoreboardHandlers = new ArrayList<>();
 
-    private static ScheduledExecutorService executor = null;
+    private ScheduledExecutorService executor = null;
 
-    private static boolean firstExecution = false;
+    private boolean firstExecution = false;
 
-    private static final Runnable changeHandlerRunnable = () -> {
+    private final Runnable changeHandlerRunnable = () -> {
         if (!WynnUtils.onWorld() || McUtils.player() == null) return;
 
         if (queuedChanges.isEmpty()) {
@@ -181,7 +181,7 @@ public final class ScoreboardModel extends Model {
         handleScoreboardReconstruction();
     };
 
-    private static void handleScoreboardReconstruction() {
+    private void handleScoreboardReconstruction() {
         McUtils.mc().doRunTask(() -> {
             Scoreboard scoreboard = McUtils.player().getScoreboard();
 
@@ -246,7 +246,7 @@ public final class ScoreboardModel extends Model {
         });
     }
 
-    private static List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
+    private List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
         List<Segment> segments = new ArrayList<>();
 
         Segment currentSegment = null;
@@ -302,7 +302,7 @@ public final class ScoreboardModel extends Model {
         return segments;
     }
 
-    public static void init() {
+    public void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
         registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
@@ -310,26 +310,26 @@ public final class ScoreboardModel extends Model {
         startThread();
     }
 
-    public static void disable() {
+    public void disable() {
         resetState();
         scoreboardHandlers.clear();
     }
 
-    private static void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
+    private void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
         registerHandler(handlerInstance, Set.of(segmentType));
     }
 
-    private static void registerHandler(ScoreboardHandler handlerInstance, Set<SegmentType> segmentTypes) {
+    private void registerHandler(ScoreboardHandler handlerInstance, Set<SegmentType> segmentTypes) {
         scoreboardHandlers.add(new Pair<>(handlerInstance, segmentTypes));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetScore(ScoreboardSetScoreEvent event) {
+    public void onSetScore(ScoreboardSetScoreEvent event) {
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             startThread();
             return;
@@ -338,13 +338,13 @@ public final class ScoreboardModel extends Model {
         resetState();
     }
 
-    private static void startThread() {
+    private void startThread() {
         firstExecution = true;
         executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(changeHandlerRunnable, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
     }
 
-    private static void resetState() {
+    private void resetState() {
         if (executor != null) {
             executor.shutdownNow();
             executor = null;

@@ -14,11 +14,11 @@ public final class PowderItemStackModel extends Model {
     private static final ItemStackTransformer POWDER_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isPowder, PowderItemStack::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerTransformer(POWDER_TRANSFORMER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(POWDER_TRANSFORMER);
     }
 }

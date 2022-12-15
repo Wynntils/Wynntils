@@ -18,14 +18,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CompassModel extends Model {
-    private static Supplier<Location> locationSupplier = null;
-    private static Location compassLocation = null; // this field acts as a cache for the supplier
-    private static Texture targetIcon = null;
+    private Supplier<Location> locationSupplier = null;
+    private Location compassLocation = null; // this field acts as a cache for the supplier
+    private Texture targetIcon = null;
 
-    public static void init() {}
+    public void init() {}
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.Start e) {
+    public void onTick(ClientTickEvent.Start e) {
         if (locationSupplier == null) return;
 
         Location newLocation = locationSupplier.get();
@@ -41,11 +41,11 @@ public final class CompassModel extends Model {
         }
     }
 
-    public static Optional<Location> getCompassLocation() {
+    public Optional<Location> getCompassLocation() {
         return Optional.ofNullable(compassLocation);
     }
 
-    public static Optional<WaypointPoi> getCompassWaypoint() {
+    public Optional<WaypointPoi> getCompassWaypoint() {
         if (locationSupplier != null && locationSupplier.get() != null) {
             WaypointPoi waypointPoi = new WaypointPoi(() -> {
                 Location location = locationSupplier.get();
@@ -59,15 +59,15 @@ public final class CompassModel extends Model {
         return Optional.empty();
     }
 
-    public static Texture getTargetIcon() {
+    public Texture getTargetIcon() {
         return targetIcon;
     }
 
-    public static void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
+    public void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
         setDynamicCompassLocation(compassSupplier, Texture.WAYPOINT);
     }
 
-    public static void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
+    public void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
         if (compassSupplier == null) {
             return;
         }
@@ -77,17 +77,17 @@ public final class CompassModel extends Model {
         targetIcon = icon;
     }
 
-    public static void setCompassLocation(Location location) {
+    public void setCompassLocation(Location location) {
         setCompassLocation(location, Texture.WAYPOINT);
     }
 
-    public static void setCompassLocation(Location location, Texture icon) {
+    public void setCompassLocation(Location location, Texture icon) {
         locationSupplier = () -> location;
         compassLocation = location;
         targetIcon = icon;
     }
 
-    public static void reset() {
+    public void reset() {
         compassLocation = null;
         locationSupplier = null;
 
@@ -99,7 +99,7 @@ public final class CompassModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onSetSpawn(SetSpawnEvent e) {
+    public void onSetSpawn(SetSpawnEvent e) {
         BlockPos spawnPos = e.getSpawnPos();
 
         if (McUtils.player() == null) {

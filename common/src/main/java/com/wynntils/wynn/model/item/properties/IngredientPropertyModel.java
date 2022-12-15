@@ -14,11 +14,11 @@ public final class IngredientPropertyModel extends Model {
     private static final ItemPropertyWriter INGREDIENT_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isIngredient, IngredientProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(INGREDIENT_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(INGREDIENT_WRITER);
     }
 }

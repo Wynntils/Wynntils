@@ -14,11 +14,11 @@ public final class ItemTierPropertyModel extends Model {
     private static final ItemPropertyWriter ITEM_TIER_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
 
-    public static void init() {
+    public void init() {
         Managers.ItemStackTransform.registerProperty(ITEM_TIER_WRITER);
     }
 
-    public static void disable() {
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(ITEM_TIER_WRITER);
     }
 }

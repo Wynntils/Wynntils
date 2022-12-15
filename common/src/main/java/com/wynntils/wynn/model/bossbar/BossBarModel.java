@@ -26,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class BossBarModel extends Model {
 
-    public static void init() {}
+    public void init() {}
 
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
@@ -42,7 +42,7 @@ public final class BossBarModel extends Model {
 
     // FixPacketBugsFeature gets in the way if receiveCanceled is not set
     @SubscribeEvent(receiveCanceled = true)
-    public static void onHealthBarEvent(BossHealthUpdateEvent event) {
+    public void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 
         packet.dispatch(new TrackedBarHandler(event));

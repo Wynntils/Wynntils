@@ -40,20 +40,20 @@ public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
-    private static HadesConnection hadesConnection;
-    private static int tickCountUntilUpdate = 0;
-    private static PlayerStatus lastSentStatus;
-    private static ScheduledExecutorService pingScheduler;
+    private HadesConnection hadesConnection;
+    private int tickCountUntilUpdate = 0;
+    private PlayerStatus lastSentStatus;
+    private ScheduledExecutorService pingScheduler;
 
-    public static void init() {
+    public void init() {
         tryCreateConnection();
     }
 
-    public static void disable() {
+    public void disable() {
         tryDisconnect();
     }
 
-    private static void tryCreateConnection() {
+    private void tryCreateConnection() {
         if (!Managers.WynntilsAccount.isLoggedIn()) {
             WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
             return;
@@ -74,31 +74,31 @@ public final class HadesModel extends Model {
         }
     }
 
-    private static void tryDisconnect() {
+    private void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
         }
     }
 
     @SubscribeEvent
-    public static void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(SocketEvent.Authenticated event) {
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
-        pingScheduler.scheduleAtFixedRate(HadesModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
+        pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
-    public static void onDisconnect(SocketEvent.Disconnected event) {
+    public void onDisconnect(SocketEvent.Disconnected event) {
         pingScheduler.shutdown();
     }
 
-    private static void sendPing() {
+    private void sendPing() {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketPing(System.currentTimeMillis()));
     }
 
     @SubscribeEvent
-    public static void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
+    public void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
         if (!HadesFeature.INSTANCE.shareWithFriends || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
@@ -108,7 +108,7 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
+    public void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
         if (!HadesFeature.INSTANCE.shareWithParty || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
@@ -118,17 +118,17 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         tryResendWorldData();
     }
 
     @SubscribeEvent
-    public static void onClassChange(CharacterUpdateEvent event) {
+    public void onClassChange(CharacterUpdateEvent event) {
         tryResendWorldData();
     }
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.End event) {
+    public void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
         if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
@@ -179,7 +179,7 @@ public final class HadesModel extends Model {
         }
     }
 
-    public static void tryResendWorldData() {
+    public void tryResendWorldData() {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
@@ -187,13 +187,13 @@ public final class HadesModel extends Model {
                 Managers.Character.getCharacterInfo().getId()));
     }
 
-    public static void resetSocialType(SocialType socialType) {
+    public void resetSocialType(SocialType socialType) {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
     }
 
-    private static boolean isSocketOpen() {
+    private boolean isSocketOpen() {
         return hadesConnection != null && hadesConnection.isOpen();
     }
 }
