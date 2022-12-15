@@ -10,6 +10,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -17,7 +18,6 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.ItemProperty;
-import com.wynntils.wynn.model.item.properties.DurabilityPropertyModel;
 import java.util.List;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class DurabilityArcFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(DurabilityPropertyModel.class);
+        return List.of(Models.DurabilityProperty.getClass());
     }
 
     @SubscribeEvent

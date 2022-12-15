@@ -6,15 +6,14 @@ package com.wynntils.features.user;
 
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
-import com.wynntils.core.chat.tabs.ChatTabModel;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
@@ -51,10 +50,10 @@ public class ChatTabsFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class, ChatTabModel.class);
+        return List.of(Models.Chat.getClass(), Models.ChatTab.getClass());
     }
 
-    // We do this here, and not in ChatTabModel to not introduce a feature-model dependency.
+    // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
@@ -62,7 +61,7 @@ public class ChatTabsFeature extends UserFeature {
             if (!chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                ChatTabModel.addMessageToTab(chatTab, event.getMessage());
+                Models.ChatTab.addMessageToTab(chatTab, event.getMessage());
                 return;
             }
         }
@@ -72,7 +71,7 @@ public class ChatTabsFeature extends UserFeature {
             if (chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                ChatTabModel.addMessageToTab(chatTab, event.getMessage());
+                Models.ChatTab.addMessageToTab(chatTab, event.getMessage());
             }
         }
 
@@ -87,7 +86,7 @@ public class ChatTabsFeature extends UserFeature {
             if (!chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                ChatTabModel.addMessageToTab(chatTab, event.getComponent());
+                Models.ChatTab.addMessageToTab(chatTab, event.getComponent());
                 return;
             }
         }
@@ -97,7 +96,7 @@ public class ChatTabsFeature extends UserFeature {
             if (chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                ChatTabModel.addMessageToTab(chatTab, event.getComponent());
+                Models.ChatTab.addMessageToTab(chatTab, event.getComponent());
             }
         }
 
@@ -121,9 +120,9 @@ public class ChatTabsFeature extends UserFeature {
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.WORLD
                 && !chatTabs.isEmpty()
-                && ChatTabModel.getFocusedTab() == null) {
+                && Models.ChatTab.getFocusedTab() == null) {
             // We joined wynn, time to override our focused tab.
-            ChatTabModel.setFocusedTab(chatTabs.get(0));
+            Models.ChatTab.setFocusedTab(chatTabs.get(0));
         }
     }
 
@@ -144,21 +143,21 @@ public class ChatTabsFeature extends UserFeature {
         if (!KeyboardUtils.isShiftDown()) return;
 
         event.setCanceled(true);
-        ChatTabModel.setFocusedTab(
-                chatTabs.get((chatTabs.indexOf(ChatTabModel.getFocusedTab()) + 1) % chatTabs.size()));
+        Models.ChatTab.setFocusedTab(
+                chatTabs.get((chatTabs.indexOf(Models.ChatTab.getFocusedTab()) + 1) % chatTabs.size()));
     }
 
     @Override
     protected void postEnable() {
         if (chatTabs.isEmpty()) return;
 
-        ChatTabModel.setFocusedTab(chatTabs.get(0));
+        Models.ChatTab.setFocusedTab(chatTabs.get(0));
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (!chatTabs.isEmpty()) {
-            ChatTabModel.setFocusedTab(chatTabs.get(0));
+            Models.ChatTab.setFocusedTab(chatTabs.get(0));
         }
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {

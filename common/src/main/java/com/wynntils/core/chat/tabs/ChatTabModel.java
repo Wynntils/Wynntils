@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ChatTabModel extends Model {
+public final class ChatTabModel extends Model {
     private static ChatTab focusedTab = null;
 
     private static final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();

@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.ModelRegistry;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.objects.Location;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -60,7 +60,7 @@ public class TerritoryCommand extends CommandBase {
         MutableComponent territoryComponent = new TextComponent(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
-        if (!ModelRegistry.isEnabled(CompassModel.class)) {
+        if (!ModelRegistry.isEnabled(Models.Compass.getClass())) {
             MutableComponent success = territoryComponent
                     .append(": ")
                     .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
@@ -68,7 +68,7 @@ public class TerritoryCommand extends CommandBase {
             return 1;
         }
 
-        CompassModel.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
+        Models.Compass.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
         MutableComponent separator = new TextComponent("-----------------------------------------------------")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withStrikethrough(true));

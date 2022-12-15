@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class GearItemStackModel extends Model {
+public final class GearItemStackModel extends Model {
     private static final ItemStackTransformer GEAR_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isKnownGear, GearItemStack::new);
 

@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -30,7 +31,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ChatItemModel {
+public final class ChatItemModel extends Model {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));

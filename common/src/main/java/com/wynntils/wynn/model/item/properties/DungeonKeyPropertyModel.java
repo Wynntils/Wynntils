@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class DungeonKeyPropertyModel extends Model {
+public final class DungeonKeyPropertyModel extends Model {
     private static final ItemPropertyWriter DUNGEON_KEY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
 

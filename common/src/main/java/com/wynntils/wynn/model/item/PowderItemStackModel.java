@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class PowderItemStackModel extends Model {
+public final class PowderItemStackModel extends Model {
     private static final ItemStackTransformer POWDER_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isPowder, PowderItemStack::new);
 
