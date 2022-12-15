@@ -29,6 +29,7 @@ public final class ServerListModel extends Model {
 
     private Map<String, ServerProfile> availableServers = new HashMap<>();
 
+    @Override
     public void init() {
         updateServerList();
     }

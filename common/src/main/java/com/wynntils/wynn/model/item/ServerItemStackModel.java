@@ -14,10 +14,12 @@ public final class ServerItemStackModel extends Model {
     private static final ItemStackTransformer SERVER_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isServerItem, ServerItemStack::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerTransformer(SERVER_TRANSFORMER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(SERVER_TRANSFORMER);
     }

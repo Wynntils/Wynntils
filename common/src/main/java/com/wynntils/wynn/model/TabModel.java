@@ -36,6 +36,7 @@ public final class TabModel extends Model {
 
     private List<StatusTimer> timers = new ArrayList<>();
 
+    @Override
     public void init() {}
 
     @SubscribeEvent

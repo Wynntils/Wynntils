@@ -35,6 +35,7 @@ public final class ActionBarModel extends Model {
     private int maxMana = -1;
 
     /** Needed for all Models */
+    @Override
     public void init() {}
 
     @SubscribeEvent

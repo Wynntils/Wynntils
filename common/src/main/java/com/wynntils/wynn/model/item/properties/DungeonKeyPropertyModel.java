@@ -14,10 +14,12 @@ public final class DungeonKeyPropertyModel extends Model {
     private static final ItemPropertyWriter DUNGEON_KEY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerProperty(DUNGEON_KEY_WRITER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterProperty(DUNGEON_KEY_WRITER);
     }

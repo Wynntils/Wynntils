@@ -78,6 +78,7 @@ public final class ChatModel extends Model {
     private List<Component> lastNpcDialog = List.of();
 
     /** Needed for all Models */
+    @Override
     public void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

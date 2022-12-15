@@ -14,10 +14,12 @@ public final class IngredientItemStackModel extends Model {
     private static final ItemStackTransformer INGREDIENT_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isIngredient, IngredientItemStack::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerTransformer(INGREDIENT_TRANSFORMER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(INGREDIENT_TRANSFORMER);
     }

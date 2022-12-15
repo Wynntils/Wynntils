@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class RemoteWynntilsUserInfoModel extends Model {
+    @Override
     public void init() {}
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();

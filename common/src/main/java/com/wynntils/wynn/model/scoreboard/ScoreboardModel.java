@@ -302,6 +302,7 @@ public final class ScoreboardModel extends Model {
         return segments;
     }
 
+    @Override
     public void init() {
         registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
@@ -310,6 +311,7 @@ public final class ScoreboardModel extends Model {
         startThread();
     }
 
+    @Override
     public void disable() {
         resetState();
         scoreboardHandlers.clear();

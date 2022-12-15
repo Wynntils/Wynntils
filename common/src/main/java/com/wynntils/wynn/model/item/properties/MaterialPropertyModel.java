@@ -14,10 +14,12 @@ public final class MaterialPropertyModel extends Model {
     private static final ItemPropertyWriter MATERIAL_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isMaterial, MaterialProperty::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerProperty(MATERIAL_WRITER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterProperty(MATERIAL_WRITER);
     }

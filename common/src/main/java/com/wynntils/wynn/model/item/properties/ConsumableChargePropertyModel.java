@@ -14,10 +14,12 @@ public final class ConsumableChargePropertyModel extends Model {
     private static final ItemPropertyWriter CONSUMABLE_CHARGE_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerProperty(CONSUMABLE_CHARGE_WRITER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterProperty(CONSUMABLE_CHARGE_WRITER);
     }

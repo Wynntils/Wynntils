@@ -45,10 +45,12 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
+    @Override
     public void init() {
         tryCreateConnection();
     }
 
+    @Override
     public void disable() {
         tryDisconnect();
     }

@@ -20,6 +20,7 @@ public final class ShamanMaskModel extends Model {
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
 
+    @Override
     public void init() {}
 
     @SubscribeEvent

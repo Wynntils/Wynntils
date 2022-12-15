@@ -53,6 +53,7 @@ public final class TranslationModel extends Model {
         translator = null;
     }
 
+    @Override
     public void init() {
         CachingTranslationService.loadTranslationCache();
     }

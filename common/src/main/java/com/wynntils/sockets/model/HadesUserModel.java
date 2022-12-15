@@ -15,10 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class HadesUserModel extends Model {
     private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
+    @Override
     public void init() {
         hadesUserMap = new HashMap<>();
     }
 
+    @Override
     public void disable() {
         hadesUserMap.clear();
     }

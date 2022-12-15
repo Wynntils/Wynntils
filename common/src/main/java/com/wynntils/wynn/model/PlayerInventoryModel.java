@@ -20,10 +20,12 @@ public final class PlayerInventoryModel extends Model {
     private int emeralds = 0;
     private int openSlots = 0;
 
+    @Override
     public void init() {
         resetCache();
     }
 
+    @Override
     public void disable() {
         resetCache();
     }

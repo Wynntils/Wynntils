@@ -53,10 +53,12 @@ public final class PlayerRelationsModel extends Model {
     private Set<String> friends;
     private Set<String> partyMembers;
 
+    @Override
     public void init() {
         resetRelations();
     }
 
+    @Override
     public void disable() {
         resetRelations();
     }

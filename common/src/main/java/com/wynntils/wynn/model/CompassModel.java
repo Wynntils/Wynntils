@@ -22,6 +22,7 @@ public final class CompassModel extends Model {
     private Location compassLocation = null; // this field acts as a cache for the supplier
     private Texture targetIcon = null;
 
+    @Override
     public void init() {}
 
     @SubscribeEvent

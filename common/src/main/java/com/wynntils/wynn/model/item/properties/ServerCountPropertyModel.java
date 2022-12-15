@@ -14,10 +14,12 @@ public final class ServerCountPropertyModel extends Model {
     private static final ItemPropertyWriter SERVER_COUNT_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isServerItem, ServerCountProperty::new);
 
+    @Override
     public void init() {
         Managers.ItemStackTransform.registerProperty(SERVER_COUNT_WRITER);
     }
 
+    @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterProperty(SERVER_COUNT_WRITER);
     }

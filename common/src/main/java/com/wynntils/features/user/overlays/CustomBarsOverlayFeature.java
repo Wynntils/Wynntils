@@ -225,6 +225,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
+        @Override
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();
