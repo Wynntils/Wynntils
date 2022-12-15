@@ -60,7 +60,9 @@ public final class ManagerRegistry {
         Class<? extends CoreManager> manager = managerInstance.getClass();
         PERSISTENT_CORE_MANAGERS.add(manager);
         ENABLED_MANAGERS.add(manager);
+        // FIXME: Remove the class registration when all static methods are gone
         WynntilsMod.registerEventListener(manager);
+        WynntilsMod.registerEventListener(managerInstance);
     }
 
     private static void addDependency(ModelDependant dependant, Class<? extends Model> dependency) {
