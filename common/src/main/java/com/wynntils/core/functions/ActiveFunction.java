@@ -19,6 +19,8 @@ public abstract class ActiveFunction<T> extends DependantFunction<T> {
         return List.of();
     }
 
+    public void init() {}
+
     /**
      * Called on enabling of Function
      *
@@ -27,6 +29,9 @@ public abstract class ActiveFunction<T> extends DependantFunction<T> {
     public boolean onEnable() {
         return true;
     }
+
+    /** Called on disabling of Function */
+    public void onDisable() {}
 
     /**
      * Return the time the value was last updated, as given by System.currentTimeMillis().
