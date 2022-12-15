@@ -13,6 +13,7 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
+import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
