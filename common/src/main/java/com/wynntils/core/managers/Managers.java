@@ -34,7 +34,6 @@ public final class Managers {
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigManager Config = new ConfigManager();
     public static final ContainerQueryManager ContainerQuery = new ContainerQueryManager();
-    public static final FunctionManager Function = new FunctionManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
@@ -43,6 +42,7 @@ public final class Managers {
 
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final NetManager Net = new NetManager(Url);
+    public static final FunctionManager Function = new FunctionManager(ItemStackTransform);
     public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
     public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);
