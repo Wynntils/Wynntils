@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.TeleportScrollProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class TeleportScrollPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class TeleportScrollPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(TELEPORT_SCROLL_WRITER);
+        Managers.ItemStackTransform.registerProperty(TELEPORT_SCROLL_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(TELEPORT_SCROLL_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(TELEPORT_SCROLL_WRITER);
     }
 }

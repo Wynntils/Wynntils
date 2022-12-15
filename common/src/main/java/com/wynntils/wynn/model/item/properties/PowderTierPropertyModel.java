@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.item.properties;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.PowderTierProperty;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
 public class PowderTierPropertyModel extends Model {
@@ -15,10 +15,10 @@ public class PowderTierPropertyModel extends Model {
             new ItemPropertyWriter(WynnItemMatchers::isPowder, PowderTierProperty::new);
 
     public static void init() {
-        ItemStackTransformManager.registerProperty(POWDER_TIER_WRITER);
+        Managers.ItemStackTransform.registerProperty(POWDER_TIER_WRITER);
     }
 
     public static void disable() {
-        ItemStackTransformManager.unregisterProperty(POWDER_TIER_WRITER);
+        Managers.ItemStackTransform.unregisterProperty(POWDER_TIER_WRITER);
     }
 }

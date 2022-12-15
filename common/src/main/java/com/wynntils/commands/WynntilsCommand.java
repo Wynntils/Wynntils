@@ -8,14 +8,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,10 +28,14 @@ import net.minecraft.network.chat.TextComponent;
 public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        throw new UnsupportedOperationException("WynntilsCommand need special treatment");
+    }
+
+    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, Set<CommandBase> commands) {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : ClientCommandManager.getCommandInstanceSet()) {
+        for (CommandBase commandInstance : commands) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
@@ -79,9 +83,15 @@ public class WynntilsCommand extends CommandBase {
             feature.disable();
         }
 
-        WebManager.reset();
-        ItemProfilesManager.reset();
-        WebManager.init(); // reloads api urls as well as web manager
+        // Try to reload downloaded data.
+        // It is highly unclear if this achieves anything like what it was supposed
+        // to do. The entire /wynntils reload needs to be rethought. See
+        // https://github.com/Wynntils/Artemis/issues/824
+
+        Managers.ItemProfiles.reset();
+        Managers.Url.reloadUrls();
+        Managers.Splash.reset();
+        Managers.WynntilsAccount.reset();
 
         for (Feature feature : enabledFeatures) { // re-enable all features which should be
             if (feature.canEnable()) {
@@ -109,11 +119,12 @@ public class WynntilsCommand extends CommandBase {
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent("https://www.patreon.com/Wynntils")
+        MutableComponent url = new TextComponent(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.patreon.com/Wynntils"))
+                        .withClickEvent(new ClickEvent(
+                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new TextComponent("Click here to open in your" + " browser."))));
@@ -149,18 +160,14 @@ public class WynntilsCommand extends CommandBase {
     private int discordLink(CommandContext<CommandSourceStack> context) {
         MutableComponent msg =
                 new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = WebManager.getApiUrls().isEmpty()
-                ? null
-                : WebManager.getApiUrls().get().get("DiscordInvite");
-        MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
-        if (discordInvite != null) {
-            link.setStyle(link.getStyle()
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
-                    .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new TextComponent("Click here to join our Discord" + " server."))));
-        }
+        String discordInvite = Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
+        MutableComponent link =
+                new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+        link.setStyle(link.getStyle()
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
+                .withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        new TextComponent("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }

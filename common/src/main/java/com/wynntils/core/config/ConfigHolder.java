@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.managers.Managers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class ConfigHolder {
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = ConfigManager.deepCopy(getValue(), this.fieldType);
+        this.defaultValue = Managers.Config.deepCopy(getValue(), this.fieldType);
     }
 
     private Type calculateType(Type typeOverride, Object value, Field field) {
@@ -163,7 +164,7 @@ public class ConfigHolder {
     public void reset() {
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(ConfigManager.deepCopy(defaultValue, this.fieldType));
+        setValue(Managers.Config.deepCopy(defaultValue, this.fieldType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }

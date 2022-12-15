@@ -6,13 +6,13 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
@@ -51,6 +51,30 @@ public class MapFeature extends UserFeature {
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
+
+    @Config
+    public float poiFadeDistance = 0.6f;
+
+    @Config
+    public float combatPoiMinZoom = 0.1f;
+
+    @Config
+    public float servicePoiMinZoom = 1f;
+
+    @Config
+    public float customPoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier1PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier2PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.1f;
 
     @Config
     public PointerType pointerType = PointerType.Arrow;
@@ -132,7 +156,11 @@ public class MapFeature extends UserFeature {
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
-                location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
+                location,
+                tier.getWaypointName(),
+                CommonColors.WHITE,
+                tier.getWaypointTexture(),
+                CustomPoi.Visibility.DEFAULT);
 
         if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
             MapFeature.INSTANCE.customPois.add(newPoi);
@@ -141,7 +169,7 @@ public class MapFeature extends UserFeature {
             NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 

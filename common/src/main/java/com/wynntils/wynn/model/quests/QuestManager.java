@@ -5,47 +5,45 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.utils.WebUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class QuestManager extends CoreManager {
-    private static final String WIKI_BASE_URL = "https://wynncraft.fandom.com/wiki/";
-    private static final String WIKI_QUEST_PAGE_QUERY =
-            "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=";
-
+public class QuestManager extends Manager {
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
 
-    private static List<QuestInfo> quests = List.of();
-    private static List<QuestInfo> miniQuests = List.of();
-    private static List<List<String>> dialogueHistory = List.of();
-    private static QuestInfo currentQuest = null;
+    private List<QuestInfo> quests = List.of();
+    private List<QuestInfo> miniQuests = List.of();
+    private List<List<String>> dialogueHistory = List.of();
+    private QuestInfo currentQuest = null;
 
-    public static void init() {}
+    public QuestManager(NetManager netManager) {
+        super(List.of(netManager));
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onWorldStateChanged(WorldStateEvent e) {
+    public void onWorldStateChanged(WorldStateEvent e) {
         quests = List.of();
         dialogueHistory = List.of();
     }
 
-    public static void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
+    public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
         WynntilsMod.info("Requesting rescan of Quest Book");
         if (includeQuests) {
             CONTAINER_QUERIES.queryQuestBook();
@@ -55,19 +53,19 @@ public class QuestManager extends CoreManager {
         }
     }
 
-    public static void rescanDialogueHistory() {
+    public void rescanDialogueHistory() {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
-    public static List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
+    public List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
 
-    public static List<QuestInfo> getMiniQuests(QuestSortOrder sortOrder) {
+    public List<QuestInfo> getMiniQuests(QuestSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, miniQuests);
     }
 
-    private static List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questList) {
+    private List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {
@@ -89,52 +87,42 @@ public class QuestManager extends CoreManager {
         };
     }
 
-    public static Optional<QuestInfo> getQuestFromName(String name) {
+    public Optional<QuestInfo> getQuestFromName(String name) {
         return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
     }
 
-    public static List<List<String>> getDialogueHistory() {
+    public List<List<String>> getDialogueHistory() {
         return dialogueHistory;
     }
 
-    public static void toggleTracking(QuestInfo questInfo) {
+    public void toggleTracking(QuestInfo questInfo) {
         CONTAINER_QUERIES.toggleTracking(questInfo);
     }
 
-    public static void openQuestOnWiki(QuestInfo questInfo) {
+    public void openQuestOnWiki(QuestInfo questInfo) {
         if (questInfo.isMiniQuest()) {
             String type = questInfo.getName().split(" ")[0];
 
-            String wikiName = "Quests#" + type + "ing_Posts"; // Don't encode #
+            String wikiName = "Quests#" + type + "ing_Posts";
 
-            Utils.openUrl(WIKI_BASE_URL + wikiName);
+            Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
             return;
         }
 
-        String url = WIKI_QUEST_PAGE_QUERY + WebUtils.encodeForCargoQuery(questInfo.getName());
-        Request req = new RequestBuilder(url, "WikiQuestQuery")
-                .handleJsonArray(jsonOutput -> {
-                    String pageTitle = jsonOutput
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("_pageTitle")
-                            .getAsString();
-                    Utils.openUrl(WIKI_BASE_URL + WebUtils.encodeForWikiTitle(pageTitle));
-                    return true;
-                })
-                .build();
-
-        RequestHandler handler = new RequestHandler();
-
-        handler.addAndDispatch(req, true);
+        ApiResponse apiResponse =
+                Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
+        apiResponse.handleJsonArray(json -> {
+            String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
+            Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+        });
     }
 
-    public static QuestInfo getCurrentQuest() {
+    public QuestInfo getCurrentQuest() {
         return currentQuest;
     }
 
-    public static Location getCurrentQuestLocation() {
-        QuestInfo questInfo = QuestManager.getCurrentQuest();
+    public Location getCurrentQuestLocation() {
+        QuestInfo questInfo = getCurrentQuest();
 
         if (questInfo == null) return null;
 
@@ -145,40 +133,40 @@ public class QuestManager extends CoreManager {
         return location.get();
     }
 
-    protected static void setCurrentQuest(QuestInfo questInfo) {
+    protected void setCurrentQuest(QuestInfo questInfo) {
         currentQuest = questInfo;
         WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
     }
 
-    protected static void setQuests(List<QuestInfo> newQuests) {
+    protected void setQuests(List<QuestInfo> newQuests) {
         quests = newQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    protected static void setMiniQuests(List<QuestInfo> newMiniQuests) {
+    protected void setMiniQuests(List<QuestInfo> newMiniQuests) {
         miniQuests = newMiniQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
     }
 
-    protected static void setDialogueHistory(List<List<String>> newDialogueHistory) {
+    protected void setDialogueHistory(List<List<String>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }
 
     /** Shared between the container query classes */
-    public static String getQuestBookTitle(int pageNum) {
+    public String getQuestBookTitle(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
-        private static final Vec3 PLAYER_LOCATION = McUtils.player().position();
+        private final Vec3 playerLocation = McUtils.player().position();
 
         private double getDistance(Optional<Location> loc) {
             // Quests with no location always counts as closest
             if (loc.isEmpty()) return 0f;
 
             Location location = loc.get();
-            return PLAYER_LOCATION.distanceToSqr(location.toVec3());
+            return playerLocation.distanceToSqr(location.toVec3());
         }
 
         @Override

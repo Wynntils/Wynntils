@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.core.commands.ClientCommandManager;
+import com.wynntils.core.managers.Managers;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
@@ -40,7 +40,7 @@ public abstract class CommandSuggestionsMixin {
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
             int cursor) {
-        return ClientCommandManager.getCompletionSuggestions(
+        return Managers.ClientCommand.getCompletionSuggestions(
                 input.getValue(), serverDispatcher, clientParse, serverParse, cursor);
     }
 
@@ -54,8 +54,8 @@ public abstract class CommandSuggestionsMixin {
                             remap = false))
     private ParseResults<SharedSuggestionProvider> redirectParse(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher, StringReader command, Object source) {
-        CommandDispatcher<CommandSourceStack> clientDispatcher = ClientCommandManager.getClientDispatcher();
-        clientParse = clientDispatcher.parse(command, ClientCommandManager.getSource());
+        CommandDispatcher<CommandSourceStack> clientDispatcher = Managers.ClientCommand.getClientDispatcher();
+        clientParse = clientDispatcher.parse(command, Managers.ClientCommand.getSource());
 
         return serverDispatcher.parse(command, (SharedSuggestionProvider) source);
     }

@@ -26,6 +26,11 @@ public class WaypointPoi extends DynamicIconPoi {
     }
 
     @Override
+    public float getMinZoomForRender() {
+        return -1f;
+    }
+
+    @Override
     public String getName() {
         return "Waypoint";
     }
@@ -44,6 +49,11 @@ public class WaypointPoi extends DynamicIconPoi {
         @Override
         public Texture getIcon() {
             return Texture.POINTER;
+        }
+
+        @Override
+        public float getMinZoomForRender() {
+            return -1f;
         }
 
         @Override

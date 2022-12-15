@@ -6,7 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,18 +24,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class UrlManager extends CoreManager {
-    private static Map<UrlId, UrlInfo> urlMap = Map.of();
+public final class UrlManager extends Manager {
+    private Map<UrlId, UrlInfo> urlMap = Map.of();
 
-    public static void init() {
+    public UrlManager() {
+        super(List.of());
         loadUrls();
     }
 
-    public static UrlInfo getUrlInfo(UrlId urlId) {
+    public UrlInfo getUrlInfo(UrlId urlId) {
         return urlMap.get(urlId);
     }
 
-    public static String getUrl(UrlId urlId) {
+    public String getUrl(UrlId urlId) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
         // This is only valid for POST URLs, or GET URLs with no arguments
@@ -43,13 +45,13 @@ public final class UrlManager extends CoreManager {
         return urlInfo.url();
     }
 
-    public static String buildUrl(UrlId urlId, Map<String, String> arguments) {
+    public String buildUrl(UrlId urlId, Map<String, String> arguments) {
         UrlInfo urlInfo = urlMap.get(urlId);
 
         return buildUrl(urlInfo, arguments);
     }
 
-    public static String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
+    public String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
         // Verify that arguments match with what is specified
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
 
@@ -64,11 +66,11 @@ public final class UrlManager extends CoreManager {
                                 StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
     }
 
-    public static void reloadUrls() {
+    public void reloadUrls() {
         loadUrls();
     }
 
-    private static void loadUrls() {
+    private void loadUrls() {
         // Figure out where to load the URLs from initially
         try (InputStream inputStream = getLocalInputStream()) {
             readUrls(inputStream);
@@ -80,7 +82,10 @@ public final class UrlManager extends CoreManager {
         }
 
         // Then trigger a (re-)download from the net to the cache
-        Download dl = NetManager.download(UrlId.DATA_STATIC_URLS);
+        // FIXME: How handle this properly?
+        if (Managers.Net == null) return;
+
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_URLS);
         dl.handleInputStream(inputStream -> {
             try {
                 readUrls(inputStream);
@@ -90,10 +95,21 @@ public final class UrlManager extends CoreManager {
         });
     }
 
-    private static InputStream getLocalInputStream() {
+    private InputStream getLocalInputStream() {
+        File cacheFile = null;
+        boolean useCache;
+
         // First check if there is a copy in the local cache
-        File cacheFile = NetManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
-        if (cacheFile.exists() && cacheFile.length() > 0) {
+        if (Managers.Net != null) {
+            // FIXME: Resolve this circular dependency better
+
+            cacheFile = Managers.Net.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+            useCache = (cacheFile.exists() && cacheFile.length() > 0);
+        } else {
+            useCache = false;
+        }
+
+        if (useCache) {
             // Yes, we have a cache. Use it to populate the map
             try {
                 return new FileInputStream(cacheFile);
@@ -108,7 +124,7 @@ public final class UrlManager extends CoreManager {
         }
     }
 
-    private static void readUrls(InputStream inputStream) throws IOException {
+    private void readUrls(InputStream inputStream) throws IOException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();

@@ -15,6 +15,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -28,7 +29,6 @@ import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         if (!autoTrackQuestCoordinates) return;
 
         // set if valid
-        CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
+        CompassModel.setDynamicCompassLocation(Managers.Quest::getCurrentQuestLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -140,7 +140,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestManager.getCurrentQuest();
+            QuestInfo currentQuest = Managers.Quest.getCurrentQuest();
 
             if (currentQuest == null) {
                 return;
