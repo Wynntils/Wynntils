@@ -1,9 +1,21 @@
+## [0.0.1-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.161...v0.0.1-alpha.162) (2022-12-15)
+
+
+### New Features
+
+* Add POI fading and POI visibility configs ([#832](https://github.com/Wynntils/Artemis/issues/832)) ([c6299fd](https://github.com/Wynntils/Artemis/commit/c6299fd1783b5e180f0169f013df946386fb30c6))
+
 ## [0.0.1-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.160...v0.0.1-alpha.161) (2022-12-14)
 
 
 ### Bug Fixes
 
 * NetManager conversions and removal of WebManager ([#826](https://github.com/Wynntils/Artemis/issues/826)) ([ee3109f](https://github.com/Wynntils/Artemis/commit/ee3109f9068e1aa6a5056ae3103a49342ab5413f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.161 [skip ci] ([7c7ab65](https://github.com/Wynntils/Artemis/commit/7c7ab656d832a2723b01ac6788445d523d321036))
 
 ## [0.0.1-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.159...v0.0.1-alpha.160) (2022-12-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.158 [skip ci] ([be3a282](https://github.com/Wynntils/Artemis/commit/be3a2823dc26a5c1333fb5e4746e4ba919a0d1a5))
-
-## [0.0.1-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.156...v0.0.1-alpha.157) (2022-12-14)
-
-
-### Code Refactoring
-
-* item transformer model rework ([#794](https://github.com/Wynntils/Artemis/issues/794)) ([14f7163](https://github.com/Wynntils/Artemis/commit/14f7163504e67fc8bb3982553eb6457ee1102a99))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.157 [skip ci] ([6a186c3](https://github.com/Wynntils/Artemis/commit/6a186c323da671902b303b8160a5e067aa60e336))
 
