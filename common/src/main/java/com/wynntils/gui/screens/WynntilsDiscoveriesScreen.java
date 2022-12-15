@@ -22,7 +22,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
-import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -201,7 +200,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                DiscoveryManager::reloadDiscoveries));
+                Managers.Discovery::reloadDiscoveries));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,

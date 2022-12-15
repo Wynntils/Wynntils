@@ -9,7 +9,6 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -154,7 +153,7 @@ public class OverlayManagementScreen extends Screen {
             }
 
             Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
@@ -256,7 +255,7 @@ public class OverlayManagementScreen extends Screen {
 
         if (!fixedSelection) {
             Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {

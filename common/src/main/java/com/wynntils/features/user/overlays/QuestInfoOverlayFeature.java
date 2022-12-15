@@ -29,7 +29,6 @@ import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         if (!autoTrackQuestCoordinates) return;
 
         // set if valid
-        CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
+        CompassModel.setDynamicCompassLocation(Managers.Quest::getCurrentQuestLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
