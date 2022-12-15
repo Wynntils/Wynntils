@@ -39,20 +39,20 @@ public class NetManager extends CoreManager {
     @Override
     public void init() {}
 
-    public static ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         return createApiResponse(urlInfo, arguments);
     }
 
-    public static ApiResponse callApi(UrlId urlId) {
+    public ApiResponse callApi(UrlId urlId) {
         return callApi(urlId, Map.of());
     }
 
-    public static Download download(URI uri, File file) {
+    public Download download(URI uri, File file) {
         return new Download(file, createGetRequest(uri));
     }
 
-    public static Download download(URI uri, File file, String expectedHash) {
+    public Download download(URI uri, File file, String expectedHash) {
         if (checkLocalHash(file, expectedHash)) {
             return new Download(file);
         }
@@ -60,17 +60,17 @@ public class NetManager extends CoreManager {
         return download(uri, file);
     }
 
-    public static Download download(URI uri, String localFileName) {
+    public Download download(URI uri, String localFileName) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile);
     }
 
-    public static Download download(URI uri, String localFileName, String expectedHash) {
+    public Download download(URI uri, String localFileName, String expectedHash) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, expectedHash);
     }
 
-    public static Download download(UrlId urlId) {
+    public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
         String localFileName = urlId.getId();
@@ -81,20 +81,20 @@ public class NetManager extends CoreManager {
         return download(uri, localFileName);
     }
 
-    public static File getCacheFile(String localFileName) {
+    public File getCacheFile(String localFileName) {
         return new File(CACHE_DIR, localFileName);
     }
 
-    public static void openLink(URI url) {
+    public void openLink(URI url) {
         Util.getPlatform().openUri(url);
     }
 
-    public static void openLink(UrlId urlId, Map<String, String> arguments) {
+    public void openLink(UrlId urlId, Map<String, String> arguments) {
         URI uri = URI.create(Managers.Url.buildUrl(urlId, arguments));
         openLink(uri);
     }
 
-    private static HttpRequest createGetRequest(URI uri) {
+    private HttpRequest createGetRequest(URI uri) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
@@ -102,7 +102,7 @@ public class NetManager extends CoreManager {
                 .build();
     }
 
-    private static HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
+    private HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
@@ -112,7 +112,7 @@ public class NetManager extends CoreManager {
                 .build();
     }
 
-    private static ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
+    private ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
@@ -129,7 +129,7 @@ public class NetManager extends CoreManager {
         }
     }
 
-    private static boolean checkLocalHash(File localFile, String expectedHash) {
+    private boolean checkLocalHash(File localFile, String expectedHash) {
         if (!localFile.exists()) return false;
 
         try (InputStream is = Files.newInputStream(localFile.toPath())) {

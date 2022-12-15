@@ -20,8 +20,8 @@ public class SplashManager extends CoreManager {
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
 
-    private static List<String> allSplashes = new ArrayList<>();
-    private static String currentSplash = DEFAULT_SPLASH;
+    private List<String> allSplashes = new ArrayList<>();
+    private String currentSplash = DEFAULT_SPLASH;
 
     public SplashManager(NetManager netManager) {
         super(List.of(netManager));
@@ -32,11 +32,11 @@ public class SplashManager extends CoreManager {
         updateCurrentSplash();
     }
 
-    public static String getCurrentSplash() {
+    public String getCurrentSplash() {
         return currentSplash;
     }
 
-    private static void updateCurrentSplash() {
+    private void updateCurrentSplash() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_SPLASHES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<String>>() {}.getType();

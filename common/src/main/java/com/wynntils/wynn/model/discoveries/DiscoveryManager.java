@@ -38,12 +38,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class DiscoveryManager extends CoreManager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
 
-    private static List<DiscoveryInfo> discoveries = List.of();
-    private static List<DiscoveryInfo> secretDiscoveries = List.of();
-    private static List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
+    private List<DiscoveryInfo> discoveries = List.of();
+    private List<DiscoveryInfo> secretDiscoveries = List.of();
+    private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
-    private static List<Component> discoveriesTooltip = List.of();
-    private static List<Component> secretDiscoveriesTooltip = List.of();
+    private List<Component> discoveriesTooltip = List.of();
+    private List<Component> secretDiscoveriesTooltip = List.of();
 
     public DiscoveryManager(
             NetManager netManager,
@@ -56,12 +56,12 @@ public class DiscoveryManager extends CoreManager {
     public void init() {}
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onWorldStateChanged(WorldStateEvent e) {
+    public void onWorldStateChanged(WorldStateEvent e) {
         discoveries = List.of();
         secretDiscoveries = List.of();
     }
 
-    public static void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
+    public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
         if (discoveryInfo.getType() == DiscoveryType.SECRET) {
             locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.MAP);
             return;
@@ -76,7 +76,7 @@ public class DiscoveryManager extends CoreManager {
         }
     }
 
-    public static void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
+    public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
         if (discoveryInfo.getType() == DiscoveryType.SECRET) {
             locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.COMPASS);
             return;
@@ -91,49 +91,49 @@ public class DiscoveryManager extends CoreManager {
         }
     }
 
-    public static void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
+    public void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
         Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
-    private static void queryDiscoveries() {
+    private void queryDiscoveries() {
         CONTAINER_QUERIES.queryDiscoveries();
     }
 
-    public static void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    public void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
         discoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Normal());
     }
 
-    public static void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    public void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
         secretDiscoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
     }
 
-    public static void setDiscoveriesTooltip(List<Component> newTooltip) {
+    public void setDiscoveriesTooltip(List<Component> newTooltip) {
         discoveriesTooltip = newTooltip;
     }
 
-    public static void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
+    public void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
         secretDiscoveriesTooltip = newTooltip;
     }
 
-    public static List<Component> getDiscoveriesTooltip() {
+    public List<Component> getDiscoveriesTooltip() {
         return discoveriesTooltip;
     }
 
-    public static List<Component> getSecretDiscoveriesTooltip() {
+    public List<Component> getSecretDiscoveriesTooltip() {
         return secretDiscoveriesTooltip;
     }
 
-    public static Stream<DiscoveryInfo> getAllDiscoveries() {
+    public Stream<DiscoveryInfo> getAllDiscoveries() {
         return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
     }
 
-    public static List<DiscoveryInfo> getDiscoveryInfoList() {
+    public List<DiscoveryInfo> getDiscoveryInfoList() {
         return discoveryInfoList;
     }
 
-    private static void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
+    private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
@@ -187,7 +187,7 @@ public class DiscoveryManager extends CoreManager {
         });
     }
 
-    private static void updateDiscoveriesResource() {
+    private void updateDiscoveriesResource() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_DISCOVERIES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
@@ -196,7 +196,7 @@ public class DiscoveryManager extends CoreManager {
         });
     }
 
-    public static void reloadDiscoveries() {
+    public void reloadDiscoveries() {
         updateDiscoveriesResource();
         queryDiscoveries();
     }

@@ -35,11 +35,11 @@ import org.apache.commons.codec.binary.Hex;
 public class WynntilsAccountManager extends CoreManager {
     private static final String NO_TOKEN = "<no token>";
 
-    private static String token = NO_TOKEN;
-    private static boolean loggedIn = false;
+    private String token = NO_TOKEN;
+    private boolean loggedIn = false;
 
-    private static final HashMap<String, String> encodedConfigs = new HashMap<>();
-    private static final HashMap<String, String> md5Verifications = new HashMap<>();
+    private final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private final HashMap<String, String> md5Verifications = new HashMap<>();
 
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
@@ -50,7 +50,7 @@ public class WynntilsAccountManager extends CoreManager {
         login();
     }
 
-    private static void login() {
+    private void login() {
         if (loggedIn) return;
 
         doLogin();
@@ -74,11 +74,11 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public static boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return loggedIn;
     }
 
@@ -90,7 +90,7 @@ public class WynntilsAccountManager extends CoreManager {
         encodedConfigs.remove(name);
     }
 
-    private static void doLogin() {
+    private void doLogin() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         // generating secret key
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
@@ -132,7 +132,7 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
-    private static String parseAndJoinPublicKey(String key) {
+    private String parseAndJoinPublicKey(String key) {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());
 

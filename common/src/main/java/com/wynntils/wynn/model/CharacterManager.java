@@ -53,8 +53,8 @@ public class CharacterManager extends CoreManager {
         21196500, 23315500, 25649000, 249232940
     };
 
-    private static CharacterInfo currentCharacter;
-    private static boolean inCharacterSelection;
+    private CharacterInfo currentCharacter;
+    private boolean inCharacterSelection;
 
     public CharacterManager() {
         super(List.of());
@@ -63,11 +63,11 @@ public class CharacterManager extends CoreManager {
     @Override
     public void init() {}
 
-    public static boolean hasCharacter() {
+    public boolean hasCharacter() {
         return currentCharacter != null;
     }
 
-    public static CharacterInfo getCharacterInfo() {
+    public CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
             currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0, new ProfessionInfo());
         }
@@ -75,12 +75,12 @@ public class CharacterManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuClosed(MenuClosedEvent e) {
+    public void onMenuClosed(MenuClosedEvent e) {
         inCharacterSelection = false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onWorldStateChanged(WorldStateEvent e) {
+    public void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldStateManager.State.WORLD) {
             currentCharacter = null;
@@ -110,7 +110,7 @@ public class CharacterManager extends CoreManager {
         }
     }
 
-    private static void scanCharacterInfoPage(int oldId) {
+    private void scanCharacterInfoPage(int oldId) {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
@@ -131,7 +131,7 @@ public class CharacterManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onContainerClick(ContainerClickEvent e) {
+    public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
             currentCharacter = CharacterInfo.parseCharacter(e.getItemStack(), e.getSlotNum());

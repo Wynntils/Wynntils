@@ -27,12 +27,12 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends CoreManager {
-    private static final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
-    private static final Map<Overlay, Feature> overlayParent = new HashMap<>();
+    private final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
+    private final Map<Overlay, Feature> overlayParent = new HashMap<>();
 
-    private static final Set<Overlay> enabledOverlays = new HashSet<>();
+    private final Set<Overlay> enabledOverlays = new HashSet<>();
 
-    private static final List<SectionCoordinates> sections = new ArrayList<>(9);
+    private final List<SectionCoordinates> sections = new ArrayList<>(9);
 
     public OverlayManager() {
         super(List.of());
@@ -43,18 +43,18 @@ public final class OverlayManager extends CoreManager {
         addCrashCallbacks();
     }
 
-    public static void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
+    public void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
         overlayInfoMap.put(overlay, overlayInfo);
         overlayParent.put(overlay, parent);
     }
 
-    public static void disableOverlays(List<Overlay> overlays) {
+    public void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
         overlays.forEach(
                 overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 
-    public static void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
+    public void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
         if (!ignoreState) {
             overlays = overlays.stream().filter(Overlay::isEnabled).toList();
         }
@@ -65,20 +65,20 @@ public final class OverlayManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onRenderPre(RenderEvent.Pre event) {
+    public void onRenderPre(RenderEvent.Pre event) {
         McUtils.mc().getProfiler().push("preRenOverlay");
         renderOverlays(event, OverlayInfo.RenderState.Pre);
         McUtils.mc().getProfiler().pop();
     }
 
     @SubscribeEvent
-    public static void onRenderPost(RenderEvent.Post event) {
+    public void onRenderPost(RenderEvent.Post event) {
         McUtils.mc().getProfiler().push("postRenOverlay");
         renderOverlays(event, OverlayInfo.RenderState.Post);
         McUtils.mc().getProfiler().pop();
     }
 
-    private static void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+    private void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
         boolean testMode = false;
         boolean shouldRender = true;
 
@@ -131,7 +131,7 @@ public final class OverlayManager extends CoreManager {
         }
     }
 
-    private static void addCrashCallbacks() {
+    private void addCrashCallbacks() {
         CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Overlays") {
 
             @Override
@@ -148,17 +148,17 @@ public final class OverlayManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onResizeEvent(DisplayResizeEvent event) {
+    public void onResizeEvent(DisplayResizeEvent event) {
         calculateSections();
     }
 
     // Calculate the sections when loading is finished (this acts as a "game loaded" event)
     @SubscribeEvent
-    public static void gameInitEvent(TitleScreenInitEvent.Post event) {
+    public void gameInitEvent(TitleScreenInitEvent.Post event) {
         calculateSections();
     }
 
-    private static void calculateSections() {
+    private void calculateSections() {
         Window window = McUtils.window();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
@@ -174,27 +174,27 @@ public final class OverlayManager extends CoreManager {
         }
     }
 
-    public static SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
+    public SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
         return sections.get(section.getIndex());
     }
 
-    public static List<SectionCoordinates> getSections() {
+    public List<SectionCoordinates> getSections() {
         return sections;
     }
 
-    public static Set<Overlay> getOverlays() {
+    public Set<Overlay> getOverlays() {
         return overlayInfoMap.keySet();
     }
 
-    public static OverlayInfo getOverlayInfo(Overlay overlay) {
+    public OverlayInfo getOverlayInfo(Overlay overlay) {
         return overlayInfoMap.getOrDefault(overlay, null);
     }
 
-    public static Feature getOverlayParent(Overlay overlay) {
+    public Feature getOverlayParent(Overlay overlay) {
         return overlayParent.get(overlay);
     }
 
-    public static boolean isEnabled(Overlay overlay) {
+    public boolean isEnabled(Overlay overlay) {
         return enabledOverlays.contains(overlay);
     }
 }

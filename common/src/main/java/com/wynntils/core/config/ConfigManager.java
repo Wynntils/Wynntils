@@ -47,8 +47,8 @@ public final class ConfigManager extends CoreManager {
             .create();
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
 
-    private static File userConfig;
-    private static JsonObject configObject;
+    private File userConfig;
+    private JsonObject configObject;
 
     public ConfigManager() {
         super(List.of());
@@ -59,7 +59,7 @@ public final class ConfigManager extends CoreManager {
         loadConfigFile();
     }
 
-    public static void registerFeature(Feature feature) {
+    public void registerFeature(Feature feature) {
         for (Overlay overlay : feature.getOverlays()) {
             registerConfigOptions(overlay);
         }
@@ -67,7 +67,7 @@ public final class ConfigManager extends CoreManager {
         registerConfigOptions(feature);
     }
 
-    private static void registerConfigOptions(Configurable configurable) {
+    private void registerConfigOptions(Configurable configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);
@@ -75,7 +75,7 @@ public final class ConfigManager extends CoreManager {
         CONFIG_HOLDERS.addAll(configOptions);
     }
 
-    public static void loadConfigFile() {
+    public void loadConfigFile() {
         // create config directory if necessary
         FileUtils.mkdir(CONFIGS);
 
@@ -116,11 +116,11 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void loadAllConfigOptions(boolean resetIfNotFound) {
+    public void loadAllConfigOptions(boolean resetIfNotFound) {
         loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
     }
 
-    public static void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
+    public void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");
             return; // nothing to load from
@@ -142,7 +142,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void saveConfig() {
+    public void saveConfig() {
         try {
             // create file if necessary
             if (!userConfig.exists()) {
@@ -169,7 +169,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    public static void saveDefaultConfig() {
+    public void saveDefaultConfig() {
         try {
             // create file if necessary
             if (!DEFAULT_CONFIG.exists()) {
@@ -196,7 +196,7 @@ public final class ConfigManager extends CoreManager {
         }
     }
 
-    private static Type findFieldTypeOverride(Configurable parent, Field configField) {
+    private Type findFieldTypeOverride(Configurable parent, Field configField) {
         Optional<Field> typeField = Arrays.stream(
                         FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
                 .filter(field ->
@@ -214,7 +214,7 @@ public final class ConfigManager extends CoreManager {
         return null;
     }
 
-    private static List<ConfigHolder> getConfigOptions(Configurable parent) {
+    private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
@@ -244,11 +244,11 @@ public final class ConfigManager extends CoreManager {
         return options;
     }
 
-    public static List<ConfigHolder> getConfigHolders() {
+    public List<ConfigHolder> getConfigHolders() {
         return CONFIG_HOLDERS;
     }
 
-    public static Object deepCopy(Object value, Type fieldType) {
+    public Object deepCopy(Object value, Type fieldType) {
         return CONFIG_GSON.fromJson(CONFIG_GSON.toJson(value), fieldType);
     }
 }

@@ -33,9 +33,9 @@ import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends CoreManager {
-    private static final List<Function<?>> FUNCTIONS = new ArrayList<>();
-    private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
-    private static final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
+    private final List<Function<?>> FUNCTIONS = new ArrayList<>();
+    private final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
+    private final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
 
     public FunctionManager() {
         super(List.of());
@@ -46,7 +46,7 @@ public final class FunctionManager extends CoreManager {
         registerAllFunctions();
     }
 
-    private static void registerFunction(Function<?> function) {
+    private void registerFunction(Function<?> function) {
         FUNCTIONS.add(function);
         if (function instanceof ActiveFunction<?> activeFunction) {
             activeFunction.init();
@@ -58,11 +58,11 @@ public final class FunctionManager extends CoreManager {
         }
     }
 
-    public static List<Function<?>> getFunctions() {
+    public List<Function<?>> getFunctions() {
         return FUNCTIONS;
     }
 
-    public static boolean enableFunction(Function<?> function) {
+    public boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
         // try to recover, worst case we disable it again
@@ -79,7 +79,7 @@ public final class FunctionManager extends CoreManager {
         return enableSucceeded;
     }
 
-    public static void disableFunction(Function<?> function) {
+    public void disableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
         WynntilsMod.unregisterEventListener(activeFunction);
@@ -87,13 +87,13 @@ public final class FunctionManager extends CoreManager {
         ENABLED_FUNCTIONS.remove(activeFunction);
     }
 
-    public static boolean isEnabled(Function<?> function) {
+    public boolean isEnabled(Function<?> function) {
         if (!(function instanceof ActiveFunction<?>)) return true;
 
         return (ENABLED_FUNCTIONS.contains(function));
     }
 
-    public static Optional<Function<?>> forName(String functionName) {
+    public Optional<Function<?>> forName(String functionName) {
         for (Function<?> function : Managers.Function.getFunctions()) {
             if (hasName(function, functionName)) {
                 return Optional.of(function);
@@ -103,7 +103,7 @@ public final class FunctionManager extends CoreManager {
         return Optional.empty();
     }
 
-    private static boolean hasName(Function<?> function, String name) {
+    private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
         for (String alias : function.getAliases()) {
             if (alias.equalsIgnoreCase(name)) return true;
@@ -111,7 +111,7 @@ public final class FunctionManager extends CoreManager {
         return false;
     }
 
-    private static Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+    private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
         if (CRASHED_FUNCTIONS.contains(function)) {
             return Optional.empty();
         }
@@ -132,7 +132,7 @@ public final class FunctionManager extends CoreManager {
         return Optional.empty();
     }
 
-    public static Component getSimpleValueString(
+    public Component getSimpleValueString(
             Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
@@ -148,7 +148,7 @@ public final class FunctionManager extends CoreManager {
         return header.append(new TextComponent(formattedValue).withStyle(color));
     }
 
-    public static String getRawValueString(Function<?> function, String argument) {
+    public String getRawValueString(Function<?> function, String argument) {
         Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
             return "??";
@@ -157,7 +157,7 @@ public final class FunctionManager extends CoreManager {
         return format(value.get());
     }
 
-    private static String format(Object value) {
+    private String format(Object value) {
         if (value instanceof Number number) {
             // French locale has NBSP
             // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
@@ -170,7 +170,7 @@ public final class FunctionManager extends CoreManager {
      * Return a string, based on the template, with values filled in from the referenced
      * functions.
      */
-    public static Component getStringFromTemplate(String template) {
+    public Component getStringFromTemplate(String template) {
         // FIXME: implement template parser
         return new TextComponent(template);
     }
@@ -178,12 +178,12 @@ public final class FunctionManager extends CoreManager {
     /**
      * Return a list of all functions referenced in a template string
      */
-    public static List<Function<?>> getFunctionsInTemplate(String template) {
+    public List<Function<?>> getFunctionsInTemplate(String template) {
         // FIXME: implement template parser
         return List.of();
     }
 
-    public static <T> void doFormat(
+    public <T> void doFormat(
             String format,
             Consumer<T> consumer,
             java.util.function.Function<String, T> mapper,
@@ -228,7 +228,7 @@ public final class FunctionManager extends CoreManager {
     private static final Pattern INFO_VARIABLE_PATTERN =
             Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
-    public static List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
+    public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
         List<Function<?>> dependencies = new ArrayList<>();
 
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
@@ -243,7 +243,7 @@ public final class FunctionManager extends CoreManager {
         return dependencies;
     }
 
-    public static String[] getLinesFromLegacyTemplate(String renderableText) {
+    public String[] getLinesFromLegacyTemplate(String renderableText) {
         StringBuilder builder = new StringBuilder(renderableText.length() + 10);
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
@@ -268,7 +268,7 @@ public final class FunctionManager extends CoreManager {
         return parseColorCodes(builder.toString()).split("\n");
     }
 
-    private static String parseColorCodes(String toProcess) {
+    private String parseColorCodes(String toProcess) {
         // For every & symbol, check if the next symbol is a color code and if so, replace it with §
         // But don't do it if a \ precedes the &
         String validColors = "0123456789abcdefklmnor";
@@ -288,7 +288,7 @@ public final class FunctionManager extends CoreManager {
         return sb.toString();
     }
 
-    private static String doEscapeFormat(String escaped) {
+    private String doEscapeFormat(String escaped) {
         return switch (escaped) {
             case "\\" -> "\\\\";
             case "n" -> "\n";
@@ -304,7 +304,7 @@ public final class FunctionManager extends CoreManager {
     }
     // endregion
 
-    private static void registerAllFunctions() {
+    private void registerAllFunctions() {
         registerFunction(new WorldFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());

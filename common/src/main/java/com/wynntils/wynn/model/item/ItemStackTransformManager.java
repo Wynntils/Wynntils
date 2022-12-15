@@ -34,8 +34,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemStackTransformManager extends CoreManager {
-    private static final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
-    private static final Set<ItemPropertyWriter> PROPERTIES = ConcurrentHashMap.newKeySet();
+    private final Set<ItemStackTransformer> TRANSFORMERS = ConcurrentHashMap.newKeySet();
+    private final Set<ItemPropertyWriter> PROPERTIES = ConcurrentHashMap.newKeySet();
 
     public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
             CosmeticTierPropertyModel.class,
@@ -64,24 +64,24 @@ public class ItemStackTransformManager extends CoreManager {
     @Override
     public void init() {}
 
-    public static void registerTransformer(ItemStackTransformer transformer) {
+    public void registerTransformer(ItemStackTransformer transformer) {
         TRANSFORMERS.add(transformer);
     }
 
-    public static void unregisterTransformer(ItemStackTransformer transformer) {
+    public void unregisterTransformer(ItemStackTransformer transformer) {
         TRANSFORMERS.remove(transformer);
     }
 
-    public static void registerProperty(ItemPropertyWriter writer) {
+    public void registerProperty(ItemPropertyWriter writer) {
         PROPERTIES.add(writer);
     }
 
-    public static void unregisterProperty(ItemPropertyWriter writer) {
+    public void unregisterProperty(ItemPropertyWriter writer) {
         PROPERTIES.remove(writer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onSetSlot(SetSlotEvent.Pre event) {
+    public void onSetSlot(SetSlotEvent.Pre event) {
         ItemStack stack = event.getItem();
 
         // itemstack transformers

@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends CoreManager {
-    private static final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
+    private final Set<KeyBind> KEY_BINDS = ConcurrentHashMap.newKeySet();
 
     public KeyBindManager() {
         super(List.of());
@@ -37,12 +37,12 @@ public final class KeyBindManager extends CoreManager {
     public void init() {}
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.End e) {
+    public void onTick(ClientTickEvent.End e) {
         triggerKeybinds();
     }
 
     @SubscribeEvent
-    public static void onKeyPress(InventoryKeyPressEvent e) {
+    public void onKeyPress(InventoryKeyPressEvent e) {
         checkAllKeyBinds(keyBind -> {
             if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
@@ -51,7 +51,7 @@ public final class KeyBindManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMousePress(InventoryMouseClickedEvent e) {
+    public void onMousePress(InventoryMouseClickedEvent e) {
         checkAllKeyBinds(keyBind -> {
             if (keyBind.getKeyMapping().matchesMouse(e.getButton())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
@@ -59,7 +59,7 @@ public final class KeyBindManager extends CoreManager {
         });
     }
 
-    public static void registerKeybind(KeyBind toAdd) {
+    public void registerKeybind(KeyBind toAdd) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
@@ -84,7 +84,7 @@ public final class KeyBindManager extends CoreManager {
         KeyMapping.resetMapping();
     }
 
-    public static void unregisterKeybind(KeyBind toRemove) {
+    public void unregisterKeybind(KeyBind toRemove) {
         if (!KEY_BINDS.remove(toRemove)) return;
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
@@ -104,7 +104,7 @@ public final class KeyBindManager extends CoreManager {
         KeyMapping.resetMapping();
     }
 
-    private static void triggerKeybinds() {
+    private void triggerKeybinds() {
         checkAllKeyBinds(keyBind -> {
             if (keyBind.onlyFirstPress()) {
                 while (keyBind.getKeyMapping().consumeClick()) {
@@ -116,7 +116,7 @@ public final class KeyBindManager extends CoreManager {
         });
     }
 
-    private static void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
+    private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
         List<KeyBind> crashedKeyBinds = new LinkedList<>();
 
         for (KeyBind keyBind : KEY_BINDS) {
@@ -139,11 +139,11 @@ public final class KeyBindManager extends CoreManager {
         }
     }
 
-    private static boolean hasName(String name) {
+    private boolean hasName(String name) {
         return KEY_BINDS.stream().anyMatch(k -> k.getName().equals(name));
     }
 
-    public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
+    public void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
         if (categorySortOrder.containsKey(category)) return;
 
         int max = 0;

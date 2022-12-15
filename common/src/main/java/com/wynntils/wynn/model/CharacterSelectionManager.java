@@ -38,10 +38,10 @@ public class CharacterSelectionManager extends CoreManager {
 
     private static final int EDIT_BUTTON_SLOT = 8;
 
-    private static CharacterSelectorScreen currentScreen;
-    private static int containerId = -1;
-    private static int firstNewCharacterSlot = -1;
-    private static final List<ClassInfo> classInfoList = new ArrayList<>();
+    private CharacterSelectorScreen currentScreen;
+    private int containerId = -1;
+    private int firstNewCharacterSlot = -1;
+    private final List<ClassInfo> classInfoList = new ArrayList<>();
 
     public CharacterSelectionManager() {
         super(List.of());
@@ -51,7 +51,7 @@ public class CharacterSelectionManager extends CoreManager {
     public void init() {}
 
     @SubscribeEvent
-    public static void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent event) {
         if (event.getScreen() instanceof CharacterSelectorScreen characterSelectorScreen) {
             currentScreen = characterSelectorScreen;
 
@@ -61,7 +61,7 @@ public class CharacterSelectionManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
         if (!ComponentUtils.getCoded(event.getTitle()).equals("§8§lSelect a Character")) {
             return;
         }
@@ -70,7 +70,7 @@ public class CharacterSelectionManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
+    public void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
         if (event.getContainerId() != containerId) {
             return;
         }
@@ -100,7 +100,7 @@ public class CharacterSelectionManager extends CoreManager {
         }
     }
 
-    private static ClassInfo getClassInfoFromItem(ItemStack item, int slot, String className) {
+    private ClassInfo getClassInfoFromItem(ItemStack item, int slot, String className) {
         ClassType classType = null;
         int level = 0;
         int xp = 0;
@@ -145,7 +145,7 @@ public class CharacterSelectionManager extends CoreManager {
         return new ClassInfo(className, item, slot, classType, level, xp, soulPoints, finishedQuests);
     }
 
-    public static void playWithCharacter(int slot) {
+    public void playWithCharacter(int slot) {
         ContainerUtils.clickOnSlot(
                 slot,
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,
@@ -153,7 +153,7 @@ public class CharacterSelectionManager extends CoreManager {
                 currentScreen.getActualClassSelectionScreen().getMenu().getItems());
     }
 
-    public static void deleteCharacter(int slot) {
+    public void deleteCharacter(int slot) {
         ContainerUtils.clickOnSlot(
                 slot,
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,
@@ -161,11 +161,11 @@ public class CharacterSelectionManager extends CoreManager {
                 currentScreen.getActualClassSelectionScreen().getMenu().getItems());
     }
 
-    public static void editCharacters(AbstractContainerMenu menu) {
+    public void editCharacters(AbstractContainerMenu menu) {
         ContainerUtils.clickOnSlot(EDIT_BUTTON_SLOT, menu.containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, menu.getItems());
     }
 
-    public static void createNewClass() {
+    public void createNewClass() {
         ContainerUtils.clickOnSlot(
                 currentScreen.getFirstNewCharacterSlot(),
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,

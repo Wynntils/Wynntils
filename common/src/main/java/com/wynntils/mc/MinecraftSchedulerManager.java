@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 // Use this manager to schedule runnables to run on next tick
 public class MinecraftSchedulerManager extends CoreManager {
-    private static final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     public MinecraftSchedulerManager() {
         super(List.of());
@@ -20,11 +20,11 @@ public class MinecraftSchedulerManager extends CoreManager {
     @Override
     public void init() {}
 
-    public static void queueRunnable(Runnable runnable) {
+    public void queueRunnable(Runnable runnable) {
         queue.add(runnable);
     }
 
-    public static void onTick() {
+    public void onTick() {
         while (!queue.isEmpty()) {
             queue.remove().run();
         }

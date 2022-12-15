@@ -46,8 +46,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class ClientCommandManager extends CoreManager {
-    private static final Set<CommandBase> commandInstanceSet = new HashSet<>();
-    private static final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
+    private final Set<CommandBase> commandInstanceSet = new HashSet<>();
+    private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     public ClientCommandManager() {
         super(List.of());
@@ -58,24 +58,24 @@ public final class ClientCommandManager extends CoreManager {
         registerAllCommands();
     }
 
-    public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
+    public CommandDispatcher<CommandSourceStack> getClientDispatcher() {
         return clientDispatcher;
     }
 
-    private static void registerCommand(CommandBase command) {
+    private void registerCommand(CommandBase command) {
         commandInstanceSet.add(command);
         command.register(clientDispatcher);
     }
 
-    public static boolean handleCommand(String message) {
+    public boolean handleCommand(String message) {
         assert message.startsWith("/");
 
         StringReader reader = new StringReader(message);
         reader.skip();
-        return ClientCommandManager.executeCommand(reader, message);
+        return executeCommand(reader, message);
     }
 
-    public static CompletableFuture<Suggestions> getCompletionSuggestions(
+    public CompletableFuture<Suggestions> getCompletionSuggestions(
             String cmd,
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<CommandSourceStack> clientParse,
@@ -85,8 +85,6 @@ public final class ClientCommandManager extends CoreManager {
         if (stringReader.canRead() && stringReader.peek() == '/') {
             stringReader.skip();
         }
-
-        CommandDispatcher<CommandSourceStack> clientDispatcher = getClientDispatcher();
 
         CompletableFuture<Suggestions> clientSuggestions =
                 clientDispatcher.getCompletionSuggestions(clientParse, cursor);
@@ -105,7 +103,7 @@ public final class ClientCommandManager extends CoreManager {
         return result;
     }
 
-    public static ClientCommandSourceStack getSource() {
+    public ClientCommandSourceStack getSource() {
         LocalPlayer player = McUtils.player();
 
         if (player == null) return null;
@@ -113,7 +111,7 @@ public final class ClientCommandManager extends CoreManager {
         return new ClientCommandSourceStack(player);
     }
 
-    private static boolean executeCommand(StringReader reader, String command) {
+    private boolean executeCommand(StringReader reader, String command) {
         ClientCommandSourceStack source = getSource();
 
         if (source == null) return false;
@@ -148,12 +146,12 @@ public final class ClientCommandManager extends CoreManager {
 
                 text.append(new TranslatableComponent("command.context.here")
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-                ClientCommandManager.sendError(text);
+                sendError(text);
             }
         } catch (RuntimeException e) {
             TextComponent error =
                     new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            ClientCommandManager.sendError(new TranslatableComponent("command.failed")
+            sendError(new TranslatableComponent("command.failed")
                     .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
             WynntilsMod.error("Failed to execute command.", e);
         }
@@ -161,15 +159,15 @@ public final class ClientCommandManager extends CoreManager {
         return true;
     }
 
-    private static void sendError(MutableComponent error) {
+    private void sendError(MutableComponent error) {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public static Set<CommandBase> getCommandInstanceSet() {
+    public Set<CommandBase> getCommandInstanceSet() {
         return commandInstanceSet;
     }
 
-    private static void registerAllCommands() {
+    private void registerAllCommands() {
         registerCommand(new BombBellCommand());
         registerCommand(new CompassCommand());
         registerCommand(new ConfigCommand());

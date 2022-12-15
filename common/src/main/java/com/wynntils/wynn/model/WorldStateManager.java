@@ -36,11 +36,11 @@ public class WorldStateManager extends CoreManager {
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
 
-    private static String currentTabListFooter = "";
-    private static String currentWorldName = "";
-    private static boolean onBetaServer;
+    private String currentTabListFooter = "";
+    private String currentWorldName = "";
+    private boolean onBetaServer;
 
-    private static State currentState = State.NOT_CONNECTED;
+    private State currentState = State.NOT_CONNECTED;
 
     public WorldStateManager() {
         super(List.of());
@@ -49,27 +49,27 @@ public class WorldStateManager extends CoreManager {
     @Override
     public void init() {}
 
-    public static boolean onServer() {
+    public boolean onServer() {
         return currentState != State.NOT_CONNECTED;
     }
 
-    public static boolean onWorld() {
+    public boolean onWorld() {
         return currentState == State.WORLD;
     }
 
-    public static boolean isInStream() {
+    public boolean isInStream() {
         return currentWorldName.equals("-");
     }
 
-    public static boolean isOnBetaServer() {
+    public boolean isOnBetaServer() {
         return onBetaServer;
     }
 
-    public static State getCurrentState() {
+    public State getCurrentState() {
         return currentState;
     }
 
-    private static void setState(State newState, String newWorldName) {
+    private void setState(State newState, String newWorldName) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         State oldState = currentState;
@@ -80,19 +80,19 @@ public class WorldStateManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void screenOpened(ScreenOpenedEvent e) {
+    public void screenOpened(ScreenOpenedEvent e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
             setState(State.NOT_CONNECTED, "");
         }
     }
 
     @SubscribeEvent
-    public static void disconnected(DisconnectedEvent e) {
+    public void disconnected(DisconnectedEvent e) {
         setState(State.NOT_CONNECTED, "");
     }
 
     @SubscribeEvent
-    public static void connecting(ConnectedEvent e) {
+    public void connecting(ConnectedEvent e) {
         if (onServer()) {
             WynntilsMod.error("Got connected event while already connected to server: " + e);
             currentState = State.NOT_CONNECTED;
@@ -109,14 +109,14 @@ public class WorldStateManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void remove(PlayerLogOutEvent e) {
+    public void remove(PlayerLogOutEvent e) {
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
             setState(State.INTERIM, "");
         }
     }
 
     @SubscribeEvent
-    public static void onTeleport(PlayerTeleportEvent e) {
+    public void onTeleport(PlayerTeleportEvent e) {
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
             // We get here even if the character selection menu will not show up because of autojoin
             if (getCurrentState() != State.CHARACTER_SELECTION) {
@@ -128,7 +128,7 @@ public class WorldStateManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
             setState(State.CHARACTER_SELECTION, "");
@@ -136,7 +136,7 @@ public class WorldStateManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void onTabListFooter(PlayerInfoFooterChangedEvent e) {
+    public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
         String footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
@@ -150,7 +150,7 @@ public class WorldStateManager extends CoreManager {
     }
 
     @SubscribeEvent
-    public static void update(PlayerDisplayNameChangeEvent e) {
+    public void update(PlayerDisplayNameChangeEvent e) {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
@@ -162,7 +162,7 @@ public class WorldStateManager extends CoreManager {
         }
     }
 
-    public static String getCurrentWorldName() {
+    public String getCurrentWorldName() {
         return currentWorldName;
     }
 

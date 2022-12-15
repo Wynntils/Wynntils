@@ -42,15 +42,15 @@ public class TerritoryManager extends CoreManager {
             .create();
 
     // This is territory POIs as returned by the advancement from Wynncraft
-    private static Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
+    private Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
     // This is the profiles as downloaded from Athena
-    private static Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
+    private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
 
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
-    private static Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
+    private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
-    private static ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public TerritoryManager(NetManager netManager) {
         super(List.of(netManager));
@@ -59,31 +59,31 @@ public class TerritoryManager extends CoreManager {
     @Override
     public void init() {
         timerExecutor.scheduleWithFixedDelay(
-                TerritoryManager::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+                this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
-    public static TerritoryProfile getTerritoryProfile(String name) {
+    public TerritoryProfile getTerritoryProfile(String name) {
         return territoryProfileMap.get(name);
     }
 
-    public static Stream<String> getTerritoryNames() {
+    public Stream<String> getTerritoryNames() {
         return territoryProfileMap.keySet().stream();
     }
 
-    public static Set<TerritoryPoi> getTerritoryPois() {
+    public Set<TerritoryPoi> getTerritoryPois() {
         return allTerritoryPois;
     }
 
-    public static List<Poi> getTerritoryPoisFromAdvancement() {
+    public List<Poi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    public static TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
+    public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
     }
 
     @SubscribeEvent
-    public static void onAdvancementUpdate(AdvancementUpdateEvent event) {
+    public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Advancement.Builder> added :
@@ -126,7 +126,7 @@ public class TerritoryManager extends CoreManager {
         }
     }
 
-    private static void updateTerritoryProfileMap() {
+    private void updateTerritoryProfileMap() {
         // dataAthenaTerritoryList is based on
         // https://api.wynncraft.com/public_api.php?action=territoryList
         // but guild prefix is injected based on
