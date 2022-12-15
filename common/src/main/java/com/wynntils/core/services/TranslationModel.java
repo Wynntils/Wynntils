@@ -11,14 +11,8 @@ import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 
 public final class TranslationModel extends Model {
-
-    public static final String TRANSLATED_PREFIX =
-            ChatFormatting.GRAY + "[" + TranslationFeature.INSTANCE.languageName + "]" + ChatFormatting.RESET;
-    public static final String UNTRANSLATED_PREFIX = ChatFormatting.GRAY + "[en]" + ChatFormatting.RESET;
-
     private static TranslationService translator = null;
 
     /**

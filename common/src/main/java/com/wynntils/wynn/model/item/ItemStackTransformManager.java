@@ -5,8 +5,6 @@
 package com.wynntils.wynn.model.item;
 
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
 import java.util.List;
@@ -20,26 +18,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemStackTransformManager extends Manager {
-    public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
-            Models.CosmeticTierProperty.getClass(),
-            Models.EmeraldPouchItemStack.getClass(),
-            Models.MaterialProperty.getClass(),
-            Models.IngredientProperty.getClass(),
-            Models.ItemTierProperty.getClass(),
-            Models.PowderTierProperty.getClass());
-    public static final List<Class<? extends Model>> TEXT_OVERLAY_PROPERTIES = List.of(
-            Models.AmplifierTierProperty.getClass(),
-            Models.ConsumableChargeProperty.getClass(),
-            Models.DailyRewardMultiplierProperty.getClass(),
-            Models.DungeonKeyProperty.getClass(),
-            Models.EmeraldPouchTierProperty.getClass(),
-            Models.GatheringToolProperty.getClass(),
-            Models.PowderTierProperty.getClass(),
-            Models.ServerCountProperty.getClass(),
-            Models.SkillIconProperty.getClass(),
-            Models.SkillPointProperty.getClass(),
-            Models.TeleportScrollProperty.getClass());
-
     private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
     private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
 
