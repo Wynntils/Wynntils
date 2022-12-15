@@ -18,5 +18,6 @@ package com.wynntils.core.managers;
  */
 public abstract class Model {
     public abstract void init();
+
     public void disable() {}
 }

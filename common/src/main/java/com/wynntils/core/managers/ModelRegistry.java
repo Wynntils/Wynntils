@@ -7,7 +7,6 @@ package com.wynntils.core.managers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.ModelDependant;
 import com.wynntils.core.features.Translatable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ModelRegistry {
     private static final Map<Model, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
