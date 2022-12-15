@@ -83,6 +83,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new NoTotemRedirector());
+        register(new PotionAlreadyActiveRedirector());
         register(new PotionsMaxRedirector());
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
@@ -485,6 +486,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "No totems nearby!";
+        }
+    }
+
+    private class PotionAlreadyActiveRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("^§cYou already have that potion active...$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return potion;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "This potion is already active!";
         }
     }
 
