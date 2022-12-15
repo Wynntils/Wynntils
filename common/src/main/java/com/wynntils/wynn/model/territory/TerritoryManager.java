@@ -7,7 +7,7 @@ package com.wynntils.wynn.model.territory;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
@@ -35,7 +35,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TerritoryManager extends CoreManager {
+public class TerritoryManager extends Manager {
     private static final int TERRITORY_UPDATE_MS = 15000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())

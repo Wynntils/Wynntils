@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc;
 
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 // Use this manager to schedule runnables to run on next tick
-public class MinecraftSchedulerManager extends CoreManager {
+public class MinecraftSchedulerManager extends Manager {
     private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     public MinecraftSchedulerManager() {

@@ -6,7 +6,7 @@ package com.wynntils.core.net;
 
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class UrlManager extends CoreManager {
+public final class UrlManager extends Manager {
     private Map<UrlId, UrlInfo> urlMap = Map.of();
 
     public UrlManager() {

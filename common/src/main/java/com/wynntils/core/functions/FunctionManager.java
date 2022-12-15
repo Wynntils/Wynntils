@@ -5,7 +5,7 @@
 package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.functions.CharacterFunctions;
@@ -33,7 +33,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
-public final class FunctionManager extends CoreManager {
+public final class FunctionManager extends Manager {
     private static final Pattern INFO_VARIABLE_PATTERN =
             Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 

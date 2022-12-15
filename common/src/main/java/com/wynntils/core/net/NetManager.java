@@ -6,7 +6,7 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.util.Map;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class NetManager extends CoreManager {
+public class NetManager extends Manager {
     protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;

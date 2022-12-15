@@ -6,7 +6,7 @@ package com.wynntils.core.net.athena;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
@@ -32,7 +32,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
-public class WynntilsAccountManager extends CoreManager {
+public class WynntilsAccountManager extends Manager {
     private static final String NO_TOKEN = "<no token>";
 
     private String token = NO_TOKEN;

@@ -22,7 +22,7 @@ import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public final class ClientCommandManager extends CoreManager {
+public final class ClientCommandManager extends Manager {
     private final Set<CommandBase> commandInstanceSet = new HashSet<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 

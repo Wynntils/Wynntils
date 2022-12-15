@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 public final class ManagerRegistry {
-    private static final List<Class<? extends CoreManager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
+    private static final List<Class<? extends Manager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
     private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
     private static final Collection<Class<? extends Model>> ENABLED_MANAGERS = new HashSet<>();
 
@@ -56,8 +56,8 @@ public final class ManagerRegistry {
      * <p>
      * Do not use this if you don't know what you are doing. Instead, register the manager as a feature dependency.
      * */
-    private static void registerPersistentDependency(CoreManager managerInstance) {
-        Class<? extends CoreManager> manager = managerInstance.getClass();
+    private static void registerPersistentDependency(Manager managerInstance) {
+        Class<? extends Manager> manager = managerInstance.getClass();
         PERSISTENT_CORE_MANAGERS.add(manager);
 //        ENABLED_MANAGERS.add(manager);
         // FIXME: Remove the class registration when all static methods are gone
@@ -160,7 +160,7 @@ public final class ManagerRegistry {
         public Object generate() {
             StringBuilder result = new StringBuilder();
 
-            for (Class<? extends CoreManager> persistentManager : PERSISTENT_CORE_MANAGERS) {
+            for (Class<? extends Manager> persistentManager : PERSISTENT_CORE_MANAGERS) {
                 result.append("\n\t\t").append(persistentManager.getName()).append(": Persistent Manager");
             }
 

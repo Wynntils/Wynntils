@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.gui.screens.overlays.OverlayManagementScreen;
 import com.wynntils.mc.event.DisplayResizeEvent;
@@ -26,7 +26,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class OverlayManager extends CoreManager {
+public final class OverlayManager extends Manager {
     private final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
     private final Map<Overlay, Feature> overlayParent = new HashMap<>();
 

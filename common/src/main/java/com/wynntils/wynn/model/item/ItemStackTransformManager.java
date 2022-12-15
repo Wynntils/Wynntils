@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.item;
 
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
@@ -33,7 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends CoreManager {
+public class ItemStackTransformManager extends Manager {
     public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
             CosmeticTierPropertyModel.class,
             EmeraldPouchItemStackModel.class,

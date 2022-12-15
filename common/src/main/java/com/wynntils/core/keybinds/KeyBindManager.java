@@ -7,7 +7,7 @@ package com.wynntils.core.keybinds;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.managers.Manager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -26,7 +26,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
-public final class KeyBindManager extends CoreManager {
+public final class KeyBindManager extends Manager {
     private final Set<KeyBind> keyBinds = ConcurrentHashMap.newKeySet();
 
     public KeyBindManager() {
