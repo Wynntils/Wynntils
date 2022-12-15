@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.managers;
 
-import com.wynntils.core.WynntilsMod;
 import java.util.List;
 
 /**
