@@ -6,7 +6,7 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
@@ -61,7 +61,7 @@ public final class FunctionManager extends Manager {
         // We have a hacky workaround for an actual issue where
         // HorsePropertyModel depends on Managers.ItemStackTransform
         if (function instanceof DependantFunction<?> dependantFunction) {
-            ManagerRegistry.addAllDependencies(dependantFunction);
+            ModelRegistry.addAllDependencies(dependantFunction);
         }
     }
 

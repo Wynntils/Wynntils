@@ -11,7 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.CrashReportManager;
-import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
@@ -185,7 +185,7 @@ public final class WynntilsMod {
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
-        ManagerRegistry.init();
+        ModelRegistry.init();
     }
 
     private static void parseVersion(String modVersion) {

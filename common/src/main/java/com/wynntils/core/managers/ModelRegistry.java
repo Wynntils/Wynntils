@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
-public final class ManagerRegistry {
+public final class ModelRegistry {
     private static final List<Class<? extends Manager>> PERSISTENT_CORE_MANAGERS = new ArrayList<>();
     private static final Map<Class<? extends Model>, List<ModelDependant>> MODEL_DEPENDENCIES = new HashMap<>();
     private static final Collection<Class<? extends Model>> ENABLED_MANAGERS = new HashSet<>();
