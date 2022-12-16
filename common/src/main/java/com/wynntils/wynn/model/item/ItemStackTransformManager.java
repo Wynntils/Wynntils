@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends Manager {
+public final class ItemStackTransformManager extends Manager {
     private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
     private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
 
