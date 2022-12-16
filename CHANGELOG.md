@@ -1,9 +1,21 @@
+## [0.0.1-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.171...v0.0.1-alpha.172) (2022-12-16)
+
+
+### Code Refactoring
+
+* flatten item and property models into single files ([#844](https://github.com/Wynntils/Artemis/issues/844)) ([1dbdab4](https://github.com/Wynntils/Artemis/commit/1dbdab453ef1459aa7e96f8f4aa78c1facfee9e7))
+
 ## [0.0.1-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.170...v0.0.1-alpha.171) (2022-12-16)
 
 
 ### Bug Fixes
 
 * Remove all references to Managers.CrashReport in CrashReportManager ([#846](https://github.com/Wynntils/Artemis/issues/846)) ([ea575ca](https://github.com/Wynntils/Artemis/commit/ea575ca6bacae39148a49a4eb7c14cfb8436109b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.171 [skip ci] ([f096aaf](https://github.com/Wynntils/Artemis/commit/f096aafa269a05ef9337bf20fe10b6369bcd28e1))
 
 ## [0.0.1-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.169...v0.0.1-alpha.170) (2022-12-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.168 [skip ci] ([39b1fba](https://github.com/Wynntils/Artemis/commit/39b1fbaba68eb30842c2fd26737c651044607345))
-
-## [0.0.1-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.166...v0.0.1-alpha.167) (2022-12-15)
-
-
-### Bug Fixes
-
-* Resolve the UrlManager/NetManager circularity ([#837](https://github.com/Wynntils/Artemis/issues/837)) ([8cbb2af](https://github.com/Wynntils/Artemis/commit/8cbb2af94b64a2790c870e3663587df31699a37d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.167 [skip ci] ([d15120b](https://github.com/Wynntils/Artemis/commit/d15120b04ce66444b2e2b7ce9431b52ac69cc2d9))
 
