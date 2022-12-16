@@ -13,6 +13,7 @@ import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -124,24 +125,18 @@ public class QuestInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || (!(o instanceof QuestInfo questInfo))) return false;
-
-        // Consider it the same quest just based on "constant" aspects of the quest
-        if (level != questInfo.level) return false;
-        if (isMiniQuest != questInfo.isMiniQuest) return false;
-        if (!name.equals(questInfo.name)) return false;
-        if (length != questInfo.length) return false;
-        return additionalRequirements.equals(questInfo.additionalRequirements);
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestInfo questInfo = (QuestInfo) o;
+        return level == questInfo.level
+                && isMiniQuest == questInfo.isMiniQuest
+                && Objects.equals(name, questInfo.name)
+                && length == questInfo.length
+                && Objects.equals(additionalRequirements, questInfo.additionalRequirements);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + length.hashCode();
-        result = 31 * result + level;
-        result = 31 * result + additionalRequirements.hashCode();
-        result = 31 * result + (isMiniQuest ? 1 : 0);
-        return result;
+        return Objects.hash(name, length, level, additionalRequirements, isMiniQuest);
     }
 
     @Override
