@@ -35,7 +35,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DiscoveryManager extends Manager {
+public final class DiscoveryManager extends Manager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
 
     private List<DiscoveryInfo> discoveries = List.of();

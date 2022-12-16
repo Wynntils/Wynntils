@@ -32,7 +32,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
-public class WynntilsAccountManager extends Manager {
+public final class WynntilsAccountManager extends Manager {
     private static final String NO_TOKEN = "<no token>";
 
     private String token = NO_TOKEN;
