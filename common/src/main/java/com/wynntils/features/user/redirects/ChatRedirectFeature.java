@@ -642,7 +642,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SpeedBoostRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^\\+3 minutes speed boost.$");
+        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§b\\+([23]) minutes§r§7 speed boost.$");
 
         @Override
         protected Pattern getNormalPattern() {
@@ -656,7 +656,8 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            return ChatFormatting.AQUA + "+3 minutes" + ChatFormatting.GRAY + " speed boost";
+            String minutesString = String.format("+%s minutes", matcher.group(1));
+            return ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost";
         }
     }
 
