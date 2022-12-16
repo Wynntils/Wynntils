@@ -88,7 +88,6 @@ public final class ModelRegistry {
         Managers.CrashReport.registerCrashContext("Loaded Models", ModelRegistry::crashHandler);
     }
 
-
     private static String crashHandler() {
         StringBuilder result = new StringBuilder();
 
