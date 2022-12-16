@@ -49,26 +49,34 @@ public final class UpdateManager extends Manager {
     public CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
-        File updateFile = getUpdateFile();
-        if (updateFile.exists()) {
-            future.complete(UpdateResult.UPDATE_PENDING);
-            return future;
-        }
-
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
         apiResponse.handleJsonObject(
                 json -> {
                     String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
 
-                    String currentMd5 = getCurrentMd5();
+                    if (latestMd5 == null) {
+                        future.complete(UpdateResult.ERROR);
+                        return;
+                    }
+
+                    String currentMd5 = getMd5(WynntilsMod.getModJar());
                     if (Objects.equals(currentMd5, latestMd5)) {
                         future.complete(UpdateResult.ALREADY_ON_LATEST);
                         return;
                     }
 
-                    if (latestMd5 == null) {
-                        future.complete(UpdateResult.ERROR);
-                        return;
+                    File localUpdateFile = getUpdateFile();
+                    if (localUpdateFile.exists()) {
+                        String localUpdateMd5 = getMd5(localUpdateFile);
+
+                        // If the local update file is the same as the latest update, we can just use that.
+                        if (Objects.equals(localUpdateMd5, latestMd5)) {
+                            future.complete(UpdateResult.UPDATE_PENDING);
+                            return;
+                        } else {
+                            // Otherwise, we need to delete the old file.
+                            FileUtils.deleteFile(localUpdateFile);
+                        }
                     }
 
                     String latestDownload = json.getAsJsonPrimitive("url").getAsString();
@@ -83,8 +91,8 @@ public final class UpdateManager extends Manager {
         return future;
     }
 
-    private String getCurrentMd5() {
-        MD5Verification verification = new MD5Verification(WynntilsMod.getModJar());
+    private String getMd5(File file) {
+        MD5Verification verification = new MD5Verification(file);
         return verification.getMd5();
     }
 
