@@ -1,9 +1,21 @@
+## [0.0.1-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.175...v0.0.1-alpha.176) (2022-12-16)
+
+
+### New Features
+
+* Redirects "Soul Point Lost" messages to Overlay ([#852](https://github.com/Wynntils/Artemis/issues/852)) ([9961435](https://github.com/Wynntils/Artemis/commit/99614353d27c38edf9fb42f83b88574f836bf928))
+
 ## [0.0.1-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.174...v0.0.1-alpha.175) (2022-12-16)
 
 
 ### New Features
 
 * Snappier and more robust quest book ([#848](https://github.com/Wynntils/Artemis/issues/848)) ([82eaebf](https://github.com/Wynntils/Artemis/commit/82eaebf05d4ef1da56c3f4904d7a42466c9df557))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.175 [skip ci] ([7b58892](https://github.com/Wynntils/Artemis/commit/7b588927fc5139b993fd82a77373b0c912521c11))
 
 ## [0.0.1-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.173...v0.0.1-alpha.174) (2022-12-16)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.172 [skip ci] ([86b279f](https://github.com/Wynntils/Artemis/commit/86b279fb075bb112cbc124f35f6045a1be304952))
-
-## [0.0.1-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.170...v0.0.1-alpha.171) (2022-12-16)
-
-
-### Bug Fixes
-
-* Remove all references to Managers.CrashReport in CrashReportManager ([#846](https://github.com/Wynntils/Artemis/issues/846)) ([ea575ca](https://github.com/Wynntils/Artemis/commit/ea575ca6bacae39148a49a4eb7c14cfb8436109b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.171 [skip ci] ([f096aaf](https://github.com/Wynntils/Artemis/commit/f096aafa269a05ef9337bf20fe10b6369bcd28e1))
 
