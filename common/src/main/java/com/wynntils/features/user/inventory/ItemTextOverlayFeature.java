@@ -24,18 +24,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    public static final List<Class<? extends Model>> TEXT_OVERLAY_PROPERTIES = List.of(
-            Models.AmplifierTierProperty.getClass(),
-            Models.ConsumableChargeProperty.getClass(),
-            Models.DailyRewardMultiplierProperty.getClass(),
-            Models.DungeonKeyProperty.getClass(),
-            Models.EmeraldPouchTierProperty.getClass(),
-            Models.GatheringToolProperty.getClass(),
-            Models.PowderTierProperty.getClass(),
-            Models.ServerCountProperty.getClass(),
-            Models.SkillIconProperty.getClass(),
-            Models.SkillPointProperty.getClass(),
-            Models.TeleportScrollProperty.getClass());
+    public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
+            Models.AmplifierTierProperty,
+            Models.ConsumableChargeProperty,
+            Models.DailyRewardMultiplierProperty,
+            Models.DungeonKeyProperty,
+            Models.EmeraldPouchTierProperty,
+            Models.GatheringToolProperty,
+            Models.PowderTierProperty,
+            Models.ServerCountProperty,
+            Models.SkillIconProperty,
+            Models.SkillPointProperty,
+            Models.TeleportScrollProperty);
 
     public static ItemTextOverlayFeature INSTANCE;
 
@@ -106,7 +106,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean hotbarTextOverlayEnabled = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return TEXT_OVERLAY_PROPERTIES;
     }
 

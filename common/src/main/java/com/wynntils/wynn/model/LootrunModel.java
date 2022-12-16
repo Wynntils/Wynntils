@@ -65,25 +65,25 @@ public final class LootrunModel extends Model {
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
 
-    private static LootrunState state = LootrunState.DISABLED;
+    private LootrunState state = LootrunState.DISABLED;
 
-    private static LootrunInstance lootrun = null;
+    private LootrunInstance lootrun = null;
     private static LootrunUncompiled uncompiled = null;
-    private static LootrunInstance recordingCompiled = null;
-    private static LootrunUncompiled recording = null;
+    private LootrunInstance recordingCompiled = null;
+    private LootrunUncompiled recording = null;
 
-    private static RecordingInformation recordingInformation = null;
+    private RecordingInformation recordingInformation = null;
 
-    public static LootrunState getState() {
+    public LootrunState getState() {
         return state;
     }
 
-    public static void render(PoseStack poseStack) {
+    public void render(PoseStack poseStack) {
         renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
         renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
     }
 
-    private static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
+    private void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
         if (lootrun == null) {
             return;
         }
@@ -134,7 +134,7 @@ public final class LootrunModel extends Model {
         poseStack.popPose();
     }
 
-    private static void renderNotes(
+    private void renderNotes(
             PoseStack poseStack, LootrunInstance lootrun, int color, MultiBufferSource source, long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
@@ -158,7 +158,7 @@ public final class LootrunModel extends Model {
         }
     }
 
-    private static void renderChests(
+    private void renderChests(
             PoseStack poseStack,
             LootrunInstance lootrun,
             int color,
@@ -178,7 +178,7 @@ public final class LootrunModel extends Model {
         source.endBatch();
     }
 
-    private static void renderPoints(
+    private void renderPoints(
             PoseStack poseStack,
             MultiBufferSource.BufferSource source,
             Long2ObjectMap<List<ColoredPath>> points,
@@ -191,7 +191,7 @@ public final class LootrunModel extends Model {
         renderNonTexturedLootrunPoints(poseStack, source, locations, level, CustomRenderType.LOOTRUN_LINE);
     }
 
-    private static void renderNonTexturedLootrunPoints(
+    private void renderNonTexturedLootrunPoints(
             PoseStack poseStack,
             MultiBufferSource.BufferSource source,
             List<ColoredPath> locations,
@@ -251,13 +251,13 @@ public final class LootrunModel extends Model {
         }
     }
 
-    private static void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
+    private void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
         for (ColoredPoint location : toRender.points()) {
             renderPoint(consumer, lastMatrix, location);
         }
     }
 
-    private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPoint location) {
+    private void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPoint location) {
         Vec3 rawLocation = location.vec3();
         int pathColor = location.color();
         consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
@@ -266,7 +266,7 @@ public final class LootrunModel extends Model {
                 .endVertex();
     }
 
-    private static BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
+    private BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
         BlockValidness state = BlockValidness.INVALID;
         Iterable<BlockPos> blocks = getBlocksForPoint(point);
 
@@ -283,14 +283,14 @@ public final class LootrunModel extends Model {
         return state;
     }
 
-    private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
+    private Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
         BlockPos minPos = new BlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
         BlockPos maxPos = new BlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
 
         return BlockPos.betweenClosed(minPos, maxPos);
     }
 
-    public static int addNote(Component text) {
+    public int addNote(Component text) {
         Entity root = McUtils.player().getRootVehicle();
 
         LootrunUncompiled current = getActiveLootrun();
@@ -301,7 +301,7 @@ public final class LootrunModel extends Model {
         return recompileLootrun(true);
     }
 
-    public static LootrunUncompiled getActiveLootrun() {
+    public LootrunUncompiled getActiveLootrun() {
         LootrunUncompiled instance = null;
         if (recording != null) instance = recording;
         else if (uncompiled != null) instance = uncompiled;
@@ -309,11 +309,11 @@ public final class LootrunModel extends Model {
         return instance;
     }
 
-    public static LootrunInstance getCurrentLootrun() {
+    public LootrunInstance getCurrentLootrun() {
         return lootrun;
     }
 
-    public static int recompileLootrun(boolean saveToFile) {
+    public int recompileLootrun(boolean saveToFile) {
         if (recording != null) {
             recordingInformation.setDirty(true);
         } else if (uncompiled != null) {
@@ -339,7 +339,7 @@ public final class LootrunModel extends Model {
         return 1;
     }
 
-    private static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+    private LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
         Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
@@ -352,7 +352,7 @@ public final class LootrunModel extends Model {
         return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
     }
 
-    private static List<Path> sample(Path raw, float sampleRate) {
+    private List<Path> sample(Path raw, float sampleRate) {
         List<Path> vec3s = new ArrayList<>();
         Path currentVec3s = new Path(new ArrayList<>());
         vec3s.add(currentVec3s);
@@ -407,7 +407,7 @@ public final class LootrunModel extends Model {
         return result;
     }
 
-    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw, boolean recording) {
+    private Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw, boolean recording) {
         float sampleRate = 10f;
 
         List<List<Vec3>> sampled =
@@ -488,7 +488,7 @@ public final class LootrunModel extends Model {
         return sampleByChunk;
     }
 
-    private static Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
+    private Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
         Long2ObjectMap<Set<BlockPos>> result = new Long2ObjectOpenHashMap<>();
         for (BlockPos pos : chests) {
             Set<BlockPos> addTo = result.computeIfAbsent(new ChunkPos(pos).toLong(), (chunk) -> new HashSet<>());
@@ -497,7 +497,7 @@ public final class LootrunModel extends Model {
         return result;
     }
 
-    private static Long2ObjectMap<List<Note>> getNotes(List<Note> notes) {
+    private Long2ObjectMap<List<Note>> getNotes(List<Note> notes) {
         Long2ObjectMap<List<Note>> result = new Long2ObjectOpenHashMap<>();
         for (Note note : notes) {
             ChunkPos chunk = new ChunkPos(new BlockPos(note.position()));
@@ -507,7 +507,7 @@ public final class LootrunModel extends Model {
         return result;
     }
 
-    private static LootrunUncompiled readJson(File file, JsonObject json) {
+    private LootrunUncompiled readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
         Path pointsList = new Path(new ArrayList<>());
         for (JsonElement element : points) {
@@ -548,7 +548,7 @@ public final class LootrunModel extends Model {
         return new LootrunUncompiled(pointsList, chests, notes, file);
     }
 
-    public static void clearCurrentLootrun() {
+    public void clearCurrentLootrun() {
         LootrunFeature.INSTANCE.disable();
         state = LootrunState.DISABLED;
         lootrun = null;
@@ -558,7 +558,7 @@ public final class LootrunModel extends Model {
         recordingInformation = null;
     }
 
-    public static void stopRecording() {
+    public void stopRecording() {
         // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
         lootrun = compile(recording, false);
@@ -568,14 +568,14 @@ public final class LootrunModel extends Model {
         recordingInformation = null;
     }
 
-    public static void startRecording() {
+    public void startRecording() {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new Path(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
         LootrunFeature.INSTANCE.enable();
     }
 
-    public static List<LootrunInstance> getLootruns() {
+    public List<LootrunInstance> getLootruns() {
         List<LootrunInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
@@ -595,7 +595,7 @@ public final class LootrunModel extends Model {
         return lootruns;
     }
 
-    public static boolean tryLoadFile(String fileName) {
+    public boolean tryLoadFile(String fileName) {
         String lootrunFileName = fileName + ".json";
         File lootrunFile = new File(LOOTRUNS, lootrunFileName);
         if (lootrunFile.exists()) {
@@ -616,7 +616,7 @@ public final class LootrunModel extends Model {
         return false;
     }
 
-    public static LootrunUndoResult tryUndo() {
+    public LootrunUndoResult tryUndo() {
         Vec3 position = McUtils.player().position();
         Path points = recording.path();
         Path removed = new Path(new ArrayList<>());
@@ -646,13 +646,13 @@ public final class LootrunModel extends Model {
         return LootrunUndoResult.SUCCESSFUL;
     }
 
-    public static boolean addChest(BlockPos pos) {
+    public boolean addChest(BlockPos pos) {
         LootrunUncompiled current = getActiveLootrun();
         if (current == null) return false;
         return current.chests().add(pos);
     }
 
-    public static boolean removeChest(BlockPos pos) {
+    public boolean removeChest(BlockPos pos) {
         LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return false;
@@ -660,7 +660,7 @@ public final class LootrunModel extends Model {
         return current.chests().remove(pos);
     }
 
-    public static Note deleteNoteAt(BlockPos pos) {
+    public Note deleteNoteAt(BlockPos pos) {
         LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return null;
@@ -675,7 +675,7 @@ public final class LootrunModel extends Model {
         return null;
     }
 
-    public static List<Note> getCurrentNotes() {
+    public List<Note> getCurrentNotes() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun != null) return activeLootrun.notes();
@@ -683,7 +683,7 @@ public final class LootrunModel extends Model {
         return new ArrayList<>();
     }
 
-    public static void setLastChestIfRecording(BlockPos pos) {
+    public void setLastChestIfRecording(BlockPos pos) {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -691,7 +691,7 @@ public final class LootrunModel extends Model {
         recordingInformation.setLastChest(pos);
     }
 
-    public static void addChestIfRecording() {
+    public void addChestIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -705,7 +705,7 @@ public final class LootrunModel extends Model {
         recordingInformation.setLastChest(null);
     }
 
-    public static void recordMovementIfRecording() {
+    public void recordMovementIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -728,7 +728,7 @@ public final class LootrunModel extends Model {
         }
     }
 
-    public static Vec3 getStartingPoint() {
+    public Vec3 getStartingPoint() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun == null) {
@@ -740,7 +740,7 @@ public final class LootrunModel extends Model {
         return activeLootrun.path.points().get(0);
     }
 
-    public static LootrunSaveResult trySaveCurrentLootrun(String name) {
+    public LootrunSaveResult trySaveCurrentLootrun(String name) {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun == null) {

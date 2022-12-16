@@ -29,8 +29,8 @@ public class ChatTimestampFeature extends UserFeature {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @Override

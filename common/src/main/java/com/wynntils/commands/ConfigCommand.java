@@ -88,6 +88,7 @@ public class ConfigCommand extends CommandBase {
                     },
                     builder);
 
+    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("config")
                 .then(this.buildGetConfigNode())

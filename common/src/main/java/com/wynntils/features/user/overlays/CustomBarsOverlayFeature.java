@@ -39,8 +39,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomBarsOverlayFeature extends UserFeature {
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.ActionBar.getClass(), Models.BossBar.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ActionBar, Models.BossBar);
     }
 
     @SubscribeEvent
@@ -225,6 +225,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
+        @Override
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();

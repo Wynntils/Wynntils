@@ -15,7 +15,7 @@ public abstract class ActiveFunction<T> extends DependantFunction<T> {
     }
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of();
     }
 

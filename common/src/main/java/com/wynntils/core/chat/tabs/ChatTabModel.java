@@ -22,21 +22,20 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ChatTabModel extends Model {
-    private static ChatTab focusedTab = null;
+    private ChatTab focusedTab = null;
 
-    private static final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
-    private static final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
+    private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
+    private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
 
-    public static void init() {}
-
-    public static void disable() {
+    @Override
+    public void disable() {
         chatTabData.clear();
         unreadMessages.clear();
         setFocusedTab(null);
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
             chatTabData.clear();
             unreadMessages.clear();
@@ -45,19 +44,19 @@ public final class ChatTabModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent event) {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
         if (focusedTab == null || focusedTab.getAutoCommand() == null) return;
 
         replaceChatText(chatScreen, focusedTab.getAutoCommand());
     }
 
-    private static void replaceChatText(ChatScreen chatScreen, String autoCommand) {
+    private void replaceChatText(ChatScreen chatScreen, String autoCommand) {
         ((ChatScreenInvoker) chatScreen).invokeInsertText(autoCommand, true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onChatPacket(ChatPacketReceivedEvent event) {
+    public void onChatPacket(ChatPacketReceivedEvent event) {
         if (event.getType() != ChatType.CHAT) return;
         if (focusedTab == null) return;
 
@@ -65,7 +64,7 @@ public final class ChatTabModel extends Model {
         event.setCanceled(true);
     }
 
-    public static void addMessageToTab(ChatTab tab, Component message) {
+    public void addMessageToTab(ChatTab tab, Component message) {
         chatTabData.putIfAbsent(tab, new ChatComponent(McUtils.mc()));
 
         chatTabData.get(tab).addMessage(message);
@@ -75,7 +74,7 @@ public final class ChatTabModel extends Model {
         }
     }
 
-    public static void setFocusedTab(ChatTab focused) {
+    public void setFocusedTab(ChatTab focused) {
         if (Objects.equals(focusedTab, focused)) {
             // do not create new chat component if we are already focused on the tab
             return;
@@ -103,11 +102,11 @@ public final class ChatTabModel extends Model {
         }
     }
 
-    public static ChatTab getFocusedTab() {
+    public ChatTab getFocusedTab() {
         return focusedTab;
     }
 
-    public static boolean hasUnreadMessages(ChatTab tab) {
+    public boolean hasUnreadMessages(ChatTab tab) {
         return unreadMessages.getOrDefault(tab, false);
     }
 }

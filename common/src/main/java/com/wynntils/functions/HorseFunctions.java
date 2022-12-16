@@ -33,8 +33,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.HorseProperty.getClass());
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -52,8 +52,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.HorseProperty.getClass());
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -71,8 +71,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.HorseProperty.getClass());
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -90,8 +90,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.HorseProperty.getClass());
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -110,8 +110,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(Models.HorseProperty.getClass());
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override

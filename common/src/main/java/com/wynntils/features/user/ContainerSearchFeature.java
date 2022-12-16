@@ -53,8 +53,8 @@ public class ContainerSearchFeature extends UserFeature {
     private boolean autoSearching = false;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.SearchOverlayProperty.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.SearchOverlayProperty);
     }
 
     @SubscribeEvent

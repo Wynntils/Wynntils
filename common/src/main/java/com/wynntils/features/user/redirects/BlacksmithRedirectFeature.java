@@ -30,8 +30,8 @@ public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])([A-Z][a-zA-Z\\s]+)");
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
