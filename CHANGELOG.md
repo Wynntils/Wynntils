@@ -1,9 +1,21 @@
+## [0.0.1-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.170...v0.0.1-alpha.171) (2022-12-16)
+
+
+### Bug Fixes
+
+* Remove all references to Managers.CrashReport in CrashReportManager ([#846](https://github.com/Wynntils/Artemis/issues/846)) ([ea575ca](https://github.com/Wynntils/Artemis/commit/ea575ca6bacae39148a49a4eb7c14cfb8436109b))
+
 ## [0.0.1-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.169...v0.0.1-alpha.170) (2022-12-16)
 
 
 ### Code Refactoring
 
 * Make Models into singletons ([#838](https://github.com/Wynntils/Artemis/issues/838)) ([f87ed1b](https://github.com/Wynntils/Artemis/commit/f87ed1b4c2fd5632d921fea8b94d2a3b873c7c49))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.170 [skip ci] ([f5fa3a2](https://github.com/Wynntils/Artemis/commit/f5fa3a278e23c0849c10d2e1ff06a58562ad01c8))
 
 ## [0.0.1-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.168...v0.0.1-alpha.169) (2022-12-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.167 [skip ci] ([d15120b](https://github.com/Wynntils/Artemis/commit/d15120b04ce66444b2e2b7ce9431b52ac69cc2d9))
-
-## [0.0.1-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.165...v0.0.1-alpha.166) (2022-12-15)
-
-
-### Code Refactoring
-
-* Access models through Models instance, not directly through class name ([#835](https://github.com/Wynntils/Artemis/issues/835)) ([6c9ae0e](https://github.com/Wynntils/Artemis/commit/6c9ae0ee634b6ab60deae783c3f795a314e7e006))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.166 [skip ci] ([a761dd3](https://github.com/Wynntils/Artemis/commit/a761dd3696078e3ffcf283fe4f52209170f03fed))
 
