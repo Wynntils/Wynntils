@@ -91,11 +91,11 @@ public final class ModelRegistry {
     private static String crashHandler() {
         StringBuilder result = new StringBuilder();
 
-        for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+        for (Map.Entry<Model, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
             if (!ENABLED_MODELS.contains(dependencyEntry.getKey())) continue;
 
             result.append("\n\t\t")
-                    .append(dependencyEntry.getKey().getName())
+                    .append(dependencyEntry.getKey().getClass().getName())
                     .append(": ")
                     .append(dependencyEntry.getValue().stream()
                             .map(t -> {
