@@ -95,42 +95,34 @@ public final class ModelRegistry {
         }
     }
 
-    private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new ModelCrashContext());
-    }
-
     public static boolean isEnabled(Class<? extends Model> model) {
         return ENABLED_MODELS.contains(model);
     }
 
-    private static class ModelCrashContext extends CrashReportManager.ICrashContext {
-        public ModelCrashContext() {
-            super("Loaded Models");
+    private static void addCrashCallbacks() {
+        Managers.CrashReport.registerCrashContext("Loaded Models", ModelRegistry::crashHandler);
+    }
+
+    private static String crashHandler() {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry : MODEL_DEPENDENCIES.entrySet()) {
+            if (!ENABLED_MODELS.contains(dependencyEntry.getKey())) continue;
+
+            result.append("\n\t\t")
+                    .append(dependencyEntry.getKey().getName())
+                    .append(": ")
+                    .append(dependencyEntry.getValue().stream()
+                            .map(t -> {
+                                if (t instanceof Translatable translatable) {
+                                    return translatable.getTranslatedName();
+                                } else {
+                                    return t.toString();
+                                }
+                            })
+                            .collect(Collectors.joining(", ")));
         }
 
-        @Override
-        public Object generate() {
-            StringBuilder result = new StringBuilder();
-
-            for (Map.Entry<Class<? extends Model>, List<ModelDependant>> dependencyEntry :
-                    MODEL_DEPENDENCIES.entrySet()) {
-                if (!ENABLED_MODELS.contains(dependencyEntry.getKey())) continue;
-
-                result.append("\n\t\t")
-                        .append(dependencyEntry.getKey().getName())
-                        .append(": ")
-                        .append(dependencyEntry.getValue().stream()
-                                .map(t -> {
-                                    if (t instanceof Translatable translatable) {
-                                        return translatable.getTranslatedName();
-                                    } else {
-                                        return t.toString();
-                                    }
-                                })
-                                .collect(Collectors.joining(", ")));
-            }
-
-            return result.toString();
-        }
+        return result.toString();
     }
 }

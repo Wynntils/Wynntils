@@ -10,6 +10,7 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.UpdateManager;
@@ -37,16 +38,17 @@ public final class Managers {
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigManager Config = new ConfigManager();
     public static final ContainerQueryManager ContainerQuery = new ContainerQueryManager();
+    public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
-    public static final OverlayManager Overlay = new OverlayManager();
     public static final WorldStateManager WorldState = new WorldStateManager();
 
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final NetManager Net = new NetManager(Url);
     public static final FunctionManager Function = new FunctionManager(ItemStackTransform);
     public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
+    public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);
     public static final TerritoryManager Territory = new TerritoryManager(Net);

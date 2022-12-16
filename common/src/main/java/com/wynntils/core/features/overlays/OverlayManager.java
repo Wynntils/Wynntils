@@ -8,8 +8,9 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.gui.screens.overlays.OverlayManagementScreen;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -34,8 +35,8 @@ public final class OverlayManager extends Manager {
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
 
-    public OverlayManager() {
-        super(List.of());
+    public OverlayManager(CrashReportManager crashReportManager) {
+        super(List.of(crashReportManager));
         addCrashCallbacks();
     }
 
@@ -128,18 +129,14 @@ public final class OverlayManager extends Manager {
     }
 
     private void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Overlays") {
+        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> {
+            StringBuilder result = new StringBuilder();
 
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
-
-                for (Overlay overlay : enabledOverlays) {
-                    result.append("\n\t\t").append(overlay.getTranslatedName());
-                }
-
-                return result.toString();
+            for (Overlay overlay : enabledOverlays) {
+                result.append("\n\t\t").append(overlay.getTranslatedName());
             }
+
+            return result.toString();
         });
     }
 
