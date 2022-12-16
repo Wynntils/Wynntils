@@ -1,9 +1,21 @@
+## [0.0.1-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.169...v0.0.1-alpha.170) (2022-12-16)
+
+
+### Code Refactoring
+
+* Make Models into singletons ([#838](https://github.com/Wynntils/Artemis/issues/838)) ([f87ed1b](https://github.com/Wynntils/Artemis/commit/f87ed1b4c2fd5632d921fea8b94d2a3b873c7c49))
+
 ## [0.0.1-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.168...v0.0.1-alpha.169) (2022-12-16)
 
 
 ### Code Refactoring
 
 * Fix up CrashReportManager ([#839](https://github.com/Wynntils/Artemis/issues/839)) ([00b2b28](https://github.com/Wynntils/Artemis/commit/00b2b28028ccb5b526e6b291de35e75d4425da85))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.169 [skip ci] ([b8990a8](https://github.com/Wynntils/Artemis/commit/b8990a843e96b91a4ff08434d4fc7d4591ac2dbe))
 
 ## [0.0.1-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.167...v0.0.1-alpha.168) (2022-12-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.166 [skip ci] ([a761dd3](https://github.com/Wynntils/Artemis/commit/a761dd3696078e3ffcf283fe4f52209170f03fed))
-
-## [0.0.1-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.164...v0.0.1-alpha.165) (2022-12-15)
-
-
-### New Features
-
-* Redirects "Potion Already Active" message to overlay ([#831](https://github.com/Wynntils/Artemis/issues/831)) ([6a39d3d](https://github.com/Wynntils/Artemis/commit/6a39d3d4cfb47b1914e69bcf1b97200cbe288bb7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.165 [skip ci] ([52a16e1](https://github.com/Wynntils/Artemis/commit/52a16e1988d534668bd7276ba2052a37b7f3d9b5))
 
