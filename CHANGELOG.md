@@ -1,3 +1,10 @@
+## [0.0.1-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.174...v0.0.1-alpha.175) (2022-12-16)
+
+
+### New Features
+
+* Snappier and more robust quest book ([#848](https://github.com/Wynntils/Artemis/issues/848)) ([82eaebf](https://github.com/Wynntils/Artemis/commit/82eaebf05d4ef1da56c3f4904d7a42466c9df557))
+
 ## [0.0.1-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.173...v0.0.1-alpha.174) (2022-12-16)
 
 
@@ -5,6 +12,11 @@
 
 * Crash at startup in KeyMappingMixin ([#850](https://github.com/Wynntils/Artemis/issues/850)) ([110120f](https://github.com/Wynntils/Artemis/commit/110120f86989e81fffaf9bb2f03e830bea84f974))
 * Crash in Forge at startup ([#849](https://github.com/Wynntils/Artemis/issues/849)) ([c3a8c3e](https://github.com/Wynntils/Artemis/commit/c3a8c3e90947123f637297249d97904bb14f6c3b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.174 [skip ci] ([15cd997](https://github.com/Wynntils/Artemis/commit/15cd9976f058c0579da32492045d9e2c18e857a8))
 
 ## [0.0.1-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.172...v0.0.1-alpha.173) (2022-12-16)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.171 [skip ci] ([f096aaf](https://github.com/Wynntils/Artemis/commit/f096aafa269a05ef9337bf20fe10b6369bcd28e1))
-
-## [0.0.1-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.169...v0.0.1-alpha.170) (2022-12-16)
-
-
-### Code Refactoring
-
-* Make Models into singletons ([#838](https://github.com/Wynntils/Artemis/issues/838)) ([f87ed1b](https://github.com/Wynntils/Artemis/commit/f87ed1b4c2fd5632d921fea8b94d2a3b873c7c49))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.170 [skip ci] ([f5fa3a2](https://github.com/Wynntils/Artemis/commit/f5fa3a278e23c0849c10d2e1ff06a58562ad01c8))
 
