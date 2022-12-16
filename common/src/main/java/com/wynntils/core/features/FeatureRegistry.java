@@ -10,7 +10,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
@@ -309,19 +308,16 @@ public final class FeatureRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Features") {
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
+        Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
+            StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES) {
-                    if (feature.isEnabled()) {
-                        result.append("\n\t\t").append(feature.getTranslatedName());
-                    }
+            for (Feature feature : FEATURES) {
+                if (feature.isEnabled()) {
+                    result.append("\n\t\t").append(feature.getTranslatedName());
                 }
-
-                return result.toString();
             }
+
+            return result.toString();
         });
     }
 }
