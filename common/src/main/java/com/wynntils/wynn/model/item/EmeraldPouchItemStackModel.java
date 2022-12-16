@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
 
-public class EmeraldPouchItemStackModel extends Model {
+public final class EmeraldPouchItemStackModel extends Model {
     private static final ItemStackTransformer EMERALD_POUCH_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
 

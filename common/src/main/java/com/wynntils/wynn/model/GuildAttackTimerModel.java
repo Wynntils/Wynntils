@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class GuildAttackTimerModel extends Model {
+public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
 

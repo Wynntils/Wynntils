@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.wynn.model.BombBellModel;
+import com.wynntils.core.managers.Models;
 import com.wynntils.wynn.objects.BombInfo;
 import com.wynntils.wynn.objects.BombType;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class BombBellCommand extends CommandBase {
             return 0;
         }
 
-        Set<BombInfo> bombBells = BombBellModel.getBombBells().stream()
+        Set<BombInfo> bombBells = Models.BombBell.getBombBells().stream()
                 .filter(bombInfo -> bombInfo.bomb() == bombType)
                 .collect(Collectors.toSet());
 
@@ -59,7 +59,7 @@ public class BombBellCommand extends CommandBase {
     }
 
     private int listBombs(CommandContext<CommandSourceStack> context) {
-        Set<BombInfo> bombBells = BombBellModel.getBombBells();
+        Set<BombInfo> bombBells = Models.BombBell.getBombBells();
 
         MutableComponent component = getBombListComponent(bombBells);
 

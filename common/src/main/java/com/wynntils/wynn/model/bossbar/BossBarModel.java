@@ -24,7 +24,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class BossBarModel extends Model {
+public final class BossBarModel extends Model {
 
     public static void init() {}
 

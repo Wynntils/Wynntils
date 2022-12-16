@@ -5,24 +5,8 @@
 package com.wynntils.wynn.model.item;
 
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.model.item.properties.AmplifierTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.ConsumableChargePropertyModel;
-import com.wynntils.wynn.model.item.properties.CosmeticTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.properties.DungeonKeyPropertyModel;
-import com.wynntils.wynn.model.item.properties.EmeraldPouchTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.GatheringToolPropertyModel;
-import com.wynntils.wynn.model.item.properties.IngredientPropertyModel;
-import com.wynntils.wynn.model.item.properties.ItemTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.MaterialPropertyModel;
-import com.wynntils.wynn.model.item.properties.PowderTierPropertyModel;
-import com.wynntils.wynn.model.item.properties.ServerCountPropertyModel;
-import com.wynntils.wynn.model.item.properties.SkillIconPropertyModel;
-import com.wynntils.wynn.model.item.properties.SkillPointPropertyModel;
-import com.wynntils.wynn.model.item.properties.TeleportScrollPropertyModel;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,27 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemStackTransformManager extends Manager {
-    public static final List<Class<? extends Model>> HIGHLIGHT_PROPERTIES = List.of(
-            CosmeticTierPropertyModel.class,
-            EmeraldPouchItemStackModel.class,
-            MaterialPropertyModel.class,
-            IngredientPropertyModel.class,
-            ItemTierPropertyModel.class,
-            PowderTierPropertyModel.class);
-    public static final List<Class<? extends Model>> TEXT_OVERLAY_PROPERTIES = List.of(
-            AmplifierTierPropertyModel.class,
-            ConsumableChargePropertyModel.class,
-            DailyRewardMultiplierPropertyModel.class,
-            DungeonKeyPropertyModel.class,
-            EmeraldPouchTierPropertyModel.class,
-            GatheringToolPropertyModel.class,
-            PowderTierPropertyModel.class,
-            ServerCountPropertyModel.class,
-            SkillIconPropertyModel.class,
-            SkillPointPropertyModel.class,
-            TeleportScrollPropertyModel.class);
-
+public final class ItemStackTransformManager extends Manager {
     private final Set<ItemStackTransformer> transformers = ConcurrentHashMap.newKeySet();
     private final Set<ItemPropertyWriter> properties = ConcurrentHashMap.newKeySet();
 

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ServerListModel extends Model {
+public final class ServerListModel extends Model {
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
 
     private static Map<String, ServerProfile> availableServers = new HashMap<>();

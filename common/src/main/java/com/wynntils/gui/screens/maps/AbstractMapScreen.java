@@ -7,6 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.map.PointerType;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -20,7 +21,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.IconPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
@@ -323,7 +323,7 @@ public abstract class AbstractMapScreen extends Screen {
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
-        List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
+        List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);

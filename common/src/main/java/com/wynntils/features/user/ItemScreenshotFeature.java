@@ -13,12 +13,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.awt.HeadlessException;
@@ -120,7 +120,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
         // chat item prompt
         if (stack instanceof GearItemStack gearItem) {
-            String encoded = ChatItemModel.encodeItem(gearItem);
+            String encoded = Models.ChatItem.encodeItem(gearItem);
 
             McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemMessage")
                     .withStyle(ChatFormatting.DARK_GREEN)

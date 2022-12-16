@@ -10,7 +10,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 
-public class SkillIconPropertyModel extends Model {
+public final class SkillIconPropertyModel extends Model {
     private static final ItemPropertyWriter SKILL_ICON_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
 

@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
@@ -18,7 +19,6 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import com.wynntils.wynn.model.territory.TerritoryManager;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DiscoveryManager extends Manager {
+public final class DiscoveryManager extends Manager {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
 
     private List<DiscoveryInfo> discoveries = List.of();
@@ -84,7 +84,7 @@ public class DiscoveryManager extends Manager {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            CompassModel.setCompassLocation(new Location(centerX, 0, centerZ));
+            Models.Compass.setCompassLocation(new Location(centerX, 0, centerZ));
         }
     }
 
@@ -178,7 +178,7 @@ public class DiscoveryManager extends Manager {
                     Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
                 }
                 case COMPASS -> {
-                    CompassModel.setCompassLocation(new Location(x, 0, z));
+                    Models.Compass.setCompassLocation(new Location(x, 0, z));
                 }
             }
         });

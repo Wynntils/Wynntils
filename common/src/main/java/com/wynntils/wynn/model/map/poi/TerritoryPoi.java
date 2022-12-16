@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -14,7 +15,6 @@ import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 
@@ -94,7 +94,7 @@ public class TerritoryPoi implements Poi {
                             FontRenderer.TextShadow.OUTLINE);
         }
 
-        GuildAttackTimerModel.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
+        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
                 .ifPresent(attackTimer -> {
                     final String timeLeft = attackTimer.timerString();
 

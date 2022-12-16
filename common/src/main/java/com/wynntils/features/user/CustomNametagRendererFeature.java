@@ -8,11 +8,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.RemoteWynntilsUserInfoModel;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
@@ -108,7 +108,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {
         WynntilsUser user =
-                RemoteWynntilsUserInfoModel.getUser(event.getEntity().getUUID());
+                Models.RemoteWynntilsUserInfo.getUser(event.getEntity().getUUID());
         if (user == null) return;
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
@@ -118,6 +118,6 @@ public class CustomNametagRendererFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(RemoteWynntilsUserInfoModel.class);
+        return List.of(Models.RemoteWynntilsUserInfo.getClass());
     }
 }

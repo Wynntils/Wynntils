@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -42,7 +43,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ScoreboardModel.class);
+        return List.of(Models.Scoreboard.getClass());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,10 @@ public final class UrlManager extends Manager {
 
     public UrlManager() {
         super(List.of());
-        loadUrls();
+        // This is a way of resolving the circular dependencies between UrlManager and
+        // NetManager. UrlManager needs Net to download the urls.json file, but NetManager
+        // needs UrlManager to resolve the URL for the source urls.json file to download.
+        loadUrls(new NetManager(this));
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
@@ -67,12 +71,13 @@ public final class UrlManager extends Manager {
     }
 
     public void reloadUrls() {
-        loadUrls();
+        // If we reload URLs after initial bootstrapping, use normal manager
+        loadUrls(Managers.Net);
     }
 
-    private void loadUrls() {
+    private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially
-        try (InputStream inputStream = getLocalInputStream()) {
+        try (InputStream inputStream = getLocalInputStream(netManager)) {
             readUrls(inputStream);
         } catch (IOException e) {
             // We can't load the url list from local disk. This is a catastrophic failure.
@@ -82,10 +87,13 @@ public final class UrlManager extends Manager {
         }
 
         // Then trigger a (re-)download from the net to the cache
-        // FIXME: How handle this properly?
-        if (Managers.Net == null) return;
+        // We need to do the urlInfo lookup ourself, since we might have
+        // a embryonic netManager which can't do much.
+        UrlManager.UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+        URI uri = URI.create(urlInfo.url());
+        String localFileName = UrlId.DATA_STATIC_URLS.getId();
 
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_URLS);
+        Download dl = netManager.download(uri, localFileName);
         dl.handleInputStream(inputStream -> {
             try {
                 readUrls(inputStream);
@@ -95,21 +103,10 @@ public final class UrlManager extends Manager {
         });
     }
 
-    private InputStream getLocalInputStream() {
-        File cacheFile = null;
-        boolean useCache;
-
+    private InputStream getLocalInputStream(NetManager netManager) {
         // First check if there is a copy in the local cache
-        if (Managers.Net != null) {
-            // FIXME: Resolve this circular dependency better
-
-            cacheFile = Managers.Net.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
-            useCache = (cacheFile.exists() && cacheFile.length() > 0);
-        } else {
-            useCache = false;
-        }
-
-        if (useCache) {
+        File cacheFile = netManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+        if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {
                 return new FileInputStream(cacheFile);

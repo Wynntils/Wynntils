@@ -14,6 +14,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -21,7 +22,6 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.StatusEffectsChangedEvent;
-import com.wynntils.wynn.model.TabModel;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -33,7 +33,7 @@ public class StatusOverlayFeature extends UserFeature {
 
     @Override
     public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(TabModel.class);
+        return List.of(Models.Tab.getClass());
     }
 
     @SubscribeEvent
@@ -42,7 +42,7 @@ public class StatusOverlayFeature extends UserFeature {
     }
 
     private void recalculateRenderCache() {
-        renderCache = TabModel.getTimers().stream()
+        renderCache = Models.Tab.getTimers().stream()
                 .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
                 .toList();
     }
