@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BombBellTrackingFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass(), Models.BombBell.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat, Models.BombBell);
     }
 }

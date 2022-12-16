@@ -14,11 +14,13 @@ public final class DailyRewardMultiplierPropertyModel extends Model {
     private static final ItemPropertyWriter DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(DAILY_REWARD_MULTIPLIER_PROPERTY_WRITER);
     }
 }

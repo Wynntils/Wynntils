@@ -14,11 +14,13 @@ public final class UnidentifiedItemStackModel extends Model {
     private static final ItemStackTransformer UNIDENTIFIED_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerTransformer(UNIDENTIFIED_TRANSFORMER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(UNIDENTIFIED_TRANSFORMER);
     }
 }

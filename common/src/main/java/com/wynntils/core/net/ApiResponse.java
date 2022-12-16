@@ -15,6 +15,7 @@ public class ApiResponse extends NetResult {
         super(request);
     }
 
+    @Override
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         CompletableFuture<InputStream> future = Managers.Net.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())

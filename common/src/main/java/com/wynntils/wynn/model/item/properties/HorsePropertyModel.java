@@ -14,11 +14,13 @@ public final class HorsePropertyModel extends Model {
     private static final ItemPropertyWriter HORSE_WRITER =
             new ItemPropertyWriter(WynnItemMatchers::isHorse, HorseProperty::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerProperty(HORSE_WRITER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(HORSE_WRITER);
     }
 }

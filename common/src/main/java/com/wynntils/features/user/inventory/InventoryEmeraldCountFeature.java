@@ -47,8 +47,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     public boolean showContainerEmeraldCount = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.PlayerInventory.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.PlayerInventory);
     }
 
     @SubscribeEvent

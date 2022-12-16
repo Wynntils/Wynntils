@@ -49,8 +49,8 @@ public class ChatTabsFeature extends UserFeature {
     private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass(), Models.ChatTab.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat, Models.ChatTab);
     }
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.

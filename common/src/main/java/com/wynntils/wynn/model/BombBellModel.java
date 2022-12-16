@@ -20,16 +20,15 @@ public final class BombBellModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
-    private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
+    private final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
 
-    public static void init() {}
-
-    public static void disable() {
+    @Override
+    public void disable() {
         BOMB_BELLS.clear();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onChat(ChatMessageReceivedEvent event) {
+    public void onChat(ChatMessageReceivedEvent event) {
         String unformatted = ComponentUtils.stripFormatting(event.getOriginalCodedMessage());
 
         Matcher matcher = BOMB_BELL_PATTERN.matcher(unformatted);
@@ -45,12 +44,12 @@ public final class BombBellModel extends Model {
         }
     }
 
-    private static void removeOldTimers() {
+    private void removeOldTimers() {
         BOMB_BELLS.removeIf(bombInfo ->
                 bombInfo.startTime() + (bombInfo.bomb().getActiveMinutes() * 60000L) < System.currentTimeMillis());
     }
 
-    public static Set<BombInfo> getBombBells() {
+    public Set<BombInfo> getBombBells() {
         removeOldTimers();
         return BOMB_BELLS;
     }

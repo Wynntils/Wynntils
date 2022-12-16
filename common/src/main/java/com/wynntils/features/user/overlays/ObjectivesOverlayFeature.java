@@ -42,8 +42,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public boolean disableObjectiveTrackingOnScoreboard = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Scoreboard.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Scoreboard);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

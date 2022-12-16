@@ -25,20 +25,17 @@ public final class ActionBarModel extends Model {
     private static final Pattern POWDER_CHARGE_PATTERN = Pattern.compile("§.+([✤✦❉✹❋]+) (\\d+)%");
     private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7(-?\\d+)§f .+§(-?\\d+) (-?\\d+)");
 
-    private static Component previousMessage = null;
+    private Component previousMessage = null;
 
-    private static float powderSpecialCharge = 0;
-    private static Powder powderSpecialType = null;
-    private static int currentHealth = -1;
-    private static int maxHealth = -1;
-    private static int currentMana = -1;
-    private static int maxMana = -1;
-
-    /** Needed for all Models */
-    public static void init() {}
+    private float powderSpecialCharge = 0;
+    private Powder powderSpecialType = null;
+    private int currentHealth = -1;
+    private int maxHealth = -1;
+    private int currentMana = -1;
+    private int maxMana = -1;
 
     @SubscribeEvent
-    public static void onActionBarUpdate(ChatPacketReceivedEvent e) {
+    public void onActionBarUpdate(ChatPacketReceivedEvent e) {
         if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;
 
         String actionBar = e.getMessage().getString();
@@ -88,27 +85,27 @@ public final class ActionBarModel extends Model {
         e.setMessage(modified);
     }
 
-    public static int getCurrentHealth() {
+    public int getCurrentHealth() {
         return currentHealth;
     }
 
-    public static int getMaxHealth() {
+    public int getMaxHealth() {
         return maxHealth;
     }
 
-    public static int getCurrentMana() {
+    public int getCurrentMana() {
         return currentMana;
     }
 
-    public static int getMaxMana() {
+    public int getMaxMana() {
         return maxMana;
     }
 
-    public static float getPowderSpecialCharge() {
+    public float getPowderSpecialCharge() {
         return powderSpecialCharge;
     }
 
-    public static Powder getPowderSpecialType() {
+    public Powder getPowderSpecialType() {
         return powderSpecialType;
     }
 }

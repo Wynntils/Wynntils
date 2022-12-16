@@ -127,8 +127,8 @@ public class MapFeature extends UserFeature {
     });
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Map.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Map);
     }
 
     @SubscribeEvent

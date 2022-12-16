@@ -47,22 +47,24 @@ public final class PlayerRelationsModel extends Model {
             Pattern.compile("§eYou have successfully joined the party.");
     private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded.");
 
-    private static boolean expectingFriendMessage = false;
-    private static boolean expectingPartyMessage = false;
+    private boolean expectingFriendMessage = false;
+    private boolean expectingPartyMessage = false;
 
-    private static Set<String> friends;
-    private static Set<String> partyMembers;
+    private Set<String> friends;
+    private Set<String> partyMembers;
 
-    public static void init() {
+    @Override
+    public void init() {
         resetRelations();
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         resetRelations();
     }
 
     @SubscribeEvent
-    public static void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(SocketEvent.Authenticated event) {
         if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
@@ -70,7 +72,7 @@ public final class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         Models.HadesUser.getHadesUserMap().clear();
 
         if (event.getNewState() == WorldStateManager.State.WORLD) {
@@ -82,7 +84,7 @@ public final class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onChatReceived(ChatMessageReceivedEvent event) {
+    public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.SYSTEM) return;
 
         String coded = event.getOriginalCodedMessage();
@@ -121,7 +123,7 @@ public final class PlayerRelationsModel extends Model {
 
     // region Party List Parsing
 
-    private static boolean tryParsePartyMessages(String coded) {
+    private boolean tryParsePartyMessages(String coded) {
         if (PARTY_DISBAND.matcher(coded).matches()
                 || PARTY_SELF_LEAVE_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
@@ -178,7 +180,7 @@ public final class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseNoPartyMessage(String coded) {
+    private boolean tryParseNoPartyMessage(String coded) {
         if (PARTY_NO_LIST_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -187,7 +189,7 @@ public final class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParsePartyList(String unformatted) {
+    private boolean tryParsePartyList(String unformatted) {
         Matcher matcher = PARTY_LIST_MESSAGE_PATTERN.matcher(unformatted);
         if (!matcher.matches()) return false;
 
@@ -204,7 +206,7 @@ public final class PlayerRelationsModel extends Model {
 
     // region Friend List Parsing
 
-    private static boolean tryParseNoFriendList(String coded) {
+    private boolean tryParseNoFriendList(String coded) {
         if (FRIEND_NO_LIST_MESSAGE_PATTERN_2.matcher(coded).matches()) {
             WynntilsMod.info("Player has no friends!");
             return true;
@@ -213,7 +215,7 @@ public final class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseFriendMessages(String coded) {
+    private boolean tryParseFriendMessages(String coded) {
         Matcher matcher = FRIEND_REMOVE_MESSAGE_PATTERN.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
@@ -241,7 +243,7 @@ public final class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseFriendList(String unformatted) {
+    private boolean tryParseFriendList(String unformatted) {
         Matcher matcher = FRIEND_LIST_MESSAGE_PATTERN.matcher(unformatted);
         if (!matcher.matches()) return false;
 
@@ -256,7 +258,7 @@ public final class PlayerRelationsModel extends Model {
 
     // endregion
 
-    private static void resetRelations() {
+    private void resetRelations() {
         friends = new HashSet<>();
         partyMembers = new HashSet<>();
 
@@ -264,7 +266,7 @@ public final class PlayerRelationsModel extends Model {
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    public static void requestFriendListUpdate() {
+    public void requestFriendListUpdate() {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
@@ -272,7 +274,7 @@ public final class PlayerRelationsModel extends Model {
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
-    public static void requestPartyListUpdate() {
+    public void requestPartyListUpdate() {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;

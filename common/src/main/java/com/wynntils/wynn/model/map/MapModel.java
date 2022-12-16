@@ -28,35 +28,36 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapModel extends Model {
-    private static final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
-    private static final Set<LabelPoi> LABEL_POIS = new HashSet<>();
-    private static final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
-    private static final Set<CombatPoi> COMBAT_POIS = new HashSet<>();
+    private final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
+    private final Set<LabelPoi> LABEL_POIS = new HashSet<>();
+    private final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
+    private final Set<CombatPoi> COMBAT_POIS = new HashSet<>();
 
-    public static void init() {
+    @Override
+    public void init() {
         loadMaps();
         loadPlaces();
         loadServices();
         loadCombat();
     }
 
-    public static Set<LabelPoi> getLabelPois() {
+    public Set<LabelPoi> getLabelPois() {
         return LABEL_POIS;
     }
 
-    public static Set<ServicePoi> getServicePois() {
+    public Set<ServicePoi> getServicePois() {
         return SERVICE_POIS;
     }
 
-    public static Set<CombatPoi> getCombatPois() {
+    public Set<CombatPoi> getCombatPois() {
         return COMBAT_POIS;
     }
 
-    public static List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
+    public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
         return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
     }
 
-    private static void loadMaps() {
+    private void loadMaps() {
         MAPS.clear();
 
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPS);
@@ -86,7 +87,7 @@ public final class MapModel extends Model {
         });
     }
 
-    private static void loadPlaces() {
+    private void loadPlaces() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_PLACES);
         dl.handleReader(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
@@ -96,7 +97,7 @@ public final class MapModel extends Model {
         });
     }
 
-    private static void loadServices() {
+    private void loadServices() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_SERVICES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
@@ -115,7 +116,7 @@ public final class MapModel extends Model {
         });
     }
 
-    private static void loadCombat() {
+    private void loadCombat() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_COMBAT_LOCATIONS);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
