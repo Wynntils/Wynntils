@@ -41,8 +41,8 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     public boolean disableAttackTimersOnScoreboard = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Scoreboard.getClass(), Models.GuildAttackTimer.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Scoreboard, Models.GuildAttackTimer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

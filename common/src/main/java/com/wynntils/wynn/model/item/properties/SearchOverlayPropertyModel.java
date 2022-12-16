@@ -13,11 +13,13 @@ public final class SearchOverlayPropertyModel extends Model {
     private static final ItemPropertyWriter SEARCH_OVERLAY_WRITER =
             new ItemPropertyWriter(itemstack -> true, SearchOverlayProperty::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerProperty(SEARCH_OVERLAY_WRITER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterProperty(SEARCH_OVERLAY_WRITER);
     }
 }

@@ -54,6 +54,7 @@ public class Download extends NetResult {
         }
     }
 
+    @Override
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
             // File is already in downloaded, just read from the cache
