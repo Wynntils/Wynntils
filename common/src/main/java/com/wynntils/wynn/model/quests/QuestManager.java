@@ -153,8 +153,7 @@ public final class QuestManager extends Manager {
         // but will do after scanning is complete
         if (updateAfterRescan(name, nextTask)) return;
 
-        Optional<QuestInfo> questInfoOpt;
-        questInfoOpt = getQuestInfoFromName(name);
+        Optional<QuestInfo> questInfoOpt = getQuestInfoFromName(name);
         if (questInfoOpt.isEmpty()) {
             WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + name);
             return;
