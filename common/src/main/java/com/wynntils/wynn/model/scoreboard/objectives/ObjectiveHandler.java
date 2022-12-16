@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
 
 public class ObjectiveHandler implements ScoreboardHandler {
     // §b is guild objective, §a is normal objective and §c is daily objective
-    private static final Pattern OBJECTIVE_PATTERN = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
-    private static final Pattern OBJECTIVE_PATTERN_START = Pattern.compile("^§([abc]).*$");
-    private static final Pattern OBJECTIVE_PATTERN_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
+    private static final Pattern OBJECTIVE_PATTERN_ONE_LINE = Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
+    private static final Pattern OBJECTIVE_PATTERN_MULTILINE_START = Pattern.compile("^§([abc])[- ]\\s§7(.*)$");
+    private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
     private static WynnObjective guildWynnObjective = null;
@@ -123,42 +123,44 @@ public class ObjectiveHandler implements ScoreboardHandler {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
         List<String> actualContent = new ArrayList<>();
-        StringBuilder scoreLine = new StringBuilder();
+        StringBuilder multiLine = new StringBuilder();
 
         for (String line : segment.getContent()) {
-            if (OBJECTIVE_PATTERN.matcher(line).matches()) {
+            if (OBJECTIVE_PATTERN_ONE_LINE.matcher(line).matches()) {
                 actualContent.add(line);
                 continue;
             }
 
-            if (OBJECTIVE_PATTERN_START.matcher(line).matches()) {
-                if (!scoreLine.isEmpty()) {
-                    WynntilsMod.error("ObjectiveManager: Multiple objective start without and ending:");
-                    WynntilsMod.error("Already got: " + scoreLine);
+            if (OBJECTIVE_PATTERN_MULTILINE_START.matcher(line).matches()) {
+                if (!multiLine.isEmpty()) {
+                    WynntilsMod.error("ObjectiveManager: Multi-line objective start repeatedly:");
+                    WynntilsMod.error("Already got: " + multiLine);
                     WynntilsMod.error("Next line: " + line);
                 }
 
-                scoreLine = new StringBuilder(line);
+                multiLine = new StringBuilder(line);
                 continue;
             }
 
-            if (!scoreLine.isEmpty()) {
-                scoreLine.append(line);
+            // If we have started collecting a multiline, keep building it
+            if (!multiLine.isEmpty()) {
+                multiLine.append(line);
             }
 
-            if (OBJECTIVE_PATTERN_END.matcher(line).matches()) {
-                actualContent.add(scoreLine.toString().trim().replaceAll(" +", " "));
-                scoreLine = new StringBuilder();
+            if (OBJECTIVE_PATTERN_MULTILINE_END.matcher(line).matches()) {
+                actualContent.add(multiLine.toString().trim().replaceAll(" +", " "));
+                multiLine = new StringBuilder();
             }
         }
 
-        if (!scoreLine.isEmpty() && !SEGMENT_HEADER.matcher(scoreLine).matches()) {
-            WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + scoreLine);
+        if (!multiLine.isEmpty() && !SEGMENT_HEADER.matcher(multiLine).matches()) {
+            WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + multiLine);
         }
 
         for (String line : actualContent) {
-            Matcher objectiveMatcher = OBJECTIVE_PATTERN.matcher(line);
+            Matcher objectiveMatcher = OBJECTIVE_PATTERN_ONE_LINE.matcher(line);
             if (!objectiveMatcher.matches()) {
+                WynntilsMod.error("ObjectiveManager: Broken objective stored: " + line);
                 continue;
             }
 
