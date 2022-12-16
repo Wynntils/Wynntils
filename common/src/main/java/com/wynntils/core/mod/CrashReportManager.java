@@ -5,8 +5,6 @@
 package com.wynntils.core.mod;
 
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.mc.utils.McUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
