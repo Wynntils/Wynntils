@@ -55,7 +55,8 @@ public class InfoBoxFeature extends UserFeature {
             new OverlayPosition(
                     160, 20, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
             HorizontalAlignment.Center,
-            VerticalAlignment.Middle);
+            VerticalAlignment.Middle,
+            0);
 
     public static class InfoBoxOverlay extends Overlay {
         @Config
@@ -91,10 +92,12 @@ public class InfoBoxFeature extends UserFeature {
                 String content,
                 OverlayPosition position,
                 HorizontalAlignment horizontalAlignment,
-                VerticalAlignment verticalAlignment) {
+                VerticalAlignment verticalAlignment,
+                float secondsPerRecalculation) {
             super(position, new GuiScaledOverlaySize(120, 10), horizontalAlignment, verticalAlignment);
             this.id = id;
             this.content = content;
+            this.secondsPerRecalculation = secondsPerRecalculation;
         }
 
         @Override
