@@ -44,7 +44,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
             new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    private QuestInfo tracked = null;
+    private QuestInfo trackingRequested = null;
     private boolean miniQuestMode = false;
     private QuestSortOrder questSortOrder = QuestSortOrder.LEVEL;
 
@@ -154,32 +154,18 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
         if (miniQuestMode) return;
 
-        this.setQuests(Managers.Quest.getQuests(questSortOrder));
-
-        for (QuestInfo quest : elements) {
-            if (!quest.isTracked()) {
-                continue;
-            }
-
-            tracked = quest;
-            return;
-        }
+        this.setQuests(getSortedQuests());
+        setTrackingRequested(null);
+        reloadElements();
     }
 
     @SubscribeEvent
     public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
         if (!miniQuestMode) return;
 
-        this.setQuests(Managers.Quest.getMiniQuests(questSortOrder));
-
-        for (QuestInfo quest : elements) {
-            if (!quest.isTracked()) {
-                continue;
-            }
-
-            tracked = quest;
-            return;
-        }
+        this.setQuests(getSortedQuests());
+        setTrackingRequested(null);
+        reloadElements();
     }
 
     // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
@@ -221,13 +207,13 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
             tooltipLines.add(new TextComponent(""));
 
-            if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-                if (this.tracked == questInfo) {
-                    tooltipLines.add(new TextComponent("Left click to unpin it!")
+            if (questInfo.isTrackable()) {
+                if (questInfo.equals(Managers.Quest.getTrackedQuest())) {
+                    tooltipLines.add(new TextComponent("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
                             .withStyle(ChatFormatting.BOLD));
                 } else {
-                    tooltipLines.add(new TextComponent("Left click to pin it!")
+                    tooltipLines.add(new TextComponent("Left click to track it!")
                             .withStyle(ChatFormatting.GREEN)
                             .withStyle(ChatFormatting.BOLD));
                 }
@@ -378,9 +364,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
     @Override
     protected void reloadElementsList(String searchText) {
-        List<QuestInfo> newQuests =
-                miniQuestMode ? Managers.Quest.getMiniQuests(questSortOrder) : Managers.Quest.getQuests(questSortOrder);
-
+        List<QuestInfo> newQuests = getSortedQuests();
         elements = newQuests.stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
                 .collect(Collectors.toList());
@@ -418,20 +402,23 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                 .append(new TextComponent("]").withStyle(braceColor));
     }
 
+    private List<QuestInfo> getSortedQuests() {
+        return miniQuestMode ? Managers.Quest.getMiniQuests(questSortOrder) : Managers.Quest.getQuests(questSortOrder);
+    }
+
     private void setQuests(List<QuestInfo> quests) {
         this.elements = new ArrayList<>(quests);
         this.maxPage = Math.max(
                 0,
                 (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
-        this.setCurrentPage(0);
     }
 
-    public void setTracked(QuestInfo tracked) {
-        this.tracked = tracked;
+    public void setTrackingRequested(QuestInfo questInfo) {
+        this.trackingRequested = questInfo;
     }
 
-    public QuestInfo getTracked() {
-        return tracked;
+    public QuestInfo getTrackingRequested() {
+        return trackingRequested;
     }
 
     @Override
@@ -453,7 +440,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     public void setMiniQuestMode(boolean miniQuestMode) {
         this.miniQuestMode = miniQuestMode;
 
-        this.setQuests(List.of());
+        this.setQuests(getSortedQuests());
+        this.setCurrentPage(0);
 
         Managers.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
     }
@@ -468,11 +456,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
         }
 
         this.questSortOrder = newSortOrder;
-
-        if (miniQuestMode) {
-            setQuests(Managers.Quest.getMiniQuests(questSortOrder));
-        } else {
-            setQuests(Managers.Quest.getQuests(questSortOrder));
-        }
+        setQuests(getSortedQuests());
+        this.setCurrentPage(0);
     }
 }

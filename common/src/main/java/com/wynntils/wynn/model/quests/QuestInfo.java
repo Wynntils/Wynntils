@@ -20,6 +20,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
@@ -119,6 +121,23 @@ public class QuestInfo {
 
     public boolean isMiniQuest() {
         return isMiniQuest;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        QuestInfo questInfo = (QuestInfo) o;
+
+        // Consider it the same quest just based on "constant" aspects of the quest
+        return new EqualsBuilder().append(level, questInfo.level).append(isMiniQuest, questInfo.isMiniQuest).append(name, questInfo.name).append(length, questInfo.length).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(name).append(length).append(level).append(isMiniQuest).toHashCode();
     }
 
     @Override
