@@ -20,6 +20,9 @@ public final class ModelRegistry {
     private static final Collection<Model> ENABLED_MODELS = new HashSet<>();
 
     public static void init() {
+        // When the model registry is in place, we can activate the functions
+        Managers.Function.activateAllFunctions();
+
         addCrashCallbacks();
     }
 
