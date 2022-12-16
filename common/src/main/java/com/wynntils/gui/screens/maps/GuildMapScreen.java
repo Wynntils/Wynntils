@@ -350,42 +350,8 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = Managers.Territory.getTerritoryPoisFromAdvancement();
-
-        if (territoryDefenseFilterEnabled) {
-            pois.removeIf( // Remove territories that do not match the filtered defense level
-                    poi -> {
-                        // Do not filter anything if the poi is not a territory (shouldn't happen)
-                        if (!(poi instanceof TerritoryPoi)) return false;
-
-                        switch (territoryDefenseFilterType) {
-                                // All these checks are reversed since we're checking for which territories to remove
-                                // instead of which to keep
-                            case LOWER -> {
-                                return ((TerritoryPoi) poi)
-                                                .getTerritoryInfo()
-                                                .getDefences()
-                                                .getLevel()
-                                        > territoryDefenseFilterLevel.getLevel();
-                            }
-                            case HIGHER -> {
-                                return ((TerritoryPoi) poi)
-                                                .getTerritoryInfo()
-                                                .getDefences()
-                                                .getLevel()
-                                        < territoryDefenseFilterLevel.getLevel();
-                            }
-                            case DEFAULT -> {
-                                return ((TerritoryPoi) poi)
-                                                .getTerritoryInfo()
-                                                .getDefences()
-                                                .getLevel()
-                                        != territoryDefenseFilterLevel.getLevel();
-                            }
-                        }
-                        return false;
-                    });
-        }
+        List<Poi> pois = Managers.Territory.getFilteredTerritoryPoisFromAdvancement(
+                territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType);
 
         renderPois(
                 pois,
