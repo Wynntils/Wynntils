@@ -140,7 +140,10 @@ public final class KeyBindManager extends Manager {
         return keyBinds.stream().anyMatch(k -> k.getName().equals(name));
     }
 
-    public void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
+    /**
+     * Note: this is called directly from a mixin!
+     */
+    public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
         if (categorySortOrder.containsKey(category)) return;
 
         int max = 0;

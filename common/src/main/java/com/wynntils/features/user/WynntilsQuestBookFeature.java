@@ -62,7 +62,7 @@ public class WynntilsQuestBookFeature extends UserFeature {
         if (itemInHand != null
                 && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
-            McUtils.mc().setScreen(new WynntilsMenuScreen());
+            McUtils.mc().setScreen(new WynntilsQuestBookScreen());
         }
     }
 }
