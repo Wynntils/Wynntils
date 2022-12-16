@@ -1,9 +1,21 @@
+## [0.0.1-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.176...v0.0.1-alpha.177) (2022-12-16)
+
+
+### Bug Fixes
+
+* Remove minimap overlay coordinates and add it back as an info box ([#855](https://github.com/Wynntils/Artemis/issues/855)) ([eafebd6](https://github.com/Wynntils/Artemis/commit/eafebd6cea48ded08d384b4ed096da779156634d))
+
 ## [0.0.1-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.175...v0.0.1-alpha.176) (2022-12-16)
 
 
 ### New Features
 
 * Redirects "Soul Point Lost" messages to Overlay ([#852](https://github.com/Wynntils/Artemis/issues/852)) ([9961435](https://github.com/Wynntils/Artemis/commit/99614353d27c38edf9fb42f83b88574f836bf928))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.176 [skip ci] ([8b492e0](https://github.com/Wynntils/Artemis/commit/8b492e092789f187f39a08ca3bbc5fc3a1d75cce))
 
 ## [0.0.1-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.174...v0.0.1-alpha.175) (2022-12-16)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.173 [skip ci] ([657ce3f](https://github.com/Wynntils/Artemis/commit/657ce3f52e75d3e12812d1e4ef546c8057da3bad))
-
-## [0.0.1-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.171...v0.0.1-alpha.172) (2022-12-16)
-
-
-### Code Refactoring
-
-* flatten item and property models into single files ([#844](https://github.com/Wynntils/Artemis/issues/844)) ([1dbdab4](https://github.com/Wynntils/Artemis/commit/1dbdab453ef1459aa7e96f8f4aa78c1facfee9e7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.172 [skip ci] ([86b279f](https://github.com/Wynntils/Artemis/commit/86b279fb075bb112cbc124f35f6045a1be304952))
 
