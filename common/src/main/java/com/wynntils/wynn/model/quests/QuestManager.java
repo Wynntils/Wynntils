@@ -22,16 +22,20 @@ import java.util.Optional;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.StringUtils;
 
 public final class QuestManager extends Manager {
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
+    public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
     private List<List<String>> dialogueHistory = List.of();
-    private QuestInfo currentQuest = null;
+    private QuestInfo trackedQuest = null;
+    private String afterRescanName;
+    private String afterRescanTask;
 
     public QuestManager(NetManager netManager) {
         super(List.of(netManager));
@@ -39,8 +43,16 @@ public final class QuestManager extends Manager {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
+        reset();
+    }
+
+    private void reset() {
         quests = List.of();
+        miniQuests = List.of();
         dialogueHistory = List.of();
+        trackedQuest = null;
+        afterRescanName = null;
+        afterRescanTask = null;
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -87,16 +99,16 @@ public final class QuestManager extends Manager {
         };
     }
 
-    public Optional<QuestInfo> getQuestFromName(String name) {
-        return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
-    }
-
     public List<List<String>> getDialogueHistory() {
         return dialogueHistory;
     }
 
-    public void toggleTracking(QuestInfo questInfo) {
+    public void startTracking(QuestInfo questInfo) {
         CONTAINER_QUERIES.toggleTracking(questInfo);
+    }
+
+    public void stopTracking() {
+        McUtils.player().chat("/tracking");
     }
 
     public void openQuestOnWiki(QuestInfo questInfo) {
@@ -117,12 +129,12 @@ public final class QuestManager extends Manager {
         });
     }
 
-    public QuestInfo getCurrentQuest() {
-        return currentQuest;
+    public QuestInfo getTrackedQuest() {
+        return trackedQuest;
     }
 
-    public Location getCurrentQuestLocation() {
-        QuestInfo questInfo = getCurrentQuest();
+    public Location getTrackedQuestNextLocation() {
+        QuestInfo questInfo = getTrackedQuest();
 
         if (questInfo == null) return null;
 
@@ -133,19 +145,83 @@ public final class QuestManager extends Manager {
         return location.get();
     }
 
-    protected void setCurrentQuest(QuestInfo questInfo) {
-        currentQuest = questInfo;
-        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(currentQuest));
+    public void clearTrackedQuestFromScoreBoard() {
+        updateTrackedQuest(null);
     }
 
-    protected void setQuests(List<QuestInfo> newQuests) {
+    public void updateTrackedQuestFromScoreboard(String name, String nextTask) {
+        // If our quest book has not yet been scanned, we can't update now
+        // but will do after scanning is complete
+        if (updateAfterRescan(name, nextTask)) return;
+
+        Optional<QuestInfo> questInfoOpt = getQuestInfoFromName(name);
+        if (questInfoOpt.isEmpty()) {
+            WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + name);
+            return;
+        }
+
+        QuestInfo questInfo = questInfoOpt.get();
+        questInfo.setNextTask(nextTask);
+
+        updateTrackedQuest(questInfo);
+    }
+
+    private void updateTrackedQuest(QuestInfo questInfo) {
+        trackedQuest = questInfo;
+        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(trackedQuest));
+    }
+
+    private Optional<QuestInfo> getQuestInfoFromName(String name) {
+        List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ? miniQuests : quests;
+
+        return questInfoList.stream()
+                .filter(quest -> quest.getName().equals(stripPrefix(name)))
+                .findFirst();
+    }
+
+    private boolean updateAfterRescan(String name, String nextTask) {
+        boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
+        List<QuestInfo> questInfoList = isMiniQuest ? miniQuests : quests;
+
+        if (questInfoList.isEmpty()) {
+            afterRescanTask = nextTask;
+            afterRescanName = stripPrefix(name);
+            rescanQuestBook(!isMiniQuest, isMiniQuest);
+            return true;
+        }
+
+        return false;
+    }
+
+    private String stripPrefix(String name) {
+        return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
+    }
+
+    protected void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
         quests = newQuests;
+        maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    protected void setMiniQuests(List<QuestInfo> newMiniQuests) {
+    protected void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
         miniQuests = newMiniQuests;
+        maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
+    }
+
+    private void maybeUpdateTrackedQuest(QuestInfo trackedQuest) {
+        if (trackedQuest != this.trackedQuest) {
+            if (trackedQuest != null && trackedQuest.getName().equals(afterRescanName)) {
+                // We have stored the current task from last scoreboard update,
+                // now we can finally present it
+                trackedQuest.setNextTask(afterRescanTask);
+                afterRescanName = null;
+                afterRescanTask = null;
+                Managers.Quest.updateTrackedQuest(trackedQuest);
+            }
+            WynntilsMod.warn("Tracked Quest according to scoreboard is " + this.trackedQuest + " but query says "
+                    + trackedQuest);
+        }
     }
 
     protected void setDialogueHistory(List<List<String>> newDialogueHistory) {

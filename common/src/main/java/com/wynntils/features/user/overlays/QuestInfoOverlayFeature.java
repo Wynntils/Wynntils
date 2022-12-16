@@ -63,7 +63,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         if (!autoTrackQuestCoordinates) return;
 
         // set if valid
-        Models.Compass.setDynamicCompassLocation(Managers.Quest::getCurrentQuestLocation);
+        Models.Compass.setDynamicCompassLocation(Managers.Quest::getTrackedQuestNextLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -140,14 +140,14 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = Managers.Quest.getCurrentQuest();
+            QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
 
-            if (currentQuest == null) {
+            if (trackedQuest == null) {
                 return;
             }
 
-            toRender.get(1).setText(currentQuest.getName());
-            toRender.get(2).setText(currentQuest.getNextTask());
+            toRender.get(1).setText(trackedQuest.getName());
+            toRender.get(2).setText(trackedQuest.getNextTask());
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(
