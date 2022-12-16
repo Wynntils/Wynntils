@@ -28,6 +28,7 @@ public final class QuestManager extends Manager {
     public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
+    public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
@@ -171,39 +172,31 @@ public final class QuestManager extends Manager {
     }
 
     private Optional<QuestInfo> getQuestInfoFromName(String name) {
-        Optional<QuestInfo> questInfoOpt;
-        if (name.startsWith("Mini-Quest - ")) {
-            String shortName = StringUtils.replaceOnce(name, "Mini-Quest - ", "");
-            questInfoOpt = Managers.Quest.miniQuests.stream()
-                    .filter(quest -> quest.getName().equals(shortName))
-                    .findFirst();
-        } else {
-            questInfoOpt = Managers.Quest.quests.stream()
-                    .filter(quest -> quest.getName().equals(name))
-                    .findFirst();
-        }
-        return questInfoOpt;
+        List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ?
+                miniQuests : quests;
+
+        return questInfoList.stream()
+                .filter(quest -> quest.getName().equals(stripPrefix(name)))
+                .findFirst();
     }
 
     private boolean updateAfterRescan(String name, String nextTask) {
-        if (name.startsWith("Mini-Quest - ")) {
-            if (miniQuests.isEmpty()) {
-                afterRescanTask = nextTask;
-                String shortName = StringUtils.replaceOnce(name, "Mini-Quest - ", "");
-                afterRescanName = shortName;
-                rescanQuestBook(false, true);
-                return true;
-            }
-            return false;
-        } else {
-            if (quests.isEmpty()) {
-                afterRescanTask = nextTask;
-                afterRescanName = name;
-                rescanQuestBook(true, false);
-                return true;
-            }
-            return false;
+        boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
+        List<QuestInfo> questInfoList = isMiniQuest ?
+                miniQuests : quests;
+
+        if (questInfoList.isEmpty()) {
+            afterRescanTask = nextTask;
+            afterRescanName = stripPrefix(name);
+            rescanQuestBook(!isMiniQuest, isMiniQuest);
+            return true;
         }
+
+        return false;
+    }
+
+    private String stripPrefix(String name) {
+        return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
     protected void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
