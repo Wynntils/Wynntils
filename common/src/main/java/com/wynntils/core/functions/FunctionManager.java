@@ -14,7 +14,6 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public final class FunctionManager extends Manager {
      * functions with the proper models.
      */
     public void activateAllFunctions() {
-        for(Function<?> function: functions) {
+        for (Function<?> function : functions) {
             if (function instanceof DependantFunction<?> dependantFunction) {
                 ModelRegistry.addAllDependencies(dependantFunction);
             }
