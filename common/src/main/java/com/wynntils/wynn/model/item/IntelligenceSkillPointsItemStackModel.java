@@ -14,11 +14,13 @@ public final class IntelligenceSkillPointsItemStackModel extends Model {
     private static final ItemStackTransformer INTELLIGENCE_SKILL_POINTS_TRANSFORMER = new ItemStackTransformer(
             WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(INTELLIGENCE_SKILL_POINTS_TRANSFORMER);
     }
 }

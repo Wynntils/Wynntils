@@ -2,9 +2,11 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.managers;
+package com.wynntils.core.net.athena;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class UpdateManager extends Manager {
+public final class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
 

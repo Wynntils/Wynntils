@@ -27,8 +27,8 @@ public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.Chat.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @SubscribeEvent

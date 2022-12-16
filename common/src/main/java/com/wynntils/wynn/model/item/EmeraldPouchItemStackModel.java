@@ -14,11 +14,13 @@ public final class EmeraldPouchItemStackModel extends Model {
     private static final ItemStackTransformer EMERALD_POUCH_TRANSFORMER =
             new ItemStackTransformer(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
 
-    public static void init() {
+    @Override
+    public void init() {
         Managers.ItemStackTransform.registerTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         Managers.ItemStackTransform.unregisterTransformer(EMERALD_POUCH_TRANSFORMER);
     }
 }

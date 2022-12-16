@@ -25,14 +25,12 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
 
     public static final GuildAttackHandler SCOREBOARD_HANDLER = new GuildAttackHandler();
-    private static final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
+    private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
-    private static List<TerritoryAttackTimer> attackTimers = List.of();
-
-    public static void init() {}
+    private List<TerritoryAttackTimer> attackTimers = List.of();
 
     @SubscribeEvent
-    public static void onMessage(ChatMessageReceivedEvent event) {
+    public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
         Matcher matcher = GUILD_DEFENSE_CHAT_PATTERN.matcher(event.getOriginalCodedMessage());
@@ -56,7 +54,7 @@ public final class GuildAttackTimerModel extends Model {
         }
     }
 
-    public static void processChanges(Segment segment) {
+    public void processChanges(Segment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
         for (String line : segment.getContent()) {
@@ -94,15 +92,15 @@ public final class GuildAttackTimerModel extends Model {
         attackTimers = newList;
     }
 
-    public static void resetTimers() {
+    public void resetTimers() {
         attackTimers = List.of();
     }
 
-    public static List<TerritoryAttackTimer> getAttackTimers() {
+    public List<TerritoryAttackTimer> getAttackTimers() {
         return attackTimers;
     }
 
-    public static Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
+    public Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
         return attackTimers.stream()
                 .filter(t -> t.territory().equals(territory))
                 .findFirst();

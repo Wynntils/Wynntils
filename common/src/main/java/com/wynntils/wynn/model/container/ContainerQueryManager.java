@@ -19,7 +19,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ContainerQueryManager extends Manager {
+public final class ContainerQueryManager extends Manager {
     private static final int NO_CONTAINER = -2;
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
 

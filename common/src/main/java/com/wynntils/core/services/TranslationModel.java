@@ -13,7 +13,7 @@ import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
 
 public final class TranslationModel extends Model {
-    private static TranslationService translator = null;
+    private TranslationService translator = null;
 
     /**
      * Get a TranslationService.
@@ -21,7 +21,7 @@ public final class TranslationModel extends Model {
      * @param service An enum describing which translation service is requested.
      * @return An instance of the selected translation service, or null on failure
      */
-    public static TranslationService getService(TranslationServices service) {
+    public TranslationService getService(TranslationServices service) {
         try {
             Constructor<? extends TranslationService> ctor = service.serviceClass.getConstructor();
             return ctor.newInstance();
@@ -37,7 +37,7 @@ public final class TranslationModel extends Model {
      *
      * @return An instance of the selected translation service, or null on failure
      */
-    public static TranslationService getTranslator() {
+    public TranslationService getTranslator() {
         // These might not have been created yet, or reset by config changing
         if (Models.Translation.translator == null) {
             Models.Translation.translator =
@@ -49,15 +49,16 @@ public final class TranslationModel extends Model {
     /**
      * Reset the default TranslatorService, e.g. due to config changes.
      */
-    public static void resetTranslator() {
+    public void resetTranslator() {
         translator = null;
     }
 
-    public static void init() {
+    @Override
+    public void init() {
         CachingTranslationService.loadTranslationCache();
     }
 
-    public static void shutdown() {
+    public void shutdown() {
         CachingTranslationService.saveTranslationCache();
     }
 

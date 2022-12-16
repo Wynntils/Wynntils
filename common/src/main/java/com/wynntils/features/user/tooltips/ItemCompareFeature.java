@@ -42,8 +42,8 @@ public class ItemCompareFeature extends UserFeature {
     private boolean compareToEquipped = false;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(Models.GearItemStack.getClass());
+    public List<Model> getModelDependencies() {
+        return List.of(Models.GearItemStack);
     }
 
     @SubscribeEvent
