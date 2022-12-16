@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 // Use this manager to schedule runnables to run on next tick
-public class MinecraftSchedulerManager extends Manager {
+public final class MinecraftSchedulerManager extends Manager {
     private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     public MinecraftSchedulerManager() {

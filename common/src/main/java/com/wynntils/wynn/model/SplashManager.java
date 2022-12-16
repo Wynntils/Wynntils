@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplashManager extends Manager {
+public final class SplashManager extends Manager {
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
 

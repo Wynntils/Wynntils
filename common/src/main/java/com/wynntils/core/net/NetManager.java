@@ -21,7 +21,7 @@ import java.util.Map;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class NetManager extends Manager {
+public final class NetManager extends Manager {
     protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
