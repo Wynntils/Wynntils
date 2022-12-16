@@ -38,10 +38,10 @@ public final class CrashReportManager extends Manager {
         }
 
         Map<String, Supplier<String>> crashHandlers = instance.getCrashHandlers();
-        for (String handlerName : crashHandlers.keySet()) {
-            String report = crashHandlers.get(handlerName).get();
+        for (Map.Entry<String, Supplier<String>> entry : crashHandlers.entrySet()) {
+            String report = entry.getValue().get();
             if (report != null) {
-                wynntilsCategory.setDetail(handlerName, report);
+                wynntilsCategory.setDetail(entry.getKey(), report);
             }
         }
 
