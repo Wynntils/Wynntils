@@ -37,7 +37,7 @@ import org.lwjgl.glfw.GLFW;
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
-    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryLow;
+    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryHigh;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;

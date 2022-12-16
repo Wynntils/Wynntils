@@ -39,7 +39,8 @@ public enum GuildResourceValues {
 
     public GuildResourceValues getFilterNext(boolean limited) {
         if (limited) {
-            return ordinal() == 4 ? values()[1] : values()[ordinal() + 1];
+            // If is HIGH, go back to LOW since limited
+            return ordinal() == 3 ? values()[1] : values()[ordinal() + 1];
         } else {
             return values()[(ordinal() + 1) % values().length];
         }
