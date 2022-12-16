@@ -1,9 +1,21 @@
+## [0.0.1-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.168...v0.0.1-alpha.169) (2022-12-16)
+
+
+### Code Refactoring
+
+* Fix up CrashReportManager ([#839](https://github.com/Wynntils/Artemis/issues/839)) ([00b2b28](https://github.com/Wynntils/Artemis/commit/00b2b28028ccb5b526e6b291de35e75d4425da85))
+
 ## [0.0.1-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.167...v0.0.1-alpha.168) (2022-12-16)
 
 
 ### Code Refactoring
 
 * Make all Manager classes final ([#840](https://github.com/Wynntils/Artemis/issues/840)) ([113df5f](https://github.com/Wynntils/Artemis/commit/113df5f99e075f7d42fcbd8e22ad8cd33746bfb9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.168 [skip ci] ([39b1fba](https://github.com/Wynntils/Artemis/commit/39b1fbaba68eb30842c2fd26737c651044607345))
 
 ## [0.0.1-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.166...v0.0.1-alpha.167) (2022-12-15)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.165 [skip ci] ([52a16e1](https://github.com/Wynntils/Artemis/commit/52a16e1988d534668bd7276ba2052a37b7f3d9b5))
-
-## [0.0.1-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.163...v0.0.1-alpha.164) (2022-12-15)
-
-
-### Miscellaneous Chores
-
-* Rebuild with new fixes ([71fd2da](https://github.com/Wynntils/Artemis/commit/71fd2da94ad528ed4e48df9106e29ed7232cf427))
-* **release:** v0.0.1-alpha.164 [skip ci] ([6694f52](https://github.com/Wynntils/Artemis/commit/6694f524da53e5717beacff36c3adf6538322ee5))
 
