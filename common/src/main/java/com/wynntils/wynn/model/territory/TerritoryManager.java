@@ -83,7 +83,9 @@ public final class TerritoryManager extends Manager {
             case LOWER -> territoryPoiMap.values().stream()
                     .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() <= filterLevel)
                     .collect(Collectors.toList());
-            case DEFAULT -> getTerritoryPoisFromAdvancement();
+            case DEFAULT -> territoryPoiMap.values().stream()
+                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() == filterLevel)
+                    .collect(Collectors.toList());
         };
     }
 
