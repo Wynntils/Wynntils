@@ -132,12 +132,22 @@ public class QuestInfo {
         QuestInfo questInfo = (QuestInfo) o;
 
         // Consider it the same quest just based on "constant" aspects of the quest
-        return new EqualsBuilder().append(level, questInfo.level).append(isMiniQuest, questInfo.isMiniQuest).append(name, questInfo.name).append(length, questInfo.length).isEquals();
+        return new EqualsBuilder()
+                .append(level, questInfo.level)
+                .append(isMiniQuest, questInfo.isMiniQuest)
+                .append(name, questInfo.name)
+                .append(length, questInfo.length)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(name).append(length).append(level).append(isMiniQuest).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(length)
+                .append(level)
+                .append(isMiniQuest)
+                .toHashCode();
     }
 
     @Override

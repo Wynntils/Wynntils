@@ -229,8 +229,8 @@ public final class QuestManager extends Manager {
                 afterRescanTask = null;
                 Managers.Quest.updateTrackedQuest(trackedQuest);
             }
-            WynntilsMod.warn("Tracked Quest according to scoreboard is " + this.trackedQuest
-                    + " but query says " + trackedQuest);
+            WynntilsMod.warn("Tracked Quest according to scoreboard is " + this.trackedQuest + " but query says "
+                    + trackedQuest);
         }
     }
 
