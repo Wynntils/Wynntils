@@ -644,7 +644,7 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class SoulPointLossRedirector extends SimpleRedirector {
         private static final Pattern SYSTEM_PATTERN =
-                Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost...");
+                Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost...$");
 
         @Override
         protected Pattern getSystemPattern() {
