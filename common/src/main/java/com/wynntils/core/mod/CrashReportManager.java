@@ -5,8 +5,6 @@
 package com.wynntils.core.mod;
 
 import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.mc.utils.McUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +13,16 @@ import net.minecraft.CrashReportCategory;
 
 public final class CrashReportManager extends Manager {
     private final Map<String, Supplier<String>> crashHandlers = new HashMap<>();
+    private static CrashReportManager instance = null;
 
     public CrashReportManager() {
         super(List.of());
+        if (instance != null) {
+            // Save a local copy since we can't rely on being able to use the
+            // Managers class in case of a crash. Note especially that minecraft does a
+            // CrashReport.preload() early at game startup
+            instance = this;
+        }
     }
 
     public void registerCrashContext(String name, Supplier<String> handler) {
@@ -27,16 +32,16 @@ public final class CrashReportManager extends Manager {
     public static CrashReportCategory generateDetails() {
         CrashReportCategory wynntilsCategory = new CrashReportCategory("Wynntils");
 
-        if (McUtils.mc() == null) {
+        if (instance == null) {
             wynntilsCategory.setDetail("No crash handler loaded yet", "");
             return wynntilsCategory;
         }
 
-        Map<String, Supplier<String>> crashHandlers = Managers.CrashReport.getCrashHandlers();
-        for (String handlerName : crashHandlers.keySet()) {
-            String report = crashHandlers.get(handlerName).get();
+        Map<String, Supplier<String>> crashHandlers = instance.getCrashHandlers();
+        for (Map.Entry<String, Supplier<String>> entry : crashHandlers.entrySet()) {
+            String report = entry.getValue().get();
             if (report != null) {
-                wynntilsCategory.setDetail(handlerName, report);
+                wynntilsCategory.setDetail(entry.getKey(), report);
             }
         }
 
