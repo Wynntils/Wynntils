@@ -126,28 +126,24 @@ public class QuestInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        QuestInfo questInfo = (QuestInfo) o;
+        if (o == null || (!(o instanceof QuestInfo questInfo))) return false;
 
         // Consider it the same quest just based on "constant" aspects of the quest
-        return new EqualsBuilder()
-                .append(level, questInfo.level)
-                .append(isMiniQuest, questInfo.isMiniQuest)
-                .append(name, questInfo.name)
-                .append(length, questInfo.length)
-                .isEquals();
+        if (level != questInfo.level) return false;
+        if (isMiniQuest != questInfo.isMiniQuest) return false;
+        if (!name.equals(questInfo.name)) return false;
+        if (length != questInfo.length) return false;
+        return additionalRequirements.equals(questInfo.additionalRequirements);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(name)
-                .append(length)
-                .append(level)
-                .append(isMiniQuest)
-                .toHashCode();
+        int result = name.hashCode();
+        result = 31 * result + length.hashCode();
+        result = 31 * result + level;
+        result = 31 * result + additionalRequirements.hashCode();
+        result = 31 * result + (isMiniQuest ? 1 : 0);
+        return result;
     }
 
     @Override
