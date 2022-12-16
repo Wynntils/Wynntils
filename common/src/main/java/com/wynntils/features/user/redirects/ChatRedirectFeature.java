@@ -88,6 +88,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new ScrollTeleportationFailRedirector());
+        register(new ScrollTeleportationSoulPointRedirector());
         register(new SoulPointDiscarder());
         register(new SoulPointRedirector());
         register(new SpeedBoostRedirector());
@@ -584,6 +585,25 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!";
+        }
+    }
+
+    private class ScrollTeleportationSoulPointRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§41 soul point has been lost...$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return scrollTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "-1 Soul Point";
         }
     }
 
