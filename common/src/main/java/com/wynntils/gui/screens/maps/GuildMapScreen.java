@@ -350,8 +350,10 @@ public class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = Managers.Territory.getFilteredTerritoryPoisFromAdvancement(
-                territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType);
+        List<Poi> pois = territoryDefenseFilterEnabled
+                ? Managers.Territory.getFilteredTerritoryPoisFromAdvancement(
+                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
+                : Managers.Territory.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,
