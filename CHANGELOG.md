@@ -1,9 +1,22 @@
+## [0.0.1-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.173...v0.0.1-alpha.174) (2022-12-16)
+
+
+### Bug Fixes
+
+* Crash at startup in KeyMappingMixin ([#850](https://github.com/Wynntils/Artemis/issues/850)) ([110120f](https://github.com/Wynntils/Artemis/commit/110120f86989e81fffaf9bb2f03e830bea84f974))
+* Crash in Forge at startup ([#849](https://github.com/Wynntils/Artemis/issues/849)) ([c3a8c3e](https://github.com/Wynntils/Artemis/commit/c3a8c3e90947123f637297249d97904bb14f6c3b))
+
 ## [0.0.1-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.172...v0.0.1-alpha.173) (2022-12-16)
 
 
 ### Bug Fixes
 
 * Bug fix for multi-line objective patterns ([#847](https://github.com/Wynntils/Artemis/issues/847)) ([694034b](https://github.com/Wynntils/Artemis/commit/694034bfae05be1ee4a92ea0463511ddf17eb9c9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.173 [skip ci] ([657ce3f](https://github.com/Wynntils/Artemis/commit/657ce3f52e75d3e12812d1e4ef546c8057da3bad))
 
 ## [0.0.1-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.171...v0.0.1-alpha.172) (2022-12-16)
 
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.170 [skip ci] ([f5fa3a2](https://github.com/Wynntils/Artemis/commit/f5fa3a278e23c0849c10d2e1ff06a58562ad01c8))
-
-## [0.0.1-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.168...v0.0.1-alpha.169) (2022-12-16)
-
-
-### Code Refactoring
-
-* Fix up CrashReportManager ([#839](https://github.com/Wynntils/Artemis/issues/839)) ([00b2b28](https://github.com/Wynntils/Artemis/commit/00b2b28028ccb5b526e6b291de35e75d4425da85))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.169 [skip ci] ([b8990a8](https://github.com/Wynntils/Artemis/commit/b8990a843e96b91a4ff08434d4fc7d4591ac2dbe))
 
