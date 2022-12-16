@@ -35,7 +35,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TerritoryManager extends Manager {
+public final class TerritoryManager extends Manager {
     private static final int TERRITORY_UPDATE_MS = 15000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())

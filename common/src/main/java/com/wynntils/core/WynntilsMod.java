@@ -10,7 +10,6 @@ import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
@@ -182,12 +181,11 @@ public final class WynntilsMod {
                 modLoader,
                 Minecraft.getInstance().getLaunchedVersion());
 
-        addCrashCallbacks();
-
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         Managers.init();
         ModelRegistry.init();
+        addCrashCallbacks();
     }
 
     private static void parseVersion(String modVersion) {
@@ -209,12 +207,7 @@ public final class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("In Development") {
-            @Override
-            public Object generate() {
-                return isDevelopmentEnvironment() ? "Yes" : "No";
-            }
-        });
+        Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
     public enum ModLoader {
