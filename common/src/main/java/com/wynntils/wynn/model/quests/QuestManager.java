@@ -172,8 +172,7 @@ public final class QuestManager extends Manager {
     }
 
     private Optional<QuestInfo> getQuestInfoFromName(String name) {
-        List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ?
-                miniQuests : quests;
+        List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ? miniQuests : quests;
 
         return questInfoList.stream()
                 .filter(quest -> quest.getName().equals(stripPrefix(name)))
@@ -182,8 +181,7 @@ public final class QuestManager extends Manager {
 
     private boolean updateAfterRescan(String name, String nextTask) {
         boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
-        List<QuestInfo> questInfoList = isMiniQuest ?
-                miniQuests : quests;
+        List<QuestInfo> questInfoList = isMiniQuest ? miniQuests : quests;
 
         if (questInfoList.isEmpty()) {
             afterRescanTask = nextTask;
