@@ -11,7 +11,6 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.utils.MD5Verification;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +58,7 @@ public final class UpdateManager extends Manager {
                         return;
                     }
 
-                    String currentMd5 = getMd5(WynntilsMod.getModJar());
+                    String currentMd5 = FileUtils.getMd5(WynntilsMod.getModJar());
                     if (Objects.equals(currentMd5, latestMd5)) {
                         future.complete(UpdateResult.ALREADY_ON_LATEST);
                         return;
@@ -67,7 +66,7 @@ public final class UpdateManager extends Manager {
 
                     File localUpdateFile = getUpdateFile();
                     if (localUpdateFile.exists()) {
-                        String localUpdateMd5 = getMd5(localUpdateFile);
+                        String localUpdateMd5 = FileUtils.getMd5(localUpdateFile);
 
                         // If the local update file is the same as the latest update, we can just use that.
                         if (Objects.equals(localUpdateMd5, latestMd5)) {
@@ -89,11 +88,6 @@ public final class UpdateManager extends Manager {
                 });
 
         return future;
-    }
-
-    private String getMd5(File file) {
-        MD5Verification verification = new MD5Verification(file);
-        return verification.getMd5();
     }
 
     private File getUpdateFile() {
