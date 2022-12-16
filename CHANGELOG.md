@@ -1,9 +1,21 @@
+## [0.0.1-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.172...v0.0.1-alpha.173) (2022-12-16)
+
+
+### Bug Fixes
+
+* Bug fix for multi-line objective patterns ([#847](https://github.com/Wynntils/Artemis/issues/847)) ([694034b](https://github.com/Wynntils/Artemis/commit/694034bfae05be1ee4a92ea0463511ddf17eb9c9))
+
 ## [0.0.1-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.171...v0.0.1-alpha.172) (2022-12-16)
 
 
 ### Code Refactoring
 
 * flatten item and property models into single files ([#844](https://github.com/Wynntils/Artemis/issues/844)) ([1dbdab4](https://github.com/Wynntils/Artemis/commit/1dbdab453ef1459aa7e96f8f4aa78c1facfee9e7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.172 [skip ci] ([86b279f](https://github.com/Wynntils/Artemis/commit/86b279fb075bb112cbc124f35f6045a1be304952))
 
 ## [0.0.1-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.170...v0.0.1-alpha.171) (2022-12-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.169 [skip ci] ([b8990a8](https://github.com/Wynntils/Artemis/commit/b8990a843e96b91a4ff08434d4fc7d4591ac2dbe))
-
-## [0.0.1-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.167...v0.0.1-alpha.168) (2022-12-16)
-
-
-### Code Refactoring
-
-* Make all Manager classes final ([#840](https://github.com/Wynntils/Artemis/issues/840)) ([113df5f](https://github.com/Wynntils/Artemis/commit/113df5f99e075f7d42fcbd8e22ad8cd33746bfb9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.168 [skip ci] ([39b1fba](https://github.com/Wynntils/Artemis/commit/39b1fbaba68eb30842c2fd26737c651044607345))
 
