@@ -14,7 +14,6 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -40,27 +39,23 @@ public final class FunctionManager extends Manager {
     private final Set<ActiveFunction<?>> enabledFunctions = new HashSet<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
-    public FunctionManager(ItemStackTransformManager itemStackTransformManager) {
-        // FIXME: The dependency is a hack
+    public FunctionManager() {
         super(List.of());
         registerAllFunctions();
     }
 
-    private void registerFunction(Function<?> function) {
-        functions.add(function);
-        if (function instanceof ActiveFunction<?> activeFunction) {
-            activeFunction.init();
-        }
-        // FIXME: This is sort of hacky. We should have these as ActiveFunctions instead,
-        //        and register/unregister the model dependency when enabling/disabling
-
-        // FIXME: This is double bad, since we are setting up a manager and not all
-        // managers might be in place, and now we start setting up models,
-        // which might depend on managers.
-        // We have a hacky workaround for an actual issue where
-        // HorsePropertyModel depends on Managers.ItemStackTransform
-        if (function instanceof DependantFunction<?> dependantFunction) {
-            ModelRegistry.addAllDependencies(dependantFunction);
+    /**
+     * This needs to be called after Models are setup, to associate all
+     * functions with the proper models.
+     */
+    public void activateAllFunctions() {
+        for (Function<?> function : functions) {
+            if (function instanceof DependantFunction<?> dependantFunction) {
+                ModelRegistry.addAllDependencies(dependantFunction);
+            }
+            if (function instanceof ActiveFunction<?> activeFunction) {
+                activeFunction.init();
+            }
         }
     }
 
@@ -306,6 +301,10 @@ public final class FunctionManager extends Manager {
         };
     }
     // endregion
+
+    private void registerFunction(Function<?> function) {
+        functions.add(function);
+    }
 
     private void registerAllFunctions() {
         registerFunction(new WorldFunction());
