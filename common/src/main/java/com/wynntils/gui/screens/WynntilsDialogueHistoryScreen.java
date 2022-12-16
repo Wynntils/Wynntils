@@ -60,7 +60,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    protected void init() {
+    protected void safeInit() {
         Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
@@ -111,7 +111,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

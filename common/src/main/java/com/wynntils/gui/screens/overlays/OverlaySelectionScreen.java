@@ -11,6 +11,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
+import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.gui.screens.overlays.lists.OverlayList;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -22,7 +23,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class OverlaySelectionScreen extends Screen {
+public class OverlaySelectionScreen extends WynntilsScreen {
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
 
@@ -33,7 +34,7 @@ public class OverlaySelectionScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void safeInit() {
         overlayList = new OverlayList(this);
         this.addRenderableWidget(new Button(
                 (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
@@ -53,7 +54,7 @@ public class OverlaySelectionScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
         int backgroundColor = CommonColors.DARK_GRAY.withAlpha(200).asInt();

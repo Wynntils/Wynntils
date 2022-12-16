@@ -19,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
+import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
@@ -43,7 +44,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
+public class WynntilsBookSettingsScreen extends WynntilsScreen implements TextboxScreen {
     private final int CONFIGURABLES_PER_PAGE = 13;
     private final int CONFIGS_PER_PAGE = 4;
     private final List<AbstractButton> configurables = new ArrayList<>();
@@ -79,7 +80,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     @Override
-    protected void init() {
+    protected void safeInit() {
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -109,7 +110,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     // region Render
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float backgroundRenderX = getTranslationX();
         float backgroundRenderY = getTranslationY();
 
