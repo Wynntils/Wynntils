@@ -14,6 +14,7 @@ import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.model.map.TerritoryDefenseFilterType;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
@@ -72,6 +73,20 @@ public final class TerritoryManager extends Manager {
 
     public List<Poi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
+    }
+
+    public List<Poi> getFilteredTerritoryPoisFromAdvancement(int filterLevel, TerritoryDefenseFilterType filterType) {
+        return switch (filterType) {
+            case HIGHER -> territoryPoiMap.values().stream()
+                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
+                    .collect(Collectors.toList());
+            case LOWER -> territoryPoiMap.values().stream()
+                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() <= filterLevel)
+                    .collect(Collectors.toList());
+            case DEFAULT -> territoryPoiMap.values().stream()
+                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() == filterLevel)
+                    .collect(Collectors.toList());
+        };
     }
 
     public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
