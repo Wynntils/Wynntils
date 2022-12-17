@@ -1,9 +1,21 @@
+## [0.0.1-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.184...v0.0.1-alpha.185) (2022-12-17)
+
+
+### Bug Fixes
+
+* CrashReportManager did not actually produce a crash report ([#858](https://github.com/Wynntils/Artemis/issues/858)) ([65db70a](https://github.com/Wynntils/Artemis/commit/65db70aa10f959fac116f46d4a60882aabd7dab0))
+
 ## [0.0.1-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.183...v0.0.1-alpha.184) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Fix issues with territory defense filter + feat: Right click cycles back ([#860](https://github.com/Wynntils/Artemis/issues/860)) ([bc6a208](https://github.com/Wynntils/Artemis/commit/bc6a208e412d886830b542de45436044509764fa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.184 [skip ci] ([61bda39](https://github.com/Wynntils/Artemis/commit/61bda394a8b36153dd6b4dd420b65b419f6ae991))
 
 ## [0.0.1-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.182...v0.0.1-alpha.183) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.181 [skip ci] ([c12b77d](https://github.com/Wynntils/Artemis/commit/c12b77d3997ce3f87a09076a0419f339ea2936ce))
-
-## [0.0.1-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.179...v0.0.1-alpha.180) (2022-12-17)
-
-
-### Bug Fixes
-
-* bumps setup-java to v3 ([#857](https://github.com/Wynntils/Artemis/issues/857)) ([315a7ff](https://github.com/Wynntils/Artemis/commit/315a7ffc64f131aa72c315ad8ba9c796d0e2c7da))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.180 [skip ci] ([76cff8d](https://github.com/Wynntils/Artemis/commit/76cff8d6133a6b5ca1c0668206f237acc7938a7e))
 
