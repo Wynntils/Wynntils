@@ -109,7 +109,7 @@ public class QuestButton extends AbstractButton {
             Optional<Location> nextLocation = this.questInfo.getNextLocation();
 
             nextLocation.ifPresent(
-                    location -> McUtils.mc().setScreen(new MainMapScreen((float) location.x, (float) location.z)));
+                    location -> McUtils.mc().setScreen(MainMapScreen.create((float) location.x, (float) location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             openQuestWiki();
         }

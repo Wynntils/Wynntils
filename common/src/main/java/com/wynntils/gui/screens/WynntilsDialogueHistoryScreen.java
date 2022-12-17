@@ -27,6 +27,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -46,11 +47,15 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     private int currentPage = 0;
     private List<List<String>> dialogues = new ArrayList<>();
 
-    public WynntilsDialogueHistoryScreen() {
+    private WynntilsDialogueHistoryScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsDialogueHistoryScreen());
     }
 
     @Override
@@ -68,7 +73,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
                 11,

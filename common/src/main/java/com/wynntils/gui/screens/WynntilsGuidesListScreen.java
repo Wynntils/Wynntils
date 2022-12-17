@@ -26,13 +26,17 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
     private final List<Screen> GUIDES = List.of(
-            new WynntilsItemGuideScreen(),
-            new WynntilsIngredientGuideScreen(),
-            new WynntilsEmeraldPouchGuideScreen(),
-            new WynntilsPowderGuideScreen());
+            WynntilsItemGuideScreen.create(),
+            WynntilsIngredientGuideScreen.create(),
+            WynntilsEmeraldPouchGuideScreen.create(),
+            WynntilsPowderGuideScreen.create());
 
-    public WynntilsGuidesListScreen() {
+    private WynntilsGuidesListScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsGuidesListScreen());
     }
 
     @Override
@@ -52,7 +56,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,

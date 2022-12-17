@@ -11,6 +11,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.overlays.lists.OverlayList;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -28,8 +29,12 @@ public class OverlaySelectionScreen extends Screen {
 
     private OverlayList overlayList;
 
-    public OverlaySelectionScreen() {
+    private OverlaySelectionScreen() {
         super(new TranslatableComponent("screens.wynntils.overlaySelection.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new OverlaySelectionScreen());
     }
 
     @Override
@@ -41,7 +46,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(new WynntilsMenuScreen())));
+                button -> McUtils.mc().setScreen(WynntilsMenuScreen.create())));
 
         this.addRenderableWidget(new Button(
                 (int) (this.width / 2 + BUTTON_WIDTH * 0.5f),
@@ -49,7 +54,7 @@ public class OverlaySelectionScreen extends Screen {
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlaySelection.freeMove"),
-                button -> McUtils.mc().setScreen(new OverlayManagementScreen())));
+                button -> McUtils.mc().setScreen(OverlayManagementScreen.create())));
     }
 
     @Override

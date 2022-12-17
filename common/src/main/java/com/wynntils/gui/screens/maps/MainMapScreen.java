@@ -11,6 +11,7 @@ import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
@@ -29,20 +30,29 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class MainMapScreen extends AbstractMapScreen {
-    public MainMapScreen() {
+    private MainMapScreen() {
         super();
         centerMapAroundPlayer();
     }
 
-    public MainMapScreen(float mapCenterX, float mapCenterZ) {
+    private MainMapScreen(float mapCenterX, float mapCenterZ) {
         super(mapCenterX, mapCenterZ);
         updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new MainMapScreen());
+    }
+
+    public static Screen create(float mapCenterX, float mapCenterZ) {
+        return WynntilsScreenWrapper.create(new MainMapScreen(mapCenterX, mapCenterZ));
     }
 
     @Override
@@ -149,7 +159,7 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                (b) -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
+                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
                 List.of(
                         new TextComponent("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -267,12 +277,12 @@ public class MainMapScreen extends AbstractMapScreen {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, customPoi));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
 
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, new PoiLocation(gameX, null, gameZ)));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
