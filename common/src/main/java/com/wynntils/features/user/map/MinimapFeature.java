@@ -89,9 +89,6 @@ public class MinimapFeature extends UserFeature {
         @Config
         public CompassRenderType showCompass = CompassRenderType.All;
 
-        @Config
-        public boolean showCoords = true;
-
         @Config(subcategory = "Remote Players")
         public boolean renderRemoteFriendPlayers = true;
 
@@ -209,21 +206,6 @@ public class MinimapFeature extends UserFeature {
 
             // Directional Text
             renderCardinalDirections(poseStack, width, height, centerX, centerZ);
-
-            // Coordinates
-            if (showCoords) {
-                String coords = String.format(
-                        "%s, %s, %s", (int) playerX, (int) McUtils.player().getY(), (int) playerZ);
-
-                FontRenderer.getInstance()
-                        .renderText(
-                                poseStack,
-                                centerX,
-                                renderY + height + 10 * height / DEFAULT_SIZE,
-                                new TextRenderTask(
-                                        coords,
-                                        TextRenderSetting.CENTERED.withTextShadow(FontRenderer.TextShadow.OUTLINE)));
-            }
         }
 
         private void renderPois(
