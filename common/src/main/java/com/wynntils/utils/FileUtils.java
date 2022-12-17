@@ -71,4 +71,13 @@ public final class FileUtils {
             e.printStackTrace();
         }
     }
+
+    public static String getMd5(File file) {
+        if (!file.exists() || file.isDirectory()) {
+            throw new IllegalArgumentException("Argument file should not be null or a directory.");
+        }
+
+        MD5Verification verification = new MD5Verification(file);
+        return verification.getMd5();
+    }
 }
