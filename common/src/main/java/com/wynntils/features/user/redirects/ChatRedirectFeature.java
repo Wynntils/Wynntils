@@ -88,8 +88,9 @@ public class ChatRedirectFeature extends UserFeature {
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new ScrollTeleportationFailRedirector());
-        register(new SoulPointDiscarder());
-        register(new SoulPointRedirector());
+        register(new SoulPointGainDiscarder());
+        register(new SoulPointGainRedirector());
+        register(new SoulPointLossRedirector());
         register(new SpeedBoostRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
@@ -587,7 +588,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class SoulPointDiscarder implements Redirector {
+    private class SoulPointGainDiscarder implements Redirector {
         private static final Pattern SYSTEM_PATTERN =
                 Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
         private static final Pattern BACKGROUND_PATTERN =
@@ -615,7 +616,7 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class SoulPointRedirector extends SimpleRedirector {
+    private class SoulPointGainRedirector extends SimpleRedirector {
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
         private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
 
@@ -638,6 +639,35 @@ public class ChatRedirectFeature extends UserFeature {
         protected String getNotification(Matcher matcher) {
             // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
             return ChatFormatting.LIGHT_PURPLE + matcher.group(1);
+        }
+    }
+
+    private class SoulPointLossRedirector extends SimpleRedirector {
+        private static final Pattern SYSTEM_PATTERN =
+                Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost...$");
+
+        @Override
+        protected Pattern getSystemPattern() {
+            return SYSTEM_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return soulPoint;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            String numberString = matcher.group(1);
+            String pluralizer = "";
+
+            Integer numberValue = Integer.parseInt(numberString);
+            if (numberValue > 1) {
+                pluralizer = "s";
+            }
+
+            String returnableString = String.format("§4-%s Soul Point%s", numberString, pluralizer);
+            return returnableString;
         }
     }
 
