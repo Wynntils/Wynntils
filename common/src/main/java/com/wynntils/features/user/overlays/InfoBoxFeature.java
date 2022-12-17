@@ -137,23 +137,32 @@ public class InfoBoxFeature extends UserFeature {
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment
 
-            String line = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
+            String[] renderedLines;
+            if (content.isEmpty()) {
+                renderedLines = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%");
+            } else {
+                renderedLines = cachedLines;
+            }
 
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            line,
-                            renderX,
-                            renderX + this.getWidth(),
-                            renderY,
-                            renderY + this.getHeight(),
-                            0,
-                            CommonColors.WHITE,
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment(),
-                            FontRenderer.TextShadow.OUTLINE);
+            for (String line : renderedLines) {
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                line,
+                                renderX,
+                                renderX + this.getWidth(),
+                                renderY,
+                                renderY + this.getHeight(),
+                                0,
+                                CommonColors.WHITE,
+                                this.getRenderHorizontalAlignment(),
+                                this.getRenderVerticalAlignment(),
+                                this.textShadow);
+
+                renderY += FontRenderer.getInstance().getFont().lineHeight;
+            }
         }
 
         @Override
