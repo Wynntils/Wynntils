@@ -2,13 +2,14 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
+    "ChatScreenMixin"
     "ChestMenuMixin",
     "ClientLevelMixin",
-    "ClientPacketListenerMixin",
     "ClientPackSourceMixin",
+    "ClientPacketListenerMixin",
     "CommandSuggestionsMixin",
-    "ConnectionMixin",
     "ConnectScreenMixin",
+    "ConnectionMixin",
     "CrashReportMixin",
     "CustomHeadLayerMixin",
     "EntityLookupMixin",
@@ -16,8 +17,8 @@
     "HumanoidArmorLayerMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
-    "KeyboardHandlerMixin",
     "KeyMappingMixin",
+    "KeyboardHandlerMixin",
     "LerpingBossEventAccessor",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
@@ -42,7 +43,6 @@
     "accessors.MinecraftAccessor",
     "accessors.OptionsAccessor",
     "invokers.ChatScreenInvoker",
-    "ChatScreenMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {
