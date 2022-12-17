@@ -1,9 +1,21 @@
+## [0.0.1-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.179...v0.0.1-alpha.180) (2022-12-17)
+
+
+### Bug Fixes
+
+* bumps setup-java to v3 ([#857](https://github.com/Wynntils/Artemis/issues/857)) ([315a7ff](https://github.com/Wynntils/Artemis/commit/315a7ffc64f131aa72c315ad8ba9c796d0e2c7da))
+
 ## [0.0.1-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.178...v0.0.1-alpha.179) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Only show dummy info overlay preview if there is not an actual content set ([#853](https://github.com/Wynntils/Artemis/issues/853)) ([4bca01f](https://github.com/Wynntils/Artemis/commit/4bca01f127abbe88a6fda1e76afe8886693061d0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.179 [skip ci] ([8b72309](https://github.com/Wynntils/Artemis/commit/8b723094f344a52074422da6ed47c95988a271d9))
 
 ## [0.0.1-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.177...v0.0.1-alpha.178) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.176 [skip ci] ([8b492e0](https://github.com/Wynntils/Artemis/commit/8b492e092789f187f39a08ca3bbc5fc3a1d75cce))
-
-## [0.0.1-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.174...v0.0.1-alpha.175) (2022-12-16)
-
-
-### New Features
-
-* Snappier and more robust quest book ([#848](https://github.com/Wynntils/Artemis/issues/848)) ([82eaebf](https://github.com/Wynntils/Artemis/commit/82eaebf05d4ef1da56c3f4904d7a42466c9df557))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.175 [skip ci] ([7b58892](https://github.com/Wynntils/Artemis/commit/7b588927fc5139b993fd82a77373b0c912521c11))
 
