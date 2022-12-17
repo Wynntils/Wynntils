@@ -1,9 +1,21 @@
+## [0.0.1-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.185...v0.0.1-alpha.186) (2022-12-17)
+
+
+### New Features
+
+* Add crash protection for Screens ([#859](https://github.com/Wynntils/Artemis/issues/859)) ([a34b68f](https://github.com/Wynntils/Artemis/commit/a34b68fe93113bf6da5961040fb8607599a9932c)), closes [#812](https://github.com/Wynntils/Artemis/issues/812) [#860](https://github.com/Wynntils/Artemis/issues/860)
+
 ## [0.0.1-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.184...v0.0.1-alpha.185) (2022-12-17)
 
 
 ### Bug Fixes
 
 * CrashReportManager did not actually produce a crash report ([#858](https://github.com/Wynntils/Artemis/issues/858)) ([65db70a](https://github.com/Wynntils/Artemis/commit/65db70aa10f959fac116f46d4a60882aabd7dab0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.185 [skip ci] ([20ac0a1](https://github.com/Wynntils/Artemis/commit/20ac0a1ca39dbb0ad341cd9a4dfa705d6d2f96a6))
 
 ## [0.0.1-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.183...v0.0.1-alpha.184) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.182 [skip ci] ([80a57ae](https://github.com/Wynntils/Artemis/commit/80a57ae33c9ecce3bfab80080a320cab1058a0ed))
-
-## [0.0.1-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.180...v0.0.1-alpha.181) (2022-12-17)
-
-
-### New Features
-
-* WynncraftButtonFeature now has a config option to connect to lobby instead of game server ([#854](https://github.com/Wynntils/Artemis/issues/854)) ([f1b4218](https://github.com/Wynntils/Artemis/commit/f1b42188250ba3db4e89104564adebceda8c8068))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.181 [skip ci] ([c12b77d](https://github.com/Wynntils/Artemis/commit/c12b77d3997ce3f87a09076a0419f339ea2936ce))
 
