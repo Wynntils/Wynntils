@@ -46,6 +46,8 @@ public class GuildMapScreen extends AbstractMapScreen {
     protected void init() {
         super.init();
 
+        // Buttons have to be added in reverse order (right to left) so they don't overlap
+
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
                 (int) (this.renderHeight
@@ -63,24 +65,6 @@ public class GuildMapScreen extends AbstractMapScreen {
                         new TextComponent("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(new TranslatableComponent("screens.wynntils.guildMap.help.description1")))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
-                16,
-                Texture.MAP_ADD_BUTTON,
-                (b) -> resourceMode = !resourceMode,
-                List.of(
-                        new TextComponent("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent(
-                                        "screens.wynntils.guildMap.toggleResourceColor.name")),
-                        new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
-                                .withStyle(ChatFormatting.GRAY))));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
@@ -116,6 +100,24 @@ public class GuildMapScreen extends AbstractMapScreen {
                     territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },
                 getCompleteFilterTooltip()));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_ADD_BUTTON,
+                (b) -> resourceMode = !resourceMode,
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(new TranslatableComponent(
+                                        "screens.wynntils.guildMap.toggleResourceColor.name")),
+                        new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
     }
 
     @Override
