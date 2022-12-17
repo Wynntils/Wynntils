@@ -46,6 +46,8 @@ public class GuildMapScreen extends AbstractMapScreen {
     protected void init() {
         super.init();
 
+        // Buttons have to be added in reverse order (right to left) so they don't overlap
+
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
                 (int) (this.renderHeight
@@ -63,24 +65,6 @@ public class GuildMapScreen extends AbstractMapScreen {
                         new TextComponent("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(new TranslatableComponent("screens.wynntils.guildMap.help.description1")))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
-                16,
-                Texture.MAP_ADD_BUTTON,
-                (b) -> resourceMode = !resourceMode,
-                List.of(
-                        new TextComponent("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent(
-                                        "screens.wynntils.guildMap.toggleResourceColor.name")),
-                        new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
-                                .withStyle(ChatFormatting.GRAY))));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
@@ -110,12 +94,35 @@ public class GuildMapScreen extends AbstractMapScreen {
                     }
 
                     territoryDefenseFilterEnabled = true;
-                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
-                            territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
+                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
+                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    }
 
                     territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },
                 getCompleteFilterTooltip()));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_ADD_BUTTON,
+                (b) -> resourceMode = !resourceMode,
+                List.of(
+                        new TextComponent("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(new TranslatableComponent(
+                                        "screens.wynntils.guildMap.toggleResourceColor.name")),
+                        new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
     }
 
     @Override
@@ -175,7 +182,8 @@ public class GuildMapScreen extends AbstractMapScreen {
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
                 TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
-                if (routePoi != null) {
+                // Only render connection if the other poi is also in the filtered pois
+                if (routePoi != null && filteredPois.contains(routePoi)) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
 
