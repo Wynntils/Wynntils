@@ -1,9 +1,21 @@
+## [0.0.1-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.183...v0.0.1-alpha.184) (2022-12-17)
+
+
+### Bug Fixes
+
+* Fix issues with territory defense filter + feat: Right click cycles back ([#860](https://github.com/Wynntils/Artemis/issues/860)) ([bc6a208](https://github.com/Wynntils/Artemis/commit/bc6a208e412d886830b542de45436044509764fa))
+
 ## [0.0.1-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.182...v0.0.1-alpha.183) (2022-12-17)
 
 
 ### New Features
 
 * Territory defense level sorting ([#812](https://github.com/Wynntils/Artemis/issues/812)) ([39e0505](https://github.com/Wynntils/Artemis/commit/39e0505ce83da62cf2eb3f6452d0ab6a62fc1878))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.183 [skip ci] ([6c4a4eb](https://github.com/Wynntils/Artemis/commit/6c4a4eb8d2034136a0e503ab23acfffc8e2a7eef))
 
 ## [0.0.1-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.181...v0.0.1-alpha.182) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.180 [skip ci] ([76cff8d](https://github.com/Wynntils/Artemis/commit/76cff8d6133a6b5ca1c0668206f237acc7938a7e))
-
-## [0.0.1-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.178...v0.0.1-alpha.179) (2022-12-17)
-
-
-### Bug Fixes
-
-* Only show dummy info overlay preview if there is not an actual content set ([#853](https://github.com/Wynntils/Artemis/issues/853)) ([4bca01f](https://github.com/Wynntils/Artemis/commit/4bca01f127abbe88a6fda1e76afe8886693061d0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.179 [skip ci] ([8b72309](https://github.com/Wynntils/Artemis/commit/8b723094f344a52074422da6ed47c95988a271d9))
 
