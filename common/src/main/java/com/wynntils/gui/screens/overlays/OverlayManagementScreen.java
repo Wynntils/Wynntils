@@ -19,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -97,18 +98,26 @@ public class OverlayManagementScreen extends Screen {
     private boolean userInteracted = false;
     private int animationLengthRemaining;
 
-    public OverlayManagementScreen(Overlay overlay) {
+    private OverlayManagementScreen(Overlay overlay) {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
         selectedOverlay = overlay;
         fixedSelection = true;
         animationLengthRemaining = ANIMATION_LENGTH;
     }
 
-    public OverlayManagementScreen() {
+    private OverlayManagementScreen() {
         super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
         selectedOverlay = null;
         fixedSelection = false;
         animationLengthRemaining = 0;
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new OverlayManagementScreen());
+    }
+
+    public static Screen create(Overlay overlay) {
+        return WynntilsScreenWrapper.create(new OverlayManagementScreen(overlay));
     }
 
     @Override
@@ -371,11 +380,11 @@ public class OverlayManagementScreen extends Screen {
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
-            McUtils.mc().setScreen(new OverlaySelectionScreen());
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            McUtils.mc().setScreen(new OverlaySelectionScreen());
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
             return true;
         }
@@ -711,7 +720,7 @@ public class OverlayManagementScreen extends Screen {
                 BUTTON_HEIGHT,
                 new TranslatableComponent("screens.wynntils.overlayManagement.closeSettingsScreen"),
                 button -> {
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
+                    McUtils.mc().setScreen(OverlaySelectionScreen.create());
                     onClose();
                 },
                 (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
@@ -745,7 +754,7 @@ public class OverlayManagementScreen extends Screen {
                 new TranslatableComponent("screens.wynntils.overlayManagement.applySettings"),
                 button -> {
                     Managers.Config.saveConfig();
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
+                    McUtils.mc().setScreen(OverlaySelectionScreen.create());
                     onClose();
                 },
                 (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(

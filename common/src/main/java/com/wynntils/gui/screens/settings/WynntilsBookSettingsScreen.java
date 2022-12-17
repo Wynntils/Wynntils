@@ -19,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
@@ -61,7 +62,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
 
-    public WynntilsBookSettingsScreen() {
+    private WynntilsBookSettingsScreen() {
         super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
 
         McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
@@ -76,6 +77,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 },
                 this);
         reloadConfigurableButtons();
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsBookSettingsScreen());
     }
 
     @Override
