@@ -75,14 +75,8 @@ public class ConfigUpfixerManager extends Manager {
             appliedUpfixers.add(upfixer.getAsString());
         }
 
-        List<ConfigUpfixer> missingUpfixers = new ArrayList<>();
-
-        for (ConfigUpfixer configUpfixer : configUpfixers) {
-            if (!appliedUpfixers.contains(configUpfixer.getUpfixerName())) {
-                missingUpfixers.add(configUpfixer);
-            }
-        }
-
-        return missingUpfixers;
+        return configUpfixers.stream()
+                .filter(upfixer -> !appliedUpfixers.contains(upfixer.getUpfixerName()))
+                .toList();
     }
 }
