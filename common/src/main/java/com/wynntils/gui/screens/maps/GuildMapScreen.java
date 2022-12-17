@@ -94,8 +94,13 @@ public class GuildMapScreen extends AbstractMapScreen {
                     }
 
                     territoryDefenseFilterEnabled = true;
-                    territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
-                            territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
+                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
+                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                    }
 
                     territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },

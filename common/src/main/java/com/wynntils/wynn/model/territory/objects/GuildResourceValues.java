@@ -46,6 +46,15 @@ public enum GuildResourceValues {
         }
     }
 
+    public GuildResourceValues getFilterPrevious(boolean limited) {
+        if (limited) {
+            // If is LOW, go back to HIGH since limited
+            return ordinal() == 1 ? values()[3] : values()[(ordinal() + values().length - 1) % values().length];
+        } else {
+            return values()[(ordinal() + values().length - 1) % values().length];
+        }
+    }
+
     public int getLevel() {
         return level;
     }
