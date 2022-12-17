@@ -1,9 +1,21 @@
+## [0.0.1-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.182...v0.0.1-alpha.183) (2022-12-17)
+
+
+### New Features
+
+* Territory defense level sorting ([#812](https://github.com/Wynntils/Artemis/issues/812)) ([39e0505](https://github.com/Wynntils/Artemis/commit/39e0505ce83da62cf2eb3f6452d0ab6a62fc1878))
+
 ## [0.0.1-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.181...v0.0.1-alpha.182) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Hash check local update file in UpdateManager (and also fix returning early on error) ([#851](https://github.com/Wynntils/Artemis/issues/851)) ([9264290](https://github.com/Wynntils/Artemis/commit/9264290740270e39dada217868d20fd919d98ddc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.182 [skip ci] ([80a57ae](https://github.com/Wynntils/Artemis/commit/80a57ae33c9ecce3bfab80080a320cab1058a0ed))
 
 ## [0.0.1-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.180...v0.0.1-alpha.181) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.179 [skip ci] ([8b72309](https://github.com/Wynntils/Artemis/commit/8b723094f344a52074422da6ed47c95988a271d9))
-
-## [0.0.1-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.177...v0.0.1-alpha.178) (2022-12-17)
-
-
-### Bug Fixes
-
-* Patches Up SpeedBoostRedirector ([#856](https://github.com/Wynntils/Artemis/issues/856)) ([dbc3e26](https://github.com/Wynntils/Artemis/commit/dbc3e26a11a2d31fe2bed86243e0519d9fbd96d3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.178 [skip ci] ([103d319](https://github.com/Wynntils/Artemis/commit/103d319ee4a1e9537bf64f838ee836b8184f0b84))
 
