@@ -1,9 +1,21 @@
+## [0.0.1-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.194...v0.0.1-alpha.195) (2022-12-17)
+
+
+### New Features
+
+* Move overlays by one pixel with arrows, shift+arrow to change alignment ([#868](https://github.com/Wynntils/Artemis/issues/868)) ([7f2479f](https://github.com/Wynntils/Artemis/commit/7f2479fa597d2fd444ffd3aa9911d9acf263d9eb))
+
 ## [0.0.1-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.193...v0.0.1-alpha.194) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Nerf mythic scaling to 1.5 from 2 [#867](https://github.com/Wynntils/Artemis/issues/867) ([37183b1](https://github.com/Wynntils/Artemis/commit/37183b1d5e1d7d2e0e2e538cc0d4864bcbe190bd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.194 [skip ci] ([038955d](https://github.com/Wynntils/Artemis/commit/038955db8708adf2a9434ad1093427a63bf4abc8))
 
 ## [0.0.1-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.192...v0.0.1-alpha.193) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.191 [skip ci] ([f4045a8](https://github.com/Wynntils/Artemis/commit/f4045a8aea31de4583dfe59e2f284e67a019720b))
-
-## [0.0.1-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.189...v0.0.1-alpha.190) (2022-12-17)
-
-
-### Bug Fixes
-
-* Create WynntilsScreenWrapper#instanceOf and use it ([#863](https://github.com/Wynntils/Artemis/issues/863)) ([b3d571a](https://github.com/Wynntils/Artemis/commit/b3d571a92e642382b42b65d20d49e2e68b833ddc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.190 [skip ci] ([eb1fa89](https://github.com/Wynntils/Artemis/commit/eb1fa89a966ed4fa7da9427562fe75124692e9d7))
 
