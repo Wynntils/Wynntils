@@ -40,6 +40,14 @@ public class WynntilsScreenWrapper extends Screen {
         return delegate;
     }
 
+    public static <T extends Screen> Optional<T> instanceOf(Class<T> clazz) {
+        if (McUtils.mc().screen instanceof WynntilsScreenWrapper wrapper) {
+            return clazz.isInstance(wrapper.delegate) ? Optional.of(clazz.cast(wrapper.delegate)) : Optional.empty();
+        }
+
+        return Optional.empty();
+    }
+
     private void failure(String method, Throwable e) {
         WynntilsMod.error("Failure in " + delegate.getClass().getSimpleName() + "." + method + "()", e);
         McUtils.sendMessageToClient(new TextComponent("Wynntils: Failure in " + method + " in "
