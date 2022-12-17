@@ -1,9 +1,21 @@
+## [0.0.1-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.178...v0.0.1-alpha.179) (2022-12-17)
+
+
+### Bug Fixes
+
+* Only show dummy info overlay preview if there is not an actual content set ([#853](https://github.com/Wynntils/Artemis/issues/853)) ([4bca01f](https://github.com/Wynntils/Artemis/commit/4bca01f127abbe88a6fda1e76afe8886693061d0))
+
 ## [0.0.1-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.177...v0.0.1-alpha.178) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Patches Up SpeedBoostRedirector ([#856](https://github.com/Wynntils/Artemis/issues/856)) ([dbc3e26](https://github.com/Wynntils/Artemis/commit/dbc3e26a11a2d31fe2bed86243e0519d9fbd96d3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.178 [skip ci] ([103d319](https://github.com/Wynntils/Artemis/commit/103d319ee4a1e9537bf64f838ee836b8184f0b84))
 
 ## [0.0.1-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.176...v0.0.1-alpha.177) (2022-12-16)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.175 [skip ci] ([7b58892](https://github.com/Wynntils/Artemis/commit/7b588927fc5139b993fd82a77373b0c912521c11))
-
-## [0.0.1-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.173...v0.0.1-alpha.174) (2022-12-16)
-
-
-### Bug Fixes
-
-* Crash at startup in KeyMappingMixin ([#850](https://github.com/Wynntils/Artemis/issues/850)) ([110120f](https://github.com/Wynntils/Artemis/commit/110120f86989e81fffaf9bb2f03e830bea84f974))
-* Crash in Forge at startup ([#849](https://github.com/Wynntils/Artemis/issues/849)) ([c3a8c3e](https://github.com/Wynntils/Artemis/commit/c3a8c3e90947123f637297249d97904bb14f6c3b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.174 [skip ci] ([15cd997](https://github.com/Wynntils/Artemis/commit/15cd9976f058c0579da32492045d9e2c18e857a8))
 
