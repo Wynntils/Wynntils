@@ -11,6 +11,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.managers.Manager;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.overlays.OverlayManagementScreen;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -79,9 +80,11 @@ public final class OverlayManager extends Manager {
         boolean testMode = false;
         boolean shouldRender = true;
 
-        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
-            testMode = screen.isTestMode();
-            shouldRender = false;
+        if (McUtils.mc().screen instanceof WynntilsScreenWrapper wrapper) {
+            if (wrapper.getDelegate() instanceof OverlayManagementScreen screen) {
+                testMode = screen.isTestMode();
+                shouldRender = false;
+            }
         }
 
         List<Overlay> crashedOverlays = new LinkedList<>();
