@@ -37,6 +37,6 @@ public class GuildMapFeature extends UserFeature {
             return;
         }
 
-        McUtils.mc().setScreen(new GuildMapScreen());
+        McUtils.mc().setScreen(GuildMapScreen.create());
     });
 }

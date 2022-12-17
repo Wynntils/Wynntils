@@ -123,7 +123,7 @@ public class MapFeature extends UserFeature {
             return;
         }
 
-        McUtils.mc().setScreen(new MainMapScreen());
+        McUtils.mc().setScreen(MainMapScreen.create());
     });
 
     @Override
