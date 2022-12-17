@@ -1,9 +1,21 @@
+## [0.0.1-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.186...v0.0.1-alpha.187) (2022-12-17)
+
+
+### New Features
+
+* Add config upfixers ([#834](https://github.com/Wynntils/Artemis/issues/834)) ([cdc44b3](https://github.com/Wynntils/Artemis/commit/cdc44b31139a87f8b05a58bb56f75c62a83b1703))
+
 ## [0.0.1-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.185...v0.0.1-alpha.186) (2022-12-17)
 
 
 ### New Features
 
 * Add crash protection for Screens ([#859](https://github.com/Wynntils/Artemis/issues/859)) ([a34b68f](https://github.com/Wynntils/Artemis/commit/a34b68fe93113bf6da5961040fb8607599a9932c)), closes [#812](https://github.com/Wynntils/Artemis/issues/812) [#860](https://github.com/Wynntils/Artemis/issues/860)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.186 [skip ci] ([4c95b17](https://github.com/Wynntils/Artemis/commit/4c95b179a286c0c88a5ff235d12cb52e3093899f))
 
 ## [0.0.1-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.184...v0.0.1-alpha.185) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.183 [skip ci] ([6c4a4eb](https://github.com/Wynntils/Artemis/commit/6c4a4eb8d2034136a0e503ab23acfffc8e2a7eef))
-
-## [0.0.1-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.181...v0.0.1-alpha.182) (2022-12-17)
-
-
-### Bug Fixes
-
-* Hash check local update file in UpdateManager (and also fix returning early on error) ([#851](https://github.com/Wynntils/Artemis/issues/851)) ([9264290](https://github.com/Wynntils/Artemis/commit/9264290740270e39dada217868d20fd919d98ddc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.182 [skip ci] ([80a57ae](https://github.com/Wynntils/Artemis/commit/80a57ae33c9ecce3bfab80080a320cab1058a0ed))
 
