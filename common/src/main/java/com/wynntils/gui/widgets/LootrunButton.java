@@ -94,7 +94,7 @@ public class LootrunButton extends AbstractButton {
             LootrunModel.Path path = lootrun.path();
             Vec3 start = path.points().get(0);
 
-            McUtils.mc().setScreen(new MainMapScreen((float) start.x, (float) start.z));
+            McUtils.mc().setScreen(MainMapScreen.create((float) start.x, (float) start.z));
             return true;
         }
 

@@ -14,6 +14,7 @@ import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.ScreenWrapper;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -27,12 +28,19 @@ import com.wynntils.wynn.model.territory.objects.TerritoryStorage;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
+
+    private GuildMapScreen() {}
+
+    public static Screen create() {
+        return ScreenWrapper.create(new GuildMapScreen());
+    }
 
     @Override
     protected void init() {

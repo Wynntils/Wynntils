@@ -25,12 +25,12 @@ public class WynntilsQuestBookFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
-            "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(new WynntilsQuestBookScreen()));
+            "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(WynntilsQuestBookScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openWynntilsMenu =
             new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
-                    .setScreen(new WynntilsMenuScreen()));
+                    .setScreen(WynntilsMenuScreen.create()));
 
     @Config
     public boolean replaceWynncraftQuestBook = true;
@@ -62,7 +62,7 @@ public class WynntilsQuestBookFeature extends UserFeature {
         if (itemInHand != null
                 && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
-            McUtils.mc().setScreen(new WynntilsQuestBookScreen());
+            McUtils.mc().setScreen(WynntilsQuestBookScreen.create());
         }
     }
 }

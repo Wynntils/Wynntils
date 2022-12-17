@@ -69,7 +69,7 @@ public final class DiscoveryManager extends Manager {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            McUtils.mc().setScreen(new MainMapScreen(centerX, centerZ));
+            McUtils.mc().setScreen(MainMapScreen.create(centerX, centerZ));
         }
     }
 
@@ -175,7 +175,7 @@ public final class DiscoveryManager extends Manager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
                 }
                 case COMPASS -> {
                     Models.Compass.setCompassLocation(new Location(x, 0, z));
