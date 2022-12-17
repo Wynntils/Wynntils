@@ -12,33 +12,20 @@ import java.util.function.Supplier;
 import net.minecraft.CrashReportCategory;
 
 public final class CrashReportManager extends Manager {
-    private final Map<String, Supplier<String>> crashHandlers = new HashMap<>();
-    private static CrashReportManager instance = null;
+    private static final Map<String, Supplier<String>> CRASH_HANDLERS = new HashMap<>();
 
     public CrashReportManager() {
         super(List.of());
-        if (instance != null) {
-            // Save a local copy since we can't rely on being able to use the
-            // Managers class in case of a crash. Note especially that minecraft does a
-            // CrashReport.preload() early at game startup
-            instance = this;
-        }
     }
 
     public void registerCrashContext(String name, Supplier<String> handler) {
-        crashHandlers.put(name, handler);
+        CRASH_HANDLERS.put(name, handler);
     }
 
     public static CrashReportCategory generateDetails() {
         CrashReportCategory wynntilsCategory = new CrashReportCategory("Wynntils");
 
-        if (instance == null) {
-            wynntilsCategory.setDetail("No crash handler loaded yet", "");
-            return wynntilsCategory;
-        }
-
-        Map<String, Supplier<String>> crashHandlers = instance.getCrashHandlers();
-        for (Map.Entry<String, Supplier<String>> entry : crashHandlers.entrySet()) {
+        for (Map.Entry<String, Supplier<String>> entry : CRASH_HANDLERS.entrySet()) {
             String report = entry.getValue().get();
             if (report != null) {
                 wynntilsCategory.setDetail(entry.getKey(), report);
@@ -46,9 +33,5 @@ public final class CrashReportManager extends Manager {
         }
 
         return wynntilsCategory;
-    }
-
-    private Map<String, Supplier<String>> getCrashHandlers() {
-        return crashHandlers;
     }
 }
