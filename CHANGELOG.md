@@ -1,9 +1,21 @@
+## [0.0.1-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.193...v0.0.1-alpha.194) (2022-12-17)
+
+
+### Bug Fixes
+
+* Nerf mythic scaling to 1.5 from 2 [#867](https://github.com/Wynntils/Artemis/issues/867) ([37183b1](https://github.com/Wynntils/Artemis/commit/37183b1d5e1d7d2e0e2e538cc0d4864bcbe190bd))
+
 ## [0.0.1-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.192...v0.0.1-alpha.193) (2022-12-17)
 
 
 ### New Features
 
 * Add a config option for opening Wynntils Menu instead of Quest Book when using quest book item ([#865](https://github.com/Wynntils/Artemis/issues/865)) ([a9b0471](https://github.com/Wynntils/Artemis/commit/a9b0471fe766e67e90ad70b055c1e4f471e99c07))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.193 [skip ci] ([664a811](https://github.com/Wynntils/Artemis/commit/664a811620b84cbe2164bdf481e50a1aae612265))
 
 ## [0.0.1-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.191...v0.0.1-alpha.192) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.190 [skip ci] ([eb1fa89](https://github.com/Wynntils/Artemis/commit/eb1fa89a966ed4fa7da9427562fe75124692e9d7))
-
-## [0.0.1-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.188...v0.0.1-alpha.189) (2022-12-17)
-
-
-### Bug Fixes
-
-* Fix incompatibility with Fabric-Screen API and instanceof check ([#862](https://github.com/Wynntils/Artemis/issues/862)) ([0fe8ff0](https://github.com/Wynntils/Artemis/commit/0fe8ff04ff49b83add8f829aec5fe907a16ac040))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.189 [skip ci] ([ca775b0](https://github.com/Wynntils/Artemis/commit/ca775b0ca41423ef5f5ccc60d983f351ed5248a8))
 
