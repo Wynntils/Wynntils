@@ -43,7 +43,7 @@ public class CharacterSelectorScreen extends Screen {
     private double lastMouseY = 0;
     private ClassInfoButton selected = null;
 
-    public CharacterSelectorScreen() {
+    private CharacterSelectorScreen() {
         super(new TranslatableComponent("screens.wynntils.characterSelection.name"));
 
         if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
@@ -52,6 +52,10 @@ public class CharacterSelectorScreen extends Screen {
             throw new IllegalStateException(
                     "Tried to open custom character selection screen when normal character selection screen is not open");
         }
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new CharacterSelectorScreen());
     }
 
     @Override

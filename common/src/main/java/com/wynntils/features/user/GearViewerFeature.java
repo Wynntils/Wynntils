@@ -33,6 +33,6 @@ public class GearViewerFeature extends UserFeature {
 
         if (!WynnPlayerUtils.isLocalPlayer(hitPlayer.get())) return;
 
-        McUtils.mc().setScreen(new GearViewerScreen(hitPlayer.get()));
+        McUtils.mc().setScreen(GearViewerScreen.create(hitPlayer.get()));
     }
 }

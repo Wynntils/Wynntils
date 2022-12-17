@@ -30,13 +30,13 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                 (Button) renderables.get(1),
                 new TranslatableComponent("feature.wynntils.wynncraftPauseScreen.territoryMap.name")
                         .withStyle(ChatFormatting.DARK_AQUA),
-                (button) -> McUtils.mc().setScreen(new GuildMapScreen()));
+                (button) -> McUtils.mc().setScreen(GuildMapScreen.create()));
         renderables.set(1, territoryMap);
 
         Button wynntilsMenu = replaceButtonFunction(
                 (Button) renderables.get(2),
                 new TranslatableComponent("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
-                (button) -> McUtils.mc().setScreen(new WynntilsMenuScreen()));
+                (button) -> McUtils.mc().setScreen(WynntilsMenuScreen.create()));
         renderables.set(2, wynntilsMenu);
 
         Button classSelection = replaceButtonFunction(
