@@ -681,6 +681,8 @@
   "feature.wynntils.worldWaypointDistance.textShadow.name": "Text Shadow",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.description": "How far should off-screen indicator be from top of the screen?",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.name": "Top Indicator Distance",
+  "feature.wynntils.wynncraftButton.connectToLobby.description": "Should the button connect to the lobby or the game server?",
+  "feature.wynntils.wynncraftButton.connectToLobby.name": "Connect to Lobby",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",
   "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Back to Hub",
