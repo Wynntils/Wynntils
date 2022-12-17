@@ -67,42 +67,79 @@ public class WynntilsScreenWrapper extends Screen {
 
     @Override
     public Component getTitle() {
-        return delegate.getTitle();
+        try {
+            return delegate.getTitle();
+        } catch (Throwable t) {
+            failure("getTitle", t);
+            return null;
+        }
     }
 
     @Override
     public Component getNarrationMessage() {
-        return delegate.getNarrationMessage();
+        try {
+            return delegate.getNarrationMessage();
+        } catch (Throwable t) {
+            failure("getNarrationMessage", t);
+            return null;
+        }
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return delegate.keyPressed(keyCode, scanCode, modifiers);
+        try {
+            return delegate.keyPressed(keyCode, scanCode, modifiers);
+        } catch (Throwable t) {
+            failure("keyPressed", t);
+            return false;
+        }
     }
 
     @Override
     public boolean shouldCloseOnEsc() {
-        return delegate.shouldCloseOnEsc();
+        try {
+            return delegate.shouldCloseOnEsc();
+        } catch (Throwable t) {
+            failure("shouldCloseOnEsc", t);
+            return false;
+        }
     }
 
     @Override
     public void onClose() {
-        delegate.onClose();
+        try {
+            delegate.onClose();
+        } catch (Throwable t) {
+            failure("onClose", t);
+        }
     }
 
     @Override
     public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {
-        return delegate.addRenderableWidget(widget);
+        try {
+            return delegate.addRenderableWidget(widget);
+        } catch (Throwable t) {
+            failure("addRenderableWidget", t);
+            return null;
+        }
     }
 
     @Override
     public void clearWidgets() {
-        delegate.clearWidgets();
+        try {
+            delegate.clearWidgets();
+        } catch (Throwable t) {
+            failure("clearWidgets", t);
+        }
     }
 
     @Override
     public void renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
-        delegate.renderTooltip(poseStack, itemStack, mouseX, mouseY);
+        try {
+            delegate.renderTooltip(poseStack, itemStack, mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("renderTooltip", t);
+        }
     }
 
     @Override
@@ -112,202 +149,377 @@ public class WynntilsScreenWrapper extends Screen {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY) {
-        delegate.renderTooltip(poseStack, tooltips, visualTooltipComponent, mouseX, mouseY);
+        try {
+            delegate.renderTooltip(poseStack, tooltips, visualTooltipComponent, mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("renderTooltip", t);
+        }
     }
 
     @Override
     public List<Component> getTooltipFromItem(ItemStack itemStack) {
-        return delegate.getTooltipFromItem(itemStack);
+        try {
+            return delegate.getTooltipFromItem(itemStack);
+        } catch (Throwable t) {
+            failure("getTooltipFromItem", t);
+            return null;
+        }
     }
 
     @Override
     public void renderTooltip(PoseStack poseStack, Component text, int mouseX, int mouseY) {
-        delegate.renderTooltip(poseStack, text, mouseX, mouseY);
+        try {
+            delegate.renderTooltip(poseStack, text, mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("renderTooltip", t);
+        }
     }
 
     @Override
     public void renderComponentTooltip(PoseStack poseStack, List<Component> tooltips, int mouseX, int mouseY) {
-        delegate.renderComponentTooltip(poseStack, tooltips, mouseX, mouseY);
+        try {
+            delegate.renderComponentTooltip(poseStack, tooltips, mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("renderComponentTooltip", t);
+        }
     }
 
     @Override
     public void renderTooltip(
             PoseStack poseStack, List<? extends FormattedCharSequence> tooltips, int mouseX, int mouseY) {
-        delegate.renderTooltip(poseStack, tooltips, mouseX, mouseY);
+        try {
+            delegate.renderTooltip(poseStack, tooltips, mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("renderTooltip", t);
+        }
     }
 
     @Override
     public boolean handleComponentClicked(Style style) {
-        return delegate.handleComponentClicked(style);
+        try {
+            return delegate.handleComponentClicked(style);
+        } catch (Throwable t) {
+            failure("handleComponentClicked", t);
+            return false;
+        }
     }
 
     @Override
     public void sendMessage(String text) {
-        delegate.sendMessage(text);
+        try {
+            delegate.sendMessage(text);
+        } catch (Throwable t) {
+            failure("sendMessage", t);
+        }
     }
 
     @Override
     public void sendMessage(String text, boolean addToChat) {
-        delegate.sendMessage(text, addToChat);
+        try {
+            delegate.sendMessage(text, addToChat);
+        } catch (Throwable t) {
+            failure("sendMessage", t);
+        }
     }
 
     @Override
     public List<? extends GuiEventListener> children() {
-        return delegate.children();
+        try {
+            return delegate.children();
+        } catch (Throwable t) {
+            failure("children", t);
+            return null;
+        }
     }
 
     @Override
     public void tick() {
-        delegate.tick();
+        try {
+            delegate.tick();
+        } catch (Throwable t) {
+            failure("tick", t);
+        }
     }
 
     @Override
     public void removed() {
-        delegate.removed();
+        try {
+            delegate.removed();
+        } catch (Throwable t) {
+            failure("removed", t);
+        }
     }
 
     @Override
     public void renderBackground(PoseStack poseStack) {
-        delegate.renderBackground(poseStack);
+        try {
+            delegate.renderBackground(poseStack);
+        } catch (Throwable t) {
+            failure("renderBackground", t);
+        }
     }
 
     @Override
     public void renderBackground(PoseStack poseStack, int vOffset) {
-        delegate.renderBackground(poseStack, vOffset);
+        try {
+            delegate.renderBackground(poseStack, vOffset);
+        } catch (Throwable t) {
+            failure("renderBackground", t);
+        }
     }
 
     @Override
     public void renderDirtBackground(int vOffset) {
-        delegate.renderDirtBackground(vOffset);
+        try {
+            delegate.renderDirtBackground(vOffset);
+        } catch (Throwable t) {
+            failure("renderDirtBackground", t);
+        }
     }
 
     @Override
     public boolean isPauseScreen() {
-        return delegate.isPauseScreen();
+        try {
+            return delegate.isPauseScreen();
+        } catch (Throwable t) {
+            failure("isPauseScreen", t);
+            return false;
+        }
     }
 
     @Override
     public void resize(Minecraft minecraft, int width, int height) {
-        delegate.resize(minecraft, width, height);
+        try {
+            delegate.resize(minecraft, width, height);
+        } catch (Throwable t) {
+            failure("resize", t);
+        }
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return delegate.isMouseOver(mouseX, mouseY);
+        try {
+            return delegate.isMouseOver(mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("isMouseOver", t);
+            return false;
+        }
     }
 
     @Override
     public void onFilesDrop(List<Path> packs) {
-        delegate.onFilesDrop(packs);
+        try {
+            delegate.onFilesDrop(packs);
+        } catch (Throwable t) {
+            failure("onFilesDrop", t);
+        }
     }
 
     @Override
     public void afterMouseMove() {
-        delegate.afterMouseMove();
+        try {
+            delegate.afterMouseMove();
+        } catch (Throwable t) {
+            failure("afterMouseMove", t);
+        }
     }
 
     @Override
     public void afterMouseAction() {
-        delegate.afterMouseAction();
+        try {
+            delegate.afterMouseAction();
+        } catch (Throwable t) {
+            failure("afterMouseAction", t);
+        }
     }
 
     @Override
     public void afterKeyboardAction() {
-        delegate.afterKeyboardAction();
+        try {
+            delegate.afterKeyboardAction();
+        } catch (Throwable t) {
+            failure("afterKeyboardAction", t);
+        }
     }
 
     @Override
     public void handleDelayedNarration() {
-        delegate.handleDelayedNarration();
+        try {
+            delegate.handleDelayedNarration();
+        } catch (Throwable t) {
+            failure("handleDelayedNarration", t);
+        }
     }
 
     @Override
     public void narrationEnabled() {
-        delegate.narrationEnabled();
+        try {
+            delegate.narrationEnabled();
+        } catch (Throwable t) {
+            failure("narrationEnabled", t);
+        }
     }
 
     @Override
     public GuiEventListener getFocused() {
-        return delegate.getFocused();
+        try {
+            return delegate.getFocused();
+        } catch (Throwable t) {
+            failure("getFocused", t);
+            return null;
+        }
     }
 
     @Override
     public void setFocused(GuiEventListener focused) {
-        delegate.setFocused(focused);
+        try {
+            delegate.setFocused(focused);
+        } catch (Throwable t) {
+            failure("setFocused", t);
+        }
     }
 
     @Override
     public void blitOutlineBlack(int width, int height, BiConsumer<Integer, Integer> boxXYConsumer) {
-        delegate.blitOutlineBlack(width, height, boxXYConsumer);
+        try {
+            delegate.blitOutlineBlack(width, height, boxXYConsumer);
+        } catch (Throwable t) {
+            failure("blitOutlineBlack", t);
+        }
     }
 
     @Override
     public void blit(PoseStack poseStack, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight) {
-        delegate.blit(poseStack, x, y, uOffset, vOffset, uWidth, vHeight);
+        try {
+            delegate.blit(poseStack, x, y, uOffset, vOffset, uWidth, vHeight);
+        } catch (Throwable t) {
+            failure("blit", t);
+        }
     }
 
     @Override
     public int getBlitOffset() {
-        return delegate.getBlitOffset();
+        try {
+            return delegate.getBlitOffset();
+        } catch (Throwable t) {
+            failure("getBlitOffset", t);
+            return 0;
+        }
     }
 
     @Override
     public void setBlitOffset(int blitOffset) {
-        delegate.setBlitOffset(blitOffset);
+        try {
+            delegate.setBlitOffset(blitOffset);
+        } catch (Throwable t) {
+            failure("setBlitOffset", t);
+        }
     }
 
     @Override
     public Optional<GuiEventListener> getChildAt(double mouseX, double mouseY) {
-        return delegate.getChildAt(mouseX, mouseY);
+        try {
+            return delegate.getChildAt(mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("getChildAt", t);
+            return null;
+        }
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return delegate.mouseClicked(mouseX, mouseY, button);
+        try {
+            return delegate.mouseClicked(mouseX, mouseY, button);
+        } catch (Throwable t) {
+            failure("mouseClicked", t);
+            return false;
+        }
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return delegate.mouseReleased(mouseX, mouseY, button);
+        try {
+            return delegate.mouseReleased(mouseX, mouseY, button);
+        } catch (Throwable t) {
+            failure("mouseReleased", t);
+            return false;
+        }
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        return delegate.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        try {
+            return delegate.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        } catch (Throwable t) {
+            failure("mouseDragged", t);
+            return false;
+        }
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return delegate.mouseScrolled(mouseX, mouseY, delta);
+        try {
+            return delegate.mouseScrolled(mouseX, mouseY, delta);
+        } catch (Throwable t) {
+            failure("mouseScrolled", t);
+            return false;
+        }
     }
 
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        return delegate.keyReleased(keyCode, scanCode, modifiers);
+        try {
+            return delegate.keyReleased(keyCode, scanCode, modifiers);
+        } catch (Throwable t) {
+            failure("keyReleased", t);
+            return false;
+        }
     }
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        return delegate.charTyped(codePoint, modifiers);
+        try {
+            return delegate.charTyped(codePoint, modifiers);
+        } catch (Throwable t) {
+            failure("charTyped", t);
+            return false;
+        }
     }
 
     @Override
     public void setInitialFocus(GuiEventListener eventListener) {
-        delegate.setInitialFocus(eventListener);
+        try {
+            delegate.setInitialFocus(eventListener);
+        } catch (Throwable t) {
+            failure("setInitialFocus", t);
+        }
     }
 
     @Override
     public void magicalSpecialHackyFocus(GuiEventListener eventListener) {
-        delegate.magicalSpecialHackyFocus(eventListener);
+        try {
+            delegate.magicalSpecialHackyFocus(eventListener);
+        } catch (Throwable t) {
+            failure("magicalSpecialHackyFocus", t);
+        }
     }
 
     @Override
     public boolean changeFocus(boolean focus) {
-        return delegate.changeFocus(focus);
+        try {
+            return delegate.changeFocus(focus);
+        } catch (Throwable t) {
+            failure("changeFocus", t);
+            return false;
+        }
     }
 
     @Override
     public void mouseMoved(double mouseX, double mouseY) {
-        delegate.mouseMoved(mouseX, mouseY);
+        try {
+            delegate.mouseMoved(mouseX, mouseY);
+        } catch (Throwable t) {
+            failure("mouseMoved", t);
+        }
     }
 }
