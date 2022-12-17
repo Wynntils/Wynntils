@@ -35,6 +35,9 @@ public class WynntilsQuestBookFeature extends UserFeature {
     @Config
     public boolean replaceWynncraftQuestBook = true;
 
+    @Config
+    public boolean questBookShouldOpenWynntilsMenu = false;
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
@@ -56,13 +59,17 @@ public class WynntilsQuestBookFeature extends UserFeature {
         tryCancelQuestBookOpen(event);
     }
 
-    private static void tryCancelQuestBookOpen(Event event) {
+    private void tryCancelQuestBookOpen(Event event) {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemInHand != null
                 && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
-            McUtils.mc().setScreen(WynntilsQuestBookScreen.create());
+            McUtils.mc()
+                    .setScreen(
+                            questBookShouldOpenWynntilsMenu
+                                    ? WynntilsMenuScreen.create()
+                                    : WynntilsQuestBookScreen.create());
         }
     }
 }

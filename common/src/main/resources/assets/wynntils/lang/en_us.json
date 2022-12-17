@@ -691,6 +691,8 @@
   "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
   "feature.wynntils.wynntilsPauseScreen.name": "Wynntils Pause Screen",
   "feature.wynntils.wynntilsQuestBook.name": "Wynntils Quest Book",
+  "feature.wynntils.wynntilsQuestBook.questBookShouldOpenWynntilsMenu.description": "Should the Wynncraft quest book item open the Wynntils Menu instead of the quest book?",
+  "feature.wynntils.wynntilsQuestBook.questBookShouldOpenWynntilsMenu.name": "Quest Book Opens Wynntils Menu",
   "feature.wynntils.wynntilsQuestBook.replaceWynncraftQuestBook.description": "Should the Wynncraft quest book be replaced with the mod's custom one?",
   "feature.wynntils.wynntilsQuestBook.replaceWynncraftQuestBook.name": "Replace Wynncraft Quest Book",
   "function.wynntils.bps.description": "Player speed in blocks per second",
