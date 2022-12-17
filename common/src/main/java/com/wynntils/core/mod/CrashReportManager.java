@@ -16,12 +16,6 @@ public final class CrashReportManager extends Manager {
 
     public CrashReportManager() {
         super(List.of());
-        if (instance != null) {
-            // Save a local copy since we can't rely on being able to use the
-            // Managers class in case of a crash. Note especially that minecraft does a
-            // CrashReport.preload() early at game startup
-            instance = this;
-        }
     }
 
     public void registerCrashContext(String name, Supplier<String> handler) {
