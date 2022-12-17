@@ -1,9 +1,21 @@
+## [0.0.1-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.192...v0.0.1-alpha.193) (2022-12-17)
+
+
+### New Features
+
+* Add a config option for opening Wynntils Menu instead of Quest Book when using quest book item ([#865](https://github.com/Wynntils/Artemis/issues/865)) ([a9b0471](https://github.com/Wynntils/Artemis/commit/a9b0471fe766e67e90ad70b055c1e4f471e99c07))
+
 ## [0.0.1-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.191...v0.0.1-alpha.192) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Fix config option reset button ([#864](https://github.com/Wynntils/Artemis/issues/864)) ([220c593](https://github.com/Wynntils/Artemis/commit/220c593a761d99ddeceee448c226c6fd74438e05))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.192 [skip ci] ([f646003](https://github.com/Wynntils/Artemis/commit/f6460038a8128e2855e1d7426cc6d200af59cbb1))
 
 ## [0.0.1-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.190...v0.0.1-alpha.191) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.189 [skip ci] ([ca775b0](https://github.com/Wynntils/Artemis/commit/ca775b0ca41423ef5f5ccc60d983f351ed5248a8))
-
-## [0.0.1-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.187...v0.0.1-alpha.188) (2022-12-17)
-
-
-### New Features
-
-* Add ChatTabEditingScreen ([#861](https://github.com/Wynntils/Artemis/issues/861)) ([04cea02](https://github.com/Wynntils/Artemis/commit/04cea02e12b22f15dfd789b05dfd195fedaf5d5f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.188 [skip ci] ([7deed6e](https://github.com/Wynntils/Artemis/commit/7deed6ecdfc94d0616f749681062de99db3a2dbf))
 
