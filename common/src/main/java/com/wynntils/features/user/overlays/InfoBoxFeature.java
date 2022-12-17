@@ -48,6 +48,16 @@ public class InfoBoxFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox6Overlay = new InfoBoxOverlay(6);
 
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
+    private final Overlay infoBox7Overlay = new InfoBoxOverlay(
+            7,
+            "%x% %y% %z%",
+            new OverlayPosition(
+                    160, 20, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
+            HorizontalAlignment.Center,
+            VerticalAlignment.Middle,
+            0);
+
     public static class InfoBoxOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
@@ -75,6 +85,19 @@ public class InfoBoxFeature extends UserFeature {
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle);
             this.id = id;
+        }
+
+        protected InfoBoxOverlay(
+                int id,
+                String content,
+                OverlayPosition position,
+                HorizontalAlignment horizontalAlignment,
+                VerticalAlignment verticalAlignment,
+                float secondsPerRecalculation) {
+            super(position, new GuiScaledOverlaySize(120, 10), horizontalAlignment, verticalAlignment);
+            this.id = id;
+            this.content = content;
+            this.secondsPerRecalculation = secondsPerRecalculation;
         }
 
         @Override
