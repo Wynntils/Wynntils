@@ -1,9 +1,21 @@
+## [0.0.1-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.190...v0.0.1-alpha.191) (2022-12-17)
+
+
+### Bug Fixes
+
+* Update services.json hash ([c35cbd6](https://github.com/Wynntils/Artemis/commit/c35cbd66a64e88654a3b65b733b06e49182ede1a))
+
 ## [0.0.1-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.189...v0.0.1-alpha.190) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Create WynntilsScreenWrapper#instanceOf and use it ([#863](https://github.com/Wynntils/Artemis/issues/863)) ([b3d571a](https://github.com/Wynntils/Artemis/commit/b3d571a92e642382b42b65d20d49e2e68b833ddc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.190 [skip ci] ([eb1fa89](https://github.com/Wynntils/Artemis/commit/eb1fa89a966ed4fa7da9427562fe75124692e9d7))
 
 ## [0.0.1-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.188...v0.0.1-alpha.189) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.187 [skip ci] ([94d17c5](https://github.com/Wynntils/Artemis/commit/94d17c5357d03f035989847896da80aaa1fa801b))
-
-## [0.0.1-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.185...v0.0.1-alpha.186) (2022-12-17)
-
-
-### New Features
-
-* Add crash protection for Screens ([#859](https://github.com/Wynntils/Artemis/issues/859)) ([a34b68f](https://github.com/Wynntils/Artemis/commit/a34b68fe93113bf6da5961040fb8607599a9932c)), closes [#812](https://github.com/Wynntils/Artemis/issues/812) [#860](https://github.com/Wynntils/Artemis/issues/860)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.186 [skip ci] ([4c95b17](https://github.com/Wynntils/Artemis/commit/4c95b179a286c0c88a5ff235d12cb52e3093899f))
 
