@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
@@ -80,11 +81,10 @@ public final class OverlayManager extends Manager {
         boolean testMode = false;
         boolean shouldRender = true;
 
-        if (McUtils.mc().screen instanceof WynntilsScreenWrapper wrapper) {
-            if (wrapper.getDelegate() instanceof OverlayManagementScreen screen) {
-                testMode = screen.isTestMode();
-                shouldRender = false;
-            }
+        Optional<OverlayManagementScreen> screen = WynntilsScreenWrapper.instanceOf(OverlayManagementScreen.class);
+        if (screen.isPresent()) {
+            testMode = screen.get().isTestMode();
+            shouldRender = false;
         }
 
         List<Overlay> crashedOverlays = new LinkedList<>();
