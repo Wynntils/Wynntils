@@ -46,15 +46,23 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     private boolean firstSetup;
     private final ChatTab edited;
 
-    public ChatTabEditingScreen() {
+    private ChatTabEditingScreen() {
         this(null);
     }
 
-    public ChatTabEditingScreen(ChatTab tab) {
+    private ChatTabEditingScreen(ChatTab tab) {
         super(new TextComponent("Chat Tab Editing Screen"));
 
         this.edited = tab;
         this.firstSetup = true;
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new ChatTabEditingScreen());
+    }
+
+    public static Screen create(ChatTab chatTab) {
+        return WynntilsScreenWrapper.create(new ChatTabEditingScreen(chatTab));
     }
 
     @Override
