@@ -1,9 +1,21 @@
+## [0.0.1-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.188...v0.0.1-alpha.189) (2022-12-17)
+
+
+### Bug Fixes
+
+* Fix incompatibility with Fabric-Screen API and instanceof check ([#862](https://github.com/Wynntils/Artemis/issues/862)) ([0fe8ff0](https://github.com/Wynntils/Artemis/commit/0fe8ff04ff49b83add8f829aec5fe907a16ac040))
+
 ## [0.0.1-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.187...v0.0.1-alpha.188) (2022-12-17)
 
 
 ### New Features
 
 * Add ChatTabEditingScreen ([#861](https://github.com/Wynntils/Artemis/issues/861)) ([04cea02](https://github.com/Wynntils/Artemis/commit/04cea02e12b22f15dfd789b05dfd195fedaf5d5f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.188 [skip ci] ([7deed6e](https://github.com/Wynntils/Artemis/commit/7deed6ecdfc94d0616f749681062de99db3a2dbf))
 
 ## [0.0.1-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.186...v0.0.1-alpha.187) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.185 [skip ci] ([20ac0a1](https://github.com/Wynntils/Artemis/commit/20ac0a1ca39dbb0ad341cd9a4dfa705d6d2f96a6))
-
-## [0.0.1-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.183...v0.0.1-alpha.184) (2022-12-17)
-
-
-### Bug Fixes
-
-* Fix issues with territory defense filter + feat: Right click cycles back ([#860](https://github.com/Wynntils/Artemis/issues/860)) ([bc6a208](https://github.com/Wynntils/Artemis/commit/bc6a208e412d886830b542de45436044509764fa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.184 [skip ci] ([61bda39](https://github.com/Wynntils/Artemis/commit/61bda394a8b36153dd6b4dd420b65b419f6ae991))
 
