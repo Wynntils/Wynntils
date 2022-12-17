@@ -177,7 +177,8 @@ public class GuildMapScreen extends AbstractMapScreen {
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
                 TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
-                if (routePoi != null) {
+                // Only render connection if the other poi is also in the filtered pois
+                if (routePoi != null && filteredPois.contains(routePoi)) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
                     float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
 
