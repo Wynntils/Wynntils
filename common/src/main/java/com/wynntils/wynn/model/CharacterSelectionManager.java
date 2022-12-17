@@ -17,6 +17,7 @@ import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -50,13 +51,12 @@ public final class CharacterSelectionManager extends Manager {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent event) {
-        if (event.getScreen() instanceof WynntilsScreenWrapper wynntilsScreenWrapper) {
-            if (wynntilsScreenWrapper.getDelegate() instanceof CharacterSelectorScreen characterSelectorScreen) {
-                currentScreen = characterSelectorScreen;
+        Optional<CharacterSelectorScreen> screen = WynntilsScreenWrapper.instanceOf(CharacterSelectorScreen.class);
+        if (screen.isPresent()) {
+            currentScreen = screen.get();
 
-                currentScreen.setClassInfoList(classInfoList);
-                currentScreen.setFirstNewCharacterSlot(firstNewCharacterSlot);
-            }
+            currentScreen.setClassInfoList(classInfoList);
+            currentScreen.setFirstNewCharacterSlot(firstNewCharacterSlot);
         }
     }
 
