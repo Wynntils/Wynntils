@@ -116,8 +116,8 @@ public class ConfigButton extends AbstractButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return configOptionElement.mouseClicked(mouseX, mouseY, button)
-                && resetButton.mouseClicked(mouseX, mouseY, button);
+        return resetButton.mouseClicked(mouseX, mouseY, button)
+                || configOptionElement.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
