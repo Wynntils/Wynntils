@@ -43,6 +43,7 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
