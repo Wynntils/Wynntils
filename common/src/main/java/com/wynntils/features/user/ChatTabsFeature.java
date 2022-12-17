@@ -14,6 +14,7 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
+import com.wynntils.gui.widgets.ChatTabAddButton;
 import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
@@ -25,7 +26,7 @@ import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.lang.reflect.Type;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -36,17 +37,17 @@ public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
 
     @Config(visible = false)
-    public List<ChatTab> chatTabs = Arrays.asList(
+    public List<ChatTab> chatTabs = new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
             new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
             new ChatTab("Guild", false, "/g ", Sets.newHashSet(RecipientType.GUILD), null),
             new ChatTab("Party", false, "/p ", Sets.newHashSet(RecipientType.PARTY), null),
             new ChatTab("Private", false, "/r ", Sets.newHashSet(RecipientType.PRIVATE), null),
-            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null));
+            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null)));
 
     @TypeOverride
-    private final Type chatTabsType = new TypeToken<List<ChatTab>>() {}.getType();
+    private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
 
     @Override
     public List<Model> getModelDependencies() {
@@ -108,6 +109,9 @@ public class ChatTabsFeature extends UserFeature {
     public void onScreenInit(ScreenInitEvent event) {
         if (event.getScreen() instanceof ChatScreen chatScreen) {
             int xOffset = 0;
+
+            chatScreen.addRenderableWidget(new ChatTabAddButton(xOffset + 2, chatScreen.height - 35, 12, 13));
+            xOffset += 15;
 
             for (ChatTab chatTab : chatTabs) {
                 chatScreen.addRenderableWidget(new ChatTabButton(xOffset + 2, chatScreen.height - 35, 40, 13, chatTab));

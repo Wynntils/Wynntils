@@ -41,6 +41,7 @@ public class ChatTab {
         }
 
         if (customRegexString != null
+                && !customRegexString.isBlank()
                 && !getCustomRegex().matcher(event.getOriginalCodedMessage()).matches()) {
             return false;
         }
@@ -76,6 +77,14 @@ public class ChatTab {
         return customRegex == null && customRegexString != null
                 ? customRegex = Pattern.compile(customRegexString, Pattern.DOTALL)
                 : customRegex;
+    }
+
+    public String getCustomRegexString() {
+        return customRegexString;
+    }
+
+    public Set<RecipientType> getFilteredTypes() {
+        return filteredTypes;
     }
 
     @Override
