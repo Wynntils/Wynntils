@@ -12,6 +12,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -59,7 +60,7 @@ public class ChatTabButton extends AbstractButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Models.ChatTab.setFocusedTab(tab);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            McUtils.mc().setScreen(new ChatTabEditingScreen(tab));
+            McUtils.mc().setScreen(WynntilsScreenWrapper.create(new ChatTabEditingScreen(tab)));
         }
         return true;
     }

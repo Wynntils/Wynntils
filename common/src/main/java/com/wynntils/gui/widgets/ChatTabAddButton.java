@@ -10,6 +10,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -42,7 +43,7 @@ public class ChatTabAddButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(new ChatTabEditingScreen());
+        McUtils.mc().setScreen(WynntilsScreenWrapper.create(new ChatTabEditingScreen()));
     }
 
     @Override
