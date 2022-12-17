@@ -1,9 +1,21 @@
+## [0.0.1-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.177...v0.0.1-alpha.178) (2022-12-17)
+
+
+### Bug Fixes
+
+* Patches Up SpeedBoostRedirector ([#856](https://github.com/Wynntils/Artemis/issues/856)) ([dbc3e26](https://github.com/Wynntils/Artemis/commit/dbc3e26a11a2d31fe2bed86243e0519d9fbd96d3))
+
 ## [0.0.1-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.176...v0.0.1-alpha.177) (2022-12-16)
 
 
 ### Bug Fixes
 
 * Remove minimap overlay coordinates and add it back as an info box ([#855](https://github.com/Wynntils/Artemis/issues/855)) ([eafebd6](https://github.com/Wynntils/Artemis/commit/eafebd6cea48ded08d384b4ed096da779156634d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.177 [skip ci] ([94c1f51](https://github.com/Wynntils/Artemis/commit/94c1f51a2a8e6d73391460adaba132aa0346ac0e))
 
 ## [0.0.1-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.175...v0.0.1-alpha.176) (2022-12-16)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.174 [skip ci] ([15cd997](https://github.com/Wynntils/Artemis/commit/15cd9976f058c0579da32492045d9e2c18e857a8))
-
-## [0.0.1-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.172...v0.0.1-alpha.173) (2022-12-16)
-
-
-### Bug Fixes
-
-* Bug fix for multi-line objective patterns ([#847](https://github.com/Wynntils/Artemis/issues/847)) ([694034b](https://github.com/Wynntils/Artemis/commit/694034bfae05be1ee4a92ea0463511ddf17eb9c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.173 [skip ci] ([657ce3f](https://github.com/Wynntils/Artemis/commit/657ce3f52e75d3e12812d1e4ef546c8057da3bad))
 
