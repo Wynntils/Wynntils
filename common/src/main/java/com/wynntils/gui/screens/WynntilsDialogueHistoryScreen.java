@@ -55,7 +55,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new WynntilsDialogueHistoryScreen());
+        return WynntilsScreenWrapper.create(new WynntilsDialogueHistoryScreen());
     }
 
     @Override

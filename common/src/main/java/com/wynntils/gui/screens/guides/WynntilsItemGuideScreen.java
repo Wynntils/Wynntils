@@ -12,7 +12,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.ScreenWrapper;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
 import com.wynntils.gui.screens.guides.widgets.GuideGearItemStack;
@@ -43,7 +43,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new WynntilsItemGuideScreen());
+        return WynntilsScreenWrapper.create(new WynntilsItemGuideScreen());
     }
 
     @Override

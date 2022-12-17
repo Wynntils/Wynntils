@@ -11,7 +11,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.ScreenWrapper;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
 import com.wynntils.gui.screens.guides.widgets.GuidePowderItemStack;
@@ -43,7 +43,7 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new WynntilsPowderGuideScreen());
+        return WynntilsScreenWrapper.create(new WynntilsPowderGuideScreen());
     }
 
     @Override

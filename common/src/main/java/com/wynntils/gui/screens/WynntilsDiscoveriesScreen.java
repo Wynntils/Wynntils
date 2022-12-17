@@ -60,7 +60,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new WynntilsDiscoveriesScreen());
+        return WynntilsScreenWrapper.create(new WynntilsDiscoveriesScreen());
     }
 
     @SubscribeEvent

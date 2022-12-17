@@ -48,7 +48,7 @@ public class GearViewerScreen extends Screen {
     }
 
     public static Screen create(Player player) {
-        return ScreenWrapper.create(new GearViewerScreen(player));
+        return WynntilsScreenWrapper.create(new GearViewerScreen(player));
     }
 
     @Override

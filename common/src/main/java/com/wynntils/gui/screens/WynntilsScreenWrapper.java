@@ -23,17 +23,17 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
-public class ScreenWrapper extends Screen {
+public class WynntilsScreenWrapper extends Screen {
     private final Screen delegate;
 
-    private ScreenWrapper(Component component, Screen delegate) {
+    private WynntilsScreenWrapper(Component component, Screen delegate) {
         super(component);
 
         this.delegate = delegate;
     }
 
     public static Screen create(Screen instance) {
-        return new ScreenWrapper(instance.getTitle(), instance);
+        return new WynntilsScreenWrapper(instance.getTitle(), instance);
     }
 
     public Screen getDelegate() {

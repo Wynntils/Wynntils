@@ -36,7 +36,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new WynntilsGuidesListScreen());
+        return WynntilsScreenWrapper.create(new WynntilsGuidesListScreen());
     }
 
     @Override

@@ -6,7 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.Manager;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.gui.screens.ScreenWrapper;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -50,8 +50,8 @@ public final class CharacterSelectionManager extends Manager {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent event) {
-        if (event.getScreen() instanceof ScreenWrapper screenWrapper) {
-            if (screenWrapper.getDelegate() instanceof CharacterSelectorScreen characterSelectorScreen) {
+        if (event.getScreen() instanceof WynntilsScreenWrapper wynntilsScreenWrapper) {
+            if (wynntilsScreenWrapper.getDelegate() instanceof CharacterSelectorScreen characterSelectorScreen) {
                 currentScreen = characterSelectorScreen;
 
                 currentScreen.setClassInfoList(classInfoList);

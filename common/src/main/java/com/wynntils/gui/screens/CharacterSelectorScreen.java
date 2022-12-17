@@ -55,7 +55,7 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     public static Screen create() {
-        return ScreenWrapper.create(new CharacterSelectorScreen());
+        return WynntilsScreenWrapper.create(new CharacterSelectorScreen());
     }
 
     @Override
