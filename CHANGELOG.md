@@ -1,9 +1,21 @@
+## [0.0.1-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.181...v0.0.1-alpha.182) (2022-12-17)
+
+
+### Bug Fixes
+
+* Hash check local update file in UpdateManager (and also fix returning early on error) ([#851](https://github.com/Wynntils/Artemis/issues/851)) ([9264290](https://github.com/Wynntils/Artemis/commit/9264290740270e39dada217868d20fd919d98ddc))
+
 ## [0.0.1-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.180...v0.0.1-alpha.181) (2022-12-17)
 
 
 ### New Features
 
 * WynncraftButtonFeature now has a config option to connect to lobby instead of game server ([#854](https://github.com/Wynntils/Artemis/issues/854)) ([f1b4218](https://github.com/Wynntils/Artemis/commit/f1b42188250ba3db4e89104564adebceda8c8068))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.181 [skip ci] ([c12b77d](https://github.com/Wynntils/Artemis/commit/c12b77d3997ce3f87a09076a0419f339ea2936ce))
 
 ## [0.0.1-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.179...v0.0.1-alpha.180) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.178 [skip ci] ([103d319](https://github.com/Wynntils/Artemis/commit/103d319ee4a1e9537bf64f838ee836b8184f0b84))
-
-## [0.0.1-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.176...v0.0.1-alpha.177) (2022-12-16)
-
-
-### Bug Fixes
-
-* Remove minimap overlay coordinates and add it back as an info box ([#855](https://github.com/Wynntils/Artemis/issues/855)) ([eafebd6](https://github.com/Wynntils/Artemis/commit/eafebd6cea48ded08d384b4ed096da779156634d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.177 [skip ci] ([94c1f51](https://github.com/Wynntils/Artemis/commit/94c1f51a2a8e6d73391460adaba132aa0346ac0e))
 
