@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -51,11 +52,15 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     private boolean showFoundTerritory = true;
     private boolean showUndiscoveredTerritory = false;
 
-    public WynntilsDiscoveriesScreen() {
+    private WynntilsDiscoveriesScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsDiscoveriesScreen());
     }
 
     @SubscribeEvent
@@ -193,7 +198,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,

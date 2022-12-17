@@ -33,7 +33,7 @@ public class QuestsPageButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(new WynntilsQuestBookScreen());
+        McUtils.mc().setScreen(WynntilsQuestBookScreen.create());
     }
 
     @Override

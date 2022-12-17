@@ -114,7 +114,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         if (!overlay.isEnabled()) return false;
 
-        McUtils.mc().setScreen(new OverlayManagementScreen(this.overlay));
+        McUtils.mc().setScreen(OverlayManagementScreen.create(this.overlay));
         return true;
     }
 }

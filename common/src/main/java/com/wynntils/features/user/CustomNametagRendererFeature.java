@@ -10,6 +10,7 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.gui.screens.GearViewerScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.utils.McUtils;
@@ -46,8 +47,8 @@ public class CustomNametagRendererFeature extends UserFeature {
         }
 
         // If we are viewing this player's gears, do not show plus info
-        if (McUtils.mc().screen instanceof GearViewerScreen gearViewerScreen
-                && gearViewerScreen.getPlayer() == event.getEntity()) {
+        Optional<GearViewerScreen> screen = WynntilsScreenWrapper.instanceOf(GearViewerScreen.class);
+        if (screen.isPresent() && screen.get().getPlayer() == event.getEntity()) {
             return;
         }
 

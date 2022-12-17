@@ -26,6 +26,7 @@ public class QuestContainerQueries {
 
     private List<QuestInfo> newQuests;
     private List<QuestInfo> newMiniQuests;
+    private QuestInfo trackedQuest;
 
     /**
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
@@ -71,12 +72,15 @@ public class QuestContainerQueries {
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
+                if (questInfo.isTracked()) {
+                    trackedQuest = questInfo;
+                }
             }
         }
 
         if (page == 4) {
             // Last page finished
-            Managers.Quest.setQuests(newQuests);
+            Managers.Quest.updateQuestsFromQuery(newQuests, trackedQuest);
         }
     }
 
@@ -123,13 +127,16 @@ public class QuestContainerQueries {
                 QuestInfo questInfo = QuestInfoParser.parseItem(item, page, true);
                 if (questInfo == null) continue;
 
+                if (questInfo.isTracked()) {
+                    trackedQuest = questInfo;
+                }
                 newMiniQuests.add(questInfo);
             }
         }
 
         if (page == 3) {
             // Last page finished
-            Managers.Quest.setMiniQuests(newMiniQuests);
+            Managers.Quest.updateMiniQuestsFromQuery(newMiniQuests, trackedQuest);
         }
     }
 

@@ -56,9 +56,7 @@ public class CustomPoi extends StaticIconPoi {
     }
 
     public Visibility getVisibility() {
-        // Visibility is null for configs that have the old format (minZoom float)
-        // This null check is here to provide some kind of backwards compatibility and prevent crashes
-        return visibility == null ? Visibility.DEFAULT : visibility;
+        return visibility;
     }
 
     @Override

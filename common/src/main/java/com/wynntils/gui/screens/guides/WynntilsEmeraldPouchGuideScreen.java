@@ -13,6 +13,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.guides.widgets.GuideEmeraldPouchItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -24,6 +25,7 @@ import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -37,8 +39,12 @@ public class WynntilsEmeraldPouchGuideScreen
 
     private List<EmeraldPouchItemStack> parsedItemCache;
 
-    public WynntilsEmeraldPouchGuideScreen() {
+    private WynntilsEmeraldPouchGuideScreen() {
         super(new TranslatableComponent("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsEmeraldPouchGuideScreen());
     }
 
     @Override
@@ -66,7 +72,7 @@ public class WynntilsEmeraldPouchGuideScreen
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsGuidesListScreen()));
+                WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
