@@ -1,9 +1,21 @@
+## [0.0.1-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.187...v0.0.1-alpha.188) (2022-12-17)
+
+
+### New Features
+
+* Add ChatTabEditingScreen ([#861](https://github.com/Wynntils/Artemis/issues/861)) ([04cea02](https://github.com/Wynntils/Artemis/commit/04cea02e12b22f15dfd789b05dfd195fedaf5d5f))
+
 ## [0.0.1-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.186...v0.0.1-alpha.187) (2022-12-17)
 
 
 ### New Features
 
 * Add config upfixers ([#834](https://github.com/Wynntils/Artemis/issues/834)) ([cdc44b3](https://github.com/Wynntils/Artemis/commit/cdc44b31139a87f8b05a58bb56f75c62a83b1703))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.187 [skip ci] ([94d17c5](https://github.com/Wynntils/Artemis/commit/94d17c5357d03f035989847896da80aaa1fa801b))
 
 ## [0.0.1-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.185...v0.0.1-alpha.186) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.184 [skip ci] ([61bda39](https://github.com/Wynntils/Artemis/commit/61bda394a8b36153dd6b4dd420b65b419f6ae991))
-
-## [0.0.1-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.182...v0.0.1-alpha.183) (2022-12-17)
-
-
-### New Features
-
-* Territory defense level sorting ([#812](https://github.com/Wynntils/Artemis/issues/812)) ([39e0505](https://github.com/Wynntils/Artemis/commit/39e0505ce83da62cf2eb3f6452d0ab6a62fc1878))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.183 [skip ci] ([6c4a4eb](https://github.com/Wynntils/Artemis/commit/6c4a4eb8d2034136a0e503ab23acfffc8e2a7eef))
 
