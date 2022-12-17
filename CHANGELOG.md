@@ -1,9 +1,21 @@
+## [0.0.1-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.191...v0.0.1-alpha.192) (2022-12-17)
+
+
+### Bug Fixes
+
+* Fix config option reset button ([#864](https://github.com/Wynntils/Artemis/issues/864)) ([220c593](https://github.com/Wynntils/Artemis/commit/220c593a761d99ddeceee448c226c6fd74438e05))
+
 ## [0.0.1-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.190...v0.0.1-alpha.191) (2022-12-17)
 
 
 ### Bug Fixes
 
 * Update services.json hash ([c35cbd6](https://github.com/Wynntils/Artemis/commit/c35cbd66a64e88654a3b65b733b06e49182ede1a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.191 [skip ci] ([f4045a8](https://github.com/Wynntils/Artemis/commit/f4045a8aea31de4583dfe59e2f284e67a019720b))
 
 ## [0.0.1-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.189...v0.0.1-alpha.190) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.188 [skip ci] ([7deed6e](https://github.com/Wynntils/Artemis/commit/7deed6ecdfc94d0616f749681062de99db3a2dbf))
-
-## [0.0.1-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.186...v0.0.1-alpha.187) (2022-12-17)
-
-
-### New Features
-
-* Add config upfixers ([#834](https://github.com/Wynntils/Artemis/issues/834)) ([cdc44b3](https://github.com/Wynntils/Artemis/commit/cdc44b31139a87f8b05a58bb56f75c62a83b1703))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.187 [skip ci] ([94d17c5](https://github.com/Wynntils/Artemis/commit/94d17c5357d03f035989847896da80aaa1fa801b))
 
