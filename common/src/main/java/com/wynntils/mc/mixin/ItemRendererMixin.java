@@ -23,7 +23,7 @@ public class ItemRendererMixin {
             method = "render",
             at =
                     @At(
-                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
                             shift = At.Shift.BEFORE,
                             value = "INVOKE"))
     public void onRenderItem(
