@@ -68,16 +68,15 @@ public class OverlayManagementScreen extends Screen {
             Component.literal("Shift-Middle click on an overlay to reset it to it's original state.")
                     .withStyle(ChatFormatting.RED));
 
-    private static final List<Component> CLOSE_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to stop editing and reset changes."));
+    private static final Component CLOSE_TOOLTIP_LINES =
+            Component.literal("Click here to stop editing and reset changes.");
 
-    private static final List<Component> TEST_TOOLTIP_LINES = List.of(
-            Component.literal("Click here to toggle test mode."),
-            Component.literal("In test mode, you can see how your overlay setup would look in-game,"),
-            Component.literal("using preview render mode."));
+    private static final Component TEST_TOOLTIP_LINES = Component.literal("Click here to toggle test mode.")
+            .append(Component.literal("In test mode, you can see how your overlay setup would look in-game,"))
+            .append(Component.literal("using preview render mode."));
 
-    private static final List<Component> APPLY_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to apply changes to current overlay."));
+    private static final Component APPLY_TOOLTIP_LINES =
+            Component.literal("Click here to apply changes to current overlay.");
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
