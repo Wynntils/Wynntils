@@ -33,13 +33,7 @@ public class ChatTabButton extends AbstractButton {
         if (tab == null) return;
 
         RenderUtils.drawRect(
-                poseStack,
-                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
-                getX(),
-                getY(),
-                0,
-                width,
-                height);
+                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         CustomColor color = Models.ChatTab.getFocusedTab() == tab
                 ? CommonColors.GREEN
