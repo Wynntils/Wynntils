@@ -45,20 +45,12 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
         if (parsedItemCache == null) {
             parsedItemCache = PowderGenerator.getAllPowderProfiles().stream()
                     .map(PowderItemStack::new)
                     .toList();
         }
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
 

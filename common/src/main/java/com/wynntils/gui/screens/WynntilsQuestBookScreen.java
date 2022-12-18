@@ -61,7 +61,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
@@ -70,8 +69,6 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
      * */
     @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         Managers.Quest.rescanQuestBook(true, true);
 
         super.init();

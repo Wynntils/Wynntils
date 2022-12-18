@@ -80,8 +80,6 @@ public abstract class AbstractMapScreen extends Screen {
 
     @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(
@@ -118,12 +116,6 @@ public abstract class AbstractMapScreen extends Screen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
-    }
-
-    @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
     }
 
     @Override

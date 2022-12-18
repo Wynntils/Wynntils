@@ -17,7 +17,6 @@ import com.wynntils.gui.widgets.GuidesButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -40,15 +39,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         super.init();
 
         this.addRenderableWidget(new BackButton(
