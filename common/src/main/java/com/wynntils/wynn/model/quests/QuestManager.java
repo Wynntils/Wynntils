@@ -108,7 +108,7 @@ public final class QuestManager extends Manager {
     }
 
     public void stopTracking() {
-        McUtils.player().chat("/tracking");
+        McUtils.sendCommand("tracking");
     }
 
     public void openQuestOnWiki(QuestInfo questInfo) {

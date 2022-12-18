@@ -71,4 +71,8 @@ public final class McUtils {
     public static void sendPacket(Packet<?> packet) {
         mc().getConnection().send(packet);
     }
+
+    public static void sendCommand(String command) {
+        player().chat("/" + command);
+    }
 }
