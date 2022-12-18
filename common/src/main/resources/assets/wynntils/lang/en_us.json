@@ -73,7 +73,7 @@
   "feature.wynntils.combatXpGainMessage.secondDelay.description": "How long (in seconds) should a combat XP gain message remain on the screen?",
   "feature.wynntils.combatXpGainMessage.secondDelay.name": "Combat XP Gain Message Expiry Time",
   "feature.wynntils.commandAliases.name": "Command Aliases",
-  "feature.wynntils.commands.name": "Custom Wynntils Commands",
+  "feature.wynntils.commands.name": "Custom Wynntils Command",
   "feature.wynntils.connectionProgress.name": "Connection Progress",
   "feature.wynntils.containerSearch.filterInBank.description": "Should there be a search widget in the bank?",
   "feature.wynntils.containerSearch.filterInBank.name": "Search Bar in Bank",
