@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.item;
 
 import com.wynntils.core.managers.Manager;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.wynn.item.WynnItemStack;
 import java.util.List;
@@ -43,8 +44,15 @@ public final class ItemStackTransformManager extends Manager {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        ItemStack stack = event.getItem();
+        event.setItem(transformItem(event.getItem()));
+    }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        event.getItems().replaceAll(this::transformItem);
+    }
+
+    private ItemStack transformItem(ItemStack stack) {
         // itemstack transformers
         for (ItemStackTransformer t : transformers) {
             if (t.test(stack)) {
@@ -65,7 +73,8 @@ public final class ItemStackTransformManager extends Manager {
         if (stack instanceof WynnItemStack wynnItemStack) {
             wynnItemStack.init();
         }
-        event.setItem(stack);
+
+        return stack;
     }
 
     public static class ItemStackTransformer {
