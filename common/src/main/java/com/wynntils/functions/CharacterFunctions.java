@@ -335,148 +335,148 @@ public class CharacterFunctions {
             return Managers.Character.getCharacterInfo().getXpProgress() * 100.0f;
         }
     }
-    
+
     public static class WoodcuttingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("woodcutting"); 
+        public List<String> getAliases() {
+            return List.of("woodcutting");
         }
     }
-    
+
     public static class MiningLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.MINING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("mining"); 
+        public List<String> getAliases() {
+            return List.of("mining");
         }
     }
-    
+
     public static class FishingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.FISHING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("fishing"); 
+        public List<String> getAliases() {
+            return List.of("fishing");
         }
     }
-    
+
     public static class FarmingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.FARMING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("farming"); 
+        public List<String> getAliases() {
+            return List.of("farming");
         }
     }
-    
+
     public static class AlchemismLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("alchemism"); 
+        public List<String> getAliases() {
+            return List.of("alchemism");
         }
     }
-    
+
     public static class ArmouringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.ARMOURING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("armouring"); 
+        public List<String> getAliases() {
+            return List.of("armouring");
         }
     }
-    
+
     public static class CookingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.COOKING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("cooking"); 
+        public List<String> getAliases() {
+            return List.of("cooking");
         }
     }
-    
+
     public static class JewelingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.JEWELING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("jeweling"); 
+        public List<String> getAliases() {
+            return List.of("jeweling");
         }
     }
-    
+
     public static class ScribingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.SCRIBING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("scribing"); 
+        public List<String> getAliases() {
+            return List.of("scribing");
         }
     }
-    
+
     public static class TailoringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.TAILORING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("tailoring"); 
+        public List<String> getAliases() {
+            return List.of("tailoring");
         }
     }
-    
+
     public static class WeaponsmithingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("weaponsmithing"); 
+        public List<String> getAliases() {
+            return List.of("weaponsmithing");
         }
     }
-    
+
     public static class WoodworkingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
         }
-        
+
         @Override
-        public List<String> getAliases() { 
-            return List.of("woodworking"); 
+        public List<String> getAliases() {
+            return List.of("woodworking");
         }
     }
 }
