@@ -144,7 +144,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
+        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
             textboxScreen.setFocusedTextInput(this);
