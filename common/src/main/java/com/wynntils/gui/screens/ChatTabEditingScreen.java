@@ -178,7 +178,8 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                                     saveChatTab();
                                     this.onClose();
                                 })
-                        .bounds(this.width / 2 - 200, this.height - 40, 100, 20)
+                        .pos(this.width / 2 - 200, this.height - 40)
+                        .size(100, 20)
                         .build());
 
         this.addRenderableWidget(
@@ -189,12 +190,14 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                                     deleteChatTab();
                                     this.onClose();
                                 })
-                        .bounds(this.width / 2 - 50, this.height - 40, 100, 20)
+                        .pos(this.width / 2 - 50, this.height - 40)
+                        .size(100, 20)
                         .build());
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
-                .bounds(this.width / 2 + 100, this.height - 40, 100, 20)
+                .pos(this.width / 2 + 100, this.height - 40)
+                .size(100, 20)
                 .build());
         // endregion
 
