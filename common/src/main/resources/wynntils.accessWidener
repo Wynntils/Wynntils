@@ -1,7 +1,5 @@
 accessWidener v2 named
 
-accessible class net/minecraft/client/OptionInstance$SliderableValueSet
-accessible class net/minecraft/client/OptionInstance$ValueSet
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType

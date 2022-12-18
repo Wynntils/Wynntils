@@ -75,6 +75,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.event.UpdateLightTextureEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.mc.objects.ChatType;
@@ -261,6 +262,10 @@ public final class EventFactory {
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
         return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
+    public static UpdateLightTextureEvent onUpdateLightTexture(float oldGamma) {
+        return post(new UpdateLightTextureEvent(oldGamma));
     }
 
     // endregion
