@@ -65,7 +65,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleAuthenticationResponse(HSPacketAuthenticationResponse packet) {
-        Component userComponent = TextComponent.EMPTY;
+        Component userComponent = Component.empty();
 
         switch (packet.getResponse()) {
             case SUCCESS -> {

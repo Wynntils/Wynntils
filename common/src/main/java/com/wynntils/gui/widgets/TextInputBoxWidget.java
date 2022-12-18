@@ -57,7 +57,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen,
             TextInputBoxWidget oldWidget) {
-        this(x, y, width, height, TextComponent.EMPTY, onUpdateConsumer, textboxScreen);
+        this(x, y, width, height, Component.empty(), onUpdateConsumer, textboxScreen);
 
         if (oldWidget != null) {
             this.textBoxInput = oldWidget.textBoxInput;

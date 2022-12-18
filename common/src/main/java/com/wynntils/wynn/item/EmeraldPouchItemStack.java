@@ -85,7 +85,7 @@ public class EmeraldPouchItemStack extends WynnItemStack {
 
         List<Component> itemLore = new ArrayList<>();
 
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
         itemLore.add(Component.literal("Emerald Pouches allows the wearer to easily ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("store ").withStyle(ChatFormatting.AQUA))
@@ -93,7 +93,7 @@ public class EmeraldPouchItemStack extends WynnItemStack {
                 .append(Component.literal("convert ").withStyle(ChatFormatting.AQUA))
                 .append(Component.literal("picked emeralds without spending extra inventory slots.")
                         .withStyle(ChatFormatting.GRAY)));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
         itemLore.add(Component.literal(" - " + rows + " Rows ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("(" + totalString + " Total)"))

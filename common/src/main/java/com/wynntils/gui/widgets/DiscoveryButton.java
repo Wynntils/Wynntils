@@ -112,7 +112,7 @@ public class DiscoveryButton extends AbstractButton {
                     .toList();
 
             if (!unmet.isEmpty()) {
-                lines.add(TextComponent.EMPTY);
+                lines.add(Component.empty());
                 lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.requirements")
                         .withStyle(ChatFormatting.DARK_AQUA));
                 unmet.forEach(requirement -> lines.add(Component.literal(" - ")
@@ -123,7 +123,7 @@ public class DiscoveryButton extends AbstractButton {
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
                 || Managers.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
-            lines.add(TextComponent.EMPTY);
+            lines.add(Component.empty());
             lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));

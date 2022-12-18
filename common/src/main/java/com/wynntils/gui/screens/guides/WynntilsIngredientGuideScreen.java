@@ -140,7 +140,7 @@ public class WynntilsIngredientGuideScreen
             IngredientItemStack itemStack = guideGearItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
-            tooltipLines.add(TextComponent.EMPTY);
+            tooltipLines.add(Component.empty());
 
             String unformattedName = itemStack.getIngredientProfile().getDisplayName();
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {

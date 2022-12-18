@@ -93,7 +93,7 @@ public class PowderItemStack extends WynnItemStack {
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(tierStringBuilder))
                 .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderProfile.min()
                 + "-" + powderProfile.max() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
@@ -101,7 +101,7 @@ public class PowderItemStack extends WynnItemStack {
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
                 + powderProfile.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral" + ChatFormatting.GRAY
                 + " to " + element.getLightColor() + element.getSymbol() + " " + name));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
                 + powderProfile.addedDefence() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
@@ -110,13 +110,13 @@ public class PowderItemStack extends WynnItemStack {
                 + powderProfile.removedDefence() + " " + opposingElement.getLightColor() + opposingElement.getSymbol()
                 + " " + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
                 + ChatFormatting.GRAY + "Defence"));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
         itemLore.add(Component.literal(
                         "Add this powder to your items by visiting a Powder Master or use it as an ingredient when crafting.")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         if (tier > 3) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
             itemLore.add(Component.literal(
                             "Adding 2 powders of tier 4-6 at the powder master will unlock a special attack/effect.")
                     .withStyle(ChatFormatting.DARK_GRAY));

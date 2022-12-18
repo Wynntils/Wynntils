@@ -34,7 +34,7 @@ public class GearViewerScreen extends Screen {
     private final List<ItemStack> armorItems;
 
     private GearViewerScreen(Player player) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.player = player;
         this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
 

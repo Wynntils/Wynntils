@@ -92,7 +92,7 @@ public class DiscoveryInfo {
                             .append(Component.literal(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         }
 
-        displayLore.add(TextComponent.EMPTY);
+        displayLore.add(Component.empty());
 
         if (discovered) {
             displayLore.add(Component.literal("Discovered").withStyle(ChatFormatting.GREEN));
@@ -101,7 +101,7 @@ public class DiscoveryInfo {
         }
 
         if (!description.isEmpty()) {
-            displayLore.add(TextComponent.EMPTY);
+            displayLore.add(Component.empty());
             displayLore.addAll(ComponentUtils.wrapTooltips(
                     List.of(Component.literal(description).withStyle(ChatFormatting.GRAY)), 300));
         }

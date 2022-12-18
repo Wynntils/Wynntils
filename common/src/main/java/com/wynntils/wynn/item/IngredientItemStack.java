@@ -85,7 +85,7 @@ public class IngredientItemStack extends WynnItemStack {
         List<Component> itemLore = new ArrayList<>();
 
         itemLore.add(Component.literal("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.empty());
 
         Map<String, IngredientIdentificationContainer> statuses = ingredientProfile.getStatuses();
 
@@ -129,21 +129,21 @@ public class IngredientItemStack extends WynnItemStack {
         }
 
         if (statuses.size() > 0) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         IngredientModifiers ingredientModifiers = ingredientProfile.getIngredientModifiers();
         itemLore.addAll(ingredientModifiers.getModifierLoreLines());
 
         if (ingredientModifiers.anyExists()) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         IngredientItemModifiers itemModifiers = ingredientProfile.getItemModifiers();
         itemLore.addAll(itemModifiers.getItemModifierLoreLines());
 
         if (itemModifiers.anyExists()) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         if (ingredientProfile.isUntradeable())
