@@ -281,7 +281,7 @@ public final class ComponentUtils {
          * This method handles the fact that the style likely has changed between 2 components
          *
          * <p>It tries to first generate a constructive way of adding color codes to get from the old
-         * style to the new style. If that does not succeed, it instead resets the format and adds the
+         * style to the new style. If that does not succeed, it instead resets the format if the old style was not empty, and adds the
          * color codes of the new style
          */
         private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
@@ -294,9 +294,9 @@ public final class ComponentUtils {
                     result.append(different);
                     return;
                 }
-            }
 
-            result.append(ChatFormatting.RESET);
+                result.append(ChatFormatting.RESET);
+            }
 
             if (newStyle.getColor() != null) {
                 getChatFormatting(newStyle.getColor()).ifPresent(result::append);
