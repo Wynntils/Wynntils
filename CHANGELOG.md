@@ -1,8 +1,16 @@
+## [0.0.1-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.197...v0.0.1-alpha.198) (2022-12-18)
+
+
+### Code Refactoring
+
+* In preparation for 1.19.3, introduce McUtils.sendCommand ([#873](https://github.com/Wynntils/Artemis/issues/873)) ([afc1587](https://github.com/Wynntils/Artemis/commit/afc1587a0f4629ced1c94a459b269a07ce38ae44))
+
 ## [0.0.1-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.196...v0.0.1-alpha.197) (2022-12-18)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.1-alpha.197 [skip ci] ([9ad513f](https://github.com/Wynntils/Artemis/commit/9ad513fc7c8d24df74632170fe374bd8df1897b5))
 * Sort Features in registry ([b0655b0](https://github.com/Wynntils/Artemis/commit/b0655b0df6b49c2106b328a7581801197f773183))
 
 ## [0.0.1-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.195...v0.0.1-alpha.196) (2022-12-18)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.194 [skip ci] ([038955d](https://github.com/Wynntils/Artemis/commit/038955db8708adf2a9434ad1093427a63bf4abc8))
-
-## [0.0.1-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.192...v0.0.1-alpha.193) (2022-12-17)
-
-
-### New Features
-
-* Add a config option for opening Wynntils Menu instead of Quest Book when using quest book item ([#865](https://github.com/Wynntils/Artemis/issues/865)) ([a9b0471](https://github.com/Wynntils/Artemis/commit/a9b0471fe766e67e90ad70b055c1e4f471e99c07))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.193 [skip ci] ([664a811](https://github.com/Wynntils/Artemis/commit/664a811620b84cbe2164bdf481e50a1aae612265))
 
