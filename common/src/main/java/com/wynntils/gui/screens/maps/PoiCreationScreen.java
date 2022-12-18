@@ -183,22 +183,24 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Icon
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 40, 20, 20, Component.literal("<"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
                         selectedIconIndex = POI_ICONS.size() - 1;
                     } else {
                         selectedIconIndex--;
                     }
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 40, this.height / 2 + 40, 20, 20, Component.literal(">"), (button) -> {
+                })
+                .bounds(this.width / 2 - 100, this.height / 2 + 40, 20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
                     if (selectedIconIndex + 1 >= POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
                         selectedIconIndex++;
                     }
-                }));
+                })
+                .bounds(this.width / 2 - 40, this.height / 2 + 40, 20, 20)
+                .build());
         if (oldPoi != null && firstSetup) {
             int index = POI_ICONS.indexOf(oldPoi.getIcon());
             selectedIconIndex = index == -1 ? 0 : index;
@@ -236,18 +238,21 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, Component.literal("<"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, Component.literal(">"), (button) -> {
+                })
+                .bounds(this.width / 2 - 100, this.height / 2 + 90, 20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
-                }));
+                })
+                .bounds(this.width / 2 + 80, this.height / 2 + 90, 20, 20)
+                .build());
+
         if (oldPoi != null && firstSetup) {
             selectedVisiblity = oldPoi.getVisibility();
         }
@@ -255,24 +260,16 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                saveButton = new Button(
-                        this.width / 2 + 50,
-                        this.height / 2 + 140,
-                        100,
-                        20,
-                        Component.translatable("screens.wynntils.poiCreation.save"),
-                        (button) -> {
+                new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
                             savePoi();
                             this.onClose();
-                        }));
-
-        this.addRenderableWidget(new Button(
-                this.width / 2 - 150,
-                this.height / 2 + 140,
-                100,
-                20,
-                Component.translatable("screens.wynntils.poiCreation.cancel"),
-                (button) -> this.onClose()));
+                        })
+                        .bounds(this.width / 2 + 50, this.height / 2 + 140, 100, 20)
+                        .build());
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                .bounds(this.width / 2 - 150, this.height / 2 + 140, 100, 20)
+                .build());
         // endregion
 
         updateSaveStatus();
