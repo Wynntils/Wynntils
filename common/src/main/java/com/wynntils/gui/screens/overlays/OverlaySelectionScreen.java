@@ -40,21 +40,23 @@ public class OverlaySelectionScreen extends Screen {
     @Override
     protected void init() {
         overlayList = new OverlayList(this);
-        this.addRenderableWidget(new Button(
-                (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
-                this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.overlaySelection.close"),
-                button -> McUtils.mc().setScreen(WynntilsMenuScreen.create())));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlaySelection.close"),
+                        button -> McUtils.mc().setScreen(WynntilsMenuScreen.create()))
+                .pos(
+                        (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
+                        this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build());
 
-        this.addRenderableWidget(new Button(
-                (int) (this.width / 2 + BUTTON_WIDTH * 0.5f),
-                this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.overlaySelection.freeMove"),
-                button -> McUtils.mc().setScreen(OverlayManagementScreen.create())));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlaySelection.freeMove"),
+                        button -> McUtils.mc().setScreen(OverlayManagementScreen.create()))
+                .pos(
+                        (int) (this.width / 2 + BUTTON_WIDTH * 0.5f),
+                        this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build());
     }
 
     @Override
