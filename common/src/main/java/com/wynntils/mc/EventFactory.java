@@ -521,13 +521,6 @@ public final class EventFactory {
                 }
             }
         }
-
-        //            else if (action == Action.REMOVE_PLAYER) {
-        //                for (PlayerUpdate entry : entries) {
-        //                    GameProfile profile = entry.getProfile();
-        //                    post(new PlayerLogOutEvent(profile.getId()));
-        //                }
-        //            }
     }
 
     public static void onPlayerInfoRemovePacket(ClientboundPlayerInfoRemovePacket packet) {
