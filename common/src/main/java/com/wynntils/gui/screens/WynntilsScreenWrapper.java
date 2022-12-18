@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -125,7 +125,7 @@ public class WynntilsScreenWrapper extends Screen {
     }
 
     @Override
-    public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
         try {
             return delegate.addRenderableWidget(widget);
         } catch (Throwable t) {

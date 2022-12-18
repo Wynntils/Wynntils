@@ -27,7 +27,7 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -286,8 +286,8 @@ public abstract class AbstractMapScreen extends Screen {
                 this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
                 this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
-        for (Widget widget : this.renderables) {
-            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(poseStack, mouseX, mouseY, partialTicks);
         }
     }
 

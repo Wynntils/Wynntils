@@ -14,7 +14,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,7 +23,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
         PauseScreen pauseScreen = event.getPauseScreen();
-        List<Widget> renderables = new ArrayList<>(pauseScreen.renderables);
+        List<Renderable> renderables = new ArrayList<>(pauseScreen.renderables);
 
         Button territoryMap = replaceButtonFunction(
                 (Button) renderables.get(1),
@@ -62,7 +62,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
 
         event.getPauseScreen().clearWidgets();
 
-        for (Widget renderable : renderables) {
+        for (Renderable renderable : renderables) {
             event.getAddButton().accept((AbstractWidget) renderable);
         }
     }

@@ -16,7 +16,7 @@ import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -121,7 +121,7 @@ public class GearViewerScreen extends Screen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        for (Widget renderable : renderables) {
+        for (Renderable renderable : renderables) {
             renderable.render(
                     poseStack, (int) (mouseX - getTranslationX()), (int) (mouseY - getTranslationY()), partialTick);
         }

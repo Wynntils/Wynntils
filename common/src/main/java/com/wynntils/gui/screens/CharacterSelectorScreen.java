@@ -22,7 +22,7 @@ import com.wynntils.wynn.objects.ClassInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -336,7 +336,7 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        for (Widget renderable : this.renderables) {
+        for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
