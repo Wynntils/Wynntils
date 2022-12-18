@@ -106,7 +106,7 @@ public class LootrunButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void tryDeleteLootrun() {
         File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");

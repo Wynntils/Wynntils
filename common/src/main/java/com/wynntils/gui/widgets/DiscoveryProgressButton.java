@@ -61,7 +61,7 @@ public class DiscoveryProgressButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public boolean isSecretDiscoveryButton() {
         return isSecretDiscoveryButton;

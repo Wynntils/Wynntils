@@ -98,7 +98,7 @@ public class DiscoveryButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public List<Component> getTooltipLines() {
         List<Component> lines = new ArrayList<>(discoveryInfo.getLore());

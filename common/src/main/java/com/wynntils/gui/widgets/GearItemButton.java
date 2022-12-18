@@ -37,7 +37,7 @@ public class GearItemButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ItemStack getItemStack() {
         return itemStack;

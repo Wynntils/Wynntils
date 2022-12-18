@@ -105,7 +105,7 @@ public class ClassInfoButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ClassInfo getClassInfo() {
         return classInfo;

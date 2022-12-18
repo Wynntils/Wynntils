@@ -58,7 +58,7 @@ public class BasicTexturedButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public void setTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);

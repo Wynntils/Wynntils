@@ -124,7 +124,7 @@ public class ConfigButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {

@@ -136,7 +136,7 @@ public class QuestButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public QuestInfo getQuestInfo() {
         return questInfo;
