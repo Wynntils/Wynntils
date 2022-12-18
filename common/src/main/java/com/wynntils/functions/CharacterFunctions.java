@@ -11,8 +11,8 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import java.util.List;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
+import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 
 public class CharacterFunctions {
