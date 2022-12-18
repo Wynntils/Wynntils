@@ -278,8 +278,8 @@ public abstract class AbstractMapScreen extends Screen {
                 this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
                 this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
-        for (Renderable widget : this.renderables) {
-            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(poseStack, mouseX, mouseY, partialTicks);
         }
     }
 
