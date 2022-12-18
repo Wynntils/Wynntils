@@ -160,16 +160,16 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int discordLink(CommandContext<CommandSourceStack> context) {
-        MutableComponent msg =
-                new Component.literal("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
+        MutableComponent msg = Component.literal("You're welcome to join our Discord server at:\n")
+                .withStyle(ChatFormatting.GOLD);
         String discordInvite = Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
         MutableComponent link =
-                new Component.literal(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+                Component.literal(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
                 .withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        new Component.literal("Click here to join our Discord" + " server."))));
+                        Component.literal("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }

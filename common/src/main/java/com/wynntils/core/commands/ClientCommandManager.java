@@ -69,7 +69,7 @@ public final class ClientCommandManager extends Manager {
 
     public boolean handleCommand(String message) {
         StringReader reader = new StringReader(message);
-        return ClientCommandManager.executeCommand(reader, message);
+        return executeCommand(reader, message);
     }
 
     public CompletableFuture<Suggestions> getCompletionSuggestions(

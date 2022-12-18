@@ -32,13 +32,6 @@ public class Location extends Vector3d implements Position {
         this(location.x(), location.y(), location.z());
     }
 
-    @Override
-    public void add(Vector3d loc) {
-        x += loc.x;
-        y += loc.y;
-        z += loc.z;
-    }
-
     public Location add(double x, double y, double z) {
         this.x += x;
         this.y += y;

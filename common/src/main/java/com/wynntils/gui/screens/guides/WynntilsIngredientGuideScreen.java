@@ -46,12 +46,6 @@ public class WynntilsIngredientGuideScreen
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
         if (parsedItemCache == null) {
             parsedItemCache = Managers.ItemProfiles.getIngredientsCollection().stream()
