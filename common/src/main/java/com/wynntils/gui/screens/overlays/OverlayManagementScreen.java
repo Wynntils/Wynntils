@@ -748,16 +748,15 @@ public class OverlayManagementScreen extends Screen {
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.overlayManagement.testSettings"), button -> {
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
-                            onClose();
-                        })
+                        Component.translatable("screens.wynntils.overlayManagement.testSettings"),
+                        button -> testMode = !testMode)
                 .bounds(this.width / 2 - BUTTON_WIDTH / 2, this.height - 150, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(TEST_TOOLTIP_LINES))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.applySettings"), button -> {
+                            Managers.Config.saveConfig();
                             McUtils.mc().setScreen(OverlaySelectionScreen.create());
                             onClose();
                         })
