@@ -5,12 +5,10 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
-import java.util.Objects;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
 
@@ -92,21 +90,6 @@ public class CustomCommandKeybindsFeature extends UserFeature {
             GLFW.GLFW_KEY_UNKNOWN,
             true,
             () -> this.executeKeybind(keybindCommand6, commandType6));
-
-    @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
-        if (!configHolder.getFieldName().startsWith("keybindCommand")) return;
-
-        String value = (String) configHolder.getValue();
-        String newValue = value;
-        if (!newValue.startsWith("/")) {
-            newValue = "/" + newValue;
-        }
-
-        if (!Objects.equals(value, newValue)) {
-            configHolder.setValue(newValue);
-        }
-    }
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
