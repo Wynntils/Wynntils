@@ -29,7 +29,6 @@ import com.wynntils.gui.widgets.SearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
@@ -64,8 +63,6 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     private WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         searchWidget = new SearchWidget(
                 95,
@@ -334,7 +331,6 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         Managers.Config.loadConfigFile();
         Managers.Config.loadConfigOptions(Managers.Config.getConfigHolders(), true);
         super.onClose();

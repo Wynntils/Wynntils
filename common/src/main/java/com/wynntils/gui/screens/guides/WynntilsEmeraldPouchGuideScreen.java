@@ -46,12 +46,6 @@ public class WynntilsEmeraldPouchGuideScreen
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
         if (parsedItemCache == null) {
             parsedItemCache = new ArrayList<>();
@@ -60,8 +54,6 @@ public class WynntilsEmeraldPouchGuideScreen
                 parsedItemCache.add(new EmeraldPouchItemStack(i));
             }
         }
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
 

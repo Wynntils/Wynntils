@@ -70,7 +70,6 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         WynntilsMod.unregisterEventListener(this);
 
         super.onClose();
@@ -79,8 +78,6 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     @Override
     protected void init() {
         Managers.Discovery.reloadDiscoveries();
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
 

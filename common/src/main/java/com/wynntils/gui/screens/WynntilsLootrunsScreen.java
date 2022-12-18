@@ -15,7 +15,6 @@ import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.LootrunModel;
 import java.util.List;
@@ -36,15 +35,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         super.init();
 
         this.addRenderableWidget(new BackButton(
