@@ -119,7 +119,7 @@ public class QuestButton extends AbstractButton {
 
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
-            McUtils.playSound(SoundEvents.ANVIL_LAND.value());
+            McUtils.playSound(SoundEvents.ANVIL_LAND);
             if (this.questInfo.equals(Managers.Quest.getTrackedQuest())) {
                 Managers.Quest.stopTracking();
                 questBookScreen.setTrackingRequested(null);
@@ -131,7 +131,7 @@ public class QuestButton extends AbstractButton {
     }
 
     private void openQuestWiki() {
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP.value());
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
         Managers.Quest.openQuestOnWiki(questInfo);
     }
 
