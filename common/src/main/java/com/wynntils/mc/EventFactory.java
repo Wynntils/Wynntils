@@ -8,7 +8,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
-import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
@@ -20,6 +19,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
@@ -48,9 +48,9 @@ import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.PlayerArmorRenderEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
+import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
-import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
@@ -75,8 +75,10 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.event.UpdateLightTextureEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
+import com.wynntils.mc.objects.ChatType;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +98,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
@@ -104,9 +105,8 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.PlayerUpdate;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
@@ -134,6 +134,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.Event;
+import org.joml.Matrix4f;
 
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
@@ -261,6 +262,10 @@ public final class EventFactory {
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
         return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
+    public static UpdateLightTextureEvent onUpdateLightTexture(float oldGamma) {
+        return post(new UpdateLightTextureEvent(oldGamma));
     }
 
     // endregion
@@ -419,6 +424,10 @@ public final class EventFactory {
         return post(new ChatSentEvent(message));
     }
 
+    public static CommandSentEvent onCommandSent(String command, boolean signed) {
+        return post(new CommandSentEvent(command, signed));
+    }
+
     public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
         return post(new ChatPacketReceivedEvent(type, message));
     }
@@ -497,26 +506,26 @@ public final class EventFactory {
         return post(new SetSpawnEvent(spawnPos));
     }
 
-    public static void onPlayerInfoPacket(ClientboundPlayerInfoPacket packet) {
-        Action action = packet.getAction();
-        List<PlayerUpdate> entries = packet.getEntries();
+    public static void onPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket packet) {
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.newEntries()) {
+            GameProfile profile = entry.profile();
+            post(new PlayerLogInEvent(profile.getId(), profile.getName()));
+        }
 
-        if (action == Action.UPDATE_DISPLAY_NAME) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                if (entry.getDisplayName() == null) continue;
-                post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.getDisplayName()));
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.entries()) {
+            for (ClientboundPlayerInfoUpdatePacket.Action action : packet.actions()) {
+                if (action == ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME) {
+                    GameProfile profile = entry.profile();
+                    if (entry.displayName() == null) continue;
+                    post(new PlayerDisplayNameChangeEvent(profile.getId(), entry.displayName()));
+                }
             }
-        } else if (action == Action.ADD_PLAYER) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                post(new PlayerLogInEvent(profile.getId(), profile.getName()));
-            }
-        } else if (action == Action.REMOVE_PLAYER) {
-            for (PlayerUpdate entry : entries) {
-                GameProfile profile = entry.getProfile();
-                post(new PlayerLogOutEvent(profile.getId()));
-            }
+        }
+    }
+
+    public static void onPlayerInfoRemovePacket(ClientboundPlayerInfoRemovePacket packet) {
+        for (UUID uuid : packet.profileIds()) {
+            post(new PlayerInfoEvent.PlayerLogOutEvent(uuid));
         }
     }
 
