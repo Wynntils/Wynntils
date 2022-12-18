@@ -126,7 +126,6 @@ public class ServerCommand extends CommandBase {
             context.getSource()
                     .sendFailure(Component.literal("Network problems; using cached data")
                             .withStyle(ChatFormatting.RED));
-            return 1;
         }
 
         MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
@@ -156,7 +155,6 @@ public class ServerCommand extends CommandBase {
             context.getSource()
                     .sendFailure(Component.literal("Network problems; using cached data")
                             .withStyle(ChatFormatting.RED));
-            return 1;
         }
 
         List<String> sortedServers = Models.ServerList.getServersSortedOnUptime();
