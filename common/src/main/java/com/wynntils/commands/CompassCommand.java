@@ -114,16 +114,6 @@ public class CompassCommand extends CommandBase {
         return 1;
     }
 
-    private static void sendShareMessage(String target, String locationString) {
-        if (target.equals("guild")) {
-            McUtils.sendCommand("/g " + locationString);
-        } else if (target.equals("party")) {
-            McUtils.sendCommand("/p " + locationString);
-        } else {
-            McUtils.sendCommand("/msg " + target + " " + locationString);
-        }
-    }
-
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
