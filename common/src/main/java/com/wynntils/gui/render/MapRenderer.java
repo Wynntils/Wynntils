@@ -78,8 +78,7 @@ public final class MapRenderer {
                 .vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
                 .uv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void renderCursor(
