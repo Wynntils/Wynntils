@@ -389,39 +389,65 @@ public class OverlayManagementScreen extends Screen {
 
         if (selectedOverlay == null) return false;
 
-        if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
-            int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
+        // Shirt + Arrow keys change overlay alignment
+        if (KeyboardUtils.isShiftDown()) {
+            if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
+                int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
-            if (keyCode == GLFW.GLFW_KEY_DOWN) {
-                index += 1;
-            } else {
-                index -= 1;
+                if (keyCode == GLFW.GLFW_KEY_DOWN) {
+                    index += 1;
+                } else {
+                    index -= 1;
+                }
+
+                VerticalAlignment[] values = VerticalAlignment.values();
+                index = (values.length + index) % values.length;
+
+                int finalIndex = index;
+                selectedOverlay
+                        .getConfigOptionFromString("verticalAlignmentOverride")
+                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
+            } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
+                int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
+
+                if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+                    index += 1;
+                } else {
+                    index -= 1;
+                }
+
+                HorizontalAlignment[] values = HorizontalAlignment.values();
+                index = (values.length + index) % values.length;
+
+                int finalIndex = index;
+                selectedOverlay
+                        .getConfigOptionFromString("horizontalAlignmentOverride")
+                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
             }
+        } else {
+            // Arrow keys change overlay position
+            int offsetX = 0;
+            int offsetY = 0;
 
-            VerticalAlignment[] values = VerticalAlignment.values();
-            index = (values.length + index) % values.length;
+            if (keyCode == GLFW.GLFW_KEY_UP) offsetY = -1;
+            else if (keyCode == GLFW.GLFW_KEY_DOWN) offsetY = 1;
+            else if (keyCode == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
+            else if (keyCode == GLFW.GLFW_KEY_LEFT) offsetX = -1;
 
-            int finalIndex = index;
+            final int finalOffsetX = offsetX;
+            final int finalOffsetY = offsetY;
+
             selectedOverlay
-                    .getConfigOptionFromString("verticalAlignmentOverride")
-                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
-        } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
-            int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
+                    .getConfigOptionFromString("position")
+                    .ifPresent(configHolder -> configHolder.setValue(OverlayPosition.getBestPositionFor(
+                            selectedOverlay,
+                            selectedOverlay.getRenderX(),
+                            selectedOverlay.getRenderY(),
+                            finalOffsetX,
+                            finalOffsetY)));
+        }
 
-            if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-                index += 1;
-            } else {
-                index -= 1;
-            }
-
-            HorizontalAlignment[] values = HorizontalAlignment.values();
-            index = (values.length + index) % values.length;
-
-            int finalIndex = index;
-            selectedOverlay
-                    .getConfigOptionFromString("horizontalAlignmentOverride")
-                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
-        } else if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             snappingEnabled = false;
             edgeAlignmentSnapMap.clear();
             alignmentLinesToRender.clear();
