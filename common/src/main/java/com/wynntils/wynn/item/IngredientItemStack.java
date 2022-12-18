@@ -73,9 +73,9 @@ public class IngredientItemStack extends WynnItemStack {
     @Override
     public Component getHoverName() {
         if (isGuideStack) {
-            return new TextComponent(ingredientProfile.getDisplayName())
+            return Component.literal(ingredientProfile.getDisplayName())
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(" " + ingredientProfile.getTier().getTierString()));
+                    .append(Component.literal(" " + ingredientProfile.getTier().getTierString()));
         }
 
         return super.getHoverName();
@@ -84,7 +84,7 @@ public class IngredientItemStack extends WynnItemStack {
     private List<Component> generateGuideTooltip() {
         List<Component> itemLore = new ArrayList<>();
 
-        itemLore.add(new TextComponent("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
+        itemLore.add(Component.literal("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
         itemLore.add(TextComponent.EMPTY);
 
         Map<String, IngredientIdentificationContainer> statuses = ingredientProfile.getStatuses();
@@ -93,36 +93,36 @@ public class IngredientItemStack extends WynnItemStack {
             IngredientIdentificationContainer identificationContainer = statuses.get(status);
             if (identificationContainer.hasConstantValue()) {
                 if (identificationContainer.getMin() >= 0) {
-                    itemLore.add(new TextComponent("+" + identificationContainer.getMin()
+                    itemLore.add(Component.literal("+" + identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
-                    itemLore.add(new TextComponent(identificationContainer.getMin()
+                    itemLore.add(Component.literal(identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.RED)
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             } else {
                 if (identificationContainer.getMin() >= 0) {
-                    itemLore.add(new TextComponent("+" + identificationContainer.getMin())
+                    itemLore.add(Component.literal("+" + identificationContainer.getMin())
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(" to ").withStyle(ChatFormatting.DARK_GREEN))
-                            .append(new TextComponent(identificationContainer.getMax()
+                            .append(Component.literal(" to ").withStyle(ChatFormatting.DARK_GREEN))
+                            .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.GREEN))
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
-                    itemLore.add(new TextComponent(String.valueOf(identificationContainer.getMin()))
+                    itemLore.add(Component.literal(String.valueOf(identificationContainer.getMin()))
                             .withStyle(ChatFormatting.RED)
-                            .append(new TextComponent(" to ").withStyle(ChatFormatting.DARK_RED))
-                            .append(new TextComponent(identificationContainer.getMax()
+                            .append(Component.literal(" to ").withStyle(ChatFormatting.DARK_RED))
+                            .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.RED))
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             }
@@ -147,14 +147,14 @@ public class IngredientItemStack extends WynnItemStack {
         }
 
         if (ingredientProfile.isUntradeable())
-            itemLore.add(new TextComponent("Untradable Item").withStyle(ChatFormatting.RED));
+            itemLore.add(Component.literal("Untradable Item").withStyle(ChatFormatting.RED));
 
-        itemLore.add(
-                new TextComponent("Crafting Lv. Min: " + ingredientProfile.getLevel()).withStyle(ChatFormatting.GRAY));
+        itemLore.add(Component.literal("Crafting Lv. Min: " + ingredientProfile.getLevel())
+                .withStyle(ChatFormatting.GRAY));
 
         for (ProfessionType profession : ingredientProfile.getProfessions()) {
-            itemLore.add(new TextComponent("  " + profession.getProfessionIconChar() + " ")
-                    .append(new TextComponent(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
+            itemLore.add(Component.literal("  " + profession.getProfessionIconChar() + " ")
+                    .append(Component.literal(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
         }
 
         return itemLore;

@@ -27,7 +27,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class CharacterSelectorScreen extends Screen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -44,7 +44,7 @@ public class CharacterSelectorScreen extends Screen {
     private ClassInfoButton selected = null;
 
     private CharacterSelectorScreen() {
-        super(new TranslatableComponent("screens.wynntils.characterSelection.name"));
+        super(Component.translatable("screens.wynntils.characterSelection.name"));
 
         if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             actualClassSelectionScreen = abstractContainerScreen;

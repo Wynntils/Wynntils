@@ -20,10 +20,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 public class WynntilsCommand extends CommandBase {
     @Override
@@ -61,11 +61,11 @@ public class WynntilsCommand extends CommandBase {
         MutableComponent buildText;
 
         if (WynntilsMod.getVersion().isEmpty()) {
-            buildText = new TextComponent("Unknown Version");
+            buildText = Component.literal("Unknown Version");
         } else if (WynntilsMod.isDevelopmentBuild()) {
-            buildText = new TextComponent("Development Build");
+            buildText = Component.literal("Development Build");
         } else {
-            buildText = new TextComponent("Version " + WynntilsMod.getVersion());
+            buildText = Component.literal("Version " + WynntilsMod.getVersion());
         }
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
@@ -98,28 +98,30 @@ public class WynntilsCommand extends CommandBase {
                 feature.enable();
 
                 if (feature.isEnabled()) {
-                    McUtils.sendMessageToClient(new TextComponent("Reloaded ")
+                    McUtils.sendMessageToClient(Component.literal("Reloaded ")
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
+                            .append(Component.literal(feature.getTranslatedName())
+                                    .withStyle(ChatFormatting.AQUA)));
 
                     continue;
                 }
             }
 
-            McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
+            McUtils.sendMessageToClient(Component.literal("Failed to reload ")
                     .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
+                    .append(Component.literal(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
         }
 
         context.getSource()
-                .sendSuccess(new TextComponent("Finished reloading everything").withStyle(ChatFormatting.GREEN), false);
+                .sendSuccess(Component.literal("Finished reloading everything").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }
 
     private int donateLink(CommandContext<CommandSourceStack> context) {
-        MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON))
+        MutableComponent c =
+                Component.literal("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
+        MutableComponent url = Component.literal(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
@@ -127,7 +129,7 @@ public class WynntilsCommand extends CommandBase {
                                 ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
-                                new TextComponent("Click here to open in your" + " browser."))));
+                                Component.literal("Click here to open in your" + " browser."))));
 
         context.getSource().sendSuccess(c.append(url), false);
         return 1;
@@ -135,7 +137,7 @@ public class WynntilsCommand extends CommandBase {
 
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
-                new TextComponent("Wynntils' command list: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
+                Component.literal("Wynntils' command list: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         addCommandDescription(
                 text, "wynntils", List.of("help"), "This shows a list of all available commands for Wynntils.");
         addCommandDescription(
@@ -158,16 +160,16 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int discordLink(CommandContext<CommandSourceStack> context) {
-        MutableComponent msg =
-                new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
+        MutableComponent msg = Component.literal("You're welcome to join our Discord server at:\n")
+                .withStyle(ChatFormatting.GOLD);
         String discordInvite = Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
         MutableComponent link =
-                new TextComponent(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+                Component.literal(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
                 .withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        new TextComponent("Click here to join our Discord" + " server."))));
+                        Component.literal("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }
@@ -182,26 +184,27 @@ public class WynntilsCommand extends CommandBase {
             suffixString.append(" ").append(argument);
         }
 
-        MutableComponent clickComponent = new TextComponent("");
+        MutableComponent clickComponent = Component.literal("");
         {
             clickComponent.setStyle(clickComponent
                     .getStyle()
                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + prefix + suffixString))
                     .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT, new TextComponent("Click here to run this command."))));
+                            HoverEvent.Action.SHOW_TEXT, Component.literal("Click here to run this command."))));
 
-            MutableComponent prefixText = new TextComponent("-" + prefix).withStyle(ChatFormatting.DARK_GRAY);
+            MutableComponent prefixText = Component.literal("-" + prefix).withStyle(ChatFormatting.DARK_GRAY);
             clickComponent.append(prefixText);
 
             if (!suffix.isEmpty()) {
-                MutableComponent nameText = new TextComponent(suffixString.toString()).withStyle(ChatFormatting.GREEN);
+                MutableComponent nameText =
+                        Component.literal(suffixString.toString()).withStyle(ChatFormatting.GREEN);
                 clickComponent.append(nameText);
             }
 
             clickComponent.append(" ");
 
             MutableComponent descriptionText =
-                    new TextComponent(description).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
+                    Component.literal(description).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
             clickComponent.append(descriptionText);
         }
 

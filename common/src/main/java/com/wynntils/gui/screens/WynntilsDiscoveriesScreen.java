@@ -31,15 +31,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.name")
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
                     .withStyle(ChatFormatting.WHITE),
-            new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.description")
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
@@ -53,7 +51,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     private boolean showUndiscoveredTerritory = false;
 
     private WynntilsDiscoveriesScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name"));
+        super(Component.translatable("screens.wynntils.wynntilsDiscoveries.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
@@ -95,10 +93,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_TERRITORY,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent(
-                                        "screens.wynntils.wynntilsDiscoveries.showFoundTerritory.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundTerritory.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -113,9 +110,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_WORLD,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundWorld.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundWorld.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -130,9 +127,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_SECRET,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundSecret.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundSecret.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -147,10 +144,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_TERRITORY,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent(
-                                        "screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -165,9 +161,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_WORLD,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -182,9 +178,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_SECRET,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {

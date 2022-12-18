@@ -15,24 +15,23 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ClassSelectionAddButton extends AbstractButton {
     private static final List<Component> TOOLTIP_CANNOT_ADD = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.cannotAdd.name")
+            Component.translatable("screens.wynntils.characterSelection.cannotAdd.name")
                     .withStyle(ChatFormatting.DARK_RED),
-            new TranslatableComponent("screens.wynntils.characterSelection.cannotAdd.discussion")
+            Component.translatable("screens.wynntils.characterSelection.cannotAdd.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private static final List<Component> TOOLTIP_CAN_ADD = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.add.name").withStyle(ChatFormatting.GREEN),
-            new TranslatableComponent("screens.wynntils.characterSelection.add.discussion")
+            Component.translatable("screens.wynntils.characterSelection.add.name")
+                    .withStyle(ChatFormatting.GREEN),
+            Component.translatable("screens.wynntils.characterSelection.add.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public ClassSelectionAddButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Selection Delete Button"));
+        super(x, y, width, height, Component.literal("Class Selection Delete Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 

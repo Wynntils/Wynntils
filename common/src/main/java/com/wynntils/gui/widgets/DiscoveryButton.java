@@ -23,7 +23,6 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class DiscoveryButton extends AbstractButton {
@@ -33,7 +32,7 @@ public class DiscoveryButton extends AbstractButton {
     private final DiscoveryInfo discoveryInfo;
 
     public DiscoveryButton(int x, int y, int width, int height, DiscoveryInfo discoveryInfo) {
-        super(x, y, width, height, new TextComponent("Discovery Button"));
+        super(x, y, width, height, Component.literal("Discovery Button"));
         this.discoveryInfo = discoveryInfo;
     }
 
@@ -114,27 +113,27 @@ public class DiscoveryButton extends AbstractButton {
 
             if (!unmet.isEmpty()) {
                 lines.add(TextComponent.EMPTY);
-                lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.requirements")
+                lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.requirements")
                         .withStyle(ChatFormatting.DARK_AQUA));
-                unmet.forEach(requirement -> lines.add(new TextComponent(" - ")
+                unmet.forEach(requirement -> lines.add(Component.literal(" - ")
                         .withStyle(ChatFormatting.RED)
-                        .append(new TextComponent(requirement).withStyle(ChatFormatting.GRAY))));
+                        .append(Component.literal(requirement).withStyle(ChatFormatting.GRAY))));
             }
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
                 || Managers.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(TextComponent.EMPTY);
-            lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
+            lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
-            lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.middleClickToOpenOnMap")
+            lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.middleClickToOpenOnMap")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.YELLOW));
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET) {
-            lines.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.rightClickToOpenWiki")
+            lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.rightClickToOpenWiki")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GOLD));
         }

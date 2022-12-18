@@ -9,7 +9,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.GearViewerScreen;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class GearItemButton extends AbstractButton {
@@ -17,7 +17,7 @@ public class GearItemButton extends AbstractButton {
     private final ItemStack itemStack;
 
     public GearItemButton(int x, int y, int width, int height, GearViewerScreen gearViewerScreen, ItemStack itemStack) {
-        super(x, y, width, height, new TextComponent("Gear Item Button"));
+        super(x, y, width, height, Component.literal("Gear Item Button"));
         this.gearViewerScreen = gearViewerScreen;
         this.itemStack = itemStack;
     }

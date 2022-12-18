@@ -38,7 +38,7 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -169,7 +169,7 @@ public class MapFeature extends UserFeature {
             MapFeature.INSTANCE.customPois.add(newPoi);
 
             // TODO: Replace this notification with a popup
-            NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
+            NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
             Managers.Config.saveConfig();

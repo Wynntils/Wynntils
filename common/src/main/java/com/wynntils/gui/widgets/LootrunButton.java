@@ -23,7 +23,7 @@ import java.util.Objects;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
@@ -38,7 +38,7 @@ public class LootrunButton extends AbstractButton {
 
     public LootrunButton(
             int x, int y, int width, int height, LootrunModel.LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
-        super(x, y, width, height, new TextComponent("Lootrun Button"));
+        super(x, y, width, height, Component.literal("Lootrun Button"));
         this.lootrun = lootrun;
         this.screen = screen;
     }

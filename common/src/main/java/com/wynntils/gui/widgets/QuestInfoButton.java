@@ -10,13 +10,13 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class QuestInfoButton extends AbstractButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public QuestInfoButton(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
-        super(x, y, width, height, new TextComponent("Quest Info / Mini Quest Toggle Button"));
+        super(x, y, width, height, Component.literal("Quest Info / Mini Quest Toggle Button"));
         this.questBookScreen = questBookScreen;
     }
 

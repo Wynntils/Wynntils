@@ -16,7 +16,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.objects.ClassInfo;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ClassInfoButton extends AbstractButton {
     private final ClassInfo classInfo;
@@ -24,7 +24,7 @@ public class ClassInfoButton extends AbstractButton {
 
     public ClassInfoButton(
             int x, int y, int width, int height, ClassInfo classInfo, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Info Button"));
+        super(x, y, width, height, Component.literal("Class Info Button"));
         this.classInfo = classInfo;
         this.characterSelectorScreen = characterSelectorScreen;
     }

@@ -35,11 +35,11 @@ import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -128,12 +128,12 @@ public final class ClientCommandManager extends Manager {
         try {
             clientDispatcher.execute(parse);
         } catch (CommandRuntimeException e) {
-            sendError(new TextComponent(e.getMessage()));
+            sendError(Component.literal(e.getMessage()));
         } catch (CommandSyntaxException e) {
-            sendError(new TextComponent(e.getRawMessage().getString()));
+            sendError(Component.literal(e.getRawMessage().getString()));
             if (e.getInput() != null && e.getCursor() >= 0) {
                 int cursor = Math.min(e.getCursor(), e.getInput().length());
-                MutableComponent text = new TextComponent("")
+                MutableComponent text = Component.literal("")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.GRAY)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command)));
@@ -141,18 +141,18 @@ public final class ClientCommandManager extends Manager {
 
                 text.append(e.getInput().substring(Math.max(0, cursor - 10), cursor));
                 if (cursor < e.getInput().length()) {
-                    text.append(new TextComponent(e.getInput().substring(cursor))
+                    text.append(Component.literal(e.getInput().substring(cursor))
                             .withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE));
                 }
 
-                text.append(new TranslatableComponent("command.context.here")
+                text.append(Component.translatable("command.context.here")
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
                 sendError(text);
             }
         } catch (RuntimeException e) {
             TextComponent error =
-                    new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            sendError(new TranslatableComponent("command.failed")
+                    Component.literal(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
+            sendError(Component.translatable("command.failed")
                     .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
             WynntilsMod.error("Failed to execute command.", e);
         }

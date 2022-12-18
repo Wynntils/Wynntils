@@ -17,14 +17,14 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabButton extends AbstractButton {
     private final ChatTab tab;
 
     public ChatTabButton(int x, int y, int width, int height, ChatTab tab) {
-        super(x, y, width, height, new TextComponent("Chat Tab Button"));
+        super(x, y, width, height, Component.literal("Chat Tab Button"));
         this.tab = tab;
     }
 

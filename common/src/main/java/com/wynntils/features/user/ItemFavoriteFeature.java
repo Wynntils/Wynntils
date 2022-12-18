@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -58,7 +58,7 @@ public class ItemFavoriteFeature extends UserFeature {
             ItemStack stack = items.get(i);
 
             if (isFavorited(stack)) {
-                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemFavorite.closingBlocked")
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;

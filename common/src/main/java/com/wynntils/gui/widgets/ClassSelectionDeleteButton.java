@@ -15,19 +15,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ClassSelectionDeleteButton extends AbstractButton {
     private static final List<Component> TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.delete.name").withStyle(ChatFormatting.RED),
-            new TranslatableComponent("screens.wynntils.characterSelection.delete.discussion")
+            Component.translatable("screens.wynntils.characterSelection.delete.name")
+                    .withStyle(ChatFormatting.RED),
+            Component.translatable("screens.wynntils.characterSelection.delete.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public ClassSelectionDeleteButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Selection Delete Button"));
+        super(x, y, width, height, Component.literal("Class Selection Delete Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 

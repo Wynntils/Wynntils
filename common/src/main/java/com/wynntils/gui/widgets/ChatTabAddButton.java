@@ -14,11 +14,11 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ChatTabAddButton extends AbstractButton {
     public ChatTabAddButton(int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("Chat Tab Add Button"));
+        super(x, y, width, height, Component.literal("Chat Tab Add Button"));
     }
 
     @Override

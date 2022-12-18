@@ -17,9 +17,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 public class TerritoryCommand extends CommandBase {
     @Override
@@ -38,7 +38,8 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private MutableComponent helpComponent() {
-        return new TextComponent("Usage: /territory [name] | Ex: /territory Detlas").withStyle(ChatFormatting.RED);
+        return Component.literal("Usage: /territory [name] | Ex: /territory Detlas")
+                .withStyle(ChatFormatting.RED);
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
@@ -48,7 +49,7 @@ public class TerritoryCommand extends CommandBase {
 
         if (territoryProfile == null) {
             context.getSource()
-                    .sendFailure(new TextComponent(
+                    .sendFailure(Component.literal(
                                     "Can't access territory " + "\"" + territoryArg + "\". There likely is a typo.")
                             .withStyle(ChatFormatting.RED));
             return 1;
@@ -57,34 +58,35 @@ public class TerritoryCommand extends CommandBase {
         int xMiddle = (territoryProfile.getStartX() + territoryProfile.getEndX()) / 2;
         int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;
 
-        MutableComponent territoryComponent = new TextComponent(territoryProfile.getFriendlyName())
+        MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
         if (!ModelRegistry.isEnabled(Models.Compass.getClass())) {
             MutableComponent success = territoryComponent
                     .append(": ")
-                    .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
+                    .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")")
+                            .withStyle(ChatFormatting.GREEN));
             context.getSource().sendSuccess(success, false);
             return 1;
         }
 
         Models.Compass.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
-        MutableComponent separator = new TextComponent("-----------------------------------------------------")
+        MutableComponent separator = Component.literal("-----------------------------------------------------")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withStrikethrough(true));
 
-        MutableComponent finalMessage = new TextComponent("");
+        MutableComponent finalMessage = Component.literal("");
 
         finalMessage.append(separator);
 
-        MutableComponent success = new TextComponent("The compass is now pointing towards ")
+        MutableComponent success = Component.literal("The compass is now pointing towards ")
                 .withStyle(ChatFormatting.GREEN)
                 .append(territoryComponent)
-                .append(new TextComponent(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
+                .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
 
         finalMessage.append("\n").append(success);
 
-        MutableComponent warn = new TextComponent(
+        MutableComponent warn = Component.literal(
                         "Note that this command redirects your" + " compass to the middle of said territory.")
                 .withStyle(ChatFormatting.AQUA);
 

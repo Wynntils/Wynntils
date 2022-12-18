@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
@@ -99,7 +99,7 @@ public final class WynntilsMod {
         //       event, and we send a new message about disabling X feature,
         //       causing a new exception in client-side message event.
         if (!(event instanceof ClientsideMessageEvent)) {
-            McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
+            McUtils.sendMessageToClient(Component.literal("Wynntils error: Feature '" + feature.getTranslatedName()
                             + "' has crashed and will be disabled")
                     .withStyle(ChatFormatting.RED));
         }

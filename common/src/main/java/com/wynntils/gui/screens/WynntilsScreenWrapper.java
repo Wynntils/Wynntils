@@ -18,7 +18,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +49,7 @@ public class WynntilsScreenWrapper extends Screen {
 
     private void failure(String method, Throwable e) {
         WynntilsMod.error("Failure in " + delegate.getClass().getSimpleName() + "." + method + "()", e);
-        McUtils.sendMessageToClient(new TextComponent("Wynntils: Failure in " + method + " in "
+        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in " + method + " in "
                 + delegate.getClass().getSimpleName() + ". Screen forcefully closed."));
         McUtils.mc().setScreen(null);
     }

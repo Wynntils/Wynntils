@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
@@ -24,7 +23,7 @@ public class BasicTexturedButton extends AbstractButton {
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
-        super(x, y, width, height, new TextComponent("Basic Button"));
+        super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
         this.setTooltip(tooltip);

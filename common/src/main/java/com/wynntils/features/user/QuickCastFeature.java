@@ -26,8 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
@@ -126,14 +126,14 @@ public class QuickCastFeature extends UserFeature {
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
         if (!SPELL_PACKET_QUEUE.isEmpty()) {
-            sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.anotherInProgress"));
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.anotherInProgress"));
             return;
         }
 
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (!WynnItemMatchers.isWeapon(heldItem)) {
-            sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.notAWeapon"));
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
             return;
         }
 
@@ -144,14 +144,14 @@ public class QuickCastFeature extends UserFeature {
             if (lore.contains("Archer/Hunter")) isArcher = true;
             Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore);
             if (!matcher.matches()) continue;
-            sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.classMismatch", matcher.group(1)));
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.classMismatch", matcher.group(1)));
             return;
         }
 
         for (String lore : loreLines) {
             Matcher matcher = LVL_MIN_NOT_REACHED_PATTERN.matcher(lore);
             if (!matcher.matches()) continue;
-            sendCancelReason(new TranslatableComponent(
+            sendCancelReason(Component.translatable(
                     "feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)));
             return;
         }
@@ -162,7 +162,7 @@ public class QuickCastFeature extends UserFeature {
                 .toList();
         for (int i = 0; i < spellInProgress.length; ++i) {
             if (spellInProgress[i] != spell.get(i)) {
-                sendCancelReason(new TranslatableComponent("feature.wynntils.quickCast.incompatibleInProgress"));
+                sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
                 return;
             }
         }

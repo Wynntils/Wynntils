@@ -23,7 +23,7 @@ import com.wynntils.wynn.model.quests.QuestInfo;
 import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
@@ -38,7 +38,7 @@ public class QuestButton extends AbstractButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public QuestButton(int x, int y, int width, int height, QuestInfo questInfo, WynntilsQuestBookScreen screen) {
-        super(x, y, width, height, new TextComponent("Quest Button"));
+        super(x, y, width, height, Component.literal("Quest Button"));
         this.questInfo = questInfo;
         this.questBookScreen = screen;
     }

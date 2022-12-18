@@ -22,13 +22,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class GearViewerScreen extends Screen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
-            List.of(new TranslatableComponent("screens.wynntils.gearViewer.viewStats"));
+            List.of(Component.translatable("screens.wynntils.gearViewer.viewStats"));
 
     private final Player player;
     private final ItemStack heldItem;
