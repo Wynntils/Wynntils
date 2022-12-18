@@ -86,27 +86,27 @@ public class EmeraldPouchItemStack extends WynnItemStack {
         List<Component> itemLore = new ArrayList<>();
 
         itemLore.add(TextComponent.EMPTY);
-        itemLore.add(new TextComponent("Emerald Pouches allows the wearer to easily ")
+        itemLore.add(Component.literal("Emerald Pouches allows the wearer to easily ")
                 .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent("store ").withStyle(ChatFormatting.AQUA))
-                .append(new TextComponent("and ").withStyle(ChatFormatting.GRAY))
-                .append(new TextComponent("convert ").withStyle(ChatFormatting.AQUA))
-                .append(new TextComponent("picked emeralds without spending extra inventory slots.")
+                .append(Component.literal("store ").withStyle(ChatFormatting.AQUA))
+                .append(Component.literal("and ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal("convert ").withStyle(ChatFormatting.AQUA))
+                .append(Component.literal("picked emeralds without spending extra inventory slots.")
                         .withStyle(ChatFormatting.GRAY)));
         itemLore.add(TextComponent.EMPTY);
-        itemLore.add(new TextComponent(" - " + rows + " Rows ")
+        itemLore.add(Component.literal(" - " + rows + " Rows ")
                 .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent("(" + totalString + " Total)"))
+                .append(Component.literal("(" + totalString + " Total)"))
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         switch (upTo) {
-            case 0 -> itemLore.add(new TextComponent("No Auto-Conversions").withStyle(ChatFormatting.GRAY));
-            case 1 -> itemLore.add(new TextComponent("Converts up to")
+            case 0 -> itemLore.add(Component.literal("No Auto-Conversions").withStyle(ChatFormatting.GRAY));
+            case 1 -> itemLore.add(Component.literal("Converts up to")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
-            default -> itemLore.add(new TextComponent("Converts up to")
+                    .append(Component.literal(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
+            default -> itemLore.add(Component.literal("Converts up to")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
         }
 
         return itemLore;
@@ -115,9 +115,9 @@ public class EmeraldPouchItemStack extends WynnItemStack {
     @Override
     public Component getHoverName() {
         return generated
-                ? new TextComponent("Emerald Pouch ")
+                ? Component.literal("Emerald Pouch ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TextComponent("[Tier " + MathUtils.toRoman(tier) + "]")
+                        .append(Component.literal("[Tier " + MathUtils.toRoman(tier) + "]")
                                 .withStyle(ChatFormatting.DARK_GREEN))
                 : super.getHoverName();
     }

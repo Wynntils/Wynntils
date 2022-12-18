@@ -22,7 +22,7 @@ import com.wynntils.utils.StringUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
     private final List<Screen> GUIDES = List.of(
@@ -32,7 +32,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
             WynntilsPowderGuideScreen.create());
 
     private WynntilsGuidesListScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
+        super(Component.translatable("screens.wynntils.wynntilsGuides.name"));
     }
 
     public static Screen create() {

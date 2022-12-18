@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.AddOperation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
@@ -48,6 +47,6 @@ public class AbbreviateMobHealthFeature extends UserFeature {
         String formattedHealth = StringUtils.integerToShortString(rawHealth).toUpperCase(Locale.ROOT);
 
         String formattedName = healthMatcher.replaceAll("$1" + formattedHealth + "$3");
-        return new TextComponent(formattedName);
+        return Component.literal(formattedName);
     }
 }

@@ -18,7 +18,7 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
@@ -49,7 +49,7 @@ public class WynncraftButtonFeature extends UserFeature {
 
         // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
-            super(x, y, 20, 20, new TranslatableComponent(""), WynncraftButton::onPress);
+            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress);
             this.serverData = serverData;
             this.backScreen = backScreen;
 

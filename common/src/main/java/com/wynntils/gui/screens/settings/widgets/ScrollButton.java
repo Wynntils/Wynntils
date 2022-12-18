@@ -12,7 +12,7 @@ import com.wynntils.utils.MathUtils;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ScrollButton extends AbstractButton {
     private final Consumer<Integer> onScroll;
@@ -36,7 +36,7 @@ public class ScrollButton extends AbstractButton {
             int perScrollIncrement,
             Consumer<Integer> onScroll,
             CustomColor scrollAreaColor) {
-        super(x, y, width, height, new TextComponent("Scroll Button"));
+        super(x, y, width, height, Component.literal("Scroll Button"));
         this.y2 = y2;
         this.maxScroll = maxScroll;
         this.perScrollIncrement = perScrollIncrement;

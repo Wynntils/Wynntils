@@ -24,13 +24,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.phys.Vec3;
 
 public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
     private WynntilsLootrunsScreen() {
-        super(new TranslatableComponent("screens.wynntils.lootruns.name"));
+        super(Component.translatable("screens.wynntils.lootruns.name"));
     }
 
     public static Screen create() {
@@ -80,25 +78,25 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
-                        new TextComponent(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.loaded")
+                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.loaded")
                                 .withStyle(ChatFormatting.YELLOW),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.viewInFolder")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
                                 .withStyle(ChatFormatting.GOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.openOnMap")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.openOnMap")
                                 .withStyle(ChatFormatting.BLUE),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.unload")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.unload")
                                 .withStyle(ChatFormatting.GREEN));
             } else {
                 tooltipLines = List.of(
-                        new TextComponent(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.load")
+                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.load")
                                 .withStyle(ChatFormatting.GREEN),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.viewInFolder")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
                                 .withStyle(ChatFormatting.GOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.openOnMap")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.openOnMap")
                                 .withStyle(ChatFormatting.BLUE),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.remove")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.remove")
                                 .withStyle(ChatFormatting.RED));
             }
 

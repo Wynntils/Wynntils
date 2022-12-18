@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -86,7 +86,7 @@ public class CustomNametagRendererFeature extends UserFeature {
         String itemName = WynnItemUtils.getTranslatedName(itemStack);
 
         if (itemName.contains("Crafted")) {
-            event.addInjectedLine(new TextComponent(itemName).withStyle(ChatFormatting.DARK_AQUA));
+            event.addInjectedLine(Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA));
             return;
         }
 
@@ -98,12 +98,12 @@ public class CustomNametagRendererFeature extends UserFeature {
         if (itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6) {
-            event.addInjectedLine(new TextComponent("Unidentified Item")
+            event.addInjectedLine(Component.literal("Unidentified Item")
                     .withStyle(itemProfile.getTier().getChatFormatting()));
             return;
         }
 
-        event.addInjectedLine(new TextComponent(itemProfile.getDisplayName())
+        event.addInjectedLine(Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting()));
     }
 

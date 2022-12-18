@@ -28,8 +28,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class PoiCreationScreen extends Screen implements TextboxScreen {
@@ -71,7 +70,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private boolean firstSetup = false;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
-        super(new TextComponent("Poi Creation Screen"));
+        super(Component.literal("Poi Creation Screen"));
         this.oldMapScreen = oldMapScreen;
 
         this.firstSetup = true;
@@ -185,7 +184,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Icon
         this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 40, 20, 20, new TextComponent("<"), (button) -> {
+                new Button(this.width / 2 - 100, this.height / 2 + 40, 20, 20, Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
                         selectedIconIndex = POI_ICONS.size() - 1;
                     } else {
@@ -193,7 +192,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                     }
                 }));
         this.addRenderableWidget(
-                new Button(this.width / 2 - 40, this.height / 2 + 40, 20, 20, new TextComponent(">"), (button) -> {
+                new Button(this.width / 2 - 40, this.height / 2 + 40, 20, 20, Component.literal(">"), (button) -> {
                     if (selectedIconIndex + 1 >= POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
@@ -238,13 +237,13 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Visibility
         this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, new TextComponent("<"), (button) -> {
+                new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, Component.literal("<"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
                 }));
         this.addRenderableWidget(
-                new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, new TextComponent(">"), (button) -> {
+                new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, Component.literal(">"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
@@ -261,7 +260,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.height / 2 + 140,
                         100,
                         20,
-                        new TranslatableComponent("screens.wynntils.poiCreation.save"),
+                        Component.translatable("screens.wynntils.poiCreation.save"),
                         (button) -> {
                             savePoi();
                             this.onClose();
@@ -272,7 +271,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                 this.height / 2 + 140,
                 100,
                 20,
-                new TranslatableComponent("screens.wynntils.poiCreation.cancel"),
+                Component.translatable("screens.wynntils.poiCreation.cancel"),
                 (button) -> this.onClose()));
         // endregion
 

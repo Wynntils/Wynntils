@@ -29,7 +29,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 public class WynntilsIngredientGuideScreen
@@ -40,7 +39,7 @@ public class WynntilsIngredientGuideScreen
     private List<IngredientItemStack> parsedItemCache;
 
     private WynntilsIngredientGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
+        super(Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
     }
 
     public static Screen create() {
@@ -145,13 +144,13 @@ public class WynntilsIngredientGuideScreen
 
             String unformattedName = itemStack.getIngredientProfile().getDisplayName();
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                         .withStyle(ChatFormatting.GREEN));
             }
-            tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.open")
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
                     .withStyle(ChatFormatting.RED));
             RenderUtils.drawTooltipAt(
                     poseStack,

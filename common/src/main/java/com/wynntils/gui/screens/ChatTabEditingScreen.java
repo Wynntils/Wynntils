@@ -26,8 +26,7 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabEditingScreen extends Screen implements TextboxScreen {
@@ -51,7 +50,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     }
 
     private ChatTabEditingScreen(ChatTab tab) {
-        super(new TextComponent("Chat Tab Editing Screen"));
+        super(Component.literal("Chat Tab Editing Screen"));
 
         this.edited = tab;
         this.firstSetup = true;
@@ -137,7 +136,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                             || edited.getFilteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
-            Checkbox newBox = new Checkbox(x, y, 20, 20, new TextComponent(type.getName()), ticked, true);
+            Checkbox newBox = new Checkbox(x, y, 20, 20, Component.literal(type.getName()), ticked, true);
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
 
@@ -162,7 +161,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                         this.height / 2 + 75,
                         20,
                         20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.consuming"),
+                        Component.translatable("screens.wynntils.chatTabsGui.consuming"),
                         consumingCheckbox != null && consumingCheckbox.selected(),
                         true));
         if (firstSetup && edited != null) {
@@ -177,7 +176,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                         this.height - 40,
                         100,
                         20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.save")
+                        Component.translatable("screens.wynntils.chatTabsGui.save")
                                 .withStyle(ChatFormatting.DARK_GREEN),
                         (button) -> {
                             saveChatTab();
@@ -190,7 +189,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                         this.height - 40,
                         100,
                         20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.delete")
+                        Component.translatable("screens.wynntils.chatTabsGui.delete")
                                 .withStyle(ChatFormatting.DARK_RED),
                         (button) -> {
                             deleteChatTab();
@@ -202,7 +201,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                 this.height - 40,
                 100,
                 20,
-                new TranslatableComponent("screens.wynntils.chatTabsGui.cancel"),
+                Component.translatable("screens.wynntils.chatTabsGui.cancel"),
                 (button) -> this.onClose()));
         // endregion
 

@@ -8,13 +8,12 @@ import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public enum QuestStatus {
-    STARTED(new TextComponent("Started...").withStyle(ChatFormatting.YELLOW)),
-    CAN_START(new TextComponent("Can start...").withStyle(ChatFormatting.YELLOW)),
-    CANNOT_START(new TextComponent("Cannot start...").withStyle(ChatFormatting.RED)),
-    COMPLETED(new TextComponent("Completed!").withStyle(ChatFormatting.GREEN));
+    STARTED(Component.literal("Started...").withStyle(ChatFormatting.YELLOW)),
+    CAN_START(Component.literal("Can start...").withStyle(ChatFormatting.YELLOW)),
+    CANNOT_START(Component.literal("Cannot start...").withStyle(ChatFormatting.RED)),
+    COMPLETED(Component.literal("Completed!").withStyle(ChatFormatting.GREEN));
 
     /** This component is used to reconstruct quest tooltip in {@link WynntilsQuestBookScreen}.
      */

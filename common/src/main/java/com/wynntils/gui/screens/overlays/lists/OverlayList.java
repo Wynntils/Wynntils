@@ -19,19 +19,18 @@ import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final int ITEM_HEIGHT = 25;
     private static final int ROW_WIDTH = 161;
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
-            new TextComponent("Left click on the overlay to edit it."),
-            new TextComponent("Right click on the overlay to disable/enable it."));
+            Component.literal("Left click on the overlay to edit it."),
+            Component.literal("Right click on the overlay to disable/enable it."));
 
     private static final List<Component> DISABLED_PARENT_TOOLTIP_LINES = List.of(
-            new TextComponent("This overlay's parent feature is disabled.").withStyle(ChatFormatting.RED),
-            new TextComponent("Enable the feature to edit this overlay.").withStyle(ChatFormatting.RED));
+            Component.literal("This overlay's parent feature is disabled.").withStyle(ChatFormatting.RED),
+            Component.literal("Enable the feature to edit this overlay.").withStyle(ChatFormatting.RED));
 
     public OverlayList(OverlaySelectionScreen screen) {
         super(
@@ -63,8 +62,8 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
         if (hovered != null) {
             if (!hovered.getOverlay().isParentEnabled()) {
                 List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
-                helpModified.add(new TextComponent(""));
-                helpModified.add(new TextComponent("Feature: "
+                helpModified.add(Component.literal(""));
+                helpModified.add(Component.literal("Feature: "
                         + Managers.Overlay.getOverlayParent(hovered.getOverlay())
                                 .getTranslatedName()));
 

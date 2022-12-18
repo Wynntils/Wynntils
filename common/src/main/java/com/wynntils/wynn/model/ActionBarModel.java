@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarModel extends Model {
@@ -74,7 +73,7 @@ public final class ActionBarModel extends Model {
         WynntilsMod.postEvent(healthText);
         WynntilsMod.postEvent(manaText);
 
-        MutableComponent modified = new TextComponent(healthText.getMessage())
+        MutableComponent modified = Component.literal(healthText.getMessage())
                 .append("    ")
                 .append(actionText.getMessage())
                 .append("    ")

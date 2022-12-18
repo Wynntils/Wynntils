@@ -15,8 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class DiscoveryFilterButton extends AbstractButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -39,7 +37,7 @@ public class DiscoveryFilterButton extends AbstractButton {
             List<Component> tooltipList,
             Runnable onPress,
             Supplier<Boolean> isEnabled) {
-        super(x, y, width, height, new TextComponent("Discovery Filter Button"));
+        super(x, y, width, height, Component.literal("Discovery Filter Button"));
 
         this.texture = texture;
         this.dynamicTexture = dynamicTexture;
@@ -113,10 +111,10 @@ public class DiscoveryFilterButton extends AbstractButton {
         List<Component> renderedTooltip = new ArrayList<>(tooltipList);
 
         if (isEnabled.get()) {
-            renderedTooltip.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.clickToHide")
+            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToHide")
                     .withStyle(ChatFormatting.GRAY));
         } else {
-            renderedTooltip.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.clickToShow")
+            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToShow")
                     .withStyle(ChatFormatting.GRAY));
         }
 

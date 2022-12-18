@@ -17,7 +17,7 @@ import com.wynntils.wynn.item.IngredientItemStack;
 import java.util.Map;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuideIngredientItemStack extends AbstractButton {
@@ -26,7 +26,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
     public GuideIngredientItemStack(
             int x, int y, int width, int height, IngredientItemStack itemStack, WynntilsIngredientGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide IngredientItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide IngredientItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }

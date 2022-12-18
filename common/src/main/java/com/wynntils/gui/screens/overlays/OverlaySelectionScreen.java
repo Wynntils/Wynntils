@@ -20,7 +20,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class OverlaySelectionScreen extends Screen {
@@ -30,7 +30,7 @@ public class OverlaySelectionScreen extends Screen {
     private OverlayList overlayList;
 
     private OverlaySelectionScreen() {
-        super(new TranslatableComponent("screens.wynntils.overlaySelection.name"));
+        super(Component.translatable("screens.wynntils.overlaySelection.name"));
     }
 
     public static Screen create() {
@@ -45,7 +45,7 @@ public class OverlaySelectionScreen extends Screen {
                 this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                new TranslatableComponent("screens.wynntils.overlaySelection.close"),
+                Component.translatable("screens.wynntils.overlaySelection.close"),
                 button -> McUtils.mc().setScreen(WynntilsMenuScreen.create())));
 
         this.addRenderableWidget(new Button(
@@ -53,7 +53,7 @@ public class OverlaySelectionScreen extends Screen {
                 this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                new TranslatableComponent("screens.wynntils.overlaySelection.freeMove"),
+                Component.translatable("screens.wynntils.overlaySelection.freeMove"),
                 button -> McUtils.mc().setScreen(OverlayManagementScreen.create())));
     }
 

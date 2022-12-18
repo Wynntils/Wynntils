@@ -9,13 +9,13 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class DiscoveryProgressButton extends AbstractButton {
     private final boolean isSecretDiscoveryButton;
 
     public DiscoveryProgressButton(int x, int y, int width, int height, boolean isSecretDiscoveryButton) {
-        super(x, y, width, height, new TextComponent("Discovery Progress Button"));
+        super(x, y, width, height, Component.literal("Discovery Progress Button"));
 
         this.isSecretDiscoveryButton = isSecretDiscoveryButton;
     }
