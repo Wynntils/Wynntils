@@ -1,9 +1,21 @@
+## [0.0.1-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.196...v0.0.1-alpha.197) (2022-12-18)
+
+
+### Miscellaneous Chores
+
+* Sort Features in registry ([b0655b0](https://github.com/Wynntils/Artemis/commit/b0655b0df6b49c2106b328a7581801197f773183))
+
 ## [0.0.1-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.195...v0.0.1-alpha.196) (2022-12-18)
 
 
 ### Code Refactoring
 
 * sort mixins and accesswideners ([#866](https://github.com/Wynntils/Artemis/issues/866)) ([ebc6a92](https://github.com/Wynntils/Artemis/commit/ebc6a92165bfdbb34ab4066df2fed488e724180e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.196 [skip ci] ([f006602](https://github.com/Wynntils/Artemis/commit/f006602652d1f8d01c4fc123213df083b193fa46))
 
 ## [0.0.1-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.194...v0.0.1-alpha.195) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.193 [skip ci] ([664a811](https://github.com/Wynntils/Artemis/commit/664a811620b84cbe2164bdf481e50a1aae612265))
-
-## [0.0.1-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.191...v0.0.1-alpha.192) (2022-12-17)
-
-
-### Bug Fixes
-
-* Fix config option reset button ([#864](https://github.com/Wynntils/Artemis/issues/864)) ([220c593](https://github.com/Wynntils/Artemis/commit/220c593a761d99ddeceee448c226c6fd74438e05))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.192 [skip ci] ([f646003](https://github.com/Wynntils/Artemis/commit/f6460038a8128e2855e1d7426cc6d200af59cbb1))
 
