@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.managers.Manager;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class ConfigUpfixerManager extends Manager {
 
         // Register upfixers here, in order of run priority
         registerUpfixer(new CustomPoiVisbilityUpfixer());
+        registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
     }
 
     public void registerUpfixer(ConfigUpfixer upfixer) {
