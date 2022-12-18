@@ -28,8 +28,8 @@ public class DiscoveryProgressButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    this.getX() + (width - texture.width()) / 2f,
-                    this.getY() + (height - texture.height() / 2f) / 2f,
+                    getX() + (width - texture.width()) / 2f,
+                    getY() + (height - texture.height() / 2f) / 2f,
                     1,
                     texture.width(),
                     texture.height() / 2f,
@@ -43,8 +43,8 @@ public class DiscoveryProgressButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    this.getX() + (width - texture.width()) / 2f,
-                    this.getY() + (height - texture.height() / 2f) / 2f,
+                    getX() + (width - texture.width()) / 2f,
+                    getY() + (height - texture.height() / 2f) / 2f,
                     1,
                     texture.width(),
                     texture.height() / 2f,

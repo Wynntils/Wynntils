@@ -43,8 +43,8 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        float actualX = screen.getTranslationX() + this.getX();
-        float actualY = screen.getTranslationY() + this.getY();
+        float actualX = screen.getTranslationX() + getX();
+        float actualY = screen.getTranslationY() + getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -65,9 +65,9 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         MathUtils.toRoman(itemStack.getTier()),
-                        this.getX() + 2,
-                        this.getX() + 14,
-                        this.getY() + 8,
+                        getX() + 2,
+                        getX() + 14,
+                        getY() + 8,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -79,8 +79,8 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    this.getX() + 12,
-                    this.getY() - 4,
+                    getX() + 12,
+                    getY() - 4,
                     200,
                     9,
                     9,

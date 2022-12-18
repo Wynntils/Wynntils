@@ -35,8 +35,8 @@ public class ChatTabButton extends AbstractButton {
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
-                this.getX(),
-                this.getY(),
+                getX(),
+                getY(),
                 0,
                 width,
                 height);
@@ -48,10 +48,10 @@ public class ChatTabButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         tab.getName(),
-                        this.getX() + 1,
-                        this.getX() + width,
-                        this.getY() + 1,
-                        this.getY() + height,
+                        getX() + 1,
+                        getX() + width,
+                        getY() + 1,
+                        getY() + height,
                         0,
                         color,
                         HorizontalAlignment.Center,

@@ -60,7 +60,7 @@ public class ScrollButton extends AbstractButton {
                     this.y2 - this.getY() - 4 + this.height);
         }
 
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, this.getY(), y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
         RenderUtils.drawHoverableTexturedRect(
                 poseStack, Texture.SETTING_SCROLL_BUTTON, this.getX(), renderY, isHovered);
@@ -68,7 +68,7 @@ public class ScrollButton extends AbstractButton {
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, this.getY(), y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
         return mouseX >= this.getX()
                 && mouseX <= this.getX() + this.width
