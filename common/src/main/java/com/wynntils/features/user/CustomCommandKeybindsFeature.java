@@ -110,7 +110,7 @@ public class CustomCommandKeybindsFeature extends UserFeature {
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
-            case EXECUTE -> McUtils.player().chat(keybindCommand);
+            case EXECUTE -> McUtils.sendCommand(keybindCommand.isEmpty() ? "" : keybindCommand.substring(1));
             case SUGGEST -> {
                 McUtils.mc().setScreen(new ChatScreen(keybindCommand));
             }
