@@ -46,9 +46,9 @@ public abstract class ScreenMixin implements TextboxScreen {
     public List<Renderable> renderables;
 
     // Making this public is required for the mixin, use this with caution anywhere else
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
-        renderables.add(widget);
-        return addWidget(widget);
+    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T renderable) {
+        renderables.add(renderable);
+        return addWidget(renderable);
     }
 
     // Making this public is required for the mixin, use this with caution anywhere else
@@ -105,7 +105,7 @@ public abstract class ScreenMixin implements TextboxScreen {
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "rebuildWidgets",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInit(CallbackInfo ci) {
         EventFactory.onScreenInit((Screen) (Object) this);
