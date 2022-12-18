@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -26,7 +27,7 @@ import net.minecraft.world.item.TooltipFlag;
 public class IngredientItemStack extends WynnItemStack {
     private final boolean isGuideStack;
 
-    private final List<Component> guideTooltip;
+    private final List<MutableComponent> guideTooltip;
 
     private final IngredientProfile ingredientProfile;
 
@@ -80,8 +81,8 @@ public class IngredientItemStack extends WynnItemStack {
         return super.getHoverName();
     }
 
-    private List<Component> generateGuideTooltip() {
-        List<Component> itemLore = new ArrayList<>();
+    private List<MutableComponent> generateGuideTooltip() {
+        List<MutableComponent> itemLore = new ArrayList<>();
 
         itemLore.add(Component.literal("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
         itemLore.add(Component.empty());

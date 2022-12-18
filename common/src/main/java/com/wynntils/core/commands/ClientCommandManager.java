@@ -39,7 +39,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -150,7 +149,7 @@ public final class ClientCommandManager extends Manager {
                 sendError(text);
             }
         } catch (RuntimeException e) {
-            TextComponent error =
+            MutableComponent error =
                     Component.literal(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             sendError(Component.translatable("command.failed")
                     .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
