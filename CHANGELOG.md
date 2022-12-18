@@ -1,9 +1,21 @@
+## [0.0.1-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.195...v0.0.1-alpha.196) (2022-12-18)
+
+
+### Code Refactoring
+
+* sort mixins and accesswideners ([#866](https://github.com/Wynntils/Artemis/issues/866)) ([ebc6a92](https://github.com/Wynntils/Artemis/commit/ebc6a92165bfdbb34ab4066df2fed488e724180e))
+
 ## [0.0.1-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.194...v0.0.1-alpha.195) (2022-12-17)
 
 
 ### New Features
 
 * Move overlays by one pixel with arrows, shift+arrow to change alignment ([#868](https://github.com/Wynntils/Artemis/issues/868)) ([7f2479f](https://github.com/Wynntils/Artemis/commit/7f2479fa597d2fd444ffd3aa9911d9acf263d9eb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.195 [skip ci] ([6019fdb](https://github.com/Wynntils/Artemis/commit/6019fdbc76d8d448e2ef78d5da6d373e18c79afe))
 
 ## [0.0.1-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.193...v0.0.1-alpha.194) (2022-12-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.192 [skip ci] ([f646003](https://github.com/Wynntils/Artemis/commit/f6460038a8128e2855e1d7426cc6d200af59cbb1))
-
-## [0.0.1-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.190...v0.0.1-alpha.191) (2022-12-17)
-
-
-### Bug Fixes
-
-* Update services.json hash ([c35cbd6](https://github.com/Wynntils/Artemis/commit/c35cbd66a64e88654a3b65b733b06e49182ede1a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.191 [skip ci] ([f4045a8](https://github.com/Wynntils/Artemis/commit/f4045a8aea31de4583dfe59e2f284e67a019720b))
 
