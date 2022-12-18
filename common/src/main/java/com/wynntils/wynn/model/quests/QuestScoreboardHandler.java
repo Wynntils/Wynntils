@@ -5,13 +5,13 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public class QuestScoreboardHandler implements ScoreboardHandler {
@@ -36,26 +36,18 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
             }
         }
 
-        Optional<QuestInfo> questInfoOpt = QuestManager.getQuestFromName(
-                WynnUtils.normalizeBadString(questName.toString().trim()));
-        if (questInfoOpt.isEmpty()) {
-            WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + questName);
-            return;
-        }
-
-        QuestInfo questInfo = questInfoOpt.get();
-        questInfo.setNextTask(nextTask.toString().trim());
-
-        QuestManager.setCurrentQuest(questInfo);
+        String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
+        String fixedNextTask = WynnUtils.normalizeBadString(nextTask.toString().trim());
+        Managers.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-        QuestManager.setCurrentQuest(null);
+        Managers.Quest.clearTrackedQuestFromScoreBoard();
     }
 
     @Override
     public void resetHandler() {
-        QuestManager.setCurrentQuest(null);
+        Managers.Quest.clearTrackedQuestFromScoreBoard();
     }
 }

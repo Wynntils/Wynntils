@@ -10,11 +10,11 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +26,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.UnidentifiedItemStack);
     }
 
     @SubscribeEvent

@@ -29,6 +29,7 @@ public abstract class Function<T> implements Translatable {
         return List.of();
     }
 
+    @Override
     public String getTranslatedName() {
         return getTranslation("name");
     }
@@ -41,6 +42,7 @@ public abstract class Function<T> implements Translatable {
         return translationName;
     }
 
+    @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("function.wynntils." + getTranslationKeyName() + "." + keySuffix);
     }

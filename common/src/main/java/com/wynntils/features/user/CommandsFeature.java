@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandSentEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -15,7 +14,7 @@ public class CommandsFeature extends UserFeature {
     public void onCommand(CommandSentEvent e) {
         String command = e.getCommand();
 
-        if (ClientCommandManager.handleCommand(command)) {
+        if (Managers.ClientCommand.handleCommand(command)) {
             e.setCanceled(true);
         }
     }

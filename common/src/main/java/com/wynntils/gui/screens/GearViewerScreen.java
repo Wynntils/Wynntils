@@ -32,7 +32,7 @@ public class GearViewerScreen extends Screen {
     private final ItemStack heldItem;
     private final List<ItemStack> armorItems;
 
-    public GearViewerScreen(Player player) {
+    private GearViewerScreen(Player player) {
         super(Component.empty());
         this.player = player;
         this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
@@ -43,6 +43,10 @@ public class GearViewerScreen extends Screen {
         }
 
         Collections.reverse(armorItems);
+    }
+
+    public static Screen create(Player player) {
+        return WynntilsScreenWrapper.create(new GearViewerScreen(player));
     }
 
     @Override

@@ -7,18 +7,19 @@ package com.wynntils.gui.screens.settings;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
@@ -60,7 +61,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
 
-    public WynntilsBookSettingsScreen() {
+    private WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
         searchWidget = new SearchWidget(
@@ -75,6 +76,10 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
         reloadConfigurableButtons();
     }
 
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsBookSettingsScreen());
+    }
+
     @Override
     protected void init() {
         this.addRenderableWidget(searchWidget);
@@ -86,7 +91,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
                 14,
                 Component.translatable("screens.wynntils.settingsScreen.apply"),
                 () -> {
-                    ConfigManager.saveConfig();
+                    Managers.Config.saveConfig();
                     this.onClose();
                 },
                 List.of(Component.translatable("screens.wynntils.settingsScreen.apply.description")
@@ -326,8 +331,8 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
 
     @Override
     public void onClose() {
-        ConfigManager.loadConfigFile();
-        ConfigManager.loadConfigOptions(ConfigManager.getConfigHolders(), true);
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadConfigOptions(Managers.Config.getConfigHolders(), true);
         super.onClose();
     }
 

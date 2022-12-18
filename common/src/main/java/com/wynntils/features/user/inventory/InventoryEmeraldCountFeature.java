@@ -10,6 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -20,7 +21,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.PlayerInventoryModel;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.EmeraldUnits;
 import com.wynntils.wynn.utils.ContainerUtils;
@@ -47,8 +47,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     public boolean showContainerEmeraldCount = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(PlayerInventoryModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.PlayerInventory);
     }
 
     @SubscribeEvent
@@ -56,7 +56,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.containerMenu());
 
         if (!(event.getScreen() instanceof InventoryScreen)) {
-            emeralds -= PlayerInventoryModel.getCurrentEmeraldCount();
+            emeralds -= Models.PlayerInventory.getCurrentEmeraldCount();
         }
 
         if (emeralds == 0) return;

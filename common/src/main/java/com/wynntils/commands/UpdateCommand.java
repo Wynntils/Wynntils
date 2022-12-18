@@ -8,7 +8,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.UpdateManager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
@@ -33,7 +34,7 @@ public class UpdateCommand extends CommandBase {
 
         CompletableFuture.runAsync(() -> {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
-            CompletableFuture<UpdateManager.UpdateResult> completableFuture = UpdateManager.tryUpdate();
+            CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
             completableFuture.whenComplete((result, throwable) -> {
                 switch (result) {

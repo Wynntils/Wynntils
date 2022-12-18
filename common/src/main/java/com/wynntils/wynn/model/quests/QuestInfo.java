@@ -4,15 +4,16 @@
  */
 package com.wynntils.wynn.model.quests;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,6 +122,23 @@ public class QuestInfo {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestInfo questInfo = (QuestInfo) o;
+        return level == questInfo.level
+                && isMiniQuest == questInfo.isMiniQuest
+                && Objects.equals(name, questInfo.name)
+                && length == questInfo.length
+                && Objects.equals(additionalRequirements, questInfo.additionalRequirements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, length, level, additionalRequirements, isMiniQuest);
+    }
+
+    @Override
     public String toString() {
         return "QuestInfo[" + "name=\""
                 + name + "\", " + "isMiniQuest="
@@ -142,7 +160,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((CharacterManager.getCharacterInfo().getLevel() >= questInfo.getLevel()
+            tooltipLines.add((Managers.Character.getCharacterInfo().getLevel() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
                     .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -151,7 +169,7 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = CharacterManager.getCharacterInfo()
+            MutableComponent base = Managers.Character.getCharacterInfo()
                                     .getProfessionInfo()
                                     .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()

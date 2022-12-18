@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
@@ -23,8 +23,8 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -11,6 +11,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.overlays.lists.OverlayList;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -28,8 +29,12 @@ public class OverlaySelectionScreen extends Screen {
 
     private OverlayList overlayList;
 
-    public OverlaySelectionScreen() {
+    private OverlaySelectionScreen() {
         super(Component.translatable("screens.wynntils.overlaySelection.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new OverlaySelectionScreen());
     }
 
     @Override
@@ -37,7 +42,7 @@ public class OverlaySelectionScreen extends Screen {
         overlayList = new OverlayList(this);
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlaySelection.close"),
-                        button -> McUtils.mc().setScreen(new WynntilsMenuScreen()))
+                        button -> McUtils.mc().setScreen(WynntilsMenuScreen.create()))
                 .bounds(
                         (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
                         this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,
@@ -47,7 +52,7 @@ public class OverlaySelectionScreen extends Screen {
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlaySelection.freeMove"),
-                        button -> McUtils.mc().setScreen(new OverlayManagementScreen()))
+                        button -> McUtils.mc().setScreen(OverlayManagementScreen.create()))
                 .bounds(
                         (int) (this.width / 2 + BUTTON_WIDTH * 0.5f),
                         this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20,

@@ -5,6 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -16,9 +17,9 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -27,10 +28,12 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class QuestButton extends AbstractButton {
-    private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
-    private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
-    private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
-    private static final CustomColor TRACKED_BUTTON_COLOR_HOVERED = new CustomColor(126, 211, 106);
+    private static final Pair<CustomColor, CustomColor> BUTTON_COLOR =
+            Pair.of(new CustomColor(181, 174, 151), new CustomColor(121, 116, 101));
+    private static final Pair<CustomColor, CustomColor> TRACKED_BUTTON_COLOR =
+            Pair.of(new CustomColor(176, 197, 148), new CustomColor(126, 211, 106));
+    private static final Pair<CustomColor, CustomColor> TRACKING_REQUESTED_BUTTON_COLOR =
+            Pair.of(new CustomColor(255, 206, 127), new CustomColor(255, 196, 50));
     private final QuestInfo questInfo;
     private final WynntilsQuestBookScreen questBookScreen;
 
@@ -42,10 +45,7 @@ public class QuestButton extends AbstractButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor backgroundColor = questBookScreen.getTracked() == this.questInfo
-                ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
-                : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
-
+        CustomColor backgroundColor = getBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 10 - 11;
@@ -83,6 +83,20 @@ public class QuestButton extends AbstractButton {
                 stateTexture.height());
     }
 
+    private CustomColor getBackgroundColor() {
+        Pair<CustomColor, CustomColor> colors;
+
+        if (this.questInfo.equals(Managers.Quest.getTrackedQuest())) {
+            colors = TRACKED_BUTTON_COLOR;
+        } else if (this.questInfo.equals(questBookScreen.getTrackingRequested())) {
+            colors = TRACKING_REQUESTED_BUTTON_COLOR;
+        } else {
+            colors = BUTTON_COLOR;
+        }
+
+        return (this.isHovered ? colors.b() : colors.a());
+    }
+
     // Not called
     @Override
     public void onPress() {}
@@ -95,7 +109,7 @@ public class QuestButton extends AbstractButton {
             Optional<Location> nextLocation = this.questInfo.getNextLocation();
 
             nextLocation.ifPresent(
-                    location -> McUtils.mc().setScreen(new MainMapScreen((float) location.x, (float) location.z)));
+                    location -> McUtils.mc().setScreen(MainMapScreen.create((float) location.x, (float) location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             openQuestWiki();
         }
@@ -106,19 +120,19 @@ public class QuestButton extends AbstractButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.playSound(SoundEvents.ANVIL_LAND);
-            QuestManager.toggleTracking(this.questInfo);
-
-            if (questBookScreen.getTracked() != this.questInfo) {
-                questBookScreen.setTracked(this.questInfo);
+            if (this.questInfo.equals(Managers.Quest.getTrackedQuest())) {
+                Managers.Quest.stopTracking();
+                questBookScreen.setTrackingRequested(null);
             } else {
-                questBookScreen.setTracked(null);
+                Managers.Quest.startTracking(this.questInfo);
+                questBookScreen.setTrackingRequested(this.questInfo);
             }
         }
     }
 
     private void openQuestWiki() {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
-        QuestManager.openQuestOnWiki(questInfo);
+        Managers.Quest.openQuestOnWiki(questInfo);
     }
 
     @Override

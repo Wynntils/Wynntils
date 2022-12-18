@@ -33,7 +33,7 @@ public class DialogueHistoryButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(new WynntilsDialogueHistoryScreen());
+        McUtils.mc().setScreen(WynntilsDialogueHistoryScreen.create());
     }
 
     @Override

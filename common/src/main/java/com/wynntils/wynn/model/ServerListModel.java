@@ -6,51 +6,49 @@ package com.wynntils.wynn.model;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.webapi.WebManager;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ServerListModel extends Model {
+public final class ServerListModel extends Model {
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
-    private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
-    private static Map<String, ServerProfile> availableServers = new HashMap<>();
+    private Map<String, ServerProfile> availableServers = new HashMap<>();
 
-    public static void init() {
-        updateServerList(0);
+    @Override
+    public void init() {
+        updateServerList();
     }
 
-    public static List<String> getWynnServerTypes() {
+    public List<String> getWynnServerTypes() {
         return SERVER_TYPES;
     }
 
-    public static Set<String> getServers() {
+    public Set<String> getServers() {
         return availableServers.keySet();
     }
 
-    public static List<String> getServersSortedOnUptime() {
+    public List<String> getServersSortedOnUptime() {
         return getServers().stream()
                 .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
                 .toList();
     }
 
-    public static List<String> getServersSortedOnNameOfType(String serverType) {
+    public List<String> getServersSortedOnNameOfType(String serverType) {
         return getServers().stream()
                 .filter(server -> server.startsWith(serverType))
                 .sorted((o1, o2) -> {
@@ -62,36 +60,42 @@ public class ServerListModel extends Model {
                 .toList();
     }
 
-    public static ServerProfile getServer(String worldId) {
+    public ServerProfile getServer(String worldId) {
         return availableServers.get(worldId);
     }
 
-    public static boolean forceUpdate(int timeOutMs) {
-        // timeOutMs is currently ignored; will be fixed soon
-        return updateNow();
+    public boolean forceUpdate(int timeOutMs) {
+        CompletableFuture<Boolean> future = updateServerList();
+        try {
+            future.get(timeOutMs, TimeUnit.MILLISECONDS);
+            return true;
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // if timeout is reached, return false
+            return false;
+        }
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldStateManager.State.HUB
                 && event.getNewState() != WorldStateManager.State.CONNECTING) return;
 
-        updateServerList(0);
+        updateServerList();
     }
 
-    private static boolean updateNow() {
-        if (WebManager.apiUrls == null || !WynntilsAccountManager.isLoggedIn()) return false;
-        String url = WebManager.apiUrls.get("Athena") + "/cache/get/serverList";
+    private CompletableFuture<Boolean> updateServerList() {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        try {
-            URLConnection st = WebManager.generateURLRequest(url);
-            InputStreamReader stInputReader = new InputStreamReader(st.getInputStream(), StandardCharsets.UTF_8);
-            JsonObject json = JsonParser.parseReader(stInputReader).getAsJsonObject();
+        // dataAthenaServerList is based on
+        // https://api.wynncraft.com/public_api.php?action=onlinePlayers
+        // but injects a firstSeen timestamp when the server was first noticed by Athena
 
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_SERVER_LIST);
+        dl.handleJsonObject(json -> {
             JsonObject servers = json.getAsJsonObject("servers");
             Map<String, ServerProfile> newMap = new HashMap<>();
 
-            long serverTime = Long.parseLong(st.getHeaderField("timestamp"));
+            long serverTime = dl.getResponseTimestamp();
             for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
                 ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
                 profile.matchTime(serverTime);
@@ -100,15 +104,8 @@ public class ServerListModel extends Model {
             }
 
             availableServers = newMap;
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private static void updateServerList(int timeOutMs) {
-        // Will update in background
-        // timeOutMs is currently ignored; will be fixed soon
-        EXECUTOR.submit(ServerListModel::updateNow);
+            future.complete(true);
+        });
+        return future;
     }
 }

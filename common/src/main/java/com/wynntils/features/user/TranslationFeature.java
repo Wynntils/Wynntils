@@ -10,6 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.services.TranslationModel;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -46,8 +47,8 @@ public class TranslationFeature extends UserFeature {
     public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(TranslationModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Translation);
     }
 
     @SubscribeEvent
@@ -57,7 +58,7 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+        Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsg -> {
             String messageToSend;
             if (translatedMsg != null) {
                 messageToSend = unwrapCoding(translatedMsg);
@@ -82,7 +83,7 @@ public class TranslationFeature extends UserFeature {
         String origCoded = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
         if (origCoded != null) {
             String wrapped = wrapCoding(origCoded);
-            TranslationModel.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+            Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsg -> {
                 String unwrapped = unwrapCoding(translatedMsg);
                 // FIXME: We need a ComponentUtils.componentFromCoded()...
                 // This will currently remove all formatting :(

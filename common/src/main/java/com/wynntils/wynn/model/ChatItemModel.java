@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.model;
 
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -28,7 +30,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ChatItemModel {
+public final class ChatItemModel extends Model {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -72,7 +74,7 @@ public final class ChatItemModel {
      * modified without also changing the encoding in legacy.
      *
      */
-    public static String encodeItem(GearItemStack item) {
+    public String encodeItem(GearItemStack item) {
         String itemName = item.getSimpleName();
 
         // get identification data - ordered for consistency
@@ -133,7 +135,7 @@ public final class ChatItemModel {
         return encoded.toString();
     }
 
-    private static GearItemStack decodeItem(String encoded) {
+    private GearItemStack decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 
@@ -142,8 +144,8 @@ public final class ChatItemModel {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = ItemProfilesManager.getItemsMap() != null
-                ? ItemProfilesManager.getItemsMap().get(name)
+        ItemProfile item = Managers.ItemProfiles.getItemsMap() != null
+                ? Managers.ItemProfiles.getItemsMap().get(name)
                 : null;
         if (item == null) return null;
 
@@ -212,11 +214,11 @@ public final class ChatItemModel {
         return new GearItemStack(item, idContainers, powderList, rerolls);
     }
 
-    public static Matcher chatItemMatcher(String text) {
+    public Matcher chatItemMatcher(String text) {
         return ENCODED_PATTERN.matcher(text);
     }
 
-    public static Component insertItemComponents(Component message) {
+    public Component insertItemComponents(Component message) {
         // no item tooltips to insert
         if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
@@ -264,7 +266,7 @@ public final class ChatItemModel {
         return temp;
     }
 
-    private static Component createItemComponent(GearItemStack item) {
+    private Component createItemComponent(GearItemStack item) {
         MutableComponent itemComponent = Component.literal(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());
@@ -276,7 +278,7 @@ public final class ChatItemModel {
         return itemComponent;
     }
 
-    private static String encodeString(String text) {
+    private String encodeString(String text) {
         StringBuilder encoded = new StringBuilder();
         for (char c : text.toCharArray()) {
             int value = c - 32; // offset by 32 to ignore ascii control characters
@@ -285,11 +287,11 @@ public final class ChatItemModel {
         return encoded.toString();
     }
 
-    private static String encodeNumber(int value) {
+    private String encodeNumber(int value) {
         return new String(Character.toChars(value + OFFSET));
     }
 
-    private static String decodeString(String text) {
+    private String decodeString(String text) {
         StringBuilder decoded = new StringBuilder();
         for (int i = 0; i < text.length(); i += 2) {
             int value = text.codePointAt(i) - OFFSET + 32;
@@ -298,7 +300,7 @@ public final class ChatItemModel {
         return decoded.toString();
     }
 
-    private static int[] decodeNumbers(String text) {
+    private int[] decodeNumbers(String text) {
         int[] decoded = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i += 2) {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;

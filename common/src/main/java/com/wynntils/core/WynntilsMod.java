@@ -10,11 +10,12 @@ import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.CrashReportManager;
-import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -124,6 +125,10 @@ public final class WynntilsMod {
         return new File(MOD_STORAGE_ROOT, dirName);
     }
 
+    public static InputStream getModResourceAsStream(String resourceName) {
+        return WynntilsMod.class.getClassLoader().getResourceAsStream("assets/" + MOD_ID + "/" + resourceName);
+    }
+
     public static Logger getLogger() {
         return LOGGER;
     }
@@ -176,11 +181,11 @@ public final class WynntilsMod {
                 modLoader,
                 Minecraft.getInstance().getLaunchedVersion());
 
-        addCrashCallbacks();
-
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
-        ManagerRegistry.init();
+        Managers.init();
+        ModelRegistry.init();
+        addCrashCallbacks();
     }
 
     private static void parseVersion(String modVersion) {
@@ -202,12 +207,7 @@ public final class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("In Development") {
-            @Override
-            public Object generate() {
-                return isDevelopmentEnvironment() ? "Yes" : "No";
-            }
-        });
+        Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
     public enum ModLoader {

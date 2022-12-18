@@ -4,15 +4,14 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
-import com.wynntils.wynn.model.BombBellModel;
+import com.wynntils.core.managers.Models;
 import java.util.List;
 
 public class BombBellTrackingFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class, BombBellModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat, Models.BombBell);
     }
 }

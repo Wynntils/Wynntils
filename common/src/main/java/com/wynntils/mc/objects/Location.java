@@ -32,6 +32,7 @@ public class Location extends Vector3d implements Position {
         this(location.x(), location.y(), location.z());
     }
 
+    @Override
     public void add(Vector3d loc) {
         x += loc.x;
         y += loc.y;
@@ -106,6 +107,7 @@ public class Location extends Vector3d implements Position {
         return new Vec3(x, y, z);
     }
 
+    @Override
     public Location clone() throws CloneNotSupportedException {
         super.clone();
         return new Location(x, y, z);

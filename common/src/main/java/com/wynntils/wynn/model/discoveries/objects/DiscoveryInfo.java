@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class DiscoveryInfo {
 
         displayLore.add(Component.literal(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
 
-        if (CharacterManager.getCharacterInfo().getLevel() >= minLevel) {
+        if (Managers.Character.getCharacterInfo().getLevel() >= minLevel) {
             displayLore.add(Component.literal("✔")
                     .withStyle(ChatFormatting.GREEN)
                     .append(Component.literal(" Combat Lv. Min: ")

@@ -5,8 +5,9 @@
 package com.wynntils.sockets.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
+import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -25,9 +26,6 @@ import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -38,25 +36,27 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class HadesModel extends Model {
+public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
-    private static HadesConnection hadesConnection;
-    private static int tickCountUntilUpdate = 0;
-    private static PlayerStatus lastSentStatus;
-    private static ScheduledExecutorService pingScheduler;
+    private HadesConnection hadesConnection;
+    private int tickCountUntilUpdate = 0;
+    private PlayerStatus lastSentStatus;
+    private ScheduledExecutorService pingScheduler;
 
-    public static void init() {
+    @Override
+    public void init() {
         tryCreateConnection();
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         tryDisconnect();
     }
 
-    private static void tryCreateConnection() {
-        if (!WynntilsAccountManager.isLoggedIn()) {
+    private void tryCreateConnection() {
+        if (!Managers.WynntilsAccount.isLoggedIn()) {
             WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
             return;
         }
@@ -76,31 +76,31 @@ public class HadesModel extends Model {
         }
     }
 
-    private static void tryDisconnect() {
+    private void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
         }
     }
 
     @SubscribeEvent
-    public static void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(SocketEvent.Authenticated event) {
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
-        pingScheduler.scheduleAtFixedRate(HadesModel::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
+        pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
-    public static void onDisconnect(SocketEvent.Disconnected event) {
+    public void onDisconnect(SocketEvent.Disconnected event) {
         pingScheduler.shutdown();
     }
 
-    private static void sendPing() {
+    private void sendPing() {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketPing(System.currentTimeMillis()));
     }
 
     @SubscribeEvent
-    public static void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
+    public void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
         if (!HadesFeature.INSTANCE.shareWithFriends || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
@@ -110,7 +110,7 @@ public class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
+    public void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
         if (!HadesFeature.INSTANCE.shareWithParty || !isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
@@ -120,19 +120,19 @@ public class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         tryResendWorldData();
     }
 
     @SubscribeEvent
-    public static void onClassChange(CharacterUpdateEvent event) {
+    public void onClassChange(CharacterUpdateEvent event) {
         tryResendWorldData();
     }
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.End event) {
+    public void onTick(ClientTickEvent.End event) {
         if (!isSocketOpen()) return;
-        if (!WorldStateManager.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -151,10 +151,10 @@ public class HadesModel extends Model {
                             pX,
                             pY,
                             pZ,
-                            ActionBarModel.getCurrentHealth(),
-                            ActionBarModel.getMaxHealth(),
-                            ActionBarModel.getCurrentMana(),
-                            ActionBarModel.getMaxMana())) {
+                            Models.ActionBar.getCurrentHealth(),
+                            Models.ActionBar.getMaxHealth(),
+                            Models.ActionBar.getCurrentMana(),
+                            Models.ActionBar.getMaxMana())) {
                 tickCountUntilUpdate = 1;
                 return;
             }
@@ -165,10 +165,10 @@ public class HadesModel extends Model {
                     pX,
                     pY,
                     pZ,
-                    ActionBarModel.getCurrentHealth(),
-                    ActionBarModel.getMaxHealth(),
-                    ActionBarModel.getCurrentMana(),
-                    ActionBarModel.getMaxMana());
+                    Models.ActionBar.getCurrentHealth(),
+                    Models.ActionBar.getMaxHealth(),
+                    Models.ActionBar.getCurrentMana(),
+                    Models.ActionBar.getMaxMana());
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
@@ -181,21 +181,21 @@ public class HadesModel extends Model {
         }
     }
 
-    public static void tryResendWorldData() {
+    public void tryResendWorldData() {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
-                WorldStateManager.getCurrentWorldName(),
-                CharacterManager.getCharacterInfo().getId()));
+                Managers.WorldState.getCurrentWorldName(),
+                Managers.Character.getCharacterInfo().getId()));
     }
 
-    public static void resetSocialType(SocialType socialType) {
+    public void resetSocialType(SocialType socialType) {
         if (!isSocketOpen()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
     }
 
-    private static boolean isSocketOpen() {
+    private boolean isSocketOpen() {
         return hadesConnection != null && hadesConnection.isOpen();
     }
 }

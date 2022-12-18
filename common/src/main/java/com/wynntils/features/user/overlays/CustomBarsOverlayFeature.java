@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -27,7 +28,6 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.objects.ManaTexture;
@@ -39,8 +39,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomBarsOverlayFeature extends UserFeature {
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class, BossBarModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ActionBar, Models.BossBar);
     }
 
     @SubscribeEvent
@@ -220,11 +220,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            int current = ActionBarModel.getCurrentHealth();
-            int max = ActionBarModel.getMaxHealth();
+            int current = Models.ActionBar.getCurrentHealth();
+            int max = Models.ActionBar.getMaxHealth();
             return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
+        @Override
         protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();
@@ -297,12 +298,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.bloodPoolBar.getBarProgress();
+            return Models.BossBar.bloodPoolBar.getBarProgress();
         }
 
         @Override
         public boolean isActive() {
-            return BossBarModel.bloodPoolBar.isActive();
+            return Models.BossBar.bloodPoolBar.isActive();
         }
     }
 
@@ -333,8 +334,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            int current = ActionBarModel.getCurrentMana();
-            int max = ActionBarModel.getMaxMana();
+            int current = Models.ActionBar.getCurrentMana();
+            int max = Models.ActionBar.getMaxMana();
             return new BossBarModel.BarProgress(current, max, current / (float) max);
         }
 
@@ -421,12 +422,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.manaBankBar.getBarProgress();
+            return Models.BossBar.manaBankBar.getBarProgress();
         }
 
         @Override
         public boolean isActive() {
-            return BossBarModel.manaBankBar.isActive();
+            return Models.BossBar.manaBankBar.isActive();
         }
     }
 
@@ -446,7 +447,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.awakenedBar.getBarProgress();
+            return Models.BossBar.awakenedBar.getBarProgress();
         }
 
         @Override
@@ -456,7 +457,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public boolean isActive() {
-            return BossBarModel.awakenedBar.isActive();
+            return Models.BossBar.awakenedBar.isActive();
         }
     }
 
@@ -475,7 +476,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.focusBar.getBarProgress();
+            return Models.BossBar.focusBar.getBarProgress();
         }
 
         @Override
@@ -485,7 +486,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public boolean isActive() {
-            return BossBarModel.focusBar.isActive();
+            return Models.BossBar.focusBar.isActive();
         }
     }
 
@@ -505,7 +506,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarModel.BarProgress progress() {
-            return BossBarModel.corruptedBar.getBarProgress();
+            return Models.BossBar.corruptedBar.getBarProgress();
         }
 
         @Override
@@ -515,7 +516,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public boolean isActive() {
-            return BossBarModel.corruptedBar.isActive();
+            return Models.BossBar.corruptedBar.isActive();
         }
     }
 }

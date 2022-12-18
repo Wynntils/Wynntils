@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -19,11 +20,11 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.CharacterManager;
-import com.wynntils.wynn.model.SplashManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -38,15 +39,22 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuButton hovered = null;
 
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
-    private static final WynntilsBookSettingsScreen settingsScreenInstance = new WynntilsBookSettingsScreen();
+    private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
 
-    public WynntilsMenuScreen() {
+    private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
+        setup();
+    }
 
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsMenuScreen());
+    }
+
+    private void setup() {
         buttons.add(new WynntilsMenuButton(
                 Texture.QUEST_BOOK_ICON,
                 true,
-                new WynntilsQuestBookScreen(),
+                WynntilsQuestBookScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -76,7 +84,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.OVERLAYS_ICON,
                 true,
-                new OverlaySelectionScreen(),
+                OverlaySelectionScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -91,7 +99,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.DIALOGUE_BUTTON,
                 false,
-                new WynntilsDialogueHistoryScreen(),
+                WynntilsDialogueHistoryScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -108,7 +116,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new WynntilsMenuButton(
                     Texture.MAP_ICON,
                     true,
-                    new MainMapScreen(),
+                    MainMapScreen.create(),
                     List.of(
                             Component.literal("[>] ")
                                     .withStyle(ChatFormatting.GOLD)
@@ -124,7 +132,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.LOOTRUN_ICON,
                 true,
-                new WynntilsLootrunsScreen(),
+                WynntilsLootrunsScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -140,7 +148,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.GUIDES_ICON,
                 true,
-                new WynntilsGuidesListScreen(),
+                WynntilsGuidesListScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -156,7 +164,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         buttons.add(new WynntilsMenuButton(
                 Texture.DISCOVERIES_ICON,
                 true,
-                new WynntilsDiscoveriesScreen(),
+                WynntilsDiscoveriesScreen.create(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
@@ -214,7 +222,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
-        CharacterManager.CharacterInfo characterInfo = CharacterManager.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -228,7 +236,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
 
-        String currentSplash = SplashManager.getCurrentSplash();
+        String currentSplash = Managers.Splash.getCurrentSplash();
         currentSplash = currentSplash == null ? "" : currentSplash;
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

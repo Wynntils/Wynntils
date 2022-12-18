@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TabModel extends Model {
+public final class TabModel extends Model {
     /**
      * CG1 is the color and symbol used for the effect, and the strength modifier string (e.g. "79%")
      * NCG1 is for strength modifiers without a decimal, and the % sign
@@ -34,12 +34,10 @@ public class TabModel extends Model {
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
-    private static List<StatusTimer> timers = new ArrayList<>();
-
-    public static void init() {}
+    private List<StatusTimer> timers = new ArrayList<>();
 
     @SubscribeEvent
-    public static void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
+    public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
         String footer = event.getFooter();
 
         if (footer.isEmpty()) {
@@ -71,7 +69,7 @@ public class TabModel extends Model {
         WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
-    public static List<StatusTimer> getTimers() {
+    public List<StatusTimer> getTimers() {
         return timers;
     }
 }

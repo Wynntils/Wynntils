@@ -6,11 +6,11 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatCoordinatesFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(CompassModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

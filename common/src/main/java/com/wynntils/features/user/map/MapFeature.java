@@ -6,17 +6,19 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -24,7 +26,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.objects.HealthTexture;
@@ -32,6 +33,7 @@ import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -51,6 +53,30 @@ public class MapFeature extends UserFeature {
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
+
+    @Config
+    public float poiFadeDistance = 0.6f;
+
+    @Config
+    public float combatPoiMinZoom = 0.1f;
+
+    @Config
+    public float servicePoiMinZoom = 1f;
+
+    @Config
+    public float customPoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier1PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier2PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.1f;
 
     @Config
     public PointerType pointerType = PointerType.Arrow;
@@ -94,17 +120,18 @@ public class MapFeature extends UserFeature {
     public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, () -> {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
-        if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
-            mainMapScreen.setHoldingMapKey(true);
+        Optional<MainMapScreen> screen = WynntilsScreenWrapper.instanceOf(MainMapScreen.class);
+        if (screen.isPresent()) {
+            screen.get().setHoldingMapKey(true);
             return;
         }
 
-        McUtils.mc().setScreen(new MainMapScreen());
+        McUtils.mc().setScreen(MainMapScreen.create());
     });
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(MapModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Map);
     }
 
     @SubscribeEvent
@@ -132,7 +159,11 @@ public class MapFeature extends UserFeature {
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
-                location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
+                location,
+                tier.getWaypointName(),
+                CommonColors.WHITE,
+                tier.getWaypointTexture(),
+                CustomPoi.Visibility.DEFAULT);
 
         if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
             MapFeature.INSTANCE.customPois.add(newPoi);
@@ -141,7 +172,7 @@ public class MapFeature extends UserFeature {
             NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 

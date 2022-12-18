@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.core.managers.Models;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ServerItemStack extends WynnItemStack {
         List<Component> newTooltip = new ArrayList<>(getOriginalTooltip());
 
         String serverId = "WC" + id;
-        ServerProfile serverProfile = ServerListModel.getServer(serverId);
+        ServerProfile serverProfile = Models.ServerList.getServer(serverId);
         String uptimeString = serverProfile == null ? "Unknown" : serverProfile.getUptime();
 
         newTooltip.add(Component.literal("Uptime: ")

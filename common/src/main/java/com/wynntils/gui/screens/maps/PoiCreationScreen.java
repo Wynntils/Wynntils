@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -15,6 +15,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -60,7 +61,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private Button saveButton;
 
     private int selectedIconIndex = 0;
-    private Visibility selectedVisiblity = Visibility.DEFAULT;
+    private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
     private final MainMapScreen oldMapScreen;
@@ -68,25 +69,37 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private PoiLocation setupLocation;
     private boolean firstSetup = false;
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Creation Screen"));
         this.oldMapScreen = oldMapScreen;
 
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
         this(oldMapScreen);
 
         this.oldPoi = poi;
         this.firstSetup = true;
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen) {
+        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen));
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen, setupLocation));
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
+        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen, poi));
     }
 
     @Override
@@ -226,22 +239,22 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Visibility
         this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() - 1 + Visibility.values().length)
-                                    % Visibility.values().length];
+                    selectedVisiblity = CustomPoi.Visibility.values()[
+                            (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                                    % CustomPoi.Visibility.values().length];
                 })
                 .bounds(this.width / 2 - 100, this.height / 2 + 90, 20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() + 1 + Visibility.values().length)
-                                    % Visibility.values().length];
+                    selectedVisiblity = CustomPoi.Visibility.values()[
+                            (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                                    % CustomPoi.Visibility.values().length];
                 })
                 .bounds(this.width / 2 + 80, this.height / 2 + 90, 20, 20)
                 .build());
 
         if (oldPoi != null && firstSetup) {
-            selectedVisiblity = Visibility.fromMinZoom(oldPoi.getMinZoom());
+            selectedVisiblity = oldPoi.getVisibility();
         }
         // endregion
 
@@ -347,7 +360,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
+                        I18n.get("screens.wynntils.poiCreation.CustomPoi.Visibility") + ":",
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
@@ -453,7 +466,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
                 POI_ICONS.get(selectedIconIndex),
-                selectedVisiblity.getMinZoom());
+                selectedVisiblity);
 
         if (oldPoi != null) {
             MapFeature.INSTANCE.customPois.remove(oldPoi);
@@ -461,36 +474,6 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         MapFeature.INSTANCE.customPois.add(poi);
 
-        ConfigManager.saveConfig();
-    }
-
-    public enum Visibility {
-        DEFAULT("screens.wynntils.poiCreation.visibility.default", 1.5f),
-        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible", Integer.MIN_VALUE),
-        HIDDEN("screens.wynntils.poiCreation.visibility.hidden", Integer.MAX_VALUE);
-
-        private final String translationKey;
-        private final float minZoom;
-
-        Visibility(String translationKey, float minZoom) {
-            this.translationKey = translationKey;
-            this.minZoom = minZoom;
-        }
-
-        public String getTranslationKey() {
-            return translationKey;
-        }
-
-        public float getMinZoom() {
-            return minZoom;
-        }
-
-        public static Visibility fromMinZoom(float value) {
-            for (Visibility v : values()) {
-                if (v.getMinZoom() == value) return v;
-            }
-
-            return DEFAULT;
-        }
+        Managers.Config.saveConfig();
     }
 }

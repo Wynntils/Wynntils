@@ -5,18 +5,19 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
+import java.util.Optional;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
@@ -43,6 +44,7 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
@@ -52,9 +54,8 @@ public class TerritoryPoi implements Poi {
         final float actualRenderZ = renderZ - renderHeight / 2f;
 
         CustomColor color;
-        if (territoryInfo != null
-                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
-                && guildMapScreen.isResourceMode()) {
+        Optional<GuildMapScreen> screen = WynntilsScreenWrapper.instanceOf(GuildMapScreen.class);
+        if (territoryInfo != null && screen.isPresent() && screen.get().isResourceMode()) {
             color = territoryInfo.getColor();
         } else {
             color = territoryProfile.getGuildColor();
@@ -94,7 +95,7 @@ public class TerritoryPoi implements Poi {
                             FontRenderer.TextShadow.OUTLINE);
         }
 
-        GuildAttackTimerModel.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
+        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
                 .ifPresent(attackTimer -> {
                     final String timeLeft = attackTimer.timerString();
 

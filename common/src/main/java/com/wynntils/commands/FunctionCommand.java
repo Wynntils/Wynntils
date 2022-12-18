@@ -12,7 +12,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.FunctionManager;
+import com.wynntils.core.managers.Managers;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +45,11 @@ public class FunctionCommand extends CommandBase {
 
     private final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FunctionManager.getFunctions().stream().map(Function::getName), builder);
+                    Managers.Function.getFunctions().stream().map(Function::getName), builder);
 
     private final SuggestionProvider<CommandSourceStack> activeFunctionSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FunctionManager.getFunctions().stream()
+                    Managers.Function.getFunctions().stream()
                             .filter(function -> function instanceof ActiveFunction<?>)
                             .map(Function::getName),
                     builder);
@@ -59,7 +59,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
-        List<Function<?>> functions = FunctionManager.getFunctions().stream()
+        List<Function<?>> functions = Managers.Function.getFunctions().stream()
                 .sorted(Comparator.comparing(Function::getName))
                 .toList();
 
@@ -100,7 +100,7 @@ public class FunctionCommand extends CommandBase {
     private int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource()
@@ -116,7 +116,7 @@ public class FunctionCommand extends CommandBase {
             return 0;
         }
 
-        boolean success = FunctionManager.enableFunction(activeFunction);
+        boolean success = Managers.Function.enableFunction(activeFunction);
 
         if (!success) {
             context.getSource()
@@ -143,7 +143,7 @@ public class FunctionCommand extends CommandBase {
     private int disableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource()
@@ -159,7 +159,7 @@ public class FunctionCommand extends CommandBase {
             return 0;
         }
 
-        FunctionManager.disableFunction(activeFunction);
+        Managers.Function.disableFunction(activeFunction);
 
         Component response = Component.literal(function.getName())
                 .withStyle(ChatFormatting.AQUA)
@@ -194,7 +194,7 @@ public class FunctionCommand extends CommandBase {
         }
 
         String functionName = context.getArgument("function", String.class);
-        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource()
@@ -206,7 +206,7 @@ public class FunctionCommand extends CommandBase {
         String extraInfo = "";
         if (function instanceof ActiveFunction<?> activeFunction) {
             StringBuilder activeInfo = new StringBuilder(" [");
-            if (!FunctionManager.isEnabled(activeFunction)) {
+            if (!Managers.Function.isEnabled(activeFunction)) {
                 activeInfo.append("not enabled; ");
             }
             long updateDelay = System.currentTimeMillis() - activeFunction.lastUpdateTime();
@@ -219,7 +219,7 @@ public class FunctionCommand extends CommandBase {
 
         MutableComponent result = Component.literal("");
         result.append(
-                FunctionManager.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
+                Managers.Function.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
         if (!extraInfo.isEmpty()) {
             result.append(Component.literal(extraInfo).withStyle(ChatFormatting.GRAY));
         }
@@ -238,7 +238,7 @@ public class FunctionCommand extends CommandBase {
     private int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
-        Optional<Function<?>> functionOptional = FunctionManager.forName(functionName);
+        Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
             context.getSource()

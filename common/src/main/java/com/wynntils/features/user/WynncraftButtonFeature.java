@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -22,9 +23,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class WynncraftButtonFeature extends UserFeature {
+    private static final String GAME_SERVER = "play.wynncraft.com";
+    private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+
+    @Config
+    public boolean connectToLobby = false;
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
+        ServerData wynncraftServer = new ServerData("Wynncraft", connectToLobby ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
         WynncraftButton wynncraftButton = new WynncraftButton(

@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -19,13 +20,18 @@ import com.wynntils.wynn.model.LootrunModel;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
 public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
-    public WynntilsLootrunsScreen() {
+    private WynntilsLootrunsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsLootrunsScreen());
     }
 
     @Override
@@ -37,7 +43,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -59,7 +65,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+            LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
@@ -126,7 +132,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
     }
 
     protected void renderDescription(PoseStack poseStack) {
-        LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -240,7 +246,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(LootrunModel.getLootruns().stream()
+        elements.addAll(Models.Lootrun.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

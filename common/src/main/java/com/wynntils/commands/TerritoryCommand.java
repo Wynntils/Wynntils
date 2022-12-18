@@ -7,12 +7,11 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.ModelRegistry;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.objects.Location;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,14 +26,8 @@ public class TerritoryCommand extends CommandBase {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
-                        .suggests((context, builder) -> {
-                            if (!TerritoryManager.isTerritoryListLoaded()
-                                    && !TerritoryManager.updateTerritoryProfileMap()) {
-                                return Suggestions.empty();
-                            }
-
-                            return SharedSuggestionProvider.suggest(TerritoryManager.getTerritoryNames(), builder);
-                        })
+                        .suggests((context, builder) ->
+                                SharedSuggestionProvider.suggest(Managers.Territory.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -50,15 +43,9 @@ public class TerritoryCommand extends CommandBase {
     }
 
     private int territory(CommandContext<CommandSourceStack> context) {
-        if (!TerritoryManager.isTerritoryListLoaded() && !TerritoryManager.updateTerritoryProfileMap()) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Can't access territory data").withStyle(ChatFormatting.RED));
-            return 1;
-        }
-
         String territoryArg = context.getArgument("territory", String.class);
-        TerritoryProfile territoryProfile = TerritoryManager.getTerritoryProfile(territoryArg);
+
+        TerritoryProfile territoryProfile = Managers.Territory.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {
             context.getSource()
@@ -74,7 +61,7 @@ public class TerritoryCommand extends CommandBase {
         MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
-        if (!ManagerRegistry.isEnabled(CompassModel.class)) {
+        if (!ModelRegistry.isEnabled(Models.Compass.getClass())) {
             MutableComponent success = territoryComponent
                     .append(": ")
                     .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")")
@@ -83,7 +70,7 @@ public class TerritoryCommand extends CommandBase {
             return 1;
         }
 
-        CompassModel.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
+        Models.Compass.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
         MutableComponent separator = Component.literal("-----------------------------------------------------")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withStrikethrough(true));

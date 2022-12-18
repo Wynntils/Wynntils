@@ -11,10 +11,10 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
@@ -24,6 +24,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
+    public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
+            Models.AmplifierTierProperty,
+            Models.ConsumableChargeProperty,
+            Models.DailyRewardMultiplierProperty,
+            Models.DungeonKeyProperty,
+            Models.EmeraldPouchTierProperty,
+            Models.GatheringToolProperty,
+            Models.PowderTierProperty,
+            Models.ServerCountProperty,
+            Models.SkillIconProperty,
+            Models.SkillPointProperty,
+            Models.TeleportScrollProperty);
+
     public static ItemTextOverlayFeature INSTANCE;
 
     @Config
@@ -93,8 +106,8 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean hotbarTextOverlayEnabled = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return TEXT_OVERLAY_PROPERTIES;
     }
 
     @SubscribeEvent

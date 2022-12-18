@@ -12,30 +12,32 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class HadesUserModel extends Model {
-    private static Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
+public final class HadesUserModel extends Model {
+    private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
-    public static void init() {
+    @Override
+    public void init() {
         hadesUserMap = new HashMap<>();
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         hadesUserMap.clear();
     }
 
-    public static Map<UUID, HadesUser> getHadesUserMap() {
+    public Map<UUID, HadesUser> getHadesUserMap() {
         return hadesUserMap;
     }
 
-    public static Optional<HadesUser> getUser(UUID uuid) {
+    public Optional<HadesUser> getUser(UUID uuid) {
         return Optional.ofNullable(hadesUserMap.get(uuid));
     }
 
-    public static void putUser(UUID uuid, HadesUser hadesUser) {
+    public void putUser(UUID uuid, HadesUser hadesUser) {
         hadesUserMap.put(uuid, hadesUser);
     }
 
-    public static void removeUser(UUID uuid) {
+    public void removeUser(UUID uuid) {
         hadesUserMap.remove(uuid);
     }
 }

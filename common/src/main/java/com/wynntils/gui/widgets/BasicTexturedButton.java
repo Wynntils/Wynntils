@@ -19,14 +19,14 @@ public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
-    private final List<Component> tooltip;
+    private List<Component> tooltip;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
         super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.tooltip = ComponentUtils.wrapTooltips(tooltip, 250);
+        this.setTooltip(tooltip);
     }
 
     @Override
@@ -59,4 +59,8 @@ public class BasicTexturedButton extends AbstractButton {
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public void setTooltip(List<Component> newTooltip) {
+        tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);
+    }
 }

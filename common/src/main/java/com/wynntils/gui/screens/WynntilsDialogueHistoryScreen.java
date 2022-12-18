@@ -6,6 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -20,13 +21,13 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.model.quests.QuestManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,11 +45,15 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     private int currentPage = 0;
     private List<List<String>> dialogues = new ArrayList<>();
 
-    public WynntilsDialogueHistoryScreen() {
+    private WynntilsDialogueHistoryScreen() {
         super(Component.translatable("screens.wynntils.wynntilsDialogueHistory.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsDialogueHistoryScreen());
     }
 
     @Override
@@ -59,20 +64,20 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @Override
     protected void init() {
-        QuestManager.rescanDialogueHistory();
+        Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                QuestManager::rescanDialogueHistory));
+                Managers.Quest::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -175,7 +180,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(QuestManager.getDialogueHistory());
+        this.setDialogues(Managers.Quest.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

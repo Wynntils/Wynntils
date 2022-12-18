@@ -16,6 +16,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -26,8 +27,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.ItemStackTransformModel;
-import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.objects.Powder;
 import java.util.List;
 
@@ -37,8 +36,8 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
     private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class, ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ActionBar, Models.GearItemStack);
     }
 
     public static class PowderAbilityBarOverlay extends Overlay {
@@ -67,8 +66,8 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            float powderSpecialCharge = ActionBarModel.getPowderSpecialCharge();
-            Powder powderSpecialType = ActionBarModel.getPowderSpecialType();
+            float powderSpecialCharge = Models.ActionBar.getPowderSpecialCharge();
+            Powder powderSpecialType = Models.ActionBar.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && (!(McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack)
                             || !gearItemStack

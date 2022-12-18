@@ -10,6 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,7 +22,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.CompassModel;
 import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec2;
@@ -62,15 +62,15 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     private Vec3 screenCoord;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(CompassModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {
-        if (CompassModel.getCompassLocation().isEmpty()) return;
+        if (Models.Compass.getCompassLocation().isEmpty()) return;
 
-        Location location = CompassModel.getCompassLocation().get();
+        Location location = Models.Compass.getCompassLocation().get();
         Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
         Camera camera = event.getCamera();
         Vec3 cameraPos = camera.getPosition();
@@ -110,7 +110,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        if (CompassModel.getCompassLocation().isEmpty()
+        if (Models.Compass.getCompassLocation().isEmpty()
                 || screenCoord == null
                 || (maxWaypointTextDistance != 0 && maxWaypointTextDistance < distance)) return;
 
@@ -121,7 +121,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         float displayPositionY;
 
         Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
-        Texture icon = CompassModel.getTargetIcon();
+        Texture icon = Models.Compass.getTargetIcon();
 
         // The set waypoint is visible on the screen, so we render the icon + distance
         if (intersectPoint == null) {
@@ -192,7 +192,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-            CompassModel.getCompassWaypoint()
+            Models.Compass.getCompassWaypoint()
                     .get()
                     .getPointerPoi()
                     .renderAt(poseStack, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);

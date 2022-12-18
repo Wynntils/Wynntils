@@ -6,19 +6,14 @@ package com.wynntils.core.services;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 
-public class TranslationModel extends Model {
-
-    public static final String TRANSLATED_PREFIX =
-            ChatFormatting.GRAY + "[" + TranslationFeature.INSTANCE.languageName + "]" + ChatFormatting.RESET;
-    public static final String UNTRANSLATED_PREFIX = ChatFormatting.GRAY + "[en]" + ChatFormatting.RESET;
-
-    private static TranslationService translator = null;
+public final class TranslationModel extends Model {
+    private TranslationService translator = null;
 
     /**
      * Get a TranslationService.
@@ -26,7 +21,7 @@ public class TranslationModel extends Model {
      * @param service An enum describing which translation service is requested.
      * @return An instance of the selected translation service, or null on failure
      */
-    public static TranslationService getService(TranslationServices service) {
+    public TranslationService getService(TranslationServices service) {
         try {
             Constructor<? extends TranslationService> ctor = service.serviceClass.getConstructor();
             return ctor.newInstance();
@@ -42,10 +37,11 @@ public class TranslationModel extends Model {
      *
      * @return An instance of the selected translation service, or null on failure
      */
-    public static TranslationService getTranslator() {
+    public TranslationService getTranslator() {
         // These might not have been created yet, or reset by config changing
-        if (TranslationModel.translator == null) {
-            TranslationModel.translator = TranslationModel.getService(TranslationFeature.INSTANCE.translationService);
+        if (Models.Translation.translator == null) {
+            Models.Translation.translator =
+                    Models.Translation.getService(TranslationFeature.INSTANCE.translationService);
         }
         return translator;
     }
@@ -53,15 +49,16 @@ public class TranslationModel extends Model {
     /**
      * Reset the default TranslatorService, e.g. due to config changes.
      */
-    public static void resetTranslator() {
+    public void resetTranslator() {
         translator = null;
     }
 
-    public static void init() {
+    @Override
+    public void init() {
         CachingTranslationService.loadTranslationCache();
     }
 
-    public static void shutdown() {
+    public void shutdown() {
         CachingTranslationService.saveTranslationCache();
     }
 

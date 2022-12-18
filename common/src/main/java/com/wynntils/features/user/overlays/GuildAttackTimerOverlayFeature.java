@@ -16,6 +16,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -23,7 +24,6 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.Comparator;
@@ -41,8 +41,8 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     public boolean disableAttackTimersOnScoreboard = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ScoreboardModel.class, GuildAttackTimerModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Scoreboard, Models.GuildAttackTimer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -81,7 +81,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            GuildAttackTimerModel.getAttackTimers().stream()
+                            Models.GuildAttackTimer.getAttackTimers().stream()
                                     .sorted(Comparator.comparing(TerritoryAttackTimer::asSeconds))
                                     .map(territoryAttackTimer ->
                                             new TextRenderTask(territoryAttackTimer.asString(), textRenderSetting))

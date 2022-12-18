@@ -10,12 +10,12 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.HighlightProperty;
@@ -26,6 +26,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
+    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(
+            Models.CosmeticTierProperty,
+            Models.EmeraldPouchItemStack,
+            Models.MaterialProperty,
+            Models.IngredientProperty,
+            Models.ItemTierProperty,
+            Models.PowderTierProperty);
+
     public static ItemHighlightFeature INSTANCE;
 
     @Config
@@ -140,8 +148,8 @@ public class ItemHighlightFeature extends UserFeature {
     public float hotbarOpacity = .5f;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return HIGHLIGHT_PROPERTIES;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

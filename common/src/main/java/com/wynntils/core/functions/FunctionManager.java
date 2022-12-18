@@ -5,8 +5,8 @@
 package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.managers.ManagerRegistry;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -30,32 +30,43 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
-public final class FunctionManager extends CoreManager {
-    private static final List<Function<?>> FUNCTIONS = new ArrayList<>();
-    private static final Set<ActiveFunction<?>> ENABLED_FUNCTIONS = new HashSet<>();
-    private static final Set<Function<?>> CRASHED_FUNCTIONS = new HashSet<>();
+public final class FunctionManager extends Manager {
+    private static final Pattern INFO_VARIABLE_PATTERN =
+            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
-    private static void registerFunction(Function<?> function) {
-        FUNCTIONS.add(function);
-        if (function instanceof ActiveFunction<?> activeFunction) {
-            activeFunction.init();
-        }
-        // FIXME: This is sort of hacky. We should have these as ActiveFunctions instead,
-        //        and register/unregister the model dependency when enabling/disabling
-        if (function instanceof DependantFunction<?> dependantFunction) {
-            ManagerRegistry.addAllDependencies(dependantFunction);
+    private final List<Function<?>> functions = new ArrayList<>();
+    private final Set<ActiveFunction<?>> enabledFunctions = new HashSet<>();
+    private final Set<Function<?>> crashedFunctions = new HashSet<>();
+
+    public FunctionManager() {
+        super(List.of());
+        registerAllFunctions();
+    }
+
+    /**
+     * This needs to be called after Models are setup, to associate all
+     * functions with the proper models.
+     */
+    public void activateAllFunctions() {
+        for (Function<?> function : functions) {
+            if (function instanceof DependantFunction<?> dependantFunction) {
+                ModelRegistry.addAllDependencies(dependantFunction);
+            }
+            if (function instanceof ActiveFunction<?> activeFunction) {
+                activeFunction.init();
+            }
         }
     }
 
-    public static List<Function<?>> getFunctions() {
-        return FUNCTIONS;
+    public List<Function<?>> getFunctions() {
+        return functions;
     }
 
-    public static boolean enableFunction(Function<?> function) {
+    public boolean enableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
 
         // try to recover, worst case we disable it again
-        CRASHED_FUNCTIONS.remove(function);
+        crashedFunctions.remove(function);
 
         WynntilsMod.registerEventListener(activeFunction);
 
@@ -64,26 +75,26 @@ public final class FunctionManager extends CoreManager {
         if (!enableSucceeded) {
             WynntilsMod.unregisterEventListener(activeFunction);
         }
-        ENABLED_FUNCTIONS.add(activeFunction);
+        enabledFunctions.add(activeFunction);
         return enableSucceeded;
     }
 
-    public static void disableFunction(Function<?> function) {
+    public void disableFunction(Function<?> function) {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
         WynntilsMod.unregisterEventListener(activeFunction);
         activeFunction.onDisable();
-        ENABLED_FUNCTIONS.remove(activeFunction);
+        enabledFunctions.remove(activeFunction);
     }
 
-    public static boolean isEnabled(Function<?> function) {
+    public boolean isEnabled(Function<?> function) {
         if (!(function instanceof ActiveFunction<?>)) return true;
 
-        return (ENABLED_FUNCTIONS.contains(function));
+        return (enabledFunctions.contains(function));
     }
 
-    public static Optional<Function<?>> forName(String functionName) {
-        for (Function<?> function : FunctionManager.getFunctions()) {
+    public Optional<Function<?>> forName(String functionName) {
+        for (Function<?> function : getFunctions()) {
             if (hasName(function, functionName)) {
                 return Optional.of(function);
             }
@@ -92,7 +103,7 @@ public final class FunctionManager extends CoreManager {
         return Optional.empty();
     }
 
-    private static boolean hasName(Function<?> function, String name) {
+    private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
         for (String alias : function.getAliases()) {
             if (alias.equalsIgnoreCase(name)) return true;
@@ -100,8 +111,8 @@ public final class FunctionManager extends CoreManager {
         return false;
     }
 
-    private static Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
-        if (CRASHED_FUNCTIONS.contains(function)) {
+    private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+        if (crashedFunctions.contains(function)) {
             return Optional.empty();
         }
 
@@ -114,14 +125,14 @@ public final class FunctionManager extends CoreManager {
                             "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
-            FunctionManager.disableFunction(function);
-            CRASHED_FUNCTIONS.add(function);
+            disableFunction(function);
+            crashedFunctions.add(function);
         }
 
         return Optional.empty();
     }
 
-    public static Component getSimpleValueString(
+    public Component getSimpleValueString(
             Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
@@ -137,7 +148,7 @@ public final class FunctionManager extends CoreManager {
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    public static String getRawValueString(Function<?> function, String argument) {
+    public String getRawValueString(Function<?> function, String argument) {
         Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
             return "??";
@@ -146,7 +157,7 @@ public final class FunctionManager extends CoreManager {
         return format(value.get());
     }
 
-    private static String format(Object value) {
+    private String format(Object value) {
         if (value instanceof Number number) {
             // French locale has NBSP
             // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
@@ -159,7 +170,7 @@ public final class FunctionManager extends CoreManager {
      * Return a string, based on the template, with values filled in from the referenced
      * functions.
      */
-    public static Component getStringFromTemplate(String template) {
+    public Component getStringFromTemplate(String template) {
         // FIXME: implement template parser
         return Component.literal(template);
     }
@@ -167,12 +178,12 @@ public final class FunctionManager extends CoreManager {
     /**
      * Return a list of all functions referenced in a template string
      */
-    public static List<Function<?>> getFunctionsInTemplate(String template) {
+    public List<Function<?>> getFunctionsInTemplate(String template) {
         // FIXME: implement template parser
         return List.of();
     }
 
-    public static <T> void doFormat(
+    public <T> void doFormat(
             String format,
             Consumer<T> consumer,
             java.util.function.Function<String, T> mapper,
@@ -214,17 +225,14 @@ public final class FunctionManager extends CoreManager {
 
     // region Legacy formatting
 
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
-    public static List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
+    public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
         List<Function<?>> dependencies = new ArrayList<>();
 
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
-            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = FunctionManager.forName(m.group(1)).get();
+                Function<?> function = forName(m.group(1)).get();
                 dependencies.add(function);
             }
         }
@@ -232,16 +240,16 @@ public final class FunctionManager extends CoreManager {
         return dependencies;
     }
 
-    public static String[] getLinesFromLegacyTemplate(String renderableText) {
+    public String[] getLinesFromLegacyTemplate(String renderableText) {
         StringBuilder builder = new StringBuilder(renderableText.length() + 10);
         Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
         while (m.find()) {
             String replacement = null;
-            if (m.group(1) != null && FunctionManager.forName(m.group(1)).isPresent()) {
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
                 // %variable%
-                Function<?> function = FunctionManager.forName(m.group(1)).get();
+                Function<?> function = forName(m.group(1)).get();
 
-                replacement = FunctionManager.getRawValueString(function, "");
+                replacement = getRawValueString(function, "");
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));
@@ -257,7 +265,7 @@ public final class FunctionManager extends CoreManager {
         return parseColorCodes(builder.toString()).split("\n");
     }
 
-    private static String parseColorCodes(String toProcess) {
+    private String parseColorCodes(String toProcess) {
         // For every & symbol, check if the next symbol is a color code and if so, replace it with §
         // But don't do it if a \ precedes the &
         String validColors = "0123456789abcdefklmnor";
@@ -277,7 +285,7 @@ public final class FunctionManager extends CoreManager {
         return sb.toString();
     }
 
-    private static String doEscapeFormat(String escaped) {
+    private String doEscapeFormat(String escaped) {
         return switch (escaped) {
             case "\\" -> "\\\\";
             case "n" -> "\n";
@@ -293,7 +301,11 @@ public final class FunctionManager extends CoreManager {
     }
     // endregion
 
-    public static void init() {
+    private void registerFunction(Function<?> function) {
+        functions.add(function);
+    }
+
+    private void registerAllFunctions() {
         registerFunction(new WorldFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
@@ -305,6 +317,7 @@ public final class FunctionManager extends CoreManager {
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.InventoryFreeFunction());
+        registerFunction(new CharacterFunctions.InventoryUsedFunction());
         registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
         registerFunction(new CharacterFunctions.ManaFunction());

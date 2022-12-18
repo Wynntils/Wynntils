@@ -4,15 +4,13 @@
  */
 package com.wynntils.features.user;
 
-import com.google.common.collect.ImmutableList;
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +27,8 @@ public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new WebLoadedCondition());
-    }
-
-    @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Chat);
     }
 
     @SubscribeEvent
@@ -55,7 +48,7 @@ public class ChatItemFeature extends UserFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = ChatItemModel.chatItemMatcher(chatInput.getValue());
+        Matcher m = Models.ChatItem.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -74,6 +67,6 @@ public class ChatItemFeature extends UserFeature {
 
         Component message = e.getMessage();
 
-        e.setMessage(ChatItemModel.insertItemComponents(message));
+        e.setMessage(Models.ChatItem.insertItemComponents(message));
     }
 }

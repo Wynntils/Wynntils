@@ -10,8 +10,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.managers.Models;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.List;
 import java.util.Locale;
@@ -79,11 +79,10 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
-        if (!ServerListModel.forceUpdate(UPDATE_TIME_OUT_MS)) {
+        if (!Models.ServerList.forceUpdate(UPDATE_TIME_OUT_MS)) {
             context.getSource()
-                    .sendFailure(Component.literal("Failed to get server data from API.")
+                    .sendFailure(Component.literal("Network problems; using cached data")
                             .withStyle(ChatFormatting.RED));
-            return 1;
         }
 
         String server = context.getArgument("server", String.class);
@@ -96,7 +95,7 @@ public class ServerCommand extends CommandBase {
         } catch (Exception ignored) {
         }
 
-        ServerProfile serverProfile = ServerListModel.getServer(server);
+        ServerProfile serverProfile = Models.ServerList.getServer(server);
         if (serverProfile == null) {
             context.getSource()
                     .sendFailure(Component.literal(server + " not found.").withStyle(ChatFormatting.RED));
@@ -123,17 +122,17 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        if (!ServerListModel.forceUpdate(3000)) {
+        if (!Models.ServerList.forceUpdate(3000)) {
             context.getSource()
-                    .sendFailure(Component.literal("Failed to get server data from API.")
+                    .sendFailure(Component.literal("Network problems; using cached data")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
 
         MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
-        for (String serverType : ServerListModel.getWynnServerTypes()) {
-            List<String> currentTypeServers = ServerListModel.getServersSortedOnNameOfType(serverType);
+        for (String serverType : Models.ServerList.getWynnServerTypes()) {
+            List<String> currentTypeServers = Models.ServerList.getServersSortedOnNameOfType(serverType);
 
             if (currentTypeServers.isEmpty()) continue;
 
@@ -153,20 +152,20 @@ public class ServerCommand extends CommandBase {
     }
 
     private int serverUptimeList(CommandContext<CommandSourceStack> context) {
-        if (!ServerListModel.forceUpdate(3000)) {
+        if (!Models.ServerList.forceUpdate(3000)) {
             context.getSource()
-                    .sendFailure(Component.literal("Failed to get server data from API.")
+                    .sendFailure(Component.literal("Network problems; using cached data")
                             .withStyle(ChatFormatting.RED));
             return 1;
         }
 
-        List<String> sortedServers = ServerListModel.getServersSortedOnUptime();
+        List<String> sortedServers = Models.ServerList.getServersSortedOnUptime();
 
         MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
         for (String server : sortedServers) {
             message.append("\n");
             message.append(Component.literal(
-                            server + ": " + ServerListModel.getServer(server).getUptime())
+                            server + ": " + Models.ServerList.getServer(server).getUptime())
                     .withStyle(ChatFormatting.AQUA));
         }
 

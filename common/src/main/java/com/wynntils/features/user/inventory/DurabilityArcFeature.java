@@ -10,11 +10,11 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.ItemProperty;
@@ -32,8 +32,8 @@ public class DurabilityArcFeature extends UserFeature {
     public boolean renderDurabilityArcHotbar = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.DurabilityProperty);
     }
 
     @SubscribeEvent

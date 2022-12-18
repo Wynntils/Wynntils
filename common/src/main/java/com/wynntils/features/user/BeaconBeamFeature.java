@@ -8,13 +8,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.CompassModel;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -26,20 +26,20 @@ public class BeaconBeamFeature extends UserFeature {
     public CustomColor waypointBeamColor = CommonColors.RED;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(CompassModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
-        if (CompassModel.getCompassLocation().isEmpty()) return;
+        if (Models.Compass.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
         Vec3 camera = event.getCamera().getPosition();
-        Location location = CompassModel.getCompassLocation().get();
+        Location location = Models.Compass.getCompassLocation().get();
 
         double dx = location.x - camera.x;
         double dy = location.y - camera.y;

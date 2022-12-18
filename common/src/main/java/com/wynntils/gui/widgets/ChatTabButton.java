@@ -6,16 +6,19 @@ package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.tabs.ChatTab;
-import com.wynntils.core.chat.tabs.ChatTabModel;
+import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.ChatTabEditingScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public class ChatTabButton extends AbstractButton {
     private final ChatTab tab;
@@ -38,9 +41,9 @@ public class ChatTabButton extends AbstractButton {
                 width,
                 height);
 
-        CustomColor color = ChatTabModel.getFocusedTab() == tab
+        CustomColor color = Models.ChatTab.getFocusedTab() == tab
                 ? CommonColors.GREEN
-                : (ChatTabModel.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
+                : (Models.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -57,9 +60,20 @@ public class ChatTabButton extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
-        ChatTabModel.setFocusedTab(tab);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            Models.ChatTab.setFocusedTab(tab);
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            McUtils.mc().setScreen(ChatTabEditingScreen.create(tab));
+        }
+        return true;
     }
+
+    // unused
+    @Override
+    public void onPress() {}
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

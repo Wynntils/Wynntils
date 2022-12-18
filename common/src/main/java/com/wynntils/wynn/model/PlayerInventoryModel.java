@@ -10,25 +10,28 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PlayerInventoryModel extends Model {
+public final class PlayerInventoryModel extends Model {
 
-    private static int emeralds = 0;
-    private static int openSlots = 0;
+    private int emeralds = 0;
+    private int openSlots = 0;
 
-    public static void init() {
+    @Override
+    public void init() {
         resetCache();
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         resetCache();
     }
 
     @SubscribeEvent
-    public static void onWorldChange(WorldStateEvent e) {
+    public void onWorldChange(WorldStateEvent e) {
         if (e.getNewState() == WorldStateManager.State.WORLD) {
             updateCache();
         } else {
@@ -37,7 +40,7 @@ public class PlayerInventoryModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         // Only update if the container is the player inventory
         if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
             updateCache();
@@ -45,29 +48,33 @@ public class PlayerInventoryModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onSlotSetEvent(SetSlotEvent.Post e) {
+    public void onSlotSetEvent(SetSlotEvent.Post e) {
         // Only update if the container is the player inventory
         if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
             updateCache();
         }
     }
 
-    private static void updateCache() {
+    private void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
         emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
-        openSlots = ContainerUtils.getEmptySlotsInContainer(inventory);
+        openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
-    private static void resetCache() {
+    private void resetCache() {
         emeralds = 0;
         openSlots = 0;
     }
 
-    public static int getCurrentEmeraldCount() {
+    public int getCurrentEmeraldCount() {
         return emeralds;
     }
 
-    public static int getOpenInvSlots() {
+    public int getOpenInvSlots() {
         return openSlots;
+    }
+
+    public int getUsedInvSlots() {
+        return 28 - openSlots;
     }
 }

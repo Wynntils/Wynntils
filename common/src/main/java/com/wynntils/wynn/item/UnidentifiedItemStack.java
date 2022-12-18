@@ -5,9 +5,9 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
@@ -62,9 +62,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
         }
 
         if (levelRange == null) return;
-        if (ItemProfilesManager.getItemGuesses() == null || ItemProfilesManager.getItemsMap() == null) return;
+        if (Managers.ItemProfiles.getItemGuesses() == null || Managers.ItemProfiles.getItemsMap() == null) return;
 
-        ItemGuessProfile guessProfile = ItemProfilesManager.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
@@ -78,7 +78,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = ItemProfilesManager.getItemsMap().get(item);
+            ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

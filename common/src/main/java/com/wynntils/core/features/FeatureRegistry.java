@@ -5,13 +5,12 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.CrashReportManager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -27,6 +26,7 @@ import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
+import com.wynntils.features.user.CombatXpGainMessageFeature;
 import com.wynntils.features.user.CommandAliasesFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.ContainerSearchFeature;
@@ -52,6 +52,7 @@ import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
+import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
@@ -137,6 +138,7 @@ public final class FeatureRegistry {
         registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
+        registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new CommandAliasesFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
@@ -178,6 +180,7 @@ public final class FeatureRegistry {
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new MythicBoxScalerFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
@@ -203,10 +206,10 @@ public final class FeatureRegistry {
         registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         // save/create default config file containing all config holders
-        ConfigManager.saveDefaultConfig();
+        Managers.Config.saveDefaultConfig();
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
@@ -277,7 +280,7 @@ public final class FeatureRegistry {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        ConfigManager.registerFeature(feature);
+        Managers.Config.registerFeature(feature);
 
         // initialize & enable
         feature.init();
@@ -306,19 +309,16 @@ public final class FeatureRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Features") {
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
+        Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
+            StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES) {
-                    if (feature.isEnabled()) {
-                        result.append("\n\t\t").append(feature.getTranslatedName());
-                    }
+            for (Feature feature : FEATURES) {
+                if (feature.isEnabled()) {
+                    result.append("\n\t\t").append(feature.getTranslatedName());
                 }
-
-                return result.toString();
             }
+
+            return result.toString();
         });
     }
 }

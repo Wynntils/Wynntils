@@ -4,24 +4,25 @@
  */
 package com.wynntils.core.net.athena;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.WebReader;
-import com.wynntils.core.webapi.request.PostRequestBuilder;
-import com.wynntils.core.webapi.request.Request;
-import com.wynntils.core.webapi.request.RequestBuilder;
-import com.wynntils.core.webapi.request.RequestHandler;
+import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.NetManager;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -31,21 +32,25 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
-public class WynntilsAccountManager extends CoreManager {
-    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
-            new ThreadFactoryBuilder().setNameFormat("wynntils-accounts-%d").build());
+public final class WynntilsAccountManager extends Manager {
+    private static final String NO_TOKEN = "<no token>";
 
-    private static String token;
-    private static boolean loggedIn = false;
+    private String token = NO_TOKEN;
+    private boolean loggedIn = false;
 
-    private static final HashMap<String, String> encodedConfigs = new HashMap<>();
-    private static final HashMap<String, String> md5Verifications = new HashMap<>();
+    private final HashMap<String, String> encodedConfigs = new HashMap<>();
+    private final HashMap<String, String> md5Verifications = new HashMap<>();
 
-    public static void init() {
+    public WynntilsAccountManager(NetManager netManager) {
+        super(List.of(netManager));
         login();
     }
 
-    private static void login() {
+    public void reset() {
+        login();
+    }
+
+    private void login() {
         if (loggedIn) return;
 
         doLogin();
@@ -69,11 +74,11 @@ public class WynntilsAccountManager extends CoreManager {
         }
     }
 
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public static boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return loggedIn;
     }
 
@@ -85,59 +90,49 @@ public class WynntilsAccountManager extends CoreManager {
         encodedConfigs.remove(name);
     }
 
-    private static void doLogin() {
-        if (WebManager.getApiUrls().isEmpty() || !WebManager.getApiUrls().get().hasKey("Athena")) return;
-
-        WebReader webReader = WebManager.getApiUrls().get();
-        RequestHandler handler = WebManager.getHandler();
-
-        String baseUrl = webReader.get("Athena");
-        String[] secretKey = new String[1]; // it's an array for the lambda below be able to set its value
-
+    private void doLogin() {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         // generating secret key
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
+        apiResponse.handleJsonObject(json -> {
+            String secretKey = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
 
-        Request getPublicKey = new RequestBuilder(baseUrl + "/auth/getPublicKey", "getPublicKey")
-                .handleJsonObject(json -> {
-                    if (!json.has("publicKeyIn")) return false;
-                    secretKey[0] = parseAndJoinPublicKey(json.get("publicKeyIn").getAsString());
-                    return true;
-                })
-                .build();
+            Map<String, String> arguments = new HashMap<>();
+            arguments.put("key", secretKey);
+            arguments.put("username", McUtils.mc().getUser().getName());
+            arguments.put("version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
 
-        handler.addAndDispatch(getPublicKey);
+            ApiResponse apiAuthResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
+            apiAuthResponse.handleJsonObject(authJson -> {
+                token = authJson.get("authToken").getAsString(); /* md5 hashes*/
+                JsonObject hashes = authJson.getAsJsonObject("hashes");
+                hashes.entrySet()
+                        .forEach((k) ->
+                                md5Verifications.put(k.getKey(), k.getValue().getAsString())); /* configurations*/
+                JsonObject configFiles = authJson.getAsJsonObject("configFiles");
+                configFiles
+                        .entrySet()
+                        .forEach((k) ->
+                                encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
+                loggedIn = true;
+                future.complete(true);
+                WynntilsMod.info("Successfully connected to Athena!");
+            });
+        });
 
-        // response
+        // FIXME: Rewrite athena account manager dependencies to work async
+        try {
+            // Wait up to 5 seconds for login to complete.
+            // This is not ideal, but the rest of the code assumes that login is done
+            // when further down the manager init chain.
 
-        JsonObject authParams = new JsonObject();
-        authParams.addProperty("username", McUtils.mc().getUser().getName());
-        authParams.addProperty("key", secretKey[0]);
-        authParams.addProperty(
-                "version", String.format("A%s %s", WynntilsMod.getVersion(), WynntilsMod.getModLoader()));
-
-        Request responseEncryption = new PostRequestBuilder(baseUrl + "/auth/responseEncryption", "responseEncryption")
-                .postJsonElement(authParams)
-                .handleJsonObject(json -> {
-                    if (!json.has("authToken")) return false;
-                    token = json.get("authToken").getAsString(); /* md5 hashes*/
-                    JsonObject hashes = json.getAsJsonObject("hashes");
-                    hashes.entrySet()
-                            .forEach((k) -> md5Verifications.put(
-                                    k.getKey(), k.getValue().getAsString())); /* configurations*/
-                    JsonObject configFiles = json.getAsJsonObject("configFiles");
-                    configFiles
-                            .entrySet()
-                            .forEach((k) ->
-                                    encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
-                    loggedIn = true;
-                    WynntilsMod.info("Successfully connected to Athena!");
-                    return true;
-                })
-                .build();
-
-        handler.addAndDispatch(responseEncryption);
+            future.get(5000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // Well then, we failed. Calling function will inform the user
+        }
     }
 
-    private static String parseAndJoinPublicKey(String key) {
+    private String parseAndJoinPublicKey(String key) {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());
 

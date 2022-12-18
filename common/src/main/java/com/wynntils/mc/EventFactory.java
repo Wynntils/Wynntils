@@ -31,6 +31,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
+import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -69,6 +70,7 @@ import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -106,6 +108,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -152,6 +155,10 @@ public final class EventFactory {
     // region Render Events
     public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
         return post(new PlayerArmorRenderEvent(player, slot));
+    }
+
+    public static GroundItemEntityTransformEvent onGroundItemRender(PoseStack poseStack, ItemStack stack) {
+        return post(new GroundItemEntityTransformEvent(poseStack, stack));
     }
 
     public static NametagRenderEvent onNameTagRender(
@@ -462,6 +469,10 @@ public final class EventFactory {
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {
         return post(new SetPlayerTeamEvent(
                 ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()));
+    }
+
+    public static void onSetXp(ClientboundSetExperiencePacket packet) {
+        post(new SetXpEvent(packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
     }
 
     public static AddEntityLookupEvent onAddEntityLookup(UUID uuid, Map<UUID, EntityAccess> entityMap) {

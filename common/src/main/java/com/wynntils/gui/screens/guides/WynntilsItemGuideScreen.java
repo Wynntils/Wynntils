@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -13,6 +14,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
+import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.guides.widgets.GuideGearItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -21,9 +23,9 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,14 +36,24 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
 
     private List<GearItemStack> parsedItemCache;
 
-    public WynntilsItemGuideScreen() {
+    private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
+    }
+
+    public static Screen create() {
+        return WynntilsScreenWrapper.create(new WynntilsItemGuideScreen());
+    }
+
+    @Override
+    public void onClose() {
+        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
+        super.onClose();
     }
 
     @Override
     protected void init() {
         if (parsedItemCache == null) {
-            parsedItemCache = ItemProfilesManager.getItemsCollection().stream()
+            parsedItemCache = Managers.ItemProfiles.getItemsCollection().stream()
                     .map(GearItemStack::new)
                     .toList();
         }
@@ -53,7 +65,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsGuidesListScreen()));
+                WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
