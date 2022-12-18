@@ -257,7 +257,7 @@ public class MainMapScreen extends AbstractMapScreen {
             }
 
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
-                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP.value());
+                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
                     if (hovered instanceof IconPoi iconPoi) {
                         Models.Compass.setCompassLocation(new Location(hovered.getLocation()), iconPoi.getIcon());
@@ -302,7 +302,7 @@ public class MainMapScreen extends AbstractMapScreen {
         Location compassLocation = new Location(gameX, 0, gameZ);
         Models.Compass.setCompassLocation(compassLocation);
 
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP.value());
+        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {
