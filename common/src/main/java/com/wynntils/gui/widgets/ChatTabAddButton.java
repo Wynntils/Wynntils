@@ -23,16 +23,17 @@ public class ChatTabAddButton extends AbstractButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         "+",
-                        x + 1,
-                        x + width,
-                        y + 1,
-                        y + height,
+                        getX() + 1,
+                        getX() + width,
+                        getY() + 1,
+                        getY() + height,
                         0,
                         CommonColors.ORANGE,
                         HorizontalAlignment.Center,

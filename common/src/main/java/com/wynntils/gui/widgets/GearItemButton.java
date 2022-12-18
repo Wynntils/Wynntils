@@ -28,8 +28,8 @@ public class GearItemButton extends AbstractButton {
 
         RenderUtils.renderGuiItem(
                 itemStack,
-                (int) (gearViewerScreen.getTranslationX() + this.x),
-                (int) (gearViewerScreen.getTranslationY() + this.y),
+                (int) (gearViewerScreen.getTranslationX() + this.getX()),
+                (int) (gearViewerScreen.getTranslationY() + this.getY()),
                 1);
     }
 

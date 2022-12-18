@@ -48,7 +48,7 @@ public class LootrunButton extends AbstractButton {
         CustomColor backgroundColor = isLoaded()
                 ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
                 : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 21;
         FontRenderer.getInstance()
@@ -58,8 +58,8 @@ public class LootrunButton extends AbstractButton {
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,

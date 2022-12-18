@@ -32,7 +32,8 @@ public class ChatTabButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (tab == null) return;
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         CustomColor color = Models.ChatTab.getFocusedTab() == tab
                 ? CommonColors.GREEN
@@ -41,10 +42,10 @@ public class ChatTabButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         tab.getName(),
-                        x + 1,
-                        x + width,
-                        y + 1,
-                        y + height,
+                        getX() + 1,
+                        getX() + width,
+                        getY() + 1,
+                        getY() + height,
                         0,
                         color,
                         HorizontalAlignment.Center,

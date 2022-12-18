@@ -68,7 +68,7 @@ public class WynncraftButtonFeature extends UserFeature {
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
             // Insets the icon by 3
-            blit(matrices, this.x + 3, this.y + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
+            blit(matrices, this.getX() + 3, this.getY() + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
         }
 
         protected static void onPress(Button button) {

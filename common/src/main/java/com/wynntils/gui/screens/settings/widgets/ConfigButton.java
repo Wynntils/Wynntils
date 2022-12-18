@@ -39,8 +39,8 @@ public class ConfigButton extends AbstractButton {
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
         this.resetButton = new GeneralSettingsButton(
-                this.x + this.width - 40,
-                this.y + 13,
+                this.getX() + this.width - 40,
+                this.getY() + 13,
                 35,
                 12,
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
@@ -68,8 +68,8 @@ public class ConfigButton extends AbstractButton {
                 .renderText(
                         poseStack,
                         displayName,
-                        (this.x + 3) / 0.8f,
-                        (this.y + 3) / 0.8f,
+                        (this.getX() + 3) / 0.8f,
+                        (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
@@ -79,16 +79,16 @@ public class ConfigButton extends AbstractButton {
         RenderUtils.drawLine(
                 poseStack,
                 CommonColors.GRAY,
-                this.x,
-                this.y + this.height,
-                this.x + this.width,
-                this.y + this.height,
+                this.getX(),
+                this.getY() + this.height,
+                this.getX() + this.width,
+                this.getY() + this.height,
                 0,
                 1);
 
         poseStack.pushPose();
-        final int renderX = this.x + 3;
-        final int renderY = this.y + 12;
+        final int renderX = this.getX() + 3;
+        final int renderY = this.getY() + 12;
         poseStack.translate(renderX, renderY, 0);
         configOptionElement.renderConfigAppropriateButton(
                 poseStack, this.width - 45, 30, mouseX - renderX, mouseY - renderY, partialTick);

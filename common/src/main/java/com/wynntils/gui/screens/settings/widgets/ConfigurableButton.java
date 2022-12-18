@@ -49,8 +49,8 @@ public class ConfigurableButton extends AbstractButton {
                 .renderText(
                         poseStack,
                         (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName(),
-                        this.x,
-                        this.y,
+                        this.getX(),
+                        this.getY(),
                         color,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,

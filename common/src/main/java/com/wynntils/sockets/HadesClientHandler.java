@@ -23,7 +23,6 @@ import com.wynntils.sockets.objects.HadesUser;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class HadesClientHandler implements IHadesClientAdapter {
     private final HadesConnection hadesConnection;

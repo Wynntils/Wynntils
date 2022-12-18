@@ -47,8 +47,8 @@ public class ClassSelectionAddButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.ADD_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,

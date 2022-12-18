@@ -38,9 +38,9 @@ public class SearchWidget extends TextInputBoxWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         defaultText ? DEFAULT_TEXT.getString() : renderedText,
-                        this.x + 5,
-                        this.x + this.width - 5,
-                        this.y + 6.5f,
+                        this.getX() + 5,
+                        this.getX() + this.width - 5,
+                        this.getY() + 6.5f,
                         this.width,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
@@ -49,14 +49,24 @@ public class SearchWidget extends TextInputBoxWidget {
 
     @Override
     protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
         RenderUtils.drawRectBorders(
-                poseStack, CommonColors.GRAY, this.x, this.y, this.x + this.width, this.y + this.height, 0, 1f);
+                poseStack,
+                CommonColors.GRAY,
+                this.getX(),
+                this.getY(),
+                this.getX() + this.width,
+                this.getY() + this.height,
+                0,
+                1f);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height) {
+        if (mouseX >= this.getX()
+                && mouseX <= this.getX() + this.width
+                && mouseY >= this.getY()
+                && mouseY <= this.getY() + this.height) {
             McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
             textboxScreen.setFocusedTextInput(this);
 

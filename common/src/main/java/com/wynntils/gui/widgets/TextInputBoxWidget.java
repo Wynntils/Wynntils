@@ -20,7 +20,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
@@ -75,7 +74,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
-        poseStack.translate(this.x, this.y, 0);
+        poseStack.translate(this.getX(), this.getY(), 0);
 
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 

@@ -46,7 +46,7 @@ public class QuestButton extends AbstractButton {
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = getBackgroundColor();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
@@ -56,8 +56,8 @@ public class QuestButton extends AbstractButton {
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
@@ -75,8 +75,8 @@ public class QuestButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 stateTexture.resource(),
-                this.x + 1,
-                this.y + 1,
+                this.getX() + 1,
+                this.getY() + 1,
                 stateTexture.width(),
                 stateTexture.height(),
                 stateTexture.width(),

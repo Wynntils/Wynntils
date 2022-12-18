@@ -68,6 +68,7 @@ public class WynncraftPauseScreenFeature extends UserFeature {
     }
 
     private Button replaceButtonFunction(Button widget, Component translatableComponent, Button.OnPress onPress) {
-        return new Button(widget.x, widget.y, widget.getWidth(), widget.getHeight(), translatableComponent, onPress);
+        return new Button(
+                widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), translatableComponent, onPress);
     }
 }
