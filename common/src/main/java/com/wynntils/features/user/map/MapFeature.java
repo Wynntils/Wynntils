@@ -18,7 +18,6 @@ import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -33,7 +32,6 @@ import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -120,9 +118,8 @@ public class MapFeature extends UserFeature {
     public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, () -> {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
-        Optional<MainMapScreen> screen = WynntilsScreenWrapper.instanceOf(MainMapScreen.class);
-        if (screen.isPresent()) {
-            screen.get().setHoldingMapKey(true);
+        if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
+            mainMapScreen.setHoldingMapKey(true);
             return;
         }
 
