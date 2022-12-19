@@ -111,15 +111,17 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         RootCommandNode<SharedSuggestionProvider> root = packet.getRoot(
                 CommandBuildContext.simple(this.registryAccess.compositeAccess(), this.enabledFeatures()));
         CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
-        if (event.getRoot() != root) {
+        if (!event.getRoot().equals(root)) {
             // We modified command root, so inject it
             this.commands = new CommandDispatcher<>(event.getRoot());
+            ci.cancel();
         }
     }
 
