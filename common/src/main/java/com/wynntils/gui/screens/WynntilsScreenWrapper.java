@@ -545,4 +545,22 @@ public class WynntilsScreenWrapper extends Screen {
             failure("setTooltipForNextRenderPass", t);
         }
     }
+
+    @Override
+    public void removeWidget(GuiEventListener listener) {
+        try {
+            delegate.removeWidget(listener);
+        } catch (Throwable t) {
+            failure("removeWidget", t);
+        }
+    }
+
+    @Override
+    public void triggerImmediateNarration(boolean bl) {
+        try {
+            delegate.triggerImmediateNarration(bl);
+        } catch (Throwable t) {
+            failure("triggerImmediateNarration", t);
+        }
+    }
 }
