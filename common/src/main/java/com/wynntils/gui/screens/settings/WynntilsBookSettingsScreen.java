@@ -19,7 +19,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
@@ -77,7 +76,7 @@ public class WynntilsBookSettingsScreen extends Screen implements TextboxScreen 
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsBookSettingsScreen());
+        return new WynntilsBookSettingsScreen();
     }
 
     @Override
