@@ -46,7 +46,6 @@ public abstract class DownloadedPackSourceMixin {
             } catch (IOException e) {
                 // ignored
             }
-
         } else {
             EventFactory.onResourcePackClearEvent(null);
         }
