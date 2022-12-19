@@ -13,9 +13,11 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
@@ -211,24 +213,6 @@ public class WynntilsScreenWrapper extends Screen {
         } catch (Throwable t) {
             failure("handleComponentClicked", t);
             return false;
-        }
-    }
-
-    @Override
-    public void sendMessage(String text) {
-        try {
-            delegate.sendMessage(text);
-        } catch (Throwable t) {
-            failure("sendMessage", t);
-        }
-    }
-
-    @Override
-    public void sendMessage(String text, boolean addToChat) {
-        try {
-            delegate.sendMessage(text, addToChat);
-        } catch (Throwable t) {
-            failure("sendMessage", t);
         }
     }
 
@@ -530,6 +514,53 @@ public class WynntilsScreenWrapper extends Screen {
             delegate.mouseMoved(mouseX, mouseY);
         } catch (Throwable t) {
             failure("mouseMoved", t);
+        }
+    }
+
+    @Override
+    public void setTooltipForNextRenderPass(List<FormattedCharSequence> list) {
+        try {
+            delegate.setTooltipForNextRenderPass(list);
+        } catch (Throwable t) {
+            failure("setTooltipForNextRenderPass", t);
+        }
+    }
+
+    @Override
+    public void setTooltipForNextRenderPass(
+            List<FormattedCharSequence> list, ClientTooltipPositioner clientTooltipPositioner, boolean bl) {
+        try {
+            delegate.setTooltipForNextRenderPass(list, clientTooltipPositioner, bl);
+        } catch (Throwable t) {
+            failure("setTooltipForNextRenderPass", t);
+        }
+    }
+
+    @Override
+    public void setTooltipForNextRenderPass(
+            Tooltip tooltip, ClientTooltipPositioner clientTooltipPositioner, boolean bl) {
+        try {
+            delegate.setTooltipForNextRenderPass(tooltip, clientTooltipPositioner, bl);
+        } catch (Throwable t) {
+            failure("setTooltipForNextRenderPass", t);
+        }
+    }
+
+    @Override
+    public void removeWidget(GuiEventListener listener) {
+        try {
+            delegate.removeWidget(listener);
+        } catch (Throwable t) {
+            failure("removeWidget", t);
+        }
+    }
+
+    @Override
+    public void triggerImmediateNarration(boolean bl) {
+        try {
+            delegate.triggerImmediateNarration(bl);
+        } catch (Throwable t) {
+            failure("triggerImmediateNarration", t);
         }
     }
 }

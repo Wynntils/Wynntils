@@ -5,19 +5,20 @@
 package com.wynntils.core.events;
 
 import com.wynntils.core.WynntilsMod;
+import net.minecraftforge.eventbus.BusBuilderImpl;
 import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class EventBusWrapper extends EventBus {
-    private EventBusWrapper(BusBuilder busBuilder) {
+    private EventBusWrapper(BusBuilderImpl busBuilder) {
         super(busBuilder);
     }
 
     public static IEventBus createEventBus() {
         if (WynntilsMod.isDevelopmentEnvironment()) {
-            return new EventBusWrapper(BusBuilder.builder());
+            return new EventBusWrapper((BusBuilderImpl) BusBuilder.builder());
         } else {
             return BusBuilder.builder().build();
         }

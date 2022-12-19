@@ -120,12 +120,16 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(
-            method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
-            at = @At("RETURN"))
-    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoPacket(packet);
+        EventFactory.onPlayerInfoUpdatePacket(packet);
+    }
+
+    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onPlayerInfoRemovePacket(packet);
     }
 
     @Inject(
@@ -185,7 +189,22 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
+        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+
+        if (!packet.getItems().equals(event.getItems())) {
+            if (packet.getContainerId() == 0) {
+                McUtils.player()
+                        .inventoryMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+                McUtils.player()
+                        .containerMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            }
+
             ci.cancel();
         }
     }
