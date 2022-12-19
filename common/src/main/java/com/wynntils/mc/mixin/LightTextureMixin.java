@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LightTexture.class)
 public abstract class LightTextureMixin {
-    @Redirect(method = "updateLightTexture", at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F"))
+    @Redirect(
+            method = "updateLightTexture",
+            at = @At(value = "INVOKE", target = "Ljava/lang/Double;floatValue()F", ordinal = 1))
     private float updateLightTexture(Double instance) {
         return EventFactory.onUpdateLightTexture(instance.floatValue()).getGamma();
     }
