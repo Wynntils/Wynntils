@@ -68,16 +68,12 @@ public class OverlayManagementScreen extends Screen {
             Component.literal("Shift-Middle click on an overlay to reset it to it's original state.")
                     .withStyle(ChatFormatting.RED));
 
-    private static final List<Component> CLOSE_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to stop editing and reset changes."));
+    private static final Component CLOSE_TOOLTIP = Component.literal("Click here to stop editing and reset changes.");
 
-    private static final List<Component> TEST_TOOLTIP_LINES = List.of(
-            Component.literal("Click here to toggle test mode."),
-            Component.literal("In test mode, you can see how your overlay setup would look in-game,"),
-            Component.literal("using preview render mode."));
+    private static final Component TEST_TOOLTIP = Component.literal(
+            "Click here to toggle test mode. In test mode, you can see how your overlay setup would look in-game, using preview render mode.");
 
-    private static final List<Component> APPLY_TOOLTIP_LINES =
-            List.of(Component.literal("Click here to apply changes to current overlay."));
+    private static final Component APPLY_TOOLTIP = Component.literal("Click here to apply changes to current overlay.");
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
@@ -242,6 +238,11 @@ public class OverlayManagementScreen extends Screen {
         }
 
         super.render(poseStack, mouseX, mouseY, partialTick); // This renders widgets
+        // This renders button tooltips
+        if (this.deferredTooltipRendering != null) {
+            this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
+            this.deferredTooltipRendering = null;
+        }
     }
 
     @Override
@@ -745,7 +746,7 @@ public class OverlayManagementScreen extends Screen {
                         })
                 .pos(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .tooltip(Tooltip.create(CLOSE_TOOLTIP_LINES))
+                .tooltip(Tooltip.create(CLOSE_TOOLTIP))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
@@ -753,7 +754,7 @@ public class OverlayManagementScreen extends Screen {
                         button -> testMode = !testMode)
                 .pos(this.width / 2 - BUTTON_WIDTH / 2, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .tooltip(Tooltip.create(TEST_TOOLTIP_LINES))
+                .tooltip(Tooltip.create(TEST_TOOLTIP))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
@@ -764,7 +765,7 @@ public class OverlayManagementScreen extends Screen {
                         })
                 .pos(this.width / 2 + BUTTON_WIDTH, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .tooltip(Tooltip.create(APPLY_TOOLTIP_LINES))
+                .tooltip(Tooltip.create(APPLY_TOOLTIP))
                 .build());
     }
 
