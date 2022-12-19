@@ -21,7 +21,6 @@ import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
@@ -62,12 +61,16 @@ public abstract class ClientPacketListenerMixin {
         ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
     }
 
-    @Inject(
-            method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
-            at = @At("RETURN"))
-    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoPacket(packet);
+        EventFactory.onPlayerInfoUpdatePacket(packet);
+    }
+
+    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onPlayerInfoRemovePacket(packet);
     }
 
     @Inject(
@@ -127,7 +130,22 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
+        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+
+        if (packet.getItems() != event.getItems()) {
+            if (packet.getContainerId() == 0) {
+                McUtils.player()
+                        .inventoryMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+                McUtils.player()
+                        .containerMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            }
+
             ci.cancel();
         }
     }
@@ -209,10 +227,10 @@ public abstract class ClientPacketListenerMixin {
     @Redirect(
             method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
             at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
+            @At(
+                    value = "INVOKE",
+                    target =
+                            "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
     private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
