@@ -1,9 +1,21 @@
+## [0.0.1-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.201...v0.0.1-alpha.202) (2022-12-19)
+
+
+### Code Refactoring
+
+* Stop differentiating between SYSTEM and NORMAL messages ([#888](https://github.com/Wynntils/Artemis/issues/888)) ([baae426](https://github.com/Wynntils/Artemis/commit/baae42644c5650fdaf1e4395c5cdf5cf31459d7d))
+
 ## [0.0.1-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.200...v0.0.1-alpha.201) (2022-12-19)
 
 
 ### Bug Fixes
 
 * Don't play sound twice in EnumConfigOptionElement ([#887](https://github.com/Wynntils/Artemis/issues/887)) ([c8719ac](https://github.com/Wynntils/Artemis/commit/c8719accad041c61f449642750e7d9be98f33676))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.201 [skip ci] ([526467c](https://github.com/Wynntils/Artemis/commit/526467c049468e7fa9b9b69ffd022aed79e39d69))
 
 ## [0.0.1-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.199...v0.0.1-alpha.200) (2022-12-19)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.198 [skip ci] ([d13a124](https://github.com/Wynntils/Artemis/commit/d13a124b3b3534c91a4749d4a76a81da23c5b7b3))
-
-## [0.0.1-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.196...v0.0.1-alpha.197) (2022-12-18)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.197 [skip ci] ([9ad513f](https://github.com/Wynntils/Artemis/commit/9ad513fc7c8d24df74632170fe374bd8df1897b5))
-* Sort Features in registry ([b0655b0](https://github.com/Wynntils/Artemis/commit/b0655b0df6b49c2106b328a7581801197f773183))
 
