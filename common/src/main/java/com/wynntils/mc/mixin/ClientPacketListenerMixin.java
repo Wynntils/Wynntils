@@ -10,7 +10,6 @@ import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.time.Instant;
 import java.util.Objects;
@@ -40,8 +39,6 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
@@ -302,10 +299,10 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handlePlayerChat",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
             cancellable = true)
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
@@ -352,10 +349,10 @@ public abstract class ClientPacketListenerMixin {
     @Inject(
             method = "handleSystemChat",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"),
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"),
             cancellable = true)
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
