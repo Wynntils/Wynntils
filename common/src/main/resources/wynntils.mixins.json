@@ -21,6 +21,7 @@
     "KeyMappingMixin",
     "LerpingBossEventAccessor",
     "LevelRendererMixin",
+    "LightTextureMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
     "MainMixin",

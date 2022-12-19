@@ -34,7 +34,7 @@ public class CommandAliasesFeature extends UserFeature {
     private final Type aliasesType = new TypeToken<List<CommandAlias>>() {}.getType();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatSend(CommandSentEvent e) {
+    public void onCommandSent(CommandSentEvent e) {
         String message = e.getCommand();
 
         for (CommandAlias commandAlias : aliases) {
