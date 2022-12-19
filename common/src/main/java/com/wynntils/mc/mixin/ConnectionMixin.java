@@ -6,9 +6,8 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,14 +26,8 @@ public abstract class ConnectionMixin {
         }
     }
 
-    @Inject(
-            method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void sendPre(
-            Packet<?> packet,
-            GenericFutureListener<? extends Future<? super Void>> genericFutureListener,
-            CallbackInfo ci) {
+    @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
+    private void sendPre(Packet<?> packet, PacketSendListener sendListener, CallbackInfo ci) {
         if (EventFactory.onPacketSent(packet).isCanceled()) {
             ci.cancel();
         }
