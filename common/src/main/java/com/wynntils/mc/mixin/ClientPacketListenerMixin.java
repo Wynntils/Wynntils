@@ -197,7 +197,7 @@ public abstract class ClientPacketListenerMixin {
             ci.cancel();
         }
 
-        if (packet.getItems() != event.getItems()) {
+        if (!packet.getItems().equals(event.getItems())) {
             if (packet.getContainerId() == 0) {
                 McUtils.player()
                         .inventoryMenu
