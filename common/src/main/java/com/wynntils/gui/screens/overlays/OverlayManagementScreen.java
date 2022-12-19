@@ -241,6 +241,11 @@ public class OverlayManagementScreen extends Screen {
         }
 
         super.render(poseStack, mouseX, mouseY, partialTick); // This renders widgets
+        // This renders button tooltips
+        if (this.deferredTooltipRendering != null) {
+            this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
+            this.deferredTooltipRendering = null;
+        }
     }
 
     @Override
