@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
@@ -59,7 +58,7 @@ public class QuickCastFeature extends UserFeature {
 
     private SpellDirection[] spellInProgress = NO_SPELL;
 
-    private static final Queue<Packet<?>> SPELL_PACKET_QUEUE = new LinkedList<>();
+    private static final Queue<Runnable> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private int packetCountdown = 0;
     private int spellCountdown = 0;
@@ -169,7 +168,7 @@ public class QuickCastFeature extends UserFeature {
 
         lastSelectedSlot = McUtils.inventory().selected;
         List<SpellDirection> remainder = spell.subList(spellInProgress.length, spell.size());
-        remainder.stream().map(SpellDirection::getInteractionPacket).forEach(SPELL_PACKET_QUEUE::add);
+        remainder.stream().map(SpellDirection::getSendPacketRunnable).forEach(SPELL_PACKET_QUEUE::add);
     }
 
     @SubscribeEvent
@@ -186,7 +185,7 @@ public class QuickCastFeature extends UserFeature {
         boolean slotChanged = currSelectedSlot != lastSelectedSlot;
 
         if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
-        McUtils.sendPacket(SPELL_PACKET_QUEUE.poll());
+        SPELL_PACKET_QUEUE.poll().run();
         if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
 
         // Waiting a few ticks is useful for avoiding lag related input-overlaps
@@ -209,17 +208,17 @@ public class QuickCastFeature extends UserFeature {
     }
 
     public enum SpellDirection {
-        RIGHT(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND)),
-        LEFT(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+        RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
+        LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
 
-        private final Packet<?> interactionPacket;
+        private final Runnable sendPacketRunnable;
 
-        SpellDirection(Packet<?> interactionPacket) {
-            this.interactionPacket = interactionPacket;
+        SpellDirection(Runnable sendPacketRunnable) {
+            this.sendPacketRunnable = sendPacketRunnable;
         }
 
-        public Packet<?> getInteractionPacket() {
-            return interactionPacket;
+        public Runnable getSendPacketRunnable() {
+            return sendPacketRunnable;
         }
     }
 }
