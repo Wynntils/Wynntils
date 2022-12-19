@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -69,6 +70,10 @@ public final class McUtils {
 
     public static void sendPacket(Packet<?> packet) {
         mc().getConnection().send(packet);
+    }
+
+    public static void sendSequencedPacket(PredictiveAction predictiveAction) {
+        mc().gameMode.startPrediction(mc().level, predictiveAction);
     }
 
     public static void sendCommand(String command) {
