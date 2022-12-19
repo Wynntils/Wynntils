@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[40.1.84,)"
 #issueTrackerURL = ""
 license = "GNU AGPL 3"
 
