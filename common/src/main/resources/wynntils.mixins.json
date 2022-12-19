@@ -12,6 +12,7 @@
     "ConnectScreenMixin",
     "CrashReportMixin",
     "CustomHeadLayerMixin",
+    "DownloadedPackSourceMixin",
     "EntityLookupMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
