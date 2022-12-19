@@ -1,9 +1,21 @@
+## [0.0.1-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.198...v0.0.1-alpha.199) (2022-12-19)
+
+
+### Bug Fixes
+
+* Require a newer version of FML (to match Forge version req) ([#884](https://github.com/Wynntils/Artemis/issues/884)) ([0d16814](https://github.com/Wynntils/Artemis/commit/0d16814fabf4bd41dab35de773ac1d57a1414864))
+
 ## [0.0.1-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.197...v0.0.1-alpha.198) (2022-12-18)
 
 
 ### Code Refactoring
 
 * In preparation for 1.19.3, introduce McUtils.sendCommand ([#873](https://github.com/Wynntils/Artemis/issues/873)) ([afc1587](https://github.com/Wynntils/Artemis/commit/afc1587a0f4629ced1c94a459b269a07ce38ae44))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.198 [skip ci] ([d13a124](https://github.com/Wynntils/Artemis/commit/d13a124b3b3534c91a4749d4a76a81da23c5b7b3))
 
 ## [0.0.1-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.196...v0.0.1-alpha.197) (2022-12-18)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.195 [skip ci] ([6019fdb](https://github.com/Wynntils/Artemis/commit/6019fdbc76d8d448e2ef78d5da6d373e18c79afe))
-
-## [0.0.1-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.193...v0.0.1-alpha.194) (2022-12-17)
-
-
-### Bug Fixes
-
-* Nerf mythic scaling to 1.5 from 2 [#867](https://github.com/Wynntils/Artemis/issues/867) ([37183b1](https://github.com/Wynntils/Artemis/commit/37183b1d5e1d7d2e0e2e538cc0d4864bcbe190bd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.194 [skip ci] ([038955d](https://github.com/Wynntils/Artemis/commit/038955db8708adf2a9434ad1093427a63bf4abc8))
 
