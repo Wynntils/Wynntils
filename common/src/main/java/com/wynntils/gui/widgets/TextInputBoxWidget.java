@@ -254,7 +254,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private String getRenderCursorChar() {
         String cursorChar;

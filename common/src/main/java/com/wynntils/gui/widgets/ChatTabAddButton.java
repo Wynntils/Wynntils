@@ -47,5 +47,5 @@ public class ChatTabAddButton extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
