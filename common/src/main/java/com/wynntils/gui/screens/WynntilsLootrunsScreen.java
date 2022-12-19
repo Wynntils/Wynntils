@@ -34,7 +34,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsLootrunsScreen());
+        return new WynntilsLootrunsScreen();
     }
 
     @Override

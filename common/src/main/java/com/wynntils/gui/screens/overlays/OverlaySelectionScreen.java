@@ -11,7 +11,6 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.overlays.lists.OverlayList;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -34,7 +33,7 @@ public class OverlaySelectionScreen extends Screen {
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new OverlaySelectionScreen());
+        return new OverlaySelectionScreen();
     }
 
     @Override
