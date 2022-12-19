@@ -11,6 +11,7 @@
     "ConnectScreenMixin",
     "CrashReportMixin",
     "CustomHeadLayerMixin",
+    "OptionInstanceMixin",
     "DownloadedPackSourceMixin",
     "EntityLookupMixin",
     "GuiMixin",
