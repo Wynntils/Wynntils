@@ -227,10 +227,10 @@ public abstract class ClientPacketListenerMixin {
     @Redirect(
             method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
     private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
