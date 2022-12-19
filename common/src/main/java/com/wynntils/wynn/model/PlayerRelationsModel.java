@@ -85,7 +85,7 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent event) {
-        if (event.getMessageType() != MessageType.SYSTEM) return;
+        if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
