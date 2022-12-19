@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
@@ -52,7 +53,8 @@ public class WynntilsScreenWrapper extends Screen {
     private void failure(String method, Throwable e) {
         WynntilsMod.error("Failure in " + delegate.getClass().getSimpleName() + "." + method + "()", e);
         McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in " + method + " in "
-                + delegate.getClass().getSimpleName() + ". Screen forcefully closed."));
+                        + delegate.getClass().getSimpleName() + ". Screen forcefully closed.")
+                .withStyle(ChatFormatting.RED));
         McUtils.mc().setScreen(null);
     }
 
