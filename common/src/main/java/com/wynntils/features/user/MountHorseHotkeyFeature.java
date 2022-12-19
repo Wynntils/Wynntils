@@ -89,7 +89,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendPacket(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
+                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },

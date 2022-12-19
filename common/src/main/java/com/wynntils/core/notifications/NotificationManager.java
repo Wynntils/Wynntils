@@ -106,6 +106,6 @@ public final class NotificationManager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(Component.literal(msgContainer.getRenderTask().getText()), msgContainer.hashCode());
+                .addMessage(Component.literal(msgContainer.getRenderTask().getText()));
     }
 }

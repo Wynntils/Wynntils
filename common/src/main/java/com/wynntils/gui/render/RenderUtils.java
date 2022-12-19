@@ -16,8 +16,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
@@ -40,6 +38,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
@@ -988,7 +988,7 @@ public final class RenderUtils {
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
         poseStack.translate(centerX, centerZ, 0);
         // See Quaternion#fromXYZ
-        poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
+        poseStack.mulPose(new Quaternionf(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
                 StrictMath.cos(-Math.toRadians(angle) / 2)));
         poseStack.translate(-centerX, -centerZ, 0);
     }
