@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.GridWidget;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -94,9 +97,31 @@ public class WynncraftPauseScreenFeature extends UserFeature {
             }
         }
 
+        // Inject back children if they were not cell inhabitants
+        // This is needed for compatability with other mods that inject children directly
+        for (AbstractWidget child : grid.children) {
+            if (grid.cellInhabitants.stream().noneMatch(cellInhabitant -> cellInhabitant.child.equals(child))) {
+                newGridWidget.children.add(child);
+            }
+        }
+
         // Remove old grid, add back new
         pauseScreen.removeWidget(grid);
-        pauseScreen.addRenderableWidget(newGridWidget);
+
+        // This is weird, but ModMenu assumes the grid widget is the first one in the list
+        List<GuiEventListener> oldChildren = new ArrayList<>(pauseScreen.children);
+        List<Renderable> oldRenderables = new ArrayList<>(pauseScreen.renderables);
+        List<NarratableEntry> oldNarratables = new ArrayList<>(pauseScreen.narratables);
+
+        pauseScreen.clearWidgets();
+
+        pauseScreen.children.add(newGridWidget);
+        pauseScreen.renderables.add(newGridWidget);
+        pauseScreen.narratables.add(newGridWidget);
+
+        pauseScreen.children.addAll(oldChildren);
+        pauseScreen.renderables.addAll(oldRenderables);
+        pauseScreen.narratables.addAll(oldNarratables);
     }
 
     private Button replaceButtonFunction(Button widget, Component component, Button.OnPress onPress) {
