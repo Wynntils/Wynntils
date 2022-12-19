@@ -6,7 +6,7 @@ package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Optional;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,7 @@ public final class IngredientInfo {
             return new ItemStack(Items.AIR);
         }
 
-        Optional<Item> item = Registry.ITEM.getOptional(new ResourceLocation(materialName));
+        Optional<Item> item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(materialName));
         ItemStack itemStack = item.map(ItemStack::new).orElseGet(() -> new ItemStack(Items.AIR));
 
         if (metadata != null) {
