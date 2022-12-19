@@ -49,7 +49,7 @@ public class WynncraftButtonFeature extends UserFeature {
 
         // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
-            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress);
+            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
             this.backScreen = backScreen;
 
