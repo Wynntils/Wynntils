@@ -59,10 +59,13 @@ public class WynntilsScreenWrapper extends Screen {
     @Override
     public void init(Minecraft minecraft, int width, int height) {
         try {
+            delegate.init(minecraft, width, height);
+
             // This is the only overwritten method where we call super for the wrapper screen.
             // This is needed to make FAPI think we set up the screen correctly.
+            // We can't do that until after the delegate is init'ed though, otherwise
+            // our wrapper methods can get called from super.init() and fail.
             super.init(minecraft, width, height);
-            delegate.init(minecraft, width, height);
         } catch (Throwable t) {
             failure("init", t);
         }
