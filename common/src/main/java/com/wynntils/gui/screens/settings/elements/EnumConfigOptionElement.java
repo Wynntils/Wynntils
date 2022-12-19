@@ -83,9 +83,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
         } else {
             return false;
         }
-
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK);
-
+        
         Enum<?> configHolderValue = (Enum<?>) configHolder.getValue();
         assert enumConstants.contains(configHolderValue);
 
