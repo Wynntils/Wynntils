@@ -11,8 +11,6 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.utils.McUtils;
-import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -23,15 +21,11 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.LastSeenMessagesTracker;
-import net.minecraft.network.chat.MessageSignature;
 import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.chat.SignedMessageBody;
-import net.minecraft.network.chat.SignedMessageChain;
 import net.minecraft.network.chat.SignedMessageLink;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -51,9 +45,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
-import net.minecraft.util.Crypt;
 import net.minecraft.world.flag.FeatureFlagSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -72,9 +64,6 @@ public abstract class ClientPacketListenerMixin {
     protected abstract void send(ServerboundResourcePackPacket.Action action);
 
     @Shadow
-    public abstract void send(Packet<?> packet);
-
-    @Shadow
     private CommandDispatcher<SharedSuggestionProvider> commands;
 
     @Shadow
@@ -90,12 +79,6 @@ public abstract class ClientPacketListenerMixin {
     @Shadow
     private MessageSignatureCache messageSignatureCache;
 
-    @Shadow
-    private SignedMessageChain.Encoder signedMessageEncoder;
-
-    @Shadow
-    private LastSeenMessagesTracker lastSeenMessages;
-
     private static boolean isRenderThread() {
         return McUtils.mc().isSameThread();
     }
@@ -104,21 +87,6 @@ public abstract class ClientPacketListenerMixin {
     private void onChatPre(String string, CallbackInfo ci) {
         ChatSentEvent result = EventFactory.onChatSent(string);
         if (result.isCanceled()) {
-            ci.cancel();
-        }
-
-        if (!Objects.equals(string, result.getMessage())) {
-            // Note: This code is taken from the MC source code. I don't think there is a sane way of not doing this,
-            // unfortunately (in 1.19.2, there was, not in 1.19.3).
-            //       For anyone concerned, this does not mess with NoChatReport at the time of writing.
-
-            Instant instant = Instant.now();
-            long l = Crypt.SaltSupplier.getLong();
-            LastSeenMessagesTracker.Update update = this.lastSeenMessages.generateAndApplyUpdate();
-            MessageSignature messageSignature =
-                    this.signedMessageEncoder.pack(new SignedMessageBody(string, instant, l, update.lastSeen()));
-            this.send(new ServerboundChatPacket(string, instant, l, messageSignature, update.update()));
-
             ci.cancel();
         }
     }
