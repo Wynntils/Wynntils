@@ -19,7 +19,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -113,11 +112,11 @@ public class OverlayManagementScreen extends Screen {
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new OverlayManagementScreen());
+        return new OverlayManagementScreen();
     }
 
     public static Screen create(Overlay overlay) {
-        return WynntilsScreenWrapper.create(new OverlayManagementScreen(overlay));
+        return new OverlayManagementScreen(overlay);
     }
 
     @Override

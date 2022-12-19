@@ -13,7 +13,6 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.guides.widgets.GuidePowderItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -43,7 +42,7 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsPowderGuideScreen());
+        return new WynntilsPowderGuideScreen();
     }
 
     @Override
