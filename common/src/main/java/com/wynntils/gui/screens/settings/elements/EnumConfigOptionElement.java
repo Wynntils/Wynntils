@@ -83,7 +83,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
         } else {
             return false;
         }
-        
+
         Enum<?> configHolderValue = (Enum<?>) configHolder.getValue();
         assert enumConstants.contains(configHolderValue);
 
