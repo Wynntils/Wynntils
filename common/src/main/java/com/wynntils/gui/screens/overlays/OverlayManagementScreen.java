@@ -71,9 +71,8 @@ public class OverlayManagementScreen extends Screen {
     private static final Component CLOSE_TOOLTIP_LINES =
             Component.literal("Click here to stop editing and reset changes.");
 
-    private static final Component TEST_TOOLTIP_LINES = Component.literal("Click here to toggle test mode.")
-            .append(Component.literal("In test mode, you can see how your overlay setup would look in-game,"))
-            .append(Component.literal("using preview render mode."));
+    private static final Component TEST_TOOLTIP_LINES = Component.literal(
+            "Click here to toggle test mode. In test mode, you can see how your overlay setup would look in-game, using preview render mode.");
 
     private static final Component APPLY_TOOLTIP_LINES =
             Component.literal("Click here to apply changes to current overlay.");
