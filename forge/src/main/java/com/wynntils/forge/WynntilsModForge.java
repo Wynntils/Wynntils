@@ -39,12 +39,12 @@ public class WynntilsModForge {
         WynntilsMod.registerEventListener(this);
     }
 
-    // FIXME: This is slightly hacky to do this but it works!
+    // This is slightly hacky to do this, but it works
     @SubscribeEvent
     public void onClientLoad(TitleScreenInitEvent.Pre event) {
         // Enable stencil support
         Minecraft.getInstance().getMainRenderTarget().enableStencil();
 
-        WynntilsMod.unregisterEventListener(WynntilsModForge.class);
+        WynntilsMod.unregisterEventListener(this);
     }
 }
