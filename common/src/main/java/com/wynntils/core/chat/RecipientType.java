@@ -22,20 +22,19 @@ public enum RecipientType {
     PRIVATE("^§7\\[.* ➤ .*\\] §r§f.*$", "^(§r§8)?\\[.* ➤ .*\\] §r§7.*$", "Private"),
     SHOUT("^§3.* \\[[A-Z0-9]+\\] shouts: §r§b.*$", "^(§r§8)?.* \\[[A-Z0-9]+\\] shouts: §r§7.*$", "Shout");
 
-    private final Pattern normalPattern;
+    private final Pattern foregroundPattern;
     private final Pattern backgroundPattern;
     private final String name;
 
-    RecipientType(String normalPattern, String backgroundPattern, String name) {
-        this.normalPattern = (normalPattern == null ? null : Pattern.compile(normalPattern));
+    RecipientType(String foregroundPattern, String backgroundPattern, String name) {
+        this.foregroundPattern = (foregroundPattern == null ? null : Pattern.compile(foregroundPattern));
         this.backgroundPattern = (backgroundPattern == null ? null : Pattern.compile(backgroundPattern));
 
         this.name = name;
     }
 
     public boolean matchPattern(String msg, MessageType messageType) {
-        assert (messageType == MessageType.NORMAL || messageType == MessageType.BACKGROUND);
-        Pattern pattern = (messageType == MessageType.NORMAL ? normalPattern : backgroundPattern);
+        Pattern pattern = (messageType == MessageType.FOREGROUND ? foregroundPattern : backgroundPattern);
         if (pattern == null) return false;
         return pattern.matcher(msg).find();
     }
