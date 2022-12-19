@@ -1,9 +1,21 @@
+## [0.0.1-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.202...v0.0.1-alpha.203) (2022-12-19)
+
+
+### Bug Fixes
+
+* Remove WynntilsScreenWrapper ([#891](https://github.com/Wynntils/Artemis/issues/891)) ([28877b5](https://github.com/Wynntils/Artemis/commit/28877b596cc3f6ba274d1d59af51f644cfdaee8e))
+
 ## [0.0.1-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.201...v0.0.1-alpha.202) (2022-12-19)
 
 
 ### Code Refactoring
 
 * Stop differentiating between SYSTEM and NORMAL messages ([#888](https://github.com/Wynntils/Artemis/issues/888)) ([baae426](https://github.com/Wynntils/Artemis/commit/baae42644c5650fdaf1e4395c5cdf5cf31459d7d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.202 [skip ci] ([78aba62](https://github.com/Wynntils/Artemis/commit/78aba626dd1868450a6ce9de156ecace9549e1c9))
 
 ## [0.0.1-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.200...v0.0.1-alpha.201) (2022-12-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.199 [skip ci] ([80ff0a5](https://github.com/Wynntils/Artemis/commit/80ff0a589c253697ae63c24f2d37bff62bbaae2e))
-
-## [0.0.1-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.197...v0.0.1-alpha.198) (2022-12-18)
-
-
-### Code Refactoring
-
-* In preparation for 1.19.3, introduce McUtils.sendCommand ([#873](https://github.com/Wynntils/Artemis/issues/873)) ([afc1587](https://github.com/Wynntils/Artemis/commit/afc1587a0f4629ced1c94a459b269a07ce38ae44))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.198 [skip ci] ([d13a124](https://github.com/Wynntils/Artemis/commit/d13a124b3b3534c91a4749d4a76a81da23c5b7b3))
 
