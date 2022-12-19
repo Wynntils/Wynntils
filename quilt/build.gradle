@@ -18,7 +18,7 @@ buildscript {
          */
 
         dependencies {
-            classpath "com.github.coehlrich:EventBusTransformer:1.0.2"
+            classpath "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
         }
     }
 }
@@ -76,7 +76,7 @@ dependencies {
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
-    runtimeOnly "com.github.coehlrich:EventBusTransformer:1.0.2"
+    runtimeOnly "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}") {
         exclude group: "net.fabricmc"
     }
