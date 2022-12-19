@@ -21,6 +21,7 @@ import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
@@ -61,16 +62,12 @@ public abstract class ClientPacketListenerMixin {
         ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
     }
 
-    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
-    private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
+    @Inject(
+            method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
+            at = @At("RETURN"))
+    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoUpdatePacket(packet);
-    }
-
-    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
-    private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoRemovePacket(packet);
+        EventFactory.onPlayerInfoPacket(packet);
     }
 
     @Inject(
@@ -130,22 +127,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-
-        if (packet.getItems() != event.getItems()) {
-            if (packet.getContainerId() == 0) {
-                McUtils.player()
-                        .inventoryMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
-                McUtils.player()
-                        .containerMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            }
-
+        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
             ci.cancel();
         }
     }
