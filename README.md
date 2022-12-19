@@ -50,11 +50,11 @@ However, it can be nice to fix the formatting locally before pushing. There are 
 
 * Finally, you can also use the Palantir formatting directly. This will skip the additional non-Palantir rules we have in Spotless, but these are few and unlikely to affect most cases. For IntelliJ, there is the [Palantir plugin](https://plugins.jetbrains.com/plugin/13180-palantir-java-format) that is supposed to do that, but at the moment it unfortunately seems to be broken.
 
-### Hot-swapping
+### Hot-swapping (Linux/MacOS only)
 Using the Hotswap Agent is recommended if you want to do live code editing. See [Hotswap Agent installation instructions](http://hotswapagent.org/mydoc_quickstart-jdk17.html),
 but bear in mind that the instructions are incorrect (!). Don't "unpack" `hotswap-agent.jar`, instead
 rename the downloaded jar file to `hotswap-agent.jar`. Finally, add `wynntils.hotswap=true` in your personal `gradle.properties` file.
-By default, this is `C:\Users\<your username>\.gradle\gradle.properties` on Windows, or `~/.gradle/gradle.properties` on Linux/MacOS.
+By default, this is `~/.gradle/gradle.properties` on Linux/MacOS.
 
 
 ### Run Configurations and Authenticating
