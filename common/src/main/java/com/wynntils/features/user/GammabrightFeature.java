@@ -77,11 +77,11 @@ public class GammabrightFeature extends UserFeature {
     }
 
     private void resetGamma() {
-        McUtils.options().gamma().set(lastGamma);
+        McUtils.options().gamma().value = lastGamma;
     }
 
     private void enableGammabright() {
         lastGamma = McUtils.options().gamma().get();
-        McUtils.options().gamma().set(1000d);
+        McUtils.options().gamma().value = 1000d;
     }
 }
