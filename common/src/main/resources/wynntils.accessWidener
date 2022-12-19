@@ -7,6 +7,7 @@ accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
+accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
@@ -16,6 +17,7 @@ accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant c
 accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant row I
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
+accessible field net/minecraft/client/gui/screens/Screen deferredTooltipRendering Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;
 accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
@@ -32,6 +34,7 @@ accessible method net/minecraft/client/gui/components/AbstractSelectionList getR
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
+accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;II)V
 accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V
 accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;

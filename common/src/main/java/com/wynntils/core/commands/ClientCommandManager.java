@@ -68,10 +68,7 @@ public final class ClientCommandManager extends Manager {
     }
 
     public boolean handleCommand(String message) {
-        assert message.startsWith("/");
-
         StringReader reader = new StringReader(message);
-        reader.skip();
         return executeCommand(reader, message);
     }
 

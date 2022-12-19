@@ -89,7 +89,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     }
 
     @Override
-    protected void renderList(PoseStack poseStack, int x, int y, int mouseX, int mouseY, float partialTick) {
+    protected void renderList(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         int itemCount = this.getItemCount();
 
         int renderedCount = 0;
