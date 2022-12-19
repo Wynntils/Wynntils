@@ -14,7 +14,6 @@ import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
@@ -45,7 +44,7 @@ public class GuildMapScreen extends AbstractMapScreen {
     private GuildMapScreen() {}
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new GuildMapScreen());
+        return new GuildMapScreen();
     }
 
     @Override

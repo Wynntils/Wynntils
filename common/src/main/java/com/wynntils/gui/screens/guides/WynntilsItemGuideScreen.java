@@ -14,7 +14,6 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.guides.widgets.GuideGearItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -41,7 +40,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsItemGuideScreen());
+        return new WynntilsItemGuideScreen();
     }
 
     @Override

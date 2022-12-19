@@ -47,7 +47,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsMenuScreen());
+        return new WynntilsMenuScreen();
     }
 
     private void setup() {

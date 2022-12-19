@@ -15,7 +15,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -91,15 +90,15 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     public static Screen create(MainMapScreen oldMapScreen) {
-        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen));
+        return new PoiCreationScreen(oldMapScreen);
     }
 
     public static Screen create(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
-        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen, setupLocation));
+        return new PoiCreationScreen(oldMapScreen, setupLocation);
     }
 
     public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
-        return WynntilsScreenWrapper.create(new PoiCreationScreen(oldMapScreen, poi));
+        return new PoiCreationScreen(oldMapScreen, poi);
     }
 
     @Override

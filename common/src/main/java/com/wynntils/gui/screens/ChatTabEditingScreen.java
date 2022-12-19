@@ -57,11 +57,11 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new ChatTabEditingScreen());
+        return new ChatTabEditingScreen();
     }
 
     public static Screen create(ChatTab chatTab) {
-        return WynntilsScreenWrapper.create(new ChatTabEditingScreen(chatTab));
+        return new ChatTabEditingScreen(chatTab);
     }
 
     @Override

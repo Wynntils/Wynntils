@@ -11,7 +11,6 @@ import com.wynntils.core.managers.Models;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
@@ -47,11 +46,11 @@ public class MainMapScreen extends AbstractMapScreen {
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new MainMapScreen());
+        return new MainMapScreen();
     }
 
     public static Screen create(float mapCenterX, float mapCenterZ) {
-        return WynntilsScreenWrapper.create(new MainMapScreen(mapCenterX, mapCenterZ));
+        return new MainMapScreen(mapCenterX, mapCenterZ);
     }
 
     @Override

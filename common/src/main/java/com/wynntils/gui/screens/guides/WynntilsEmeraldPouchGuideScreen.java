@@ -13,7 +13,6 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.guides.widgets.GuideEmeraldPouchItemStack;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
@@ -42,7 +41,7 @@ public class WynntilsEmeraldPouchGuideScreen
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsEmeraldPouchGuideScreen());
+        return new WynntilsEmeraldPouchGuideScreen();
     }
 
     @Override
