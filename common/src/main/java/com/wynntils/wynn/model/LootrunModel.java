@@ -15,6 +15,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.io.File;
@@ -65,6 +66,8 @@ public final class LootrunModel extends Model {
             ChatFormatting.BLUE.getColor(),
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
+
+    private static List<LootrunInstance> LOOTRUN_INSTANCE_CACHE = new ArrayList<>();
 
     private LootrunState state = LootrunState.DISABLED;
 
@@ -587,6 +590,10 @@ public final class LootrunModel extends Model {
     }
 
     public List<LootrunInstance> getLootruns() {
+        return LOOTRUN_INSTANCE_CACHE;
+    }
+
+    public void refreshLootrunCache() {
         List<LootrunInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
@@ -603,7 +610,8 @@ public final class LootrunModel extends Model {
             }
         }
 
-        return lootruns;
+        LOOTRUN_INSTANCE_CACHE = lootruns;
+        WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
     public boolean tryLoadFile(String fileName) {
