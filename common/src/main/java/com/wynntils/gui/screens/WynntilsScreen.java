@@ -27,7 +27,6 @@ public abstract class WynntilsScreen extends Screen {
     @Override
     protected final void init() {
         try {
-            super.init();
             doInit();
         } catch (Throwable t) {
             failure("init", t);
