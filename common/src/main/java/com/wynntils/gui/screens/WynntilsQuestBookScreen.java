@@ -37,7 +37,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),

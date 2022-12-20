@@ -6,10 +6,11 @@ package com.wynntils.utils.objects;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class TimedSet<T> implements Iterable<T> {
-    private final HashSet<TimedEntry> ENTRIES = new HashSet<>();
+    private final Set<TimedEntry> ENTRIES = new HashSet<>();
 
     long timeJump;
     boolean autoClear;
@@ -53,19 +54,21 @@ public class TimedSet<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         if (autoClear) releaseEntries();
 
-        return new Iterator<>() {
-            final Iterator<TimedEntry> ORIGINAL = ENTRIES.iterator();
+        return new TimedSetIterator();
+    }
 
-            @Override
-            public boolean hasNext() {
-                return ORIGINAL.hasNext();
-            }
+    private class TimedSetIterator implements Iterator<T> {
+        final Iterator<TimedEntry> ORIGINAL = ENTRIES.iterator();
 
-            @Override
-            public T next() {
-                return ORIGINAL.next().getEntry();
-            }
-        };
+        @Override
+        public boolean hasNext() {
+            return ORIGINAL.hasNext();
+        }
+
+        @Override
+        public T next() {
+            return ORIGINAL.next().getEntry();
+        }
     }
 
     private class TimedEntry {

@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-public class ScriptedContainerQuery {
+public final class ScriptedContainerQuery {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
             (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
 
@@ -64,7 +64,7 @@ public class ScriptedContainerQuery {
         void processContainer(ContainerContent container);
     }
 
-    private class ScriptedQueryStep implements ContainerQueryStep {
+    private final class ScriptedQueryStep implements ContainerQueryStep {
         final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
@@ -136,7 +136,7 @@ public class ScriptedContainerQuery {
      * The builder will accept these three in any order, and create a ContainerQueryStep for each
      * such triplet. It will not allow the creation of a step where one of them are missing.
      */
-    public static class QueryBuilder {
+    public static final class QueryBuilder {
         private StartAction startAction;
         private ContainerVerification verification;
         private ContainerAction handleContent;

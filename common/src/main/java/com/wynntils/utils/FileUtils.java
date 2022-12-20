@@ -68,7 +68,7 @@ public final class FileUtils {
                 FileChannel destination = new FileOutputStream(destFile).getChannel()) {
             destination.transferFrom(source, 0, source.size());
         } catch (Exception e) {
-            e.printStackTrace();
+            WynntilsMod.warn("Failed to copy file " + sourceFile + " to " + destFile, e);
         }
     }
 

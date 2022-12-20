@@ -141,11 +141,11 @@ public class TerritoryInfo {
         color = CustomColor.fromHSV(h / 360f, s, v, 1);
     }
 
-    public HashMap<GuildResource, Integer> getGenerators() {
+    public Map<GuildResource, Integer> getGenerators() {
         return generators;
     }
 
-    public HashMap<GuildResource, TerritoryStorage> getStorage() {
+    public Map<GuildResource, TerritoryStorage> getStorage() {
         return storage;
     }
 

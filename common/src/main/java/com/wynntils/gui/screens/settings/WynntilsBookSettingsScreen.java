@@ -43,7 +43,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsBookSettingsScreen extends WynntilsScreen implements TextboxScreen {
+public final class WynntilsBookSettingsScreen extends WynntilsScreen implements TextboxScreen {
     private final int CONFIGURABLES_PER_PAGE = 13;
     private final int CONFIGS_PER_PAGE = 4;
     private final List<WynntilsButton> configurables = new ArrayList<>();

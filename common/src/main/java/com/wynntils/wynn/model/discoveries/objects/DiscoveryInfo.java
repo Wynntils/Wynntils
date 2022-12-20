@@ -109,7 +109,11 @@ public class DiscoveryInfo {
     }
 
     public List<Component> getLore() {
-        return displayLore == null ? displayLore = generateLore() : displayLore;
+        if (displayLore == null) {
+            displayLore = generateLore();
+        }
+
+        return displayLore;
     }
 
     public String getName() {

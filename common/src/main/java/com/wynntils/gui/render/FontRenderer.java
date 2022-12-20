@@ -78,12 +78,8 @@ public final class FontRenderer {
 
                 font.draw(poseStack, text, 0, 0, customColor.asInt());
             }
-            case NORMAL -> {
-                font.drawShadow(poseStack, text, 0, 0, customColor.asInt());
-            }
-            default -> {
-                font.draw(poseStack, text, 0, 0, customColor.asInt());
-            }
+            case NORMAL -> font.drawShadow(poseStack, text, 0, 0, customColor.asInt());
+            default -> font.draw(poseStack, text, 0, 0, customColor.asInt());
         }
 
         poseStack.popPose();

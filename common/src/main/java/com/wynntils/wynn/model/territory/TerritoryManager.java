@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public final class TerritoryManager extends Manager {
             .create();
 
     // This is territory POIs as returned by the advancement from Wynncraft
-    private Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
+    private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
     // This is the profiles as downloaded from Athena
     private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
@@ -51,7 +52,7 @@ public final class TerritoryManager extends Manager {
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
-    private ScheduledThreadPoolExecutor timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public TerritoryManager(NetManager netManager) {
         super(List.of(netManager));

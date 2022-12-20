@@ -34,7 +34,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class MainMapScreen extends AbstractMapScreen {
+public final class MainMapScreen extends AbstractMapScreen {
     private MainMapScreen() {
         super();
         centerMapAroundPlayer();

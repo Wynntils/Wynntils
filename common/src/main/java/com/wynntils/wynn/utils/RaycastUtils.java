@@ -13,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class RaycastUtils {
+public final class RaycastUtils {
     private static final float RAYCAST_RANGE = 5f;
 
     public static Optional<Player> getHoveredPlayer() {

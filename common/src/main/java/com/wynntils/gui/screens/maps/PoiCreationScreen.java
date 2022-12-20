@@ -30,7 +30,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class PoiCreationScreen extends Screen implements TextboxScreen {
+public final class PoiCreationScreen extends Screen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
 
     private static final List<Texture> POI_ICONS = List.of(
@@ -283,7 +283,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+        renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
