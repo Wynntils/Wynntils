@@ -38,7 +38,7 @@ To set up the workspace, just import the project as a gradle project into your I
 To build the mod just call the `buildDependents` and the artifacts should be generated in `fabric/build/libs`, `quilt/build/libs` and `forge/build/libs`. There are a lot of jars there, use the jar which has the respective loader at the end (eg. `wynntils-VERSION-fabric.jar`).
 
 ### Code Formatting
-The code format is checked by Spotless using the Palantir engine. When opening a PR, Spotless checks will be run automatically by GitHub Actions. This bot runs the `spotlessApply` so it fixes all formatting errors that it can. If such errors are found, the bot will then push a commit to your branch with these fixes.
+The code format is checked by Spotless using the Palantir engine. When opening a PR, Spotless checks will be run automatically by GitHub Actions. This bot runs the `spotlessApply` which fixes all formatting errors that it can find. If such errors are found, the bot will then push a commit to your branch with these fixes.
 
 However, it can be nice to fix the formatting locally before pushing. There are several ways to do this.
 
