@@ -1,9 +1,21 @@
+## [0.0.1-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.204...v0.0.1-alpha.205) (2022-12-20)
+
+
+### New Features
+
+* Redirects "Housing Teleport" messages to Overlay ([#892](https://github.com/Wynntils/Artemis/issues/892)) ([586cc87](https://github.com/Wynntils/Artemis/commit/586cc87e16528f7169e71d58460b92eb4280328d))
+
 ## [0.0.1-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.203...v0.0.1-alpha.204) (2022-12-20)
 
 
 ### Bug Fixes
 
 * Strict Coordinate Pattern now matches on five-digit long coords ([#893](https://github.com/Wynntils/Artemis/issues/893)) ([0926bf1](https://github.com/Wynntils/Artemis/commit/0926bf1908068630c785d4ba1a8bf0ccfe9ebb4f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.204 [skip ci] ([0568b77](https://github.com/Wynntils/Artemis/commit/0568b77d5becd4e2da4a79ad7858b18beb94f1c7))
 
 ## [0.0.1-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.202...v0.0.1-alpha.203) (2022-12-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.201 [skip ci] ([526467c](https://github.com/Wynntils/Artemis/commit/526467c049468e7fa9b9b69ffd022aed79e39d69))
-
-## [0.0.1-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.199...v0.0.1-alpha.200) (2022-12-19)
-
-
-### Reverts
-
-* Revert "fix: Require a newer version of FML (to match Forge version req) (#884)" ([fdcd134](https://github.com/Wynntils/Artemis/commit/fdcd1348c22f63a377f06f2ba1833e32547f7c1c)), closes [#884](https://github.com/Wynntils/Artemis/issues/884)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.200 [skip ci] ([8e70063](https://github.com/Wynntils/Artemis/commit/8e70063f3bd2365960c6c752b2521b3e64180baf))
 
