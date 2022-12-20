@@ -536,6 +536,13 @@ public final class LootrunModel extends Model {
             for (JsonElement element : notesJson) {
                 JsonObject noteJson = element.getAsJsonObject();
                 JsonObject positionJson = noteJson.getAsJsonObject("position");
+
+                // Artemis builds, until this point have used a slightly different format for notes
+                // This perserves support for those files, as this commit fixes the format to match legacy
+                if (positionJson == null) {
+                    positionJson = noteJson.getAsJsonObject("location");
+                }
+
                 Vec3 position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
@@ -860,7 +867,7 @@ public final class LootrunModel extends Model {
                     locationJson.addProperty("x", location.x);
                     locationJson.addProperty("y", location.y);
                     locationJson.addProperty("z", location.z);
-                    noteJson.add("position", locationJson);
+                    noteJson.add("location", locationJson);
 
                     noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
                     notes.add(noteJson);
