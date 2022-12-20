@@ -57,7 +57,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsQuestBookScreen());
+        return new WynntilsQuestBookScreen();
     }
 
     @Override
