@@ -258,7 +258,7 @@ public final class ComponentUtils {
         return builder.extractLines();
     }
 
-    private static class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
+    private static final class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
         private final StringBuilder result;
         Style oldStyle;
 
