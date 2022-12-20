@@ -18,6 +18,7 @@ import com.wynntils.gui.widgets.DiscoveryFilterButton;
 import com.wynntils.gui.widgets.DiscoveryProgressButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
+import com.wynntils.gui.widgets.TooltipProvider;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
@@ -34,12 +35,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
-
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -256,22 +251,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     }
 
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Component> tooltipLines = List.of();
+        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
 
-        if (this.hovered instanceof ReloadButton) {
-            tooltipLines = RELOAD_TOOLTIP;
-        } else if (this.hovered instanceof DiscoveryFilterButton filterButton) {
-            tooltipLines = filterButton.getTooltipLines();
-        } else if (this.hovered instanceof DiscoveryButton discoveryButton) {
-            tooltipLines = discoveryButton.getTooltipLines();
-        } else if (this.hovered instanceof DiscoveryProgressButton progressButton) {
-            if (progressButton.isSecretDiscoveryButton()) {
-                tooltipLines = Managers.Discovery.getSecretDiscoveriesTooltip();
-            } else {
-                tooltipLines = Managers.Discovery.getDiscoveriesTooltip();
-            }
-        }
-
+        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
         if (tooltipLines.isEmpty()) return;
 
         RenderUtils.drawTooltipAt(
