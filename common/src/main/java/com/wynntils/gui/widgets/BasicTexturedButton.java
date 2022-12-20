@@ -11,11 +11,9 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class BasicTexturedButton extends AbstractButton {
+public class BasicTexturedButton extends WynntilsButton {
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
@@ -56,9 +54,6 @@ public class BasicTexturedButton extends AbstractButton {
 
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public void setTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);

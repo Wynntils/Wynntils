@@ -21,13 +21,11 @@ import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import java.util.Optional;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class QuestButton extends AbstractButton {
+public class QuestButton extends WynntilsButton {
     private static final Pair<CustomColor, CustomColor> BUTTON_COLOR =
             Pair.of(new CustomColor(181, 174, 151), new CustomColor(121, 116, 101));
     private static final Pair<CustomColor, CustomColor> TRACKED_BUTTON_COLOR =
@@ -134,9 +132,6 @@ public class QuestButton extends AbstractButton {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
         Managers.Quest.openQuestOnWiki(questInfo);
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public QuestInfo getQuestInfo() {
         return questInfo;

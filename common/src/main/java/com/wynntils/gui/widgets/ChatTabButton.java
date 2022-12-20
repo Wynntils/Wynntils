@@ -15,12 +15,10 @@ import com.wynntils.gui.screens.ChatTabEditingScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ChatTabButton extends AbstractButton {
+public class ChatTabButton extends WynntilsButton {
     private final ChatTab tab;
 
     public ChatTabButton(int x, int y, int width, int height, ChatTab tab) {
@@ -68,7 +66,4 @@ public class ChatTabButton extends AbstractButton {
     // unused
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

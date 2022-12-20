@@ -7,12 +7,10 @@ package com.wynntils.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.GearViewerScreen;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class GearItemButton extends AbstractButton {
+public class GearItemButton extends WynntilsButton {
     private final GearViewerScreen gearViewerScreen;
     private final ItemStack itemStack;
 
@@ -35,9 +33,6 @@ public class GearItemButton extends AbstractButton {
 
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ItemStack getItemStack() {
         return itemStack;
