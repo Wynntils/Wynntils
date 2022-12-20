@@ -5,13 +5,15 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import java.util.List;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class DiscoveryProgressButton extends AbstractButton {
+public class DiscoveryProgressButton extends AbstractButton implements TooltipProvider {
     private final boolean isSecretDiscoveryButton;
 
     public DiscoveryProgressButton(int x, int y, int width, int height, boolean isSecretDiscoveryButton) {
@@ -65,5 +67,14 @@ public class DiscoveryProgressButton extends AbstractButton {
 
     public boolean isSecretDiscoveryButton() {
         return isSecretDiscoveryButton;
+    }
+
+    @Override
+    public List<Component> getTooltipLines() {
+        if (isSecretDiscoveryButton()) {
+            return Managers.Discovery.getSecretDiscoveriesTooltip();
+        } else {
+            return Managers.Discovery.getDiscoveriesTooltip();
+        }
     }
 }
