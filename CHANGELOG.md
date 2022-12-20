@@ -1,9 +1,21 @@
+## [0.0.2-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.7...v0.0.2-alpha.8) (2022-12-20)
+
+
+### Bug Fixes
+
+* Lootrun screen loading is now async, and is cached ([#902](https://github.com/Wynntils/Artemis/issues/902)) ([db2ce68](https://github.com/Wynntils/Artemis/commit/db2ce68403a49583ce55a5f50460e6bef3169110))
+
 ## [0.0.2-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.6...v0.0.2-alpha.7) (2022-12-20)
 
 
 ### Bug Fixes
 
 * Do not do number formatting on info variables ([#903](https://github.com/Wynntils/Artemis/issues/903)) ([89db0d6](https://github.com/Wynntils/Artemis/commit/89db0d6e3419bc5ea5898e6e949ac860b7b24797))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.7 [skip ci] ([5a90836](https://github.com/Wynntils/Artemis/commit/5a908364cbf790be2a9a5b2a1e5781fdfb05d794))
 
 ## [0.0.2-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.5...v0.0.2-alpha.6) (2022-12-20)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.4 [skip ci] ([e5d18d4](https://github.com/Wynntils/Artemis/commit/e5d18d4a6b5f2a6f97a694defeeb58e5d2d7d2fb))
-
-## [0.0.2-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.2...v0.0.2-alpha.3) (2022-12-20)
-
-
-### Code Refactoring
-
-* Create WynntilsButton to avoid having a dummy updateWidgetNarration everywhere ([#897](https://github.com/Wynntils/Artemis/issues/897)) ([3c50a78](https://github.com/Wynntils/Artemis/commit/3c50a785517a2bfee32a94c34036cb77d181d8c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.3 [skip ci] ([ac3b51b](https://github.com/Wynntils/Artemis/commit/ac3b51be41bc7a92341565e80b37fa3fd5958281))
 
