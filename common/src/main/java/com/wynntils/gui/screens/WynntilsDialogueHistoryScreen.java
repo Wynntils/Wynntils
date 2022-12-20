@@ -18,13 +18,13 @@ import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.QuestsPageButton;
 import com.wynntils.gui.widgets.ReloadButton;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -63,7 +63,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
@@ -114,7 +114,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -230,7 +230,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
-            if (renderable instanceof AbstractButton button) {
+            if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                     this.hovered = button;
                 }

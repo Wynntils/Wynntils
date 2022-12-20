@@ -11,18 +11,18 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.QuestBookSearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extends WynntilsMenuPagedScreenBase
+public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extends WynntilsMenuPagedScreenBase
         implements TextboxScreen {
     protected int currentPage = 0;
     protected int maxPage = 0;
@@ -33,7 +33,7 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
     protected Renderable hovered = null;
 
     @Override
-    protected void init() {
+    protected void doInit() {
         reloadElements(searchWidget.getTextBoxInput());
 
         this.addRenderableWidget(searchWidget);
@@ -61,7 +61,7 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
-            if (renderable instanceof AbstractButton button) {
+            if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                     this.hovered = button;
                 }

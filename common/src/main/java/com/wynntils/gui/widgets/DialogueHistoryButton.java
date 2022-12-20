@@ -9,11 +9,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsDialogueHistoryScreen;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class DialogueHistoryButton extends AbstractButton {
+public class DialogueHistoryButton extends WynntilsButton {
     public DialogueHistoryButton(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Dialogue History Button"));
     }
@@ -35,7 +33,4 @@ public class DialogueHistoryButton extends AbstractButton {
     public void onPress() {
         McUtils.mc().setScreen(WynntilsDialogueHistoryScreen.create());
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

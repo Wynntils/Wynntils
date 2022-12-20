@@ -9,15 +9,14 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class GeneralSettingsButton extends AbstractButton {
+public class GeneralSettingsButton extends WynntilsButton {
     private static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
     private static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final Runnable onClick;
@@ -77,7 +76,4 @@ public class GeneralSettingsButton extends AbstractButton {
     public void onPress() {
         onClick.run();
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

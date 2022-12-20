@@ -35,8 +35,8 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -103,7 +103,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

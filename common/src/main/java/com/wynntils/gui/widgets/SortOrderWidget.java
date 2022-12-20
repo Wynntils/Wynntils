@@ -9,11 +9,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class SortOrderWidget extends AbstractButton {
+public class SortOrderWidget extends WynntilsButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public SortOrderWidget(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
@@ -76,7 +74,4 @@ public class SortOrderWidget extends AbstractButton {
                     sortTexture.height());
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
