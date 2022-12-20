@@ -1,9 +1,21 @@
+## [0.0.1-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.205...v0.0.1-alpha.206) (2022-12-20)
+
+
+### New Features
+
+* Adding Profession Level info variables ([#871](https://github.com/Wynntils/Artemis/issues/871)) ([0e65008](https://github.com/Wynntils/Artemis/commit/0e6500893f54f8618b885b77a8fee5df95251e99))
+
 ## [0.0.1-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.204...v0.0.1-alpha.205) (2022-12-20)
 
 
 ### New Features
 
 * Redirects "Housing Teleport" messages to Overlay ([#892](https://github.com/Wynntils/Artemis/issues/892)) ([586cc87](https://github.com/Wynntils/Artemis/commit/586cc87e16528f7169e71d58460b92eb4280328d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.205 [skip ci] ([0d682e4](https://github.com/Wynntils/Artemis/commit/0d682e4dc1084156293e76be493a3d9fec3756a1))
 
 ## [0.0.1-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.203...v0.0.1-alpha.204) (2022-12-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.202 [skip ci] ([78aba62](https://github.com/Wynntils/Artemis/commit/78aba626dd1868450a6ce9de156ecace9549e1c9))
-
-## [0.0.1-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.200...v0.0.1-alpha.201) (2022-12-19)
-
-
-### Bug Fixes
-
-* Don't play sound twice in EnumConfigOptionElement ([#887](https://github.com/Wynntils/Artemis/issues/887)) ([c8719ac](https://github.com/Wynntils/Artemis/commit/c8719accad041c61f449642750e7d9be98f33676))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.201 [skip ci] ([526467c](https://github.com/Wynntils/Artemis/commit/526467c049468e7fa9b9b69ffd022aed79e39d69))
 
