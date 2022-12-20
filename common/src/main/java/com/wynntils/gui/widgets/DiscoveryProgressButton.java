@@ -9,11 +9,9 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class DiscoveryProgressButton extends AbstractButton implements TooltipProvider {
+public class DiscoveryProgressButton extends WynntilsButton implements TooltipProvider {
     private final boolean isSecretDiscoveryButton;
 
     public DiscoveryProgressButton(int x, int y, int width, int height, boolean isSecretDiscoveryButton) {
@@ -61,9 +59,6 @@ public class DiscoveryProgressButton extends AbstractButton implements TooltipPr
 
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public boolean isSecretDiscoveryButton() {
         return isSecretDiscoveryButton;

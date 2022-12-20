@@ -14,11 +14,9 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.objects.ClassInfo;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ClassInfoButton extends AbstractButton {
+public class ClassInfoButton extends WynntilsButton {
     private final ClassInfo classInfo;
     private final CharacterSelectorScreen characterSelectorScreen;
 
@@ -103,9 +101,6 @@ public class ClassInfoButton extends AbstractButton {
             Managers.CharacterSelection.playWithCharacter(classInfo.slot());
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ClassInfo getClassInfo() {
         return classInfo;

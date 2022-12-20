@@ -12,18 +12,17 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsEmeraldPouchGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideEmeraldPouchItemStack extends AbstractButton {
+public class GuideEmeraldPouchItemStack extends WynntilsButton {
     private final EmeraldPouchItemStack itemStack;
     private final WynntilsEmeraldPouchGuideScreen screen;
 
@@ -112,9 +111,6 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public EmeraldPouchItemStack getItemStack() {
         return itemStack;
