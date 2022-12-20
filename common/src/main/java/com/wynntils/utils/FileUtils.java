@@ -64,8 +64,11 @@ public final class FileUtils {
     }
 
     private static void copyFileWindows(File sourceFile, File destFile) {
-        try (FileChannel source = new FileInputStream(sourceFile).getChannel();
-                FileChannel destination = new FileOutputStream(destFile).getChannel()) {
+        try (FileInputStream inputStream = new FileInputStream(sourceFile);
+                FileOutputStream outputStream = new FileOutputStream(destFile)) {
+            FileChannel source = inputStream.getChannel();
+            FileChannel destination = outputStream.getChannel();
+
             destination.transferFrom(source, 0, source.size());
         } catch (Exception e) {
             WynntilsMod.warn("Failed to copy file " + sourceFile + " to " + destFile, e);

@@ -69,10 +69,10 @@ public class ContainerSearchFeature extends UserFeature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        SearchableContainerType SearchableContainerType = getCurrentSearchableContainerType(title);
-        if (SearchableContainerType == null) return;
+        SearchableContainerType searchableContainerType = getCurrentSearchableContainerType(title);
+        if (searchableContainerType == null) return;
 
-        currentSearchableContainerType = SearchableContainerType;
+        currentSearchableContainerType = searchableContainerType;
 
         addSearchWidget(screen, renderX, renderY);
     }

@@ -112,7 +112,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             this.tcString = tcString;
         }
 
-        protected String getTcString() {
+        private String getTcString() {
             return this.tcString;
         }
     }

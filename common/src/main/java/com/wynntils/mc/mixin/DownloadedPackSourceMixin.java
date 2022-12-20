@@ -33,21 +33,19 @@ public abstract class DownloadedPackSourceMixin {
         try (PackResources packResources = this.serverPack.open()) {
             // We can calculate this here as this is always going to be posted anyway
             if (packResources instanceof FilePackResources filePackResources) {
-                try {
-                    String hash = Files.asByteSource(filePackResources.file)
-                            .hash(Hashing.sha1())
-                            .toString();
+                String hash = Files.asByteSource(filePackResources.file)
+                        .hash(Hashing.sha1())
+                        .toString();
 
-                    if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
-                        cir.setReturnValue(CompletableFuture.completedFuture(null));
-                        cir.cancel();
-                    }
-                } catch (IOException e) {
-                    // ignored
+                if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
+                    cir.setReturnValue(CompletableFuture.completedFuture(null));
+                    cir.cancel();
                 }
             } else {
                 EventFactory.onResourcePackClearEvent(null);
             }
+        } catch (IOException e) {
+            // ignored
         }
     }
 }
