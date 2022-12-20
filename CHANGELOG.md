@@ -1,9 +1,21 @@
+## [0.0.2-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.2...v0.0.2-alpha.3) (2022-12-20)
+
+
+### Code Refactoring
+
+* Create WynntilsButton to avoid having a dummy updateWidgetNarration everywhere ([#897](https://github.com/Wynntils/Artemis/issues/897)) ([3c50a78](https://github.com/Wynntils/Artemis/commit/3c50a785517a2bfee32a94c34036cb77d181d8c9))
+
 ## [0.0.2-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.1...v0.0.2-alpha.2) (2022-12-20)
 
 
 ### Code Refactoring
 
 * Improve OOP design by introducing TooltipProvider ([#895](https://github.com/Wynntils/Artemis/issues/895)) ([aa0e00a](https://github.com/Wynntils/Artemis/commit/aa0e00aa42736db24e1d29845256d845333e8eb5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.2 [skip ci] ([f7e7b40](https://github.com/Wynntils/Artemis/commit/f7e7b406e94805dfe70be187960c0b05072b4b5e))
 
 ## [0.0.2-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.211...v0.0.2-alpha.1) (2022-12-20)
 
@@ -28,16 +40,4 @@
 
 * **release:** v0.0.1-alpha.210 [skip ci] ([13c7849](https://github.com/Wynntils/Artemis/commit/13c7849b31a77d256a0b6aaa253b0523f5b965d2))
 * trigger rebuild ([9d8024e](https://github.com/Wynntils/Artemis/commit/9d8024e7434b6437b9c26b34cd6f82fe59560331))
-
-## [0.0.1-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.208...v0.0.1-alpha.209) (2022-12-20)
-
-
-### New Features
-
-* Upgrade to Minecraft 1.19.3 ([#894](https://github.com/Wynntils/Artemis/issues/894)) ([eb941d3](https://github.com/Wynntils/Artemis/commit/eb941d3b36009e60140b8bdc3163d173b681f4b6)), closes [#875](https://github.com/Wynntils/Artemis/issues/875) [#876](https://github.com/Wynntils/Artemis/issues/876) [#877](https://github.com/Wynntils/Artemis/issues/877) [#878](https://github.com/Wynntils/Artemis/issues/878) [#880](https://github.com/Wynntils/Artemis/issues/880) [#882](https://github.com/Wynntils/Artemis/issues/882) [#879](https://github.com/Wynntils/Artemis/issues/879) [#881](https://github.com/Wynntils/Artemis/issues/881) [#883](https://github.com/Wynntils/Artemis/issues/883) [#872](https://github.com/Wynntils/Artemis/issues/872) [#889](https://github.com/Wynntils/Artemis/issues/889)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.209 [skip ci] ([de180f0](https://github.com/Wynntils/Artemis/commit/de180f08e63306b3595efe13aa2709fe52264958))
 
