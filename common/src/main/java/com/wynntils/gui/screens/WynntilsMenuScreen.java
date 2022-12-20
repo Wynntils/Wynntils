@@ -181,9 +181,6 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    protected void doInit() {}
-
-    @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
