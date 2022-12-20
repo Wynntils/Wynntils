@@ -1,9 +1,21 @@
+## [0.0.2-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.5...v0.0.2-alpha.6) (2022-12-20)
+
+
+### Miscellaneous Chores
+
+* rebuild with bug ([97763e2](https://github.com/Wynntils/Artemis/commit/97763e24375ba871dfa376b336b166fadb5cdbfc))
+
 ## [0.0.2-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.4...v0.0.2-alpha.5) (2022-12-20)
 
 
 ### Code Refactoring
 
 * Applying a bunch of fixes as suggested by Code Inspection in IntelliJ ([#899](https://github.com/Wynntils/Artemis/issues/899)) ([e74d4d4](https://github.com/Wynntils/Artemis/commit/e74d4d44a6ef03a2c3dcfa5f72478d5cdf5c39df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.5 [skip ci] ([816c872](https://github.com/Wynntils/Artemis/commit/816c8722fa7c297cffcd162c999ea372a9a3901d))
 
 ## [0.0.2-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.3...v0.0.2-alpha.4) (2022-12-20)
 
@@ -40,11 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.2 [skip ci] ([f7e7b40](https://github.com/Wynntils/Artemis/commit/f7e7b406e94805dfe70be187960c0b05072b4b5e))
-
-## [0.0.2-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.211...v0.0.2-alpha.1) (2022-12-20)
-
-
-### Miscellaneous Chores
-
-* Bump to v0.0.2-alpha.1 ([d41c4ab](https://github.com/Wynntils/Artemis/commit/d41c4abd8c01a4c665c5deb9aa4a21e1a4ea4fc9))
 
