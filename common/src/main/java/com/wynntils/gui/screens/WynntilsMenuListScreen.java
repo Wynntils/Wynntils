@@ -33,7 +33,7 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
     protected Renderable hovered = null;
 
     @Override
-    protected void init() {
+    protected void doInit() {
         reloadElements(searchWidget.getTextBoxInput());
 
         this.addRenderableWidget(searchWidget);

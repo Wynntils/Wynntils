@@ -45,7 +45,7 @@ public class WynntilsEmeraldPouchGuideScreen
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class WynntilsEmeraldPouchGuideScreen
             }
         }
 
-        super.init();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -80,7 +80,7 @@ public class WynntilsEmeraldPouchGuideScreen
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

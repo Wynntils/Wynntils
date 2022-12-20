@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class GearViewerScreen extends Screen {
+public class GearViewerScreen extends WynntilsScreen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.gearViewer.viewStats"));
 
@@ -50,7 +50,7 @@ public class GearViewerScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         this.addRenderableWidget(new ViewPlayerStatsButton(
                 -20,
                 Texture.GEAR_VIEWER_BACKGROUND.height() / 3,
@@ -73,7 +73,7 @@ public class GearViewerScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float translationX = getTranslationX();
         float translationY = getTranslationY();
 
