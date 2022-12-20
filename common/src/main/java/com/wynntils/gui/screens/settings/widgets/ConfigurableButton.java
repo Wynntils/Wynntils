@@ -13,14 +13,13 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ConfigurableButton extends AbstractButton {
+public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
 
     public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
@@ -64,7 +63,4 @@ public class ConfigurableButton extends AbstractButton {
             }
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -12,12 +12,10 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-public class ClassSelectionEditButton extends AbstractButton {
+public class ClassSelectionEditButton extends WynntilsButton {
     private static final List<Component> TOOLTIP = List.of(
             Component.translatable("screens.wynntils.characterSelection.edit.name")
                     .withStyle(ChatFormatting.YELLOW),
@@ -63,7 +61,4 @@ public class ClassSelectionEditButton extends AbstractButton {
                     true);
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

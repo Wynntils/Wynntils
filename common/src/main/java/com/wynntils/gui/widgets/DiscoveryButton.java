@@ -19,12 +19,10 @@ import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class DiscoveryButton extends AbstractButton implements TooltipProvider {
+public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
 
@@ -96,9 +94,6 @@ public class DiscoveryButton extends AbstractButton implements TooltipProvider {
     // not called
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
     public List<Component> getTooltipLines() {

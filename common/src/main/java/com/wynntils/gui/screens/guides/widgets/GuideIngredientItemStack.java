@@ -11,16 +11,15 @@ import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.item.IngredientItemStack;
 import java.util.Map;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideIngredientItemStack extends AbstractButton {
+public class GuideIngredientItemStack extends WynntilsButton {
     private final IngredientItemStack itemStack;
     private final WynntilsIngredientGuideScreen screen;
 
@@ -92,9 +91,6 @@ public class GuideIngredientItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public IngredientItemStack getItemStack() {
         return itemStack;

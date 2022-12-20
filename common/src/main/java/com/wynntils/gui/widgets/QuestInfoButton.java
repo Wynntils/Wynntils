@@ -8,11 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class QuestInfoButton extends AbstractButton {
+public class QuestInfoButton extends WynntilsButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public QuestInfoButton(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
@@ -37,7 +35,4 @@ public class QuestInfoButton extends AbstractButton {
     public void onPress() {
         this.questBookScreen.setMiniQuestMode(!this.questBookScreen.isMiniQuestMode());
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
