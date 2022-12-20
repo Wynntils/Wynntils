@@ -19,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -42,7 +43,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
-public class OverlayManagementScreen extends Screen {
+public class OverlayManagementScreen extends WynntilsScreen {
     // This is used to calculate alignment lines
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
     // of the screen both vertically and horizontally.
@@ -115,7 +116,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         setupButtons();
         calculateAlignmentLinePositions();
     }
@@ -137,7 +138,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (testMode) {
             TextRenderTask renderTask = new TextRenderTask(
                     I18n.get("screens.wynntils.overlayManagement.testModeOn"),
@@ -236,7 +237,7 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        super.render(poseStack, mouseX, mouseY, partialTick); // This renders widgets
+        super.doRender(poseStack, mouseX, mouseY, partialTick); // This renders widgets
         // This renders button tooltips
         if (this.deferredTooltipRendering != null) {
             this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
