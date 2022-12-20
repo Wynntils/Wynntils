@@ -56,6 +56,7 @@ public final class WynntilsAccountManager extends Manager {
         if (event.getNewState() == WorldStateManager.State.WORLD && !loggedIn && firstWorldJoin) {
             firstWorldJoin = false;
 
+            // FIXME: Use the proper reload command here, once they are reworked
             MutableComponent failed = Component.literal(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
