@@ -45,6 +45,7 @@ import net.minecraft.world.item.Items;
 
 public final class WynnItemUtils {
     private static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
+
     static {
         COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
         COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));

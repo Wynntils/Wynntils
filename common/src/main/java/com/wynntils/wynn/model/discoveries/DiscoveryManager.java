@@ -172,7 +172,7 @@ public final class DiscoveryManager extends Manager {
             }
 
             switch (action) {
-                // We can't run this is on request thread
+                    // We can't run this is on request thread
                 case MAP -> Managers.MinecraftScheduler.queueRunnable(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
                 case COMPASS -> Models.Compass.setCompassLocation(new Location(x, 0, z));
