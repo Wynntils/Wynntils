@@ -40,6 +40,8 @@
   "feature.wynntils.chatRedirect.heal.name": "Heal Message Filtering",
   "feature.wynntils.chatRedirect.horse.description": "How should messages relating to your horse appear?",
   "feature.wynntils.chatRedirect.horse.name": "Horse Message Filtering",
+  "feature.wynntils.chatRedirect.housingTeleport.description": "How should messages about teleporting to a housing plot appear?",
+  "feature.wynntils.chatRedirect.housingTeleport.name": "Housing Teleport Message Filtering",
   "feature.wynntils.chatRedirect.ingredientPouch.description": "How should messages about selling the contents of your ingredient pouch appear?",
   "feature.wynntils.chatRedirect.ingredientPouch.name": "Ingredient Pouch Sale Message Filtering",
   "feature.wynntils.chatRedirect.loginAnnouncements.description": "How should login messages appear?",
