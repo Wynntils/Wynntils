@@ -19,7 +19,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.managers.Managers;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -89,7 +88,7 @@ public class FeatureCommand extends CommandBase {
                 }
             }
 
-            if (!Objects.equals(lastCategory, feature.getCategory())) {
+            if (lastCategory != feature.getCategory()) {
                 lastCategory = feature.getCategory();
                 response.append(Component.literal("\n" + lastCategory.toString() + ":")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)

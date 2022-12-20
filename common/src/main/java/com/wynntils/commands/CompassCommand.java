@@ -169,7 +169,7 @@ public class CompassCommand extends CommandBase {
 
         Vec3 currentLocation = McUtils.player().position();
         Optional<ServicePoi> closestServiceOptional = Models.Map.getServicePois().stream()
-                .filter(poi -> poi.getKind().equals(selectedKind))
+                .filter(poi -> poi.getKind() == selectedKind)
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
                         poi.getLocation().getY().orElse((int) currentLocation.y),

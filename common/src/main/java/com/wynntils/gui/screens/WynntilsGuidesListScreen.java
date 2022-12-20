@@ -23,7 +23,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
+public final class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
     private final List<Screen> GUIDES = List.of(
             WynntilsItemGuideScreen.create(),
             WynntilsIngredientGuideScreen.create(),

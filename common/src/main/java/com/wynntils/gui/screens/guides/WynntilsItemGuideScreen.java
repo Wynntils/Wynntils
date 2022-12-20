@@ -29,7 +29,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
+public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 

@@ -43,7 +43,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
-public class OverlayManagementScreen extends WynntilsScreen {
+public final class OverlayManagementScreen extends WynntilsScreen {
     // This is used to calculate alignment lines
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
     // of the screen both vertically and horizontally.

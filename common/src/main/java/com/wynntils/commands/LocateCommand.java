@@ -85,7 +85,7 @@ public class LocateCommand extends CommandBase {
         ServiceKind selectedKind = matchedKinds.get(0);
 
         List<Poi> services = new ArrayList<>(Models.Map.getServicePois().stream()
-                .filter(poi -> poi.getKind().equals(selectedKind))
+                .filter(poi -> poi.getKind() == selectedKind)
                 .toList());
 
         // Only keep the 4 closest results

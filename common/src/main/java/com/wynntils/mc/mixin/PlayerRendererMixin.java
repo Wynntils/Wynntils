@@ -50,11 +50,11 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
         List<MutableComponent> injected = event.getInjectedLines();
 
         for (MutableComponent component : injected) {
-            super.renderNameTag(entity, component, matrixStack, buffer, packedLight);
+            renderNameTag(entity, component, matrixStack, buffer, packedLight);
             matrixStack.translate(0.0, 0.25875f, 0.0);
         }
 
-        super.renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
+        renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
 
         matrixStack.popPose();
 

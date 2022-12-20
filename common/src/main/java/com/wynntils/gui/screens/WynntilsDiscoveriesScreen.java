@@ -34,7 +34,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
+public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters

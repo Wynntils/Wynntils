@@ -23,7 +23,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class OverlaySelectionScreen extends WynntilsScreen {
+public final class OverlaySelectionScreen extends WynntilsScreen {
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_HEIGHT = 20;
 

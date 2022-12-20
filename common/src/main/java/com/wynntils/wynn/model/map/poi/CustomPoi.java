@@ -12,10 +12,10 @@ import com.wynntils.mc.objects.CustomColor;
 import java.util.Objects;
 
 public class CustomPoi extends StaticIconPoi {
-    private String name;
-    private CustomColor color;
-    private Texture icon;
-    private Visibility visibility;
+    private final String name;
+    private final CustomColor color;
+    private final Texture icon;
+    private final Visibility visibility;
 
     public CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, Visibility visibility) {
         super(location);
@@ -82,7 +82,7 @@ public class CustomPoi extends StaticIconPoi {
 
         CustomPoi customPoi = (CustomPoi) other;
         return location.equals(customPoi.location)
-                && Objects.equals(visibility, customPoi.visibility)
+                && visibility == customPoi.visibility
                 && name.equals(customPoi.name)
                 && color.equals(customPoi.color)
                 && icon == customPoi.icon;

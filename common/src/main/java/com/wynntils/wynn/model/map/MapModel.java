@@ -154,7 +154,7 @@ public final class MapModel extends Model {
         }
     }
 
-    private static class MapPartProfile {
+    private static final class MapPartProfile {
         final String name;
         final String url;
         final int x1;

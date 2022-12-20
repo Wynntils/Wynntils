@@ -234,6 +234,6 @@ public abstract class Feature extends AbstractConfigurable
     public enum FeatureState {
         UNINITALIZED,
         DISABLED,
-        ENABLED;
+        ENABLED
     }
 }

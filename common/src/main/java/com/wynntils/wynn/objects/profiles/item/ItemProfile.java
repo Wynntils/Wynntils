@@ -52,7 +52,7 @@ public class ItemProfile {
             Map<String, String> damageTypes,
             Map<String, Integer> defenseTypes,
             Map<String, IdentificationProfile> statuses,
-            ArrayList<String> majorIds,
+            List<String> majorIds,
             String restriction,
             String lore) {
         this.displayName = displayName;
