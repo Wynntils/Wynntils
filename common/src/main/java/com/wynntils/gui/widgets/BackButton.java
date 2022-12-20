@@ -8,12 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class BackButton extends AbstractButton {
+public class BackButton extends WynntilsButton {
     private final Screen backTo;
 
     public BackButton(int x, int y, int width, int height, Screen backTo) {
@@ -61,7 +59,4 @@ public class BackButton extends AbstractButton {
     public void onPress() {
         McUtils.mc().setScreen(backTo);
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

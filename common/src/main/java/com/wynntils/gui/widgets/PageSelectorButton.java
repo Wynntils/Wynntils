@@ -8,11 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsMenuPagedScreenBase;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class PageSelectorButton extends AbstractButton {
+public class PageSelectorButton extends WynntilsButton {
     private final boolean forward;
     private final WynntilsMenuPagedScreenBase screen;
 
@@ -68,7 +66,4 @@ public class PageSelectorButton extends AbstractButton {
                     backArrow.height());
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -19,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
+import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.gui.screens.settings.widgets.CategoryButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigButton;
 import com.wynntils.gui.screens.settings.widgets.ConfigurableButton;
@@ -26,6 +27,7 @@ import com.wynntils.gui.screens.settings.widgets.GeneralSettingsButton;
 import com.wynntils.gui.screens.settings.widgets.ScrollButton;
 import com.wynntils.gui.widgets.SearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
@@ -35,18 +37,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
+public final class WynntilsBookSettingsScreen extends WynntilsScreen implements TextboxScreen {
     private final int CONFIGURABLES_PER_PAGE = 13;
     private final int CONFIGS_PER_PAGE = 4;
-    private final List<AbstractButton> configurables = new ArrayList<>();
-    private final List<AbstractButton> configs = new ArrayList<>();
+    private final List<WynntilsButton> configurables = new ArrayList<>();
+    private final List<WynntilsButton> configs = new ArrayList<>();
 
     private TextInputBoxWidget focusedTextInput;
     private final SearchWidget searchWidget;
@@ -80,7 +81,7 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -110,7 +111,7 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
     // region Render
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float backgroundRenderX = getTranslationX();
         float backgroundRenderY = getTranslationY();
 
@@ -172,7 +173,7 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
         for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
                 i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
                 i++) {
-            AbstractButton featureButton = configurables.get(i);
+            WynntilsButton featureButton = configurables.get(i);
             featureButton.render(poseStack, mouseX, mouseY, partialTick);
         }
 
@@ -184,7 +185,7 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
         for (int i = Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE) - 1;
                 i >= configScrollOffset;
                 i--) {
-            AbstractButton configButton = configs.get(i);
+            WynntilsButton configButton = configs.get(i);
             configButton.render(poseStack, mouseX, mouseY, partialTick);
         }
     }
@@ -221,14 +222,14 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
         for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
                 i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
                 i++) {
-            AbstractButton featureButton = configurables.get(i);
+            WynntilsButton featureButton = configurables.get(i);
             if (featureButton.isMouseOver(mouseX, mouseY)) {
                 featureButton.mouseClicked(mouseX, mouseY, button);
             }
         }
 
         for (int i = configScrollOffset; i < Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE); i++) {
-            AbstractButton configButton = configs.get(i);
+            WynntilsButton configButton = configs.get(i);
             if (configButton.isMouseOver(mouseX, mouseY)) {
                 configButton.mouseClicked(mouseX, mouseY, button);
             }

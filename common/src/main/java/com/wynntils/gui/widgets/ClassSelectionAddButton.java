@@ -12,11 +12,9 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ClassSelectionAddButton extends AbstractButton {
+public class ClassSelectionAddButton extends WynntilsButton {
     private static final List<Component> TOOLTIP_CANNOT_ADD = List.of(
             Component.translatable("screens.wynntils.characterSelection.cannotAdd.name")
                     .withStyle(ChatFormatting.DARK_RED),
@@ -70,7 +68,4 @@ public class ClassSelectionAddButton extends AbstractButton {
                     true);
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
