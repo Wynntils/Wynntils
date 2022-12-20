@@ -473,7 +473,7 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             Integer ingredientCount = Integer.parseInt(matcher.group(1));
-            String ingredientString = ingredientCount.toString() + " §dingredient" + (ingredientCount == 1 ? "" : "s");
+            String ingredientString = ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s");
 
             String emeraldString = matcher.group(2);
 

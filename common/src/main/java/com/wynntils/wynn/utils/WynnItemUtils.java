@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -43,6 +44,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class WynnItemUtils {
+    private static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
+    static {
+        COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
+        COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+    }
+
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
@@ -245,18 +254,9 @@ public final class WynnItemUtils {
                         .withStyle(ChatFormatting.RED));
     }
 
-    private static final TreeMap<Float, TextColor> colorMap = new TreeMap<>() {
-        {
-            put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-            put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-            put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-            put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-        }
-    };
-
     private static TextColor getPercentageColor(float percentage) {
-        Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
-        Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
+        Map.Entry<Float, TextColor> lowerEntry = COLOR_MAP.floorEntry(percentage);
+        Map.Entry<Float, TextColor> higherEntry = COLOR_MAP.ceilingEntry(percentage);
 
         // Boundary conditions
         if (lowerEntry == null) {

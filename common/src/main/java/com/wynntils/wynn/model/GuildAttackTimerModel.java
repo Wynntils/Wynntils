@@ -9,6 +9,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.guild.GuildAttackHandler;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
@@ -24,7 +25,7 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
 
-    public static final GuildAttackHandler SCOREBOARD_HANDLER = new GuildAttackHandler();
+    public static final ScoreboardHandler SCOREBOARD_HANDLER = new GuildAttackHandler();
     private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     private List<TerritoryAttackTimer> attackTimers = List.of();

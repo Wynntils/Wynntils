@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class GearViewerScreen extends Screen {
+public final class GearViewerScreen extends Screen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.gearViewer.viewStats"));
 

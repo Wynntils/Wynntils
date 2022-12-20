@@ -89,7 +89,7 @@ public class FeatureCommand extends CommandBase {
                 }
             }
 
-            if (!Objects.equals(lastCategory, feature.getCategory())) {
+            if (lastCategory != feature.getCategory()) {
                 lastCategory = feature.getCategory();
                 response.append(Component.literal("\n" + lastCategory.toString() + ":")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)

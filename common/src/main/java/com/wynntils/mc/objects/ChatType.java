@@ -7,5 +7,5 @@ package com.wynntils.mc.objects;
 public enum ChatType {
     CHAT,
     SYSTEM,
-    GAME_INFO;
+    GAME_INFO
 }

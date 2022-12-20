@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * were extracted from https://wynncraft.fandom.com/wiki/Commands,
  * https://wynncraft.com/help?guide=commands and from running the commands in-game.
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class AddCommandExpansionFeature extends UserFeature {
     @SubscribeEvent
     public void onCommandPacket(CommandsPacketEvent event) {

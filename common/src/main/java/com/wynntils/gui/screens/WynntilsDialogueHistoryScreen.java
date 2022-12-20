@@ -32,7 +32,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
+public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     private static final int LINES_PER_PAGE = 16;
 
     private static final List<Component> RELOAD_TOOLTIP = List.of(

@@ -25,7 +25,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
-public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
+public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
     private WynntilsLootrunsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
     }

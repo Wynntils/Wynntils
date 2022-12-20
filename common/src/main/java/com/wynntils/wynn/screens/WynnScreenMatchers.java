@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 
-public class WynnScreenMatchers {
+public final class WynnScreenMatchers {
     private static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 

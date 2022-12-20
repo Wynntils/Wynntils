@@ -29,7 +29,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 
-public class CharacterSelectorScreen extends Screen {
+public final class CharacterSelectorScreen extends Screen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
 
     private final AbstractContainerScreen<?> actualClassSelectionScreen;
