@@ -1,9 +1,21 @@
+## [0.0.1-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.208...v0.0.1-alpha.209) (2022-12-20)
+
+
+### New Features
+
+* Upgrade to Minecraft 1.19.3 ([#894](https://github.com/Wynntils/Artemis/issues/894)) ([eb941d3](https://github.com/Wynntils/Artemis/commit/eb941d3b36009e60140b8bdc3163d173b681f4b6)), closes [#875](https://github.com/Wynntils/Artemis/issues/875) [#876](https://github.com/Wynntils/Artemis/issues/876) [#877](https://github.com/Wynntils/Artemis/issues/877) [#878](https://github.com/Wynntils/Artemis/issues/878) [#880](https://github.com/Wynntils/Artemis/issues/880) [#882](https://github.com/Wynntils/Artemis/issues/882) [#879](https://github.com/Wynntils/Artemis/issues/879) [#881](https://github.com/Wynntils/Artemis/issues/881) [#883](https://github.com/Wynntils/Artemis/issues/883) [#872](https://github.com/Wynntils/Artemis/issues/872) [#889](https://github.com/Wynntils/Artemis/issues/889)
+
 ## [0.0.1-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.207...v0.0.1-alpha.208) (2022-12-20)
 
 
 ### Bug Fixes
 
 * Fix Artemis having a slightly different lootrun format than legacy, and add the ability to load both ([98be89c](https://github.com/Wynntils/Artemis/commit/98be89c7170f44f1774d44e447a7969730eef2bc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.208 [skip ci] ([1d9e2c2](https://github.com/Wynntils/Artemis/commit/1d9e2c27e25c1cb3e3db79f04c28bcc1e340bf40))
 
 ## [0.0.1-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.206...v0.0.1-alpha.207) (2022-12-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.205 [skip ci] ([0d682e4](https://github.com/Wynntils/Artemis/commit/0d682e4dc1084156293e76be493a3d9fec3756a1))
-
-## [0.0.1-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.203...v0.0.1-alpha.204) (2022-12-20)
-
-
-### Bug Fixes
-
-* Strict Coordinate Pattern now matches on five-digit long coords ([#893](https://github.com/Wynntils/Artemis/issues/893)) ([0926bf1](https://github.com/Wynntils/Artemis/commit/0926bf1908068630c785d4ba1a8bf0ccfe9ebb4f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.204 [skip ci] ([0568b77](https://github.com/Wynntils/Artemis/commit/0568b77d5becd4e2da4a79ad7858b18beb94f1c7))
 
