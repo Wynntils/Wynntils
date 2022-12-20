@@ -1,9 +1,21 @@
+## [0.0.1-alpha.210](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.209...v0.0.1-alpha.210) (2022-12-20)
+
+
+### Miscellaneous Chores
+
+* trigger rebuild ([9d8024e](https://github.com/Wynntils/Artemis/commit/9d8024e7434b6437b9c26b34cd6f82fe59560331))
+
 ## [0.0.1-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.208...v0.0.1-alpha.209) (2022-12-20)
 
 
 ### New Features
 
 * Upgrade to Minecraft 1.19.3 ([#894](https://github.com/Wynntils/Artemis/issues/894)) ([eb941d3](https://github.com/Wynntils/Artemis/commit/eb941d3b36009e60140b8bdc3163d173b681f4b6)), closes [#875](https://github.com/Wynntils/Artemis/issues/875) [#876](https://github.com/Wynntils/Artemis/issues/876) [#877](https://github.com/Wynntils/Artemis/issues/877) [#878](https://github.com/Wynntils/Artemis/issues/878) [#880](https://github.com/Wynntils/Artemis/issues/880) [#882](https://github.com/Wynntils/Artemis/issues/882) [#879](https://github.com/Wynntils/Artemis/issues/879) [#881](https://github.com/Wynntils/Artemis/issues/881) [#883](https://github.com/Wynntils/Artemis/issues/883) [#872](https://github.com/Wynntils/Artemis/issues/872) [#889](https://github.com/Wynntils/Artemis/issues/889)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.1-alpha.209 [skip ci] ([de180f0](https://github.com/Wynntils/Artemis/commit/de180f08e63306b3595efe13aa2709fe52264958))
 
 ## [0.0.1-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.207...v0.0.1-alpha.208) (2022-12-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.206 [skip ci] ([35bbe53](https://github.com/Wynntils/Artemis/commit/35bbe53c7e1fbcb48c577c2e54462190421c27a0))
-
-## [0.0.1-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.204...v0.0.1-alpha.205) (2022-12-20)
-
-
-### New Features
-
-* Redirects "Housing Teleport" messages to Overlay ([#892](https://github.com/Wynntils/Artemis/issues/892)) ([586cc87](https://github.com/Wynntils/Artemis/commit/586cc87e16528f7169e71d58460b92eb4280328d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.1-alpha.205 [skip ci] ([0d682e4](https://github.com/Wynntils/Artemis/commit/0d682e4dc1084156293e76be493a3d9fec3756a1))
 
