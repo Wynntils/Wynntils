@@ -29,20 +29,28 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class MainMapScreen extends AbstractMapScreen {
-    public MainMapScreen() {
+    private MainMapScreen() {
         super();
         centerMapAroundPlayer();
     }
 
-    public MainMapScreen(float mapCenterX, float mapCenterZ) {
+    private MainMapScreen(float mapCenterX, float mapCenterZ) {
         super(mapCenterX, mapCenterZ);
         updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
+    public static Screen create() {
+        return new MainMapScreen();
+    }
+
+    public static Screen create(float mapCenterX, float mapCenterZ) {
+        return new MainMapScreen(mapCenterX, mapCenterZ);
     }
 
     @Override
@@ -60,36 +68,36 @@ public class MainMapScreen extends AbstractMapScreen {
                 Texture.MAP_HELP_BUTTON,
                 (b) -> {},
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.name")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description1")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description1")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description2")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description2")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description3")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description3")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description4")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description4")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description5")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description5")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description6")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description6")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description7")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description7")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description8")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.description8")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.description9")))));
+                                .append(Component.translatable("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
@@ -102,12 +110,12 @@ public class MainMapScreen extends AbstractMapScreen {
                 Texture.MAP_SHARE_BUTTON,
                 this::shareLocationOrCompass,
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_AQUA)
-                                .append(new TranslatableComponent("screens.wynntils.map.share.name")),
-                        new TranslatableComponent("screens.wynntils.map.share.description1"),
-                        new TranslatableComponent("screens.wynntils.map.share.description2"),
-                        new TranslatableComponent("screens.wynntils.map.share.description3"))));
+                                .append(Component.translatable("screens.wynntils.map.share.name")),
+                        Component.translatable("screens.wynntils.map.share.description1"),
+                        Component.translatable("screens.wynntils.map.share.description2"),
+                        Component.translatable("screens.wynntils.map.share.description3"))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
@@ -130,15 +138,15 @@ public class MainMapScreen extends AbstractMapScreen {
                     }
                 },
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
-                                .append(new TranslatableComponent("screens.wynntils.map.focus.name")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.focus.name")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.focus.description1")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.focus.description1")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.map.focus.description2")))));
+                                .append(Component.translatable("screens.wynntils.map.focus.description2")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
@@ -149,12 +157,12 @@ public class MainMapScreen extends AbstractMapScreen {
                 16,
                 16,
                 Texture.MAP_ADD_BUTTON,
-                (b) -> McUtils.mc().setScreen(new PoiCreationScreen(this)),
+                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
-                                .append(new TranslatableComponent("screens.wynntils.map.waypoints.add.name")),
-                        new TranslatableComponent("screens.wynntils.map.waypoints.add.description")
+                                .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
+                        Component.translatable("screens.wynntils.map.waypoints.add.description")
                                 .withStyle(ChatFormatting.GRAY))));
     }
 
@@ -267,12 +275,12 @@ public class MainMapScreen extends AbstractMapScreen {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, customPoi));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
 
-                    McUtils.mc().setScreen(new PoiCreationScreen(this, new PoiLocation(gameX, null, gameZ)));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {

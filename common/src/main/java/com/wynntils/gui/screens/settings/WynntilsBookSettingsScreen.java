@@ -29,7 +29,6 @@ import com.wynntils.gui.widgets.SearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
@@ -38,10 +37,10 @@ import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsBookSettingsScreen extends WynntilsScreen implements TextboxScreen {
@@ -62,10 +61,8 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
     private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
 
-    public WynntilsBookSettingsScreen() {
-        super(new TranslatableComponent("screens.wynntils.settingsScreen.name"));
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+    private WynntilsBookSettingsScreen() {
+        super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
         searchWidget = new SearchWidget(
                 95,
@@ -79,6 +76,10 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
         reloadConfigurableButtons();
     }
 
+    public static Screen create() {
+        return new WynntilsBookSettingsScreen();
+    }
+
     @Override
     protected void safeInit() {
         this.addRenderableWidget(searchWidget);
@@ -88,12 +89,12 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
                 Texture.SETTING_BACKGROUND.height() - 30,
                 35,
                 14,
-                new TranslatableComponent("screens.wynntils.settingsScreen.apply"),
+                Component.translatable("screens.wynntils.settingsScreen.apply"),
                 () -> {
                     Managers.Config.saveConfig();
                     this.onClose();
                 },
-                List.of(new TranslatableComponent("screens.wynntils.settingsScreen.apply.description")
+                List.of(Component.translatable("screens.wynntils.settingsScreen.apply.description")
                         .withStyle(ChatFormatting.GREEN))));
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -101,9 +102,9 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
                 Texture.SETTING_BACKGROUND.height() - 30,
                 35,
                 14,
-                new TranslatableComponent("screens.wynntils.settingsScreen.close"),
+                Component.translatable("screens.wynntils.settingsScreen.close"),
                 this::onClose,
-                List.of(new TranslatableComponent("screens.wynntils.settingsScreen.close.description")
+                List.of(Component.translatable("screens.wynntils.settingsScreen.close.description")
                         .withStyle(ChatFormatting.DARK_RED))));
     }
 
@@ -163,7 +164,7 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
         mouseX -= getTranslationX();
         mouseY -= getTranslationY();
 
-        for (Widget renderable : renderables) {
+        for (Renderable renderable : renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
@@ -330,7 +331,6 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         Managers.Config.loadConfigFile();
         Managers.Config.loadConfigOptions(Managers.Config.getConfigHolders(), true);
         super.onClose();

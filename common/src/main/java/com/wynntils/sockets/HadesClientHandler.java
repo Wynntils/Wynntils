@@ -23,7 +23,6 @@ import com.wynntils.sockets.objects.HadesUser;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class HadesClientHandler implements IHadesClientAdapter {
     private final HadesConnection hadesConnection;
@@ -39,7 +38,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
             if (Managers.WorldState.onServer()) {
                 McUtils.sendMessageToClient(
-                        new TextComponent("Could not connect to HadesServer because you are not logged in on Athena.")
+                        Component.literal("Could not connect to HadesServer because you are not logged in on Athena.")
                                 .withStyle(ChatFormatting.RED));
             }
 
@@ -55,7 +54,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
         if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(
-                    new TextComponent("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
+                    Component.literal("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
         }
 
         WynntilsMod.info("Disconnected from HadesServer.");
@@ -65,24 +64,24 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleAuthenticationResponse(HSPacketAuthenticationResponse packet) {
-        Component userComponent = TextComponent.EMPTY;
+        Component userComponent = Component.empty();
 
         switch (packet.getResponse()) {
             case SUCCESS -> {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
-                userComponent =
-                        new TextComponent("Successfully connected to HadesServer").withStyle(ChatFormatting.GREEN);
+                userComponent = Component.literal("Successfully connected to HadesServer")
+                        .withStyle(ChatFormatting.GREEN);
                 WynntilsMod.postEvent(new SocketEvent.Authenticated());
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
-                userComponent = new TextComponent("Got invalid token when connecting HadesServer")
+                userComponent = Component.literal("Got invalid token when connecting HadesServer")
                         .withStyle(ChatFormatting.RED);
             }
             case ERROR -> {
                 WynntilsMod.error("Got an error trying to connect to HadesServer: " + packet.getMessage());
-                userComponent =
-                        new TextComponent("Got error when connecting HadesServer").withStyle(ChatFormatting.RED);
+                userComponent = Component.literal("Got error when connecting HadesServer")
+                        .withStyle(ChatFormatting.RED);
             }
         }
 
@@ -124,7 +123,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.info("Disconnected from HadesServer. Reason: " + packet.getReason());
 
         if (Managers.WorldState.onServer()) {
-            McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis] Disconnected from HadesServer.")
+            McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis] Disconnected from HadesServer.")
                     .withStyle(ChatFormatting.YELLOW));
         }
 

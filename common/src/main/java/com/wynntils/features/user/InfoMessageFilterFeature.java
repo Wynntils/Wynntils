@@ -57,7 +57,7 @@ public class InfoMessageFilterFeature extends UserFeature {
         String msg = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
-        if (messageType == MessageType.NORMAL) {
+        if (messageType == MessageType.FOREGROUND) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -71,7 +71,6 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (messageType == MessageType.SYSTEM) {
             if (hideLevelUp) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);

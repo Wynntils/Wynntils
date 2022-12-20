@@ -11,11 +11,11 @@ import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class QuestsPageButton extends AbstractButton {
     public QuestsPageButton(int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("Quests Page Button"));
+        super(x, y, width, height, Component.literal("Quests Page Button"));
     }
 
     @Override
@@ -23,8 +23,8 @@ public class QuestsPageButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.QUESTS_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 this.width,
                 this.height,
                 Texture.QUESTS_BUTTON.width(),
@@ -33,9 +33,9 @@ public class QuestsPageButton extends AbstractButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(new WynntilsQuestBookScreen());
+        McUtils.mc().setScreen(WynntilsQuestBookScreen.create());
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

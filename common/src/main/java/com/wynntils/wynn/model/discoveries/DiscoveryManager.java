@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -69,7 +68,7 @@ public final class DiscoveryManager extends Manager {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            McUtils.mc().setScreen(new MainMapScreen(centerX, centerZ));
+            McUtils.mc().setScreen(MainMapScreen.create(centerX, centerZ));
         }
     }
 
@@ -134,7 +133,7 @@ public final class DiscoveryManager extends Manager {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
                 return;
             }
@@ -161,13 +160,13 @@ public final class DiscoveryManager extends Manager {
                 x = Integer.parseInt(xLocation.substring(12, xEnd));
                 z = Integer.parseInt(zLocation.substring(12, zEnd));
             } catch (NumberFormatException e) {
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
                 return;
             }
 
             if (x == 0 && z == 0) {
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
                 return;
             }
@@ -175,7 +174,7 @@ public final class DiscoveryManager extends Manager {
             switch (action) {
                 case MAP -> {
                     // We can't run this is on request thread
-                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(new MainMapScreen(x, z)));
+                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
                 }
                 case COMPASS -> {
                     Models.Compass.setCompassLocation(new Location(x, 0, z));

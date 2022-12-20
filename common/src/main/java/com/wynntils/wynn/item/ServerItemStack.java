@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -45,9 +44,9 @@ public class ServerItemStack extends WynnItemStack {
         ServerProfile serverProfile = Models.ServerList.getServer(serverId);
         String uptimeString = serverProfile == null ? "Unknown" : serverProfile.getUptime();
 
-        newTooltip.add(new TextComponent("Uptime: ")
+        newTooltip.add(Component.literal("Uptime: ")
                 .withStyle(ChatFormatting.DARK_GREEN)
-                .append(new TextComponent(uptimeString).withStyle(ChatFormatting.GREEN)));
+                .append(Component.literal(uptimeString).withStyle(ChatFormatting.GREEN)));
         tooltip = newTooltip;
     }
 

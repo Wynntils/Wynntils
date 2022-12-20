@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
@@ -18,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,11 +27,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * The responsibility of this class is to act as the first gateway for incoming
  * chat messages from Wynncraft. Chat messages in vanilla comes in three types,
  * CHAT, SYSTEM and GAME_INFO. The latter is the "action bar", and is handled
- * elsewhere. The difference between CHAT and SYSTEM is almost academic; it looks
- * the same to users, but Wynntils put different messages in different categories.
- * Most are CHAT, but a few are SYSTEM. When we pass on the messages, we use the
- * term "NORMAL" instead of "CHAT".
- * <p>
+ * elsewhere. However, starting with Minecraft 1.19, Wynncraft will send all chat
+ * messages as SYSTEM, so we will ignore the CHAT type.
+ *
  * Using the regexp patterns in RecipientType, we classify the incoming messages
  * according to if they are sent to the guild, party, global chat, etc. Messages
  * that do not match any of these categories are called "info" messages, and are
@@ -88,8 +86,7 @@ public final class ChatModel extends Model {
         // make it a multiline message
         if (!codedMessage.contains("\n") || codedMessage.indexOf('\n') == (codedMessage.length() - 1)) {
             saveLastChat(message);
-            MessageType messageType = e.getType() == ChatType.SYSTEM ? MessageType.SYSTEM : MessageType.NORMAL;
-            Component updatedMessage = handleChatLine(message, codedMessage, messageType);
+            Component updatedMessage = handleChatLine(message, codedMessage, MessageType.FOREGROUND);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
@@ -211,17 +208,9 @@ public final class ChatModel extends Model {
         String msg = ComponentUtils.getCoded(message);
 
         // Check if message match a recipient category
-        if (messageType == MessageType.SYSTEM) {
-            // System type messages can only be shouts or "info" messages
-            // We call this MessageType.NORMAL anyway...
-            if (RecipientType.SHOUT.matchPattern(msg, MessageType.NORMAL)) {
-                return RecipientType.SHOUT;
-            }
-        } else {
-            for (RecipientType recipientType : RecipientType.values()) {
-                if (recipientType.matchPattern(msg, messageType)) {
-                    return recipientType;
-                }
+        for (RecipientType recipientType : RecipientType.values()) {
+            if (recipientType.matchPattern(msg, messageType)) {
+                return recipientType;
             }
         }
 

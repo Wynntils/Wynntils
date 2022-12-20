@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
@@ -39,135 +39,142 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuButton hovered = null;
 
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
-    private static final WynntilsBookSettingsScreen settingsScreenInstance = new WynntilsBookSettingsScreen();
+    private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
 
-    public WynntilsMenuScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsMenu.name"));
+    private WynntilsMenuScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
+        setup();
+    }
 
+    public static Screen create() {
+        return new WynntilsMenuScreen();
+    }
+
+    private void setup() {
         buttons.add(new WynntilsMenuButton(
                 Texture.QUEST_BOOK_ICON,
                 true,
-                new WynntilsQuestBookScreen(),
+                WynntilsQuestBookScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.questBook.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsMenu.questBook.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.questBook.description")
+                        Component.translatable("screens.wynntils.wynntilsMenu.questBook.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.SETTINGS_ICON,
                 true,
                 settingsScreenInstance,
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.configs.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsMenu.configs.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.configs.description")
+                        Component.translatable("screens.wynntils.wynntilsMenu.configs.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.OVERLAYS_ICON,
                 true,
-                new OverlaySelectionScreen(),
+                OverlaySelectionScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsMenu.overlayConfig.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsMenu.overlayConfig.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.overlayConfig.description")
+                        Component.translatable("screens.wynntils.wynntilsMenu.overlayConfig.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
         buttons.add(new WynntilsMenuButton(
                 Texture.DIALOGUE_BUTTON,
                 false,
-                new WynntilsDialogueHistoryScreen(),
+                WynntilsDialogueHistoryScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent(
+                                .append(Component.translatable(
                                                 "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
         if (MapFeature.INSTANCE.isEnabled()) {
             buttons.add(new WynntilsMenuButton(
                     Texture.MAP_ICON,
                     true,
-                    new MainMapScreen(),
+                    MainMapScreen.create(),
                     List.of(
-                            new TextComponent("[>] ")
+                            Component.literal("[>] ")
                                     .withStyle(ChatFormatting.GOLD)
-                                    .append(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.mainMap.name")
+                                    .append(Component.translatable("screens.wynntils.wynntilsQuestBook.mainMap.name")
                                             .withStyle(ChatFormatting.BOLD)
                                             .withStyle(ChatFormatting.GOLD)),
-                            new TranslatableComponent("screens.wynntils.wynntilsQuestBook.mainMap.description")
+                            Component.translatable("screens.wynntils.wynntilsQuestBook.mainMap.description")
                                     .withStyle(ChatFormatting.GRAY),
-                            new TextComponent(""),
-                            new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                            Component.literal(""),
+                            Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                     .withStyle(ChatFormatting.GREEN))));
         }
         buttons.add(new WynntilsMenuButton(
                 Texture.LOOTRUN_ICON,
                 true,
-                new WynntilsLootrunsScreen(),
+                WynntilsLootrunsScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.lootruns.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsQuestBook.lootruns.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.lootruns.description")
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.lootruns.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
 
         buttons.add(new WynntilsMenuButton(
                 Texture.GUIDES_ICON,
                 true,
-                new WynntilsGuidesListScreen(),
+                WynntilsGuidesListScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsGuides.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsGuides.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsGuides.description")
+                        Component.translatable("screens.wynntils.wynntilsGuides.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
 
         buttons.add(new WynntilsMenuButton(
                 Texture.DISCOVERIES_ICON,
                 true,
-                new WynntilsDiscoveriesScreen(),
+                WynntilsDiscoveriesScreen.create(),
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name")
+                                .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.name")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GOLD)),
-                        new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.description")
+                        Component.translatable("screens.wynntils.wynntilsDiscoveries.description")
                                 .withStyle(ChatFormatting.GRAY),
-                        new TextComponent(""),
-                        new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                        Component.literal(""),
+                        Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
 
         assert buttons.size() <= 8;

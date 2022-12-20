@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
@@ -122,7 +121,7 @@ public final class FunctionManager extends Manager {
             return Optional.ofNullable(value);
         } catch (Throwable throwable) {
             WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
-            McUtils.sendMessageToClient(new TextComponent(String.format(
+            McUtils.sendMessageToClient(Component.literal(String.format(
                             "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
@@ -136,17 +135,17 @@ public final class FunctionManager extends Manager {
     public Component getSimpleValueString(
             Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
-                ? new TextComponent(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
-                : new TextComponent("");
+                ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
+                : Component.literal("");
 
         Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
-            return header.append(new TextComponent("??"));
+            return header.append(Component.literal("??"));
         }
 
         String formattedValue = format(value.get());
 
-        return header.append(new TextComponent(formattedValue).withStyle(color));
+        return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
     public String getRawValueString(Function<?> function, String argument) {
@@ -173,7 +172,7 @@ public final class FunctionManager extends Manager {
      */
     public Component getStringFromTemplate(String template) {
         // FIXME: implement template parser
-        return new TextComponent(template);
+        return Component.literal(template);
     }
 
     /**
@@ -309,27 +308,39 @@ public final class FunctionManager extends Manager {
     private void registerAllFunctions() {
         registerFunction(new WorldFunction());
 
+        registerFunction(new CharacterFunctions.AlchemismLevelFunction());
+        registerFunction(new CharacterFunctions.ArmouringLevelFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.CookingLevelFunction());
         registerFunction(new CharacterFunctions.EmeraldBlockFunction());
         registerFunction(new CharacterFunctions.EmeraldsFunction());
+        registerFunction(new CharacterFunctions.FarmingLevelFunction());
+        registerFunction(new CharacterFunctions.FishingLevelFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.InventoryFreeFunction());
         registerFunction(new CharacterFunctions.InventoryUsedFunction());
+        registerFunction(new CharacterFunctions.JewelingLevelFunction());
         registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MiningLevelFunction());
         registerFunction(new CharacterFunctions.MoneyFunction());
+        registerFunction(new CharacterFunctions.ScribingLevelFunction());
         registerFunction(new CharacterFunctions.SoulpointFunction());
         registerFunction(new CharacterFunctions.SoulpointMaxFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
+        registerFunction(new CharacterFunctions.TailoringLevelFunction());
+        registerFunction(new CharacterFunctions.WeaponsmithingLevelFunction());
+        registerFunction(new CharacterFunctions.WoodcuttingLevelFunction());
+        registerFunction(new CharacterFunctions.WoodworkingLevelFunction());
         registerFunction(new CharacterFunctions.XpFunction());
         registerFunction(new CharacterFunctions.XpPctFunction());
         registerFunction(new CharacterFunctions.XpRawFunction());

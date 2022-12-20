@@ -14,25 +14,24 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class BasicTexturedButton extends AbstractButton {
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
-    private final List<Component> tooltip;
+    private List<Component> tooltip;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
-        super(x, y, width, height, new TextComponent("Basic Button"));
+        super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.tooltip = ComponentUtils.wrapTooltips(tooltip, 250);
+        this.setTooltip(tooltip);
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(poseStack, texture, this.x, this.y);
+        RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
 
         if (this.isHovered) {
             RenderUtils.drawTooltipAt(
@@ -59,5 +58,9 @@ public class BasicTexturedButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public void setTooltip(List<Component> newTooltip) {
+        tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);
+    }
 }

@@ -85,7 +85,7 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent event) {
-        if (event.getMessageType() != MessageType.SYSTEM) return;
+        if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
@@ -270,7 +270,7 @@ public final class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
-        McUtils.player().chat("/friend list");
+        McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
@@ -278,7 +278,7 @@ public final class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
-        McUtils.player().chat("/party list");
+        McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 }

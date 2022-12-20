@@ -24,10 +24,9 @@ import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 public class WynntilsEmeraldPouchGuideScreen
@@ -37,14 +36,12 @@ public class WynntilsEmeraldPouchGuideScreen
 
     private List<EmeraldPouchItemStack> parsedItemCache;
 
-    public WynntilsEmeraldPouchGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
+    private WynntilsEmeraldPouchGuideScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
     }
 
-    @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
+    public static Screen create() {
+        return new WynntilsEmeraldPouchGuideScreen();
     }
 
     @Override
@@ -57,14 +54,14 @@ public class WynntilsEmeraldPouchGuideScreen
             }
         }
 
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+        super.safeInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsGuidesListScreen()));
+                WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -135,13 +132,13 @@ public class WynntilsEmeraldPouchGuideScreen
             EmeraldPouchItemStack itemStack = guideEmeraldPouchItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
-            tooltipLines.add(TextComponent.EMPTY);
+            tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                         .withStyle(ChatFormatting.GREEN));
             }
 

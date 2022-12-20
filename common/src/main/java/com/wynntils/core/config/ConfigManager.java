@@ -11,10 +11,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.FileUtils;
@@ -50,9 +52,16 @@ public final class ConfigManager extends Manager {
     private File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager() {
-        super(List.of());
+    public ConfigManager(ConfigUpfixerManager upfixer) {
+        super(List.of(upfixer));
+
+        // First, we load the config file
         loadConfigFile();
+
+        // Now, we have to apply upfixers, before any config loading happens
+        if (upfixer.runUpfixers(configObject)) {
+            saveConfigToDisk(configObject);
+        }
     }
 
     public void registerFeature(Feature feature) {
@@ -139,26 +148,36 @@ public final class ConfigManager extends Manager {
     }
 
     public void saveConfig() {
+        // create file if necessary
+        if (!userConfig.exists()) {
+            FileUtils.createNewFile(userConfig);
+        }
+
+        // create json object, with entry for each option of each container
+        JsonObject holderJson = new JsonObject();
+        for (ConfigHolder holder : CONFIG_HOLDERS) {
+            if (!holder.valueChanged()) continue; // only save options that have been set by the user
+            Object value = holder.getValue();
+
+            JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
+            holderJson.add(holder.getJsonName(), holderElement);
+        }
+
+        // Also save upfixer data
+        holderJson.add(
+                Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME,
+                configObject.get(Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME));
+
+        saveConfigToDisk(holderJson);
+    }
+
+    private void saveConfigToDisk(JsonObject configObject) {
         try {
-            // create file if necessary
-            if (!userConfig.exists()) {
-                FileUtils.createNewFile(userConfig);
-            }
-
-            // create json object, with entry for each option of each container
-            JsonObject holderJson = new JsonObject();
-            for (ConfigHolder holder : CONFIG_HOLDERS) {
-                if (!holder.valueChanged()) continue; // only save options that have been set by the user
-                Object value = holder.getValue();
-
-                JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
-                holderJson.add(holder.getJsonName(), holderElement);
-            }
-
             // write json to file
             OutputStreamWriter fileWriter =
                     new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-            CONFIG_GSON.toJson(holderJson, fileWriter);
+
+            CONFIG_GSON.toJson(configObject, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             WynntilsMod.error("Failed to save user config file!", e);

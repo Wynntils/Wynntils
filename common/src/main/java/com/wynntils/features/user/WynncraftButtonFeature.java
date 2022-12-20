@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -17,14 +18,20 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.INVARIABLE)
 public class WynncraftButtonFeature extends UserFeature {
+    private static final String GAME_SERVER = "play.wynncraft.com";
+    private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+
+    @Config
+    public boolean connectToLobby = false;
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        ServerData wynncraftServer = new ServerData("Wynncraft", "play.wynncraft.com", false);
+        ServerData wynncraftServer = new ServerData("Wynncraft", connectToLobby ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
         WynncraftButton wynncraftButton = new WynncraftButton(
@@ -42,7 +49,7 @@ public class WynncraftButtonFeature extends UserFeature {
 
         // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
-            super(x, y, 20, 20, new TranslatableComponent(""), WynncraftButton::onPress);
+            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
             this.backScreen = backScreen;
 
@@ -61,7 +68,7 @@ public class WynncraftButtonFeature extends UserFeature {
             RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
 
             // Insets the icon by 3
-            blit(matrices, this.x + 3, this.y + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
+            blit(matrices, this.getX() + 3, this.getY() + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
         }
 
         protected static void onPress(Button button) {

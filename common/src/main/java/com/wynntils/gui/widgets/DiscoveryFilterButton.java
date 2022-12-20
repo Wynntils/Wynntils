@@ -15,10 +15,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
-public class DiscoveryFilterButton extends AbstractButton {
+public class DiscoveryFilterButton extends AbstractButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor BUTTON_COLOR_ENABLED = new CustomColor(164, 212, 142);
@@ -39,7 +37,7 @@ public class DiscoveryFilterButton extends AbstractButton {
             List<Component> tooltipList,
             Runnable onPress,
             Supplier<Boolean> isEnabled) {
-        super(x, y, width, height, new TextComponent("Discovery Filter Button"));
+        super(x, y, width, height, Component.literal("Discovery Filter Button"));
 
         this.texture = texture;
         this.dynamicTexture = dynamicTexture;
@@ -53,8 +51,8 @@ public class DiscoveryFilterButton extends AbstractButton {
         RenderUtils.drawRect(
                 poseStack,
                 isEnabled.get() ? BUTTON_COLOR_ENABLED : isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
-                x,
-                y,
+                getX(),
+                getY(),
                 0,
                 width,
                 height);
@@ -63,8 +61,8 @@ public class DiscoveryFilterButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     texture.resource(),
-                    x + (width - texture.width()) / 2f,
-                    y + (height - texture.height()) / 2f,
+                    getX() + (width - texture.width()) / 2f,
+                    getY() + (height - texture.height()) / 2f,
                     1,
                     texture.width(),
                     texture.height(),
@@ -79,8 +77,8 @@ public class DiscoveryFilterButton extends AbstractButton {
                 RenderUtils.drawTexturedRect(
                         poseStack,
                         texture.resource(),
-                        x + (width - texture.width()) / 2f,
-                        y + (height - texture.height() / 2f) / 2f,
+                        getX() + (width - texture.width()) / 2f,
+                        getY() + (height - texture.height() / 2f) / 2f,
                         1,
                         texture.width(),
                         texture.height() / 2f,
@@ -94,8 +92,8 @@ public class DiscoveryFilterButton extends AbstractButton {
                 RenderUtils.drawTexturedRect(
                         poseStack,
                         texture.resource(),
-                        x + (width - texture.width()) / 2f,
-                        y + (height - texture.height() / 2f) / 2f,
+                        getX() + (width - texture.width()) / 2f,
+                        getY() + (height - texture.height() / 2f) / 2f,
                         1,
                         texture.width(),
                         texture.height() / 2f,
@@ -109,14 +107,15 @@ public class DiscoveryFilterButton extends AbstractButton {
         }
     }
 
+    @Override
     public List<Component> getTooltipLines() {
         List<Component> renderedTooltip = new ArrayList<>(tooltipList);
 
         if (isEnabled.get()) {
-            renderedTooltip.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.clickToHide")
+            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToHide")
                     .withStyle(ChatFormatting.GRAY));
         } else {
-            renderedTooltip.add(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.clickToShow")
+            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToShow")
                     .withStyle(ChatFormatting.GRAY));
         }
 
@@ -129,5 +128,5 @@ public class DiscoveryFilterButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

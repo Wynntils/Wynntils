@@ -25,8 +25,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ConfigButton extends AbstractButton {
     private final WynntilsBookSettingsScreen settingsScreen;
@@ -37,20 +35,20 @@ public class ConfigButton extends AbstractButton {
 
     public ConfigButton(
             int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, ConfigHolder configHolder) {
-        super(x, y, width, height, new TextComponent(configHolder.getJsonName()));
+        super(x, y, width, height, Component.literal(configHolder.getJsonName()));
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
         this.resetButton = new GeneralSettingsButton(
-                this.x + this.width - 40,
-                this.y + 13,
+                this.getX() + this.width - 40,
+                this.getY() + 13,
                 35,
                 12,
-                new TranslatableComponent("screens.wynntils.settingsScreen.reset.name"),
+                Component.translatable("screens.wynntils.settingsScreen.reset.name"),
                 () -> {
                     configHolder.reset();
                     this.configOptionElement = getWidgetFromConfigHolder(configHolder);
                 },
-                List.of(new TranslatableComponent("screens.wynntils.settingsScreen.reset.description")));
+                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
         this.configOptionElement = getWidgetFromConfigHolder(configHolder);
     }
 
@@ -70,8 +68,8 @@ public class ConfigButton extends AbstractButton {
                 .renderText(
                         poseStack,
                         displayName,
-                        (this.x + 3) / 0.8f,
-                        (this.y + 3) / 0.8f,
+                        (this.getX() + 3) / 0.8f,
+                        (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
@@ -81,16 +79,16 @@ public class ConfigButton extends AbstractButton {
         RenderUtils.drawLine(
                 poseStack,
                 CommonColors.GRAY,
-                this.x,
-                this.y + this.height,
-                this.x + this.width,
-                this.y + this.height,
+                this.getX(),
+                this.getY() + this.height,
+                this.getX() + this.width,
+                this.getY() + this.height,
                 0,
                 1);
 
         poseStack.pushPose();
-        final int renderX = this.x + 3;
-        final int renderY = this.y + 12;
+        final int renderX = this.getX() + 3;
+        final int renderY = this.getY() + 12;
         poseStack.translate(renderX, renderY, 0);
         configOptionElement.renderConfigAppropriateButton(
                 poseStack, this.width - 45, 30, mouseX - renderX, mouseY - renderY, partialTick);
@@ -100,7 +98,7 @@ public class ConfigButton extends AbstractButton {
             String description = configHolder.getDescription();
             String[] parts = StringUtils.wrapTextBySize(description, 200);
             List<Component> components = Arrays.stream(parts)
-                    .map(s -> (Component) new TextComponent(s))
+                    .map(s -> (Component) Component.literal(s))
                     .toList();
 
             RenderUtils.drawTooltipAt(
@@ -116,8 +114,8 @@ public class ConfigButton extends AbstractButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return configOptionElement.mouseClicked(mouseX, mouseY, button)
-                && resetButton.mouseClicked(mouseX, mouseY, button);
+        return resetButton.mouseClicked(mouseX, mouseY, button)
+                || configOptionElement.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -126,7 +124,7 @@ public class ConfigButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {

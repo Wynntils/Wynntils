@@ -26,9 +26,9 @@ import java.util.concurrent.TimeoutException;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
 import org.apache.commons.codec.binary.Hex;
 
@@ -56,11 +56,11 @@ public final class WynntilsAccountManager extends Manager {
         doLogin();
 
         if (!loggedIn) {
-            MutableComponent failed = new TextComponent(
+            MutableComponent failed = Component.literal(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(new TextComponent("/wynntils reload")
+            failed.append(Component.literal("/wynntils reload")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));

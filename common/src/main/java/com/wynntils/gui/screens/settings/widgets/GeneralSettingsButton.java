@@ -38,8 +38,8 @@ public class GeneralSettingsButton extends AbstractButton {
                 poseStack,
                 CommonColors.BLACK,
                 isHovered ? HOVER_BACKGROUND_COLOR : BACKGROUND_COLOR,
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -51,10 +51,10 @@ public class GeneralSettingsButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         title,
-                        this.x,
-                        this.x + this.width,
-                        this.y,
-                        this.y + this.height,
+                        this.getX(),
+                        this.getX() + this.width,
+                        this.getY(),
+                        this.getY() + this.height,
                         0,
                         isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
                         HorizontalAlignment.Center,
@@ -79,5 +79,5 @@ public class GeneralSettingsButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

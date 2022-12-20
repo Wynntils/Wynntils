@@ -33,7 +33,7 @@ public class CustomCharacterSelectionScreenFeature extends UserFeature {
 
         openedInThisCharacterSelectionState = true;
 
-        McUtils.mc().setScreen(new CharacterSelectorScreen());
+        McUtils.mc().setScreen(CharacterSelectorScreen.create());
     }
 
     @SubscribeEvent

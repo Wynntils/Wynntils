@@ -18,6 +18,7 @@ import com.wynntils.gui.widgets.DiscoveryFilterButton;
 import com.wynntils.gui.widgets.DiscoveryProgressButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
+import com.wynntils.gui.widgets.TooltipProvider;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
@@ -28,19 +29,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
-
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -51,11 +45,15 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     private boolean showFoundTerritory = true;
     private boolean showUndiscoveredTerritory = false;
 
-    public WynntilsDiscoveriesScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.name"));
+    private WynntilsDiscoveriesScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsDiscoveries.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
+    }
+
+    public static Screen create() {
+        return new WynntilsDiscoveriesScreen();
     }
 
     @SubscribeEvent
@@ -67,7 +65,6 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         WynntilsMod.unregisterEventListener(this);
 
         super.onClose();
@@ -77,7 +74,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     protected void safeInit() {
         Managers.Discovery.reloadDiscoveries();
 
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+        super.safeInit();
 
         filterButtons.clear();
 
@@ -88,10 +85,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_TERRITORY,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent(
-                                        "screens.wynntils.wynntilsDiscoveries.showFoundTerritory.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundTerritory.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -106,9 +102,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_WORLD,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundWorld.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundWorld.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -123,9 +119,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.DISCOVERED_SECRET,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showFoundSecret.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showFoundSecret.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -140,10 +136,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_TERRITORY,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent(
-                                        "screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -158,9 +153,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_WORLD,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -175,9 +170,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 30,
                 Texture.UNDISCOVERED_SECRET,
                 true,
-                List.of(new TextComponent("[>] ")
+                List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name")
+                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name")
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
@@ -191,7 +186,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
@@ -256,22 +251,9 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     }
 
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Component> tooltipLines = List.of();
+        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
 
-        if (this.hovered instanceof ReloadButton) {
-            tooltipLines = RELOAD_TOOLTIP;
-        } else if (this.hovered instanceof DiscoveryFilterButton filterButton) {
-            tooltipLines = filterButton.getTooltipLines();
-        } else if (this.hovered instanceof DiscoveryButton discoveryButton) {
-            tooltipLines = discoveryButton.getTooltipLines();
-        } else if (this.hovered instanceof DiscoveryProgressButton progressButton) {
-            if (progressButton.isSecretDiscoveryButton()) {
-                tooltipLines = Managers.Discovery.getSecretDiscoveriesTooltip();
-            } else {
-                tooltipLines = Managers.Discovery.getDiscoveriesTooltip();
-            }
-        }
-
+        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
         if (tooltipLines.isEmpty()) return;
 
         RenderUtils.drawTooltipAt(

@@ -12,13 +12,13 @@ import com.wynntils.mc.objects.CommonColors;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class CategoryButton extends AbstractButton {
     private final FeatureCategory featureCategory;
 
     public CategoryButton(int x, int y, int width, int height, FeatureCategory featureCategory) {
-        super(x, y, width, height, new TranslatableComponent(featureCategory.toString()));
+        super(x, y, width, height, Component.translatable(featureCategory.toString()));
         this.featureCategory = featureCategory;
     }
 
@@ -28,9 +28,9 @@ public class CategoryButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         I18n.get(featureCategory.toString()),
-                        this.x,
-                        this.x + this.width,
-                        this.y,
+                        this.getX(),
+                        this.getX() + this.width,
+                        this.getY(),
                         0,
                         CommonColors.CYAN,
                         HorizontalAlignment.Center,
@@ -41,5 +41,5 @@ public class CategoryButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

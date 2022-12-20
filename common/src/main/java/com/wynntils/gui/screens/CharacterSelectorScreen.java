@@ -22,12 +22,12 @@ import com.wynntils.wynn.objects.ClassInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -43,8 +43,8 @@ public class CharacterSelectorScreen extends WynntilsScreen {
     private double lastMouseY = 0;
     private ClassInfoButton selected = null;
 
-    public CharacterSelectorScreen() {
-        super(new TranslatableComponent("screens.wynntils.characterSelection.name"));
+    private CharacterSelectorScreen() {
+        super(Component.translatable("screens.wynntils.characterSelection.name"));
 
         if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             actualClassSelectionScreen = abstractContainerScreen;
@@ -52,6 +52,10 @@ public class CharacterSelectorScreen extends WynntilsScreen {
             throw new IllegalStateException(
                     "Tried to open custom character selection screen when normal character selection screen is not open");
         }
+    }
+
+    public static Screen create() {
+        return new CharacterSelectorScreen();
     }
 
     @Override
@@ -332,7 +336,7 @@ public class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        for (Widget renderable : this.renderables) {
+        for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 

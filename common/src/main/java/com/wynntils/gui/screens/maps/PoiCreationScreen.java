@@ -27,8 +27,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class PoiCreationScreen extends Screen implements TextboxScreen {
@@ -69,25 +68,37 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private PoiLocation setupLocation;
     private boolean firstSetup = false;
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen) {
-        super(new TextComponent("Poi Creation Screen"));
+    private PoiCreationScreen(MainMapScreen oldMapScreen) {
+        super(Component.literal("Poi Creation Screen"));
         this.oldMapScreen = oldMapScreen;
 
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
         this(oldMapScreen);
 
         this.oldPoi = poi;
         this.firstSetup = true;
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen) {
+        return new PoiCreationScreen(oldMapScreen);
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+        return new PoiCreationScreen(oldMapScreen, setupLocation);
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
+        return new PoiCreationScreen(oldMapScreen, poi);
     }
 
     @Override
@@ -171,22 +182,26 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Icon
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 40, 20, 20, new TextComponent("<"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
                         selectedIconIndex = POI_ICONS.size() - 1;
                     } else {
                         selectedIconIndex--;
                     }
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 40, this.height / 2 + 40, 20, 20, new TextComponent(">"), (button) -> {
+                })
+                .pos(this.width / 2 - 100, this.height / 2 + 40)
+                .size(20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
                     if (selectedIconIndex + 1 >= POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
                         selectedIconIndex++;
                     }
-                }));
+                })
+                .pos(this.width / 2 - 40, this.height / 2 + 40)
+                .size(20, 20)
+                .build());
         if (oldPoi != null && firstSetup) {
             int index = POI_ICONS.indexOf(oldPoi.getIcon());
             selectedIconIndex = index == -1 ? 0 : index;
@@ -224,18 +239,23 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, new TextComponent("<"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, new TextComponent(">"), (button) -> {
+                })
+                .pos(this.width / 2 - 100, this.height / 2 + 90)
+                .size(20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
                     selectedVisiblity = CustomPoi.Visibility.values()[
                             (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
                                     % CustomPoi.Visibility.values().length];
-                }));
+                })
+                .pos(this.width / 2 + 80, this.height / 2 + 90)
+                .size(20, 20)
+                .build());
+
         if (oldPoi != null && firstSetup) {
             selectedVisiblity = oldPoi.getVisibility();
         }
@@ -243,24 +263,18 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                saveButton = new Button(
-                        this.width / 2 + 50,
-                        this.height / 2 + 140,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.poiCreation.save"),
-                        (button) -> {
+                new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
                             savePoi();
                             this.onClose();
-                        }));
-
-        this.addRenderableWidget(new Button(
-                this.width / 2 - 150,
-                this.height / 2 + 140,
-                100,
-                20,
-                new TranslatableComponent("screens.wynntils.poiCreation.cancel"),
-                (button) -> this.onClose()));
+                        })
+                        .pos(this.width / 2 + 50, this.height / 2 + 140)
+                        .size(100, 20)
+                        .build());
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                .pos(this.width / 2 - 150, this.height / 2 + 140)
+                .size(100, 20)
+                .build());
         // endregion
 
         updateSaveStatus();
