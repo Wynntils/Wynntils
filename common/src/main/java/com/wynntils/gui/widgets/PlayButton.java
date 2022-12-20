@@ -12,12 +12,10 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 
-public class PlayButton extends AbstractButton {
+public class PlayButton extends WynntilsButton {
     private static final List<Component> TOOLTIP = List.of(
             Component.translatable("screens.wynntils.characterSelection.playButton.play")
                     .withStyle(ChatFormatting.GREEN),
@@ -71,7 +69,4 @@ public class PlayButton extends AbstractButton {
             poseStack.popPose();
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

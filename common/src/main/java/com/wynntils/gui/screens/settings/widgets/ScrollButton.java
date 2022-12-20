@@ -7,14 +7,13 @@ package com.wynntils.gui.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ScrollButton extends AbstractButton {
+public class ScrollButton extends WynntilsButton {
     private final Consumer<Integer> onScroll;
     private final int y2;
     private final int maxScroll;
@@ -123,7 +122,4 @@ public class ScrollButton extends AbstractButton {
         onScroll.accept((int) delta * perScrollIncrement);
         currentScroll = MathUtils.clamp((int) (currentScroll - delta * perScrollIncrement), 0, maxScroll);
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

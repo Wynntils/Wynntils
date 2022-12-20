@@ -12,11 +12,9 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ClassSelectionDeleteButton extends AbstractButton {
+public class ClassSelectionDeleteButton extends WynntilsButton {
     private static final List<Component> TOOLTIP = List.of(
             Component.translatable("screens.wynntils.characterSelection.delete.name")
                     .withStyle(ChatFormatting.RED),
@@ -66,7 +64,4 @@ public class ClassSelectionDeleteButton extends AbstractButton {
                     true);
         }
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

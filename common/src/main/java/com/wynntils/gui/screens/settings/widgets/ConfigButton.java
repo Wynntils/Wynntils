@@ -16,17 +16,16 @@ import com.wynntils.gui.screens.settings.elements.ConfigOptionElement;
 import com.wynntils.gui.screens.settings.elements.CustomColorConfigOptionElement;
 import com.wynntils.gui.screens.settings.elements.EnumConfigOptionElement;
 import com.wynntils.gui.screens.settings.elements.TextConfigOptionElement;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ConfigButton extends AbstractButton {
+public class ConfigButton extends WynntilsButton {
     private final WynntilsBookSettingsScreen settingsScreen;
     private final ConfigHolder configHolder;
 
@@ -122,9 +121,6 @@ public class ConfigButton extends AbstractButton {
     public void onPress() {
         // noop
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {
