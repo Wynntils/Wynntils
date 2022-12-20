@@ -82,8 +82,9 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
         register(new HousingTeleportArrivalRedirector());
-        register(new HousingTeleportCooldownRedirector());
+        register(new HousingTeleportArrivalCooldownRedirector());
         register(new HousingTeleportDepartureRedirector());
+        register(new HousingTeleportDepartureCooldownRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
@@ -395,9 +396,9 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class HousingTeleportCooldownRedirector extends SimpleRedirector {
+    private class HousingTeleportArrivalCooldownRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cYou need to wait a bit before leaving a house.$");
+                Pattern.compile("^§cYou need to wait a bit before joining another house.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -432,6 +433,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.GRAY + "← Housing Island";
+        }
+    }
+
+    private class HousingTeleportDepartureCooldownRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou need to wait a bit before leaving a house.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Housing teleport is on cooldown!";
         }
     }
 
