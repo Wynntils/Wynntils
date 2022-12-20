@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -14,8 +15,11 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
+import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.TaskUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import com.wynntils.wynn.model.LootrunModel;
 import java.util.List;
 import java.util.Objects;
@@ -24,10 +28,13 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
     private WynntilsLootrunsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
+
+        WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
@@ -35,8 +42,21 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
     }
 
     @Override
+    public void onClose() {
+        WynntilsMod.unregisterEventListener(this);
+        super.onClose();
+    }
+
+    @SubscribeEvent
+    public void onLootrunCacheRefresh(LootrunCacheRefreshEvent event) {
+        reloadElements();
+    }
+
+    @Override
     protected void doInit() {
         super.doInit();
+
+        TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -44,6 +64,15 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
+
+        this.addRenderableWidget(new ReloadButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                11,
+                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                () -> {
+                    TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache);
+                }));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
