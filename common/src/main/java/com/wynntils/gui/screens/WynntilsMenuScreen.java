@@ -181,8 +181,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    protected void safeInit() {
-    }
+    protected void safeInit() {}
 
     @Override
     public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {

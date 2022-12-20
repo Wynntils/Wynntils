@@ -1,15 +1,27 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.utils.McUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public abstract class WynntilsScreen extends Screen {
     protected WynntilsScreen(Component component) {
         super(component);
+    }
+
+    private void failure(String method, Throwable e) {
+        WynntilsMod.error("Failure in " + this.getClass().getSimpleName() + "." + method + "()", e);
+        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in " + method + " in "
+                        + this.getClass().getSimpleName() + ". Screen forcefully closed.")
+                .withStyle(ChatFormatting.RED));
+        McUtils.mc().setScreen(null);
     }
 
     @Override
@@ -17,10 +29,8 @@ public abstract class WynntilsScreen extends Screen {
         try {
             super.init();
             safeInit();
-        } catch (Throwable e) {
-            WynntilsMod.error("Crash in Screen.init() of " + this.getClass().getSimpleName(), e);
-            McUtils.sendMessageToClient(new TextComponent("Crash in Screen.init() of " + this.getClass().getSimpleName()));
-            McUtils.mc().setScreen(null);
+        } catch (Throwable t) {
+            failure("init", t);
         }
     }
 
@@ -31,17 +41,10 @@ public abstract class WynntilsScreen extends Screen {
         try {
             super.render(poseStack, mouseX, mouseY, partialTick);
             safeRender(poseStack, mouseX, mouseY, partialTick);
-        } catch (Throwable e) {
-            WynntilsMod.error("Crash in Screen.render() of " + this.getClass().getSimpleName(), e);
-            McUtils.sendMessageToClient(new TextComponent("Crash in Screen.render() of " + this.getClass().getSimpleName()));
-            McUtils.mc().setScreen(null);
+        } catch (Throwable t) {
+            failure("init", t);
         }
     }
 
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick, boolean marker) {
-        render(poseStack, mouseX, mouseY, partialTick);
-    }
-
     public abstract void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick);
-
 }
