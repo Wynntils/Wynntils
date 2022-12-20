@@ -35,6 +35,9 @@ public class ChatRedirectFeature extends UserFeature {
     public RedirectAction horse = RedirectAction.REDIRECT;
 
     @Config
+    public RedirectAction housingTeleport = RedirectAction.REDIRECT;
+
+    @Config
     public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
 
     @Config
@@ -78,6 +81,8 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseDespawnedRedirector());
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
+        register(new HousingTeleportArrivalRedirector());
+        register(new HousingTeleportDepartureRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
@@ -87,7 +92,8 @@ public class ChatRedirectFeature extends UserFeature {
         register(new PotionsMaxRedirector());
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
-        register(new ScrollTeleportationFailRedirector());
+        register(new ScrollTeleportationHousingFailRedirector());
+        register(new ScrollTeleportationMobFailRedirector());
         register(new SoulPointGainDiscarder());
         register(new SoulPointGainRedirector());
         register(new SoulPointLossRedirector());
@@ -369,6 +375,45 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class HousingTeleportArrivalRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§aYou have flown to your housing island.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "→ Housing Island";
+        }
+    }
+
+    private class HousingTeleportDepartureRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§aYou have flown to your original position.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "← Housing Island";
+        }
+    }
+
     private class IngredientPouchSellRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
@@ -564,7 +609,27 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class ScrollTeleportationFailRedirector extends SimpleRedirector {
+    private class ScrollTeleportationHousingFailRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou can not teleport while inside a house...$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return scrollTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Can't teleport on a housing island!";
+        }
+    }
+
+    private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
 
         @Override
