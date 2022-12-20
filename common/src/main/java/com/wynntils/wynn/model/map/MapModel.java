@@ -80,9 +80,8 @@ public final class MapModel extends Model {
                                 WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                             }
                         },
-                        onError -> {
-                            WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError);
-                        });
+                        onError -> WynntilsMod.warn(
+                                "Error occurred while download map image of " + mapPart.name, onError));
             }
         });
     }

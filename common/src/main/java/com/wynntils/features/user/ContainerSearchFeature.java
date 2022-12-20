@@ -29,7 +29,9 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -186,7 +188,7 @@ public class ContainerSearchFeature extends UserFeature {
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
-            boolean filtered = !search.equals("") && name.contains(search) && item.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
 
             wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
 

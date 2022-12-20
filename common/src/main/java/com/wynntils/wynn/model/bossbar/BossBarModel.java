@@ -153,7 +153,7 @@ public final class BossBarModel extends Model {
     }
 
     private static class ManaBankBar extends TrackedBar {
-        public ManaBankBar() {
+        private ManaBankBar() {
             super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), BarType.MANABANK, ClassType.Mage);
         }
 
@@ -171,7 +171,7 @@ public final class BossBarModel extends Model {
     }
 
     private static class BloodPoolBar extends TrackedBar {
-        public BloodPoolBar() {
+        private BloodPoolBar() {
             super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), BarType.BLOODPOOL, ClassType.Shaman);
         }
 
@@ -202,7 +202,7 @@ public final class BossBarModel extends Model {
     }
 
     private static class AwakenedBar extends TrackedBar {
-        public AwakenedBar() {
+        private AwakenedBar() {
             super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), BarType.AWAKENED, ClassType.Shaman);
         }
 
@@ -220,7 +220,7 @@ public final class BossBarModel extends Model {
     }
 
     private static class FocusBar extends TrackedBar {
-        public FocusBar() {
+        private FocusBar() {
             super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BarType.FOCUS, ClassType.Archer);
         }
 
@@ -238,7 +238,7 @@ public final class BossBarModel extends Model {
     }
 
     private static class CorruptedBar extends TrackedBar {
-        public CorruptedBar() {
+        private CorruptedBar() {
             super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BarType.CORRUPTED, ClassType.Warrior);
         }
 

@@ -75,7 +75,7 @@ public class TimedSet<T> implements Iterable<T> {
         T entry;
         long expiration;
 
-        public TimedEntry(T entry, long expiration) {
+        private TimedEntry(T entry, long expiration) {
             this.entry = entry;
             this.expiration = expiration;
         }

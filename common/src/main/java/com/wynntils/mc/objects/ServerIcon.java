@@ -56,11 +56,9 @@ public class ServerIcon {
 
         try {
             ServerStatusPinger pinger = new ServerStatusPinger();
-            pinger.pingServer(server, () -> {
-                // FIXME: DynamicTexture issues in loadServerIcon
-                //        loadServerIcon(destination);
-                onDone();
-            });
+            // FIXME: DynamicTexture issues in loadServerIcon
+            //        loadServerIcon(destination);
+            pinger.pingServer(server, this::onDone);
         } catch (Exception e) {
             WynntilsMod.warn("Failed to ping server", e);
             onDone();

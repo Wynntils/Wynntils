@@ -262,7 +262,7 @@ public final class ComponentUtils {
         private final StringBuilder result;
         Style oldStyle;
 
-        public CodedStringGenerator(StringBuilder result) {
+        private CodedStringGenerator(StringBuilder result) {
             this.result = result;
             oldStyle = Style.EMPTY;
         }

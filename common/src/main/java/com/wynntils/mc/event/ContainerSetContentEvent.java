@@ -15,7 +15,7 @@ public abstract class ContainerSetContentEvent extends Event {
     private final int containerId;
     private final int stateId;
 
-    public ContainerSetContentEvent(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
+    protected ContainerSetContentEvent(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
         this.items = items;
         this.carriedItem = carriedItem;
         this.containerId = containerId;

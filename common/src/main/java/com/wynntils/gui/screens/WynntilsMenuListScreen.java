@@ -39,7 +39,7 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
         this.addRenderableWidget(searchWidget);
     }
 
-    public WynntilsMenuListScreen(Component component) {
+    protected WynntilsMenuListScreen(Component component) {
         super(component);
 
         // Do not lose search info on re-init

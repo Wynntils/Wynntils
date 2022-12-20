@@ -43,8 +43,8 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsBookSettingsScreen extends Screen implements TextboxScreen {
-    private final int CONFIGURABLES_PER_PAGE = 13;
-    private final int CONFIGS_PER_PAGE = 4;
+    private static final int CONFIGURABLES_PER_PAGE = 13;
+    private static final int CONFIGS_PER_PAGE = 4;
     private final List<AbstractButton> configurables = new ArrayList<>();
     private final List<AbstractButton> configs = new ArrayList<>();
 
@@ -64,14 +64,7 @@ public final class WynntilsBookSettingsScreen extends Screen implements TextboxS
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
         searchWidget = new SearchWidget(
-                95,
-                Texture.SETTING_BACKGROUND.height() - 32,
-                100,
-                20,
-                s -> {
-                    reloadConfigurableButtons();
-                },
-                this);
+                95, Texture.SETTING_BACKGROUND.height() - 32, 100, 20, s -> reloadConfigurableButtons(), this);
         reloadConfigurableButtons();
     }
 
