@@ -99,7 +99,7 @@ public class OverlaySelectionScreen extends WynntilsScreen {
 
         overlayList.render(poseStack, mouseX, mouseY, partialTick);
 
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
     }
 
     @Override
