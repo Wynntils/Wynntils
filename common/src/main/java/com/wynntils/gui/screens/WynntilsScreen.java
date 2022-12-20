@@ -28,23 +28,23 @@ public abstract class WynntilsScreen extends Screen {
     protected final void init() {
         try {
             super.init();
-            safeInit();
+            doInit();
         } catch (Throwable t) {
             failure("init", t);
         }
     }
 
-    protected abstract void safeInit();
+    protected abstract void doInit();
 
     @Override
     public final void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         try {
             super.render(poseStack, mouseX, mouseY, partialTick);
-            safeRender(poseStack, mouseX, mouseY, partialTick);
+            doRender(poseStack, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
             failure("render", t);
         }
     }
 
-    public abstract void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick);
+    public abstract void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick);
 }

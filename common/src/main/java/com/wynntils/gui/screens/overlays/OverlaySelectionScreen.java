@@ -38,7 +38,7 @@ public class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         overlayList = new OverlayList(this);
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlaySelection.close"),
@@ -60,7 +60,7 @@ public class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
         int backgroundColor = CommonColors.DARK_GRAY.withAlpha(200).asInt();

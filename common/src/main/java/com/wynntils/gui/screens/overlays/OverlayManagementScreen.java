@@ -116,7 +116,7 @@ public class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         setupButtons();
         calculateAlignmentLinePositions();
     }
@@ -138,7 +138,7 @@ public class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (testMode) {
             TextRenderTask renderTask = new TextRenderTask(
                     I18n.get("screens.wynntils.overlayManagement.testModeOn"),

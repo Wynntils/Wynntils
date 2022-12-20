@@ -44,14 +44,14 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = PowderGenerator.getAllPowderProfiles().stream()
                     .map(PowderItemStack::new)
                     .toList();
         }
 
-        super.safeInit();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -77,7 +77,7 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

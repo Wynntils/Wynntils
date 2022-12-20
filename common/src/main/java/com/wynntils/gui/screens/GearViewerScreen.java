@@ -50,7 +50,7 @@ public class GearViewerScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         this.addRenderableWidget(new ViewPlayerStatsButton(
                 -20,
                 Texture.GEAR_VIEWER_BACKGROUND.height() / 3,
@@ -73,7 +73,7 @@ public class GearViewerScreen extends WynntilsScreen {
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float translationX = getTranslationX();
         float translationY = getTranslationY();
 

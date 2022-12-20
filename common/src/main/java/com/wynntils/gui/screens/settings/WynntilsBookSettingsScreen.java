@@ -81,7 +81,7 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -111,7 +111,7 @@ public class WynntilsBookSettingsScreen extends WynntilsScreen implements Textbo
     // region Render
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float backgroundRenderX = getTranslationX();
         float backgroundRenderY = getTranslationY();
 

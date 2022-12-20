@@ -65,7 +65,7 @@ public class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         currentTextureScale = (float) this.height / Texture.LIST_BACKGROUND.height();
 
         float listWidth = Texture.LIST_BACKGROUND.width() * currentTextureScale;
@@ -110,7 +110,7 @@ public class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (Math.abs(lastMouseY - mouseY) > 20f && draggingScroll) {
             setScrollOffset(lastMouseY > mouseY ? 1 : -1);
             lastMouseY = mouseY;

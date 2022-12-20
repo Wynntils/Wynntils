@@ -71,10 +71,10 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     }
 
     @Override
-    protected void safeInit() {
+    protected void doInit() {
         Managers.Discovery.reloadDiscoveries();
 
-        super.safeInit();
+        super.doInit();
 
         filterButtons.clear();
 
@@ -219,7 +219,7 @@ public class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryI
     }
 
     @Override
-    public void safeRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
