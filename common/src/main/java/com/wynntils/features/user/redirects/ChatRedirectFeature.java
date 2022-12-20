@@ -82,6 +82,7 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
         register(new HousingTeleportArrivalRedirector());
+        register(new HousingTeleportCooldownRedirector());
         register(new HousingTeleportDepartureRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
@@ -391,6 +392,26 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         protected String getNotification(Matcher matcher) {
             return ChatFormatting.GRAY + "→ Housing Island";
+        }
+    }
+
+    private class HousingTeleportCooldownRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou need to wait a bit before leaving a house.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Housing teleport is on cooldown!";
         }
     }
 
