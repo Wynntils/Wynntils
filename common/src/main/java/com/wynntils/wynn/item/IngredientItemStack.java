@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.TooltipFlag;
 public class IngredientItemStack extends WynnItemStack {
     private final boolean isGuideStack;
 
-    private final List<Component> guideTooltip;
+    private final List<MutableComponent> guideTooltip;
 
     private final IngredientProfile ingredientProfile;
 
@@ -73,19 +73,19 @@ public class IngredientItemStack extends WynnItemStack {
     @Override
     public Component getHoverName() {
         if (isGuideStack) {
-            return new TextComponent(ingredientProfile.getDisplayName())
+            return Component.literal(ingredientProfile.getDisplayName())
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(" " + ingredientProfile.getTier().getTierString()));
+                    .append(Component.literal(" " + ingredientProfile.getTier().getTierString()));
         }
 
         return super.getHoverName();
     }
 
-    private List<Component> generateGuideTooltip() {
-        List<Component> itemLore = new ArrayList<>();
+    private List<MutableComponent> generateGuideTooltip() {
+        List<MutableComponent> itemLore = new ArrayList<>();
 
-        itemLore.add(new TextComponent("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
-        itemLore.add(TextComponent.EMPTY);
+        itemLore.add(Component.literal("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
+        itemLore.add(Component.empty());
 
         Map<String, IngredientIdentificationContainer> statuses = ingredientProfile.getStatuses();
 
@@ -93,68 +93,68 @@ public class IngredientItemStack extends WynnItemStack {
             IngredientIdentificationContainer identificationContainer = statuses.get(status);
             if (identificationContainer.hasConstantValue()) {
                 if (identificationContainer.getMin() >= 0) {
-                    itemLore.add(new TextComponent("+" + identificationContainer.getMin()
+                    itemLore.add(Component.literal("+" + identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
-                    itemLore.add(new TextComponent(identificationContainer.getMin()
+                    itemLore.add(Component.literal(identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.RED)
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             } else {
                 if (identificationContainer.getMin() >= 0) {
-                    itemLore.add(new TextComponent("+" + identificationContainer.getMin())
+                    itemLore.add(Component.literal("+" + identificationContainer.getMin())
                             .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(" to ").withStyle(ChatFormatting.DARK_GREEN))
-                            .append(new TextComponent(identificationContainer.getMax()
+                            .append(Component.literal(" to ").withStyle(ChatFormatting.DARK_GREEN))
+                            .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.GREEN))
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
-                    itemLore.add(new TextComponent(String.valueOf(identificationContainer.getMin()))
+                    itemLore.add(Component.literal(String.valueOf(identificationContainer.getMin()))
                             .withStyle(ChatFormatting.RED)
-                            .append(new TextComponent(" to ").withStyle(ChatFormatting.DARK_RED))
-                            .append(new TextComponent(identificationContainer.getMax()
+                            .append(Component.literal(" to ").withStyle(ChatFormatting.DARK_RED))
+                            .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.RED))
-                            .append(new TextComponent(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             }
         }
 
         if (statuses.size() > 0) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         IngredientModifiers ingredientModifiers = ingredientProfile.getIngredientModifiers();
         itemLore.addAll(ingredientModifiers.getModifierLoreLines());
 
         if (ingredientModifiers.anyExists()) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         IngredientItemModifiers itemModifiers = ingredientProfile.getItemModifiers();
         itemLore.addAll(itemModifiers.getItemModifierLoreLines());
 
         if (itemModifiers.anyExists()) {
-            itemLore.add(TextComponent.EMPTY);
+            itemLore.add(Component.empty());
         }
 
         if (ingredientProfile.isUntradeable())
-            itemLore.add(new TextComponent("Untradable Item").withStyle(ChatFormatting.RED));
+            itemLore.add(Component.literal("Untradable Item").withStyle(ChatFormatting.RED));
 
-        itemLore.add(
-                new TextComponent("Crafting Lv. Min: " + ingredientProfile.getLevel()).withStyle(ChatFormatting.GRAY));
+        itemLore.add(Component.literal("Crafting Lv. Min: " + ingredientProfile.getLevel())
+                .withStyle(ChatFormatting.GRAY));
 
         for (ProfessionType profession : ingredientProfile.getProfessions()) {
-            itemLore.add(new TextComponent("  " + profession.getProfessionIconChar() + " ")
-                    .append(new TextComponent(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
+            itemLore.add(Component.literal("  " + profession.getProfessionIconChar() + " ")
+                    .append(Component.literal(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
         }
 
         return itemLore;

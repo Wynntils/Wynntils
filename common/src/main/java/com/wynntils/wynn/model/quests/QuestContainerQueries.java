@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -37,7 +37,7 @@ public class QuestContainerQueries {
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book: " + msg);
                     McUtils.sendMessageToClient(
-                            new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
+                            Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Managers.Quest.getQuestBookTitle(1))
@@ -93,7 +93,7 @@ public class QuestContainerQueries {
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book for mini quests: " + msg);
                     McUtils.sendMessageToClient(
-                            new TextComponent("Error updating quest book.").withStyle(ChatFormatting.RED));
+                            Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Managers.Quest.getQuestBookTitle(1))

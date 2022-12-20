@@ -23,7 +23,7 @@ import java.util.Objects;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
@@ -38,7 +38,7 @@ public class LootrunButton extends AbstractButton {
 
     public LootrunButton(
             int x, int y, int width, int height, LootrunModel.LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
-        super(x, y, width, height, new TextComponent("Lootrun Button"));
+        super(x, y, width, height, Component.literal("Lootrun Button"));
         this.lootrun = lootrun;
         this.screen = screen;
     }
@@ -48,7 +48,7 @@ public class LootrunButton extends AbstractButton {
         CustomColor backgroundColor = isLoaded()
                 ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
                 : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 21;
         FontRenderer.getInstance()
@@ -58,8 +58,8 @@ public class LootrunButton extends AbstractButton {
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
@@ -106,7 +106,7 @@ public class LootrunButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void tryDeleteLootrun() {
         File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");

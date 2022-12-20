@@ -18,7 +18,6 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
 
 public final class ComponentUtils {
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
@@ -175,10 +174,10 @@ public final class ComponentUtils {
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
-        MutableComponent component = new TextComponent("");
+        MutableComponent component = Component.literal("");
         formattedText.visit(
                 (style, string) -> {
-                    component.append(new TextComponent(string).withStyle(style));
+                    component.append(Component.literal(string).withStyle(style));
                     return Optional.empty();
                 },
                 Style.EMPTY);
@@ -211,21 +210,21 @@ public final class ComponentUtils {
         List<Component> split = McUtils.mc().font.getSplitter().splitLines(component, maxWidth, Style.EMPTY).stream()
                 .map(ComponentUtils::formattedTextToComponent)
                 .collect(Collectors.toList());
-        if (split.isEmpty()) split.add(new TextComponent(""));
+        if (split.isEmpty()) split.add(Component.literal(""));
         return split;
     }
 
     private static class ComponentListBuilder {
         private final List<Component> lines = new ArrayList<>();
-        private MutableComponent currentLine = new TextComponent("");
+        private MutableComponent currentLine = Component.literal("");
 
         protected void appendSegment(String segment, Style style) {
-            currentLine.append(new TextComponent(segment).withStyle(style));
+            currentLine.append(Component.literal(segment).withStyle(style));
         }
 
         protected void endLine() {
             lines.add(currentLine);
-            currentLine = new TextComponent("");
+            currentLine = Component.literal("");
         }
 
         protected List<Component> extractLines() {
@@ -282,7 +281,7 @@ public final class ComponentUtils {
          * This method handles the fact that the style likely has changed between 2 components
          *
          * <p>It tries to first generate a constructive way of adding color codes to get from the old
-         * style to the new style. If that does not succeed, it instead resets the format and adds the
+         * style to the new style. If that does not succeed, it instead resets the format if the old style was not empty, and adds the
          * color codes of the new style
          */
         private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
@@ -295,9 +294,9 @@ public final class ComponentUtils {
                     result.append(different);
                     return;
                 }
-            }
 
-            result.append(ChatFormatting.RESET);
+                result.append(ChatFormatting.RESET);
+            }
 
             if (newStyle.getColor() != null) {
                 getChatFormatting(newStyle.getColor()).ifPresent(result::append);

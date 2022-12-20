@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.regex.Pattern;
@@ -37,7 +38,10 @@ public class TradeMarketPriceConversionFeature extends UserFeature {
         shouldConvert = false;
 
         String price = StringUtils.convertEmeraldPrice(event.getMessage());
-        if (!price.isEmpty()) event.setMessage(price);
+        if (!price.isEmpty()) {
+            event.setCanceled(true);
+            McUtils.mc().getConnection().sendChat(price);
+        }
     }
 
     @SubscribeEvent

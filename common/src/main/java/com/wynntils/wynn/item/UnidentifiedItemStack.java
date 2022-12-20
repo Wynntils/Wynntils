@@ -22,8 +22,6 @@ import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -75,7 +73,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         itemPossibilities = rarityMap.get(itemTier);
         if (itemPossibilities == null || itemPossibilities.isEmpty()) return;
 
-        tooltip.add(new TranslatableComponent("feature.wynntils.itemGuess.possibilities"));
+        tooltip.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
@@ -84,7 +82,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = new TextComponent(item).withStyle(itemTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(item).withStyle(itemTier.getChatFormatting());
 
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(item)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
@@ -97,24 +95,23 @@ public class UnidentifiedItemStack extends WynnItemStack {
             int level = entry.getKey();
             List<MutableComponent> itemsForLevel = entry.getValue();
 
-            MutableComponent guesses = new TextComponent("    ");
+            MutableComponent guesses = Component.literal("    ");
 
-            guesses.append(
-                    new TranslatableComponent("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
+            guesses.append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
 
             if (ItemGuessFeature.INSTANCE.showGuessesPrice && level != -1) {
-                guesses.append(new TextComponent(" [")
-                        .append(new TextComponent(
+                guesses.append(Component.literal(" [")
+                        .append(Component.literal(
                                         (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
-                        .append(new TextComponent("]"))
+                        .append(Component.literal("]"))
                         .withStyle(ChatFormatting.GRAY));
             }
 
             guesses.append("§7: ");
 
             Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
-                    .reduce((i, j) -> i.append(new TextComponent(", ").withStyle(ChatFormatting.GRAY))
+                    .reduce((i, j) -> i.append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
                             .append(j));
 
             if (itemsComponent.isPresent()) {

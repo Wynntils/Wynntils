@@ -7,7 +7,8 @@ package com.wynntils.wynn.objects.profiles.ingredient;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class IngredientItemModifiers {
 
@@ -74,7 +75,7 @@ public class IngredientItemModifiers {
                 || agility != 0;
     }
 
-    public List<TextComponent> getItemModifierLoreLines() {
+    public List<MutableComponent> getItemModifierLoreLines() {
         List<String> itemLore = new ArrayList<>();
 
         if (durability != 0 && duration != 0) {
@@ -106,6 +107,6 @@ public class IngredientItemModifiers {
             itemLore.add(IngredientItemModifiers.getFormattedModifierText("Agility Min.", agility));
         }
 
-        return itemLore.stream().map(TextComponent::new).toList();
+        return itemLore.stream().map(Component::literal).toList();
     }
 }

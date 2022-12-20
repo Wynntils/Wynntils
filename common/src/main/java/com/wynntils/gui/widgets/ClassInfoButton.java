@@ -16,7 +16,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.objects.ClassInfo;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ClassInfoButton extends AbstractButton {
     private final ClassInfo classInfo;
@@ -24,7 +24,7 @@ public class ClassInfoButton extends AbstractButton {
 
     public ClassInfoButton(
             int x, int y, int width, int height, ClassInfo classInfo, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Info Button"));
+        super(x, y, width, height, Component.literal("Class Info Button"));
         this.classInfo = classInfo;
         this.characterSelectorScreen = characterSelectorScreen;
     }
@@ -34,8 +34,8 @@ public class ClassInfoButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.CHARACTER_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -51,12 +51,12 @@ public class ClassInfoButton extends AbstractButton {
         float itemScale = this.height * 0.03f;
         RenderUtils.renderGuiItem(
                 classInfo.itemStack(),
-                (int) (this.x + this.width * 0.038f * itemScale),
-                (int) (this.y + this.height * 0.12f * itemScale),
+                (int) (this.getX() + this.width * 0.038f * itemScale),
+                (int) (this.getY() + this.height * 0.12f * itemScale),
                 itemScale);
 
         poseStack.pushPose();
-        poseStack.translate(this.x + this.width * 0.25f, this.y + this.height * 0.16f, 0f);
+        poseStack.translate(this.getX() + this.width * 0.25f, this.getY() + this.height * 0.16f, 0f);
         float scale = this.height * 0.032f;
         poseStack.scale(scale, scale, 0f);
 
@@ -86,10 +86,10 @@ public class ClassInfoButton extends AbstractButton {
         RenderUtils.drawProgressBar(
                 poseStack,
                 Texture.XP_BAR,
-                this.x + 5,
-                this.y + this.height * 0.8f,
-                this.x + 5 + this.width * 0.9f,
-                this.y + this.height * 0.9f,
+                this.getX() + 5,
+                this.getY() + this.height * 0.8f,
+                this.getX() + 5 + this.width * 0.9f,
+                this.getY() + this.height * 0.9f,
                 0,
                 0,
                 Texture.XP_BAR.width(),
@@ -105,7 +105,7 @@ public class ClassInfoButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ClassInfo getClassInfo() {
         return classInfo;

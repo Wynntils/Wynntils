@@ -31,8 +31,6 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class GuildMapScreen extends AbstractMapScreen {
@@ -66,12 +64,12 @@ public class GuildMapScreen extends AbstractMapScreen {
                 Texture.MAP_HELP_BUTTON,
                 (b) -> {},
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.YELLOW)
-                                .append(new TranslatableComponent("screens.wynntils.map.help.name")),
-                        new TextComponent("- ")
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(new TranslatableComponent("screens.wynntils.guildMap.help.description1")))));
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")))));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
@@ -124,11 +122,10 @@ public class GuildMapScreen extends AbstractMapScreen {
                 Texture.MAP_ADD_BUTTON,
                 (b) -> resourceMode = !resourceMode,
                 List.of(
-                        new TextComponent("[>] ")
+                        Component.literal("[>] ")
                                 .withStyle(ChatFormatting.GOLD)
-                                .append(new TranslatableComponent(
-                                        "screens.wynntils.guildMap.toggleResourceColor.name")),
-                        new TranslatableComponent("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
     }
 
@@ -385,22 +382,22 @@ public class GuildMapScreen extends AbstractMapScreen {
 
     private List<Component> getCompleteFilterTooltip() {
         Component lastLine = territoryDefenseFilterEnabled
-                ? new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
                         .append(territoryDefenseFilterLevel.asColoredString())
                         .append(territoryDefenseFilterType.asComponent())
-                : new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
                         .append("Off");
         return List.of(
-                new TextComponent("[>] ")
+                Component.literal("[>] ")
                         .withStyle(ChatFormatting.BLUE)
-                        .append(new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                        .append(Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.name")),
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description1")
                         .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description2")
                         .withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description3")
                         .withStyle(ChatFormatting.GRAY),
                 lastLine);
     }

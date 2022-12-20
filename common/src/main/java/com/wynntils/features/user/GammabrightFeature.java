@@ -51,7 +51,7 @@ public class GammabrightFeature extends UserFeature {
 
     @Override
     protected boolean onEnable() {
-        if (gammabrightEnabled && McUtils.options().gamma != 1000d) {
+        if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
 
@@ -60,7 +60,7 @@ public class GammabrightFeature extends UserFeature {
 
     private void applyGammabright() {
         if (!isEnabled()) return;
-        if (gammabrightEnabled && McUtils.options().gamma == 1000d) return;
+        if (gammabrightEnabled && McUtils.options().gamma().get() == 1000d) return;
 
         if (gammabrightEnabled) {
             enableGammabright();
@@ -77,11 +77,11 @@ public class GammabrightFeature extends UserFeature {
     }
 
     private void resetGamma() {
-        McUtils.options().gamma = lastGamma;
+        McUtils.options().gamma().value = lastGamma;
     }
 
     private void enableGammabright() {
-        lastGamma = McUtils.options().gamma;
-        McUtils.options().gamma = 1000d;
+        lastGamma = McUtils.options().gamma().get();
+        McUtils.options().gamma().value = 1000d;
     }
 }

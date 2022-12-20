@@ -9,14 +9,14 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ReloadButton extends AbstractButton {
 
     private final Runnable onClickRunnable;
 
     public ReloadButton(int x, int y, int width, int height, Runnable onClickRunnable) {
-        super(x, y, width, height, new TextComponent("Reload Button"));
+        super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
     }
 
@@ -27,8 +27,8 @@ public class ReloadButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     reloadButton.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -42,8 +42,8 @@ public class ReloadButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     reloadButton.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -62,5 +62,5 @@ public class ReloadButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

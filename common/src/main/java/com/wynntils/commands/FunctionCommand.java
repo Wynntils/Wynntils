@@ -23,7 +23,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 public class FunctionCommand extends CommandBase {
@@ -40,7 +39,7 @@ public class FunctionCommand extends CommandBase {
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
 
@@ -64,23 +63,23 @@ public class FunctionCommand extends CommandBase {
                 .sorted(Comparator.comparing(Function::getName))
                 .toList();
 
-        MutableComponent response = new TextComponent("Available functions:").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal("Available functions:").withStyle(ChatFormatting.AQUA);
 
         for (Function<?> function : functions) {
-            MutableComponent functionComponent = new TextComponent("\n - ").withStyle(ChatFormatting.GRAY);
+            MutableComponent functionComponent = Component.literal("\n - ").withStyle(ChatFormatting.GRAY);
 
-            functionComponent.append(new TextComponent(function.getName()).withStyle(ChatFormatting.YELLOW));
+            functionComponent.append(Component.literal(function.getName()).withStyle(ChatFormatting.YELLOW));
             if (!function.getAliases().isEmpty()) {
                 String aliasList = String.join(", ", function.getAliases());
 
                 functionComponent
-                        .append(new TextComponent(" [alias: ").withStyle(ChatFormatting.GRAY))
-                        .append(new TextComponent(aliasList).withStyle(ChatFormatting.WHITE))
-                        .append(new TextComponent("]").withStyle(ChatFormatting.GRAY));
+                        .append(Component.literal(" [alias: ").withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(aliasList).withStyle(ChatFormatting.WHITE))
+                        .append(Component.literal("]").withStyle(ChatFormatting.GRAY));
             }
 
             functionComponent.withStyle(style -> style.withHoverEvent(
-                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(function.getDescription()))));
+                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(function.getDescription()))));
 
             response.append(functionComponent);
         }
@@ -104,15 +103,16 @@ public class FunctionCommand extends CommandBase {
         Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Function not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         Function<?> function = functionOptional.get();
         if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Function does not need to be enabled").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("Function does not need to be enabled")
+                            .withStyle(ChatFormatting.RED));
             return 0;
         }
 
@@ -120,13 +120,14 @@ public class FunctionCommand extends CommandBase {
 
         if (!success) {
             context.getSource()
-                    .sendFailure(new TextComponent("Function could not be enabled").withStyle(ChatFormatting.RED));
+                    .sendFailure(
+                            Component.literal("Function could not be enabled").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Component response = new TextComponent(function.getName())
+        Component response = Component.literal(function.getName())
                 .withStyle(ChatFormatting.AQUA)
-                .append(new TextComponent(" is now enabled").withStyle(ChatFormatting.WHITE));
+                .append(Component.literal(" is now enabled").withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -145,22 +146,24 @@ public class FunctionCommand extends CommandBase {
         Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         Function<?> function = functionOptional.get();
         if (!(function instanceof ActiveFunction<?> activeFunction)) {
             context.getSource()
-                    .sendFailure(new TextComponent("Function can not be disabled").withStyle(ChatFormatting.RED));
+                    .sendFailure(
+                            Component.literal("Function can not be disabled").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         Managers.Function.disableFunction(activeFunction);
 
-        Component response = new TextComponent(function.getName())
+        Component response = Component.literal(function.getName())
                 .withStyle(ChatFormatting.AQUA)
-                .append(new TextComponent(" is now disabled").withStyle(ChatFormatting.WHITE));
+                .append(Component.literal(" is now disabled").withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -185,16 +188,17 @@ public class FunctionCommand extends CommandBase {
     private int getValue(CommandContext<CommandSourceStack> context) {
         Component argument;
         try {
-            argument = new TextComponent(StringArgumentType.getString(context, "argument"));
+            argument = Component.literal(StringArgumentType.getString(context, "argument"));
         } catch (IllegalArgumentException e) {
-            argument = new TextComponent("");
+            argument = Component.literal("");
         }
 
         String functionName = context.getArgument("function", String.class);
         Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
         Function<?> function = functionOptional.get();
@@ -213,11 +217,11 @@ public class FunctionCommand extends CommandBase {
             extraInfo = activeInfo.toString();
         }
 
-        MutableComponent result = new TextComponent("");
+        MutableComponent result = Component.literal("");
         result.append(
                 Managers.Function.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
         if (!extraInfo.isEmpty()) {
-            result.append(new TextComponent(extraInfo).withStyle(ChatFormatting.GRAY));
+            result.append(Component.literal(extraInfo).withStyle(ChatFormatting.GRAY));
         }
         context.getSource().sendSuccess(result, false);
         return 1;
@@ -237,7 +241,8 @@ public class FunctionCommand extends CommandBase {
         Optional<Function<?>> functionOptional = Managers.Function.forName(functionName);
 
         if (functionOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Function not found").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Function not found").withStyle(ChatFormatting.RED));
             return 0;
         }
 
@@ -245,9 +250,9 @@ public class FunctionCommand extends CommandBase {
 
         String helpText = function.getDescription();
 
-        Component response = new TextComponent(function.getName() + ": ")
+        Component response = Component.literal(function.getName() + ": ")
                 .withStyle(ChatFormatting.AQUA)
-                .append(new TextComponent(helpText).withStyle(ChatFormatting.WHITE));
+                .append(Component.literal(helpText).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }

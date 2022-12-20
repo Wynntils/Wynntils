@@ -17,12 +17,11 @@ import com.wynntils.gui.widgets.GuidesButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
     private final List<Screen> GUIDES = List.of(
@@ -32,7 +31,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
             WynntilsPowderGuideScreen.create());
 
     private WynntilsGuidesListScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
+        super(Component.translatable("screens.wynntils.wynntilsGuides.name"));
     }
 
     public static Screen create() {
@@ -40,15 +39,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         super.init();
 
         this.addRenderableWidget(new BackButton(

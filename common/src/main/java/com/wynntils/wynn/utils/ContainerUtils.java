@@ -37,14 +37,14 @@ public final class ContainerUtils {
     }
 
     public static boolean openInventory(int slotNum) {
-        int id = McUtils.containerMenu().containerId;
-        if (id != 0) {
+        int containerId = McUtils.containerMenu().containerId;
+        if (containerId != 0) {
             // Another inventory is already open, cannot do this
             return false;
         }
         int prevItem = McUtils.inventory().selected;
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(slotNum));
-        McUtils.sendPacket(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
+        McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
         return true;
     }
