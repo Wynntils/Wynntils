@@ -1,9 +1,21 @@
+## [0.0.2-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.4...v0.0.2-alpha.5) (2022-12-20)
+
+
+### Code Refactoring
+
+* Applying a bunch of fixes as suggested by Code Inspection in IntelliJ ([#899](https://github.com/Wynntils/Artemis/issues/899)) ([e74d4d4](https://github.com/Wynntils/Artemis/commit/e74d4d44a6ef03a2c3dcfa5f72478d5cdf5c39df))
+
 ## [0.0.2-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.3...v0.0.2-alpha.4) (2022-12-20)
 
 
 ### New Features
 
 * New approach at screen crash protection ([#896](https://github.com/Wynntils/Artemis/issues/896)) ([94efc58](https://github.com/Wynntils/Artemis/commit/94efc58b87141482dbb3bc5dd733991406f220e5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.4 [skip ci] ([e5d18d4](https://github.com/Wynntils/Artemis/commit/e5d18d4a6b5f2a6f97a694defeeb58e5d2d7d2fb))
 
 ## [0.0.2-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.2...v0.0.2-alpha.3) (2022-12-20)
 
@@ -35,13 +47,4 @@
 ### Miscellaneous Chores
 
 * Bump to v0.0.2-alpha.1 ([d41c4ab](https://github.com/Wynntils/Artemis/commit/d41c4abd8c01a4c665c5deb9aa4a21e1a4ea4fc9))
-
-## [0.0.1-alpha.211](https://github.com/Wynntils/Artemis/compare/v0.0.1-alpha.210...v0.0.1-alpha.211) (2022-12-20)
-
-
-### Miscellaneous Chores
-
-* Bump version to 0.1.0 ([cae88ab](https://github.com/Wynntils/Artemis/commit/cae88ab87f719b39b32953e72ce0118aa2c5b3ef))
-* **release:** v0.0.1-alpha.211 [skip ci] ([ecfa122](https://github.com/Wynntils/Artemis/commit/ecfa12236d671649852a33966a5ff5181522b82d))
-* Revert main version back, and clarify that this is an everchanging snapshot value ([c2edc4f](https://github.com/Wynntils/Artemis/commit/c2edc4ff156b9bdb036b10100a1d989dba7967b8))
 
