@@ -1,9 +1,21 @@
+## [0.0.2-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.8...v0.0.2-alpha.9) (2022-12-20)
+
+
+### Bug Fixes
+
+* WynntilsAccountManager's token users are now async ([#904](https://github.com/Wynntils/Artemis/issues/904)) ([82956a3](https://github.com/Wynntils/Artemis/commit/82956a3d105a6fcb1fdef1bf255ca86e861d6c51))
+
 ## [0.0.2-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.7...v0.0.2-alpha.8) (2022-12-20)
 
 
 ### Bug Fixes
 
 * Lootrun screen loading is now async, and is cached ([#902](https://github.com/Wynntils/Artemis/issues/902)) ([db2ce68](https://github.com/Wynntils/Artemis/commit/db2ce68403a49583ce55a5f50460e6bef3169110))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.8 [skip ci] ([b3bcc57](https://github.com/Wynntils/Artemis/commit/b3bcc573d4a735e15fbf160cb0c5cad40d9738a3))
 
 ## [0.0.2-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.6...v0.0.2-alpha.7) (2022-12-20)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.5 [skip ci] ([816c872](https://github.com/Wynntils/Artemis/commit/816c8722fa7c297cffcd162c999ea372a9a3901d))
-
-## [0.0.2-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.3...v0.0.2-alpha.4) (2022-12-20)
-
-
-### New Features
-
-* New approach at screen crash protection ([#896](https://github.com/Wynntils/Artemis/issues/896)) ([94efc58](https://github.com/Wynntils/Artemis/commit/94efc58b87141482dbb3bc5dd733991406f220e5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.4 [skip ci] ([e5d18d4](https://github.com/Wynntils/Artemis/commit/e5d18d4a6b5f2a6f97a694defeeb58e5d2d7d2fb))
 
