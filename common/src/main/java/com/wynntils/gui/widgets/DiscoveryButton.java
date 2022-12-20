@@ -24,7 +24,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class DiscoveryButton extends AbstractButton {
+public class DiscoveryButton extends AbstractButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
 
@@ -100,6 +100,7 @@ public class DiscoveryButton extends AbstractButton {
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
+    @Override
     public List<Component> getTooltipLines() {
         List<Component> lines = new ArrayList<>(discoveryInfo.getLore());
 

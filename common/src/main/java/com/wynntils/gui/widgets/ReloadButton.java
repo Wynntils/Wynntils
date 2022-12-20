@@ -7,11 +7,18 @@ package com.wynntils.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class ReloadButton extends AbstractButton {
+public class ReloadButton extends AbstractButton implements TooltipProvider {
+    private static final List<Component> RELOAD_TOOLTIP = List.of(
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
+                    .withStyle(ChatFormatting.WHITE),
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
+                    .withStyle(ChatFormatting.GRAY));
 
     private final Runnable onClickRunnable;
 
@@ -63,4 +70,9 @@ public class ReloadButton extends AbstractButton {
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    @Override
+    public List<Component> getTooltipLines() {
+        return RELOAD_TOOLTIP;
+    }
 }
