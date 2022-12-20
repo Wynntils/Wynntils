@@ -536,7 +536,7 @@ public final class LootrunModel extends Model {
         if (notesJson != null) {
             for (JsonElement element : notesJson) {
                 JsonObject noteJson = element.getAsJsonObject();
-                JsonObject positionJson = noteJson.getAsJsonObject("location");
+                JsonObject positionJson = noteJson.getAsJsonObject("position");
                 Vec3 position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
