@@ -22,7 +22,7 @@ import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
-    protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
