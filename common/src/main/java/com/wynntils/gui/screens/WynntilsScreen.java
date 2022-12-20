@@ -42,7 +42,7 @@ public abstract class WynntilsScreen extends Screen {
             super.render(poseStack, mouseX, mouseY, partialTick);
             safeRender(poseStack, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
-            failure("init", t);
+            failure("render", t);
         }
     }
 
