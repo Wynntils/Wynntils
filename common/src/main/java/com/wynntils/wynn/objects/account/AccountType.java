@@ -5,16 +5,16 @@
 package com.wynntils.wynn.objects.account;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public enum AccountType {
     NORMAL(null),
     BANNED(null),
-    DONATOR(new TextComponent("Wynntils Donator").withStyle(ChatFormatting.LIGHT_PURPLE)),
-    CONTENT_TEAM(new TextComponent("Wynntils CT").withStyle(ChatFormatting.DARK_AQUA)),
-    HELPER(new TextComponent("Wynntils Helper").withStyle(ChatFormatting.GREEN)),
-    MODERATOR(new TextComponent("Wynntils Developer")
+    DONATOR(Component.literal("Wynntils Donator").withStyle(ChatFormatting.LIGHT_PURPLE)),
+    CONTENT_TEAM(Component.literal("Wynntils CT").withStyle(ChatFormatting.DARK_AQUA)),
+    HELPER(Component.literal("Wynntils Helper").withStyle(ChatFormatting.GREEN)),
+    MODERATOR(Component.literal("Wynntils Developer")
             .withStyle(ChatFormatting.GOLD)
             .withStyle(ChatFormatting.BOLD));
 

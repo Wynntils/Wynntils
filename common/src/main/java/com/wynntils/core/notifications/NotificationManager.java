@@ -16,7 +16,6 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class NotificationManager {
@@ -107,6 +106,6 @@ public final class NotificationManager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(new TextComponent(msgContainer.getRenderTask().getText()), msgContainer.hashCode());
+                .addMessage(Component.literal(msgContainer.getRenderTask().getText()));
     }
 }

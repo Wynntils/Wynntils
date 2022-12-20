@@ -10,8 +10,9 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +34,14 @@ public class CommandAliasesFeature extends UserFeature {
     private final Type aliasesType = new TypeToken<List<CommandAlias>>() {}.getType();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatSend(ChatSentEvent e) {
-        String message = e.getMessage();
+    public void onCommandSent(CommandSentEvent e) {
+        String message = e.getCommand();
 
-        if (message.startsWith("/")) {
-            final String command = message.substring(1);
-            for (CommandAlias commandAlias : aliases) {
-                if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, command))) {
-                    e.setMessage("/" + commandAlias.getOriginalCommand());
-                    break;
-                }
+        for (CommandAlias commandAlias : aliases) {
+            if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
+                e.setCanceled(true);
+                McUtils.sendCommand(commandAlias.getOriginalCommand());
+                break;
             }
         }
     }

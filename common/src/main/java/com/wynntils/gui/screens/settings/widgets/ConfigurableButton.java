@@ -18,13 +18,13 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends AbstractButton {
     private final Configurable configurable;
 
     public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
-        super(x, y, width, height, new TextComponent(((Translatable) configurable).getTranslatedName()));
+        super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
         this.configurable = configurable;
     }
 
@@ -46,8 +46,8 @@ public class ConfigurableButton extends AbstractButton {
                 .renderText(
                         poseStack,
                         (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName(),
-                        this.x,
-                        this.y,
+                        this.getX(),
+                        this.getY(),
                         color,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
@@ -66,5 +66,5 @@ public class ConfigurableButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

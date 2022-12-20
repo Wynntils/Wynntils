@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public enum ItemTier {
     NORMAL(
@@ -133,7 +132,7 @@ public enum ItemTier {
     }
 
     public Component asLore() {
-        return new TextComponent(this + " Item").withStyle(chatFormatting);
+        return Component.literal(this + " Item").withStyle(chatFormatting);
     }
 
     @Override

@@ -16,9 +16,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class UpdatesFeature extends UserFeature {
@@ -66,7 +65,7 @@ public class UpdatesFeature extends UserFeature {
 
                         WynntilsMod.info("Attempting to auto-update.");
 
-                        McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.updates.updating")
+                        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
                         CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
@@ -74,16 +73,16 @@ public class UpdatesFeature extends UserFeature {
                         completableFuture.whenCompleteAsync((result, t) -> {
                             switch (result) {
                                 case SUCCESSFUL -> McUtils.sendMessageToClient(
-                                        new TranslatableComponent("feature.wynntils.updates.result.successful")
+                                        Component.translatable("feature.wynntils.updates.result.successful")
                                                 .withStyle(ChatFormatting.DARK_GREEN));
                                 case ERROR -> McUtils.sendMessageToClient(
-                                        new TranslatableComponent("feature.wynntils.updates.result.error")
+                                        Component.translatable("feature.wynntils.updates.result.error")
                                                 .withStyle(ChatFormatting.DARK_RED));
                                 case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                        new TranslatableComponent("feature.wynntils.updates.result.latest")
+                                        Component.translatable("feature.wynntils.updates.result.latest")
                                                 .withStyle(ChatFormatting.YELLOW));
                                 case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                                        new TranslatableComponent("feature.wynntils.updates.result.pending")
+                                        Component.translatable("feature.wynntils.updates.result.pending")
                                                 .withStyle(ChatFormatting.YELLOW));
                             }
                         });
@@ -92,20 +91,20 @@ public class UpdatesFeature extends UserFeature {
     }
 
     private static void remindToUpdateIfExists(String newVersion) {
-        MutableComponent clickable = new TranslatableComponent("feature.wynntils.updates.reminder.clickable");
+        MutableComponent clickable = Component.translatable("feature.wynntils.updates.reminder.clickable");
         clickable.setStyle(clickable
                 .getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/update"))
                 .withUnderlined(true)
                 .withBold(true));
 
-        McUtils.sendMessageToClient(new TextComponent("[Wynntils/Artemis]: ")
+        McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis]: ")
                 .withStyle(ChatFormatting.GREEN)
-                .append(new TranslatableComponent(
+                .append(Component.translatable(
                                 "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
                         .append(clickable)
-                        .append(new TextComponent("\n"))
-                        .append(new TranslatableComponent("feature.wynntils.updates.reminder.alpha"))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("feature.wynntils.updates.reminder.alpha"))
                         .withStyle(ChatFormatting.GREEN)));
     }
 }

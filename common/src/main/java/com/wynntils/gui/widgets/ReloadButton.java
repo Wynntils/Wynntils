@@ -7,16 +7,23 @@ package com.wynntils.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
-public class ReloadButton extends AbstractButton {
+public class ReloadButton extends AbstractButton implements TooltipProvider {
+    private static final List<Component> RELOAD_TOOLTIP = List.of(
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
+                    .withStyle(ChatFormatting.WHITE),
+            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
+                    .withStyle(ChatFormatting.GRAY));
 
     private final Runnable onClickRunnable;
 
     public ReloadButton(int x, int y, int width, int height, Runnable onClickRunnable) {
-        super(x, y, width, height, new TextComponent("Reload Button"));
+        super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
     }
 
@@ -27,8 +34,8 @@ public class ReloadButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     reloadButton.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -42,8 +49,8 @@ public class ReloadButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     reloadButton.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -62,5 +69,10 @@ public class ReloadButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    @Override
+    public List<Component> getTooltipLines() {
+        return RELOAD_TOOLTIP;
+    }
 }

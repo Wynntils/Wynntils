@@ -17,14 +17,14 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabButton extends AbstractButton {
     private final ChatTab tab;
 
     public ChatTabButton(int x, int y, int width, int height, ChatTab tab) {
-        super(x, y, width, height, new TextComponent("Chat Tab Button"));
+        super(x, y, width, height, Component.literal("Chat Tab Button"));
         this.tab = tab;
     }
 
@@ -32,7 +32,8 @@ public class ChatTabButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (tab == null) return;
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         CustomColor color = Models.ChatTab.getFocusedTab() == tab
                 ? CommonColors.GREEN
@@ -41,10 +42,10 @@ public class ChatTabButton extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         tab.getName(),
-                        x + 1,
-                        x + width,
-                        y + 1,
-                        y + height,
+                        getX() + 1,
+                        getX() + width,
+                        getY() + 1,
+                        getY() + height,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -69,5 +70,5 @@ public class ChatTabButton extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

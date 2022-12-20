@@ -27,8 +27,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
@@ -38,17 +36,11 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     private List<GearItemStack> parsedItemCache;
 
     private WynntilsItemGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.name"));
+        super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
     }
 
     public static Screen create() {
         return new WynntilsItemGuideScreen();
-    }
-
-    @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
     }
 
     @Override
@@ -58,8 +50,6 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
                     .map(GearItemStack::new)
                     .toList();
         }
-
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
 
         super.init();
 
@@ -116,16 +106,16 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
             GearItemStack itemStack = guideGearItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
-            tooltipLines.add(TextComponent.EMPTY);
+            tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                         .withStyle(ChatFormatting.GREEN));
             }
-            tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.open")
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
                     .withStyle(ChatFormatting.RED));
             RenderUtils.drawTooltipAt(
                     poseStack,

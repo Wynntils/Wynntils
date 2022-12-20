@@ -7,6 +7,7 @@ package com.wynntils.wynn.model;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.objects.ChatType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.event.SpellCastedEvent;
@@ -15,10 +16,8 @@ import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarModel extends Model {
@@ -88,7 +87,7 @@ public final class ActionBarModel extends Model {
         WynntilsMod.postEvent(healthText);
         WynntilsMod.postEvent(manaText);
 
-        MutableComponent modified = new TextComponent(healthText.getMessage())
+        MutableComponent modified = Component.literal(healthText.getMessage())
                 .append("    ")
                 .append(actionText.getMessage())
                 .append("    ")

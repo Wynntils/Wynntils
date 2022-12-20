@@ -16,19 +16,17 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class PlayButton extends AbstractButton {
     private static final List<Component> TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.playButton.play")
+            Component.translatable("screens.wynntils.characterSelection.playButton.play")
                     .withStyle(ChatFormatting.GREEN),
-            new TranslatableComponent("screens.wynntils.characterSelection.playButton.description")
+            Component.translatable("screens.wynntils.characterSelection.playButton.description")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public PlayButton(int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Play Button"));
+        super(x, y, width, height, Component.literal("Play Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 
@@ -45,8 +43,8 @@ public class PlayButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.PLAY_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -75,5 +73,5 @@ public class PlayButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

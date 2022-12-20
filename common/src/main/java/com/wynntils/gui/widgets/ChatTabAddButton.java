@@ -14,25 +14,26 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ChatTabAddButton extends AbstractButton {
     public ChatTabAddButton(int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("Chat Tab Add Button"));
+        super(x, y, width, height, Component.literal("Chat Tab Add Button"));
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), x, y, 0, width, height);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         "+",
-                        x + 1,
-                        x + width,
-                        y + 1,
-                        y + height,
+                        getX() + 1,
+                        getX() + width,
+                        getY() + 1,
+                        getY() + height,
                         0,
                         CommonColors.ORANGE,
                         HorizontalAlignment.Center,
@@ -46,5 +47,5 @@ public class ChatTabAddButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

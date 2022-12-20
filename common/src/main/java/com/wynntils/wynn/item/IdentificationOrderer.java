@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class IdentificationOrderer {
     public static IdentificationOrderer INSTANCE = new IdentificationOrderer(null, null, null);
@@ -76,7 +75,7 @@ public class IdentificationOrderer {
 
                 if (currentGroup != lastGroup)
                     result.add(ItemUtils.toLoreStringTag(
-                            new TextComponent(" "))); // adds a space before if the group is different
+                            Component.literal(" "))); // adds a space before if the group is different
 
                 result.add(keys.getValue());
                 lastGroup = currentGroup;
@@ -111,7 +110,7 @@ public class IdentificationOrderer {
                 int currentGroup = getGroup(keys.getKey()); // next key group
 
                 if (currentGroup != lastGroup)
-                    result.add(new TextComponent(" ")); // adds a space before if the group is different
+                    result.add(Component.literal(" ")); // adds a space before if the group is different
 
                 result.add(keys.getValue());
                 lastGroup = currentGroup;
