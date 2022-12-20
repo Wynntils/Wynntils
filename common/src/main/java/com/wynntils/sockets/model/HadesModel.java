@@ -135,20 +135,22 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD && isSocketOpen() && firstWorldJoin) {
+        if (event.getNewState() == WorldStateManager.State.WORLD && firstWorldJoin) {
             firstWorldJoin = false;
 
-            // FIXME: Use the proper reload command here, once they are reworked
-            MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
-                    .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reload")
-                    .withStyle(Style.EMPTY
-                            .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+            if (!isSocketOpen()) {
+                // FIXME: Use the proper reload command here, once they are reworked
+                MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
+                        .withStyle(ChatFormatting.GREEN);
+                failed.append(Component.literal("/wynntils reload")
+                        .withStyle(Style.EMPTY
+                                .withColor(ChatFormatting.AQUA)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
 
-            McUtils.sendMessageToClient(failed);
+                McUtils.sendMessageToClient(failed);
 
-            return;
+                return;
+            }
         }
 
         tryResendWorldData();
