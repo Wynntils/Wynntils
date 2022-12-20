@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
@@ -45,6 +44,7 @@ import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -52,6 +52,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
@@ -102,7 +103,7 @@ public final class LootrunModel extends Model {
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.options().renderDistance;
+        int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
@@ -372,9 +373,9 @@ public final class LootrunModel extends Model {
         List<Path> result = new ArrayList<>();
         for (Path current : vec3s) {
             float distance = 0f;
-            CubicSpline.Builder<Float> builderX = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderY = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderZ = CubicSpline.builder((value) -> value);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
@@ -394,9 +395,9 @@ public final class LootrunModel extends Model {
                 builderY.addPoint(distance, (float) vec3.y, slopeY);
                 builderZ.addPoint(distance, (float) vec3.z, slopeZ);
             }
-            CubicSpline<Float> splineX = builderX.build();
-            CubicSpline<Float> splineY = builderY.build();
-            CubicSpline<Float> splineZ = builderZ.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineZ = builderZ.build();
 
             Path newResult = new Path(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {

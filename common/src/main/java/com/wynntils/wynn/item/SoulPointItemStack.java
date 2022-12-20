@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -31,13 +29,13 @@ public class SoulPointItemStack extends WynnItemStack {
         if (SoulPointTimerFeature.INSTANCE.isEnabled()) {
             List<Component> copy = new ArrayList<>(tooltip);
 
-            copy.add(new TextComponent(" "));
+            copy.add(Component.literal(" "));
 
             int rawSecondsUntilSoulPoint = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
-            copy.add(new TranslatableComponent(
+            copy.add(Component.translatable(
                             "feature.wynntils.soulPointTimer.lore",
                             ChatFormatting.WHITE
                                     + String.format("%d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))

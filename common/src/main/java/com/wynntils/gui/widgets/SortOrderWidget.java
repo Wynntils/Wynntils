@@ -11,13 +11,13 @@ import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends AbstractButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public SortOrderWidget(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
-        super(x, y, width, height, new TextComponent("Sort Order Button"));
+        super(x, y, width, height, Component.literal("Sort Order Button"));
         this.questBookScreen = questBookScreen;
     }
 
@@ -41,8 +41,8 @@ public class SortOrderWidget extends AbstractButton {
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
                 };
 
-        float renderX = this.x;
-        float renderY = this.y;
+        float renderX = this.getX();
+        float renderY = this.getY();
 
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
@@ -78,5 +78,5 @@ public class SortOrderWidget extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

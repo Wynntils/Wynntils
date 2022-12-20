@@ -15,20 +15,19 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class ClassSelectionEditButton extends AbstractButton {
     private static final List<Component> TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.edit.name").withStyle(ChatFormatting.YELLOW),
-            new TranslatableComponent("screens.wynntils.characterSelection.edit.discussion")
+            Component.translatable("screens.wynntils.characterSelection.edit.name")
+                    .withStyle(ChatFormatting.YELLOW),
+            Component.translatable("screens.wynntils.characterSelection.edit.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public ClassSelectionEditButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Selection Edit Button"));
+        super(x, y, width, height, Component.literal("Class Selection Edit Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 
@@ -45,8 +44,8 @@ public class ClassSelectionEditButton extends AbstractButton {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.EDIT_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -66,5 +65,5 @@ public class ClassSelectionEditButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

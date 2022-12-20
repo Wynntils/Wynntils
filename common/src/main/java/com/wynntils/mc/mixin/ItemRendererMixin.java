@@ -17,13 +17,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
-public class ItemRendererMixin {
+public abstract class ItemRendererMixin {
 
     @Inject(
             method = "render",
             at =
                     @At(
-                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
                             shift = At.Shift.BEFORE,
                             value = "INVOKE"))
     public void onRenderItem(

@@ -20,7 +20,7 @@ import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuideEmeraldPouchItemStack extends AbstractButton {
@@ -34,7 +34,7 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
             int height,
             EmeraldPouchItemStack itemStack,
             WynntilsEmeraldPouchGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide EmeraldPouchItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }
@@ -43,8 +43,8 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + getX();
+        float actualY = screen.getTranslationY() + getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -65,9 +65,9 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         MathUtils.toRoman(itemStack.getTier()),
-                        x + 2,
-                        x + 14,
-                        y + 8,
+                        getX() + 2,
+                        getX() + 14,
+                        getY() + 8,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -79,8 +79,8 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    getX() + 12,
+                    getY() - 4,
                     200,
                     9,
                     9,
@@ -114,7 +114,7 @@ public class GuideEmeraldPouchItemStack extends AbstractButton {
     public void onPress() {}
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public EmeraldPouchItemStack getItemStack() {
         return itemStack;

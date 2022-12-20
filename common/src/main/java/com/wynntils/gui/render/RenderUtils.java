@@ -16,8 +16,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import java.awt.Image;
@@ -40,6 +38,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
@@ -170,8 +170,7 @@ public final class RenderUtils {
                     .endVertex();
         }
 
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -212,8 +211,8 @@ public final class RenderUtils {
                 .vertex(matrix, x, y, z)
                 .color(color.r, color.g, color.b, color.a)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -313,8 +312,7 @@ public final class RenderUtils {
                 .vertex(matrix, x, y, z)
                 .uv(uOffset * uScale, vOffset * vScale)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void drawScalingTexturedRect(
@@ -404,8 +402,7 @@ public final class RenderUtils {
                 .uv(uOffset * uScale, vOffset * vScale)
                 .color(color.r, color.g, color.b, color.a)
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -455,8 +452,7 @@ public final class RenderUtils {
                     .endVertex();
         }
 
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
 
@@ -633,8 +629,7 @@ public final class RenderUtils {
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();
 
@@ -830,8 +825,7 @@ public final class RenderUtils {
         bufferBuilder.vertex(matrix, xMin, yMax, 0).uv(txMin, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMax, 0).uv(txMax, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMin, 0).uv(txMax, tyMin).endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     private static void drawProgressBarForegroundWithColor(
@@ -899,8 +893,7 @@ public final class RenderUtils {
                 .uv(txMax, tyMin)
                 .color(customColor.asInt())
                 .endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void drawProgressBarBackground(
@@ -934,8 +927,7 @@ public final class RenderUtils {
         bufferBuilder.vertex(matrix, xMin, yMax, 0).uv(txMin, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMax, 0).uv(txMax, tyMax).endVertex();
         bufferBuilder.vertex(matrix, xMax, yMin, 0).uv(txMax, tyMin).endVertex();
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void fillGradient(
@@ -996,7 +988,7 @@ public final class RenderUtils {
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
         poseStack.translate(centerX, centerZ, 0);
         // See Quaternion#fromXYZ
-        poseStack.mulPose(new Quaternion(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
+        poseStack.mulPose(new Quaternionf(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
                 StrictMath.cos(-Math.toRadians(angle) / 2)));
         poseStack.translate(-centerX, -centerZ, 0);
     }

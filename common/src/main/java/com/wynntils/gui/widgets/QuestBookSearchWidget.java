@@ -34,9 +34,9 @@ public class QuestBookSearchWidget extends SearchWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         defaultText ? DEFAULT_TEXT.getString() : renderedText,
-                        this.x + 17,
-                        this.x + this.width - 5,
-                        this.y + 11f,
+                        this.getX() + 17,
+                        this.getX() + this.width - 5,
+                        this.getY() + 11f,
                         this.width,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
@@ -48,8 +48,8 @@ public class QuestBookSearchWidget extends SearchWidget {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.QUEST_BOOK_SEARCH.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,

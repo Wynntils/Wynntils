@@ -26,8 +26,7 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabEditingScreen extends Screen implements TextboxScreen {
@@ -51,7 +50,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     }
 
     private ChatTabEditingScreen(ChatTab tab) {
-        super(new TextComponent("Chat Tab Editing Screen"));
+        super(Component.literal("Chat Tab Editing Screen"));
 
         this.edited = tab;
         this.firstSetup = true;
@@ -137,7 +136,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                             || edited.getFilteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
-            Checkbox newBox = new Checkbox(x, y, 20, 20, new TextComponent(type.getName()), ticked, true);
+            Checkbox newBox = new Checkbox(x, y, 20, 20, Component.literal(type.getName()), ticked, true);
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
 
@@ -162,7 +161,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                         this.height / 2 + 75,
                         20,
                         20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.consuming"),
+                        Component.translatable("screens.wynntils.chatTabsGui.consuming"),
                         consumingCheckbox != null && consumingCheckbox.selected(),
                         true));
         if (firstSetup && edited != null) {
@@ -172,38 +171,34 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                saveButton = new Button(
-                        this.width / 2 - 200,
-                        this.height - 40,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.save")
-                                .withStyle(ChatFormatting.DARK_GREEN),
-                        (button) -> {
-                            saveChatTab();
-                            this.onClose();
-                        }));
+                saveButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.chatTabsGui.save")
+                                        .withStyle(ChatFormatting.DARK_GREEN),
+                                (button) -> {
+                                    saveChatTab();
+                                    this.onClose();
+                                })
+                        .pos(this.width / 2 - 200, this.height - 40)
+                        .size(100, 20)
+                        .build());
 
         this.addRenderableWidget(
-                deleteButton = new Button(
-                        this.width / 2 - 50,
-                        this.height - 40,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.delete")
-                                .withStyle(ChatFormatting.DARK_RED),
-                        (button) -> {
-                            deleteChatTab();
-                            this.onClose();
-                        }));
+                deleteButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.chatTabsGui.delete")
+                                        .withStyle(ChatFormatting.DARK_RED),
+                                (button) -> {
+                                    deleteChatTab();
+                                    this.onClose();
+                                })
+                        .pos(this.width / 2 - 50, this.height - 40)
+                        .size(100, 20)
+                        .build());
 
-        this.addRenderableWidget(new Button(
-                this.width / 2 + 100,
-                this.height - 40,
-                100,
-                20,
-                new TranslatableComponent("screens.wynntils.chatTabsGui.cancel"),
-                (button) -> this.onClose()));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
+                .pos(this.width / 2 + 100, this.height - 40)
+                .size(100, 20)
+                .build());
         // endregion
 
         firstSetup = false;

@@ -16,7 +16,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -50,9 +49,9 @@ public class HealthPotionBlockerFeature extends UserFeature {
         if (Models.ActionBar.getCurrentHealth() * 100 < Models.ActionBar.getMaxHealth() * threshold) return null;
 
         if (threshold < 100)
-            return new TranslatableComponent("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
+            return Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
                     .withStyle(ChatFormatting.RED);
-        return new TranslatableComponent("feature.wynntils.healthPotionBlocker.healthFull")
+        return Component.translatable("feature.wynntils.healthPotionBlocker.healthFull")
                 .withStyle(ChatFormatting.RED);
     }
 }
