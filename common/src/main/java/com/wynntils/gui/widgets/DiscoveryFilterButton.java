@@ -12,11 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class DiscoveryFilterButton extends AbstractButton implements TooltipProvider {
+public class DiscoveryFilterButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor BUTTON_COLOR_ENABLED = new CustomColor(164, 212, 142);
@@ -126,7 +124,4 @@ public class DiscoveryFilterButton extends AbstractButton implements TooltipProv
     public void onPress() {
         onPress.run();
     }
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

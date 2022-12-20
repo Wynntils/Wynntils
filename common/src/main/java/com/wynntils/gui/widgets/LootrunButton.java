@@ -21,13 +21,11 @@ import com.wynntils.wynn.model.LootrunModel;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
-public class LootrunButton extends AbstractButton {
+public class LootrunButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
@@ -104,9 +102,6 @@ public class LootrunButton extends AbstractButton {
     // Not called
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void tryDeleteLootrun() {
         File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");

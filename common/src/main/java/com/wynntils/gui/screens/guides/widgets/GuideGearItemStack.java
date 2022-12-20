@@ -11,17 +11,16 @@ import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import java.util.Map;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideGearItemStack extends AbstractButton {
+public class GuideGearItemStack extends WynntilsButton {
     private final GearItemStack itemStack;
     private final WynntilsItemGuideScreen screen;
 
@@ -93,9 +92,6 @@ public class GuideGearItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public GearItemStack getItemStack() {
         return itemStack;
