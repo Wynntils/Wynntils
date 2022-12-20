@@ -23,6 +23,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.HadesClientHandler;
 import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.objects.PlayerStatus;
+import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -47,7 +48,9 @@ public final class HadesModel extends Model {
 
     @Override
     public void init() {
-        tryCreateConnection();
+        if (Managers.WynntilsAccount.isLoggedIn()) {
+            tryCreateConnection();
+        }
     }
 
     @Override
@@ -55,12 +58,15 @@ public final class HadesModel extends Model {
         tryDisconnect();
     }
 
-    private void tryCreateConnection() {
-        if (!Managers.WynntilsAccount.isLoggedIn()) {
-            WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
-            return;
+    @SubscribeEvent
+    public void onAthenaLoginEvent(AthenaLoginEvent event) {
+        // Try to log in to Hades, if we're not already connected
+        if (hadesConnection == null || !hadesConnection.isOpen()) {
+            tryCreateConnection();
         }
+    }
 
+    private void tryCreateConnection() {
         try {
             hadesConnection = new HadesNetworkBuilder()
                     .setAddress(InetAddress.getByName("io.wynntils.com"), 9000)
