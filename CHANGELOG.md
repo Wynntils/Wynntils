@@ -1,9 +1,17 @@
+## [0.0.2-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.6...v0.0.2-alpha.7) (2022-12-20)
+
+
+### Bug Fixes
+
+* Do not do number formatting on info variables ([#903](https://github.com/Wynntils/Artemis/issues/903)) ([89db0d6](https://github.com/Wynntils/Artemis/commit/89db0d6e3419bc5ea5898e6e949ac860b7b24797))
+
 ## [0.0.2-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.5...v0.0.2-alpha.6) (2022-12-20)
 
 
 ### Miscellaneous Chores
 
 * rebuild with bug ([97763e2](https://github.com/Wynntils/Artemis/commit/97763e24375ba871dfa376b336b166fadb5cdbfc))
+* **release:** v0.0.2-alpha.6 [skip ci] ([e620db0](https://github.com/Wynntils/Artemis/commit/e620db02b107e725065aa1563cd6340e290d7137))
 
 ## [0.0.2-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.4...v0.0.2-alpha.5) (2022-12-20)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.3 [skip ci] ([ac3b51b](https://github.com/Wynntils/Artemis/commit/ac3b51be41bc7a92341565e80b37fa3fd5958281))
-
-## [0.0.2-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.1...v0.0.2-alpha.2) (2022-12-20)
-
-
-### Code Refactoring
-
-* Improve OOP design by introducing TooltipProvider ([#895](https://github.com/Wynntils/Artemis/issues/895)) ([aa0e00a](https://github.com/Wynntils/Artemis/commit/aa0e00aa42736db24e1d29845256d845333e8eb5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.2 [skip ci] ([f7e7b40](https://github.com/Wynntils/Artemis/commit/f7e7b406e94805dfe70be187960c0b05072b4b5e))
 
