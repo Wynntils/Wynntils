@@ -15,7 +15,6 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -158,11 +157,6 @@ public final class FunctionManager extends Manager {
     }
 
     private String format(Object value) {
-        if (value instanceof Number number) {
-            // French locale has NBSP
-            // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
-            return NumberFormat.getInstance().format(number).replaceAll("\u00A0", " ");
-        }
         return value.toString();
     }
 
