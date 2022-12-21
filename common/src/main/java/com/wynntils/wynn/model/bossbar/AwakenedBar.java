@@ -9,7 +9,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class AwakenedBar extends TrackedBar {
+public final class AwakenedBar extends TrackedBar {
     public AwakenedBar() {
         super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), BossBarModel.AWAKENED);
     }

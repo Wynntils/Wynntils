@@ -9,7 +9,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class FocusBar extends TrackedBar {
+public final class FocusBar extends TrackedBar {
     public FocusBar() {
         super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BossBarModel.FOCUS);
     }

@@ -9,7 +9,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class BloodPoolBar extends TrackedBar {
+public final class BloodPoolBar extends TrackedBar {
     public BloodPoolBar() {
         super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), BossBarModel.BLOODPOOL);
     }

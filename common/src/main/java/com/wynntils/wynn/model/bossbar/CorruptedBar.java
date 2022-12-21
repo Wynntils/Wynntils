@@ -9,7 +9,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class CorruptedBar extends TrackedBar {
+public final class CorruptedBar extends TrackedBar {
     public CorruptedBar() {
         super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BossBarModel.CORRUPTED);
     }

@@ -9,7 +9,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class ManaBankBar extends TrackedBar {
+public final class ManaBankBar extends TrackedBar {
     public ManaBankBar() {
         super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), BossBarModel.MANABANK);
     }
