@@ -6,7 +6,7 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.managers.Model;
 import com.wynntils.handlers.chat.RecipientType;
-import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.utils.Pair;

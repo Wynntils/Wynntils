@@ -9,7 +9,7 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.handlers.chat.MessageType;
-import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.events.SocketEvent;

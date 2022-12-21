@@ -10,7 +10,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
-import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;

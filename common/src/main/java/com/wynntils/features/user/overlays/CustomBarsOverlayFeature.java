@@ -25,7 +25,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.bossbar.BossBarProgress;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
+import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;

@@ -6,7 +6,7 @@ package com.wynntils.handlers.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Handler;
-import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
+import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
