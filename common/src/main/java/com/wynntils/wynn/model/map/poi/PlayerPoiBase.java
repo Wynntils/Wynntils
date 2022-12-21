@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
-import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.core.net.hades.objects.HadesUser;
 
 public abstract class PlayerPoiBase implements Poi {
     private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 20;

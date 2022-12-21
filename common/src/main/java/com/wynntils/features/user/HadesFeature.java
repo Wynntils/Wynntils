@@ -29,10 +29,12 @@ public class HadesFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        // SocketModel
-        //      needs ActionBarModel for updating player info
+        // We need:
+        //      HadesModel to communicate with Hades server
         //      HadesUserModel for storing remote HadesUser info
         //      PlayerRelationsModel to parse player relations
+        // Inter-model dependencies, that cannot be tracked otherwise:
+        //      HadesModel needs ActionBarModel for updating player info
         return List.of(Models.Hades, Models.PlayerRelations, Models.HadesUser, Models.ActionBar);
     }
 

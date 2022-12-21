@@ -2,12 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.sockets.model;
+package com.wynntils.core.net.hades.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
+import com.wynntils.core.net.hades.HadesClientHandler;
+import com.wynntils.core.net.hades.event.HadesEvent;
+import com.wynntils.core.net.hades.objects.PlayerStatus;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -20,9 +23,6 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.HadesClientHandler;
-import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.sockets.objects.PlayerStatus;
 import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
@@ -66,7 +66,7 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onAthenaLoginEvent(AthenaLoginEvent event) {
         // Try to log in to Hades, if we're not already connected
-        if (!isSocketOpen()) {
+        if (!isConnected()) {
             tryCreateConnection();
         }
     }
@@ -94,25 +94,25 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(HadesEvent.Authenticated event) {
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
         pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
     @SubscribeEvent
-    public void onDisconnect(SocketEvent.Disconnected event) {
+    public void onDisconnect(HadesEvent.Disconnected event) {
         pingScheduler.shutdown();
     }
 
     private void sendPing() {
-        if (!isSocketOpen()) return;
+        if (!isConnected()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketPing(System.currentTimeMillis()));
     }
 
     @SubscribeEvent
     public void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
-        if (!HadesFeature.INSTANCE.shareWithFriends || !isSocketOpen()) return;
+        if (!HadesFeature.INSTANCE.shareWithFriends || !isConnected()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -122,7 +122,7 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
-        if (!HadesFeature.INSTANCE.shareWithParty || !isSocketOpen()) return;
+        if (!HadesFeature.INSTANCE.shareWithParty || !isConnected()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -133,7 +133,7 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.isFirstJoinWorld()) {
-            if (!isSocketOpen()) {
+            if (!isConnected()) {
                 // FIXME: Use the proper reload command here, once they are reworked
                 MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
                         .withStyle(ChatFormatting.GREEN);
@@ -158,7 +158,7 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.End event) {
-        if (!isSocketOpen()) return;
+        if (!isConnected()) return;
         if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
@@ -209,7 +209,7 @@ public final class HadesModel extends Model {
     }
 
     public void tryResendWorldData() {
-        if (!isSocketOpen()) return;
+        if (!isConnected()) return;
 
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
                 Managers.WorldState.getCurrentWorldName(),
@@ -217,12 +217,12 @@ public final class HadesModel extends Model {
     }
 
     public void resetSocialType(SocialType socialType) {
-        if (!isSocketOpen()) return;
+        if (!isConnected()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
     }
 
-    private boolean isSocketOpen() {
+    private boolean isConnected() {
         return hadesConnection != null && hadesConnection.isOpen();
     }
 }

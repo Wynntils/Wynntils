@@ -5,9 +5,9 @@
 package com.wynntils.core.managers;
 
 import com.wynntils.core.chat.tabs.ChatTabModel;
+import com.wynntils.core.net.hades.model.HadesModel;
+import com.wynntils.core.net.hades.model.HadesUserModel;
 import com.wynntils.core.services.TranslationModel;
-import com.wynntils.sockets.model.HadesModel;
-import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.BombBellModel;
 import com.wynntils.wynn.model.ChatItemModel;
