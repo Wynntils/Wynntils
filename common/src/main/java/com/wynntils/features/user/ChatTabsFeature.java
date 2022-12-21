@@ -6,7 +6,7 @@ package com.wynntils.features.user;
 
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -22,7 +22,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.lang.reflect.Type;

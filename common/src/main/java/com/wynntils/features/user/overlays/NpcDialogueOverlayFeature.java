@@ -31,7 +31,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.NpcDialogEvent;
+import com.wynntils.handlers.chat.events.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.LinkedList;
 import java.util.List;

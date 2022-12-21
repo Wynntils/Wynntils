@@ -4,9 +4,9 @@
  */
 package com.wynntils.core.chat.tabs;
 
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;

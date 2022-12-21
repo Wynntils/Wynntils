@@ -5,7 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Models;

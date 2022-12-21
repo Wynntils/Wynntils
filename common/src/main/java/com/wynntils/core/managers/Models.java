@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.managers;
 
-import com.wynntils.core.chat.ChatModel;
+import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.core.chat.tabs.ChatTabModel;
 import com.wynntils.core.services.TranslationModel;
 import com.wynntils.sockets.model.HadesModel;
@@ -58,7 +58,7 @@ public final class Models {
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final ChatItemModel ChatItem = new ChatItemModel();
-    public static final ChatModel Chat = new ChatModel();
+    public static final ChatHandler Chat = new ChatHandler();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ConsumableChargePropertyModel ConsumableChargeProperty = new ConsumableChargePropertyModel();

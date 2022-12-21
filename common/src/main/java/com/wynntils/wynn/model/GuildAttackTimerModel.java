@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.core.managers.Model;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.guild.GuildAttackListener;

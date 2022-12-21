@@ -11,7 +11,7 @@ import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

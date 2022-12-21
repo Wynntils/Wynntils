@@ -10,7 +10,7 @@ import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.List;

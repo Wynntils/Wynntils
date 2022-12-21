@@ -5,7 +5,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -14,8 +14,8 @@ import com.wynntils.core.managers.Models;
 import com.wynntils.core.services.TranslationModel;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.event.NpcDialogEvent;
+import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.events.NpcDialogEvent;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
