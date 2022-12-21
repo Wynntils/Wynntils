@@ -21,7 +21,7 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;

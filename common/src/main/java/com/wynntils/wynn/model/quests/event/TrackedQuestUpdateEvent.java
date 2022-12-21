@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.event;
+package com.wynntils.wynn.model.quests.event;
 
 import com.wynntils.wynn.model.quests.QuestInfo;
 import net.minecraftforge.eventbus.api.Event;
