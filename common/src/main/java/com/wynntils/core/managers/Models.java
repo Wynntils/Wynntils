@@ -12,7 +12,7 @@ import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.BombBellModel;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
+import com.wynntils.wynn.model.guild.GuildAttackTimerModel;
 import com.wynntils.wynn.model.LootChestModel;
 import com.wynntils.wynn.model.LootrunModel;
 import com.wynntils.wynn.model.PlayerInventoryModel;
