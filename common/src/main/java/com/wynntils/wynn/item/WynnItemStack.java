@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag.Default;
+import net.minecraft.world.item.TooltipFlag;
 
 public class WynnItemStack extends ItemStack {
     protected final String itemName;
@@ -31,7 +31,7 @@ public class WynnItemStack extends ItemStack {
     }
 
     public List<Component> getOriginalTooltip() {
-        return super.getTooltipLines(null, Default.NORMAL);
+        return super.getTooltipLines(null, TooltipFlag.NORMAL);
     }
 
     public void addProperty(ItemProperty property) {

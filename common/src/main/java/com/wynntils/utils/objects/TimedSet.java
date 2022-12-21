@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class TimedSet<T> implements Iterable<T> {
-    private final Set<TimedEntry> ENTRIES = new HashSet<>();
+    private final Set<TimedEntry> entries = new HashSet<>();
 
     long timeJump;
     boolean autoClear;
@@ -25,7 +25,7 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public void releaseEntries() {
-        Iterator<TimedEntry> it = ENTRIES.iterator();
+        Iterator<TimedEntry> it = entries.iterator();
         while (it.hasNext()) {
             TimedEntry entry = it.next();
             if (!entry.shouldRelease()) continue;
@@ -35,15 +35,15 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public void put(T entry) {
-        ENTRIES.add(new TimedEntry(entry, System.currentTimeMillis() + timeJump));
+        entries.add(new TimedEntry(entry, System.currentTimeMillis() + timeJump));
     }
 
     public void clear() {
-        ENTRIES.clear();
+        entries.clear();
     }
 
     public int size() {
-        return ENTRIES.size();
+        return entries.size();
     }
 
     public boolean isEmpty() {
@@ -58,24 +58,24 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     private class TimedSetIterator implements Iterator<T> {
-        final Iterator<TimedEntry> ORIGINAL = ENTRIES.iterator();
+        private final Iterator<TimedEntry> original = entries.iterator();
 
         @Override
         public boolean hasNext() {
-            return ORIGINAL.hasNext();
+            return original.hasNext();
         }
 
         @Override
         public T next() {
-            return ORIGINAL.next().getEntry();
+            return original.next().getEntry();
         }
     }
 
-    private class TimedEntry {
+    private final class TimedEntry {
         T entry;
         long expiration;
 
-        public TimedEntry(T entry, long expiration) {
+        private TimedEntry(T entry, long expiration) {
             this.entry = entry;
             this.expiration = expiration;
         }

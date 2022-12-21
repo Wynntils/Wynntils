@@ -34,7 +34,7 @@ public final class ItemProfilesManager extends Manager {
     private HashMap<String, ItemProfile> items = new HashMap<>();
     private Collection<ItemProfile> directItems = new ArrayList<>();
     private HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private HashMap<String, String> translatedReferences = new HashMap<>();
+    private Map<String, String> translatedReferences = new HashMap<>();
     private HashMap<String, String> internalIdentifications = new HashMap<>();
     private HashMap<String, MajorIdentification> majorIds = new HashMap<>();
     private HashMap<ItemType, String[]> materialTypes = new HashMap<>();

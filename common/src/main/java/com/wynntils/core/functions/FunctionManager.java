@@ -51,9 +51,6 @@ public final class FunctionManager extends Manager {
             if (function instanceof DependantFunction<?> dependantFunction) {
                 ModelRegistry.addAllDependencies(dependantFunction);
             }
-            if (function instanceof ActiveFunction<?> activeFunction) {
-                activeFunction.init();
-            }
         }
     }
 
@@ -82,7 +79,6 @@ public final class FunctionManager extends Manager {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
         WynntilsMod.unregisterEventListener(activeFunction);
-        activeFunction.onDisable();
         enabledFunctions.remove(activeFunction);
     }
 

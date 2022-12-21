@@ -58,7 +58,7 @@ public class Download extends NetResult {
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
             // File is already in downloaded, just read from the cache
-            return CompletableFuture.supplyAsync(() -> getFileInputStreamFromCache());
+            return CompletableFuture.supplyAsync(this::getFileInputStreamFromCache);
         } else {
             prepareForDownload();
             return getDownloadInputStreamFuture().thenApply(response -> getFileInputStreamFromCache());

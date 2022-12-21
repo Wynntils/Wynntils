@@ -22,7 +22,7 @@ import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
-    protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
@@ -121,7 +121,7 @@ public final class NetManager extends Manager {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
             JsonObject jsonArgs = new JsonObject();
-            arguments.forEach((key, value) -> jsonArgs.addProperty(key, value));
+            arguments.forEach(jsonArgs::addProperty);
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);
