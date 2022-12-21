@@ -12,10 +12,9 @@ import com.wynntils.mc.objects.ChatType;
 import com.wynntils.wynn.event.SpellCastedEvent;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.utils.WynnUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class SpellModel extends Model {
     private static final Pattern SPELL_PATTERN =

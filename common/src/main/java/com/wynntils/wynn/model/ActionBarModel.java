@@ -12,12 +12,11 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class ActionBarModel extends Model {
     private static final Pattern ACTIONBAR_PATTERN =
