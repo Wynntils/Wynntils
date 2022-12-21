@@ -60,11 +60,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
                 break;
             }
         }
-
         if (levelRange == null) return;
-        if (Managers.ItemProfiles.getItemGuesses() == null) return;
 
-        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuess(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);

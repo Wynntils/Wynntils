@@ -32,7 +32,7 @@ public final class ItemProfilesManager extends Manager {
             .create();
 
     private Map<String, ItemProfile> items = Map.of();
-    private Map<String, ItemGuessProfile> itemGuesses = new HashMap<>();
+    private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = new HashMap<>();
     private Map<String, String> internalIdentifications = new HashMap<>();
     private Map<String, MajorIdentification> majorIds = new HashMap<>();
@@ -53,8 +53,7 @@ public final class ItemProfilesManager extends Manager {
     }
 
     public void reset() {
-        // tryLoadItemGuesses
-        itemGuesses = null;
+        itemGuesses = Map.of();
 
         // tryLoadItemList
         items = Map.of();
@@ -69,11 +68,10 @@ public final class ItemProfilesManager extends Manager {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
-            itemGuesses = new HashMap<>();
-            itemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
+            Map<String, ItemGuessProfile> newItemGuesses = new HashMap<>();
+            newItemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
+            itemGuesses = newItemGuesses;
         });
-
-        // Check for success
     }
 
     private void tryLoadItemList() {
@@ -138,8 +136,8 @@ public final class ItemProfilesManager extends Manager {
         });
     }
 
-    public Map<String, ItemGuessProfile> getItemGuesses() {
-        return itemGuesses;
+    public ItemGuessProfile getItemGuess(String levelRange) {
+        return itemGuesses.get(levelRange);
     }
 
     public Collection<ItemProfile> getItemsCollection() {
