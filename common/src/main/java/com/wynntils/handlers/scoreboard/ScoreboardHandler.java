@@ -51,7 +51,8 @@ public final class ScoreboardHandler extends Handler {
 
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private final List<Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>>> scoreboardHandlers = new ArrayList<>();
+    private final List<Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>>> scoreboardHandlers =
+            new ArrayList<>();
 
     private ScheduledExecutorService executor = null;
 

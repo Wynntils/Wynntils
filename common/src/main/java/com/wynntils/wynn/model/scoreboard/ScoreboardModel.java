@@ -8,13 +8,9 @@ import com.wynntils.core.managers.Handlers;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
-import com.wynntils.mc.event.ScoreboardSetScoreEvent;
-import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveListener;
 import java.util.Set;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ScoreboardModel extends Model {
     public static final Pattern GUILD_ATTACK_UPCOMING_PATTERN = Pattern.compile("Upcoming Attacks:");
@@ -28,8 +24,7 @@ public final class ScoreboardModel extends Model {
         Handlers.Scoreboard.registerHandler(
                 new ObjectiveListener(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         Handlers.Scoreboard.registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
-        Handlers.Scoreboard.registerHandler(
-                Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
+        Handlers.Scoreboard.registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
         Handlers.Scoreboard.init();
     }

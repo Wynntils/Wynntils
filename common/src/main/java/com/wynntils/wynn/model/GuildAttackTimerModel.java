@@ -4,13 +4,13 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.core.managers.Model;
-import com.wynntils.utils.Pair;
-import com.wynntils.utils.objects.TimedSet;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
+import com.wynntils.utils.Pair;
+import com.wynntils.utils.objects.TimedSet;
 import com.wynntils.wynn.model.scoreboard.guild.GuildAttackListener;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.ArrayList;

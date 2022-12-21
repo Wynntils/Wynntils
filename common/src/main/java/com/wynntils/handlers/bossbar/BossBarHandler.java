@@ -15,7 +15,6 @@ import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;

@@ -4,8 +4,6 @@
  */
 package com.wynntils.core.managers;
 
-import java.util.List;
-
 /**
  * Handlers span the bridge between Minecraft and Wynncraft. They manage a certain
  * aspect of Minecraft functionality, and with some Wynncraft knowledge, they distribute
@@ -13,6 +11,5 @@ import java.util.List;
  * Handlers are created as singletons in the {@link Handlers} holding class.
  */
 public abstract class Handler {
-    protected Handler() {
-    }
+    protected Handler() {}
 }
