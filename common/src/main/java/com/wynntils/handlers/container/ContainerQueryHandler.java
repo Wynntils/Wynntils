@@ -2,16 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.container;
+package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.managers.Handler;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.LinkedList;
-import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ContainerQueryManager extends Manager {
+public final class ContainerQueryHandler extends Handler {
     private static final int NO_CONTAINER = -2;
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
 
@@ -34,10 +33,6 @@ public final class ContainerQueryManager extends Manager {
     private int containerId = NO_CONTAINER;
     private int lastHandledContentId = NO_CONTAINER;
     private int ticksRemaining;
-
-    public ContainerQueryManager() {
-        super(List.of());
-    }
 
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {

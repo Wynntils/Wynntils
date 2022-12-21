@@ -8,10 +8,9 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.EnumMap;
@@ -31,7 +30,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

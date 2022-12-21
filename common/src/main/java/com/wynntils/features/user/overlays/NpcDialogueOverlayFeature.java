@@ -17,8 +17,8 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Handlers;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -26,12 +26,12 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.NpcDialogEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -171,9 +171,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                Models.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
-                Models.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
                 currentDialogue = null;
             }
         }
