@@ -1,9 +1,21 @@
+## [0.0.2-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.16...v0.0.2-alpha.17) (2022-12-21)
+
+
+### Bug Fixes
+
+* Replace the last two uncolored regexes and remove uncolored pattern code ([#913](https://github.com/Wynntils/Artemis/issues/913)) ([4b7ab27](https://github.com/Wynntils/Artemis/commit/4b7ab2796d2d18c5dcd9764911ce2e578c259342))
+
 ## [0.0.2-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.15...v0.0.2-alpha.16) (2022-12-21)
 
 
 ### Bug Fixes
 
 * Poi Screen now does not crash on incorrect values, Y field is set correctly, and visibility I18n is correct now ([#912](https://github.com/Wynntils/Artemis/issues/912)) ([2effe06](https://github.com/Wynntils/Artemis/commit/2effe06c4e7a8c690937fce326ea8a0e99633bfb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.16 [skip ci] ([02d54e6](https://github.com/Wynntils/Artemis/commit/02d54e67b60845342d6db9e867824f4c232cce41))
 
 ## [0.0.2-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.14...v0.0.2-alpha.15) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.13 [skip ci] ([fb085d2](https://github.com/Wynntils/Artemis/commit/fb085d2a0f7a1cbffd4e6930451579c69b708a8a))
-
-## [0.0.2-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.11...v0.0.2-alpha.12) (2022-12-21)
-
-
-### Code Refactoring
-
-* WorldStateManager should know about first world joins ([#911](https://github.com/Wynntils/Artemis/issues/911)) ([833c8ac](https://github.com/Wynntils/Artemis/commit/833c8aceeffdeab56e26e99a0a0f86e6fac6f2b0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.12 [skip ci] ([57aa3ee](https://github.com/Wynntils/Artemis/commit/57aa3ee9ea098746c131c3a826f1e5a30783f122))
 
