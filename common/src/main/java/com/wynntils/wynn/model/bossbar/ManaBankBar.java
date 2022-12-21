@@ -6,13 +6,12 @@ package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class ManaBankBar extends TrackedBar {
     public ManaBankBar() {
-        super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), BarType.MANABANK, ClassType.Mage);
+        super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), BarType.MANABANK);
     }
 
     @Override

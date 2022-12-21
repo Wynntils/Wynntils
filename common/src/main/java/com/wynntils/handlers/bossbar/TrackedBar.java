@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 public class TrackedBar {
     public final Pattern pattern;
     public final BarType type;
-    public final ClassType classType;
 
     private boolean rendered = true;
 
@@ -26,10 +25,9 @@ public class TrackedBar {
 
     protected UUID uuid = null;
 
-    public TrackedBar(Pattern pattern, BarType type, ClassType classType) {
+    public TrackedBar(Pattern pattern, BarType type) {
         this.pattern = pattern;
         this.type = type;
-        this.classType = classType;
     }
 
     public void onUpdateName(Matcher match) {}

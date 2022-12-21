@@ -6,13 +6,12 @@ package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class CorruptedBar extends TrackedBar {
     public CorruptedBar() {
-        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BarType.CORRUPTED, ClassType.Warrior);
+        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BarType.CORRUPTED);
     }
 
     @Override

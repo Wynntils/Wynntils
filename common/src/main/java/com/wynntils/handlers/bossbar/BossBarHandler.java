@@ -68,8 +68,6 @@ public class BossBarHandler extends Handler {
             ClassType userClass = Managers.Character.getCharacterInfo().getClassType();
 
             for (TrackedBar potentialTrackedBar : knownBars) {
-                if (potentialTrackedBar.classType != userClass) continue;
-
                 matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
                 if (matcher.matches()) {
                     trackedBar = potentialTrackedBar;

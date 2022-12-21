@@ -6,13 +6,12 @@ package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class FocusBar extends TrackedBar {
     public FocusBar() {
-        super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BarType.FOCUS, ClassType.Archer);
+        super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BarType.FOCUS);
     }
 
     @Override

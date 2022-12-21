@@ -6,13 +6,12 @@ package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class AwakenedBar extends TrackedBar {
     public AwakenedBar() {
-        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), BarType.AWAKENED, ClassType.Shaman);
+        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), BarType.AWAKENED);
     }
 
     @Override

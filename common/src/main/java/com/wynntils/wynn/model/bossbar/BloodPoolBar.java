@@ -6,13 +6,12 @@ package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class BloodPoolBar extends TrackedBar {
     public BloodPoolBar() {
-        super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), BarType.BLOODPOOL, ClassType.Shaman);
+        super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), BarType.BLOODPOOL);
     }
 
     @Override
