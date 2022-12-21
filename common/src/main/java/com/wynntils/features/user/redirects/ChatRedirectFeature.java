@@ -190,12 +190,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_FOREGROUND_PATTERN = Pattern.compile(
-                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§cYour items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        public Pattern getUncoloredForegroundPattern() {
-            return UNCOLORED_FOREGROUND_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -793,12 +793,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_FOREGROUND_PATTERN = Pattern.compile(
-                "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
-        public Pattern getUncoloredForegroundPattern() {
-            return UNCOLORED_FOREGROUND_PATTERN;
+        public Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
