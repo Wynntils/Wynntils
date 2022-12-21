@@ -1,9 +1,21 @@
+## [0.0.2-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.13...v0.0.2-alpha.14) (2022-12-21)
+
+
+### Code Refactoring
+
+* Move hades stuff to core.net.hades. ([#910](https://github.com/Wynntils/Artemis/issues/910)) ([b9d2cb9](https://github.com/Wynntils/Artemis/commit/b9d2cb93c484789a1eebbb88f837f311d5644811))
+
 ## [0.0.2-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.12...v0.0.2-alpha.13) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Create ObjectivesManager ([#908](https://github.com/Wynntils/Artemis/issues/908)) ([8805b67](https://github.com/Wynntils/Artemis/commit/8805b6743d892a7cf5401b0ffd715a3a6f1afbb6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.13 [skip ci] ([fb085d2](https://github.com/Wynntils/Artemis/commit/fb085d2a0f7a1cbffd4e6930451579c69b708a8a))
 
 ## [0.0.2-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.11...v0.0.2-alpha.12) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.10 [skip ci] ([14cbaa5](https://github.com/Wynntils/Artemis/commit/14cbaa51a03e725c53b4abbe13b65c6ec5f368e7))
-
-## [0.0.2-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.8...v0.0.2-alpha.9) (2022-12-20)
-
-
-### Bug Fixes
-
-* WynntilsAccountManager's token users are now async ([#904](https://github.com/Wynntils/Artemis/issues/904)) ([82956a3](https://github.com/Wynntils/Artemis/commit/82956a3d105a6fcb1fdef1bf255ca86e861d6c51))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.9 [skip ci] ([efe7094](https://github.com/Wynntils/Artemis/commit/efe7094c36501906c73fdcc139d393a5dbf75600))
 
