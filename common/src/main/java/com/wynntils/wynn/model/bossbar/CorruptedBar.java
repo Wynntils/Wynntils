@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 class CorruptedBar extends TrackedBar {
     public CorruptedBar() {
-        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BarType.CORRUPTED);
+        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"), BossBarModel.CORRUPTED);
     }
 
     @Override

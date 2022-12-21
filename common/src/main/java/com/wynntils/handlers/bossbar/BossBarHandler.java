@@ -10,10 +10,12 @@ import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -60,18 +62,14 @@ public class BossBarHandler extends Handler {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-            TrackedBar trackedBar = null;
-            Matcher matcher = null;
+            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
+                    .map(bar -> new Pair<>(bar, bar.pattern.matcher(ComponentUtils.getCoded(name))))
+                    .filter(pair -> pair.b().matches())
+                    .findFirst();
+            if (trackedBarOpt.isEmpty()) return;
 
-            for (TrackedBar potentialTrackedBar : knownBars) {
-                matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
-                if (matcher.matches()) {
-                    trackedBar = potentialTrackedBar;
-                    break;
-                }
-            }
-
-            if (trackedBar == null) return;
+            TrackedBar trackedBar = trackedBarOpt.get().a();
+            Matcher matcher = trackedBarOpt.get().b();
 
             event.setCanceled(true);
 
@@ -80,7 +78,7 @@ public class BossBarHandler extends Handler {
             trackedBar.setEvent(bossEvent);
 
             // Allow for others to try and cancel event
-            BossBarAddedEvent barAddEvent = new BossBarAddedEvent(trackedBar.type);
+            BossBarAddedEvent barAddEvent = new BossBarAddedEvent(trackedBar);
             WynntilsMod.postEvent(barAddEvent);
 
             if (barAddEvent.isCanceled()) {

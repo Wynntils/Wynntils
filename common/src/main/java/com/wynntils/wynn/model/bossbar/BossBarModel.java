@@ -11,6 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class BossBarModel extends Model {
+    public static final String BLOODPOOL = "bloodpool";
+    public static final String MANABANK = "manabank";
+    public static final String AWAKENED = "awakened";
+    public static final String FOCUS = "focus";
+    public static final String CORRUPTED = "corrupted";
+
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();

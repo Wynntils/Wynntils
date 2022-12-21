@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 class FocusBar extends TrackedBar {
     public FocusBar() {
-        super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BarType.FOCUS);
+        super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"), BossBarModel.FOCUS);
     }
 
     @Override

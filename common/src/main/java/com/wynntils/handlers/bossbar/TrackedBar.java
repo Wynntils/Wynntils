@@ -5,7 +5,6 @@
 package com.wynntils.handlers.bossbar;
 
 import com.wynntils.mc.mixin.LerpingBossEventAccessor;
-import com.wynntils.wynn.model.bossbar.BarType;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +12,7 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class TrackedBar {
     public final Pattern pattern;
-    public final BarType type;
+    private final String barType;
 
     private boolean rendered = true;
 
@@ -24,9 +23,9 @@ public class TrackedBar {
 
     protected UUID uuid = null;
 
-    public TrackedBar(Pattern pattern, BarType type) {
+    public TrackedBar(Pattern pattern, String barType) {
         this.pattern = pattern;
-        this.type = type;
+        this.barType = barType;
     }
 
     public void onUpdateName(Matcher match) {}
@@ -70,5 +69,9 @@ public class TrackedBar {
 
     public BossBarProgress getBarProgress() {
         return isActive() ? new BossBarProgress(current, max, event.getProgress()) : null;
+    }
+
+    public String getBarType() {
+        return barType;
     }
 }

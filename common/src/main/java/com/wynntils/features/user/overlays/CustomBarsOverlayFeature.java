@@ -24,11 +24,13 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.bossbar.BossBarProgress;
+import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
+import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -59,18 +61,23 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
-        BaseBarOverlay overlay =
-                switch (event.getType()) {
-                    case BLOODPOOL -> bloodPoolBarOverlay;
-                    case MANABANK -> manaBankBarOverlay;
-                    case AWAKENED -> awakenedProgressBarOverlay;
-                    case FOCUS -> focusBarOverlay;
-                    case CORRUPTED -> corruptedBarOverlay;
-                };
+        BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
 
         if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
+    }
+
+    private BaseBarOverlay getOverlayFromTrackedBar(TrackedBar trackedBar) {
+        BaseBarOverlay overlay =
+                switch (trackedBar.getBarType()) {
+                    case BossBarModel.BLOODPOOL -> bloodPoolBarOverlay;
+                    case BossBarModel.MANABANK -> manaBankBarOverlay;
+                    case BossBarModel.AWAKENED -> awakenedProgressBarOverlay;
+                    case BossBarModel.FOCUS -> focusBarOverlay;
+                    case BossBarModel.CORRUPTED -> corruptedBarOverlay;
+                };
+        return overlay;
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
