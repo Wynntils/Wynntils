@@ -39,6 +39,7 @@ public final class WorldStateManager extends Manager {
     private String currentTabListFooter = "";
     private String currentWorldName = "";
     private boolean onBetaServer;
+    private boolean hasJoinedAnyWorld = false;
 
     private State currentState = State.NOT_CONNECTED;
 
@@ -66,14 +67,18 @@ public final class WorldStateManager extends Manager {
         return currentState;
     }
 
-    private void setState(State newState, String newWorldName) {
+    private void setState(State newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         State oldState = currentState;
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
-        WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName));
+        WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
+    }
+
+    private void setState(State newState, String newWorldName) {
+        setState(newState, newWorldName, false);
     }
 
     @SubscribeEvent
@@ -155,7 +160,8 @@ public final class WorldStateManager extends Manager {
         Matcher m = WORLD_NAME.matcher(name);
         if (m.find()) {
             String worldName = m.group(1);
-            setState(State.WORLD, worldName);
+            setState(State.WORLD, worldName, !hasJoinedAnyWorld);
+            hasJoinedAnyWorld = true;
         }
     }
 
