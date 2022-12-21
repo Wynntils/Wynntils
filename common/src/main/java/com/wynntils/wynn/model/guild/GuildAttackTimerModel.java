@@ -11,8 +11,6 @@ import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.wynn.model.guild.GuildAttackListener;
-import com.wynntils.wynn.model.guild.TerritoryAttackTimer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
