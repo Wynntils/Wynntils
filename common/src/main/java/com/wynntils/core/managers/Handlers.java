@@ -21,7 +21,7 @@ public final class Handlers {
         // Register all handler singletons as event listeners
 
         FieldUtils.getAllFieldsList(Handlers.class).stream()
-                .filter(field -> Manager.class.isAssignableFrom(field.getType()))
+                .filter(field -> Handler.class.isAssignableFrom(field.getType()))
                 .forEach(field -> {
                     try {
                         WynntilsMod.registerEventListener(field.get(null));
