@@ -22,6 +22,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar, Models.Subtitle);
+        return List.of(Models.Spell);
     }
 }
