@@ -35,8 +35,8 @@ public final class ItemProfilesManager extends Manager {
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = Map.of();
     private Map<String, String> internalIdentifications = Map.of();
-    private Map<String, MajorIdentification> majorIds = new HashMap<>();
-    private Map<ItemType, String[]> materialTypes = new HashMap<>();
+    private Map<String, MajorIdentification> majorIdsMap = Map.of();
+    private Map<ItemType, String[]> materialTypes = Map.of();
     private Map<String, IngredientProfile> ingredients = new HashMap<>();
     private Collection<IngredientProfile> directIngredients = new ArrayList<>();
     private Map<String, String> ingredientHeadTextures = new HashMap<>();
@@ -54,13 +54,12 @@ public final class ItemProfilesManager extends Manager {
 
     public void reset() {
         itemGuesses = Map.of();
-
-        // tryLoadItemList
         items = Map.of();
         translatedReferences = Map.of();
         internalIdentifications = Map.of();
-        majorIds = null;
-        materialTypes = null;
+        majorIdsMap = Map.of();
+        materialTypes = Map.of();
+
         loadCommonObjects();
     }
 
@@ -89,7 +88,7 @@ public final class ItemProfilesManager extends Manager {
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-            majorIds = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+            majorIdsMap = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
 
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
@@ -102,7 +101,7 @@ public final class ItemProfilesManager extends Manager {
             HashMap<String, ItemProfile> newItems = new HashMap<>();
             for (ItemProfile itemProfile : jsonItems) {
                 itemProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
-                itemProfile.addMajorIds(majorIds);
+                itemProfile.updateMajorIdsFromStrings(majorIdsMap);
                 itemProfile.registerIdTypes();
 
                 newItems.put(itemProfile.getDisplayName(), itemProfile);
@@ -146,14 +145,6 @@ public final class ItemProfilesManager extends Manager {
 
     public ItemProfile getItemsProfile(String name) {
         return items.get(name);
-    }
-
-    public Map<ItemType, String[]> getMaterialTypes() {
-        return materialTypes;
-    }
-
-    public Map<String, MajorIdentification> getMajorIds() {
-        return majorIds;
     }
 
     public String getInternalIdentification(String internalId) {
