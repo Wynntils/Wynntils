@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;

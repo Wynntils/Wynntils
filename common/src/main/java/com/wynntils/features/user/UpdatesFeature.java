@@ -5,9 +5,9 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;

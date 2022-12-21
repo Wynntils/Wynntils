@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;

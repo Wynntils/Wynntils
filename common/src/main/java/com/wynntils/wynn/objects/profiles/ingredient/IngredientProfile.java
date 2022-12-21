@@ -6,7 +6,7 @@ package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

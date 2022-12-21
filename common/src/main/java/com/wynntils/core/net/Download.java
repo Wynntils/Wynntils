@@ -5,7 +5,7 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

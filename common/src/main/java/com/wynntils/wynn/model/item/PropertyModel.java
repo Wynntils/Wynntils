@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model.item;
 
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.AmplifierTierProperty;

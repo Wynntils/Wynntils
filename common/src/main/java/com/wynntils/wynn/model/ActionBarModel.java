@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.utils.StringUtils;

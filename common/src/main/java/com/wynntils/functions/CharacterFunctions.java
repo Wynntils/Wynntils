@@ -4,11 +4,11 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;

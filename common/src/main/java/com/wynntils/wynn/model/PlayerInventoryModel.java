@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;

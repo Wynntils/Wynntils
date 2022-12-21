@@ -6,7 +6,7 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;

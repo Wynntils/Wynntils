@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.functions;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import java.util.List;
 
 public abstract class ActiveFunction<T> extends DependantFunction<T> {

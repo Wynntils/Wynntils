@@ -6,12 +6,12 @@ package com.wynntils.features.user;
 
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerClickEvent;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc;
 
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

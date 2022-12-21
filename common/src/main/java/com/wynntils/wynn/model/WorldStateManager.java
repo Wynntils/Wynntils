@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.MenuEvent;
