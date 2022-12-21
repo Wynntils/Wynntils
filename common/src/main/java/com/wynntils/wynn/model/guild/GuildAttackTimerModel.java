@@ -2,17 +2,15 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model;
+package com.wynntils.wynn.model.guild;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.wynn.model.scoreboard.guild.GuildAttackListener;
-import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

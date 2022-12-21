@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.net.hades.model;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.HashMap;

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.managers;
+package com.wynntils.core.components;
 
 import com.wynntils.core.chat.tabs.ChatTabModel;
 import com.wynntils.core.net.hades.model.HadesModel;
@@ -12,7 +12,6 @@ import com.wynntils.wynn.model.ActionBarModel;
 import com.wynntils.wynn.model.BombBellModel;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
 import com.wynntils.wynn.model.LootChestModel;
 import com.wynntils.wynn.model.LootrunModel;
 import com.wynntils.wynn.model.PlayerInventoryModel;
@@ -22,6 +21,7 @@ import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.model.ShamanMaskModel;
 import com.wynntils.wynn.model.TabModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
+import com.wynntils.wynn.model.guild.GuildAttackTimerModel;
 import com.wynntils.wynn.model.item.ItemStackModel.EmeraldPouchItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.GearItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.IngredientItemStackModel;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientItemModifiers;

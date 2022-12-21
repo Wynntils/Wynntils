@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.managers;
+package com.wynntils.core.components;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.bossbar.BossBarHandler;

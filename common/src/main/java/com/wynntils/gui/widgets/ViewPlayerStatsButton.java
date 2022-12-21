@@ -4,7 +4,7 @@
  */
 package com.wynntils.gui.widgets;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Map;
