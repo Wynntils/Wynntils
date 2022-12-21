@@ -5,10 +5,10 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MinimapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.utils.PlayerInfoUtils;
-import com.wynntils.core.net.hades.objects.HadesUser;
 import net.minecraft.resources.ResourceLocation;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
