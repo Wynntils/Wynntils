@@ -61,7 +61,7 @@ public class TerritoryCommand extends CommandBase {
         MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
-        if (!ModelRegistry.isEnabled(Models.Compass.getClass())) {
+        if (!ModelRegistry.isEnabled(Models.Compass)) {
             MutableComponent success = territoryComponent
                     .append(": ")
                     .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")")

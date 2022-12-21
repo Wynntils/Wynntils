@@ -105,7 +105,7 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
         if (hovered instanceof GuideGearItemStack guideGearItemStack) {
             GearItemStack itemStack = guideGearItemStack.getItemStack();
 
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
+            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {

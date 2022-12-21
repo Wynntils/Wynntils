@@ -66,7 +66,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     private final MainMapScreen oldMapScreen;
     private CustomPoi oldPoi;
     private PoiLocation setupLocation;
-    private boolean firstSetup = false;
+    private boolean firstSetup;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Creation Screen"));
@@ -151,7 +151,6 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         },
                         this,
                         yInput));
-        ;
         this.addRenderableWidget(
                 zInput = new TextInputBoxWidget(
                         this.width / 2 + 15,
@@ -239,19 +238,19 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
-                    selectedVisiblity = CustomPoi.Visibility.values()[
-                            (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
-                                    % CustomPoi.Visibility.values().length];
-                })
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal("<"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
                 .pos(this.width / 2 - 100, this.height / 2 + 90)
                 .size(20, 20)
                 .build());
-        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
-                    selectedVisiblity = CustomPoi.Visibility.values()[
-                            (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
-                                    % CustomPoi.Visibility.values().length];
-                })
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal(">"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
                 .pos(this.width / 2 + 80, this.height / 2 + 90)
                 .size(20, 20)
                 .build());

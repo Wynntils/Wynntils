@@ -79,7 +79,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             alreadySetPrevItem = true;
         }
 
-        new Delay(
+        Delay.create(
                 () -> {
                     AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
@@ -112,7 +112,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             this.tcString = tcString;
         }
 
-        protected String getTcString() {
+        private String getTcString() {
             return this.tcString;
         }
     }

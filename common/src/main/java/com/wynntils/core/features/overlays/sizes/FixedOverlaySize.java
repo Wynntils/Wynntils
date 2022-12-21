@@ -16,7 +16,7 @@ public abstract class FixedOverlaySize extends OverlaySize {
         super(width, height);
     }
 
-    public FixedOverlaySize(String string) {
+    protected FixedOverlaySize(String string) {
         super(string);
     }
 

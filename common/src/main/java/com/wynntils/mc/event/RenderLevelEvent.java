@@ -18,7 +18,7 @@ public abstract class RenderLevelEvent extends Event {
     private final long startNanos;
     private final Camera camera;
 
-    public RenderLevelEvent(
+    protected RenderLevelEvent(
             LevelRenderer levelRenderer,
             PoseStack poseStack,
             float partialTick,

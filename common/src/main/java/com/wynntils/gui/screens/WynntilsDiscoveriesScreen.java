@@ -250,7 +250,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
 
         List<Component> tooltipLines = tooltipWidget.getTooltipLines();

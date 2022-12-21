@@ -13,7 +13,7 @@ public abstract class Function<T> implements Translatable {
     private final String name;
     private final String translationName;
 
-    public Function() {
+    protected Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");
         this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
         this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
