@@ -150,11 +150,10 @@ public final class WynnItemMatchers {
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        if (Managers.ItemProfiles.getItemsMap() == null
-                || !Managers.ItemProfiles.getItemsMap().containsKey(strippedName)) return false;
-        ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(strippedName);
-        return (profile != null
-                && name.startsWith(profile.getTier().getChatFormatting().toString()));
+        ItemProfile profile = Managers.ItemProfiles.getItemsProfile(strippedName);
+        if (profile == null) return false;
+
+        return name.startsWith(profile.getTier().getChatFormatting().toString());
     }
 
     public static boolean isCraftedGear(ItemStack itemStack) {

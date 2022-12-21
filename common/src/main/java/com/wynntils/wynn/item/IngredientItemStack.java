@@ -39,7 +39,7 @@ public class IngredientItemStack extends WynnItemStack {
             throw new IllegalStateException("Matcher did not match for IngredientItemStack");
         }
 
-        ingredientProfile = Managers.ItemProfiles.getIngredients().get(matcher.group(1));
+        ingredientProfile = Managers.ItemProfiles.getIngredient(matcher.group(1));
 
         isGuideStack = false;
         guideTooltip = List.of();

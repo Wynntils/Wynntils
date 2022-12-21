@@ -24,6 +24,7 @@ import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
+import com.wynntils.wynn.model.item.ItemManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
@@ -52,6 +53,7 @@ public final class Managers {
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
     public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
+    public static final ItemManager Item = new ItemManager(ItemProfiles);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);
