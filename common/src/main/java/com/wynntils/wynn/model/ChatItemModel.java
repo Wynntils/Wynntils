@@ -144,9 +144,7 @@ public final class ChatItemModel extends Model {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = Managers.ItemProfiles.getItemsMap() != null
-                ? Managers.ItemProfiles.getItemsMap().get(name)
-                : null;
+        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids

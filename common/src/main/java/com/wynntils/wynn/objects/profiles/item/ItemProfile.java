@@ -214,11 +214,13 @@ public class ItemProfile {
         return lore;
     }
 
-    public void addMajorIds(Map<String, MajorIdentification> idMap) {
+    public void updateMajorIdsFromStrings(Map<String, MajorIdentification> idMap) {
         if (majorIds == null) return;
         majorIdentifications = new ArrayList<>();
         for (String id : majorIds) {
-            if (idMap.containsKey(id)) majorIdentifications.add(idMap.get(id));
+            if (idMap.containsKey(id)) {
+                majorIdentifications.add(idMap.get(id));
+            }
         }
     }
 }
