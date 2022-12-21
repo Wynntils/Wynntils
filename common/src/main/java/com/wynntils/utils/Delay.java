@@ -8,17 +8,21 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class Delay {
+public final class Delay {
     private final Runnable function;
     private int delay;
     private boolean isRunning = true;
     private boolean onPause = false;
 
-    public Delay(Runnable function, int delay) {
+    private Delay(Runnable function, int delay) {
         this.function = function;
         this.delay = delay;
 
         WynntilsMod.registerEventListener(this);
+    }
+
+    public static Delay create(Runnable function, int delay) {
+        return new Delay(function, delay);
     }
 
     @SubscribeEvent

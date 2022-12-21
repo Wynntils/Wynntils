@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.TooltipFlag.Default;
 
 public final class ItemUtils {
     /**
@@ -162,7 +161,7 @@ public final class ItemUtils {
     }
 
     public static List<Component> getTooltipLines(ItemStack stack) {
-        TooltipFlag flag = McUtils.options().advancedItemTooltips ? Default.ADVANCED : Default.NORMAL;
+        TooltipFlag flag = McUtils.options().advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
         return stack.getTooltipLines(McUtils.player(), flag);
     }
 }

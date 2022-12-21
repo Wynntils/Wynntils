@@ -43,9 +43,7 @@ public class LootrunButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor backgroundColor = isLoaded()
-                ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
-                : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
+        CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 21;
@@ -63,6 +61,14 @@ public class LootrunButton extends WynntilsButton {
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
                         FontRenderer.TextShadow.NONE);
+    }
+
+    private CustomColor getButtonBackgroundColor() {
+        if (isLoaded()) {
+            return isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR;
+        } else {
+            return isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
+        }
     }
 
     @Override

@@ -83,7 +83,7 @@ public final class ModelRegistry {
         model.disable();
     }
 
-    public static boolean isEnabled(Class<? extends Model> model) {
+    public static boolean isEnabled(Model model) {
         return ENABLED_MODELS.contains(model);
     }
 

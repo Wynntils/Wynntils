@@ -64,7 +64,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
     private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
         ItemStack stack = hoveredSlot.getItem();
-        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();

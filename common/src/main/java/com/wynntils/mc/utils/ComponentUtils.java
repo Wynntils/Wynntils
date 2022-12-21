@@ -258,11 +258,11 @@ public final class ComponentUtils {
         return builder.extractLines();
     }
 
-    private static class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
+    private static final class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
         private final StringBuilder result;
         Style oldStyle;
 
-        public CodedStringGenerator(StringBuilder result) {
+        private CodedStringGenerator(StringBuilder result) {
             this.result = result;
             oldStyle = Style.EMPTY;
         }

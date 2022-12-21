@@ -10,7 +10,7 @@ import com.wynntils.core.config.ConfigHolder;
 public abstract class ConfigOptionElement {
     protected final ConfigHolder configHolder;
 
-    public ConfigOptionElement(ConfigHolder configHolder) {
+    protected ConfigOptionElement(ConfigHolder configHolder) {
         this.configHolder = configHolder;
     }
 

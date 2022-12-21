@@ -161,9 +161,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                CustomColor color = overlay == selectedOverlay
-                        ? CommonColors.GREEN
-                        : (fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE);
+                CustomColor color = getOverlayColor(overlay);
                 RenderUtils.drawRectBorders(
                         poseStack,
                         color,
@@ -243,6 +241,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
             this.deferredTooltipRendering = null;
         }
+    }
+
+    private CustomColor getOverlayColor(Overlay overlay) {
+        if (overlay == selectedOverlay) return CommonColors.GREEN;
+
+        return fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE;
     }
 
     @Override
