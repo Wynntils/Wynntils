@@ -7,13 +7,14 @@ package com.wynntils.handlers.bossbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Handler;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.ClassType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -25,7 +26,16 @@ import net.minecraft.world.BossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BossBarHandler extends Handler {
-    private final Map<UUID, TrackedBar> trackedBarsMap = new HashMap<>();
+    private final Map<UUID, TrackedBar> presentBars = new HashMap<>();
+    private final List<TrackedBar> knownBars = new ArrayList<>();
+
+    public void registerBar(TrackedBar trackedBar) {
+        knownBars.add(trackedBar);
+    }
+
+    public void unregisterBar(TrackedBar trackedBar) {
+        knownBars.remove(trackedBar);
+    }
 
     // FixPacketBugsFeature gets in the way if receiveCanceled is not set
     @SubscribeEvent(receiveCanceled = true)
@@ -57,7 +67,7 @@ public class BossBarHandler extends Handler {
 
             ClassType userClass = Managers.Character.getCharacterInfo().getClassType();
 
-            for (TrackedBar potentialTrackedBar : BossBarModel.KNOWN_BARS) {
+            for (TrackedBar potentialTrackedBar : knownBars) {
                 if (potentialTrackedBar.classType != userClass) continue;
 
                 matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
@@ -76,7 +86,7 @@ public class BossBarHandler extends Handler {
             trackedBar.setEvent(bossEvent);
 
             // Allow for others to try and cancel event
-            CustomBarAddEvent barAddEvent = new CustomBarAddEvent(trackedBar.type);
+            BossBarAddedEvent barAddEvent = new BossBarAddedEvent(trackedBar.type);
             WynntilsMod.postEvent(barAddEvent);
 
             if (barAddEvent.isCanceled()) {
@@ -88,11 +98,11 @@ public class BossBarHandler extends Handler {
 
             trackedBar.onUpdateName(matcher);
 
-            trackedBarsMap.put(id, trackedBar);
+            presentBars.put(id, trackedBar);
         }
 
         private void handleBarUpdate(UUID id, Consumer<TrackedBar> consumer) {
-            TrackedBar trackedBar = trackedBarsMap.get(id);
+            TrackedBar trackedBar = presentBars.get(id);
 
             if (trackedBar != null) {
                 if (!trackedBar.isRendered()) {
@@ -107,7 +117,7 @@ public class BossBarHandler extends Handler {
         public void remove(UUID id) {
             handleBarUpdate(id, trackedBar -> {
                 trackedBar.reset();
-                trackedBarsMap.remove(id);
+                presentBars.remove(id);
             });
         }
 

@@ -24,7 +24,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.bossbar.BossBarProgress;
-import com.wynntils.mc.event.CustomBarAddEvent;
+import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -58,7 +58,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onBossBarAdd(CustomBarAddEvent event) {
+    public void onBossBarAdd(BossBarAddedEvent event) {
         BaseBarOverlay overlay =
                 switch (event.getType()) {
                     case BLOODPOOL -> bloodPoolBarOverlay;

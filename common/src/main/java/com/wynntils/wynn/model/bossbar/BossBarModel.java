@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.bossbar;
 
+import com.wynntils.core.managers.Handlers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.Arrays;
@@ -20,6 +21,16 @@ public final class BossBarModel extends Model {
 
     public static final TrackedBar corruptedBar = new CorruptedBar();
 
-    public static final List<TrackedBar> KNOWN_BARS =
+    public static final List<TrackedBar> ALL_BARS =
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
+
+    @Override
+    public void init() {
+        ALL_BARS.forEach(Handlers.BossBar::registerBar);
+    }
+
+    @Override
+    public void disable() {
+        ALL_BARS.forEach(Handlers.BossBar::unregisterBar);
+    }
 }
