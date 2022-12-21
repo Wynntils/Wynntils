@@ -6,7 +6,6 @@ package com.wynntils.handlers.bossbar;
 
 import com.wynntils.mc.mixin.LerpingBossEventAccessor;
 import com.wynntils.wynn.model.bossbar.BarType;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

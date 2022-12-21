@@ -6,12 +6,10 @@ package com.wynntils.handlers.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Handler;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.handlers.bossbar.events.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.ClassType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +62,6 @@ public class BossBarHandler extends Handler {
                 boolean createWorldFog) {
             TrackedBar trackedBar = null;
             Matcher matcher = null;
-
-            ClassType userClass = Managers.Character.getCharacterInfo().getClassType();
 
             for (TrackedBar potentialTrackedBar : knownBars) {
                 matcher = potentialTrackedBar.pattern.matcher(ComponentUtils.getCoded(name));
