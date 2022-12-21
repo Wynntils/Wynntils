@@ -21,7 +21,7 @@ import com.wynntils.wynn.model.PlayerRelationsModel;
 import com.wynntils.wynn.model.RemoteWynntilsUserInfoModel;
 import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.model.ShamanMaskModel;
-import com.wynntils.wynn.model.SubtitleModel;
+import com.wynntils.wynn.model.SpellModel;
 import com.wynntils.wynn.model.TabModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.model.item.ItemStackModel.EmeraldPouchItemStackModel;
@@ -99,7 +99,7 @@ public class Models {
     public static final SkillIconPropertyModel SkillIconProperty = new SkillIconPropertyModel();
     public static final SkillPointPropertyModel SkillPointProperty = new SkillPointPropertyModel();
     public static final SoulPointItemStackModel SoulPointItemStack = new SoulPointItemStackModel();
-    public static final SubtitleModel Subtitle = new SubtitleModel();
+    public static final SpellModel Spell = new SpellModel();
     public static final TabModel Tab = new TabModel();
     public static final TeleportScrollPropertyModel TeleportScrollProperty = new TeleportScrollPropertyModel();
     public static final TranslationModel Translation = new TranslationModel();

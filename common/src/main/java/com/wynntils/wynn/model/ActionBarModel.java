@@ -10,23 +10,20 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wynn.event.SpellCastedEvent;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class ActionBarModel extends Model {
     private static final Pattern ACTIONBAR_PATTERN =
             StringUtils.compileCCRegex("§❤ ([0-9]+)/([0-9]+)§ +(.+?) +§✺ ([0-9]+)/([0-9]+)");
     private static final Pattern POWDER_CHARGE_PATTERN = Pattern.compile("§.+([✤✦❉✹❋]+) (\\d+)%");
     private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7(-?\\d+)§f .+§(-?\\d+) (-?\\d+)");
-    private static final Pattern SPELL_PATTERN =
-            Pattern.compile("§a([LR])§7-(?:§7§n|§r§7§n|§a)([LR?])§7-(?:§r§7|§r§7§n|§r§a)([LR?])§r");
 
     private Component previousMessage = null;
 
@@ -56,7 +53,6 @@ public final class ActionBarModel extends Model {
         String centerActionString = matcher.group(3);
 
         Matcher powderChargeMatcher = POWDER_CHARGE_PATTERN.matcher(centerActionString);
-        Matcher spellMatcher = SPELL_PATTERN.matcher(centerActionString);
         if (powderChargeMatcher.matches()) {
             char symbol = powderChargeMatcher.group(1).charAt(0);
             String amountStr = powderChargeMatcher.group(2);
@@ -65,15 +61,6 @@ public final class ActionBarModel extends Model {
         } else if (COORDINATES_PATTERN.matcher(centerActionString).matches()) { // This only happens if charge is lost.
             powderSpecialCharge = 0;
             powderSpecialType = null;
-        } else if (spellMatcher.matches()) {
-            if (spellMatcher.group(3) != null && !spellMatcher.group(3).equals("?")) {
-                boolean[] lastSpell = new boolean[3];
-                lastSpell[0] = spellMatcher.group(1).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-                lastSpell[1] = spellMatcher.group(2).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-                lastSpell[2] = spellMatcher.group(3).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-                SpellCastedEvent spellCasted = new SpellCastedEvent(SpellType.fromBooleanArray(lastSpell));
-                WynntilsMod.postEvent(spellCasted);
-            }
         }
 
         ActionBarMessageUpdateEvent.ActionText actionText =

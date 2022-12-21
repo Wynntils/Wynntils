@@ -6,18 +6,42 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Model;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.objects.ChatType;
 import com.wynntils.wynn.event.SpellCastedEvent;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class SubtitleModel extends Model {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public final class SpellModel extends Model {
+    private static final Pattern SPELL_PATTERN =
+            Pattern.compile("§a([LR])§7-(?:§7§n|§r§7§n|§a)([LR?])§7-(?:§r§7|§r§7§n|§r§a)([LR?])§r");
     private static final Pattern LEVEL_1_SPELL_PATTERN =
             Pattern.compile("§a(Left|Right|\\?)§7-§a(Left|Right|\\?)§7-§r§a(Left|Right|\\?)§r");
     private static final Pattern LOW_LEVEL_SPELL_PATTERN = Pattern.compile("§a([LR?])§7-§a([LR?])§7-§r§a([LR?])§r");
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ChatPacketReceivedEvent e) {
+        if (!WynnUtils.onWorld() || e.getType() != ChatType.GAME_INFO) return;
+
+        String actionBar = e.getMessage().getString();
+
+        Matcher spellMatcher = SPELL_PATTERN.matcher(actionBar);
+        if (!spellMatcher.find()) return;
+
+        if (spellMatcher.group(3) != null && !spellMatcher.group(3).equals("?")) {
+            boolean[] lastSpell = new boolean[3];
+            lastSpell[0] = spellMatcher.group(1).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            lastSpell[1] = spellMatcher.group(2).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            lastSpell[2] = spellMatcher.group(3).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            SpellCastedEvent spellCasted = new SpellCastedEvent(SpellType.fromBooleanArray(lastSpell));
+            WynntilsMod.postEvent(spellCasted);
+        }
+    }
 
     @SubscribeEvent
     public void onSubtitleUpdate(SubtitleSetTextEvent e) {
