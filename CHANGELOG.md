@@ -1,9 +1,21 @@
+## [0.0.2-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.10...v0.0.2-alpha.11) (2022-12-21)
+
+
+### Code Refactoring
+
+* Clean up ItemProfilesManager ([#907](https://github.com/Wynntils/Artemis/issues/907)) ([179f653](https://github.com/Wynntils/Artemis/commit/179f65332b49e2d61078b302993cb8cdcc7fc5de))
+
 ## [0.0.2-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.9...v0.0.2-alpha.10) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Fix even more IntelliJ suggestions ([#905](https://github.com/Wynntils/Artemis/issues/905)) ([deebee3](https://github.com/Wynntils/Artemis/commit/deebee3f16f59c0fc7f6ea2ef1fdfeee409d9bc0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.10 [skip ci] ([14cbaa5](https://github.com/Wynntils/Artemis/commit/14cbaa51a03e725c53b4abbe13b65c6ec5f368e7))
 
 ## [0.0.2-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.8...v0.0.2-alpha.9) (2022-12-20)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.7 [skip ci] ([5a90836](https://github.com/Wynntils/Artemis/commit/5a908364cbf790be2a9a5b2a1e5781fdfb05d794))
-
-## [0.0.2-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.5...v0.0.2-alpha.6) (2022-12-20)
-
-
-### Miscellaneous Chores
-
-* rebuild with bug ([97763e2](https://github.com/Wynntils/Artemis/commit/97763e24375ba871dfa376b336b166fadb5cdbfc))
-* **release:** v0.0.2-alpha.6 [skip ci] ([e620db0](https://github.com/Wynntils/Artemis/commit/e620db02b107e725065aa1563cd6340e290d7137))
 
