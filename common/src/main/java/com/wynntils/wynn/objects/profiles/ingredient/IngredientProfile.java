@@ -88,22 +88,22 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            Map<String, String> ingredientHeadTextures = Managers.ItemProfiles.getIngredientHeadTextures();
+            String ingredientHeadTexture = Managers.ItemProfiles.getIngredientHeadTexture(name);
+            // This will look bad, but if we don't have the data, then what should we do?
+            if (ingredientHeadTexture == null) return itemStack;
 
-            if (ingredientHeadTextures.containsKey(name)) {
-                CompoundTag skullData = new CompoundTag();
-                skullData.putString("Id", UUID.randomUUID().toString());
+            CompoundTag skullData = new CompoundTag();
+            skullData.putString("Id", UUID.randomUUID().toString());
 
-                CompoundTag properties = new CompoundTag();
-                ListTag textures = new ListTag();
-                CompoundTag textureEntry = new CompoundTag();
-                textureEntry.putString("Value", ingredientHeadTextures.get(name));
-                textures.add(textureEntry);
-                properties.put("textures", textures);
-                skullData.put("Properties", properties);
+            CompoundTag properties = new CompoundTag();
+            ListTag textures = new ListTag();
+            CompoundTag textureEntry = new CompoundTag();
+            textureEntry.putString("Value", ingredientHeadTexture);
+            textures.add(textureEntry);
+            properties.put("textures", textures);
+            skullData.put("Properties", properties);
 
-                itemStack.getOrCreateTag().put("SkullOwner", skullData);
-            }
+            itemStack.getOrCreateTag().put("SkullOwner", skullData);
         }
 
         return itemStack;

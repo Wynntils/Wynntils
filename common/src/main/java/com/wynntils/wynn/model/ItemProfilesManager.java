@@ -20,7 +20,6 @@ import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,19 +36,12 @@ public final class ItemProfilesManager extends Manager {
     private Map<String, String> internalIdentifications = Map.of();
     private Map<String, MajorIdentification> majorIdsMap = Map.of();
     private Map<ItemType, String[]> materialTypes = Map.of();
-    private Map<String, IngredientProfile> ingredients = new HashMap<>();
-    private Collection<IngredientProfile> directIngredients = new ArrayList<>();
-    private Map<String, String> ingredientHeadTextures = new HashMap<>();
+    private Map<String, IngredientProfile> ingredients = Map.of();
+    private Map<String, String> ingredientHeadTextures = Map.of();
 
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
-        loadCommonObjects();
-    }
-
-    private void loadCommonObjects() {
-        tryLoadItemList();
-        tryLoadItemGuesses();
-        tryLoadIngredientList();
+        loadData();
     }
 
     public void reset() {
@@ -59,8 +51,16 @@ public final class ItemProfilesManager extends Manager {
         internalIdentifications = Map.of();
         majorIdsMap = Map.of();
         materialTypes = Map.of();
+        ingredients = Map.of();
+        ingredientHeadTextures = Map.of();
 
-        loadCommonObjects();
+        loadData();
+    }
+
+    private void loadData() {
+        tryLoadItemList();
+        tryLoadItemGuesses();
+        tryLoadIngredientList();
     }
 
     private void tryLoadItemGuesses() {
@@ -122,25 +122,20 @@ public final class ItemProfilesManager extends Manager {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WynntilsMod.GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-            IngredientProfile[] gItems =
+            IngredientProfile[] jsonItems =
                     WynntilsMod.GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
-            HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
-            for (IngredientProfile prof : gItems) {
-                cingredients.put(prof.getDisplayName(), prof);
+            Map<String, IngredientProfile> newIngredients = new HashMap<>();
+            for (IngredientProfile ingredientProfile : jsonItems) {
+                newIngredients.put(ingredientProfile.getDisplayName(), ingredientProfile);
             }
 
-            ingredients = cingredients;
-            directIngredients = cingredients.values();
+            ingredients = newIngredients;
         });
     }
 
     public ItemGuessProfile getItemGuess(String levelRange) {
         return itemGuesses.get(levelRange);
-    }
-
-    public Collection<ItemProfile> getItemsCollection() {
-        return items.values();
     }
 
     public ItemProfile getItemsProfile(String name) {
@@ -155,15 +150,19 @@ public final class ItemProfilesManager extends Manager {
         return translatedReferences.getOrDefault(untranslatedName, untranslatedName);
     }
 
+    public IngredientProfile getIngredient(String name) {
+        return ingredients.get(name);
+    }
+
+    public String getIngredientHeadTexture(String ingredientName) {
+        return ingredientHeadTextures.get(ingredientName);
+    }
+
+    public Collection<ItemProfile> getItemsCollection() {
+        return items.values();
+    }
+
     public Collection<IngredientProfile> getIngredientsCollection() {
-        return directIngredients;
-    }
-
-    public Map<String, IngredientProfile> getIngredients() {
-        return ingredients;
-    }
-
-    public Map<String, String> getIngredientHeadTextures() {
-        return ingredientHeadTextures;
+        return ingredients.values();
     }
 }

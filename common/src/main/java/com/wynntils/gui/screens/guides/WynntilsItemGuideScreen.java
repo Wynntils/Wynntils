@@ -144,7 +144,7 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Managers.GearItem.getAllGearItems().stream()
+        elements.addAll(Managers.Item.getAllGearItems().stream()
                 .filter(gearItemStack -> StringUtils.partialMatch(
                         ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
                 .toList());
