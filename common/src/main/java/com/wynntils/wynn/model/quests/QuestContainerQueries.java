@@ -6,9 +6,9 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.handlers.container.ContainerContent;
+import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.container.ContainerContent;
-import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;

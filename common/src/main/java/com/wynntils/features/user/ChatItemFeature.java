@@ -7,10 +7,10 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ public class ChatItemFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent

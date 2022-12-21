@@ -6,13 +6,13 @@ package com.wynntils.wynn.model.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Manager;
-import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ObjectivesManager extends Manager {
-    public static final ScoreboardHandler SCOREBOARD_HANDLER = new ObjectiveHandler();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new ObjectiveListener();
 
     private List<WynnObjective> personalObjectives = new ArrayList<>();
     private WynnObjective guildObjective = null;
