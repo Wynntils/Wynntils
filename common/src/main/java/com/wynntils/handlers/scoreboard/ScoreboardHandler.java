@@ -2,13 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.scoreboard;
+package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.handlers.scoreboard.ScoreboardLine;
-import com.wynntils.handlers.scoreboard.ScoreboardLineChange;
-import com.wynntils.handlers.scoreboard.ScoreboardListener;
-import com.wynntils.handlers.scoreboard.Segment;
+import com.wynntils.core.managers.Handler;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -16,6 +13,7 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,9 +40,7 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ScoreboardHandler {
-    public static final ScoreboardHandler INSTANCE = new ScoreboardHandler();
-
+public final class ScoreboardHandler extends Handler {
     // TimeUnit.MILLISECONDS
     // 250 -> 4 times a second
     private static final int CHANGE_PROCESS_RATE = 250;

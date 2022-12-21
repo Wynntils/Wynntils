@@ -51,7 +51,7 @@ public class ChatTabsFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat, Models.ChatTab);
+        return List.of(Models.ChatTab);
     }
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.

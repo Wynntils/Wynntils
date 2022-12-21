@@ -6,7 +6,7 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Handler;
 import com.wynntils.handlers.chat.events.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.events.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -66,7 +66,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * a different formatting. This could be done, but requires extra logic, and most
  * importantly, a way to update already printed chat lines.
  */
-public final class ChatHandler extends Model {
+public final class ChatHandler extends Handler {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");

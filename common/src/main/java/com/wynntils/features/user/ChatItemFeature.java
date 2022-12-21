@@ -28,7 +28,7 @@ public class ChatItemFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent

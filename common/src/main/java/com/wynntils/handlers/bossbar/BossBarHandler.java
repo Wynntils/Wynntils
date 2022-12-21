@@ -5,6 +5,7 @@
 package com.wynntils.handlers.bossbar;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Handler;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.CustomBarAddEvent;
@@ -14,6 +15,7 @@ import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -23,9 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class BossBarHandler {
-    public static final BossBarHandler INSTANCE = new BossBarHandler();
-
+public class BossBarHandler extends Handler {
     private final Map<UUID, TrackedBar> trackedBarsMap = new HashMap<>();
 
     // FixPacketBugsFeature gets in the way if receiveCanceled is not set
@@ -36,7 +36,13 @@ public class BossBarHandler {
         packet.dispatch(new TrackedBarHandler(event));
     }
 
-    private record TrackedBarHandler(BossHealthUpdateEvent event) implements ClientboundBossEventPacket.Handler {
+    private final class TrackedBarHandler implements ClientboundBossEventPacket.Handler {
+        private final BossHealthUpdateEvent event;
+
+        private TrackedBarHandler(BossHealthUpdateEvent event) {
+            this.event = event;
+        }
+
         @Override
         public void add(
                 UUID id,
@@ -83,11 +89,11 @@ public class BossBarHandler {
 
             trackedBar.onUpdateName(matcher);
 
-            INSTANCE.trackedBarsMap.put(id, trackedBar);
+            trackedBarsMap.put(id, trackedBar);
         }
 
         private void handleBarUpdate(UUID id, Consumer<TrackedBar> consumer) {
-            TrackedBar trackedBar = INSTANCE.trackedBarsMap.get(id);
+            TrackedBar trackedBar = trackedBarsMap.get(id);
 
             if (trackedBar != null) {
                 if (!trackedBar.isRendered()) {
@@ -102,7 +108,7 @@ public class BossBarHandler {
         public void remove(UUID id) {
             handleBarUpdate(id, trackedBar -> {
                 trackedBar.reset();
-                INSTANCE.trackedBarsMap.remove(id);
+                trackedBarsMap.remove(id);
             });
         }
 

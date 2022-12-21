@@ -5,12 +5,9 @@
 package com.wynntils.wynn.model.bossbar;
 
 import com.wynntils.core.managers.Model;
-import com.wynntils.handlers.bossbar.BossBarHandler;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.mc.event.BossHealthUpdateEvent;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class BossBarModel extends Model {
     public static final TrackedBar manaBankBar = new ManaBankBar();
@@ -25,10 +22,4 @@ public final class BossBarModel extends Model {
 
     public static final List<TrackedBar> KNOWN_BARS =
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
-
-    @SubscribeEvent(receiveCanceled = true)
-    public void onHealthBarEvent(BossHealthUpdateEvent event) {
-        // For now, be a proxy for the BossBarHandler
-        BossBarHandler.INSTANCE.onHealthBarEvent(event);
-    }
 }

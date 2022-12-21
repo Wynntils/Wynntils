@@ -22,7 +22,6 @@ import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.handlers.container.ContainerQueryHandler;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.quests.QuestManager;
@@ -38,7 +37,6 @@ public final class Managers {
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
-    public static final ContainerQueryHandler ContainerQuery = new ContainerQueryHandler();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();

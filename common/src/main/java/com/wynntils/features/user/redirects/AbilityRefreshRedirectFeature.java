@@ -24,7 +24,7 @@ public class AbilityRefreshRedirectFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

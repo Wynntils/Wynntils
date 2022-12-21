@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
+import com.wynntils.core.managers.Handlers;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
@@ -24,30 +25,18 @@ public final class ScoreboardModel extends Model {
 
     @Override
     public void init() {
-        ScoreboardHandler.INSTANCE.registerHandler(
+        Handlers.Scoreboard.registerHandler(
                 new ObjectiveListener(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        ScoreboardHandler.INSTANCE.registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
-        ScoreboardHandler.INSTANCE.registerHandler(
+        Handlers.Scoreboard.registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
+        Handlers.Scoreboard.registerHandler(
                 Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
-        ScoreboardHandler.INSTANCE.init();
+        Handlers.Scoreboard.init();
     }
 
     @Override
     public void disable() {
-        ScoreboardHandler.INSTANCE.disable();
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSetScore(ScoreboardSetScoreEvent event) {
-        // For now, be a proxy
-        ScoreboardHandler.INSTANCE.onSetScore(event);
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        // For now, be a proxy
-        ScoreboardHandler.INSTANCE.onWorldStateChange(event);
+        Handlers.Scoreboard.disable();
     }
 
     public enum SegmentType {

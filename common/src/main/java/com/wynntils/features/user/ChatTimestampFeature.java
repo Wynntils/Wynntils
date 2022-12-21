@@ -28,7 +28,7 @@ public class ChatTimestampFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @Override

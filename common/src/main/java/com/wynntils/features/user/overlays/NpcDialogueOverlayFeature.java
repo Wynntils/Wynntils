@@ -17,6 +17,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.managers.Handlers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.core.notifications.NotificationManager;
@@ -76,7 +77,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -171,9 +172,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         private void updateDialogExtractionSettings() {
             if (isEnabled()) {
-                Models.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
-                Models.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
                 currentDialogue = null;
             }
         }

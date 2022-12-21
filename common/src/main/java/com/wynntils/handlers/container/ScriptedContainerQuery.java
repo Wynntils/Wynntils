@@ -5,7 +5,7 @@
 package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.managers.Handlers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -38,7 +38,7 @@ public final class ScriptedContainerQuery {
         if (steps.isEmpty()) return;
 
         ScriptedQueryStep firstStep = steps.pop();
-        Managers.ContainerQuery.runQuery(firstStep);
+        Handlers.ContainerQuery.runQuery(firstStep);
     }
 
     private void setErrorHandler(Consumer<String> errorHandler) {
