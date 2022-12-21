@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.bossbar;
+package com.wynntils.handlers.bossbar;
 
 import com.wynntils.mc.mixin.LerpingBossEventAccessor;
+import com.wynntils.wynn.model.bossbar.BarType;
 import com.wynntils.wynn.objects.ClassType;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -25,7 +26,7 @@ public class TrackedBar {
 
     protected UUID uuid = null;
 
-    TrackedBar(Pattern pattern, BarType type, ClassType classType) {
+    public TrackedBar(Pattern pattern, BarType type, ClassType classType) {
         this.pattern = pattern;
         this.type = type;
         this.classType = classType;
@@ -70,15 +71,7 @@ public class TrackedBar {
         return event != null;
     }
 
-    public BossBarModel.BarProgress getBarProgress() {
-        return isActive() ? new BossBarModel.BarProgress(current, max, event.getProgress()) : null;
-    }
-
-    public enum BarType {
-        BLOODPOOL,
-        MANABANK,
-        AWAKENED,
-        FOCUS,
-        CORRUPTED
+    public BossBarProgress getBarProgress() {
+        return isActive() ? new BossBarProgress(current, max, event.getProgress()) : null;
     }
 }

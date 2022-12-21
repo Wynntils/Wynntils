@@ -4,19 +4,19 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.wynn.model.bossbar.TrackedBar;
+import com.wynntils.wynn.model.bossbar.BarType;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class CustomBarAddEvent extends Event {
-    private final TrackedBar.BarType type;
+    private final BarType type;
 
-    public CustomBarAddEvent(TrackedBar.BarType type) {
+    public CustomBarAddEvent(BarType type) {
         this.type = type;
     }
 
-    public TrackedBar.BarType getType() {
+    public BarType getType() {
         return type;
     }
 }

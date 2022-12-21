@@ -23,12 +23,12 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.bossbar.BossBarProgress;
 import com.wynntils.mc.event.CustomBarAddEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -116,7 +116,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
-        protected abstract BossBarModel.BarProgress progress();
+        protected abstract BossBarProgress progress();
 
         protected abstract String icon();
 
@@ -129,7 +129,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
 
-            BossBarModel.BarProgress barProgress = progress();
+            BossBarProgress barProgress = progress();
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);
@@ -219,10 +219,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             int current = Models.ActionBar.getCurrentHealth();
             int max = Models.ActionBar.getMaxHealth();
-            return new BossBarModel.BarProgress(current, max, current / (float) max);
+            return new BossBarProgress(current, max, current / (float) max);
         }
 
         @Override
@@ -297,7 +297,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.bloodPoolBar.getBarProgress();
         }
 
@@ -333,10 +333,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             int current = Models.ActionBar.getCurrentMana();
             int max = Models.ActionBar.getMaxMana();
-            return new BossBarModel.BarProgress(current, max, current / (float) max);
+            return new BossBarProgress(current, max, current / (float) max);
         }
 
         @Override
@@ -421,7 +421,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.manaBankBar.getBarProgress();
         }
 
@@ -446,7 +446,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.awakenedBar.getBarProgress();
         }
 
@@ -475,7 +475,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.focusBar.getBarProgress();
         }
 
@@ -505,7 +505,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.corruptedBar.getBarProgress();
         }
 
