@@ -31,16 +31,16 @@ import com.wynntils.wynn.objects.Powder;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
-public class PowderAbilityBarOverlayFeature extends UserFeature {
+public class PowderSpecialBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay powderAbilityBarOverlay = new PowderAbilityBarOverlay();
+    private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     @Override
     public List<Model> getModelDependencies() {
         return List.of(Models.ActionBar, Models.GearItemStack);
     }
 
-    public static class PowderAbilityBarOverlay extends Overlay {
+    public static class PowderSpecialBarOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
 
@@ -53,7 +53,7 @@ public class PowderAbilityBarOverlayFeature extends UserFeature {
         @Config
         public boolean hideIfNoCharge = true;
 
-        protected PowderAbilityBarOverlay() {
+        protected PowderSpecialBarOverlay() {
             super(
                     new OverlayPosition(
                             -30,
