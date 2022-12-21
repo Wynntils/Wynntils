@@ -1,4 +1,5 @@
 {
+  "commands.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "core.wynntils.category.inventory": "Inventory",
   "core.wynntils.category.map": "Map",
   "core.wynntils.category.overlays": "Overlays",

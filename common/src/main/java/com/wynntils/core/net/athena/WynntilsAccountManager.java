@@ -44,7 +44,8 @@ public final class WynntilsAccountManager extends Manager {
         login();
     }
 
-    public void reset() {
+    public void reauth() {
+        loggedIn = false;
         login();
     }
 
@@ -53,12 +54,11 @@ public final class WynntilsAccountManager extends Manager {
         if (!event.isFirstJoinWorld()) return;
 
         if (!loggedIn) {
-            // FIXME: Use the proper reload command here, once they are reworked
             MutableComponent failed = Component.literal(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reload")
+            failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));

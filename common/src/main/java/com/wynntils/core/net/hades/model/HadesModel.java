@@ -87,7 +87,7 @@ public final class HadesModel extends Model {
         }
     }
 
-    private void tryDisconnect() {
+    public void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
         }

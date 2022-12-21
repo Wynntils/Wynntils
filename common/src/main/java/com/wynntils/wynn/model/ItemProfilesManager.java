@@ -44,19 +44,6 @@ public final class ItemProfilesManager extends Manager {
         loadData();
     }
 
-    public void reset() {
-        itemGuesses = Map.of();
-        items = Map.of();
-        translatedReferences = Map.of();
-        internalIdentifications = Map.of();
-        majorIdsMap = Map.of();
-        materialTypes = Map.of();
-        ingredients = Map.of();
-        ingredientHeadTextures = Map.of();
-
-        loadData();
-    }
-
     private void loadData() {
         tryLoadItemList();
         tryLoadItemGuesses();
