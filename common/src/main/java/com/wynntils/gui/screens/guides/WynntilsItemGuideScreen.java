@@ -33,8 +33,6 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GearItemStack> parsedItemCache;
-
     private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
     }
@@ -45,12 +43,6 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void doInit() {
-        if (parsedItemCache == null) {
-            parsedItemCache = Managers.ItemProfiles.getItemsCollection().stream()
-                    .map(GearItemStack::new)
-                    .toList();
-        }
-
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
@@ -152,7 +144,7 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(parsedItemCache.stream()
+        elements.addAll(Managers.Item.getAllGearItems().stream()
                 .filter(gearItemStack -> StringUtils.partialMatch(
                         ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
                 .toList());
