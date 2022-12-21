@@ -11,5 +11,5 @@ public interface ScoreboardListener {
 
     void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType);
 
-    void resetHandler();
+    void reset();
 }

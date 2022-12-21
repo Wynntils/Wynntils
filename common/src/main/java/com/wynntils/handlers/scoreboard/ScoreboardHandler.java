@@ -51,7 +51,7 @@ public final class ScoreboardHandler extends Handler {
 
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private final List<Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>>> scoreboardHandlers =
+    private final List<Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>>> scoreboardListeners =
             new ArrayList<>();
 
     private ScheduledExecutorService executor = null;
@@ -146,9 +146,9 @@ public final class ScoreboardHandler extends Handler {
         segments = parsedSegments;
 
         for (Segment segment : removedSegments) {
-            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b().contains(segment.getType())) {
-                    scoreboardHandler.a().onSegmentRemove(segment, segment.getType());
+            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
+                if (scoreboardListener.b().contains(segment.getType())) {
+                    scoreboardListener.a().onSegmentRemove(segment, segment.getType());
                 }
             }
         }
@@ -163,9 +163,9 @@ public final class ScoreboardHandler extends Handler {
         }
 
         for (Segment segment : changedSegments) {
-            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardHandler : scoreboardHandlers) {
-                if (scoreboardHandler.b().contains(segment.getType())) {
-                    scoreboardHandler.a().onSegmentChange(segment, segment.getType());
+            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
+                if (scoreboardListener.b().contains(segment.getType())) {
+                    scoreboardListener.a().onSegmentChange(segment, segment.getType());
                 }
             }
         }
@@ -300,15 +300,15 @@ public final class ScoreboardHandler extends Handler {
 
     public void disable() {
         resetState();
-        scoreboardHandlers.clear();
+        scoreboardListeners.clear();
     }
 
-    public void registerHandler(ScoreboardListener handlerInstance, ScoreboardModel.SegmentType segmentType) {
-        scoreboardHandlers.add(new Pair<>(handlerInstance, Set.of(segmentType)));
+    public void registerListener(ScoreboardListener listener, ScoreboardModel.SegmentType segmentType) {
+        scoreboardListeners.add(new Pair<>(listener, Set.of(segmentType)));
     }
 
-    public void registerHandler(ScoreboardListener handlerInstance, Set<ScoreboardModel.SegmentType> segmentTypes) {
-        scoreboardHandlers.add(new Pair<>(handlerInstance, segmentTypes));
+    public void registerListener(ScoreboardListener listener, Set<ScoreboardModel.SegmentType> segmentTypes) {
+        scoreboardListeners.add(new Pair<>(listener, segmentTypes));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -342,8 +342,8 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardHandler : scoreboardHandlers) {
-            scoreboardHandler.a().resetHandler();
+        for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
+            scoreboardListener.a().reset();
         }
     }
 }

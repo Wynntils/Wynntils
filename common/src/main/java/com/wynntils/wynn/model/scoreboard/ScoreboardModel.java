@@ -20,10 +20,10 @@ public final class ScoreboardModel extends Model {
 
     @Override
     public void init() {
-        Handlers.Scoreboard.registerHandler(
-                Managers.Objectives.SCOREBOARD_HANDLER, Set.of(SegmentType.Objective, SegmentType.GuildObjective));
-        Handlers.Scoreboard.registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
-        Handlers.Scoreboard.registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
+        Handlers.Scoreboard.registerListener(
+                Managers.Objectives.SCOREBOARD_LISTENER, Set.of(SegmentType.Objective, SegmentType.GuildObjective));
+        Handlers.Scoreboard.registerListener(Managers.Quest.SCOREBOARD_LISTENER, SegmentType.Quest);
+        Handlers.Scoreboard.registerListener(Models.GuildAttackTimer.SCOREBOARD_LISTENER, SegmentType.GuildAttackTimer);
 
         Handlers.Scoreboard.init();
     }

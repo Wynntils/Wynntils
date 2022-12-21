@@ -25,7 +25,7 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
 
-    public static final ScoreboardListener SCOREBOARD_HANDLER = new GuildAttackListener();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new GuildAttackListener();
     private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     private List<TerritoryAttackTimer> attackTimers = List.of();

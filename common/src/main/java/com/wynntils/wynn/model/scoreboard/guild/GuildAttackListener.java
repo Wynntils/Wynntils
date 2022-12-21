@@ -21,7 +21,7 @@ public class GuildAttackListener implements ScoreboardListener {
     }
 
     @Override
-    public void resetHandler() {
+    public void reset() {
         Models.GuildAttackTimer.resetTimers();
     }
 }

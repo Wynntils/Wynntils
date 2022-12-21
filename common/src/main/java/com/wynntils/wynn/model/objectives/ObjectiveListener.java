@@ -113,7 +113,7 @@ public class ObjectiveListener implements ScoreboardListener {
     }
 
     @Override
-    public void resetHandler() {
+    public void reset() {
         Managers.Objectives.resetObjectives();
     }
 }

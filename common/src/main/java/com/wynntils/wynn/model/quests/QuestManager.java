@@ -26,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestManager extends Manager {
-    public static final ScoreboardListener SCOREBOARD_HANDLER = new QuestScoreboardListener();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new QuestScoreboardListener();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";

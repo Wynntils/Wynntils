@@ -47,7 +47,7 @@ public class QuestScoreboardListener implements ScoreboardListener {
     }
 
     @Override
-    public void resetHandler() {
+    public void reset() {
         Managers.Quest.clearTrackedQuestFromScoreBoard();
     }
 }

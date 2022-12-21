@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ObjectivesManager extends Manager {
-    public static final ScoreboardListener SCOREBOARD_HANDLER = new ObjectiveListener();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new ObjectiveListener();
 
     private List<WynnObjective> personalObjectives = new ArrayList<>();
     private WynnObjective guildObjective = null;
