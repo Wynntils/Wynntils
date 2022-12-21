@@ -26,6 +26,7 @@ import com.wynntils.wynn.model.container.ContainerQueryManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.item.ItemManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager;
+import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.territory.TerritoryManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -45,6 +46,7 @@ public final class Managers {
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
+    public static final ObjectivesManager Objectives = new ObjectivesManager();
     public static final WorldStateManager WorldState = new WorldStateManager();
 
     // Managers with dependencies, ordered by dependency and then alphabetically

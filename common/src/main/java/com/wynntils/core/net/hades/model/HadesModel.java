@@ -27,7 +27,6 @@ import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -51,8 +50,6 @@ public final class HadesModel extends Model {
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
-
-    private boolean firstWorldJoin = true;
 
     @Override
     public void init() {
@@ -135,9 +132,7 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD && firstWorldJoin) {
-            firstWorldJoin = false;
-
+        if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
                 // FIXME: Use the proper reload command here, once they are reworked
                 MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")

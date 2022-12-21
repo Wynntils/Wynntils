@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.scoreboard.objectives;
+package com.wynntils.wynn.model.objectives;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,104 +23,31 @@ public class ObjectiveHandler implements ScoreboardHandler {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
-    private static WynnObjective guildWynnObjective = null;
-
-    private static final List<WynnObjective> WYNN_OBJECTIVES = new ArrayList<>();
-
-    private static void tryRemoveObjective(WynnObjective parsed) {
-        if (parsed.getGoal() == null) {
-            return;
-        }
-
-        if (guildWynnObjective != null && guildWynnObjective.isSameObjective(parsed)) {
-            guildWynnObjective = null;
-            return;
-        }
-
-        WYNN_OBJECTIVES.removeIf(wynnObjective -> wynnObjective.isSameObjective(parsed));
-    }
-
-    private static void updateObjective(WynnObjective parsed) {
-        Optional<WynnObjective> objective = WYNN_OBJECTIVES.stream()
-                .filter(wynnObjective -> wynnObjective.isSameObjective(parsed))
-                .findFirst();
-
-        if (objective.isEmpty()) {
-            // New objective
-            WYNN_OBJECTIVES.add(parsed);
-        } else {
-            // Objective progress updated
-            objective.get().setScore(parsed.getScore());
-        }
-
-        if (WYNN_OBJECTIVES.size() > 3) {
-            WynntilsMod.error("ObjectiveManager: Stored more than 3 objectives. Reset objective list.");
-            WYNN_OBJECTIVES.clear();
-            WYNN_OBJECTIVES.add(parsed);
-        }
-    }
-
-    private static void updateGuildObjective(WynnObjective parsed) {
-        if (guildWynnObjective != null && guildWynnObjective.isSameObjective(parsed)) {
-            // Objective progress updated
-            guildWynnObjective.setScore(parsed.getScore());
-            return;
-        }
-
-        // New objective
-        guildWynnObjective = parsed;
-    }
-
-    @Override
-    public void resetHandler() {
-        guildWynnObjective = null;
-        WYNN_OBJECTIVES.clear();
-    }
-
-    public static WynnObjective getGuildObjective() {
-        return guildWynnObjective;
-    }
-
-    public static List<WynnObjective> getObjectives() {
-        // Make copy, so we don't have to worry about concurrent modification
-        return new ArrayList<>(WYNN_OBJECTIVES);
-    }
-
     @Override
     public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
-        List<WynnObjective> objectives = reparseObjectives(newValue).stream()
+        List<WynnObjective> objectives = parseObjectives(newValue).stream()
                 .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
                 .toList();
 
         if (segmentType == ScoreboardModel.SegmentType.GuildObjective) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
-                    updateGuildObjective(objective);
+                    Managers.Objectives.updateGuildObjective(objective);
                 }
             }
         } else {
             for (WynnObjective objective : objectives) {
                 if (!objective.isGuildObjective()) {
-                    updateObjective(objective);
+                    Managers.Objectives.updatePersonalObjective(objective);
                 }
             }
 
             // filter out deleted objectives
-            WYNN_OBJECTIVES.removeIf(
-                    wynnObjective -> objectives.stream().noneMatch(other -> other.isSameObjective(wynnObjective)));
+            Managers.Objectives.purgePersonalObjectives(objectives);
         }
     }
 
-    @Override
-    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
-        List<WynnObjective> objectives = reparseObjectives(segment);
-
-        for (WynnObjective objective : objectives) {
-            tryRemoveObjective(objective);
-        }
-    }
-
-    private List<WynnObjective> reparseObjectives(Segment segment) {
+    private List<WynnObjective> parseObjectives(Segment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
         List<String> actualContent = new ArrayList<>();
@@ -172,5 +99,21 @@ public class ObjectiveHandler implements ScoreboardHandler {
             parsedObjectives.add(parsed);
         }
         return parsedObjectives;
+    }
+
+    @Override
+    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
+        List<WynnObjective> objectives = parseObjectives(segment);
+
+        for (WynnObjective objective : objectives) {
+            if (objective.getGoal() != null) {
+                Managers.Objectives.removeObjective(objective);
+            }
+        }
+    }
+
+    @Override
+    public void resetHandler() {
+        Managers.Objectives.resetObjectives();
     }
 }
