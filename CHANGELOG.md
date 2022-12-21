@@ -1,9 +1,21 @@
+## [0.0.2-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.17...v0.0.2-alpha.18) (2022-12-21)
+
+
+### Code Refactoring
+
+* Group guild-related model classes together ([#917](https://github.com/Wynntils/Artemis/issues/917)) ([c54f0dd](https://github.com/Wynntils/Artemis/commit/c54f0dd360f0a75d39c68b18380059b4441739a0))
+
 ## [0.0.2-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.16...v0.0.2-alpha.17) (2022-12-21)
 
 
 ### Bug Fixes
 
 * Replace the last two uncolored regexes and remove uncolored pattern code ([#913](https://github.com/Wynntils/Artemis/issues/913)) ([4b7ab27](https://github.com/Wynntils/Artemis/commit/4b7ab2796d2d18c5dcd9764911ce2e578c259342))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.17 [skip ci] ([80e2c3f](https://github.com/Wynntils/Artemis/commit/80e2c3f8def3a11e112875ac27744e281532d77c))
 
 ## [0.0.2-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.15...v0.0.2-alpha.16) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.14 [skip ci] ([0693ba1](https://github.com/Wynntils/Artemis/commit/0693ba133b78dbd6e05644f5d864fb8388d5637f))
-
-## [0.0.2-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.12...v0.0.2-alpha.13) (2022-12-21)
-
-
-### Code Refactoring
-
-* Create ObjectivesManager ([#908](https://github.com/Wynntils/Artemis/issues/908)) ([8805b67](https://github.com/Wynntils/Artemis/commit/8805b6743d892a7cf5401b0ffd715a3a6f1afbb6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.13 [skip ci] ([fb085d2](https://github.com/Wynntils/Artemis/commit/fb085d2a0f7a1cbffd4e6930451579c69b708a8a))
 
