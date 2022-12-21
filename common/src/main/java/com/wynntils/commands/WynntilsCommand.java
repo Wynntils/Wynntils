@@ -126,8 +126,6 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int version(CommandContext<CommandSourceStack> context) {
-        // TODO: Handle if dev env
-
         MutableComponent buildText;
 
         if (WynntilsMod.getVersion().isEmpty()) {
