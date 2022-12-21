@@ -1,9 +1,21 @@
+## [0.0.2-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.15...v0.0.2-alpha.16) (2022-12-21)
+
+
+### Bug Fixes
+
+* Poi Screen now does not crash on incorrect values, Y field is set correctly, and visibility I18n is correct now ([#912](https://github.com/Wynntils/Artemis/issues/912)) ([2effe06](https://github.com/Wynntils/Artemis/commit/2effe06c4e7a8c690937fce326ea8a0e99633bfb))
+
 ## [0.0.2-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.14...v0.0.2-alpha.15) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Introduce Handlers as an intermediary between MC and Models ([#909](https://github.com/Wynntils/Artemis/issues/909)) ([cc17288](https://github.com/Wynntils/Artemis/commit/cc17288b9415019be86e953512263fe0c398347a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.15 [skip ci] ([12b40ef](https://github.com/Wynntils/Artemis/commit/12b40efe06f2ed1732ca4b26c397cec26ff7ee42))
 
 ## [0.0.2-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.13...v0.0.2-alpha.14) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.12 [skip ci] ([57aa3ee](https://github.com/Wynntils/Artemis/commit/57aa3ee9ea098746c131c3a826f1e5a30783f122))
-
-## [0.0.2-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.10...v0.0.2-alpha.11) (2022-12-21)
-
-
-### Code Refactoring
-
-* Clean up ItemProfilesManager ([#907](https://github.com/Wynntils/Artemis/issues/907)) ([179f653](https://github.com/Wynntils/Artemis/commit/179f65332b49e2d61078b302993cb8cdcc7fc5de))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.11 [skip ci] ([7074071](https://github.com/Wynntils/Artemis/commit/7074071e1f417a10324c314e6cd88706cdfba71d))
 
