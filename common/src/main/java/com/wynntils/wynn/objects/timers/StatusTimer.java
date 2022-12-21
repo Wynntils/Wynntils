@@ -7,7 +7,7 @@ package com.wynntils.wynn.objects.timers;
 public abstract class StatusTimer {
     private final String name; // The name of the consumable (also used to identify it)
 
-    public StatusTimer(String name) {
+    protected StatusTimer(String name) {
         this.name = name;
     }
 

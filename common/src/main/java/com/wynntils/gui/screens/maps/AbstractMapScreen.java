@@ -68,12 +68,12 @@ public abstract class AbstractMapScreen extends Screen {
 
     protected Poi hovered = null;
 
-    public AbstractMapScreen() {
+    protected AbstractMapScreen() {
         super(Component.literal("Map"));
         centerMapAroundPlayer();
     }
 
-    public AbstractMapScreen(float mapCenterX, float mapCenterZ) {
+    protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
     }

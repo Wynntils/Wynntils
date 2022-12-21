@@ -90,7 +90,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                 this));
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
@@ -160,7 +160,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    protected void renderDescription(PoseStack poseStack) {
+    private void renderDescription(PoseStack poseStack) {
         LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();

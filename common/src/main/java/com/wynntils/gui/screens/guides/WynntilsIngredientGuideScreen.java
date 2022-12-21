@@ -121,7 +121,7 @@ public final class WynntilsIngredientGuideScreen
         if (hovered instanceof GuideIngredientItemStack guideGearItemStack) {
             IngredientItemStack itemStack = guideGearItemStack.getItemStack();
 
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
+            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
 
             String unformattedName = itemStack.getIngredientProfile().getDisplayName();

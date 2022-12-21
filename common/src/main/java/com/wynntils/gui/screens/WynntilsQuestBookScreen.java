@@ -194,7 +194,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
                         FontRenderer.TextShadow.NONE);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof ReloadButton) {
