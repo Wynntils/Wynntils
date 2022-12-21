@@ -16,6 +16,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
 import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
@@ -27,9 +28,8 @@ import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.wynn.model.objectives.WynnObjective;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveListener;
-import com.wynntils.wynn.model.scoreboard.objectives.WynnObjective;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -87,7 +87,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            WynnObjective guildObjective = ObjectiveListener.getGuildObjective();
+            WynnObjective guildObjective = Managers.Objectives.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -178,7 +178,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<WynnObjective> objectives = ObjectiveListener.getObjectives();
+            List<WynnObjective> objectives = Managers.Objectives.getPersonalObjectives();
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;

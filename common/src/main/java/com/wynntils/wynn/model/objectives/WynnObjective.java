@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.scoreboard.objectives;
+package com.wynntils.wynn.model.objectives;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import java.util.Objects;
@@ -31,7 +31,7 @@ public final class WynnObjective {
         this.isGuildObjective = isGuildObjective;
     }
 
-    public static WynnObjective parseObjectiveLine(String objectiveLine, boolean isGuildObjective) {
+    static WynnObjective parseObjectiveLine(String objectiveLine, boolean isGuildObjective) {
         String stripped = ComponentUtils.stripFormatting(objectiveLine);
 
         assert stripped != null;
