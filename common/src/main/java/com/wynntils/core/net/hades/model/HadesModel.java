@@ -23,7 +23,6 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -56,15 +55,18 @@ public final class HadesModel extends Model {
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }
+
+        Managers.WynntilsAccount.onLoginRun(this::onLogin);
     }
 
     @Override
     public void disable() {
         tryDisconnect();
+
+        Managers.WynntilsAccount.removeOnLogin(this::onLogin);
     }
 
-    @SubscribeEvent
-    public void onAthenaLoginEvent(AthenaLoginEvent event) {
+    public void onLogin() {
         // Try to log in to Hades, if we're not already connected
         if (!isConnected()) {
             tryCreateConnection();

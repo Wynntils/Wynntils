@@ -12,10 +12,10 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +38,8 @@ public final class WynntilsAccountManager extends Manager {
 
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
+
+    private final List<Runnable> onLogin = new ArrayList<>();
 
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
@@ -114,9 +116,20 @@ public final class WynntilsAccountManager extends Manager {
                                 encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                 loggedIn = true;
                 WynntilsMod.info("Successfully connected to Athena!");
-                WynntilsMod.postEvent(new AthenaLoginEvent());
+
+                // It would be ideal to use an event here, but the event bus seems to be having issues with doing so.
+                // Maybe this is related to the fact that this is called from ForkJoinPool?
+                onLogin.forEach(Runnable::run);
             });
         });
+    }
+
+    public void onLoginRun(Runnable runnable) {
+        onLogin.add(runnable);
+    }
+
+    public void removeOnLogin(Runnable runnable) {
+        onLogin.remove(runnable);
     }
 
     private String parseAndJoinPublicKey(String key) {
