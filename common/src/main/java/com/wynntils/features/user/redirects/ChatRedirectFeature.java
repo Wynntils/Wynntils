@@ -10,7 +10,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;
@@ -121,16 +120,10 @@ public class ChatRedirectFeature extends UserFeature {
             RedirectAction action = redirector.getAction();
             if (action == RedirectAction.KEEP) continue;
 
-            Matcher matcher;
             Pattern pattern = redirector.getPattern(messageType);
-            // Ideally we will get rid of those "uncolored" patterns
-            Pattern uncoloredPattern = redirector.getUncoloredForegroundPattern();
-            if (messageType == MessageType.FOREGROUND && uncoloredPattern != null) {
-                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(message));
-            } else {
-                if (pattern == null) continue;
-                matcher = pattern.matcher(message);
-            }
+            if (pattern == null) continue;
+
+            Matcher matcher = pattern.matcher(message);
 
             if (matcher.find()) {
                 e.setCanceled(true);
@@ -151,13 +144,6 @@ public class ChatRedirectFeature extends UserFeature {
 
     public interface Redirector {
         Pattern getPattern(MessageType messageType);
-
-        // This is a bit of a hack to support patterns without
-        // color coding.
-        @Deprecated
-        default Pattern getUncoloredForegroundPattern() {
-            return null;
-        }
 
         ChatRedirectFeature.RedirectAction getAction();
 
