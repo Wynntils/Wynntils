@@ -5,7 +5,7 @@
 package com.wynntils.handlers.actionbar;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Handler;
+import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.wynn.utils.WynnUtils;
