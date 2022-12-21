@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.wynn.objects.EmeraldSymbols;

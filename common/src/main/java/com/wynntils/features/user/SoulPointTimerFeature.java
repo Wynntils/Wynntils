@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import java.util.List;
 
 @FeatureInfo(stability = Stability.STABLE)

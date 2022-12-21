@@ -5,12 +5,12 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;

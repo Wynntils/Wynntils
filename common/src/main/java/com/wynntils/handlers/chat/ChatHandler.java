@@ -5,8 +5,8 @@
 package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handler;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.managers.Handler;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;

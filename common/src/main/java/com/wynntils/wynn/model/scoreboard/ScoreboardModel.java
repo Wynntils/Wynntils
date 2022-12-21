@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
-import com.wynntils.core.managers.Handlers;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import java.util.Set;
 import java.util.regex.Pattern;
 

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item.parsers;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;

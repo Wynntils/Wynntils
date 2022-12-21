@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.PointerType;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;

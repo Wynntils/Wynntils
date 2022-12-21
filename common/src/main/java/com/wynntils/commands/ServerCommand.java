@@ -10,7 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.List;
