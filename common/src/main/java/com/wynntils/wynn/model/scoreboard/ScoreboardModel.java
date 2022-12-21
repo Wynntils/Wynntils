@@ -15,7 +15,6 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -304,7 +303,8 @@ public final class ScoreboardModel extends Model {
 
     @Override
     public void init() {
-        registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
+        registerHandler(
+                Managers.Objectives.SCOREBOARD_HANDLER, Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
         registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
