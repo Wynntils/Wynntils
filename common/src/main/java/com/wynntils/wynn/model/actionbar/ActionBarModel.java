@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model.actionbar;
 
-import com.wynntils.core.managers.Handlers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Model;
 import com.wynntils.wynn.objects.Powder;
 
 public final class ActionBarModel extends Model {
