@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.container;
+package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Manager;
@@ -19,7 +19,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ContainerQueryManager extends Manager {
+public final class ContainerQueryHandler extends Manager {
     private static final int NO_CONTAINER = -2;
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
 
@@ -35,7 +35,7 @@ public final class ContainerQueryManager extends Manager {
     private int lastHandledContentId = NO_CONTAINER;
     private int ticksRemaining;
 
-    public ContainerQueryManager() {
+    public ContainerQueryHandler() {
         super(List.of());
     }
 

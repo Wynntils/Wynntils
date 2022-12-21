@@ -13,7 +13,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.ProfessionInfo;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
