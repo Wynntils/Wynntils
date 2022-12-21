@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

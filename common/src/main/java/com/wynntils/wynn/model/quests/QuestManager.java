@@ -10,12 +10,12 @@ import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestManager extends Manager {
-    public static final ScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new QuestScoreboardListener();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";

@@ -6,15 +6,15 @@ package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.Segment;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 
-public class QuestScoreboardHandler implements ScoreboardHandler {
+public class QuestScoreboardListener implements ScoreboardListener {
     @Override
     public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
         List<String> content = newValue.getContent();
@@ -47,7 +47,7 @@ public class QuestScoreboardHandler implements ScoreboardHandler {
     }
 
     @Override
-    public void resetHandler() {
+    public void reset() {
         Managers.Quest.clearTrackedQuestFromScoreBoard();
     }
 }
