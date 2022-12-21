@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -12,7 +13,6 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.utils.PlayerInfoUtils;
-import com.wynntils.sockets.objects.HadesUser;
 import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;
