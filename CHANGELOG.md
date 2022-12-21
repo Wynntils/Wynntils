@@ -1,9 +1,21 @@
+## [0.0.2-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.18...v0.0.2-alpha.19) (2022-12-21)
+
+
+### Code Refactoring
+
+* Shuffle more files around, mostly moving events closer to the source ([#918](https://github.com/Wynntils/Artemis/issues/918)) ([67a0b79](https://github.com/Wynntils/Artemis/commit/67a0b79bd48a1d362c955060fde637d83c44baf8))
+
 ## [0.0.2-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.17...v0.0.2-alpha.18) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Group guild-related model classes together ([#917](https://github.com/Wynntils/Artemis/issues/917)) ([c54f0dd](https://github.com/Wynntils/Artemis/commit/c54f0dd360f0a75d39c68b18380059b4441739a0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.18 [skip ci] ([739a323](https://github.com/Wynntils/Artemis/commit/739a323735a3b882eaa8c4a0d57a6c40122f5b5d))
 
 ## [0.0.2-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.16...v0.0.2-alpha.17) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.15 [skip ci] ([12b40ef](https://github.com/Wynntils/Artemis/commit/12b40efe06f2ed1732ca4b26c397cec26ff7ee42))
-
-## [0.0.2-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.13...v0.0.2-alpha.14) (2022-12-21)
-
-
-### Code Refactoring
-
-* Move hades stuff to core.net.hades. ([#910](https://github.com/Wynntils/Artemis/issues/910)) ([b9d2cb9](https://github.com/Wynntils/Artemis/commit/b9d2cb93c484789a1eebbb88f837f311d5644811))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.14 [skip ci] ([0693ba1](https://github.com/Wynntils/Artemis/commit/0693ba133b78dbd6e05644f5d864fb8388d5637f))
 
