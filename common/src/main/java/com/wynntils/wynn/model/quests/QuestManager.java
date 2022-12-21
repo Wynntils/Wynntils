@@ -198,13 +198,13 @@ public final class QuestManager extends Manager {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    protected void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
+    void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
         quests = newQuests;
         maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    protected void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
+    void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
         miniQuests = newMiniQuests;
         maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
@@ -225,7 +225,7 @@ public final class QuestManager extends Manager {
         }
     }
 
-    protected void setDialogueHistory(List<List<String>> newDialogueHistory) {
+    void setDialogueHistory(List<List<String>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }

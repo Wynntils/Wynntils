@@ -28,10 +28,10 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapModel extends Model {
-    private final List<MapTexture> MAPS = new CopyOnWriteArrayList<>();
-    private final Set<LabelPoi> LABEL_POIS = new HashSet<>();
-    private final Set<ServicePoi> SERVICE_POIS = new HashSet<>();
-    private final Set<CombatPoi> COMBAT_POIS = new HashSet<>();
+    private final List<MapTexture> maps = new CopyOnWriteArrayList<>();
+    private final Set<LabelPoi> labelPois = new HashSet<>();
+    private final Set<ServicePoi> servicePois = new HashSet<>();
+    private final Set<CombatPoi> combatPois = new HashSet<>();
 
     @Override
     public void init() {
@@ -42,23 +42,23 @@ public final class MapModel extends Model {
     }
 
     public Set<LabelPoi> getLabelPois() {
-        return LABEL_POIS;
+        return labelPois;
     }
 
     public Set<ServicePoi> getServicePois() {
-        return SERVICE_POIS;
+        return servicePois;
     }
 
     public Set<CombatPoi> getCombatPois() {
-        return COMBAT_POIS;
+        return combatPois;
     }
 
     public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
-        return MAPS.stream().filter(map -> box.intersects(map.getBox())).toList();
+        return maps.stream().filter(map -> box.intersects(map.getBox())).toList();
     }
 
     private void loadMaps() {
-        MAPS.clear();
+        maps.clear();
 
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPS);
         dl.handleReader(reader -> {
@@ -75,14 +75,13 @@ public final class MapModel extends Model {
                                 NativeImage nativeImage = NativeImage.read(inputStream);
                                 MapTexture mapPartImage = new MapTexture(
                                         fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                                MAPS.add(mapPartImage);
+                                maps.add(mapPartImage);
                             } catch (IOException e) {
                                 WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                             }
                         },
-                        onError -> {
-                            WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError);
-                        });
+                        onError -> WynntilsMod.warn(
+                                "Error occurred while download map image of " + mapPart.name, onError));
             }
         });
     }
@@ -92,7 +91,7 @@ public final class MapModel extends Model {
         dl.handleReader(reader -> {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
-                LABEL_POIS.add(new LabelPoi(label));
+                labelPois.add(new LabelPoi(label));
             }
         });
     }
@@ -107,7 +106,7 @@ public final class MapModel extends Model {
                 ServiceKind kind = ServiceKind.fromString(service.type);
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
-                        SERVICE_POIS.add(new ServicePoi(location, kind));
+                        servicePois.add(new ServicePoi(location, kind));
                     }
                 } else {
                     WynntilsMod.warn("Unknown service type in services.json: " + service.type);
@@ -126,7 +125,7 @@ public final class MapModel extends Model {
                 CombatKind kind = CombatKind.fromString(combatList.type);
                 if (kind != null) {
                     for (CombatProfileList.CombatProfile profile : combatList.locations) {
-                        COMBAT_POIS.add(new CombatPoi(profile.coordinates, profile.name, kind));
+                        combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
                     }
                 } else {
                     WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);

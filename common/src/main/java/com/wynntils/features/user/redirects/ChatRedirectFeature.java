@@ -472,7 +472,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            Integer ingredientCount = Integer.parseInt(matcher.group(1));
+            int ingredientCount = Integer.parseInt(matcher.group(1));
             String ingredientString = ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s");
 
             String emeraldString = matcher.group(2);
@@ -701,7 +701,6 @@ public class ChatRedirectFeature extends UserFeature {
             return switch (messageType) {
                 case BACKGROUND -> BACKGROUND_PATTERN;
                 case FOREGROUND -> FOREGROUND_PATTERN;
-                default -> null;
             };
         }
 
@@ -763,7 +762,7 @@ public class ChatRedirectFeature extends UserFeature {
             String numberString = matcher.group(1);
             String pluralizer = "";
 
-            Integer numberValue = Integer.parseInt(numberString);
+            int numberValue = Integer.parseInt(numberString);
             if (numberValue > 1) {
                 pluralizer = "s";
             }

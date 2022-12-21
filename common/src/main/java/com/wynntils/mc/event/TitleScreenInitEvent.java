@@ -14,7 +14,7 @@ public abstract class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
     private final Consumer<AbstractWidget> addButton;
 
-    public TitleScreenInitEvent(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
+    protected TitleScreenInitEvent(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
         this.titleScreen = titleScreen;
         this.addButton = addButton;
     }

@@ -33,9 +33,7 @@ public class ChatTabButton extends WynntilsButton {
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
-        CustomColor color = Models.ChatTab.getFocusedTab() == tab
-                ? CommonColors.GREEN
-                : (Models.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE);
+        CustomColor color = getTabColor();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -49,6 +47,12 @@ public class ChatTabButton extends WynntilsButton {
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
                         FontRenderer.TextShadow.OUTLINE);
+    }
+
+    private CustomColor getTabColor() {
+        if (Models.ChatTab.getFocusedTab() == tab) return CommonColors.GREEN;
+
+        return Models.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 
     @Override

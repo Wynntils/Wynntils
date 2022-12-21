@@ -150,8 +150,8 @@ public final class DiscoveryManager extends Manager {
             String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
             String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
 
-            int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
-            int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
+            int xEnd = Math.min(xLocation.indexOf('|'), xLocation.indexOf("}}"));
+            int zEnd = Math.min(zLocation.indexOf('|'), zLocation.indexOf("}}"));
 
             int x;
             int z;

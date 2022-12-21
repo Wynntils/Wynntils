@@ -20,7 +20,7 @@ public final class BombBellModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
-    private final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
+    private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
 
     @Override
     public void disable() {

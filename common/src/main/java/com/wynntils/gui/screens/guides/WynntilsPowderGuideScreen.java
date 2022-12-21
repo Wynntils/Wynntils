@@ -105,7 +105,7 @@ public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<Powd
         if (hovered instanceof GuidePowderItemStack guidePowderItemStack) {
             PowderItemStack itemStack = guidePowderItemStack.getItemStack();
 
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
+            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {

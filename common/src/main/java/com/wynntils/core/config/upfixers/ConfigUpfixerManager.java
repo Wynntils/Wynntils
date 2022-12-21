@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigUpfixerManager extends Manager {
-    public final String UPFIXER_JSON_MEMBER_NAME = "wynntils.upfixers";
+    public static final String UPFIXER_JSON_MEMBER_NAME = "wynntils.upfixers";
 
     private final List<ConfigUpfixer> configUpfixers = new ArrayList<>();
 
