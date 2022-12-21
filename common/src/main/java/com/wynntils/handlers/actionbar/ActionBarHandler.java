@@ -60,7 +60,6 @@ public final class ActionBarHandler extends Handler {
             }
             return;
         }
-        ;
         previousRawContent = content;
 
         Matcher matcher = ACTIONBAR_PATTERN.matcher(content);
