@@ -2,7 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.scoreboard;
+package com.wynntils.handlers.scoreboard;
+
+import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
 public interface ScoreboardListener {
     void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType);

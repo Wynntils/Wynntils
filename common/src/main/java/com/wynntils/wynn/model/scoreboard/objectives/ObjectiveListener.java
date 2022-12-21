@@ -5,9 +5,9 @@
 package com.wynntils.wynn.model.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.wynn.model.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.Segment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

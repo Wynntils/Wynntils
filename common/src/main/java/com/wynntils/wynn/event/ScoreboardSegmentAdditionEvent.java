@@ -5,7 +5,7 @@
 package com.wynntils.wynn.event;
 
 import com.wynntils.core.events.EventThread;
-import com.wynntils.wynn.model.scoreboard.Segment;
+import com.wynntils.handlers.scoreboard.Segment;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 

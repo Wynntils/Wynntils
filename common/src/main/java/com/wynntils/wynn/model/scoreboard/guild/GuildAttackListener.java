@@ -5,9 +5,9 @@
 package com.wynntils.wynn.model.scoreboard.guild;
 
 import com.wynntils.core.managers.Models;
-import com.wynntils.wynn.model.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.Segment;
 
 public class GuildAttackListener implements ScoreboardListener {
     @Override
