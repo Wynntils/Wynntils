@@ -15,7 +15,7 @@ import com.wynntils.gui.widgets.BasicTexturedButton;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.model.map.poi.CustomPoi;

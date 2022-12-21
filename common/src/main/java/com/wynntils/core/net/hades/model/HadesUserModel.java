@@ -2,15 +2,17 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.sockets.model;
+package com.wynntils.core.net.hades.model;
 
 import com.wynntils.core.managers.Model;
-import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.core.net.hades.objects.HadesUser;
+import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class HadesUserModel extends Model {
     private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
@@ -22,6 +24,11 @@ public final class HadesUserModel extends Model {
 
     @Override
     public void disable() {
+        hadesUserMap.clear();
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
         hadesUserMap.clear();
     }
 

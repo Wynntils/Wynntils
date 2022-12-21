@@ -12,7 +12,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.utils.PlayerInfoUtils;
-import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;

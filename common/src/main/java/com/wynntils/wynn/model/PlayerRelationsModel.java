@@ -8,10 +8,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.MessageType;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -64,7 +63,7 @@ public final class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(HadesEvent.Authenticated event) {
         if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
@@ -73,8 +72,6 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        Models.HadesUser.getHadesUserMap().clear();
-
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             requestFriendListUpdate();
             requestPartyListUpdate();

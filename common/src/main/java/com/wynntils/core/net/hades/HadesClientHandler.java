@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.sockets;
+package com.wynntils.core.net.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
@@ -18,8 +18,8 @@ import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.sockets.objects.HadesUser;
+import com.wynntils.core.net.hades.event.HadesEvent;
+import com.wynntils.core.net.hades.objects.HadesUser;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -50,7 +50,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onDisconnect() {
-        WynntilsMod.postEvent(new SocketEvent.Disconnected());
+        WynntilsMod.postEvent(new HadesEvent.Disconnected());
 
         if (Managers.WorldState.onServer()) {
             McUtils.sendMessageToClient(
@@ -71,7 +71,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent = Component.literal("Successfully connected to HadesServer")
                         .withStyle(ChatFormatting.GREEN);
-                WynntilsMod.postEvent(new SocketEvent.Authenticated());
+                WynntilsMod.postEvent(new HadesEvent.Authenticated());
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
