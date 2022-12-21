@@ -44,6 +44,10 @@ public final class ItemProfilesManager extends Manager {
         loadData();
     }
 
+    public void reloadData() {
+        loadData();
+    }
+
     private void loadData() {
         tryLoadItemList();
         tryLoadItemGuesses();

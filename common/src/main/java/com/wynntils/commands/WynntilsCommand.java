@@ -54,6 +54,7 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
+                .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
     }
@@ -109,6 +110,21 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
+    private int reloadCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.reloadCaches.reloading")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Managers.Url.reloadUrls();
+        Managers.ItemProfiles.reloadData();
+        Managers.Discovery.reloadData();
+        Models.Map.reloadData();
+
+        return 1;
+    }
+
     private int version(CommandContext<CommandSourceStack> context) {
         // TODO: Handle if dev env
 
@@ -159,6 +175,7 @@ public class WynntilsCommand extends CommandBase {
         addCommandDescription(text, "wynntils", List.of("reauth"), "This re-auths into Athena and Hades.");
         addCommandDescription(
                 text, "wynntils", List.of("clearcaches"), "This clears all Wynntils caches and closes the game.");
+        addCommandDescription(text, "wynntils", List.of("reloadcaches"), "This attempts to re-download caches.");
         addCommandDescription(text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,

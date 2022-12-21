@@ -28,6 +28,10 @@ public final class SplashManager extends Manager {
         updateCurrentSplash();
     }
 
+    public void reset() {
+        updateCurrentSplash();
+    }
+
     public String getCurrentSplash() {
         return currentSplash;
     }
