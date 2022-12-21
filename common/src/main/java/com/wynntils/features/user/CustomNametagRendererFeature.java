@@ -89,7 +89,7 @@ public class CustomNametagRendererFeature extends UserFeature {
             return;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
         if (itemProfile == null) return;
 
         // this solves an unidentified item showcase exploit

@@ -34,8 +34,6 @@ public final class WynntilsIngredientGuideScreen
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<IngredientItemStack> parsedItemCache;
-
     private WynntilsIngredientGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
     }
@@ -46,12 +44,6 @@ public final class WynntilsIngredientGuideScreen
 
     @Override
     protected void doInit() {
-        if (parsedItemCache == null) {
-            parsedItemCache = Managers.ItemProfiles.getIngredientsCollection().stream()
-                    .map(IngredientItemStack::new)
-                    .toList();
-        }
-
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
@@ -177,7 +169,7 @@ public final class WynntilsIngredientGuideScreen
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(parsedItemCache.stream()
+        elements.addAll(Managers.Item.getAllIngredientItems().stream()
                 .filter(itemStack ->
                         StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
                 .toList());

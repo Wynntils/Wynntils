@@ -311,9 +311,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Managers.ItemProfiles.getTranslatedReferences()
-                .getOrDefault(unformattedItemName, unformattedItemName)
-                .replace("֎", "");
+        return Managers.ItemProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
     }
 
     // Get gear item from un-parsed wynn item
@@ -340,7 +338,7 @@ public final class WynnItemUtils {
             return itemStack;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
 
         if (itemProfile == null) {
             return null;
@@ -367,8 +365,7 @@ public final class WynnItemUtils {
                 float percent = idInfo.get("percent").getAsInt() / 100f;
 
                 // get wynntils name from internal wynncraft name
-                String translatedId =
-                        Managers.ItemProfiles.getInternalIdentifications().get(id);
+                String translatedId = Managers.ItemProfiles.getInternalIdentification(id);
                 if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value
