@@ -26,7 +26,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.handlers.scoreboard.events.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveListener;
 import com.wynntils.wynn.model.scoreboard.objectives.WynnObjective;

@@ -23,7 +23,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.handlers.scoreboard.events.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.Comparator;

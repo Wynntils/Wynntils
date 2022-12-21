@@ -6,11 +6,11 @@ package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Handler;
+import com.wynntils.handlers.scoreboard.events.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
