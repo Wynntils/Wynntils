@@ -21,8 +21,8 @@ class CorruptedBar extends TrackedBar {
             max = 100;
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
-                    "Failed to parse current and max for corrupted bar %s (%s out of %s)",
-                    type, match.group(1), match.group(2)));
+                    "Failed to parse current and max for corrupted bar (%s out of %s)",
+                    match.group(1), match.group(2)));
         }
     }
 }
