@@ -31,16 +31,15 @@ public final class ItemProfilesManager extends Manager {
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
 
-    private HashMap<String, ItemProfile> items = new HashMap<>();
-    private Collection<ItemProfile> directItems = new ArrayList<>();
-    private HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private HashMap<String, String> translatedReferences = new HashMap<>();
-    private HashMap<String, String> internalIdentifications = new HashMap<>();
-    private HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private HashMap<ItemType, String[]> materialTypes = new HashMap<>();
-    private HashMap<String, IngredientProfile> ingredients = new HashMap<>();
+    private Map<String, ItemProfile> items = Map.of();
+    private Map<String, ItemGuessProfile> itemGuesses = new HashMap<>();
+    private Map<String, String> translatedReferences = new HashMap<>();
+    private Map<String, String> internalIdentifications = new HashMap<>();
+    private Map<String, MajorIdentification> majorIds = new HashMap<>();
+    private Map<ItemType, String[]> materialTypes = new HashMap<>();
+    private Map<String, IngredientProfile> ingredients = new HashMap<>();
     private Collection<IngredientProfile> directIngredients = new ArrayList<>();
-    private HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+    private Map<String, String> ingredientHeadTextures = new HashMap<>();
 
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
@@ -58,8 +57,7 @@ public final class ItemProfilesManager extends Manager {
         itemGuesses = null;
 
         // tryLoadItemList
-        items = null;
-        directItems = null;
+        items = Map.of();
         translatedReferences = null;
         internalIdentifications = null;
         majorIds = null;
@@ -88,11 +86,13 @@ public final class ItemProfilesManager extends Manager {
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WynntilsMod.GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
+
             internalIdentifications =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIds = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
@@ -100,22 +100,18 @@ public final class ItemProfilesManager extends Manager {
             IdentificationOrderer.INSTANCE =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-            ItemProfile[] gItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            ItemProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            HashMap<String, ItemProfile> newItems = new HashMap<>();
+            for (ItemProfile itemProfile : jsonItems) {
+                itemProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
+                itemProfile.addMajorIds(majorIds);
+                itemProfile.registerIdTypes();
 
-            HashMap<String, ItemProfile> citems = new HashMap<>();
-            for (ItemProfile prof : gItems) {
-                prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
-                prof.addMajorIds(majorIds);
-                citems.put(prof.getDisplayName(), prof);
+                newItems.put(itemProfile.getDisplayName(), itemProfile);
             }
 
-            citems.values().forEach(ItemProfile::registerIdTypes);
-
-            directItems = citems.values();
-            items = citems;
+            items = newItems;
         });
-
-        // Check for success
     }
 
     private void tryLoadIngredientList() {
@@ -142,27 +138,27 @@ public final class ItemProfilesManager extends Manager {
         });
     }
 
-    public HashMap<String, ItemGuessProfile> getItemGuesses() {
+    public Map<String, ItemGuessProfile> getItemGuesses() {
         return itemGuesses;
     }
 
     public Collection<ItemProfile> getItemsCollection() {
-        return directItems;
+        return items.values();
     }
 
-    public HashMap<String, ItemProfile> getItemsMap() {
-        return items;
+    public ItemProfile getItemsProfile(String name) {
+        return items.get(name);
     }
 
-    public HashMap<ItemType, String[]> getMaterialTypes() {
+    public Map<ItemType, String[]> getMaterialTypes() {
         return materialTypes;
     }
 
-    public HashMap<String, MajorIdentification> getMajorIds() {
+    public Map<String, MajorIdentification> getMajorIds() {
         return majorIds;
     }
 
-    public HashMap<String, String> getInternalIdentifications() {
+    public Map<String, String> getInternalIdentifications() {
         return internalIdentifications;
     }
 
@@ -174,11 +170,11 @@ public final class ItemProfilesManager extends Manager {
         return directIngredients;
     }
 
-    public HashMap<String, IngredientProfile> getIngredients() {
+    public Map<String, IngredientProfile> getIngredients() {
         return ingredients;
     }
 
-    public HashMap<String, String> getIngredientHeadTextures() {
+    public Map<String, String> getIngredientHeadTextures() {
         return ingredientHeadTextures;
     }
 }

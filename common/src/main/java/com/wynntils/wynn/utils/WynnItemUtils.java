@@ -340,7 +340,7 @@ public final class WynnItemUtils {
             return itemStack;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
 
         if (itemProfile == null) {
             return null;

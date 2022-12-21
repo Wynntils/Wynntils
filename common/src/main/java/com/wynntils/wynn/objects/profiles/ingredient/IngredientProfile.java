@@ -6,7 +6,6 @@ package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.managers.Managers;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -89,7 +88,7 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            HashMap<String, String> ingredientHeadTextures = Managers.ItemProfiles.getIngredientHeadTextures();
+            Map<String, String> ingredientHeadTextures = Managers.ItemProfiles.getIngredientHeadTextures();
 
             if (ingredientHeadTextures.containsKey(name)) {
                 CompoundTag skullData = new CompoundTag();

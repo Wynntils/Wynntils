@@ -62,7 +62,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         }
 
         if (levelRange == null) return;
-        if (Managers.ItemProfiles.getItemGuesses() == null || Managers.ItemProfiles.getItemsMap() == null) return;
+        if (Managers.ItemProfiles.getItemGuesses() == null) return;
 
         ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuesses().get(levelRange);
         if (guessProfile == null) return;
@@ -78,7 +78,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(item);
+            ItemProfile profile = Managers.ItemProfiles.getItemsProfile(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
