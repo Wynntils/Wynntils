@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 public final class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
+    private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER);
 
     public UpdateManager(NetManager netManager) {
         super(List.of(netManager));
@@ -90,9 +91,12 @@ public final class UpdateManager extends Manager {
         return future;
     }
 
+    public File getUpdatesFolder() {
+        return UPDATES_FOLDER;
+    }
+
     private File getUpdateFile() {
-        File updatesDir =
-                new File(WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER).toURI());
+        File updatesDir = new File(UPDATES_FOLDER.toURI());
         FileUtils.mkdir(updatesDir);
         return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
     }

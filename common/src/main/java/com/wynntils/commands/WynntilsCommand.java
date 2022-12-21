@@ -12,6 +12,8 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.managers.Managers;
 import com.wynntils.core.managers.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.utils.Delay;
+import com.wynntils.utils.FileUtils;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -49,6 +51,9 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("clearcaches")
+                        .then(Commands.literal("run").executes(this::doClearCaches))
+                        .executes(this::clearCaches))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
     }
@@ -63,6 +68,43 @@ public class WynntilsCommand extends CommandBase {
         Models.Hades.tryDisconnect();
         Managers.WynntilsAccount.reauth();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
+
+        return 1;
+    }
+
+    private int clearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.warn")
+                                .withStyle(ChatFormatting.DARK_RED),
+                        false);
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.clickHere")
+                                .withStyle(ChatFormatting.BLUE)
+                                .withStyle(ChatFormatting.UNDERLINE)
+                                .withStyle(style -> style.withClickEvent(
+                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils clearcaches run"))),
+                        false);
+
+        return 1;
+    }
+
+    private int doClearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.deleting")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Delay.create(
+                () -> {
+                    FileUtils.deleteFolder(Managers.Net.getCacheDir());
+                    FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
+
+                    System.exit(0);
+                },
+                100);
 
         return 1;
     }
@@ -115,6 +157,8 @@ public class WynntilsCommand extends CommandBase {
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
         addCommandDescription(text, "wynntils", List.of("reauth"), "This re-auths into Athena and Hades.");
+        addCommandDescription(
+                text, "wynntils", List.of("clearcaches"), "This clears all Wynntils caches and closes the game.");
         addCommandDescription(text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,
