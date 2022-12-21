@@ -365,7 +365,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.CustomPoi.Visibility") + ":",
+                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
