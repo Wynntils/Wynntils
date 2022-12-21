@@ -1,9 +1,21 @@
+## [0.0.2-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.11...v0.0.2-alpha.12) (2022-12-21)
+
+
+### Code Refactoring
+
+* WorldStateManager should know about first world joins ([#911](https://github.com/Wynntils/Artemis/issues/911)) ([833c8ac](https://github.com/Wynntils/Artemis/commit/833c8aceeffdeab56e26e99a0a0f86e6fac6f2b0))
+
 ## [0.0.2-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.10...v0.0.2-alpha.11) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Clean up ItemProfilesManager ([#907](https://github.com/Wynntils/Artemis/issues/907)) ([179f653](https://github.com/Wynntils/Artemis/commit/179f65332b49e2d61078b302993cb8cdcc7fc5de))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.11 [skip ci] ([7074071](https://github.com/Wynntils/Artemis/commit/7074071e1f417a10324c314e6cd88706cdfba71d))
 
 ## [0.0.2-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.9...v0.0.2-alpha.10) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.8 [skip ci] ([b3bcc57](https://github.com/Wynntils/Artemis/commit/b3bcc573d4a735e15fbf160cb0c5cad40d9738a3))
-
-## [0.0.2-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.6...v0.0.2-alpha.7) (2022-12-20)
-
-
-### Bug Fixes
-
-* Do not do number formatting on info variables ([#903](https://github.com/Wynntils/Artemis/issues/903)) ([89db0d6](https://github.com/Wynntils/Artemis/commit/89db0d6e3419bc5ea5898e6e949ac860b7b24797))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.7 [skip ci] ([5a90836](https://github.com/Wynntils/Artemis/commit/5a908364cbf790be2a9a5b2a1e5781fdfb05d794))
 
