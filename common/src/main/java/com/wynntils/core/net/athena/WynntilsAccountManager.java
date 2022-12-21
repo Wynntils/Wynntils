@@ -14,7 +14,6 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -37,8 +36,6 @@ public final class WynntilsAccountManager extends Manager {
     private String token = NO_TOKEN;
     private boolean loggedIn = false;
 
-    private boolean firstWorldJoin = true;
-
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
 
@@ -53,22 +50,20 @@ public final class WynntilsAccountManager extends Manager {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD && firstWorldJoin) {
-            firstWorldJoin = false;
+        if (!event.isFirstJoinWorld()) return;
 
-            if (!loggedIn) {
-                // FIXME: Use the proper reload command here, once they are reworked
-                MutableComponent failed = Component.literal(
-                                "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                        + "Most notably, cloud config syncing will not work. To try this action again, run ")
-                        .withStyle(ChatFormatting.GREEN);
-                failed.append(Component.literal("/wynntils reload")
-                        .withStyle(Style.EMPTY
-                                .withColor(ChatFormatting.AQUA)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+        if (!loggedIn) {
+            // FIXME: Use the proper reload command here, once they are reworked
+            MutableComponent failed = Component.literal(
+                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
+                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(Component.literal("/wynntils reload")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
 
-                McUtils.sendMessageToClient(failed);
-            }
+            McUtils.sendMessageToClient(failed);
         }
     }
 
