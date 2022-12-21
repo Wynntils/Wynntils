@@ -1,9 +1,21 @@
+## [0.0.2-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.14...v0.0.2-alpha.15) (2022-12-21)
+
+
+### Code Refactoring
+
+* Introduce Handlers as an intermediary between MC and Models ([#909](https://github.com/Wynntils/Artemis/issues/909)) ([cc17288](https://github.com/Wynntils/Artemis/commit/cc17288b9415019be86e953512263fe0c398347a))
+
 ## [0.0.2-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.13...v0.0.2-alpha.14) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Move hades stuff to core.net.hades. ([#910](https://github.com/Wynntils/Artemis/issues/910)) ([b9d2cb9](https://github.com/Wynntils/Artemis/commit/b9d2cb93c484789a1eebbb88f837f311d5644811))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.14 [skip ci] ([0693ba1](https://github.com/Wynntils/Artemis/commit/0693ba133b78dbd6e05644f5d864fb8388d5637f))
 
 ## [0.0.2-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.12...v0.0.2-alpha.13) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.11 [skip ci] ([7074071](https://github.com/Wynntils/Artemis/commit/7074071e1f417a10324c314e6cd88706cdfba71d))
-
-## [0.0.2-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.9...v0.0.2-alpha.10) (2022-12-21)
-
-
-### Code Refactoring
-
-* Fix even more IntelliJ suggestions ([#905](https://github.com/Wynntils/Artemis/issues/905)) ([deebee3](https://github.com/Wynntils/Artemis/commit/deebee3f16f59c0fc7f6ea2ef1fdfeee409d9bc0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.10 [skip ci] ([14cbaa5](https://github.com/Wynntils/Artemis/commit/14cbaa51a03e725c53b4abbe13b65c6ec5f368e7))
 
