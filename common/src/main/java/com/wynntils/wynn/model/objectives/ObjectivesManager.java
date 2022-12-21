@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import java.util.ArrayList;
 import java.util.List;

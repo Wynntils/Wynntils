@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;

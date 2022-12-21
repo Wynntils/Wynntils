@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.guild;
 
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.handlers.scoreboard.Segment;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;

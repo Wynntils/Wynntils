@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.guild;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;

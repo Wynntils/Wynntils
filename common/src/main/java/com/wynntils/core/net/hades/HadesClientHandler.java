@@ -5,8 +5,8 @@
 package com.wynntils.core.net.hades;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.HadesFeature;

@@ -5,7 +5,7 @@
 package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Handler;
+import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.utils.ComponentUtils;

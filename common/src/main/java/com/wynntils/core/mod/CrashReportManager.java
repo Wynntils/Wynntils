@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.mod;
 
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.time.LocalDateTime;

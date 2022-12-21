@@ -5,11 +5,11 @@
 package com.wynntils.features.statemanaged;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
