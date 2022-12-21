@@ -32,7 +32,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
+public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     private static final int LINES_PER_PAGE = 16;
 
     private static final List<Component> RELOAD_TOOLTIP = List.of(
@@ -63,7 +63,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
@@ -114,7 +114,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

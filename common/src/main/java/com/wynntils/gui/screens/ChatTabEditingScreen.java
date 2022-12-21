@@ -29,7 +29,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ChatTabEditingScreen extends Screen implements TextboxScreen {
+public final class ChatTabEditingScreen extends Screen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -208,7 +208,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+        renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         // Name
@@ -349,7 +349,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     private void deleteChatTab() {
         ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
         if (Objects.equals(Models.ChatTab.getFocusedTab(), edited)) {
-            if (ChatTabsFeature.INSTANCE.chatTabs.size() > 0) {
+            if (!ChatTabsFeature.INSTANCE.chatTabs.isEmpty()) {
                 Models.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
             } else {
                 Models.ChatTab.setFocusedTab(null);

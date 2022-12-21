@@ -53,7 +53,7 @@ import com.wynntils.wynn.model.item.PropertyModel.TeleportScrollPropertyModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
-public class Models {
+public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
     public static final AmplifierTierPropertyModel AmplifierTierProperty = new AmplifierTierPropertyModel();
     public static final BombBellModel BombBell = new BombBellModel();

@@ -856,7 +856,7 @@
   "screens.wynntils.lootruns.lootrunButton.unload": "Left click to unload this lootrun",
   "screens.wynntils.lootruns.lootrunButton.viewInFolder": "Middle click to open lootrun in folder",
   "screens.wynntils.lootruns.name": "Lootruns",
-  "screens.wynntils.lootruns.noLootruns": "No lootruns were found! Try changing your search term.",
+  "screens.wynntils.lootruns.noLootruns": "No lootruns were found! Try changing your search term or reloading lootruns by pressing the button in the top right corner..",
   "screens.wynntils.lootruns.notes": "Notes",
   "screens.wynntils.lootruns.start": "Start point",
   "screens.wynntils.map.focus.description1": "Left click here to center around the waypoint.",

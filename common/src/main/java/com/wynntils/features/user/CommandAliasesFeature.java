@@ -22,7 +22,6 @@ import net.minecraft.commands.Commands;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class CommandAliasesFeature extends UserFeature {
     @Config(visible = false)
     public List<CommandAlias> aliases = new ArrayList<>(List.of(

@@ -30,7 +30,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
+public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private static final int BUTTON_SIZE = 30;
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
@@ -181,7 +181,7 @@ public class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

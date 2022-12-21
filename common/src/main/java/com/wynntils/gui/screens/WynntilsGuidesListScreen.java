@@ -23,7 +23,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
+public final class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
     private final List<Screen> GUIDES = List.of(
             WynntilsItemGuideScreen.create(),
             WynntilsIngredientGuideScreen.create(),
@@ -39,8 +39,8 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -66,7 +66,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

@@ -16,7 +16,7 @@ public class KeyBind {
     private final Consumer<Slot> onInventoryPress;
     private final boolean firstPress;
 
-    private KeyMapping keyMapping;
+    private final KeyMapping keyMapping;
 
     /**
      * @param name             Name of the keybind

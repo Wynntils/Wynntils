@@ -23,16 +23,23 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.sockets.HadesClientHandler;
 import com.wynntils.sockets.events.SocketEvent;
 import com.wynntils.sockets.objects.PlayerStatus;
+import com.wynntils.wynn.event.AthenaLoginEvent;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.WorldStateManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -45,9 +52,13 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
+    private boolean firstWorldJoin = true;
+
     @Override
     public void init() {
-        tryCreateConnection();
+        if (Managers.WynntilsAccount.isLoggedIn()) {
+            tryCreateConnection();
+        }
     }
 
     @Override
@@ -55,12 +66,15 @@ public final class HadesModel extends Model {
         tryDisconnect();
     }
 
-    private void tryCreateConnection() {
-        if (!Managers.WynntilsAccount.isLoggedIn()) {
-            WynntilsMod.error("Cannot connect to HadesServer when your account is not logged in on Athena.");
-            return;
+    @SubscribeEvent
+    public void onAthenaLoginEvent(AthenaLoginEvent event) {
+        // Try to log in to Hades, if we're not already connected
+        if (!isSocketOpen()) {
+            tryCreateConnection();
         }
+    }
 
+    private void tryCreateConnection() {
         try {
             hadesConnection = new HadesNetworkBuilder()
                     .setAddress(InetAddress.getByName("io.wynntils.com"), 9000)
@@ -121,6 +135,24 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() == WorldStateManager.State.WORLD && firstWorldJoin) {
+            firstWorldJoin = false;
+
+            if (!isSocketOpen()) {
+                // FIXME: Use the proper reload command here, once they are reworked
+                MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
+                        .withStyle(ChatFormatting.GREEN);
+                failed.append(Component.literal("/wynntils reload")
+                        .withStyle(Style.EMPTY
+                                .withColor(ChatFormatting.AQUA)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+
+                McUtils.sendMessageToClient(failed);
+
+                return;
+            }
+        }
+
         tryResendWorldData();
     }
 

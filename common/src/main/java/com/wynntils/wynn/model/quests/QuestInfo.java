@@ -36,9 +36,9 @@ public class QuestInfo {
     private final int pageNumber;
 
     // Quest progress can change over time
-    private QuestStatus status;
+    private final QuestStatus status;
     private String nextTask;
-    private boolean tracked;
+    private final boolean tracked;
 
     protected QuestInfo(
             String name,

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ItemProfilesManager extends Manager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
@@ -165,7 +166,7 @@ public final class ItemProfilesManager extends Manager {
         return internalIdentifications;
     }
 
-    public HashMap<String, String> getTranslatedReferences() {
+    public Map<String, String> getTranslatedReferences() {
         return translatedReferences;
     }
 

@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.BusBuilder;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 
-public class EventBusWrapper extends EventBus {
+public final class EventBusWrapper extends EventBus {
     private EventBusWrapper(BusBuilderImpl busBuilder) {
         super(busBuilder);
     }

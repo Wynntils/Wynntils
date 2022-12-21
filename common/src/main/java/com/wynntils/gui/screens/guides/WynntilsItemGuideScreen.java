@@ -29,7 +29,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
+public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
@@ -44,14 +44,14 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = Managers.ItemProfiles.getItemsCollection().stream()
                     .map(GearItemStack::new)
                     .toList();
         }
 
-        super.init();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -77,7 +77,7 @@ public class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStac
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

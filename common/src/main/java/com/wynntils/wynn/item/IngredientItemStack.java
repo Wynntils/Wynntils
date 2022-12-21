@@ -128,7 +128,7 @@ public class IngredientItemStack extends WynnItemStack {
             }
         }
 
-        if (statuses.size() > 0) {
+        if (!statuses.isEmpty()) {
             itemLore.add(Component.empty());
         }
 

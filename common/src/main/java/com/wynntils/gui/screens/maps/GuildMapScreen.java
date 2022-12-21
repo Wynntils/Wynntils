@@ -33,7 +33,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuildMapScreen extends AbstractMapScreen {
+public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryHigh;

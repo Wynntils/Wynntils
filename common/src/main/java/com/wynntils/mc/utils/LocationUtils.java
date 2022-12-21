@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LocationUtils {
+public final class LocationUtils {
     private static final Pattern COORDINATE_PATTERN =
             Pattern.compile("(?<x>[-+]?\\d+)([^0-9+-]{1,5}(?<y>[-+]?\\d+))?[^0-9+-]{1,5}(?<z>[-+]?\\d+)");
 

@@ -37,7 +37,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),
@@ -68,10 +68,10 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     /** This is called on every resize. Re-registering widgets are required, re-creating them is not.
      * */
     @Override
-    protected void init() {
+    protected void doInit() {
         Managers.Quest.rescanQuestBook(true, true);
 
-        super.init();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -123,7 +123,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
