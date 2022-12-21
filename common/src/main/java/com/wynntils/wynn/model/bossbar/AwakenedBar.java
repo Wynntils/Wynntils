@@ -21,8 +21,7 @@ class AwakenedBar extends TrackedBar {
             max = Integer.parseInt(match.group(2));
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
-                    "Failed to parse current and max for awakened bar (%s out of %s)",
-                    match.group(1), match.group(2)));
+                    "Failed to parse current and max for awakened bar (%s out of %s)", match.group(1), match.group(2)));
         }
     }
 }
