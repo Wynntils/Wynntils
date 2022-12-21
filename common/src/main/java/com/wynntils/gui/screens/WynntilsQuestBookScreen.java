@@ -23,7 +23,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import com.wynntils.wynn.model.quests.QuestStatus;

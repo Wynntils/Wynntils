@@ -23,7 +23,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
