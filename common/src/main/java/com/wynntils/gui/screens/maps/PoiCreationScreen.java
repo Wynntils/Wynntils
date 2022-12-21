@@ -168,12 +168,12 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
             if (oldPoi != null) {
                 xInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getX()));
                 Optional<Integer> y = oldPoi.getLocation().getY();
-                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getZ()));
             } else if (setupLocation != null) {
                 xInput.setTextBoxInput(String.valueOf(setupLocation.getX()));
                 Optional<Integer> y = setupLocation.getY();
-                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(setupLocation.getZ()));
             }
         }
@@ -262,10 +262,11 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
-                            savePoi();
-                            this.onClose();
-                        })
+                saveButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
+                                    savePoi();
+                                    this.onClose();
+                                })
                         .pos(this.width / 2 + 50, this.height / 2 + 140)
                         .size(100, 20)
                         .build());
@@ -364,7 +365,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.CustomPoi.Visibility") + ":",
+                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
