@@ -15,7 +15,7 @@ import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
+import com.wynntils.wynn.model.guild.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 
 public class TerritoryPoi implements Poi {
