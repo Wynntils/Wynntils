@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.wynn.objects.BombInfo;
 import com.wynntils.wynn.objects.BombType;
 import java.util.Arrays;

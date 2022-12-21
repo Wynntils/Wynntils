@@ -7,7 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import java.util.Map;
 import net.minecraft.ChatFormatting;

@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;

@@ -6,8 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;

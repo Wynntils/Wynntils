@@ -6,8 +6,8 @@ package com.wynntils.gui.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;

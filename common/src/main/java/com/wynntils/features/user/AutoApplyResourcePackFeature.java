@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
