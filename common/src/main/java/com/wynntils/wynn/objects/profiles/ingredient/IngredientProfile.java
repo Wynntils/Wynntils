@@ -5,6 +5,7 @@
 package com.wynntils.wynn.objects.profiles.ingredient;
 
 import com.google.gson.annotations.SerializedName;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.managers.Managers;
 import java.util.List;
 import java.util.Map;
@@ -89,8 +90,11 @@ public class IngredientProfile {
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
             String ingredientHeadTexture = Managers.ItemProfiles.getIngredientHeadTexture(name);
-            // This will look bad, but if we don't have the data, then what should we do?
-            if (ingredientHeadTexture == null) return itemStack;
+            if (ingredientHeadTexture == null) {
+                // This will look bad, but if we don't have the data, then what should we do?
+                WynntilsMod.warn("Missing head texture for " + ingredientInfo.asItemStack().getDisplayName());
+                return itemStack;
+            }
 
             CompoundTag skullData = new CompoundTag();
             skullData.putString("Id", UUID.randomUUID().toString());
