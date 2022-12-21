@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model.scoreboard.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
+import com.wynntils.wynn.model.scoreboard.ScoreboardListener;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ObjectiveHandler implements ScoreboardHandler {
+public class ObjectiveListener implements ScoreboardListener {
     // §b is guild objective, §a is normal objective and §c is daily objective
     private static final Pattern OBJECTIVE_PATTERN_ONE_LINE =
             Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");

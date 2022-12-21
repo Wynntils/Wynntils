@@ -5,11 +5,11 @@
 package com.wynntils.wynn.model.scoreboard.guild;
 
 import com.wynntils.core.managers.Models;
-import com.wynntils.wynn.model.scoreboard.ScoreboardHandler;
+import com.wynntils.wynn.model.scoreboard.ScoreboardListener;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.model.scoreboard.Segment;
 
-public class GuildAttackHandler implements ScoreboardHandler {
+public class GuildAttackListener implements ScoreboardListener {
     @Override
     public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
         Models.GuildAttackTimer.processChanges(newValue);

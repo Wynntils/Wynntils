@@ -28,7 +28,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
+import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveListener;
 import com.wynntils.wynn.model.scoreboard.objectives.WynnObjective;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -87,7 +87,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            WynnObjective guildObjective = ObjectiveHandler.getGuildObjective();
+            WynnObjective guildObjective = ObjectiveListener.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -178,7 +178,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
+            List<WynnObjective> objectives = ObjectiveListener.getObjectives();
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;

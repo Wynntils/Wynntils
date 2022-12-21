@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.scoreboard;
 
-public interface ScoreboardHandler {
+public interface ScoreboardListener {
     void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType);
 
     void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType);

@@ -15,7 +15,7 @@ import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
-import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
+import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveListener;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -60,7 +60,7 @@ public final class ScoreboardModel extends Model {
 
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private final List<Pair<ScoreboardHandler, Set<SegmentType>>> scoreboardHandlers = new ArrayList<>();
+    private final List<Pair<ScoreboardListener, Set<SegmentType>>> scoreboardHandlers = new ArrayList<>();
 
     private ScheduledExecutorService executor = null;
 
@@ -154,7 +154,7 @@ public final class ScoreboardModel extends Model {
         segments = parsedSegments;
 
         for (Segment segment : removedSegments) {
-            for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
+            for (Pair<ScoreboardListener, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
                 if (scoreboardHandler.b().contains(segment.getType())) {
                     scoreboardHandler.a().onSegmentRemove(segment, segment.getType());
                 }
@@ -171,7 +171,7 @@ public final class ScoreboardModel extends Model {
         }
 
         for (Segment segment : changedSegments) {
-            for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
+            for (Pair<ScoreboardListener, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
                 if (scoreboardHandler.b().contains(segment.getType())) {
                     scoreboardHandler.a().onSegmentChange(segment, segment.getType());
                 }
@@ -304,7 +304,7 @@ public final class ScoreboardModel extends Model {
 
     @Override
     public void init() {
-        registerHandler(new ObjectiveHandler(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
+        registerHandler(new ObjectiveListener(), Set.of(SegmentType.Objective, SegmentType.GuildObjective));
         registerHandler(Managers.Quest.SCOREBOARD_HANDLER, SegmentType.Quest);
         registerHandler(Models.GuildAttackTimer.SCOREBOARD_HANDLER, SegmentType.GuildAttackTimer);
 
@@ -317,11 +317,11 @@ public final class ScoreboardModel extends Model {
         scoreboardHandlers.clear();
     }
 
-    private void registerHandler(ScoreboardHandler handlerInstance, SegmentType segmentType) {
+    private void registerHandler(ScoreboardListener handlerInstance, SegmentType segmentType) {
         registerHandler(handlerInstance, Set.of(segmentType));
     }
 
-    private void registerHandler(ScoreboardHandler handlerInstance, Set<SegmentType> segmentTypes) {
+    private void registerHandler(ScoreboardListener handlerInstance, Set<SegmentType> segmentTypes) {
         scoreboardHandlers.add(new Pair<>(handlerInstance, segmentTypes));
     }
 
@@ -356,7 +356,7 @@ public final class ScoreboardModel extends Model {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        for (Pair<ScoreboardHandler, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
+        for (Pair<ScoreboardListener, Set<SegmentType>> scoreboardHandler : scoreboardHandlers) {
             scoreboardHandler.a().resetHandler();
         }
     }
