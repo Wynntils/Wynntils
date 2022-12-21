@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public final class ManaBankBar extends TrackedBar {
     public ManaBankBar() {
-        super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"), BossBarModel.MANABANK);
+        super(Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]"));
     }
 
     @Override

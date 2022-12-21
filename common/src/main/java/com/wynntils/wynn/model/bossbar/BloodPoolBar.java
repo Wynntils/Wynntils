@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public final class BloodPoolBar extends TrackedBar {
     public BloodPoolBar() {
-        super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"), BossBarModel.BLOODPOOL);
+        super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"));
     }
 
     @Override

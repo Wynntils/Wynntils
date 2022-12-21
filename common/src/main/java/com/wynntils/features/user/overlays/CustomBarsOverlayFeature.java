@@ -30,11 +30,16 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wynn.model.bossbar.BossBarModel;
+import com.wynntils.wynn.model.bossbar.AwakenedBar;
+import com.wynntils.wynn.model.bossbar.BloodPoolBar;
+import com.wynntils.wynn.model.bossbar.CorruptedBar;
+import com.wynntils.wynn.model.bossbar.FocusBar;
+import com.wynntils.wynn.model.bossbar.ManaBankBar;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
+import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -69,16 +74,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     private BaseBarOverlay getOverlayFromTrackedBar(TrackedBar trackedBar) {
-        BaseBarOverlay overlay =
-                switch (trackedBar.getBarType()) {
-                    case BossBarModel.BLOODPOOL -> bloodPoolBarOverlay;
-                    case BossBarModel.MANABANK -> manaBankBarOverlay;
-                    case BossBarModel.AWAKENED -> awakenedProgressBarOverlay;
-                    case BossBarModel.FOCUS -> focusBarOverlay;
-                    case BossBarModel.CORRUPTED -> corruptedBarOverlay;
-                    default -> throw new RuntimeException("Unknown boss bar type");
-                };
-        return overlay;
+        return barToOverlayMap.get(trackedBar.getClass());
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
@@ -101,6 +97,18 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
+
+    private final Map<Class<? extends TrackedBar>, BaseBarOverlay> barToOverlayMap = Map.of(
+            BloodPoolBar.class,
+            bloodPoolBarOverlay,
+            ManaBankBar.class,
+            manaBankBarOverlay,
+            AwakenedBar.class,
+            awakenedProgressBarOverlay,
+            FocusBar.class,
+            focusBarOverlay,
+            CorruptedBar.class,
+            corruptedBarOverlay);
 
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class TrackedBar {
     public final Pattern pattern;
-    private final String barType;
 
     private boolean rendered = true;
 
@@ -23,9 +22,8 @@ public class TrackedBar {
 
     protected UUID uuid = null;
 
-    public TrackedBar(Pattern pattern, String barType) {
+    public TrackedBar(Pattern pattern) {
         this.pattern = pattern;
-        this.barType = barType;
     }
 
     public void onUpdateName(Matcher match) {}
@@ -69,9 +67,5 @@ public class TrackedBar {
 
     public BossBarProgress getBarProgress() {
         return isActive() ? new BossBarProgress(current, max, event.getProgress()) : null;
-    }
-
-    public String getBarType() {
-        return barType;
     }
 }

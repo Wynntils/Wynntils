@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public final class AwakenedBar extends TrackedBar {
     public AwakenedBar() {
-        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"), BossBarModel.AWAKENED);
+        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"));
     }
 
     @Override
