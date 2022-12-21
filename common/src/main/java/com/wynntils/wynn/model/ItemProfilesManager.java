@@ -33,8 +33,8 @@ public final class ItemProfilesManager extends Manager {
 
     private Map<String, ItemProfile> items = Map.of();
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
-    private Map<String, String> translatedReferences = new HashMap<>();
-    private Map<String, String> internalIdentifications = new HashMap<>();
+    private Map<String, String> translatedReferences = Map.of();
+    private Map<String, String> internalIdentifications = Map.of();
     private Map<String, MajorIdentification> majorIds = new HashMap<>();
     private Map<ItemType, String[]> materialTypes = new HashMap<>();
     private Map<String, IngredientProfile> ingredients = new HashMap<>();
@@ -57,8 +57,8 @@ public final class ItemProfilesManager extends Manager {
 
         // tryLoadItemList
         items = Map.of();
-        translatedReferences = null;
-        internalIdentifications = null;
+        translatedReferences = Map.of();
+        internalIdentifications = Map.of();
         majorIds = null;
         materialTypes = null;
         loadCommonObjects();
@@ -156,12 +156,12 @@ public final class ItemProfilesManager extends Manager {
         return majorIds;
     }
 
-    public Map<String, String> getInternalIdentifications() {
-        return internalIdentifications;
+    public String getInternalIdentification(String internalId) {
+        return internalIdentifications.get(internalId);
     }
 
-    public Map<String, String> getTranslatedReferences() {
-        return translatedReferences;
+    public String getTranslatedReference(String untranslatedName) {
+        return translatedReferences.getOrDefault(untranslatedName, untranslatedName);
     }
 
     public Collection<IngredientProfile> getIngredientsCollection() {
