@@ -4,13 +4,13 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;

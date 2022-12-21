@@ -2,17 +2,17 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.chat;
+package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.managers.Handler;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.event.NpcDialogEvent;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -66,7 +66,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * a different formatting. This could be done, but requires extra logic, and most
  * importantly, a way to update already printed chat lines.
  */
-public final class ChatModel extends Model {
+public final class ChatHandler extends Handler {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
