@@ -76,6 +76,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     case BossBarModel.AWAKENED -> awakenedProgressBarOverlay;
                     case BossBarModel.FOCUS -> focusBarOverlay;
                     case BossBarModel.CORRUPTED -> corruptedBarOverlay;
+                    default -> throw new RuntimeException("Unknown boss bar type");
                 };
         return overlay;
     }
