@@ -1,9 +1,21 @@
+## [0.0.2-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.20...v0.0.2-alpha.21) (2022-12-22)
+
+
+### Bug Fixes
+
+* Saving a lootrun always appends .json (creating `a.json.json` files) ([#923](https://github.com/Wynntils/Artemis/issues/923)) ([fcbb024](https://github.com/Wynntils/Artemis/commit/fcbb024609b49f955a751de66fdbdf9c9821a4d5))
+
 ## [0.0.2-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.19...v0.0.2-alpha.20) (2022-12-22)
 
 
 ### Bug Fixes
 
 * /hub now loads as fast as it is supposed to ([#922](https://github.com/Wynntils/Artemis/issues/922)) ([e6deeda](https://github.com/Wynntils/Artemis/commit/e6deeda7fb249b72ec69c6e67aa34237a879754c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.20 [skip ci] ([7c937cc](https://github.com/Wynntils/Artemis/commit/7c937ccc31203bcbe5be36bf221f2b7318be0376))
 
 ## [0.0.2-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.18...v0.0.2-alpha.19) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.17 [skip ci] ([80e2c3f](https://github.com/Wynntils/Artemis/commit/80e2c3f8def3a11e112875ac27744e281532d77c))
-
-## [0.0.2-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.15...v0.0.2-alpha.16) (2022-12-21)
-
-
-### Bug Fixes
-
-* Poi Screen now does not crash on incorrect values, Y field is set correctly, and visibility I18n is correct now ([#912](https://github.com/Wynntils/Artemis/issues/912)) ([2effe06](https://github.com/Wynntils/Artemis/commit/2effe06c4e7a8c690937fce326ea8a0e99633bfb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.16 [skip ci] ([02d54e6](https://github.com/Wynntils/Artemis/commit/02d54e67b60845342d6db9e867824f4c232cce41))
 
