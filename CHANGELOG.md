@@ -1,9 +1,21 @@
+## [0.0.2-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.23...v0.0.2-alpha.24) (2022-12-22)
+
+
+### Bug Fixes
+
+* Fix compatibility with other mods' client commands ([#925](https://github.com/Wynntils/Artemis/issues/925)) ([43b2fa7](https://github.com/Wynntils/Artemis/commit/43b2fa78275934e814e38eec5aeb3202af0e4eee))
+
 ## [0.0.2-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.22...v0.0.2-alpha.23) (2022-12-22)
 
 
 ### Bug Fixes
 
 * Scrolling in screens now works much better on trackpads ([#924](https://github.com/Wynntils/Artemis/issues/924)) ([152fd43](https://github.com/Wynntils/Artemis/commit/152fd433f421239a643518e0519831d7dac43475))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.23 [skip ci] ([60bdc0f](https://github.com/Wynntils/Artemis/commit/60bdc0f85fe29141f2db26073c0a0d0a238b063e))
 
 ## [0.0.2-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.21...v0.0.2-alpha.22) (2022-12-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.20 [skip ci] ([7c937cc](https://github.com/Wynntils/Artemis/commit/7c937ccc31203bcbe5be36bf221f2b7318be0376))
-
-## [0.0.2-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.18...v0.0.2-alpha.19) (2022-12-21)
-
-
-### Code Refactoring
-
-* Shuffle more files around, mostly moving events closer to the source ([#918](https://github.com/Wynntils/Artemis/issues/918)) ([67a0b79](https://github.com/Wynntils/Artemis/commit/67a0b79bd48a1d362c955060fde637d83c44baf8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.19 [skip ci] ([d52db37](https://github.com/Wynntils/Artemis/commit/d52db370311e9c5ea6c53f9470607efa5dca4ee6))
 
