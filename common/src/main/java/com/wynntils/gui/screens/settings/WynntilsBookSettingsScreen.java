@@ -290,13 +290,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                 : 0)
                         - 1);
 
-        configurableScrollOffset = MathUtils.clamp((int) (configurableScrollOffset - delta), 0, roundedUpPageNeed);
+        configurableScrollOffset = MathUtils.clamp((int) (configurableScrollOffset + delta), 0, roundedUpPageNeed);
     }
 
     private void scrollConfigList(double delta) {
         int roundedUpPageNeed = configs.size() / CONFIGS_PER_PAGE + (configs.size() % CONFIGS_PER_PAGE == 0 ? 0 : 1);
         configScrollOffset = MathUtils.clamp(
-                (int) (configScrollOffset - delta),
+                (int) (configScrollOffset + delta),
                 0,
                 configs.size() <= CONFIGS_PER_PAGE ? 0 : (roundedUpPageNeed - 1) * CONFIGS_PER_PAGE);
     }

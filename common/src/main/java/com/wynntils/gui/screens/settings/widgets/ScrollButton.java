@@ -21,8 +21,10 @@ public class ScrollButton extends WynntilsButton {
     private final CustomColor scrollAreaColor;
     private final float requiredChangePerElement;
     private int currentScroll = 0;
-    private double currentUnusedDrag = 0;
 
+    private double currentUnusedScroll = 0;
+
+    private double currentUnusedDrag = 0;
     private boolean dragging = false;
 
     public ScrollButton(
@@ -99,12 +101,12 @@ public class ScrollButton extends WynntilsButton {
             currentUnusedDrag += dragY;
 
             while (currentUnusedDrag >= requiredChangePerElement) {
-                scroll(-1);
+                scroll(1);
                 currentUnusedDrag -= requiredChangePerElement;
             }
 
             while (currentUnusedDrag <= -requiredChangePerElement) {
-                scroll(1);
+                scroll(-1);
                 currentUnusedDrag += requiredChangePerElement;
             }
         }
@@ -114,12 +116,30 @@ public class ScrollButton extends WynntilsButton {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scroll(delta > 0 ? 1 : -1);
+        // Usually, mouse scroll wheel delta is always (-)1
+        if (Math.abs(delta) == 1) {
+            scroll((int) -delta);
+            return true;
+        }
+
+        // Now we handle touchpad scrolling
+
+        // Delta is divided by 10 to make it more precise
+        // We subtract so scrolling down actually scrolls down
+        currentUnusedScroll -= delta / 10d;
+
+        if (Math.abs(currentUnusedScroll) < 1) return true;
+
+        int scroll = (int) (currentUnusedScroll);
+        currentUnusedScroll = currentUnusedScroll % 1;
+
+        scroll(scroll);
+
         return true;
     }
 
-    private void scroll(double delta) {
-        onScroll.accept((int) delta * perScrollIncrement);
-        currentScroll = MathUtils.clamp((int) (currentScroll - delta * perScrollIncrement), 0, maxScroll);
+    private void scroll(int scroll) {
+        onScroll.accept(scroll * perScrollIncrement);
+        currentScroll = MathUtils.clamp(currentScroll + scroll * perScrollIncrement, 0, maxScroll);
     }
 }
