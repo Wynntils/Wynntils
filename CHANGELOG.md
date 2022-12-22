@@ -1,9 +1,21 @@
+## [0.0.2-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.19...v0.0.2-alpha.20) (2022-12-22)
+
+
+### Bug Fixes
+
+* /hub now loads as fast as it is supposed to ([#922](https://github.com/Wynntils/Artemis/issues/922)) ([e6deeda](https://github.com/Wynntils/Artemis/commit/e6deeda7fb249b72ec69c6e67aa34237a879754c))
+
 ## [0.0.2-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.18...v0.0.2-alpha.19) (2022-12-21)
 
 
 ### Code Refactoring
 
 * Shuffle more files around, mostly moving events closer to the source ([#918](https://github.com/Wynntils/Artemis/issues/918)) ([67a0b79](https://github.com/Wynntils/Artemis/commit/67a0b79bd48a1d362c955060fde637d83c44baf8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.19 [skip ci] ([d52db37](https://github.com/Wynntils/Artemis/commit/d52db370311e9c5ea6c53f9470607efa5dca4ee6))
 
 ## [0.0.2-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.17...v0.0.2-alpha.18) (2022-12-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.16 [skip ci] ([02d54e6](https://github.com/Wynntils/Artemis/commit/02d54e67b60845342d6db9e867824f4c232cce41))
-
-## [0.0.2-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.14...v0.0.2-alpha.15) (2022-12-21)
-
-
-### Code Refactoring
-
-* Introduce Handlers as an intermediary between MC and Models ([#909](https://github.com/Wynntils/Artemis/issues/909)) ([cc17288](https://github.com/Wynntils/Artemis/commit/cc17288b9415019be86e953512263fe0c398347a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.15 [skip ci] ([12b40ef](https://github.com/Wynntils/Artemis/commit/12b40efe06f2ed1732ca4b26c397cec26ff7ee42))
 
