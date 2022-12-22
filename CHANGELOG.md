@@ -1,9 +1,21 @@
+## [0.0.2-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.21...v0.0.2-alpha.22) (2022-12-22)
+
+
+### Bug Fixes
+
+* HealthTexture C now does not have a black dot ([#921](https://github.com/Wynntils/Artemis/issues/921)) ([be6c9ad](https://github.com/Wynntils/Artemis/commit/be6c9ad8465d9f98ef6f3f085981c3ea44b6841f))
+
 ## [0.0.2-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.20...v0.0.2-alpha.21) (2022-12-22)
 
 
 ### Bug Fixes
 
 * Saving a lootrun always appends .json (creating `a.json.json` files) ([#923](https://github.com/Wynntils/Artemis/issues/923)) ([fcbb024](https://github.com/Wynntils/Artemis/commit/fcbb024609b49f955a751de66fdbdf9c9821a4d5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.21 [skip ci] ([705f10f](https://github.com/Wynntils/Artemis/commit/705f10fb5a058647cbcd3c8ae7a79c53d5b3ef54))
 
 ## [0.0.2-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.19...v0.0.2-alpha.20) (2022-12-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.18 [skip ci] ([739a323](https://github.com/Wynntils/Artemis/commit/739a323735a3b882eaa8c4a0d57a6c40122f5b5d))
-
-## [0.0.2-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.16...v0.0.2-alpha.17) (2022-12-21)
-
-
-### Bug Fixes
-
-* Replace the last two uncolored regexes and remove uncolored pattern code ([#913](https://github.com/Wynntils/Artemis/issues/913)) ([4b7ab27](https://github.com/Wynntils/Artemis/commit/4b7ab2796d2d18c5dcd9764911ce2e578c259342))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.17 [skip ci] ([80e2c3f](https://github.com/Wynntils/Artemis/commit/80e2c3f8def3a11e112875ac27744e281532d77c))
 
