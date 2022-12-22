@@ -1,9 +1,21 @@
+## [0.0.2-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.22...v0.0.2-alpha.23) (2022-12-22)
+
+
+### Bug Fixes
+
+* Scrolling in screens now works much better on trackpads ([#924](https://github.com/Wynntils/Artemis/issues/924)) ([152fd43](https://github.com/Wynntils/Artemis/commit/152fd433f421239a643518e0519831d7dac43475))
+
 ## [0.0.2-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.21...v0.0.2-alpha.22) (2022-12-22)
 
 
 ### Bug Fixes
 
 * HealthTexture C now does not have a black dot ([#921](https://github.com/Wynntils/Artemis/issues/921)) ([be6c9ad](https://github.com/Wynntils/Artemis/commit/be6c9ad8465d9f98ef6f3f085981c3ea44b6841f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.22 [skip ci] ([ac69504](https://github.com/Wynntils/Artemis/commit/ac69504c99370e5ec3221b7426ac9d62d39781d5))
 
 ## [0.0.2-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.20...v0.0.2-alpha.21) (2022-12-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.19 [skip ci] ([d52db37](https://github.com/Wynntils/Artemis/commit/d52db370311e9c5ea6c53f9470607efa5dca4ee6))
-
-## [0.0.2-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.17...v0.0.2-alpha.18) (2022-12-21)
-
-
-### Code Refactoring
-
-* Group guild-related model classes together ([#917](https://github.com/Wynntils/Artemis/issues/917)) ([c54f0dd](https://github.com/Wynntils/Artemis/commit/c54f0dd360f0a75d39c68b18380059b4441739a0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.18 [skip ci] ([739a323](https://github.com/Wynntils/Artemis/commit/739a323735a3b882eaa8c4a0d57a6c40122f5b5d))
 
