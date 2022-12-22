@@ -14,6 +14,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -263,6 +264,12 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
             ci.cancel();
+
+            // Signal loading complete to the loading screen,
+            // or else we are stuck in an "infinite" loading state
+            if (McUtils.mc().screen instanceof ReceivingLevelScreen receivingLevelScreen) {
+                receivingLevelScreen.loadingPacketsReceived();
+            }
         }
     }
 
