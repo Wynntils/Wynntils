@@ -1,9 +1,21 @@
+## [0.0.2-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.25...v0.0.2-alpha.26) (2022-12-23)
+
+
+### Bug Fixes
+
+* Fix race in optional get ([#926](https://github.com/Wynntils/Artemis/issues/926)) ([9ee5396](https://github.com/Wynntils/Artemis/commit/9ee5396abf97701c264246d8715b6a99f7c02234))
+
 ## [0.0.2-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.24...v0.0.2-alpha.25) (2022-12-23)
 
 
 ### New Features
 
 * New ActionBarHandler, allowing for more and better action bar modelling ([#914](https://github.com/Wynntils/Artemis/issues/914)) ([2c8a60f](https://github.com/Wynntils/Artemis/commit/2c8a60fc55adf911b64b025b8a97ff3c4f13ab05))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.25 [skip ci] ([669fb1e](https://github.com/Wynntils/Artemis/commit/669fb1e2fe04cf3c58708bbd3230200e2f3a0e4a))
 
 ## [0.0.2-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.23...v0.0.2-alpha.24) (2022-12-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.22 [skip ci] ([ac69504](https://github.com/Wynntils/Artemis/commit/ac69504c99370e5ec3221b7426ac9d62d39781d5))
-
-## [0.0.2-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.20...v0.0.2-alpha.21) (2022-12-22)
-
-
-### Bug Fixes
-
-* Saving a lootrun always appends .json (creating `a.json.json` files) ([#923](https://github.com/Wynntils/Artemis/issues/923)) ([fcbb024](https://github.com/Wynntils/Artemis/commit/fcbb024609b49f955a751de66fdbdf9c9821a4d5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.21 [skip ci] ([705f10f](https://github.com/Wynntils/Artemis/commit/705f10fb5a058647cbcd3c8ae7a79c53d5b3ef54))
 
