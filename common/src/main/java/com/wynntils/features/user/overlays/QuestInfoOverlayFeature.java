@@ -61,6 +61,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         if (!autoTrackQuestCoordinates) return;
+        if (event.getQuestInfo() == null) return;
 
         // set if valid
         Models.Compass.setDynamicCompassLocation(Managers.Quest::getTrackedQuestNextLocation);

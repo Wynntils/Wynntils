@@ -5,19 +5,17 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.network.chat.ChatType;
@@ -111,18 +109,10 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+            at = @At("RETURN"))
+    private void handleCommandsPost(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        RootCommandNode<SharedSuggestionProvider> root = packet.getRoot(
-                CommandBuildContext.simple(this.registryAccess.compositeAccess(), this.enabledFeatures()));
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
-        if (!event.getRoot().equals(root)) {
-            // We modified command root, so inject it
-            this.commands = new CommandDispatcher<>(event.getRoot());
-            ci.cancel();
-        }
+        EventFactory.onCommandsPacket(this.commands.getRoot());
     }
 
     @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
@@ -263,6 +253,12 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
             ci.cancel();
+
+            // Signal loading complete to the loading screen,
+            // or else we are stuck in an "infinite" loading state
+            if (McUtils.mc().screen instanceof ReceivingLevelScreen receivingLevelScreen) {
+                receivingLevelScreen.loadingPacketsReceived();
+            }
         }
     }
 
