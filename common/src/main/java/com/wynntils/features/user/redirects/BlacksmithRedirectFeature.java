@@ -39,7 +39,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
         Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage());
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
-        System.out.println(event.getOriginalCodedMessage());
 
         EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
 
