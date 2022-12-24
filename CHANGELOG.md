@@ -1,9 +1,21 @@
+## [0.0.2-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.26...v0.0.2-alpha.27) (2022-12-24)
+
+
+### New Features
+
+* Split `/wynntils reload` into `/wynntils reauth`, `/wynntils clearcaches` and `/wynntils reloadcaches` ([#916](https://github.com/Wynntils/Artemis/issues/916)) ([8e8f782](https://github.com/Wynntils/Artemis/commit/8e8f7820328773b32b03d898e1a76ecc0f103ae7))
+
 ## [0.0.2-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.25...v0.0.2-alpha.26) (2022-12-23)
 
 
 ### Bug Fixes
 
 * Fix race in optional get ([#926](https://github.com/Wynntils/Artemis/issues/926)) ([9ee5396](https://github.com/Wynntils/Artemis/commit/9ee5396abf97701c264246d8715b6a99f7c02234))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.26 [skip ci] ([126cde6](https://github.com/Wynntils/Artemis/commit/126cde6a70b42f84db11a74793fa6a74d73b2582))
 
 ## [0.0.2-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.24...v0.0.2-alpha.25) (2022-12-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.23 [skip ci] ([60bdc0f](https://github.com/Wynntils/Artemis/commit/60bdc0f85fe29141f2db26073c0a0d0a238b063e))
-
-## [0.0.2-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.21...v0.0.2-alpha.22) (2022-12-22)
-
-
-### Bug Fixes
-
-* HealthTexture C now does not have a black dot ([#921](https://github.com/Wynntils/Artemis/issues/921)) ([be6c9ad](https://github.com/Wynntils/Artemis/commit/be6c9ad8465d9f98ef6f3f085981c3ea44b6841f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.22 [skip ci] ([ac69504](https://github.com/Wynntils/Artemis/commit/ac69504c99370e5ec3221b7426ac9d62d39781d5))
 
