@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.core.net.hades.HadesClientHandler;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.PlayerStatus;
