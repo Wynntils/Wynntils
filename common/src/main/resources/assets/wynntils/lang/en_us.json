@@ -1,7 +1,7 @@
 {
   "commands.wynntils.clearCaches.clickHere": "Click here to confirm.",
   "commands.wynntils.clearCaches.deleting": "Clearing caches and closing game in 5 seconds...",
-  "commands.wynntils.clearCaches.warn": "This will clear all API and update caches, are you sure you want to continue?",
+  "commands.wynntils.clearCaches.warn": "This will clear all API and update caches, and close Minecraft. Are you sure you want to continue?",
   "commands.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "commands.wynntils.reloadCaches.reloading": "Reloading caches...",
   "core.wynntils.category.inventory": "Inventory",
