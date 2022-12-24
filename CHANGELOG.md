@@ -1,9 +1,21 @@
+## [0.0.2-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.27...v0.0.2-alpha.28) (2022-12-24)
+
+
+### New Features
+
+* Add /lootrun screen ([#927](https://github.com/Wynntils/Artemis/issues/927)) ([e756f78](https://github.com/Wynntils/Artemis/commit/e756f780ddcb424294ff0c4fa9613670cb71e9cc))
+
 ## [0.0.2-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.26...v0.0.2-alpha.27) (2022-12-24)
 
 
 ### New Features
 
 * Split `/wynntils reload` into `/wynntils reauth`, `/wynntils clearcaches` and `/wynntils reloadcaches` ([#916](https://github.com/Wynntils/Artemis/issues/916)) ([8e8f782](https://github.com/Wynntils/Artemis/commit/8e8f7820328773b32b03d898e1a76ecc0f103ae7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.27 [skip ci] ([dd7c59b](https://github.com/Wynntils/Artemis/commit/dd7c59b41253c9b4d9e228d825e68e3717f2a3dd))
 
 ## [0.0.2-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.25...v0.0.2-alpha.26) (2022-12-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.24 [skip ci] ([19bc6cb](https://github.com/Wynntils/Artemis/commit/19bc6cb3acbb2b37c04e744557f8a3f5b5311583))
-
-## [0.0.2-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.22...v0.0.2-alpha.23) (2022-12-22)
-
-
-### Bug Fixes
-
-* Scrolling in screens now works much better on trackpads ([#924](https://github.com/Wynntils/Artemis/issues/924)) ([152fd43](https://github.com/Wynntils/Artemis/commit/152fd433f421239a643518e0519831d7dac43475))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.23 [skip ci] ([60bdc0f](https://github.com/Wynntils/Artemis/commit/60bdc0f85fe29141f2db26073c0a0d0a238b063e))
 
