@@ -18,7 +18,7 @@ public class CoordinatesSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
         /* Currently we don't care about the actual matches.
         String leftPad = matcher.group(1);
         String xCoord = matcher.group(2);
@@ -26,6 +26,12 @@ public class CoordinatesSegment implements ActionBarSegment {
         String yCoord = matcher.group(4);
         String rightPad = matcher.group(5);
          */
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        // Currently we don't care about the actual matches,
+        // but we need to signal that other special center segment has been cleared
     }
 
     @Override

@@ -8,13 +8,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface ActionBarSegment {
-    Pattern getPattern();
-
-    void handleMatch(Matcher matcher);
-
+    // What the segment tells the handler
     ActionBarPosition getPosition();
 
-    default void removed() {}
+    Pattern getPattern();
 
     boolean isHidden();
+
+    // What the handler tells the segment
+    void appeared(Matcher matcher);
+
+    void update(Matcher matcher);
+
+    default void removed() {}
 }

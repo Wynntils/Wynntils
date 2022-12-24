@@ -24,7 +24,16 @@ public class PowderSpecialSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updatePowderSpecial(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updatePowderSpecial(matcher);
+    }
+
+    private void updatePowderSpecial(Matcher matcher) {
         powderSpecialType = Powder.getFromSymbol(matcher.group(1).charAt(0));
         powderSpecialCharge = Integer.parseInt(matcher.group(2));
     }
