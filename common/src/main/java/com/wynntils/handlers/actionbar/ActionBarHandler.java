@@ -84,8 +84,10 @@ public final class ActionBarHandler extends Handler {
                             lastSegment.removed();
                         }
                         lastSegments.put(pos, segment);
+                        segment.appeared(m);
+                    } else {
+                        segment.update(m);
                     }
-                    segment.handleMatch(m);
                 }
             }
         });
