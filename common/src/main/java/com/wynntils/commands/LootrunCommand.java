@@ -397,11 +397,11 @@ public class LootrunCommand extends CommandBase {
                                         .executes(this::removeChest))))
                 .then(Commands.literal("undo").executes(this::undoLootrun))
                 .then(Commands.literal("folder").executes(this::folderLootrun))
-                .then(Commands.literal("list").executes(this::listLootrun))
+                .then(Commands.literal("screen").executes(this::screenLootrun))
                 .executes(this::syntaxError);
     }
 
-    private int listLootrun(CommandContext<CommandSourceStack> context) {
+    private int screenLootrun(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the lootrun screen
         Delay.create(() -> McUtils.mc().setScreen(WynntilsLootrunsScreen.create()), 1);
         return 1;
