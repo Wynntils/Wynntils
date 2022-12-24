@@ -12,7 +12,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,12 +43,12 @@ public abstract class ScreenMixin implements TextboxScreen {
 
     @Final
     @Shadow
-    public List<Widget> renderables;
+    public List<Renderable> renderables;
 
     // Making this public is required for the mixin, use this with caution anywhere else
-    public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {
-        renderables.add(widget);
-        return addWidget(widget);
+    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T renderable) {
+        renderables.add(renderable);
+        return addWidget(renderable);
     }
 
     // Making this public is required for the mixin, use this with caution anywhere else
@@ -105,7 +105,7 @@ public abstract class ScreenMixin implements TextboxScreen {
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "rebuildWidgets",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInit(CallbackInfo ci) {
         EventFactory.onScreenInit((Screen) (Object) this);

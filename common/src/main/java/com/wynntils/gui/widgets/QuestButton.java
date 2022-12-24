@@ -5,7 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,13 +21,11 @@ import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import java.util.Optional;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class QuestButton extends AbstractButton {
+public class QuestButton extends WynntilsButton {
     private static final Pair<CustomColor, CustomColor> BUTTON_COLOR =
             Pair.of(new CustomColor(181, 174, 151), new CustomColor(121, 116, 101));
     private static final Pair<CustomColor, CustomColor> TRACKED_BUTTON_COLOR =
@@ -38,7 +36,7 @@ public class QuestButton extends AbstractButton {
     private final WynntilsQuestBookScreen questBookScreen;
 
     public QuestButton(int x, int y, int width, int height, QuestInfo questInfo, WynntilsQuestBookScreen screen) {
-        super(x, y, width, height, new TextComponent("Quest Button"));
+        super(x, y, width, height, Component.literal("Quest Button"));
         this.questInfo = questInfo;
         this.questBookScreen = screen;
     }
@@ -46,7 +44,7 @@ public class QuestButton extends AbstractButton {
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = getBackgroundColor();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
@@ -56,8 +54,8 @@ public class QuestButton extends AbstractButton {
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
@@ -75,8 +73,8 @@ public class QuestButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 stateTexture.resource(),
-                this.x + 1,
-                this.y + 1,
+                this.getX() + 1,
+                this.getY() + 1,
                 stateTexture.width(),
                 stateTexture.height(),
                 stateTexture.width(),
@@ -134,9 +132,6 @@ public class QuestButton extends AbstractButton {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
         Managers.Quest.openQuestOnWiki(questInfo);
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     public QuestInfo getQuestInfo() {
         return questInfo;

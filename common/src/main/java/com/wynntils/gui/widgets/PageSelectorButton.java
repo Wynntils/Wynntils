@@ -8,17 +8,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsMenuPagedScreenBase;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
-public class PageSelectorButton extends AbstractButton {
+public class PageSelectorButton extends WynntilsButton {
     private final boolean forward;
     private final WynntilsMenuPagedScreenBase screen;
 
     public PageSelectorButton(
             int x, int y, int width, int height, boolean forward, WynntilsMenuPagedScreenBase screen) {
-        super(x, y, width, height, new TextComponent("Page Selector Button"));
+        super(x, y, width, height, Component.literal("Page Selector Button"));
         this.forward = forward;
         this.screen = screen;
     }
@@ -40,8 +38,8 @@ public class PageSelectorButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -55,8 +53,8 @@ public class PageSelectorButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -68,7 +66,4 @@ public class PageSelectorButton extends AbstractButton {
                     backArrow.height());
         }
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

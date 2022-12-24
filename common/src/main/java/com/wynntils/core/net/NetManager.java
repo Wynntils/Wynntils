@@ -6,8 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
-    protected static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
@@ -81,6 +81,10 @@ public final class NetManager extends Manager {
         return download(uri, localFileName);
     }
 
+    public File getCacheDir() {
+        return CACHE_DIR;
+    }
+
     public File getCacheFile(String localFileName) {
         return new File(CACHE_DIR, localFileName);
     }
@@ -121,7 +125,7 @@ public final class NetManager extends Manager {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
             JsonObject jsonArgs = new JsonObject();
-            arguments.forEach((key, value) -> jsonArgs.addProperty(key, value));
+            arguments.forEach(jsonArgs::addProperty);
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);

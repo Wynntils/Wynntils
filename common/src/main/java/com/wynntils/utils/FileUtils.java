@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileSystemException;
+import java.util.Objects;
 
 public final class FileUtils {
     /**
@@ -50,6 +51,22 @@ public final class FileUtils {
         }
     }
 
+    public static void deleteFolder(File folder) {
+        if (!folder.exists()) return;
+
+        for (File file : Objects.requireNonNullElse(folder.listFiles(), new File[0])) {
+            if (file.isDirectory()) {
+                deleteFolder(file);
+            } else {
+                deleteFile(file);
+            }
+        }
+
+        if (!folder.delete()) {
+            WynntilsMod.error("Folder " + folder + " could not be deleted");
+        }
+    }
+
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (sourceFile == null || destFile == null) {
             throw new IllegalArgumentException("Argument files should not be null.");
@@ -64,11 +81,13 @@ public final class FileUtils {
     }
 
     private static void copyFileWindows(File sourceFile, File destFile) {
-        try (FileChannel source = new FileInputStream(sourceFile).getChannel();
-                FileChannel destination = new FileOutputStream(destFile).getChannel()) {
+        try (FileInputStream inputStream = new FileInputStream(sourceFile);
+                FileChannel source = inputStream.getChannel();
+                FileOutputStream outputStream = new FileOutputStream(destFile);
+                FileChannel destination = outputStream.getChannel()) {
             destination.transferFrom(source, 0, source.size());
         } catch (Exception e) {
-            e.printStackTrace();
+            WynntilsMod.warn("Failed to copy file " + sourceFile + " to " + destFile, e);
         }
     }
 

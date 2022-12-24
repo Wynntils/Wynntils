@@ -12,10 +12,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public abstract class WynntilsMenuScreenBase extends Screen {
+public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     protected WynntilsMenuScreenBase(Component component) {
         super(component);
     }

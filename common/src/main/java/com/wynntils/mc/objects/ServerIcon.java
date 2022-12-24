@@ -56,11 +56,9 @@ public class ServerIcon {
 
         try {
             ServerStatusPinger pinger = new ServerStatusPinger();
-            pinger.pingServer(server, () -> {
-                // FIXME: DynamicTexture issues in loadServerIcon
-                //        loadServerIcon(destination);
-                onDone();
-            });
+            // FIXME: DynamicTexture issues in loadServerIcon
+            //        loadServerIcon(destination);
+            pinger.pingServer(server, this::onDone);
         } catch (Exception e) {
             WynntilsMod.warn("Failed to ping server", e);
             onDone();
@@ -101,19 +99,15 @@ public class ServerIcon {
             return;
         }
 
-        try {
-            try (NativeImage nativeImage = NativeImage.fromBase64(iconString)) {
-                Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
-                Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
+        try (NativeImage nativeImage = NativeImage.fromBase64(iconString)) {
+            Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
+            Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
-                synchronized (this) {
-                    RenderSystem.recordRenderCall(() -> {
-                        Minecraft.getInstance()
-                                .getTextureManager()
-                                .register(destination, new DynamicTexture(nativeImage));
-                        serverIconLocation = destination;
-                    });
-                }
+            synchronized (this) {
+                RenderSystem.recordRenderCall(() -> {
+                    Minecraft.getInstance().getTextureManager().register(destination, new DynamicTexture(nativeImage));
+                    serverIconLocation = destination;
+                });
             }
         } catch (IOException e) {
             WynntilsMod.error("Unable to convert image from base64: " + iconString, e);

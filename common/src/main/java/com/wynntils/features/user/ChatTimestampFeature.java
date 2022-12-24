@@ -4,21 +4,18 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -30,7 +27,7 @@ public class ChatTimestampFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @Override
@@ -41,7 +38,7 @@ public class ChatTimestampFeature extends UserFeature {
         } catch (Exception e) {
             formatter = null;
 
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.chatTimestamp.invalidFormatMsg")
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatTimestamp.invalidFormatMsg")
                     .withStyle(ChatFormatting.DARK_RED));
         }
     }
@@ -53,7 +50,7 @@ public class ChatTimestampFeature extends UserFeature {
         Component message = event.getMessage();
 
         LocalDateTime date = LocalDateTime.now();
-        MutableComponent timestamp = new TextComponent("§8[§7" + date.format(formatter) + "§8]§r ");
+        MutableComponent timestamp = Component.literal("§8[§7" + date.format(formatter) + "§8]§r ");
 
         timestamp.append(message);
 

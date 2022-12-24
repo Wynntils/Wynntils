@@ -6,6 +6,8 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -16,23 +18,27 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.mc.event.CustomBarAddEvent;
+import com.wynntils.handlers.bossbar.BossBarProgress;
+import com.wynntils.handlers.bossbar.TrackedBar;
+import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
-import com.wynntils.wynn.model.bossbar.BossBarModel;
+import com.wynntils.wynn.model.bossbar.AwakenedBar;
+import com.wynntils.wynn.model.bossbar.BloodPoolBar;
+import com.wynntils.wynn.model.bossbar.CorruptedBar;
+import com.wynntils.wynn.model.bossbar.FocusBar;
+import com.wynntils.wynn.model.bossbar.ManaBankBar;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
+import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -44,33 +50,16 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (!manaBarOverlay.isEnabled() || manaBarOverlay.shouldDisplayOriginal) return;
-
-        event.setMessage("");
-    }
-
-    @SubscribeEvent
-    public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (!healthBarOverlay.isEnabled() || healthBarOverlay.shouldDisplayOriginal) return;
-
-        event.setMessage("");
-    }
-
-    @SubscribeEvent
-    public void onBossBarAdd(CustomBarAddEvent event) {
-        BaseBarOverlay overlay =
-                switch (event.getType()) {
-                    case BLOODPOOL -> bloodPoolBarOverlay;
-                    case MANABANK -> manaBankBarOverlay;
-                    case AWAKENED -> awakenedProgressBarOverlay;
-                    case FOCUS -> focusBarOverlay;
-                    case CORRUPTED -> corruptedBarOverlay;
-                };
+    public void onBossBarAdd(BossBarAddedEvent event) {
+        BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
 
         if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
+    }
+
+    private BaseBarOverlay getOverlayFromTrackedBar(TrackedBar trackedBar) {
+        return barToOverlayMap.get(trackedBar.getClass());
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
@@ -94,6 +83,18 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
 
+    private final Map<Class<? extends TrackedBar>, BaseBarOverlay> barToOverlayMap = Map.of(
+            BloodPoolBar.class,
+            bloodPoolBarOverlay,
+            ManaBankBar.class,
+            manaBankBarOverlay,
+            AwakenedBar.class,
+            awakenedProgressBarOverlay,
+            FocusBar.class,
+            focusBarOverlay,
+            CorruptedBar.class,
+            corruptedBarOverlay);
+
     public abstract static class BaseBarOverlay extends Overlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
@@ -116,7 +117,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
-        protected abstract BossBarModel.BarProgress progress();
+        protected abstract BossBarProgress progress();
 
         protected abstract String icon();
 
@@ -129,7 +130,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
 
-            BossBarModel.BarProgress barProgress = progress();
+            BossBarProgress barProgress = progress();
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
             renderText(poseStack, renderY, text);
@@ -219,10 +220,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.ActionBar.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+        }
+
+        @Override
+        public BossBarProgress progress() {
             int current = Models.ActionBar.getCurrentHealth();
             int max = Models.ActionBar.getMaxHealth();
-            return new BossBarModel.BarProgress(current, max, current / (float) max);
+            return new BossBarProgress(current, max, current / (float) max);
         }
 
         @Override
@@ -297,13 +303,18 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.bloodPoolBar.getBarProgress();
         }
 
         @Override
         public boolean isActive() {
             return Models.BossBar.bloodPoolBar.isActive();
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            // Do not call super
         }
     }
 
@@ -333,10 +344,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             int current = Models.ActionBar.getCurrentMana();
             int max = Models.ActionBar.getMaxMana();
-            return new BossBarModel.BarProgress(current, max, current / (float) max);
+            return new BossBarProgress(current, max, current / (float) max);
         }
 
         @Override
@@ -347,6 +358,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return true;
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.ActionBar.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
@@ -421,13 +437,18 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.manaBankBar.getBarProgress();
         }
 
         @Override
         public boolean isActive() {
             return Models.BossBar.manaBankBar.isActive();
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            // Do not call super
         }
     }
 
@@ -446,7 +467,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.awakenedBar.getBarProgress();
         }
 
@@ -475,7 +496,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.focusBar.getBarProgress();
         }
 
@@ -505,7 +526,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        public BossBarModel.BarProgress progress() {
+        public BossBarProgress progress() {
             return Models.BossBar.corruptedBar.getBarProgress();
         }
 

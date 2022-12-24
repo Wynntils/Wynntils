@@ -4,14 +4,13 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,9 @@ public class ChatRedirectFeature extends UserFeature {
 
     @Config
     public RedirectAction horse = RedirectAction.REDIRECT;
+
+    @Config
+    public RedirectAction housingTeleport = RedirectAction.REDIRECT;
 
     @Config
     public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
@@ -78,6 +80,10 @@ public class ChatRedirectFeature extends UserFeature {
         register(new HorseDespawnedRedirector());
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
+        register(new HousingTeleportArrivalRedirector());
+        register(new HousingTeleportArrivalCooldownRedirector());
+        register(new HousingTeleportDepartureRedirector());
+        register(new HousingTeleportDepartureCooldownRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
@@ -87,7 +93,8 @@ public class ChatRedirectFeature extends UserFeature {
         register(new PotionsMaxRedirector());
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
-        register(new ScrollTeleportationFailRedirector());
+        register(new ScrollTeleportationHousingFailRedirector());
+        register(new ScrollTeleportationMobFailRedirector());
         register(new SoulPointGainDiscarder());
         register(new SoulPointGainRedirector());
         register(new SoulPointLossRedirector());
@@ -113,16 +120,10 @@ public class ChatRedirectFeature extends UserFeature {
             RedirectAction action = redirector.getAction();
             if (action == RedirectAction.KEEP) continue;
 
-            Matcher matcher;
             Pattern pattern = redirector.getPattern(messageType);
-            // Ideally we will get rid of those "uncolored" patterns
-            Pattern uncoloredPattern = redirector.getUncoloredSystemPattern();
-            if (messageType == MessageType.SYSTEM && uncoloredPattern != null) {
-                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(message));
-            } else {
-                if (pattern == null) continue;
-                matcher = pattern.matcher(message);
-            }
+            if (pattern == null) continue;
+
+            Matcher matcher = pattern.matcher(message);
 
             if (matcher.find()) {
                 e.setCanceled(true);
@@ -144,13 +145,6 @@ public class ChatRedirectFeature extends UserFeature {
     public interface Redirector {
         Pattern getPattern(MessageType messageType);
 
-        // This is a bit of a hack to support patterns without
-        // color coding.
-        @Deprecated
-        default Pattern getUncoloredSystemPattern() {
-            return null;
-        }
-
         ChatRedirectFeature.RedirectAction getAction();
 
         List<String> getNotifications(Matcher matcher);
@@ -160,17 +154,12 @@ public class ChatRedirectFeature extends UserFeature {
         @Override
         public Pattern getPattern(MessageType messageType) {
             return switch (messageType) {
-                case NORMAL -> getNormalPattern();
+                case FOREGROUND -> getForegroundPattern();
                 case BACKGROUND -> getBackgroundPattern();
-                case SYSTEM -> getSystemPattern();
             };
         }
 
-        protected Pattern getSystemPattern() {
-            return null;
-        }
-
-        protected Pattern getNormalPattern() {
+        protected Pattern getForegroundPattern() {
             return null;
         }
 
@@ -187,12 +176,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§cYour items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -207,14 +196,14 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class FriendJoinRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile(
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
                 "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -241,12 +230,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class FriendLeaveRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -268,11 +257,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -289,12 +278,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HealedByOtherRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -316,12 +305,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HorseDespawnedRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§dSince you interacted with your inventory, your horse has despawned.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -336,12 +325,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HorseScaredRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§dYour horse is scared to come out right now, too many mobs are nearby.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -356,11 +345,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class HorseSpawnFailRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4There is no room for a horse.");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4There is no room for a horse.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -374,13 +363,92 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
+    private class HousingTeleportArrivalRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§aYou have flown to your housing island.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "→ Housing Island";
+        }
+    }
+
+    private class HousingTeleportArrivalCooldownRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou need to wait a bit before joining another house.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Housing teleport is on cooldown!";
+        }
+    }
+
+    private class HousingTeleportDepartureRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§aYou have flown to your original position.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.GRAY + "← Housing Island";
+        }
+    }
+
+    private class HousingTeleportDepartureCooldownRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou need to wait a bit before leaving a house.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Housing teleport is on cooldown!";
+        }
+    }
+
     private class IngredientPouchSellRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -390,8 +458,8 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            Integer ingredientCount = Integer.parseInt(matcher.group(1));
-            String ingredientString = ingredientCount.toString() + " §dingredient" + (ingredientCount == 1 ? "" : "s");
+            int ingredientCount = Integer.parseInt(matcher.group(1));
+            String ingredientString = ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s");
 
             String emeraldString = matcher.group(2);
 
@@ -402,14 +470,14 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class LoginRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -432,12 +500,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§cSorry, you can't teleport... Try moving away from blocks.$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -452,12 +520,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ManaDeficitRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§4You don't have enough mana to cast that spell!$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -472,11 +540,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class NoTotemRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§4You have no active totems near you$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4You have no active totems near you$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -491,11 +559,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionAlreadyActiveRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§cYou already have that potion active...$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§cYou already have that potion active...$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -510,12 +578,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionsMaxRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -530,12 +598,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionsMovedRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -550,12 +618,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class PotionsReplacedRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -569,12 +637,32 @@ public class ChatRedirectFeature extends UserFeature {
         }
     }
 
-    private class ScrollTeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+    private class ScrollTeleportationHousingFailRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou can not teleport while inside a house...$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return scrollTeleport;
+        }
+
+        @Override
+        protected String getNotification(Matcher matcher) {
+            return ChatFormatting.DARK_RED + "Can't teleport on a housing island!";
+        }
+    }
+
+    private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -589,7 +677,7 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SoulPointGainDiscarder implements Redirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
         private static final Pattern BACKGROUND_PATTERN =
                 Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
@@ -598,8 +686,7 @@ public class ChatRedirectFeature extends UserFeature {
         public Pattern getPattern(MessageType messageType) {
             return switch (messageType) {
                 case BACKGROUND -> BACKGROUND_PATTERN;
-                case SYSTEM -> SYSTEM_PATTERN;
-                default -> null;
+                case FOREGROUND -> FOREGROUND_PATTERN;
             };
         }
 
@@ -618,11 +705,11 @@ public class ChatRedirectFeature extends UserFeature {
 
     private class SoulPointGainRedirector extends SimpleRedirector {
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -643,12 +730,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SoulPointLossRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN =
+        private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost...$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -661,7 +748,7 @@ public class ChatRedirectFeature extends UserFeature {
             String numberString = matcher.group(1);
             String pluralizer = "";
 
-            Integer numberValue = Integer.parseInt(numberString);
+            int numberValue = Integer.parseInt(numberString);
             if (numberValue > 1) {
                 pluralizer = "s";
             }
@@ -672,11 +759,11 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class SpeedBoostRedirector extends SimpleRedirector {
-        private static final Pattern NORMAL_PATTERN = Pattern.compile("^§b\\+([23]) minutes§r§7 speed boost.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§r§7 speed boost.$");
 
         @Override
-        protected Pattern getNormalPattern() {
-            return NORMAL_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -692,12 +779,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_SYSTEM_PATTERN = Pattern.compile(
-                "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
-        public Pattern getUncoloredSystemPattern() {
-            return UNCOLORED_SYSTEM_PATTERN;
+        public Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -712,12 +799,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^§4You have §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -739,13 +826,13 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
-            if (messageType == MessageType.SYSTEM) {
-                return SYSTEM_PATTERN;
+            if (messageType == MessageType.FOREGROUND) {
+                return FOREGROUND_PATTERN;
             } else {
                 return null;
             }
@@ -768,12 +855,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class UnusedSkillPointsRedirector extends SimpleRedirector {
-        private static final Pattern SYSTEM_PATTERN = Pattern.compile(
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^§4You have §r§c§l(\\d+) unused Skill Points?! §r§4Right-Click while holding your compass to use them$");
 
         @Override
-        protected Pattern getSystemPattern() {
-            return SYSTEM_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override

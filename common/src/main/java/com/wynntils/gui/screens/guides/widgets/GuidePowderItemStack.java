@@ -5,30 +5,29 @@
 package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsPowderGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.PowderItemStack;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuidePowderItemStack extends AbstractButton {
+public class GuidePowderItemStack extends WynntilsButton {
     private final PowderItemStack itemStack;
     private final WynntilsPowderGuideScreen screen;
 
     public GuidePowderItemStack(
             int x, int y, int width, int height, PowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide PowderItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide PowderItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }
@@ -37,8 +36,8 @@ public class GuidePowderItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getElement().getColor();
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + getX();
+        float actualY = screen.getTranslationY() + getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -59,9 +58,9 @@ public class GuidePowderItemStack extends AbstractButton {
                 .renderAlignedTextInBox(
                         poseStack,
                         MathUtils.toRoman(itemStack.getTier()),
-                        x + 2,
-                        x + 14,
-                        y + 8,
+                        getX() + 2,
+                        getX() + 14,
+                        getY() + 8,
                         0,
                         color,
                         HorizontalAlignment.Center,
@@ -73,8 +72,8 @@ public class GuidePowderItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    getX() + 12,
+                    getY() - 4,
                     200,
                     9,
                     9,
@@ -106,9 +105,6 @@ public class GuidePowderItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     public PowderItemStack getItemStack() {
         return itemStack;

@@ -5,19 +5,18 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.model.territory.objects.TerritoryInfo;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.guild.territory.objects.TerritoryInfo;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
-import java.util.Optional;
 
 public class TerritoryPoi implements Poi {
     private final TerritoryProfile territoryProfile;
@@ -54,8 +53,9 @@ public class TerritoryPoi implements Poi {
         final float actualRenderZ = renderZ - renderHeight / 2f;
 
         CustomColor color;
-        Optional<GuildMapScreen> screen = WynntilsScreenWrapper.instanceOf(GuildMapScreen.class);
-        if (territoryInfo != null && screen.isPresent() && screen.get().isResourceMode()) {
+        if (territoryInfo != null
+                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
+                && guildMapScreen.isResourceMode()) {
             color = territoryInfo.getColor();
         } else {
             color = territoryProfile.getGuildColor();

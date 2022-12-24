@@ -6,6 +6,9 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -16,20 +19,17 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.wynn.model.objectives.WynnObjective;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.objectives.ObjectiveHandler;
-import com.wynntils.wynn.model.scoreboard.objectives.WynnObjective;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -87,7 +87,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            WynnObjective guildObjective = ObjectiveHandler.getGuildObjective();
+            WynnObjective guildObjective = Managers.Objectives.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -178,7 +178,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<WynnObjective> objectives = ObjectiveHandler.getObjectives();
+            List<WynnObjective> objectives = Managers.Objectives.getPersonalObjectives();
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;

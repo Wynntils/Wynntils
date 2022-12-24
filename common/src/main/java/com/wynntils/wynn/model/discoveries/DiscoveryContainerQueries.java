@@ -5,12 +5,12 @@
 package com.wynntils.wynn.model.discoveries;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.handlers.container.ContainerContent;
+import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.container.ContainerContent;
-import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -104,7 +104,7 @@ public class DiscoveryContainerQueries {
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying discoveries: " + msg);
                     McUtils.sendMessageToClient(
-                            new TextComponent("Error updating discoveries.").withStyle(ChatFormatting.RED));
+                            Component.literal("Error updating discoveries.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Managers.Quest.getQuestBookTitle(1))

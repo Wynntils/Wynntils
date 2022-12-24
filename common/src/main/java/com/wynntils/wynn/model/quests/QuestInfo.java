@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.quests;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
@@ -37,9 +36,9 @@ public class QuestInfo {
     private final int pageNumber;
 
     // Quest progress can change over time
-    private QuestStatus status;
+    private final QuestStatus status;
     private String nextTask;
-    private boolean tracked;
+    private final boolean tracked;
 
     protected QuestInfo(
             String name,
@@ -154,18 +153,19 @@ public class QuestInfo {
     public static List<Component> generateTooltipForQuest(QuestInfo questInfo) {
         List<Component> tooltipLines = new ArrayList<>();
 
-        tooltipLines.add(new TextComponent(questInfo.getName())
+        tooltipLines.add(Component.literal(questInfo.getName())
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.WHITE));
         tooltipLines.add(questInfo.getStatus().getQuestBookComponent());
-        tooltipLines.add(new TextComponent(""));
+        tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
             tooltipLines.add((Managers.Character.getCharacterInfo().getLevel() >= questInfo.getLevel()
-                            ? new TextComponent("✔").withStyle(ChatFormatting.GREEN)
-                            : new TextComponent("✖").withStyle(ChatFormatting.RED))
-                    .append(new TextComponent(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(String.valueOf(questInfo.getLevel())).withStyle(ChatFormatting.WHITE)));
+                            ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
+                            : Component.literal("✖").withStyle(ChatFormatting.RED))
+                    .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(String.valueOf(questInfo.getLevel()))
+                            .withStyle(ChatFormatting.WHITE)));
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
@@ -173,29 +173,29 @@ public class QuestInfo {
                                     .getProfessionInfo()
                                     .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()
-                    ? new TextComponent("✔ ").withStyle(ChatFormatting.GREEN)
-                    : new TextComponent("✖ ").withStyle(ChatFormatting.RED);
+                    ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
+                    : Component.literal("✖ ").withStyle(ChatFormatting.RED);
 
-            tooltipLines.add(base.append(new TextComponent(additionalRequirement.a() + " Lv. Min: ")
+            tooltipLines.add(base.append(Component.literal(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(new TextComponent(String.valueOf(additionalRequirement.b()))
+                    .append(Component.literal(String.valueOf(additionalRequirement.b()))
                             .withStyle(ChatFormatting.WHITE))));
         }
 
-        tooltipLines.add(new TextComponent("-")
+        tooltipLines.add(Component.literal("-")
                 .withStyle(ChatFormatting.GREEN)
-                .append(new TextComponent(" Length: ").withStyle(ChatFormatting.GRAY))
-                .append(new TextComponent(StringUtils.capitalizeFirst(
+                .append(Component.literal(" Length: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(StringUtils.capitalizeFirst(
                                 questInfo.getLength().toString().toLowerCase(Locale.ROOT)))
                         .withStyle(ChatFormatting.WHITE)));
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
-            tooltipLines.add(new TextComponent(""));
+            tooltipLines.add(Component.literal(""));
             String nextTask = questInfo.getNextTask();
             String[] lines = StringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
             for (String line : lines) {
-                tooltipLines.add(new TextComponent(line).withStyle(ChatFormatting.GRAY));
+                tooltipLines.add(Component.literal(line).withStyle(ChatFormatting.GRAY));
             }
         }
 

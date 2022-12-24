@@ -6,12 +6,11 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.core.mod.CrashReportManager;
-import com.wynntils.gui.screens.WynntilsScreenWrapper;
 import com.wynntils.gui.screens.overlays.OverlayManagementScreen;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -23,10 +22,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends Manager {
@@ -81,9 +79,8 @@ public final class OverlayManager extends Manager {
         boolean testMode = false;
         boolean shouldRender = true;
 
-        Optional<OverlayManagementScreen> screen = WynntilsScreenWrapper.instanceOf(OverlayManagementScreen.class);
-        if (screen.isPresent()) {
-            testMode = screen.get().isTestMode();
+        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
+            testMode = screen.isTestMode();
             shouldRender = false;
         }
 
@@ -117,7 +114,7 @@ public final class OverlayManager extends Manager {
             } catch (Throwable t) {
                 WynntilsMod.error("Exception when rendering overlay " + overlay.getTranslatedName(), t);
                 WynntilsMod.warn("This overlay will be disabled");
-                McUtils.sendMessageToClient(new TextComponent("Wynntils error: Overlay '" + overlay.getTranslatedName()
+                McUtils.sendMessageToClient(Component.literal("Wynntils error: Overlay '" + overlay.getTranslatedName()
                                 + "' has crashed and will be disabled")
                         .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException

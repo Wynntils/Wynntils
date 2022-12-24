@@ -16,7 +16,7 @@ import com.wynntils.wynn.utils.EntityUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
@@ -79,7 +79,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             alreadySetPrevItem = true;
         }
 
-        new Delay(
+        Delay.create(
                 () -> {
                     AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
@@ -89,7 +89,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendPacket(new ServerboundUseItemPacket(InteractionHand.MAIN_HAND));
+                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
@@ -99,7 +99,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
     private static void postHorseErrorMessage(MountHorseStatus status) {
 
         NotificationManager.queueMessage(
-                new TranslatableComponent(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
+                Component.translatable(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
     }
 
     private enum MountHorseStatus {
@@ -112,7 +112,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             this.tcString = tcString;
         }
 
-        protected String getTcString() {
+        private String getTcString() {
             return this.tcString;
         }
     }

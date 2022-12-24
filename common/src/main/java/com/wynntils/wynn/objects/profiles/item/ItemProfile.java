@@ -52,7 +52,7 @@ public class ItemProfile {
             Map<String, String> damageTypes,
             Map<String, Integer> defenseTypes,
             Map<String, IdentificationProfile> statuses,
-            ArrayList<String> majorIds,
+            List<String> majorIds,
             String restriction,
             String lore) {
         this.displayName = displayName;
@@ -214,11 +214,13 @@ public class ItemProfile {
         return lore;
     }
 
-    public void addMajorIds(Map<String, MajorIdentification> idMap) {
+    public void updateMajorIdsFromStrings(Map<String, MajorIdentification> idMap) {
         if (majorIds == null) return;
         majorIdentifications = new ArrayList<>();
         for (String id : majorIds) {
-            if (idMap.containsKey(id)) majorIdentifications.add(idMap.get(id));
+            if (idMap.containsKey(id)) {
+                majorIdentifications.add(idMap.get(id));
+            }
         }
     }
 }

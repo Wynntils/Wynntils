@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -11,7 +12,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -51,7 +51,7 @@ public class GammabrightFeature extends UserFeature {
 
     @Override
     protected boolean onEnable() {
-        if (gammabrightEnabled && McUtils.options().gamma != 1000d) {
+        if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
 
@@ -60,7 +60,7 @@ public class GammabrightFeature extends UserFeature {
 
     private void applyGammabright() {
         if (!isEnabled()) return;
-        if (gammabrightEnabled && McUtils.options().gamma == 1000d) return;
+        if (gammabrightEnabled && McUtils.options().gamma().get() == 1000d) return;
 
         if (gammabrightEnabled) {
             enableGammabright();
@@ -77,11 +77,11 @@ public class GammabrightFeature extends UserFeature {
     }
 
     private void resetGamma() {
-        McUtils.options().gamma = lastGamma;
+        McUtils.options().gamma().value = lastGamma;
     }
 
     private void enableGammabright() {
-        lastGamma = McUtils.options().gamma;
-        McUtils.options().gamma = 1000d;
+        lastGamma = McUtils.options().gamma().get();
+        McUtils.options().gamma().value = 1000d;
     }
 }

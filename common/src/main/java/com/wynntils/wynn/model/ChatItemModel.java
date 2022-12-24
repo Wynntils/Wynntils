@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -28,7 +28,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class ChatItemModel extends Model {
@@ -145,9 +144,7 @@ public final class ChatItemModel extends Model {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = Managers.ItemProfiles.getItemsMap() != null
-                ? Managers.ItemProfiles.getItemsMap().get(name)
-                : null;
+        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids
@@ -227,7 +224,7 @@ public final class ChatItemModel extends Model {
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
         components.add(0, message.plainCopy().withStyle(message.getStyle()));
 
-        MutableComponent temp = new TextComponent("");
+        MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
             Matcher m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp));
@@ -247,7 +244,7 @@ public final class ChatItemModel extends Model {
                     continue;
                 }
 
-                MutableComponent preText = new TextComponent(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(text.substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -255,7 +252,7 @@ public final class ChatItemModel extends Model {
                 Component itemComponent = createItemComponent(item);
                 temp.append(itemComponent);
 
-                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
                                 + text.substring(m.end()))
                         .withStyle(style);
                 m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
@@ -268,7 +265,7 @@ public final class ChatItemModel extends Model {
     }
 
     private Component createItemComponent(GearItemStack item) {
-        MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
+        MutableComponent itemComponent = Component.literal(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());
 

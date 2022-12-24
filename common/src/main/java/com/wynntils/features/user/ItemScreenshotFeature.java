@@ -8,12 +8,12 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -31,7 +31,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -65,7 +64,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
     private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
         ItemStack stack = hoveredSlot.getItem();
-        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();
@@ -109,12 +108,12 @@ public class ItemScreenshotFeature extends UserFeature {
         try {
             RenderUtils.copyImageToClipboard(bi);
             McUtils.sendMessageToClient(
-                    new TranslatableComponent("feature.wynntils.itemScreenshot.message", stack.getHoverName())
+                    Component.translatable("feature.wynntils.itemScreenshot.message", stack.getHoverName())
                             .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
             McUtils.sendMessageToClient(
-                    new TranslatableComponent("feature.wynntils.itemScreenshot.error", stack.getHoverName())
+                    Component.translatable("feature.wynntils.itemScreenshot.error", stack.getHoverName())
                             .withStyle(ChatFormatting.RED));
         }
 
@@ -122,13 +121,13 @@ public class ItemScreenshotFeature extends UserFeature {
         if (stack instanceof GearItemStack gearItem) {
             String encoded = Models.ChatItem.encodeItem(gearItem);
 
-            McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemMessage")
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                     .withStyle(ChatFormatting.DARK_GREEN)
                     .withStyle(ChatFormatting.UNDERLINE)
                     .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
                     .withStyle(s -> s.withHoverEvent(new HoverEvent(
                             HoverEvent.Action.SHOW_TEXT,
-                            new TranslatableComponent("feature.wynntils.itemScreenshot.chatItemTooltip")
+                            Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
                                     .withStyle(ChatFormatting.DARK_AQUA)))));
         }
     }

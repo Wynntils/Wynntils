@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.wynn.event.StatusEffectsChangedEvent;
 import com.wynntils.wynn.objects.timers.StaticStatusTimer;

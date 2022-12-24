@@ -6,30 +6,28 @@ package com.wynntils.core.net.athena;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import javax.crypto.SecretKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Crypt;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
 
 public final class WynntilsAccountManager extends Manager {
@@ -41,37 +39,40 @@ public final class WynntilsAccountManager extends Manager {
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
 
+    private final List<Runnable> onLogin = new ArrayList<>();
+
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
         login();
     }
 
-    public void reset() {
+    public void reauth() {
+        loggedIn = false;
         login();
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (!event.isFirstJoinWorld()) return;
+
+        if (!loggedIn) {
+            MutableComponent failed = Component.literal(
+                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
+                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+                    .withStyle(ChatFormatting.GREEN);
+            failed.append(Component.literal("/wynntils reauth")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.AQUA)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+
+            McUtils.sendMessageToClient(failed);
+        }
     }
 
     private void login() {
         if (loggedIn) return;
 
         doLogin();
-
-        if (!loggedIn) {
-            MutableComponent failed = new TextComponent(
-                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
-                    .withStyle(ChatFormatting.GREEN);
-            failed.append(new TextComponent("/wynntils reload")
-                    .withStyle(Style.EMPTY
-                            .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
-
-            if (McUtils.player() == null) {
-                WynntilsMod.error(ComponentUtils.getUnformatted(failed));
-                return;
-            }
-
-            McUtils.sendMessageToClient(failed);
-        }
     }
 
     public String getToken() {
@@ -91,7 +92,6 @@ public final class WynntilsAccountManager extends Manager {
     }
 
     private void doLogin() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
         // generating secret key
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_PUBLIC_KEY);
         apiResponse.handleJsonObject(json -> {
@@ -115,21 +115,21 @@ public final class WynntilsAccountManager extends Manager {
                         .forEach((k) ->
                                 encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                 loggedIn = true;
-                future.complete(true);
                 WynntilsMod.info("Successfully connected to Athena!");
+
+                // It would be ideal to use an event here, but the event bus seems to be having issues with doing so.
+                // Maybe this is related to the fact that this is called from ForkJoinPool?
+                onLogin.forEach(Runnable::run);
             });
         });
+    }
 
-        // FIXME: Rewrite athena account manager dependencies to work async
-        try {
-            // Wait up to 5 seconds for login to complete.
-            // This is not ideal, but the rest of the code assumes that login is done
-            // when further down the manager init chain.
+    public void onLoginRun(Runnable runnable) {
+        onLogin.add(runnable);
+    }
 
-            future.get(5000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            // Well then, we failed. Calling function will inform the user
-        }
+    public void removeOnLogin(Runnable runnable) {
+        onLogin.remove(runnable);
     }
 
     private String parseAndJoinPublicKey(String key) {

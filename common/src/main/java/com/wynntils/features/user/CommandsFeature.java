@@ -4,21 +4,19 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.CommandSentEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandsFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatSend(ChatSentEvent e) {
-        String message = e.getMessage();
+    public void onCommand(CommandSentEvent e) {
+        String command = e.getCommand();
 
-        if (message.startsWith("/")) {
-            if (Managers.ClientCommand.handleCommand(message)) {
-                e.setCanceled(true);
-            }
+        if (Managers.ClientCommand.handleCommand(command)) {
+            e.setCanceled(true);
         }
     }
 }

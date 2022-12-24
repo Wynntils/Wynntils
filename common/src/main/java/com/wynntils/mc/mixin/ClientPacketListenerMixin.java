@@ -4,24 +4,36 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.mc.mixin.accessors.ClientboundCommandsPacketAccessor;
+import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MessageSignatureCache;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.network.chat.RemoteChatSession;
+import net.minecraft.network.chat.SignedMessageBody;
+import net.minecraft.network.chat.SignedMessageLink;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
@@ -31,15 +43,18 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
+import net.minecraft.world.flag.FeatureFlagSet;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
@@ -49,25 +64,68 @@ public abstract class ClientPacketListenerMixin {
     @Shadow
     protected abstract void send(ServerboundResourcePackPacket.Action action);
 
+    @Shadow
+    private CommandDispatcher<SharedSuggestionProvider> commands;
+
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+
+    @Shadow
+    public abstract FeatureFlagSet enabledFeatures();
+
+    @Shadow
+    private LayeredRegistryAccess<ClientRegistryLayer> registryAccess;
+
+    @Shadow
+    private MessageSignatureCache messageSignatureCache;
+
     private static boolean isRenderThread() {
-        return (McUtils.mc().isSameThread());
+        return McUtils.mc().isSameThread();
+    }
+
+    @Inject(method = "sendChat", at = @At("HEAD"), cancellable = true)
+    private void onChatPre(String string, CallbackInfo ci) {
+        ChatSentEvent result = EventFactory.onChatSent(string);
+        if (result.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    private void onSignedCommandPre(String string, CallbackInfo ci) {
+        if (EventFactory.onCommandSent(string, true).isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
+    private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
+        if (EventFactory.onCommandSent(command, false).isCanceled()) {
+            // Return true here, to signal to MC that we handled the command.
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
     }
 
     @Inject(
             method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
-            at = @At("HEAD"))
-    private void handleCommandsPre(ClientboundCommandsPacket packet, CallbackInfo ci) {
+            at = @At("RETURN"))
+    private void handleCommandsPost(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(packet.getRoot());
-        ((ClientboundCommandsPacketAccessor) packet).setRoot(event.getRoot());
+        EventFactory.onCommandsPacket(this.commands.getRoot());
     }
 
-    @Inject(
-            method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V",
-            at = @At("RETURN"))
-    private void handlePlayerInfoPost(ClientboundPlayerInfoPacket packet, CallbackInfo ci) {
+    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoPacket(packet);
+        EventFactory.onPlayerInfoUpdatePacket(packet);
+    }
+
+    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onPlayerInfoRemovePacket(packet);
     }
 
     @Inject(
@@ -127,7 +185,22 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onContainerSetContentPre(packet).isCanceled()) {
+        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+
+        if (!packet.getItems().equals(event.getItems())) {
+            if (packet.getContainerId() == 0) {
+                McUtils.player()
+                        .inventoryMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+                McUtils.player()
+                        .containerMenu
+                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+            }
+
             ci.cancel();
         }
     }
@@ -181,6 +254,12 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
         if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
             ci.cancel();
+
+            // Signal loading complete to the loading screen,
+            // or else we are stuck in an "infinite" loading state
+            if (McUtils.mc().screen instanceof ReceivingLevelScreen receivingLevelScreen) {
+                receivingLevelScreen.loadingPacketsReceived();
+            }
         }
     }
 
@@ -206,19 +285,79 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Redirect(
-            method = "handleChat(Lnet/minecraft/network/protocol/game/ClientboundChatPacket;)V",
+    @Inject(
+            method = "handlePlayerChat",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/Gui;handleChat(Lnet/minecraft/network/chat/ChatType;Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
-    private void redirectHandleChat(Gui gui, ChatType chatType, Component message, UUID uuid) {
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
+            cancellable = true)
+    private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onChatReceived(chatType, message);
-        if (result.isCanceled()) return;
+        ChatPacketReceivedEvent result =
+                EventFactory.onChatReceived(com.wynntils.mc.objects.ChatType.CHAT, packet.unsignedContent());
+        if (result.isCanceled()) {
+            ci.cancel();
+            return;
+        }
 
-        gui.handleChat(chatType, result.getMessage(), uuid);
+        if (!result.getMessage().equals(packet.unsignedContent())) {
+            // Because of the injection point, we know these optionals are present
+            SignedMessageBody signedMessageBody =
+                    packet.body().unpack(this.messageSignatureCache).get();
+            ChatType.Bound bound = packet.chatType()
+                    .resolve(this.registryAccess.compositeAccess())
+                    .get();
+
+            UUID uuid = packet.sender();
+            PlayerInfo playerInfo = this.getPlayerInfo(uuid);
+            RemoteChatSession remoteChatSession = playerInfo.getChatSession();
+
+            SignedMessageLink signedMessageLink;
+            if (remoteChatSession != null) {
+                signedMessageLink = new SignedMessageLink(packet.index(), uuid, remoteChatSession.sessionId());
+            } else {
+                signedMessageLink = SignedMessageLink.unsigned(uuid);
+            }
+
+            PlayerChatMessage playerChatMessage = new PlayerChatMessage(
+                    signedMessageLink,
+                    packet.signature(),
+                    signedMessageBody,
+                    packet.unsignedContent(),
+                    packet.filterMask());
+
+            this.minecraft.getChatListener().handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), bound);
+            this.messageSignatureCache.push(playerChatMessage);
+
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method = "handleSystemChat",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"),
+            cancellable = true)
+    private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
+                packet.overlay() ? com.wynntils.mc.objects.ChatType.GAME_INFO : com.wynntils.mc.objects.ChatType.SYSTEM,
+                packet.content());
+        if (result.isCanceled()) {
+            ci.cancel();
+            return;
+        }
+
+        if (!result.getMessage().equals(packet.content())) {
+
+            this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
+            ci.cancel();
+        }
     }
 
     @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)

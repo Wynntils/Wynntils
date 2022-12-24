@@ -6,9 +6,9 @@ package com.wynntils.wynn.model.discoveries;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
@@ -17,11 +17,11 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.model.territory.TerritoryManager;
+import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -50,6 +49,10 @@ public final class DiscoveryManager extends Manager {
             TerritoryManager territoryManager,
             MinecraftSchedulerManager minecraftSchedulerManager) {
         super(List.of(netManager, territoryManager, minecraftSchedulerManager));
+    }
+
+    public void reloadData() {
+        updateDiscoveriesResource();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -134,7 +137,7 @@ public final class DiscoveryManager extends Manager {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
                 return;
             }
@@ -151,8 +154,8 @@ public final class DiscoveryManager extends Manager {
             String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
             String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
 
-            int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
-            int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
+            int xEnd = Math.min(xLocation.indexOf('|'), xLocation.indexOf("}}"));
+            int zEnd = Math.min(zLocation.indexOf('|'), zLocation.indexOf("}}"));
 
             int x;
             int z;
@@ -161,25 +164,22 @@ public final class DiscoveryManager extends Manager {
                 x = Integer.parseInt(xLocation.substring(12, xEnd));
                 z = Integer.parseInt(zLocation.substring(12, zEnd));
             } catch (NumberFormatException e) {
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
                 return;
             }
 
             if (x == 0 && z == 0) {
-                McUtils.sendMessageToClient(new TextComponent(
+                McUtils.sendMessageToClient(Component.literal(
                         ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
                 return;
             }
 
             switch (action) {
-                case MAP -> {
                     // We can't run this is on request thread
-                    Managers.MinecraftScheduler.queueRunnable(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
-                }
-                case COMPASS -> {
-                    Models.Compass.setCompassLocation(new Location(x, 0, z));
-                }
+                case MAP -> Managers.MinecraftScheduler.queueRunnable(
+                        () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
+                case COMPASS -> Models.Compass.setCompassLocation(new Location(x, 0, z));
             }
         });
     }

@@ -5,14 +5,13 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.net.hades.event.HadesEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Arrays;
@@ -64,7 +63,7 @@ public final class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public void onAuth(SocketEvent.Authenticated event) {
+    public void onAuth(HadesEvent.Authenticated event) {
         if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
@@ -73,8 +72,6 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        Models.HadesUser.getHadesUserMap().clear();
-
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             requestFriendListUpdate();
             requestPartyListUpdate();
@@ -85,7 +82,7 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent event) {
-        if (event.getMessageType() != MessageType.SYSTEM) return;
+        if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
@@ -270,7 +267,7 @@ public final class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
-        McUtils.player().chat("/friend list");
+        McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
@@ -278,7 +275,7 @@ public final class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
-        McUtils.player().chat("/party list");
+        McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 }

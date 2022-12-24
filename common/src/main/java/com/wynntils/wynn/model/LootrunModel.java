@@ -10,12 +10,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.io.File;
@@ -45,6 +45,7 @@ import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -52,6 +53,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
@@ -64,6 +66,8 @@ public final class LootrunModel extends Model {
             ChatFormatting.BLUE.getColor(),
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
+
+    private static List<LootrunInstance> LOOTRUN_INSTANCE_CACHE = new ArrayList<>();
 
     private LootrunState state = LootrunState.DISABLED;
 
@@ -102,7 +106,7 @@ public final class LootrunModel extends Model {
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.options().renderDistance;
+        int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
@@ -320,7 +324,7 @@ public final class LootrunModel extends Model {
             lootrun = compile(uncompiled, false);
             if (saveToFile && uncompiled.file() != null) {
                 LootrunSaveResult lootrunSaveResult =
-                        trySaveCurrentLootrun(uncompiled.file().getName());
+                        trySaveCurrentLootrun(uncompiled.file().getName().replace(".json", ""));
 
                 if (lootrunSaveResult == null) {
                     return 0;
@@ -344,12 +348,15 @@ public final class LootrunModel extends Model {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        String lootrunName = recording
-                ? "recorded_lootrun"
-                : (uncompiled.file() == null
-                        ? "lootrun"
-                        : uncompiled.file().getName().replace(".json", ""));
+        String lootrunName = getLootrunName(uncompiled, recording);
         return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
+    }
+
+    private String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
+        if (recording) return "recorded_lootrun";
+        if (uncompiled.file() == null) return "lootrun";
+
+        return uncompiled.file().getName().replace(".json", "");
     }
 
     private List<Path> sample(Path raw, float sampleRate) {
@@ -372,9 +379,9 @@ public final class LootrunModel extends Model {
         List<Path> result = new ArrayList<>();
         for (Path current : vec3s) {
             float distance = 0f;
-            CubicSpline.Builder<Float> builderX = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderY = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderZ = CubicSpline.builder((value) -> value);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
@@ -394,9 +401,9 @@ public final class LootrunModel extends Model {
                 builderY.addPoint(distance, (float) vec3.y, slopeY);
                 builderZ.addPoint(distance, (float) vec3.z, slopeZ);
             }
-            CubicSpline<Float> splineX = builderX.build();
-            CubicSpline<Float> splineY = builderY.build();
-            CubicSpline<Float> splineZ = builderZ.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineZ = builderZ.build();
 
             Path newResult = new Path(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {
@@ -535,7 +542,14 @@ public final class LootrunModel extends Model {
         if (notesJson != null) {
             for (JsonElement element : notesJson) {
                 JsonObject noteJson = element.getAsJsonObject();
-                JsonObject positionJson = noteJson.getAsJsonObject("location");
+                JsonObject positionJson = noteJson.getAsJsonObject("position");
+
+                // Artemis builds, until this point have used a slightly different format for notes
+                // This perserves support for those files, as this commit fixes the format to match legacy
+                if (positionJson == null) {
+                    positionJson = noteJson.getAsJsonObject("location");
+                }
+
                 Vec3 position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
@@ -576,6 +590,10 @@ public final class LootrunModel extends Model {
     }
 
     public List<LootrunInstance> getLootruns() {
+        return LOOTRUN_INSTANCE_CACHE;
+    }
+
+    public void refreshLootrunCache() {
         List<LootrunInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
@@ -592,7 +610,8 @@ public final class LootrunModel extends Model {
             }
         }
 
-        return lootruns;
+        LOOTRUN_INSTANCE_CACHE = lootruns;
+        WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
     public boolean tryLoadFile(String fileName) {
@@ -860,7 +879,7 @@ public final class LootrunModel extends Model {
                     locationJson.addProperty("x", location.x);
                     locationJson.addProperty("y", location.y);
                     locationJson.addProperty("z", location.z);
-                    noteJson.add("position", locationJson);
+                    noteJson.add("location", locationJson);
 
                     noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
                     notes.add(noteJson);

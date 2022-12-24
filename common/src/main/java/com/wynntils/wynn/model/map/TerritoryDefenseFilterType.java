@@ -6,7 +6,6 @@ package com.wynntils.wynn.model.map;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public enum TerritoryDefenseFilterType {
     DEFAULT(""),
@@ -20,6 +19,6 @@ public enum TerritoryDefenseFilterType {
     }
 
     public Component asComponent() {
-        return new TextComponent(asString).withStyle(ChatFormatting.WHITE);
+        return Component.literal(asString).withStyle(ChatFormatting.WHITE);
     }
 }

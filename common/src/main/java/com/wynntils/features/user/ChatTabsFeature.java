@@ -6,23 +6,23 @@ package com.wynntils.features.user;
 
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.widgets.ChatTabAddButton;
 import com.wynntils.gui.widgets.ChatTabButton;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
 import java.lang.reflect.Type;
@@ -51,7 +51,7 @@ public class ChatTabsFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat, Models.ChatTab);
+        return List.of(Models.ChatTab);
     }
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.

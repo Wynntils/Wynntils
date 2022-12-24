@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import java.util.Arrays;

@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -57,7 +57,7 @@ public class InfoMessageFilterFeature extends UserFeature {
         String msg = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
-        if (messageType == MessageType.NORMAL) {
+        if (messageType == MessageType.FOREGROUND) {
             if (hideSystemInfo) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -71,7 +71,6 @@ public class InfoMessageFilterFeature extends UserFeature {
                     return;
                 }
             }
-        } else if (messageType == MessageType.SYSTEM) {
             if (hideLevelUp) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);

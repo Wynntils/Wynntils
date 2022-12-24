@@ -5,15 +5,15 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.chat.tabs.ChatTab;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
+import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
@@ -26,11 +26,10 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ChatTabEditingScreen extends Screen implements TextboxScreen {
+public final class ChatTabEditingScreen extends Screen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -51,18 +50,18 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     }
 
     private ChatTabEditingScreen(ChatTab tab) {
-        super(new TextComponent("Chat Tab Editing Screen"));
+        super(Component.literal("Chat Tab Editing Screen"));
 
         this.edited = tab;
         this.firstSetup = true;
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new ChatTabEditingScreen());
+        return new ChatTabEditingScreen();
     }
 
     public static Screen create(ChatTab chatTab) {
-        return WynntilsScreenWrapper.create(new ChatTabEditingScreen(chatTab));
+        return new ChatTabEditingScreen(chatTab);
     }
 
     @Override
@@ -137,7 +136,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                             || edited.getFilteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
-            Checkbox newBox = new Checkbox(x, y, 20, 20, new TextComponent(type.getName()), ticked, true);
+            Checkbox newBox = new Checkbox(x, y, 20, 20, Component.literal(type.getName()), ticked, true);
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
 
@@ -162,7 +161,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
                         this.height / 2 + 75,
                         20,
                         20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.consuming"),
+                        Component.translatable("screens.wynntils.chatTabsGui.consuming"),
                         consumingCheckbox != null && consumingCheckbox.selected(),
                         true));
         if (firstSetup && edited != null) {
@@ -172,38 +171,34 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                saveButton = new Button(
-                        this.width / 2 - 200,
-                        this.height - 40,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.save")
-                                .withStyle(ChatFormatting.DARK_GREEN),
-                        (button) -> {
-                            saveChatTab();
-                            this.onClose();
-                        }));
+                saveButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.chatTabsGui.save")
+                                        .withStyle(ChatFormatting.DARK_GREEN),
+                                (button) -> {
+                                    saveChatTab();
+                                    this.onClose();
+                                })
+                        .pos(this.width / 2 - 200, this.height - 40)
+                        .size(100, 20)
+                        .build());
 
         this.addRenderableWidget(
-                deleteButton = new Button(
-                        this.width / 2 - 50,
-                        this.height - 40,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.chatTabsGui.delete")
-                                .withStyle(ChatFormatting.DARK_RED),
-                        (button) -> {
-                            deleteChatTab();
-                            this.onClose();
-                        }));
+                deleteButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.chatTabsGui.delete")
+                                        .withStyle(ChatFormatting.DARK_RED),
+                                (button) -> {
+                                    deleteChatTab();
+                                    this.onClose();
+                                })
+                        .pos(this.width / 2 - 50, this.height - 40)
+                        .size(100, 20)
+                        .build());
 
-        this.addRenderableWidget(new Button(
-                this.width / 2 + 100,
-                this.height - 40,
-                100,
-                20,
-                new TranslatableComponent("screens.wynntils.chatTabsGui.cancel"),
-                (button) -> this.onClose()));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
+                .pos(this.width / 2 + 100, this.height - 40)
+                .size(100, 20)
+                .build());
         // endregion
 
         firstSetup = false;
@@ -213,7 +208,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+        renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         // Name
@@ -354,7 +349,7 @@ public class ChatTabEditingScreen extends Screen implements TextboxScreen {
     private void deleteChatTab() {
         ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
         if (Objects.equals(Models.ChatTab.getFocusedTab(), edited)) {
-            if (ChatTabsFeature.INSTANCE.chatTabs.size() > 0) {
+            if (!ChatTabsFeature.INSTANCE.chatTabs.isEmpty()) {
                 Models.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
             } else {
                 Models.ChatTab.setFocusedTab(null);

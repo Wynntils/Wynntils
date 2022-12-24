@@ -7,7 +7,7 @@ package com.wynntils.core.keybinds;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
@@ -123,7 +123,7 @@ public final class KeyBindManager extends Manager {
                 WynntilsMod.error("Exception when handling key bind " + keyBind, t);
                 WynntilsMod.warn("This key bind will be disabled");
                 McUtils.sendMessageToClient(
-                        new TextComponent("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
+                        Component.literal("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
                                 .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedKeyBinds.add(keyBind);

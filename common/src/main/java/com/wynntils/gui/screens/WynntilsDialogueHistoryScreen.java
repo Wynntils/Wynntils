@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -18,44 +18,42 @@ import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.QuestsPageButton;
 import com.wynntils.gui.widgets.ReloadButton;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
+public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     private static final int LINES_PER_PAGE = 16;
 
     private static final List<Component> RELOAD_TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.reload.name")
+            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.name")
                     .withStyle(ChatFormatting.WHITE),
-            new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.reload.description")
+            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.description")
                     .withStyle(ChatFormatting.GRAY));
-    private Widget hovered = null;
+    private Renderable hovered = null;
 
     private int currentPage = 0;
     private List<List<String>> dialogues = new ArrayList<>();
 
     private WynntilsDialogueHistoryScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.name"));
+        super(Component.translatable("screens.wynntils.wynntilsDialogueHistory.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
-        return WynntilsScreenWrapper.create(new WynntilsDialogueHistoryScreen());
+        return new WynntilsDialogueHistoryScreen();
     }
 
     @Override
@@ -65,7 +63,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         Managers.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
@@ -116,7 +114,7 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -200,16 +198,16 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
 
         if (this.hovered instanceof QuestsPageButton) {
             List<Component> tooltipLines = List.of(
-                    new TextComponent("[>] ")
+                    Component.literal("[>] ")
                             .withStyle(ChatFormatting.GOLD)
-                            .append(new TranslatableComponent(
+                            .append(Component.translatable(
                                             "screens.wynntils.wynntilsDialogueHistory.questsPageButton.name")
                                     .withStyle(ChatFormatting.BOLD)
                                     .withStyle(ChatFormatting.GOLD)),
-                    new TranslatableComponent("screens.wynntils.wynntilsDialogueHistory.questsPageButton.description")
+                    Component.translatable("screens.wynntils.wynntilsDialogueHistory.questsPageButton.description")
                             .withStyle(ChatFormatting.GRAY),
-                    new TextComponent(""),
-                    new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                    Component.literal(""),
+                    Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                             .withStyle(ChatFormatting.GREEN));
 
             RenderUtils.drawTooltipAt(
@@ -229,10 +227,10 @@ public class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
-        for (Widget renderable : new ArrayList<>(this.renderables)) {
+        for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
-            if (renderable instanceof AbstractButton button) {
+            if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                     this.hovered = button;
                 }

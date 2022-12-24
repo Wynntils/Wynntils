@@ -5,29 +5,28 @@
 package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import java.util.Map;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideGearItemStack extends AbstractButton {
+public class GuideGearItemStack extends WynntilsButton {
     private final GearItemStack itemStack;
     private final WynntilsItemGuideScreen screen;
 
     public GuideGearItemStack(
             int x, int y, int width, int height, GearItemStack itemStack, WynntilsItemGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide GearItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }
@@ -36,8 +35,8 @@ public class GuideGearItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getItemProfile().getTier().getHighlightColor();
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + getX();
+        float actualY = screen.getTranslationY() + getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -57,8 +56,8 @@ public class GuideGearItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    getX() + 12,
+                    getY() - 4,
                     200,
                     9,
                     9,
@@ -93,9 +92,6 @@ public class GuideGearItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     public GearItemStack getItemStack() {
         return itemStack;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
@@ -76,41 +75,45 @@ public class DiscoveryInfo {
     private List<Component> generateLore() {
         displayLore = new ArrayList<>();
 
-        displayLore.add(new TextComponent(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
+        displayLore.add(Component.literal(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
 
         if (Managers.Character.getCharacterInfo().getLevel() >= minLevel) {
-            displayLore.add(new TextComponent("✔")
+            displayLore.add(Component.literal("✔")
                     .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent(" Combat Lv. Min: ")
+                    .append(Component.literal(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
+                            .append(Component.literal(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         } else {
-            displayLore.add(new TextComponent("✘")
+            displayLore.add(Component.literal("✘")
                     .withStyle(ChatFormatting.RED)
-                    .append(new TextComponent(" Combat Lv. Min: ")
+                    .append(Component.literal(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
+                            .append(Component.literal(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         }
 
-        displayLore.add(TextComponent.EMPTY);
+        displayLore.add(Component.empty());
 
         if (discovered) {
-            displayLore.add(new TextComponent("Discovered").withStyle(ChatFormatting.GREEN));
+            displayLore.add(Component.literal("Discovered").withStyle(ChatFormatting.GREEN));
         } else {
-            displayLore.add(new TextComponent("Not Discovered").withStyle(ChatFormatting.RED));
+            displayLore.add(Component.literal("Not Discovered").withStyle(ChatFormatting.RED));
         }
 
         if (!description.isEmpty()) {
-            displayLore.add(TextComponent.EMPTY);
+            displayLore.add(Component.empty());
             displayLore.addAll(ComponentUtils.wrapTooltips(
-                    List.of(new TextComponent(description).withStyle(ChatFormatting.GRAY)), 300));
+                    List.of(Component.literal(description).withStyle(ChatFormatting.GRAY)), 300));
         }
 
         return displayLore;
     }
 
     public List<Component> getLore() {
-        return displayLore == null ? displayLore = generateLore() : displayLore;
+        if (displayLore == null) {
+            displayLore = generateLore();
+        }
+
+        return displayLore;
     }
 
     public String getName() {

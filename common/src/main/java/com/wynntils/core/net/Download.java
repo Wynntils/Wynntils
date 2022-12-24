@@ -5,7 +5,7 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,7 +58,7 @@ public class Download extends NetResult {
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
             // File is already in downloaded, just read from the cache
-            return CompletableFuture.supplyAsync(() -> getFileInputStreamFromCache());
+            return CompletableFuture.supplyAsync(this::getFileInputStreamFromCache);
         } else {
             prepareForDownload();
             return getDownloadInputStreamFuture().thenApply(response -> getFileInputStreamFromCache());

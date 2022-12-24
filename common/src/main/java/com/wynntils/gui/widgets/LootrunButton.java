@@ -5,7 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,13 +21,11 @@ import com.wynntils.wynn.model.LootrunModel;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
-public class LootrunButton extends AbstractButton {
+public class LootrunButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
@@ -38,17 +36,15 @@ public class LootrunButton extends AbstractButton {
 
     public LootrunButton(
             int x, int y, int width, int height, LootrunModel.LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
-        super(x, y, width, height, new TextComponent("Lootrun Button"));
+        super(x, y, width, height, Component.literal("Lootrun Button"));
         this.lootrun = lootrun;
         this.screen = screen;
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor backgroundColor = isLoaded()
-                ? (this.isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR)
-                : (this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR);
-        RenderUtils.drawRect(poseStack, backgroundColor, this.x, this.y, 0, this.width, this.height);
+        CustomColor backgroundColor = getButtonBackgroundColor();
+        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         int maxTextWidth = this.width - 21;
         FontRenderer.getInstance()
@@ -58,13 +54,21 @@ public class LootrunButton extends AbstractButton {
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
-                        this.x + 14,
-                        this.y + 1,
+                        this.getX() + 14,
+                        this.getY() + 1,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
                         FontRenderer.TextShadow.NONE);
+    }
+
+    private CustomColor getButtonBackgroundColor() {
+        if (isLoaded()) {
+            return isHovered ? TRACKED_BUTTON_COLOR_HOVERED : TRACKED_BUTTON_COLOR;
+        } else {
+            return isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
+        }
     }
 
     @Override
@@ -104,9 +108,6 @@ public class LootrunButton extends AbstractButton {
     // Not called
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void tryDeleteLootrun() {
         File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");

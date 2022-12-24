@@ -5,20 +5,19 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.core.services.TranslationModel;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.event.NpcDialogEvent;
 import java.util.List;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -69,7 +68,7 @@ public class TranslationFeature extends UserFeature {
                 // We failed to get a translation; send the original message so it's not lost
                 messageToSend = origCoded;
             }
-            McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(new TextComponent(messageToSend)));
+            McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(Component.literal(messageToSend)));
         });
         if (!keepOriginal) {
             e.setCanceled(true);
@@ -88,7 +87,7 @@ public class TranslationFeature extends UserFeature {
                 String unwrapped = unwrapCoding(translatedMsg);
                 // FIXME: We need a ComponentUtils.componentFromCoded()...
                 // This will currently remove all formatting :(
-                Component translatedComponent = new TextComponent(ComponentUtils.stripFormatting(unwrapped));
+                Component translatedComponent = Component.literal(ComponentUtils.stripFormatting(unwrapped));
                 McUtils.mc().doRunTask(() -> {
                     NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(translatedComponent);
                     WynntilsMod.postEvent(translatedEvent);

@@ -5,16 +5,17 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.TrackedQuestUpdateEvent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestManager extends Manager {
-    public static final QuestScoreboardHandler SCOREBOARD_HANDLER = new QuestScoreboardHandler();
+    public static final ScoreboardListener SCOREBOARD_LISTENER = new QuestScoreboardListener();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
@@ -112,7 +113,7 @@ public final class QuestManager extends Manager {
     }
 
     public void stopTracking() {
-        McUtils.player().chat("/tracking");
+        McUtils.sendCommand("tracking");
     }
 
     public void openQuestOnWiki(QuestInfo questInfo) {
@@ -201,13 +202,13 @@ public final class QuestManager extends Manager {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    protected void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
+    void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
         quests = newQuests;
         maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    protected void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
+    void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
         miniQuests = newMiniQuests;
         maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
@@ -228,7 +229,7 @@ public final class QuestManager extends Manager {
         }
     }
 
-    protected void setDialogueHistory(List<List<String>> newDialogueHistory) {
+    void setDialogueHistory(List<List<String>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }

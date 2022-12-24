@@ -6,12 +6,12 @@ package com.wynntils.features.user;
 
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -45,7 +45,7 @@ public class ItemLockFeature extends UserFeature {
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
-    private Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
+    private final Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();

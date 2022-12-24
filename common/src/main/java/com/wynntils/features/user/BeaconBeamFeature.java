@@ -5,10 +5,10 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -46,7 +46,7 @@ public class BeaconBeamFeature extends UserFeature {
         double dz = location.z - camera.z;
 
         double distance = MathUtils.magnitude(dx, dz);
-        int maxDistance = McUtils.mc().options.renderDistance * 16;
+        int maxDistance = McUtils.mc().options.renderDistance().get() * 16;
 
         if (distance > maxDistance) {
             double scale = maxDistance / distance;

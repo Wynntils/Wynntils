@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class MythicBoxScalerFeature extends UserFeature {
 
     @Config
-    private float scale = 2f;
+    private float scale = 1.5f;
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {

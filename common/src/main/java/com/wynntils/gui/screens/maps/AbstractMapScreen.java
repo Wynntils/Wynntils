@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.PointerType;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -27,10 +27,10 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends Screen {
@@ -68,20 +68,18 @@ public abstract class AbstractMapScreen extends Screen {
 
     protected Poi hovered = null;
 
-    public AbstractMapScreen() {
-        super(new TextComponent("Map"));
+    protected AbstractMapScreen() {
+        super(Component.literal("Map"));
         centerMapAroundPlayer();
     }
 
-    public AbstractMapScreen(float mapCenterX, float mapCenterZ) {
-        super(new TextComponent("Map"));
+    protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
+        super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
     }
 
     @Override
     protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(
@@ -118,12 +116,6 @@ public abstract class AbstractMapScreen extends Screen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
-    }
-
-    @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
     }
 
     @Override
@@ -286,8 +278,8 @@ public abstract class AbstractMapScreen extends Screen {
                 this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
                 this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
-        for (Widget widget : this.renderables) {
-            widget.render(poseStack, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(poseStack, mouseX, mouseY, partialTicks);
         }
     }
 

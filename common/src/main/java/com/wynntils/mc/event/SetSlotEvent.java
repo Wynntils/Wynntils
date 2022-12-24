@@ -15,7 +15,7 @@ public abstract class SetSlotEvent extends Event {
     private final int slot;
     protected ItemStack item;
 
-    public SetSlotEvent(Container container, int slot, ItemStack item) {
+    protected SetSlotEvent(Container container, int slot, ItemStack item) {
         this.container = container;
         this.slot = slot;
         this.item = item;

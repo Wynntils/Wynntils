@@ -8,8 +8,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
@@ -20,61 +20,48 @@ import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ItemProfilesManager extends Manager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
 
-    private HashMap<String, ItemProfile> items = new HashMap<>();
-    private Collection<ItemProfile> directItems = new ArrayList<>();
-    private HashMap<String, ItemGuessProfile> itemGuesses = new HashMap<>();
-    private HashMap<String, String> translatedReferences = new HashMap<>();
-    private HashMap<String, String> internalIdentifications = new HashMap<>();
-    private HashMap<String, MajorIdentification> majorIds = new HashMap<>();
-    private HashMap<ItemType, String[]> materialTypes = new HashMap<>();
-    private HashMap<String, IngredientProfile> ingredients = new HashMap<>();
-    private Collection<IngredientProfile> directIngredients = new ArrayList<>();
-    private HashMap<String, String> ingredientHeadTextures = new HashMap<>();
+    private Map<String, ItemProfile> items = Map.of();
+    private Map<String, ItemGuessProfile> itemGuesses = Map.of();
+    private Map<String, String> translatedReferences = Map.of();
+    private Map<String, String> internalIdentifications = Map.of();
+    private Map<String, MajorIdentification> majorIdsMap = Map.of();
+    private Map<ItemType, String[]> materialTypes = Map.of();
+    private Map<String, IngredientProfile> ingredients = Map.of();
+    private Map<String, String> ingredientHeadTextures = Map.of();
 
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
-        loadCommonObjects();
+        loadData();
     }
 
-    private void loadCommonObjects() {
+    public void reloadData() {
+        loadData();
+    }
+
+    private void loadData() {
         tryLoadItemList();
         tryLoadItemGuesses();
         tryLoadIngredientList();
-    }
-
-    public void reset() {
-        // tryLoadItemGuesses
-        itemGuesses = null;
-
-        // tryLoadItemList
-        items = null;
-        directItems = null;
-        translatedReferences = null;
-        internalIdentifications = null;
-        majorIds = null;
-        materialTypes = null;
-        loadCommonObjects();
     }
 
     private void tryLoadItemGuesses() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
-            itemGuesses = new HashMap<>();
-            itemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
+            Map<String, ItemGuessProfile> newItemGuesses = new HashMap<>();
+            newItemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
+            itemGuesses = newItemGuesses;
         });
-
-        // Check for success
     }
 
     private void tryLoadItemList() {
@@ -87,11 +74,13 @@ public final class ItemProfilesManager extends Manager {
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             translatedReferences = WynntilsMod.GSON.fromJson(json.getAsJsonObject("translatedReferences"), hashmapType);
+
             internalIdentifications =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("internalIdentifications"), hashmapType);
 
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
-            majorIds = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+            majorIdsMap = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
+
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
@@ -99,22 +88,18 @@ public final class ItemProfilesManager extends Manager {
             IdentificationOrderer.INSTANCE =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-            ItemProfile[] gItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            ItemProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
+            HashMap<String, ItemProfile> newItems = new HashMap<>();
+            for (ItemProfile itemProfile : jsonItems) {
+                itemProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
+                itemProfile.updateMajorIdsFromStrings(majorIdsMap);
+                itemProfile.registerIdTypes();
 
-            HashMap<String, ItemProfile> citems = new HashMap<>();
-            for (ItemProfile prof : gItems) {
-                prof.getStatuses().forEach((n, p) -> p.calculateMinMax(n));
-                prof.addMajorIds(majorIds);
-                citems.put(prof.getDisplayName(), prof);
+                newItems.put(itemProfile.getDisplayName(), itemProfile);
             }
 
-            citems.values().forEach(ItemProfile::registerIdTypes);
-
-            directItems = citems.values();
-            items = citems;
+            items = newItems;
         });
-
-        // Check for success
     }
 
     private void tryLoadIngredientList() {
@@ -128,56 +113,47 @@ public final class ItemProfilesManager extends Manager {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
             ingredientHeadTextures = WynntilsMod.GSON.fromJson(json.getAsJsonObject("headTextures"), hashmapType);
 
-            IngredientProfile[] gItems =
+            IngredientProfile[] jsonItems =
                     WynntilsMod.GSON.fromJson(json.getAsJsonArray("ingredients"), IngredientProfile[].class);
-            HashMap<String, IngredientProfile> cingredients = new HashMap<>();
 
-            for (IngredientProfile prof : gItems) {
-                cingredients.put(prof.getDisplayName(), prof);
+            Map<String, IngredientProfile> newIngredients = new HashMap<>();
+            for (IngredientProfile ingredientProfile : jsonItems) {
+                newIngredients.put(ingredientProfile.getDisplayName(), ingredientProfile);
             }
 
-            ingredients = cingredients;
-            directIngredients = cingredients.values();
+            ingredients = newIngredients;
         });
     }
 
-    public HashMap<String, ItemGuessProfile> getItemGuesses() {
-        return itemGuesses;
+    public ItemGuessProfile getItemGuess(String levelRange) {
+        return itemGuesses.get(levelRange);
+    }
+
+    public ItemProfile getItemsProfile(String name) {
+        return items.get(name);
+    }
+
+    public String getInternalIdentification(String internalId) {
+        return internalIdentifications.get(internalId);
+    }
+
+    public String getTranslatedReference(String untranslatedName) {
+        return translatedReferences.getOrDefault(untranslatedName, untranslatedName);
+    }
+
+    public IngredientProfile getIngredient(String name) {
+        return ingredients.get(name);
+    }
+
+    public String getIngredientHeadTexture(String ingredientName) {
+        return ingredientHeadTextures.get(ingredientName);
     }
 
     public Collection<ItemProfile> getItemsCollection() {
-        return directItems;
-    }
-
-    public HashMap<String, ItemProfile> getItemsMap() {
-        return items;
-    }
-
-    public HashMap<ItemType, String[]> getMaterialTypes() {
-        return materialTypes;
-    }
-
-    public HashMap<String, MajorIdentification> getMajorIds() {
-        return majorIds;
-    }
-
-    public HashMap<String, String> getInternalIdentifications() {
-        return internalIdentifications;
-    }
-
-    public HashMap<String, String> getTranslatedReferences() {
-        return translatedReferences;
+        return items.values();
     }
 
     public Collection<IngredientProfile> getIngredientsCollection() {
-        return directIngredients;
-    }
-
-    public HashMap<String, IngredientProfile> getIngredients() {
-        return ingredients;
-    }
-
-    public HashMap<String, String> getIngredientHeadTextures() {
-        return ingredientHeadTextures;
+        return ingredients.values();
     }
 }

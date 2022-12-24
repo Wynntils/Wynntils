@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
@@ -34,7 +34,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -44,7 +43,7 @@ public class GearItemStack extends WynnItemStack {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
 
-    private static final Component ID_PLACEHOLDER = new TextComponent("ID_PLACEHOLDER");
+    private static final Component ID_PLACEHOLDER = Component.literal("ID_PLACEHOLDER");
 
     private ItemProfile itemProfile;
     private boolean isPerfect;
@@ -69,9 +68,8 @@ public class GearItemStack extends WynnItemStack {
         super(stack);
 
         // get item profile
-        if (Managers.ItemProfiles.getItemsMap() == null
-                || !Managers.ItemProfiles.getItemsMap().containsKey(itemName)) return;
-        itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
+        if (itemProfile == null) return;
 
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();
@@ -127,7 +125,7 @@ public class GearItemStack extends WynnItemStack {
             if (!hasIds) {
                 hasIds = true;
                 baseTooltip.add(ID_PLACEHOLDER);
-                baseTooltip.add(new TextComponent(""));
+                baseTooltip.add(Component.literal(""));
             }
 
             identifications.add(idContainer);
@@ -155,7 +153,7 @@ public class GearItemStack extends WynnItemStack {
             tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
         this.setTag(tag);
 
-        customName = new TextComponent(itemProfile.getDisplayName())
+        customName = Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
         List<Component> baseTooltip = constructBaseTooltip();
@@ -183,7 +181,7 @@ public class GearItemStack extends WynnItemStack {
             tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
         this.setTag(tag);
 
-        customName = new TextComponent(itemProfile.getDisplayName())
+        customName = Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
         parseIDs();
@@ -211,7 +209,7 @@ public class GearItemStack extends WynnItemStack {
             tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
         this.setTag(tag);
 
-        customName = new TextComponent(itemProfile.getDisplayName())
+        customName = Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
         parseIDs();
@@ -257,7 +255,7 @@ public class GearItemStack extends WynnItemStack {
          * Avaritia Repo: https://github.com/Morpheus1101/Avaritia
          */
         if (ItemStatInfoFeature.INSTANCE.perfect && isPerfect) {
-            MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD);
+            MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD);
 
             String name = "Perfect " + itemName;
 
@@ -270,14 +268,14 @@ public class GearItemStack extends WynnItemStack {
                         .withColor(Color.HSBtoRGB((hue / (float) cycle), 0.8F, 0.8F))
                         .withItalic(false);
 
-                newName.append(new TextComponent(String.valueOf(name.charAt(i))).setStyle(color));
+                newName.append(Component.literal(String.valueOf(name.charAt(i))).setStyle(color));
             }
 
             return newName;
         }
 
         if (ItemStatInfoFeature.INSTANCE.defective && isDefective) {
-            MutableComponent newName = new TextComponent("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
+            MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
             newName.setStyle(newName.getStyle().withItalic(false));
 
             String name = "Defective " + itemName;
@@ -294,12 +292,12 @@ public class GearItemStack extends WynnItemStack {
                         (i + 1) / (float) (name.length() - 1));
 
                 if (!obfuscated && Math.random() < chance) {
-                    newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+                    newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
                     current = new StringBuilder();
 
                     obfuscated = true;
                 } else if (obfuscated && Math.random() > chance) {
-                    newName.append(new TextComponent(current.toString())
+                    newName.append(Component.literal(current.toString())
                             .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
                     current = new StringBuilder();
 
@@ -310,10 +308,10 @@ public class GearItemStack extends WynnItemStack {
             current.append(name.charAt(name.length() - 1));
 
             if (obfuscated) {
-                newName.append(new TextComponent(current.toString())
+                newName.append(Component.literal(current.toString())
                         .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
             } else {
-                newName.append(new TextComponent(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+                newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
             }
 
             return newName;
@@ -334,7 +332,7 @@ public class GearItemStack extends WynnItemStack {
         }
 
         if (isChatItem) {
-            tooltip.add(new TextComponent("From chat")
+            tooltip.add(Component.literal("From chat")
                     .withStyle(ChatFormatting.DARK_GRAY)
                     .withStyle(ChatFormatting.ITALIC));
 
@@ -365,13 +363,13 @@ public class GearItemStack extends WynnItemStack {
 
         MutableComponent name;
         if (customName == null) {
-            name = new TextComponent(WynnUtils.normalizeBadString(ComponentUtils.getCoded(getHoverName())));
+            name = Component.literal(WynnUtils.normalizeBadString(ComponentUtils.getCoded(getHoverName())));
         } else {
             name = customName.copy();
         }
 
         if (hasNew) {
-            name.append(new TextComponent(" [NEW]").withStyle(ChatFormatting.GOLD));
+            name.append(Component.literal(" [NEW]").withStyle(ChatFormatting.GOLD));
         } else if (idAmount > 0) {
             overallPercentage = percentTotal / idAmount;
 
@@ -432,17 +430,18 @@ public class GearItemStack extends WynnItemStack {
 
         // attack speed
         if (itemProfile.getAttackSpeed() != null)
-            baseTooltip.add(new TextComponent(itemProfile.getAttackSpeed().asLore()));
+            baseTooltip.add(Component.literal(itemProfile.getAttackSpeed().asLore()));
 
-        baseTooltip.add(new TextComponent(""));
+        baseTooltip.add(Component.literal(""));
 
         // elemental damages
         if (!itemProfile.getDamageTypes().isEmpty()) {
             Map<DamageType, String> damages = itemProfile.getDamages();
             for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
                 DamageType type = entry.getKey();
-                MutableComponent damage = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
-                damage.append(new TextComponent(" Damage: " + entry.getValue())
+                MutableComponent damage =
+                        Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
+                damage.append(Component.literal(" Damage: " + entry.getValue())
                         .withStyle(
                                 type == DamageType.NEUTRAL
                                         ? type.getColor()
@@ -450,7 +449,7 @@ public class GearItemStack extends WynnItemStack {
                 baseTooltip.add(damage);
             }
 
-            baseTooltip.add(new TextComponent(""));
+            baseTooltip.add(Component.literal(""));
         }
 
         // elemental defenses
@@ -458,19 +457,21 @@ public class GearItemStack extends WynnItemStack {
             int health = itemProfile.getHealth();
             if (health != 0) {
                 MutableComponent healthComp =
-                        new TextComponent("❤ Health: " + health).withStyle(ChatFormatting.DARK_RED);
+                        Component.literal("❤ Health: " + health).withStyle(ChatFormatting.DARK_RED);
                 baseTooltip.add(healthComp);
             }
 
             Map<DamageType, Integer> defenses = itemProfile.getElementalDefenses();
             for (Map.Entry<DamageType, Integer> entry : defenses.entrySet()) {
                 DamageType type = entry.getKey();
-                MutableComponent defense = new TextComponent(type.getSymbol() + " " + type).withStyle(type.getColor());
-                defense.append(new TextComponent(" Defence: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                MutableComponent defense =
+                        Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
+                defense.append(
+                        Component.literal(" Defence: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(defense);
             }
 
-            baseTooltip.add(new TextComponent(""));
+            baseTooltip.add(Component.literal(""));
         }
 
         // requirements
@@ -478,46 +479,47 @@ public class GearItemStack extends WynnItemStack {
             Map<RequirementType, String> requirements = itemProfile.getRequirements();
             for (Map.Entry<RequirementType, String> entry : requirements.entrySet()) {
                 RequirementType type = entry.getKey();
-                MutableComponent requirement = new TextComponent("✔ ").withStyle(ChatFormatting.GREEN);
-                requirement.append(new TextComponent(type.asLore() + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                MutableComponent requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
+                requirement.append(
+                        Component.literal(type.asLore() + entry.getValue()).withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(requirement);
             }
 
-            baseTooltip.add(new TextComponent(""));
+            baseTooltip.add(Component.literal(""));
         }
 
         // ids
         if (!itemProfile.getStatuses().isEmpty()) {
             baseTooltip.add(ID_PLACEHOLDER);
-            baseTooltip.add(new TextComponent(""));
+            baseTooltip.add(Component.literal(""));
         }
 
         // major ids
         if (itemProfile.getMajorIds() != null && !itemProfile.getMajorIds().isEmpty()) {
             for (MajorIdentification majorId : itemProfile.getMajorIds()) {
                 Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
-                        .forEach(c -> baseTooltip.add(new TextComponent(c).withStyle(ChatFormatting.DARK_AQUA)));
+                        .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
-            baseTooltip.add(new TextComponent(""));
+            baseTooltip.add(Component.literal(""));
         }
 
         // powder slots
         if (itemProfile.getPowderAmount() > 0) {
             if (isGuideStack || powders == null) {
-                baseTooltip.add(new TextComponent("[" + itemProfile.getPowderAmount() + " Powder Slots]")
+                baseTooltip.add(Component.literal("[" + itemProfile.getPowderAmount() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
-                MutableComponent powderLine = new TextComponent(
+                MutableComponent powderLine = Component.literal(
                                 "[" + powders.size() + "/" + itemProfile.getPowderAmount() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
                 if (!powders.isEmpty()) {
-                    MutableComponent powderList = new TextComponent("[");
+                    MutableComponent powderList = Component.literal("[");
                     for (Powder p : powders) {
                         String symbol = p.getColoredSymbol();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
-                        powderList.append(new TextComponent(symbol));
+                        powderList.append(Component.literal(symbol));
                     }
-                    powderList.append(new TextComponent("]"));
+                    powderList.append(Component.literal("]"));
                     powderLine.append(powderList);
                 }
                 baseTooltip.add(powderLine);
@@ -533,7 +535,7 @@ public class GearItemStack extends WynnItemStack {
 
         // untradable
         if (itemProfile.getRestriction() != null) {
-            baseTooltip.add(new TextComponent(StringUtils.capitalizeFirst(itemProfile.getRestriction() + " Item"))
+            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(itemProfile.getRestriction() + " Item"))
                     .withStyle(ChatFormatting.RED));
         }
 
