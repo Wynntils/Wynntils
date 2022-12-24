@@ -1,8 +1,17 @@
+## [0.0.2-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.29...v0.0.2-alpha.30) (2022-12-24)
+
+
+### Bug Fixes
+
+* Powder Special charge bar should only be reset when coordinates are shown ([#931](https://github.com/Wynntils/Artemis/issues/931)) ([2af91b3](https://github.com/Wynntils/Artemis/commit/2af91b35460a185bfe5ddfabb77a586db4557e39))
+* Powder Special charge bar should only be reset when coordinates are shown ([#931](https://github.com/Wynntils/Artemis/issues/931)) ([372b690](https://github.com/Wynntils/Artemis/commit/372b690ff12faa59174a16ead180d8e0de21e4d4))
+
 ## [0.0.2-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.28...v0.0.2-alpha.29) (2022-12-24)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.29 [skip ci] ([328e1a7](https://github.com/Wynntils/Artemis/commit/328e1a7addf877c29e343b11454b1cc716cfa6ce))
 * Shorten the dev version string ([#932](https://github.com/Wynntils/Artemis/issues/932)) ([22bbe29](https://github.com/Wynntils/Artemis/commit/22bbe29a9d86c1c58ee68779f67bc4c2a6929e05))
 
 ## [0.0.2-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.27...v0.0.2-alpha.28) (2022-12-24)
@@ -40,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.26 [skip ci] ([126cde6](https://github.com/Wynntils/Artemis/commit/126cde6a70b42f84db11a74793fa6a74d73b2582))
-
-## [0.0.2-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.24...v0.0.2-alpha.25) (2022-12-23)
-
-
-### New Features
-
-* New ActionBarHandler, allowing for more and better action bar modelling ([#914](https://github.com/Wynntils/Artemis/issues/914)) ([2c8a60f](https://github.com/Wynntils/Artemis/commit/2c8a60fc55adf911b64b025b8a97ff3c4f13ab05))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.25 [skip ci] ([669fb1e](https://github.com/Wynntils/Artemis/commit/669fb1e2fe04cf3c58708bbd3230200e2f3a0e4a))
 
