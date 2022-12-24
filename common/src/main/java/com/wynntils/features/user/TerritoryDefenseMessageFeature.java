@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TerritoryDefenseMessageFeature extends UserFeature {
-    private final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
-    private final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
+    private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
+    private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {

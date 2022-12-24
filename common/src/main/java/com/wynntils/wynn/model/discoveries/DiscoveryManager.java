@@ -6,9 +6,9 @@ package com.wynntils.wynn.model.discoveries;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
@@ -17,11 +17,11 @@ import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
-import com.wynntils.wynn.model.territory.TerritoryManager;
+import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.lang.reflect.Type;
@@ -49,6 +49,10 @@ public final class DiscoveryManager extends Manager {
             TerritoryManager territoryManager,
             MinecraftSchedulerManager minecraftSchedulerManager) {
         super(List.of(netManager, territoryManager, minecraftSchedulerManager));
+    }
+
+    public void reloadData() {
+        updateDiscoveriesResource();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -150,8 +154,8 @@ public final class DiscoveryManager extends Manager {
             String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
             String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
 
-            int xEnd = Math.min(xLocation.indexOf("|"), xLocation.indexOf("}}"));
-            int zEnd = Math.min(zLocation.indexOf("|"), zLocation.indexOf("}}"));
+            int xEnd = Math.min(xLocation.indexOf('|'), xLocation.indexOf("}}"));
+            int zEnd = Math.min(zLocation.indexOf('|'), zLocation.indexOf("}}"));
 
             int x;
             int z;

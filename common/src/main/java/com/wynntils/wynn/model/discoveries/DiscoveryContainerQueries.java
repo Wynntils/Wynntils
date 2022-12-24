@@ -5,12 +5,12 @@
 package com.wynntils.wynn.model.discoveries;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.handlers.container.ContainerContent;
+import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.container.ContainerContent;
-import com.wynntils.wynn.model.container.ScriptedContainerQuery;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;

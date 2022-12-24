@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -23,10 +23,10 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import com.wynntils.wynn.model.quests.QuestStatus;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -194,7 +194,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
                         FontRenderer.TextShadow.NONE);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof ReloadButton) {

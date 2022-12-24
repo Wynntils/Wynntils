@@ -5,7 +5,7 @@
 package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -33,8 +33,6 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GearItemStack> parsedItemCache;
-
     private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
     }
@@ -45,12 +43,6 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void doInit() {
-        if (parsedItemCache == null) {
-            parsedItemCache = Managers.ItemProfiles.getItemsCollection().stream()
-                    .map(GearItemStack::new)
-                    .toList();
-        }
-
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
@@ -105,7 +97,7 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
         if (hovered instanceof GuideGearItemStack guideGearItemStack) {
             GearItemStack itemStack = guideGearItemStack.getItemStack();
 
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
+            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
@@ -152,7 +144,7 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(parsedItemCache.stream()
+        elements.addAll(Managers.Item.getAllGearItems().stream()
                 .filter(gearItemStack -> StringUtils.partialMatch(
                         ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
                 .toList());

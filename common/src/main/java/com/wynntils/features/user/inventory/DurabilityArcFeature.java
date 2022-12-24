@@ -4,13 +4,13 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;

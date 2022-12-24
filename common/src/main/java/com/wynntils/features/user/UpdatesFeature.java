@@ -5,13 +5,12 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
@@ -27,18 +26,9 @@ public class UpdatesFeature extends UserFeature {
     @Config
     public boolean autoUpdate = false;
 
-    private boolean firstJoin = true;
-
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
-            firstJoin = true;
-            return;
-        }
-
-        if (event.getNewState() != WorldStateManager.State.WORLD || !firstJoin) return;
-
-        firstJoin = false;
+        if (!event.isFirstJoinWorld()) return;
 
         CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
                 .whenCompleteAsync((version, throwable) -> Managers.MinecraftScheduler.queueRunnable(() -> {

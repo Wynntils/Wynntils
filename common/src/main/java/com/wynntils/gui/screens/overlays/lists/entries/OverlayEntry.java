@@ -6,8 +6,8 @@ package com.wynntils.gui.screens.overlays.lists.entries;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -60,13 +60,10 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         boolean enabled = Managers.Overlay.isEnabled(this.overlay);
         int y = index != 0 ? 2 : 0;
 
-        CustomColor borderColor = overlay.isParentEnabled()
-                ? (enabled ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER)
-                : DISABLED_FEATURE_COLOR_BORDER;
+        CustomColor borderColor = getBorderColor(enabled);
         RenderUtils.drawRect(poseStack, borderColor.withAlpha(100), 0, y, 0, width - PADDING, height - y - PADDING);
 
-        CustomColor rectColor =
-                overlay.isParentEnabled() ? (enabled ? ENABLED_COLOR : DISABLED_COLOR) : DISABLED_FEATURE_COLOR;
+        CustomColor rectColor = getRectColor(enabled);
         RenderUtils.drawRectBorders(poseStack, rectColor, 0, y, width - PADDING, height - PADDING, 1, 2);
 
         poseStack.translate(0, 0, 1);
@@ -86,6 +83,18 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                         FontRenderer.TextShadow.NORMAL);
 
         poseStack.popPose();
+    }
+
+    private CustomColor getBorderColor(boolean enabled) {
+        if (!overlay.isParentEnabled()) return DISABLED_FEATURE_COLOR_BORDER;
+
+        return enabled ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
+    }
+
+    private CustomColor getRectColor(boolean enabled) {
+        if (!overlay.isParentEnabled()) return DISABLED_FEATURE_COLOR;
+
+        return enabled ? ENABLED_COLOR : DISABLED_COLOR;
     }
 
     @Override

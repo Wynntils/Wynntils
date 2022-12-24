@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.wynn.objects.EmeraldSymbols;
@@ -60,11 +60,9 @@ public class UnidentifiedItemStack extends WynnItemStack {
                 break;
             }
         }
-
         if (levelRange == null) return;
-        if (Managers.ItemProfiles.getItemGuesses() == null || Managers.ItemProfiles.getItemsMap() == null) return;
 
-        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuesses().get(levelRange);
+        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuess(levelRange);
         if (guessProfile == null) return;
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
@@ -78,7 +76,7 @@ public class UnidentifiedItemStack extends WynnItemStack {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = Managers.ItemProfiles.getItemsMap().get(item);
+            ItemProfile profile = Managers.ItemProfiles.getItemsProfile(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

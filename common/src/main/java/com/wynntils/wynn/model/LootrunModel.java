@@ -11,10 +11,11 @@ import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.io.File;
@@ -65,6 +66,8 @@ public final class LootrunModel extends Model {
             ChatFormatting.BLUE.getColor(),
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
+
+    private static List<LootrunInstance> LOOTRUN_INSTANCE_CACHE = new ArrayList<>();
 
     private LootrunState state = LootrunState.DISABLED;
 
@@ -321,7 +324,7 @@ public final class LootrunModel extends Model {
             lootrun = compile(uncompiled, false);
             if (saveToFile && uncompiled.file() != null) {
                 LootrunSaveResult lootrunSaveResult =
-                        trySaveCurrentLootrun(uncompiled.file().getName());
+                        trySaveCurrentLootrun(uncompiled.file().getName().replace(".json", ""));
 
                 if (lootrunSaveResult == null) {
                     return 0;
@@ -345,12 +348,15 @@ public final class LootrunModel extends Model {
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        String lootrunName = recording
-                ? "recorded_lootrun"
-                : (uncompiled.file() == null
-                        ? "lootrun"
-                        : uncompiled.file().getName().replace(".json", ""));
+        String lootrunName = getLootrunName(uncompiled, recording);
         return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
+    }
+
+    private String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
+        if (recording) return "recorded_lootrun";
+        if (uncompiled.file() == null) return "lootrun";
+
+        return uncompiled.file().getName().replace(".json", "");
     }
 
     private List<Path> sample(Path raw, float sampleRate) {
@@ -584,6 +590,10 @@ public final class LootrunModel extends Model {
     }
 
     public List<LootrunInstance> getLootruns() {
+        return LOOTRUN_INSTANCE_CACHE;
+    }
+
+    public void refreshLootrunCache() {
         List<LootrunInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
@@ -600,7 +610,8 @@ public final class LootrunModel extends Model {
             }
         }
 
-        return lootruns;
+        LOOTRUN_INSTANCE_CACHE = lootruns;
+        WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
     public boolean tryLoadFile(String fileName) {

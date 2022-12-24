@@ -46,14 +46,7 @@ public class DiscoveryFilterButton extends WynntilsButton implements TooltipProv
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
-                poseStack,
-                isEnabled.get() ? BUTTON_COLOR_ENABLED : isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
-                getX(),
-                getY(),
-                0,
-                width,
-                height);
+        RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
 
         if (!this.dynamicTexture) {
             RenderUtils.drawTexturedRect(
@@ -103,6 +96,12 @@ public class DiscoveryFilterButton extends WynntilsButton implements TooltipProv
                         texture.height());
             }
         }
+    }
+
+    private CustomColor getButtonColor() {
+        if (isEnabled.get()) return BUTTON_COLOR_ENABLED;
+
+        return isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
     }
 
     @Override

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
@@ -68,9 +68,8 @@ public class GearItemStack extends WynnItemStack {
         super(stack);
 
         // get item profile
-        if (Managers.ItemProfiles.getItemsMap() == null
-                || !Managers.ItemProfiles.getItemsMap().containsKey(itemName)) return;
-        itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
+        if (itemProfile == null) return;
 
         // identification parsing & tooltip creation
         identifications = new ArrayList<>();

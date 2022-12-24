@@ -24,6 +24,8 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extends WynntilsMenuPagedScreenBase
         implements TextboxScreen {
+    protected double currentScroll = 0;
+
     protected int currentPage = 0;
     protected int maxPage = 0;
     protected List<E> elements = new ArrayList<>();
@@ -39,7 +41,7 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
         this.addRenderableWidget(searchWidget);
     }
 
-    public WynntilsMenuListScreen(Component component) {
+    protected WynntilsMenuListScreen(Component component) {
         super(component);
 
         // Do not lose search info on re-init
@@ -124,7 +126,24 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setCurrentPage(getCurrentPage() + (delta > 0 ? -1 : 1));
+        // Usually, mouse scroll wheel delta is always (-)1
+        if (Math.abs(delta) == 1) {
+            setCurrentPage(getCurrentPage() - (int) delta);
+            return true;
+        }
+
+        // Now we handle touchpad scrolling
+
+        // Delta is divided by 10 to make it more precise
+        // We subtract so scrolling down actually scrolls down
+        currentScroll -= delta / 10d;
+
+        if (Math.abs(currentScroll) < 1) return true;
+
+        int scroll = (int) (currentScroll);
+        currentScroll = currentScroll % 1;
+
+        setCurrentPage(getCurrentPage() + scroll);
 
         return true;
     }

@@ -11,11 +11,13 @@ public class WorldStateEvent extends Event {
     private final State newState;
     private final State oldState;
     private final String worldName;
+    private final boolean isFirstJoinWorld;
 
-    public WorldStateEvent(State newState, State oldState, String worldName) {
+    public WorldStateEvent(State newState, State oldState, String worldName, boolean isFirstJoinWorld) {
         this.newState = newState;
         this.oldState = oldState;
         this.worldName = worldName;
+        this.isFirstJoinWorld = isFirstJoinWorld;
     }
 
     public State getNewState() {
@@ -28,5 +30,9 @@ public class WorldStateEvent extends Event {
 
     public String getWorldName() {
         return worldName;
+    }
+
+    public boolean isFirstJoinWorld() {
+        return isFirstJoinWorld;
     }
 }

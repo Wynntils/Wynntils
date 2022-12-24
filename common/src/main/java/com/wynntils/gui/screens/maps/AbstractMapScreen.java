@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.PointerType;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -68,12 +68,12 @@ public abstract class AbstractMapScreen extends Screen {
 
     protected Poi hovered = null;
 
-    public AbstractMapScreen() {
+    protected AbstractMapScreen() {
         super(Component.literal("Map"));
         centerMapAroundPlayer();
     }
 
-    public AbstractMapScreen(float mapCenterX, float mapCenterZ) {
+    protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
     }

@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.statemanaged;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.StateManagedFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import java.util.List;
 
 // FIXME: This feature is only needed because we do not have a way to save any data persistently.

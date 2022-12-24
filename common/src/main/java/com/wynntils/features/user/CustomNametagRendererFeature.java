@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
@@ -89,7 +89,7 @@ public class CustomNametagRendererFeature extends UserFeature {
             return;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsMap().get(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
         if (itemProfile == null) return;
 
         // this solves an unidentified item showcase exploit

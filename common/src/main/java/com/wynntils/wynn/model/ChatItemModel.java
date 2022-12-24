@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
@@ -144,9 +144,7 @@ public final class ChatItemModel extends Model {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = Managers.ItemProfiles.getItemsMap() != null
-                ? Managers.ItemProfiles.getItemsMap().get(name)
-                : null;
+        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids

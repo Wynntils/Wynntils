@@ -5,8 +5,8 @@
 package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.ModelRegistry;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -51,9 +51,6 @@ public final class FunctionManager extends Manager {
             if (function instanceof DependantFunction<?> dependantFunction) {
                 ModelRegistry.addAllDependencies(dependantFunction);
             }
-            if (function instanceof ActiveFunction<?> activeFunction) {
-                activeFunction.init();
-            }
         }
     }
 
@@ -82,7 +79,6 @@ public final class FunctionManager extends Manager {
         if (!(function instanceof ActiveFunction<?> activeFunction)) return;
 
         WynntilsMod.unregisterEventListener(activeFunction);
-        activeFunction.onDisable();
         enabledFunctions.remove(activeFunction);
     }
 

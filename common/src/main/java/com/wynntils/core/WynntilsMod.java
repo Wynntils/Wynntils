@@ -6,12 +6,13 @@ package com.wynntils.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.ModelRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
@@ -184,6 +185,7 @@ public final class WynntilsMod {
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         Managers.init();
+        Handlers.init();
         ModelRegistry.init();
         addCrashCallbacks();
     }

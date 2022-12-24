@@ -9,11 +9,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Delay;
+import com.wynntils.utils.FileUtils;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -50,14 +50,82 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
-                .then(Commands.literal("reload").executes(this::reload))
+                .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("clearcaches")
+                        .then(Commands.literal("run").executes(this::doClearCaches))
+                        .executes(this::clearCaches))
+                .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
     }
 
-    private int version(CommandContext<CommandSourceStack> context) {
-        // TODO: Handle if dev env
+    private int reauth(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.reauth.tryReauth")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
+        Models.Hades.tryDisconnect();
+        Managers.WynntilsAccount.reauth();
+        // No need to try to re-connect to Hades, we will do that automatically when we get the new token
+
+        return 1;
+    }
+
+    private int clearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.warn")
+                                .withStyle(ChatFormatting.DARK_RED),
+                        false);
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.clickHere")
+                                .withStyle(ChatFormatting.BLUE)
+                                .withStyle(ChatFormatting.UNDERLINE)
+                                .withStyle(style -> style.withClickEvent(
+                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils clearcaches run"))),
+                        false);
+
+        return 1;
+    }
+
+    private int doClearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.deleting")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Delay.create(
+                () -> {
+                    FileUtils.deleteFolder(Managers.Net.getCacheDir());
+                    FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
+
+                    System.exit(0);
+                },
+                100);
+
+        return 1;
+    }
+
+    private int reloadCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.reloadCaches.reloading")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Managers.Url.reloadUrls();
+        Managers.ItemProfiles.reloadData();
+        Managers.Discovery.reloadData();
+        Models.Map.reloadData();
+
+        return 1;
+    }
+
+    private int version(CommandContext<CommandSourceStack> context) {
         MutableComponent buildText;
 
         if (WynntilsMod.getVersion().isEmpty()) {
@@ -71,50 +139,6 @@ public class WynntilsCommand extends CommandBase {
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
 
         context.getSource().sendSuccess(buildText, false);
-        return 1;
-    }
-
-    private int reload(CommandContext<CommandSourceStack> context) {
-        List<Feature> enabledFeatures = FeatureRegistry.getFeatures().stream()
-                .filter(Feature::isEnabled)
-                .toList();
-
-        for (Feature feature : enabledFeatures) { // disable all active features before resetting web
-            feature.disable();
-        }
-
-        // Try to reload downloaded data.
-        // It is highly unclear if this achieves anything like what it was supposed
-        // to do. The entire /wynntils reload needs to be rethought. See
-        // https://github.com/Wynntils/Artemis/issues/824
-
-        Managers.ItemProfiles.reset();
-        Managers.Url.reloadUrls();
-        Managers.Splash.reset();
-        Managers.WynntilsAccount.reset();
-
-        for (Feature feature : enabledFeatures) { // re-enable all features which should be
-            if (feature.canEnable()) {
-                feature.enable();
-
-                if (feature.isEnabled()) {
-                    McUtils.sendMessageToClient(Component.literal("Reloaded ")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(Component.literal(feature.getTranslatedName())
-                                    .withStyle(ChatFormatting.AQUA)));
-
-                    continue;
-                }
-            }
-
-            McUtils.sendMessageToClient(Component.literal("Failed to reload ")
-                    .withStyle(ChatFormatting.GREEN)
-                    .append(Component.literal(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
-        }
-
-        context.getSource()
-                .sendSuccess(Component.literal("Finished reloading everything").withStyle(ChatFormatting.GREEN), false);
-
         return 1;
     }
 
@@ -146,7 +170,10 @@ public class WynntilsCommand extends CommandBase {
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
-        addCommandDescription(text, "wynntils", List.of("reload"), "This reloads all API data.");
+        addCommandDescription(text, "wynntils", List.of("reauth"), "This re-auths into Athena and Hades.");
+        addCommandDescription(
+                text, "wynntils", List.of("clearcaches"), "This clears all Wynntils caches and closes the game.");
+        addCommandDescription(text, "wynntils", List.of("reloadcaches"), "This attempts to re-download caches.");
         addCommandDescription(text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,

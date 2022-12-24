@@ -5,13 +5,13 @@
 package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.objects.TimedSet;
-import com.wynntils.wynn.event.NotificationEvent;
+import com.wynntils.utils.TimedSet;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.concurrent.TimeUnit;

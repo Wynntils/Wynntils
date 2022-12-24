@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -66,7 +66,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     private final MainMapScreen oldMapScreen;
     private CustomPoi oldPoi;
     private PoiLocation setupLocation;
-    private boolean firstSetup = false;
+    private boolean firstSetup;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Creation Screen"));
@@ -151,7 +151,6 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         },
                         this,
                         yInput));
-        ;
         this.addRenderableWidget(
                 zInput = new TextInputBoxWidget(
                         this.width / 2 + 15,
@@ -169,12 +168,12 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
             if (oldPoi != null) {
                 xInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getX()));
                 Optional<Integer> y = oldPoi.getLocation().getY();
-                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getZ()));
             } else if (setupLocation != null) {
                 xInput.setTextBoxInput(String.valueOf(setupLocation.getX()));
                 Optional<Integer> y = setupLocation.getY();
-                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y) : "");
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(setupLocation.getZ()));
             }
         }
@@ -239,19 +238,19 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
-                    selectedVisiblity = CustomPoi.Visibility.values()[
-                            (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
-                                    % CustomPoi.Visibility.values().length];
-                })
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal("<"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
                 .pos(this.width / 2 - 100, this.height / 2 + 90)
                 .size(20, 20)
                 .build());
-        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
-                    selectedVisiblity = CustomPoi.Visibility.values()[
-                            (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
-                                    % CustomPoi.Visibility.values().length];
-                })
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal(">"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
                 .pos(this.width / 2 + 80, this.height / 2 + 90)
                 .size(20, 20)
                 .build());
@@ -263,10 +262,11 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
-                            savePoi();
-                            this.onClose();
-                        })
+                saveButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
+                                    savePoi();
+                                    this.onClose();
+                                })
                         .pos(this.width / 2 + 50, this.height / 2 + 140)
                         .size(100, 20)
                         .build());
@@ -365,7 +365,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.CustomPoi.Visibility") + ":",
+                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,

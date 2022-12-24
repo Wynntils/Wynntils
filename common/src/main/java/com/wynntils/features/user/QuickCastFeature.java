@@ -14,9 +14,9 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.model.actionbar.SpellSegment;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -50,7 +50,7 @@ public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
-    private static final Pattern SPELL_PATTERN =
+    private static final Pattern SPELL_TITLE_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
     private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
@@ -68,18 +68,22 @@ public class QuickCastFeature extends UserFeature {
     public void onSubtitleUpdate(SubtitleSetTextEvent e) {
         // only actually used when player is still low-level
         if (!WynnUtils.onWorld()) return;
-        tryUpdateSpell(e.getComponent().getString());
+
+        Matcher matcher = SPELL_TITLE_PATTERN.matcher(e.getComponent().getString());
+        if (!matcher.matches()) return;
+
+        SpellDirection[] spell = getSpellFromMatcher(matcher);
+
+        updateSpell(spell);
     }
 
     @SubscribeEvent
-    public void onActionbarMessageUpdate(ActionBarMessageUpdateEvent e) {
-        if (!WynnUtils.onWorld()) return;
-        tryUpdateSpell(e.getMessage());
+    public void updateSpellFromActionBar(SpellSegment.SpellSegmentUpdateEvent event) {
+        SpellDirection[] spell = getSpellFromMatcher(event.getMatcher());
+        updateSpell(spell);
     }
 
-    private void tryUpdateSpell(String text) {
-        SpellDirection[] spell = getSpellFromString(text);
-        if (spell == null) return;
+    private void updateSpell(SpellDirection[] spell) {
         if (Arrays.equals(spellInProgress, spell)) return;
         if (spell.length == 3) {
             spellInProgress = NO_SPELL;
@@ -90,10 +94,7 @@ public class QuickCastFeature extends UserFeature {
         }
     }
 
-    private static SpellDirection[] getSpellFromString(String string) {
-        Matcher spellMatcher = SPELL_PATTERN.matcher(string);
-        if (!spellMatcher.matches()) return null;
-
+    private static SpellDirection[] getSpellFromMatcher(Matcher spellMatcher) {
         int size = 1;
         for (; size < 3; ++size) {
             if (spellMatcher.group(size + 1).equals("?")) break;

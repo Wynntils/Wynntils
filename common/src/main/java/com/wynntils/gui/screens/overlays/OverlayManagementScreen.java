@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
@@ -12,7 +13,6 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -161,9 +161,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                CustomColor color = overlay == selectedOverlay
-                        ? CommonColors.GREEN
-                        : (fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE);
+                CustomColor color = getOverlayColor(overlay);
                 RenderUtils.drawRectBorders(
                         poseStack,
                         color,
@@ -243,6 +241,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
             this.deferredTooltipRendering = null;
         }
+    }
+
+    private CustomColor getOverlayColor(Overlay overlay) {
+        if (overlay == selectedOverlay) return CommonColors.GREEN;
+
+        return fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE;
     }
 
     @Override

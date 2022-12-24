@@ -8,9 +8,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.ModelRegistry;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.ModelRegistry;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import net.minecraft.ChatFormatting;
@@ -61,7 +61,7 @@ public class TerritoryCommand extends CommandBase {
         MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
 
-        if (!ModelRegistry.isEnabled(Models.Compass.getClass())) {
+        if (!ModelRegistry.isEnabled(Models.Compass)) {
             MutableComponent success = territoryComponent
                     .append(": ")
                     .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")")

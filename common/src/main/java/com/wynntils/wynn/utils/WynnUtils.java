@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.utils;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.model.CharacterManager;
 
 public final class WynnUtils {

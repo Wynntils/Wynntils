@@ -4,14 +4,13 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.chat.RecipientType;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,16 +120,10 @@ public class ChatRedirectFeature extends UserFeature {
             RedirectAction action = redirector.getAction();
             if (action == RedirectAction.KEEP) continue;
 
-            Matcher matcher;
             Pattern pattern = redirector.getPattern(messageType);
-            // Ideally we will get rid of those "uncolored" patterns
-            Pattern uncoloredPattern = redirector.getUncoloredForegroundPattern();
-            if (messageType == MessageType.FOREGROUND && uncoloredPattern != null) {
-                matcher = uncoloredPattern.matcher(ComponentUtils.stripFormatting(message));
-            } else {
-                if (pattern == null) continue;
-                matcher = pattern.matcher(message);
-            }
+            if (pattern == null) continue;
+
+            Matcher matcher = pattern.matcher(message);
 
             if (matcher.find()) {
                 e.setCanceled(true);
@@ -151,13 +144,6 @@ public class ChatRedirectFeature extends UserFeature {
 
     public interface Redirector {
         Pattern getPattern(MessageType messageType);
-
-        // This is a bit of a hack to support patterns without
-        // color coding.
-        @Deprecated
-        default Pattern getUncoloredForegroundPattern() {
-            return null;
-        }
 
         ChatRedirectFeature.RedirectAction getAction();
 
@@ -190,12 +176,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_FOREGROUND_PATTERN = Pattern.compile(
-                "^Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§cYour items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        public Pattern getUncoloredForegroundPattern() {
-            return UNCOLORED_FOREGROUND_PATTERN;
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override
@@ -472,7 +458,7 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            Integer ingredientCount = Integer.parseInt(matcher.group(1));
+            int ingredientCount = Integer.parseInt(matcher.group(1));
             String ingredientString = ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s");
 
             String emeraldString = matcher.group(2);
@@ -701,7 +687,6 @@ public class ChatRedirectFeature extends UserFeature {
             return switch (messageType) {
                 case BACKGROUND -> BACKGROUND_PATTERN;
                 case FOREGROUND -> FOREGROUND_PATTERN;
-                default -> null;
             };
         }
 
@@ -763,7 +748,7 @@ public class ChatRedirectFeature extends UserFeature {
             String numberString = matcher.group(1);
             String pluralizer = "";
 
-            Integer numberValue = Integer.parseInt(numberString);
+            int numberValue = Integer.parseInt(numberString);
             if (numberValue > 1) {
                 pluralizer = "s";
             }
@@ -794,12 +779,12 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern UNCOLORED_FOREGROUND_PATTERN = Pattern.compile(
-                "^Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
 
         @Override
-        public Pattern getUncoloredForegroundPattern() {
-            return UNCOLORED_FOREGROUND_PATTERN;
+        public Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
         }
 
         @Override

@@ -8,12 +8,12 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -64,7 +64,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
     private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
         ItemStack stack = hoveredSlot.getItem();
-        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();

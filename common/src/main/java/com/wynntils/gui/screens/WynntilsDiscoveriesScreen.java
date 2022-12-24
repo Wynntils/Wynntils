@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -22,7 +22,7 @@ import com.wynntils.gui.widgets.TooltipProvider;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.DiscoveriesUpdatedEvent;
+import com.wynntils.wynn.model.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -250,7 +250,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
 
         List<Component> tooltipLines = tooltipWidget.getTooltipLines();

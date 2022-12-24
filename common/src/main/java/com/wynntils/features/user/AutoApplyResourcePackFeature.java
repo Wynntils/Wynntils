@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AutoApplyResourcePackFeature extends UserFeature {
-    private final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
+    private static final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
 
     @Config(visible = false)
     private String packHash = "";

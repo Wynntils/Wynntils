@@ -4,13 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ChatTimestampFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Chat);
+        return List.of();
     }
 
     @Override

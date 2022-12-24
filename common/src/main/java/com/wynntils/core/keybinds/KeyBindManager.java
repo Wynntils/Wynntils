@@ -7,7 +7,7 @@ package com.wynntils.core.keybinds;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
