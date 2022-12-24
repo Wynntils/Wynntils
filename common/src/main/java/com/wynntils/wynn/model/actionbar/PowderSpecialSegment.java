@@ -45,8 +45,8 @@ public class PowderSpecialSegment implements ActionBarSegment {
 
     @Override
     public void removed() {
-        powderSpecialType = null;
-        powderSpecialCharge = 0;
+        // This can mean that it is just temporarily replaced by e.g.
+        // a spell, so assume it does not change
     }
 
     public float getPowderSpecialCharge() {
@@ -63,5 +63,11 @@ public class PowderSpecialSegment implements ActionBarSegment {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public void replaced() {
+        // We have been replaced by the coordinate segment, so we know the charge is gone
+        powderSpecialType = null;
+        powderSpecialCharge = 0;
     }
 }
