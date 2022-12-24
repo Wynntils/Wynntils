@@ -35,6 +35,14 @@ public final class MapModel extends Model {
 
     @Override
     public void init() {
+        loadData();
+    }
+
+    public void reloadData() {
+        loadData();
+    }
+
+    private void loadData() {
         loadMaps();
         loadPlaces();
         loadServices();

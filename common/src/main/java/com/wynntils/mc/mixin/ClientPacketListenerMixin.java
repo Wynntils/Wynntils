@@ -102,7 +102,8 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
     private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
         if (EventFactory.onCommandSent(command, false).isCanceled()) {
-            cir.setReturnValue(false);
+            // Return true here, to signal to MC that we handled the command.
+            cir.setReturnValue(true);
             cir.cancel();
         }
     }

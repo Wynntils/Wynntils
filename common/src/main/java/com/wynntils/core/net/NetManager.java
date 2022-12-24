@@ -81,6 +81,10 @@ public final class NetManager extends Manager {
         return download(uri, localFileName);
     }
 
+    public File getCacheDir() {
+        return CACHE_DIR;
+    }
+
     public File getCacheFile(String localFileName) {
         return new File(CACHE_DIR, localFileName);
     }
