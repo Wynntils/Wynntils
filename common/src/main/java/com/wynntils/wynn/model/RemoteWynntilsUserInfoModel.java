@@ -5,8 +5,8 @@
 package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;

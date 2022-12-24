@@ -6,11 +6,12 @@ package com.wynntils.core.net.athena;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.math.BigInteger;

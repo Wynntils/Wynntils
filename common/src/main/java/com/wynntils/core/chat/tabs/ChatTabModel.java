@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.chat.tabs;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;

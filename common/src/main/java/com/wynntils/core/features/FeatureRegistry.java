@@ -5,12 +5,12 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -82,7 +82,7 @@ import com.wynntils.features.user.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.user.overlays.InfoBoxFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
-import com.wynntils.features.user.overlays.PowderAbilityBarOverlayFeature;
+import com.wynntils.features.user.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.user.players.PlayerArmorHidingFeature;
@@ -184,7 +184,7 @@ public final class FeatureRegistry {
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new PowderAbilityBarOverlayFeature());
+        registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());

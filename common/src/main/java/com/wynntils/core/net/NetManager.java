@@ -6,8 +6,8 @@ package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

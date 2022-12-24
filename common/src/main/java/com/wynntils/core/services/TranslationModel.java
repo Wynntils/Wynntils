@@ -5,8 +5,8 @@
 package com.wynntils.core.services;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;

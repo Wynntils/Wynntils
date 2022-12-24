@@ -5,17 +5,17 @@
 package com.wynntils.wynn.model.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Manager;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.scoreboard.ScoreboardListener;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
-import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.TrackedQuestUpdateEvent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

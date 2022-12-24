@@ -6,6 +6,8 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -16,8 +18,6 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -29,7 +29,6 @@ import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ActionBarMessageUpdateEvent;
 import com.wynntils.wynn.model.bossbar.AwakenedBar;
 import com.wynntils.wynn.model.bossbar.BloodPoolBar;
 import com.wynntils.wynn.model.bossbar.CorruptedBar;
@@ -48,20 +47,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @Override
     public List<Model> getModelDependencies() {
         return List.of(Models.ActionBar, Models.BossBar);
-    }
-
-    @SubscribeEvent
-    public void onActionBarManaUpdate(ActionBarMessageUpdateEvent.ManaText event) {
-        if (!manaBarOverlay.isEnabled() || manaBarOverlay.shouldDisplayOriginal) return;
-
-        event.setMessage("");
-    }
-
-    @SubscribeEvent
-    public void onActionBarHealthUpdate(ActionBarMessageUpdateEvent.HealthText event) {
-        if (!healthBarOverlay.isEnabled() || healthBarOverlay.shouldDisplayOriginal) return;
-
-        event.setMessage("");
     }
 
     @SubscribeEvent
@@ -235,6 +220,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.ActionBar.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+        }
+
+        @Override
         public BossBarProgress progress() {
             int current = Models.ActionBar.getCurrentHealth();
             int max = Models.ActionBar.getMaxHealth();
@@ -321,6 +311,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
         public boolean isActive() {
             return Models.BossBar.bloodPoolBar.isActive();
         }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            // Do not call super
+        }
     }
 
     public static class ManaBarOverlay extends BaseBarOverlay {
@@ -363,6 +358,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return true;
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.ActionBar.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
@@ -444,6 +444,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return Models.BossBar.manaBankBar.isActive();
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            // Do not call super
         }
     }
 

@@ -6,13 +6,13 @@ package com.wynntils.gui.screens.settings;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.managers.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -290,13 +290,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                 : 0)
                         - 1);
 
-        configurableScrollOffset = MathUtils.clamp((int) (configurableScrollOffset - delta), 0, roundedUpPageNeed);
+        configurableScrollOffset = MathUtils.clamp((int) (configurableScrollOffset + delta), 0, roundedUpPageNeed);
     }
 
     private void scrollConfigList(double delta) {
         int roundedUpPageNeed = configs.size() / CONFIGS_PER_PAGE + (configs.size() % CONFIGS_PER_PAGE == 0 ? 0 : 1);
         configScrollOffset = MathUtils.clamp(
-                (int) (configScrollOffset - delta),
+                (int) (configScrollOffset + delta),
                 0,
                 configs.size() <= CONFIGS_PER_PAGE ? 0 : (roundedUpPageNeed - 1) * CONFIGS_PER_PAGE);
     }

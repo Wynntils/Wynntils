@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -21,7 +21,7 @@ import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;

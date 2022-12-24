@@ -6,11 +6,11 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -22,7 +22,9 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -110,9 +112,14 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        if (Models.Compass.getCompassLocation().isEmpty()
+        Optional<Location> compassLocationOpt = Models.Compass.getCompassLocation();
+        Optional<WaypointPoi> compassWaypointOpt = Models.Compass.getCompassWaypoint();
+        if (compassLocationOpt.isEmpty()
+                || compassWaypointOpt.isEmpty()
                 || screenCoord == null
                 || (maxWaypointTextDistance != 0 && maxWaypointTextDistance < distance)) return;
+
+        WaypointPoi waypointPoi = compassWaypointOpt.get();
 
         float backgroundWidth = FontRenderer.getInstance().getFont().width(distanceText);
         float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
@@ -192,8 +199,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-            Models.Compass.getCompassWaypoint()
-                    .get()
+            waypointPoi
                     .getPointerPoi()
                     .renderAt(poseStack, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
             poseStack.popPose();

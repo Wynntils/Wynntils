@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.net;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import java.io.InputStream;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

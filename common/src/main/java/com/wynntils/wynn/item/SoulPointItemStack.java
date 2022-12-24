@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;

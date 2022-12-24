@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model.bossbar;
 
-import com.wynntils.core.managers.Handlers;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import java.util.Arrays;
 import java.util.List;

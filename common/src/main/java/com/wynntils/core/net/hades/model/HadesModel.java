@@ -5,9 +5,10 @@
 package com.wynntils.core.net.hades.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Managers;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.managers.Models;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.core.net.hades.HadesClientHandler;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.PlayerStatus;
