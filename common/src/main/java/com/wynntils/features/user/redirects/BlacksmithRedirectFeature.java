@@ -27,7 +27,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
     private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])([A-Z][a-zA-Z\\s]+)");
-    // affected characters: "-", ""
 
     @Override
     public List<Model> getModelDependencies() {
