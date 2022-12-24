@@ -51,6 +51,10 @@ public final class DiscoveryManager extends Manager {
         super(List.of(netManager, territoryManager, minecraftSchedulerManager));
     }
 
+    public void reloadData() {
+        updateDiscoveriesResource();
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         discoveries = List.of();
