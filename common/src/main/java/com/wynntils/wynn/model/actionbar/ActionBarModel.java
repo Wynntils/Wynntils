@@ -6,7 +6,9 @@ package com.wynntils.wynn.model.actionbar;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.wynn.model.actionbar.event.CenterSegmentClearedEvent;
 import com.wynntils.wynn.objects.Powder;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarModel extends Model {
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment();
@@ -66,5 +68,10 @@ public final class ActionBarModel extends Model {
 
     public void hideMana(boolean shouldHide) {
         manaSegment.setHidden(shouldHide);
+    }
+
+    @SubscribeEvent
+    public void onCenterSegmentCleared(CenterSegmentClearedEvent event) {
+        powderSpecialSegment.replaced();
     }
 }

@@ -24,7 +24,16 @@ public class PowderSpecialSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updatePowderSpecial(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updatePowderSpecial(matcher);
+    }
+
+    private void updatePowderSpecial(Matcher matcher) {
         powderSpecialType = Powder.getFromSymbol(matcher.group(1).charAt(0));
         powderSpecialCharge = Integer.parseInt(matcher.group(2));
     }
@@ -36,8 +45,8 @@ public class PowderSpecialSegment implements ActionBarSegment {
 
     @Override
     public void removed() {
-        powderSpecialType = null;
-        powderSpecialCharge = 0;
+        // This can mean that it is just temporarily replaced by e.g.
+        // a spell, so assume it does not change
     }
 
     public float getPowderSpecialCharge() {
@@ -54,5 +63,11 @@ public class PowderSpecialSegment implements ActionBarSegment {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public void replaced() {
+        // We have been replaced by the coordinate segment, so we know the charge is gone
+        powderSpecialType = null;
+        powderSpecialCharge = 0;
     }
 }
