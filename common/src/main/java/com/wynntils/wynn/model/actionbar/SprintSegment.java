@@ -21,7 +21,16 @@ public class SprintSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updateSprint(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updateSprint(matcher);
+    }
+
+    private void updateSprint(Matcher matcher) {
         // Expamples:
         // "§2[§a|||Sprint|||§2]" -- max
         // "§2[§a|||Spr§8int|||§2]"  -- partial

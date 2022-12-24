@@ -23,7 +23,16 @@ public class ManaSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updateMana(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updateMana(matcher);
+    }
+
+    private void updateMana(Matcher matcher) {
         currentMana = Integer.parseInt(matcher.group(1));
         maxMana = Integer.parseInt(matcher.group(2));
     }
