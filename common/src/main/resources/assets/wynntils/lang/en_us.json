@@ -519,8 +519,6 @@
   "feature.wynntils.minimap.overlay.minimap.scale.name": "Minimap Scale",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "How should the cardinal directions (N/E/S/W) be displayed on the minimap?",
   "feature.wynntils.minimap.overlay.minimap.showCompass.name": "Show Compass Directions",
-  "feature.wynntils.minimap.overlay.minimap.showCoords.description": "Should your coordinates be displayed below the minimap?",
-  "feature.wynntils.minimap.overlay.minimap.showCoords.name": "Minimap Coordinates",
   "feature.wynntils.mountHorseHotkey.alreadyRiding": "You are already riding a horse.",
   "feature.wynntils.mountHorseHotkey.name": "Mount Horse Hotkey",
   "feature.wynntils.mountHorseHotkey.noHorse": "Your horse was unable to be found.",
