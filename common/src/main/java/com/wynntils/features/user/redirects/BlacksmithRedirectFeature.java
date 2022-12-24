@@ -26,7 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    private static final Pattern ITEM_PATTERN = Pattern.compile("§([fedacb53])([A-Z][a-zA-Z\\s]+)");
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§([fedacb53])([A-Z][a-zA-Z-'\\s]+)");
 
     @Override
     public List<Model> getModelDependencies() {
@@ -68,9 +68,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
             // Tally up the items that we sold.
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
-                Matcher itemMatcher = ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)
-                        .replace("-", "")
-                        .replace("'", "")); // Second group contains the items. A bit of a hacky solution to remove
+                Matcher itemMatcher = ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items. A bit of a hacky solution to remove
                 // the pesky "-" and "'" characters that mess up regex matcher
                 if (!itemMatcher.matches()) {
                     continue;
