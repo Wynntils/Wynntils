@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -13,7 +12,6 @@ import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import net.minecraft.client.gui.components.EditBox;
@@ -25,11 +23,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class ChatItemFeature extends UserFeature {
     private final Map<String, String> chatItems = new HashMap<>();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
-    }
 
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {

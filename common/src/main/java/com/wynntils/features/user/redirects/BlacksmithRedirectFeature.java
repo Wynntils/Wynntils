@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -14,7 +13,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -27,11 +25,6 @@ public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
     private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])([A-Z][a-zA-Z\\s]+)");
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {

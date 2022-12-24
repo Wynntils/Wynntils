@@ -58,8 +58,7 @@ public final class ItemProfilesManager extends Manager {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, ItemGuessProfile>>() {}.getType();
-            Map<String, ItemGuessProfile> newItemGuesses = new HashMap<>();
-            newItemGuesses.putAll(ITEM_GUESS_GSON.fromJson(reader, type));
+            Map<String, ItemGuessProfile> newItemGuesses = new HashMap<>(ITEM_GUESS_GSON.fromJson(reader, type));
             itemGuesses = newItemGuesses;
         });
     }
@@ -89,7 +88,7 @@ public final class ItemProfilesManager extends Manager {
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
             ItemProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
-            HashMap<String, ItemProfile> newItems = new HashMap<>();
+            Map<String, ItemProfile> newItems = new HashMap<>();
             for (ItemProfile itemProfile : jsonItems) {
                 itemProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
                 itemProfile.updateMajorIdsFromStrings(majorIdsMap);
