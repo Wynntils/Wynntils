@@ -68,9 +68,8 @@ public class BlacksmithRedirectFeature extends UserFeature {
             // Tally up the items that we sold.
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
-                Matcher itemMatcher = ITEM_PATTERN.matcher(ComponentUtils.getCoded(
-                        sibling)); // Second group contains the items. A bit of a hacky solution to remove
-                // the pesky "-" and "'" characters that mess up regex matcher
+                Matcher itemMatcher =
+                        ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items.
                 if (!itemMatcher.matches()) {
                     continue;
                 }
