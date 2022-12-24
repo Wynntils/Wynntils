@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.managers.Managers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.model.quests.QuestInfo;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import java.util.List;
@@ -19,9 +19,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class QuestCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
@@ -62,17 +62,17 @@ public class QuestCommand extends CommandBase {
             status = "active";
         }
 
-        MutableComponent response = new TextComponent("All known quests:").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal("All known quests:").withStyle(ChatFormatting.AQUA);
 
         for (QuestInfo quest : quests) {
             if (status.equals("active") && !quest.isTrackable()) continue;
 
-            response.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(new TextComponent(quest.getName())
+            response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(quest.getName())
                             .withStyle(style -> style.withClickEvent(
                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest info " + quest.getName())))
                             .withStyle(style -> style.withHoverEvent(
-                                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent("Click for info"))))
+                                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click for info"))))
                             .withStyle(ChatFormatting.WHITE));
         }
 
@@ -86,26 +86,27 @@ public class QuestCommand extends CommandBase {
         if (quest == null) return 0;
 
         MutableComponent response =
-                new TextComponent("Info for quest: " + quest.getName()).withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent("\n - Status: " + quest.getStatus()).withStyle(ChatFormatting.WHITE))
-                .append(new TextComponent("\n - Level: " + quest.getLevel()).withStyle(ChatFormatting.WHITE))
-                .append(new TextComponent("\n - Length: " + quest.getLength()).withStyle(ChatFormatting.WHITE))
+                Component.literal("Info for quest: " + quest.getName()).withStyle(ChatFormatting.AQUA);
+        response.append(Component.literal("\n - Status: " + quest.getStatus()).withStyle(ChatFormatting.WHITE))
+                .append(Component.literal("\n - Level: " + quest.getLevel()).withStyle(ChatFormatting.WHITE))
+                .append(Component.literal("\n - Length: " + quest.getLength()).withStyle(ChatFormatting.WHITE))
                 // FIXME: additional requirements are missing
-                .append(new TextComponent("\n - Next Task: " + quest.getNextTask()).withStyle(ChatFormatting.WHITE))
-                .append(new TextComponent("\n"))
-                .append(new TextComponent("[Track Quest]")
+                .append(Component.literal("\n - Next Task: " + quest.getNextTask())
+                        .withStyle(ChatFormatting.WHITE))
+                .append(Component.literal("\n"))
+                .append(Component.literal("[Track Quest]")
                         .withStyle(style -> style.withClickEvent(new ClickEvent(
                                         ClickEvent.Action.RUN_COMMAND, "/quest track " + quest.getName()))
                                 .withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT, new TextComponent("Click to track quest"))))
+                                        HoverEvent.Action.SHOW_TEXT, Component.literal("Click to track quest"))))
                         .withStyle(ChatFormatting.WHITE))
-                .append(new TextComponent(" "))
-                .append(new TextComponent("[Lookup on Wiki]")
+                .append(Component.literal(" "))
+                .append(Component.literal("[Lookup on Wiki]")
                         .withStyle(style -> style.withClickEvent(
                                         new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest wiki " + quest.getName()))
                                 .withHoverEvent(new HoverEvent(
                                         HoverEvent.Action.SHOW_TEXT,
-                                        new TextComponent("Click to lookup quest on wiki"))))
+                                        Component.literal("Click to lookup quest on wiki"))))
                         .withStyle(ChatFormatting.WHITE));
 
         context.getSource().sendSuccess(response, false);
@@ -117,22 +118,25 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        Managers.Quest.toggleTracking(quest);
+        Managers.Quest.startTracking(quest);
         MutableComponent response =
-                new TextComponent("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
+                Component.literal("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        String questName = context.getArgument("quest", String.class);
-        QuestInfo quest = getQuestInfo(context, questName);
-        if (quest == null) return 0;
+        QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
+        if (trackedQuest == null) {
+            context.getSource()
+                    .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));
+            return 0;
+        }
 
-        // FIXME: check state before toggle...
-        Managers.Quest.toggleTracking(quest);
-        MutableComponent response =
-                new TextComponent("Stopped tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
+        Managers.Quest.stopTracking();
+
+        MutableComponent response = Component.literal("Stopped tracking quest " + trackedQuest.getName())
+                .withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -144,13 +148,13 @@ public class QuestCommand extends CommandBase {
 
         Managers.Quest.openQuestOnWiki(quest);
         MutableComponent response =
-                new TextComponent("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
+                Component.literal("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
 
@@ -163,15 +167,15 @@ public class QuestCommand extends CommandBase {
 
         if (matchingQuests.size() < 1) {
             context.getSource()
-                    .sendFailure(
-                            new TextComponent("Quest '" + questName + "' not found").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("Quest '" + questName + "' not found")
+                            .withStyle(ChatFormatting.RED));
             return null;
         } else if (matchingQuests.size() > 1) {
-            MutableComponent error =
-                    new TextComponent("Quest '" + questName + "' match several quests:").withStyle(ChatFormatting.RED);
+            MutableComponent error = Component.literal("Quest '" + questName + "' match several quests:")
+                    .withStyle(ChatFormatting.RED);
             for (var quest : matchingQuests) {
-                error.append(new TextComponent("\n - ").withStyle(ChatFormatting.GRAY))
-                        .append(new TextComponent(quest.getName()).withStyle(ChatFormatting.WHITE));
+                error.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(quest.getName()).withStyle(ChatFormatting.WHITE));
             }
             context.getSource().sendFailure(error);
             return null;
