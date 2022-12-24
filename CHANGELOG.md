@@ -1,9 +1,21 @@
+## [0.0.2-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.28...v0.0.2-alpha.29) (2022-12-24)
+
+
+### Miscellaneous Chores
+
+* Shorten the dev version string ([#932](https://github.com/Wynntils/Artemis/issues/932)) ([22bbe29](https://github.com/Wynntils/Artemis/commit/22bbe29a9d86c1c58ee68779f67bc4c2a6929e05))
+
 ## [0.0.2-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.27...v0.0.2-alpha.28) (2022-12-24)
 
 
 ### New Features
 
 * Add /lootrun screen ([#927](https://github.com/Wynntils/Artemis/issues/927)) ([e756f78](https://github.com/Wynntils/Artemis/commit/e756f780ddcb424294ff0c4fa9613670cb71e9cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.28 [skip ci] ([7c7603f](https://github.com/Wynntils/Artemis/commit/7c7603fab0d65d58aed670b9c886896f60ae8c66))
 
 ## [0.0.2-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.26...v0.0.2-alpha.27) (2022-12-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.25 [skip ci] ([669fb1e](https://github.com/Wynntils/Artemis/commit/669fb1e2fe04cf3c58708bbd3230200e2f3a0e4a))
-
-## [0.0.2-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.23...v0.0.2-alpha.24) (2022-12-22)
-
-
-### Bug Fixes
-
-* Fix compatibility with other mods' client commands ([#925](https://github.com/Wynntils/Artemis/issues/925)) ([43b2fa7](https://github.com/Wynntils/Artemis/commit/43b2fa78275934e814e38eec5aeb3202af0e4eee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.24 [skip ci] ([19bc6cb](https://github.com/Wynntils/Artemis/commit/19bc6cb3acbb2b37c04e744557f8a3f5b5311583))
 
