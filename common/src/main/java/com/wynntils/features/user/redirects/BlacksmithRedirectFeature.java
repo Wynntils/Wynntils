@@ -26,7 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    private static final Pattern ITEM_PATTERN = Pattern.compile("§([fedacb53])([A-Z][a-zA-Z\\s]+)");
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])([A-Z][a-zA-Z\\s]+)");
+    // affected characters: "-", ""
 
     @Override
     public List<Model> getModelDependencies() {
@@ -38,6 +39,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
         Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage());
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
+        System.out.println(event.getOriginalCodedMessage());
 
         EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
 
@@ -71,7 +73,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 Matcher itemMatcher =
                         ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items.
 
-                if (!itemMatcher.matches()) {
+                if (!itemMatcher.lookingAt()) {
                     continue;
                 }
 
