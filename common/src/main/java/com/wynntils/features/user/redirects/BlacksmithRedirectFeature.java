@@ -70,7 +70,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
                 // Retrieve the color code of the item, and then match it to the item tier.
                 Matcher itemMatcher =
                         ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items.
-                
+
                 if (!itemMatcher.matches()) {
                     continue;
                 }
