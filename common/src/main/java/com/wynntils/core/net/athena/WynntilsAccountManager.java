@@ -11,11 +11,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,12 +39,15 @@ public final class WynntilsAccountManager extends Manager {
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
 
+    private final List<Runnable> onLogin = new ArrayList<>();
+
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
         login();
     }
 
-    public void reset() {
+    public void reauth() {
+        loggedIn = false;
         login();
     }
 
@@ -53,12 +56,11 @@ public final class WynntilsAccountManager extends Manager {
         if (!event.isFirstJoinWorld()) return;
 
         if (!loggedIn) {
-            // FIXME: Use the proper reload command here, once they are reworked
             MutableComponent failed = Component.literal(
                             "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
                                     + "Most notably, cloud config syncing will not work. To try this action again, run ")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reload")
+            failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
@@ -114,9 +116,20 @@ public final class WynntilsAccountManager extends Manager {
                                 encodedConfigs.put(k.getKey(), k.getValue().getAsString()));
                 loggedIn = true;
                 WynntilsMod.info("Successfully connected to Athena!");
-                WynntilsMod.postEvent(new AthenaLoginEvent());
+
+                // It would be ideal to use an event here, but the event bus seems to be having issues with doing so.
+                // Maybe this is related to the fact that this is called from ForkJoinPool?
+                onLogin.forEach(Runnable::run);
             });
         });
+    }
+
+    public void onLoginRun(Runnable runnable) {
+        onLogin.add(runnable);
+    }
+
+    public void removeOnLogin(Runnable runnable) {
+        onLogin.remove(runnable);
     }
 
     private String parseAndJoinPublicKey(String key) {
