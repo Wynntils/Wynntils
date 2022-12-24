@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.core.net.hades.HadesClientHandler;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.PlayerStatus;
@@ -56,15 +55,18 @@ public final class HadesModel extends Model {
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }
+
+        Managers.WynntilsAccount.onLoginRun(this::onLogin);
     }
 
     @Override
     public void disable() {
         tryDisconnect();
+
+        Managers.WynntilsAccount.removeOnLogin(this::onLogin);
     }
 
-    @SubscribeEvent
-    public void onAthenaLoginEvent(AthenaLoginEvent event) {
+    public void onLogin() {
         // Try to log in to Hades, if we're not already connected
         if (!isConnected()) {
             tryCreateConnection();
@@ -87,7 +89,7 @@ public final class HadesModel extends Model {
         }
     }
 
-    private void tryDisconnect() {
+    public void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
         }

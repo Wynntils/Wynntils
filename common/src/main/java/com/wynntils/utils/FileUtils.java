@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileSystemException;
+import java.util.Objects;
 
 public final class FileUtils {
     /**
@@ -47,6 +48,22 @@ public final class FileUtils {
 
         if (!file.delete()) {
             WynntilsMod.error("File " + file + " could not be deleted");
+        }
+    }
+
+    public static void deleteFolder(File folder) {
+        if (!folder.exists()) return;
+
+        for (File file : Objects.requireNonNullElse(folder.listFiles(), new File[0])) {
+            if (file.isDirectory()) {
+                deleteFolder(file);
+            } else {
+                deleteFile(file);
+            }
+        }
+
+        if (!folder.delete()) {
+            WynntilsMod.error("Folder " + folder + " could not be deleted");
         }
     }
 
