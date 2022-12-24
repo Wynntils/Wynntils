@@ -23,7 +23,16 @@ public class HealthSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updateHealth(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updateHealth(matcher);
+    }
+
+    private void updateHealth(Matcher matcher) {
         currentHealth = Integer.parseInt(matcher.group(1));
         maxHealth = Integer.parseInt(matcher.group(2));
     }

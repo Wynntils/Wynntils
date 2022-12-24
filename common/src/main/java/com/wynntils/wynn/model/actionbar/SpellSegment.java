@@ -21,7 +21,16 @@ public class SpellSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
+        updateSpell(matcher);
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        updateSpell(matcher);
+    }
+
+    private void updateSpell(Matcher matcher) {
         WynntilsMod.postEvent(new SpellSegmentUpdateEvent(matcher));
     }
 

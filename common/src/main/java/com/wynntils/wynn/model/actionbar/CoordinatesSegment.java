@@ -4,8 +4,10 @@
  */
 package com.wynntils.wynn.model.actionbar;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarPosition;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.wynn.model.actionbar.event.CenterSegmentClearedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +20,7 @@ public class CoordinatesSegment implements ActionBarSegment {
     }
 
     @Override
-    public void handleMatch(Matcher matcher) {
+    public void update(Matcher matcher) {
         /* Currently we don't care about the actual matches.
         String leftPad = matcher.group(1);
         String xCoord = matcher.group(2);
@@ -26,6 +28,14 @@ public class CoordinatesSegment implements ActionBarSegment {
         String yCoord = matcher.group(4);
         String rightPad = matcher.group(5);
          */
+    }
+
+    @Override
+    public void appeared(Matcher matcher) {
+        // Currently we don't care about the actual matches,
+        // but we need to signal that other special center segment has been cleared,
+        // since coordinate segment is the default/fallback segment
+        WynntilsMod.postEvent(new CenterSegmentClearedEvent());
     }
 
     @Override
