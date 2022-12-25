@@ -861,7 +861,7 @@
   "screens.wynntils.lootruns.notes": "纪录",
   "screens.wynntils.lootruns.start": "开始点",
   "screens.wynntils.map.focus.description1": "左键点击此为了在地图把追踪点为中心。",
-  "screens.wynntils.map.focus.description2": "同时按换档键和左键为了在地图把追自己玩家为中心。.",
+  "screens.wynntils.map.focus.description2": "同时按换档键和左键为了在地图把追自己玩家为中心。",
   "screens.wynntils.map.focus.name": "中心",
   "screens.wynntils.map.help.description1": "控制点击为了显示领土",
   "screens.wynntils.map.help.description2": "左键点击在一只纪录点为了追踪它的座标。",
@@ -870,6 +870,9 @@
   "screens.wynntils.map.help.description5": "同时按控制键和中键在纪录点上为了编辑这个纪录点。",
   "screens.wynntils.map.help.description6": "同时按控制键和中键在纪录点上为了删除这个纪录点。",
   "screens.wynntils.map.help.description7": "左键点击在座标纪录点为了删除它。",
+  "screens.wynntils.map.help.description8": "右键点击此为了在地图把追踪点为中心。",
+  "screens.wynntils.map.help.description9": "同时按换档键和右键为了在地图把追自己玩家为中心。",
+  "screens.wynntils.map.help.name": "中心指南",
   "screens.wynntils.map.share.description1": "§b左键点击§7为了更您的公会分享您的座标。",
   "screens.wynntils.map.share.description2": "§b右键点击§7为了更您的派对分享您的座标。",
   "screens.wynntils.map.share.description3": "§b切换点击§7为了反而地分级您的追踪座标。",
@@ -981,5 +984,8 @@
   "screens.wynntils.wynntilsQuestBook.sort.distance.name": "安排以距离",
   "screens.wynntils.wynntilsQuestBook.sort.level.description": "任务是以等级安排的，最低的先。",
   "screens.wynntils.wynntilsQuestBook.sort.level.name": "安排以等级",
-  "screens.wynntils.wynntilsQuestBook.tryReload": "没有找到任何任务！经过右上的按钮尝试重新加载。"
+  "screens.wynntils.wynntilsQuestBook.tryReload": "没有找到任何任务！经过右上的按钮尝试重新加载。",
+  "screens.wynntils.map.help.description8": "Right click to center on player.",
+  "screens.wynntils.map.help.description9": "Shift-Right click to center on the compass marker.",
+  "screens.wynntils.map.help.name": "Quick Guide"
 }
