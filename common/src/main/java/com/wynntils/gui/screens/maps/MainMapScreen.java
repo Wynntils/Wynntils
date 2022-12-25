@@ -91,7 +91,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description6")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.help.description7"))))));
+                                .append(Component.translatable("screens.wynntils.map.help.description7")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
