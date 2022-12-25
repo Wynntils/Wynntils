@@ -58,7 +58,7 @@ public class ChatTab {
             return true;
         }
 
-        return getCustomRegex().matcher(event.getCodedMessage()).matches();
+        return getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     public String getName() {
