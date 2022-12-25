@@ -1,13 +1,15 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.List;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatShowRealNameFeature extends UserFeature {
     // credits to avomod for part of the code
@@ -29,11 +31,12 @@ public class ChatShowRealNameFeature extends UserFeature {
             HoverEvent hover = message.getStyle().getHoverEvent();
             if (hover == null) return;
             if (hover.getValue(hover.getAction()) instanceof Component hoverText) {
-                String realName = hoverText.getString().split(" ")[hoverText.getString().split(" ").length - 1];
+                String realName =
+                        hoverText.getString().split(" ")[hoverText.getString().split(" ").length - 1];
                 // Save all sibling of the message
                 List<Component> siblings = message.getSiblings();
                 // Make a TextElement with the real name
-                //Component fullMessage = Component.literal("§c(" + realName + ")§f");
+                // Component fullMessage = Component.literal("§c(" + realName + ")§f");
                 Component fullMessage = Component.literal(realName);
                 // Add all old siblings to the real name
                 fullMessage.getSiblings().addAll(siblings);
@@ -43,7 +46,9 @@ public class ChatShowRealNameFeature extends UserFeature {
                 message.getSiblings().add(fullMessage);
                 System.out.println(message);
             }
-//            message.getSiblings().addAll(TextElement.of("§c(" + realName + ")§f").getWithStyle(message.getStyle())); // This is not used due to it appearing after the message in guild chat
+            //            message.getSiblings().addAll(TextElement.of("§c(" + realName +
+            // ")§f").getWithStyle(message.getStyle())); // This is not used due to it appearing after the message in
+            // guild chat
         }
     }
 
