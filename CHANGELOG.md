@@ -1,9 +1,21 @@
+## [0.0.2-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.34...v0.0.2-alpha.35) (2022-12-25)
+
+
+### Bug Fixes
+
+* Default config file should contain default config values ([#940](https://github.com/Wynntils/Artemis/issues/940)) ([c641df3](https://github.com/Wynntils/Artemis/commit/c641df3740d36fe7657faecad1da98685bce6816))
+
 ## [0.0.2-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.33...v0.0.2-alpha.34) (2022-12-25)
 
 
 ### New Features
 
 * Add coordinate parsing for local messages (fixes bug where lootrun load coordinates aren't clickable) ([#938](https://github.com/Wynntils/Artemis/issues/938)) ([bb45b40](https://github.com/Wynntils/Artemis/commit/bb45b4004f5e370bd23d03aff1022a46e9467079))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.34 [skip ci] ([735b605](https://github.com/Wynntils/Artemis/commit/735b6053902f44ae0dd17c2eeae84e18ce44a8f0))
 
 ## [0.0.2-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.32...v0.0.2-alpha.33) (2022-12-25)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.31 [skip ci] ([e97f8b4](https://github.com/Wynntils/Artemis/commit/e97f8b46d76bdde7356351d15e49d17b1a1adf7d))
-
-## [0.0.2-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.29...v0.0.2-alpha.30) (2022-12-24)
-
-
-### Bug Fixes
-
-* Powder Special charge bar should only be reset when coordinates are shown ([#931](https://github.com/Wynntils/Artemis/issues/931)) ([2af91b3](https://github.com/Wynntils/Artemis/commit/2af91b35460a185bfe5ddfabb77a586db4557e39))
-* Powder Special charge bar should only be reset when coordinates are shown ([#931](https://github.com/Wynntils/Artemis/issues/931)) ([372b690](https://github.com/Wynntils/Artemis/commit/372b690ff12faa59174a16ead180d8e0de21e4d4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.30 [skip ci] ([1130459](https://github.com/Wynntils/Artemis/commit/113045964f244bc40390049c77837b4dff74aa9a))
 
