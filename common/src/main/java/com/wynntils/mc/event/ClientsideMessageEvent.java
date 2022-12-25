@@ -26,7 +26,7 @@ public class ClientsideMessageEvent extends Event {
         this.codedMessage = originalCodedMessage;
     }
 
-    public void setComponent(Component component) {
+    public void setMessage(Component component) {
         this.component = component;
         this.codedMessage = ComponentUtils.getCoded(component);
     }

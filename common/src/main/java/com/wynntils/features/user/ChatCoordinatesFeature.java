@@ -42,7 +42,13 @@ public class ChatCoordinatesFeature extends UserFeature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onClientsideMessage(ClientsideMessageEvent event) {}
+    public void onClientsideMessage(ClientsideMessageEvent e) {
+        if (!WynnUtils.onWorld()) return;
+
+        Component message = e.getComponent();
+
+        e.setMessage(insertCoordinateComponents(message));
+    }
 
     public static Component insertCoordinateComponents(Component message) {
         // no coordinate clickables to insert
