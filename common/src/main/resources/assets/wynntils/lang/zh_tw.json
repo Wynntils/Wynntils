@@ -1,6 +1,6 @@
 {
   "commands.wynntils.clearCaches.clickHere": "點擊在此確認.",
-  "commands.wynntils.clearCaches.deleting": "清除了缓存和會過五秒關遊戲...",
+  "commands.wynntils.clearCaches.deleting": "清除了緩存和過五秒會關遊戲...",
   "commands.wynntils.clearCaches.warn": "這會清除每個應用程序接口和更新缓存, 和關遊戲。 您確定要繼續嗎?",
   "commands.wynntils.reauth.tryReauth": "跟 Hades 斷開連接, 和重新嘗試驗證...",
   "commands.wynntils.reloadCaches.reloading": "重新加載缓存...",
@@ -222,7 +222,7 @@
   "feature.wynntils.infoBox.overlay.infoBox.textShadow.name": "文本陰影",
   "feature.wynntils.infoMessageFilter.hideLevelUp.description": "要是否隱藏上等級訊息嗎？",
   "feature.wynntils.infoMessageFilter.hideLevelUp.name": "藏上等級訊息",
-  "feature.wynntils.infoMessageFilter.hideSystemInfo.description": "要是否隱藏 Wynncraft 送的信息訊息嗎？ Should Wynncraft info messages be hidden？",
+  "feature.wynntils.infoMessageFilter.hideSystemInfo.description": "要是否隱藏 Wynncraft 送的信息訊息嗎？",
   "feature.wynntils.infoMessageFilter.hideSystemInfo.name": "藏信息訊息",
   "feature.wynntils.infoMessageFilter.hideWelcome.description": "要是否隱藏 Wynncraft 的歡迎訊息嗎？",
   "feature.wynntils.infoMessageFilter.hideWelcome.name": "藏歡迎訊息",
