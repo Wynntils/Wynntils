@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.LocationUtils;
@@ -39,6 +40,9 @@ public class ChatCoordinatesFeature extends UserFeature {
 
         e.setMessage(insertCoordinateComponents(message));
     }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onClientsideMessage(ClientsideMessageEvent event) {}
 
     public static Component insertCoordinateComponents(Component message) {
         // no coordinate clickables to insert
