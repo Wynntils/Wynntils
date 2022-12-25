@@ -5,9 +5,11 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.UUID;
@@ -113,7 +115,15 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleCommandsPost(ClientboundCommandsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onCommandsPacket(this.commands.getRoot());
+        // We need to read the root from the CommandDispatcher, not the packet,
+        // due to interop with other mods
+        RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
+        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
+
+        if (event.getRoot() != root) {
+            // If we changed the root, replace the CommandDispatcher
+            this.commands = new CommandDispatcher(event.getRoot());
+        }
     }
 
     @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
