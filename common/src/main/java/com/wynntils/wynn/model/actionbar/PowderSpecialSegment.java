@@ -43,12 +43,6 @@ public class PowderSpecialSegment implements ActionBarSegment {
         return ActionBarPosition.CENTER;
     }
 
-    @Override
-    public void removed() {
-        // This can mean that it is just temporarily replaced by e.g.
-        // a spell, so assume it does not change
-    }
-
     public float getPowderSpecialCharge() {
         return powderSpecialCharge;
     }
@@ -66,7 +60,9 @@ public class PowderSpecialSegment implements ActionBarSegment {
     }
 
     public void replaced() {
-        // We have been replaced by the coordinate segment, so we know the charge is gone
+        // We can not rely on removed(), since that can mean that it is just temporarily
+        // replaced by e.g. a spell. But here we have been replaced by the coordinate
+        // segment, so we know the charge is gone
         powderSpecialType = null;
         powderSpecialCharge = 0;
     }

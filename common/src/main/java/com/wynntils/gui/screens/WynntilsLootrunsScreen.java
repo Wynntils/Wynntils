@@ -70,9 +70,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                () -> {
-                    TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache);
-                }));
+                () -> TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
