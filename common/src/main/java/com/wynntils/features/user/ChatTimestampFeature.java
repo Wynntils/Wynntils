@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -12,7 +11,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,11 +22,6 @@ public class ChatTimestampFeature extends UserFeature {
     public String formatPattern = "HH:mm:ss";
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
-    }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {

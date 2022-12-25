@@ -51,14 +51,14 @@ public class GearItemStack extends WynnItemStack {
     private float overallPercentage;
     private boolean hasNew;
 
-    private boolean isGuideStack;
+    private boolean isGuideStack = false;
     private boolean isChatItem;
 
     private Component customName;
 
     private List<ItemIdentificationContainer> identifications;
     private List<Powder> powders;
-    private int rerolls;
+    private int rerolls = 0;
 
     private List<Component> percentTooltip;
     private List<Component> rangeTooltip;
