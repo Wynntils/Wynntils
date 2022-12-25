@@ -1,9 +1,21 @@
+## [0.0.2-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.35...v0.0.2-alpha.36) (2022-12-25)
+
+
+### Miscellaneous Chores
+
+* IntelliJ inspection profile fixes ([#933](https://github.com/Wynntils/Artemis/issues/933)) ([e859715](https://github.com/Wynntils/Artemis/commit/e859715ad9161532d6a9e4d23dc75228ea2f6915))
+
 ## [0.0.2-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.34...v0.0.2-alpha.35) (2022-12-25)
 
 
 ### Bug Fixes
 
 * Default config file should contain default config values ([#940](https://github.com/Wynntils/Artemis/issues/940)) ([c641df3](https://github.com/Wynntils/Artemis/commit/c641df3740d36fe7657faecad1da98685bce6816))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.35 [skip ci] ([98263e8](https://github.com/Wynntils/Artemis/commit/98263e8d6c5e73677158c2aaeaa31393919ca461))
 
 ## [0.0.2-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.33...v0.0.2-alpha.34) (2022-12-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.32 [skip ci] ([1691bab](https://github.com/Wynntils/Artemis/commit/1691bab967b33181830ebab3f32ae69b98417ee2))
-
-## [0.0.2-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.30...v0.0.2-alpha.31) (2022-12-25)
-
-
-### New Features
-
-* Update README.md's hotswap settings info ([#934](https://github.com/Wynntils/Artemis/issues/934)) ([a009958](https://github.com/Wynntils/Artemis/commit/a0099582c1b2318d53a20df7898923e2e8c6777c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.31 [skip ci] ([e97f8b4](https://github.com/Wynntils/Artemis/commit/e97f8b46d76bdde7356351d15e49d17b1a1adf7d))
 
