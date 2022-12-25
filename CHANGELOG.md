@@ -1,9 +1,21 @@
+## [0.0.2-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.33...v0.0.2-alpha.34) (2022-12-25)
+
+
+### New Features
+
+* Add coordinate parsing for local messages (fixes bug where lootrun load coordinates aren't clickable) ([#938](https://github.com/Wynntils/Artemis/issues/938)) ([bb45b40](https://github.com/Wynntils/Artemis/commit/bb45b4004f5e370bd23d03aff1022a46e9467079))
+
 ## [0.0.2-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.32...v0.0.2-alpha.33) (2022-12-25)
 
 
 ### Bug Fixes
 
 * fix item detection (blacksmith selling) ([#928](https://github.com/Wynntils/Artemis/issues/928)) ([42eaa87](https://github.com/Wynntils/Artemis/commit/42eaa875601bfd69f3c2f4b7f1ca4cd7cbb89180))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.33 [skip ci] ([7ba5bd1](https://github.com/Wynntils/Artemis/commit/7ba5bd19a85e0b3aee745e17f823ccc4fcad9fc5))
 
 ## [0.0.2-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.31...v0.0.2-alpha.32) (2022-12-25)
 
@@ -41,12 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.30 [skip ci] ([1130459](https://github.com/Wynntils/Artemis/commit/113045964f244bc40390049c77837b4dff74aa9a))
-
-## [0.0.2-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.28...v0.0.2-alpha.29) (2022-12-24)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.29 [skip ci] ([328e1a7](https://github.com/Wynntils/Artemis/commit/328e1a7addf877c29e343b11454b1cc716cfa6ce))
-* Shorten the dev version string ([#932](https://github.com/Wynntils/Artemis/issues/932)) ([22bbe29](https://github.com/Wynntils/Artemis/commit/22bbe29a9d86c1c58ee68779f67bc4c2a6929e05))
 
