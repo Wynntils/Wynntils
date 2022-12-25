@@ -7,7 +7,6 @@ package com.wynntils.features.user.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -72,11 +71,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         if (scheduledAutoProgressKeyPress == null) return;
 
         scheduledAutoProgressKeyPress.cancel(true);
-    }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

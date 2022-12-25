@@ -129,6 +129,10 @@ public class ConfigHolder {
         }
     }
 
+    public Object getDefaultValue() {
+        return defaultValue;
+    }
+
     public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
