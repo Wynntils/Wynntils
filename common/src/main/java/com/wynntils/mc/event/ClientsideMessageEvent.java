@@ -12,12 +12,31 @@ import net.minecraftforge.eventbus.api.Event;
 // Fired when a message is sent to the local chat.
 @Cancelable
 public class ClientsideMessageEvent extends Event {
-    private final Component component;
-    private final String codedMessage;
+    private final Component originalComponent;
+    private final String originalCodedMessage;
+
+    private Component component;
+    private String codedMessage;
 
     public ClientsideMessageEvent(Component component) {
+        this.originalComponent = component;
+        this.originalCodedMessage = ComponentUtils.getCoded(component);
+
+        this.component = originalComponent;
+        this.codedMessage = originalCodedMessage;
+    }
+
+    public void setMessage(Component component) {
         this.component = component;
         this.codedMessage = ComponentUtils.getCoded(component);
+    }
+
+    public Component getOriginalComponent() {
+        return originalComponent;
+    }
+
+    public String getOriginalCodedMessage() {
+        return originalCodedMessage;
     }
 
     public Component getComponent() {
