@@ -194,7 +194,7 @@ public final class ConfigManager extends Manager {
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
             for (ConfigHolder holder : CONFIG_HOLDERS) {
-                Object value = holder.getValue();
+                Object value = holder.getDefaultValue();
 
                 JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
                 holderJson.add(holder.getJsonName(), holderElement);
