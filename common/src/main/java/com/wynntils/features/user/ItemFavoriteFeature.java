@@ -41,7 +41,7 @@ public class ItemFavoriteFeature extends UserFeature {
     public Set<String> favoriteItems = new HashSet<>();
 
     @TypeOverride
-    private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
+    private final Type favoriteItemsType = new TypeToken<HashSet<String>>() {}.getType();
 
     @Override
     public List<Model> getModelDependencies() {

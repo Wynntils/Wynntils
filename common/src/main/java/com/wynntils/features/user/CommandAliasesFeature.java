@@ -30,7 +30,7 @@ public class CommandAliasesFeature extends UserFeature {
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr"))));
 
     @TypeOverride
-    private final Type aliasesType = new TypeToken<List<CommandAlias>>() {}.getType();
+    private final Type aliasesType = new TypeToken<ArrayList<CommandAlias>>() {}.getType();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {

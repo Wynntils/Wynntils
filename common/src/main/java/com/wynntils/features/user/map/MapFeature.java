@@ -50,7 +50,7 @@ public class MapFeature extends UserFeature {
     public List<CustomPoi> customPois = new ArrayList<>();
 
     @TypeOverride
-    private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
+    private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
     @Config
     public float poiFadeDistance = 0.6f;
