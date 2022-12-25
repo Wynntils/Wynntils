@@ -21,7 +21,7 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
     public float playerGhostTranslucenceLevel = 0.75f;
 
     @Config
-    public boolean transparentPlayerGhostArmor = true;
+    public boolean transparentPlayerGhostArmor = false;
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {

@@ -51,7 +51,7 @@ public class ItemLockFeature extends UserFeature {
     private final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();
 
     @Config
-    public boolean blockAllActionsOnLockedItems = false;
+    public boolean blockAllActionsOnLockedItems = true;
 
     @Config
     public boolean allowClickOnEmeraldPouchInBlockingMode = true;
