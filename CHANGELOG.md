@@ -1,9 +1,21 @@
+## [0.0.2-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.32...v0.0.2-alpha.33) (2022-12-25)
+
+
+### Bug Fixes
+
+* fix item detection (blacksmith selling) ([#928](https://github.com/Wynntils/Artemis/issues/928)) ([42eaa87](https://github.com/Wynntils/Artemis/commit/42eaa875601bfd69f3c2f4b7f1ca4cd7cbb89180))
+
 ## [0.0.2-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.31...v0.0.2-alpha.32) (2022-12-25)
 
 
 ### Bug Fixes
 
 * Our command manipulation was broken by [#925](https://github.com/Wynntils/Artemis/issues/925) ([#935](https://github.com/Wynntils/Artemis/issues/935)) ([b8f212c](https://github.com/Wynntils/Artemis/commit/b8f212c1949a268f34591e0dd9d463c13c08fe83))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.32 [skip ci] ([1691bab](https://github.com/Wynntils/Artemis/commit/1691bab967b33181830ebab3f32ae69b98417ee2))
 
 ## [0.0.2-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.30...v0.0.2-alpha.31) (2022-12-25)
 
@@ -37,16 +49,4 @@
 
 * **release:** v0.0.2-alpha.29 [skip ci] ([328e1a7](https://github.com/Wynntils/Artemis/commit/328e1a7addf877c29e343b11454b1cc716cfa6ce))
 * Shorten the dev version string ([#932](https://github.com/Wynntils/Artemis/issues/932)) ([22bbe29](https://github.com/Wynntils/Artemis/commit/22bbe29a9d86c1c58ee68779f67bc4c2a6929e05))
-
-## [0.0.2-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.27...v0.0.2-alpha.28) (2022-12-24)
-
-
-### New Features
-
-* Add /lootrun screen ([#927](https://github.com/Wynntils/Artemis/issues/927)) ([e756f78](https://github.com/Wynntils/Artemis/commit/e756f780ddcb424294ff0c4fa9613670cb71e9cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.28 [skip ci] ([7c7603f](https://github.com/Wynntils/Artemis/commit/7c7603fab0d65d58aed670b9c886896f60ae8c66))
 
