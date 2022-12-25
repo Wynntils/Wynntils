@@ -1,9 +1,17 @@
+## [0.0.2-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.36...v0.0.2-alpha.37) (2022-12-25)
+
+
+### New Features
+
+* Remove unused translation keys and duplicate functionality ([#929](https://github.com/Wynntils/Artemis/issues/929)) ([8ae4e3b](https://github.com/Wynntils/Artemis/commit/8ae4e3b90a8293d8b8e8ff1c0c187e734207e328))
+
 ## [0.0.2-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.35...v0.0.2-alpha.36) (2022-12-25)
 
 
 ### Miscellaneous Chores
 
 * IntelliJ inspection profile fixes ([#933](https://github.com/Wynntils/Artemis/issues/933)) ([e859715](https://github.com/Wynntils/Artemis/commit/e859715ad9161532d6a9e4d23dc75228ea2f6915))
+* **release:** v0.0.2-alpha.36 [skip ci] ([23a3822](https://github.com/Wynntils/Artemis/commit/23a382217597975816ea257c02a621f40af7cc3d))
 
 ## [0.0.2-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.34...v0.0.2-alpha.35) (2022-12-25)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.33 [skip ci] ([7ba5bd1](https://github.com/Wynntils/Artemis/commit/7ba5bd19a85e0b3aee745e17f823ccc4fcad9fc5))
-
-## [0.0.2-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.31...v0.0.2-alpha.32) (2022-12-25)
-
-
-### Bug Fixes
-
-* Our command manipulation was broken by [#925](https://github.com/Wynntils/Artemis/issues/925) ([#935](https://github.com/Wynntils/Artemis/issues/935)) ([b8f212c](https://github.com/Wynntils/Artemis/commit/b8f212c1949a268f34591e0dd9d463c13c08fe83))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.32 [skip ci] ([1691bab](https://github.com/Wynntils/Artemis/commit/1691bab967b33181830ebab3f32ae69b98417ee2))
 
