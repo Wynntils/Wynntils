@@ -1,9 +1,21 @@
+## [0.0.2-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.37...v0.0.2-alpha.38) (2022-12-25)
+
+
+### New Features
+
+* zh lang files ([#937](https://github.com/Wynntils/Artemis/issues/937)) ([036ca6d](https://github.com/Wynntils/Artemis/commit/036ca6d62832b550bafd7a15244d40dda10eaf93))
+
 ## [0.0.2-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.36...v0.0.2-alpha.37) (2022-12-25)
 
 
 ### New Features
 
 * Remove unused translation keys and duplicate functionality ([#929](https://github.com/Wynntils/Artemis/issues/929)) ([8ae4e3b](https://github.com/Wynntils/Artemis/commit/8ae4e3b90a8293d8b8e8ff1c0c187e734207e328))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.37 [skip ci] ([7f906f4](https://github.com/Wynntils/Artemis/commit/7f906f4cbfdaad107246beb0ce61fe4ce42628ac))
 
 ## [0.0.2-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.35...v0.0.2-alpha.36) (2022-12-25)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.34 [skip ci] ([735b605](https://github.com/Wynntils/Artemis/commit/735b6053902f44ae0dd17c2eeae84e18ce44a8f0))
-
-## [0.0.2-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.32...v0.0.2-alpha.33) (2022-12-25)
-
-
-### Bug Fixes
-
-* fix item detection (blacksmith selling) ([#928](https://github.com/Wynntils/Artemis/issues/928)) ([42eaa87](https://github.com/Wynntils/Artemis/commit/42eaa875601bfd69f3c2f4b7f1ca4cd7cbb89180))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.33 [skip ci] ([7ba5bd1](https://github.com/Wynntils/Artemis/commit/7ba5bd19a85e0b3aee745e17f823ccc4fcad9fc5))
 
