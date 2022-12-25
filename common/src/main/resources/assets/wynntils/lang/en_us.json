@@ -870,6 +870,8 @@
   "screens.wynntils.map.help.description5": "Shift-Middle click on a waypoint to edit it.",
   "screens.wynntils.map.help.description6": "Alt-Middle click on a waypoint to remove it.",
   "screens.wynntils.map.help.description7": "Left click on the compass marker to remove it.",
+  "screens.wynntils.map.help.description8": "Right click to center on player.",
+  "screens.wynntils.map.help.description9": "Shift-Right click to center on the compass marker.",
   "screens.wynntils.map.help.name": "Quick Guide",
   "screens.wynntils.map.share.description1": "§bLeft click§7 to share your location with your guild.",
   "screens.wynntils.map.share.description2": "§bRight click§7 to share your location with your party.",
