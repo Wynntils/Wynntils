@@ -91,7 +91,13 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description6")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.help.description7")))));
+                                .append(Component.translatable("screens.wynntils.map.help.description7")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description8")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
@@ -234,7 +240,16 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (McUtils.mc().player.isShiftKeyDown()
+                    && Models.Compass.getCompassLocation().isPresent()) {
+                Location location = Models.Compass.getCompassLocation().get();
+                updateMapCenter((float) location.x, (float) location.z);
+                return true;
+            }
+
+            centerMapAroundPlayer();
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Compass.reset();
                 return true;
