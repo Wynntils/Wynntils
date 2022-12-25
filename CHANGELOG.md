@@ -1,9 +1,21 @@
+## [0.0.2-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.31...v0.0.2-alpha.32) (2022-12-25)
+
+
+### Bug Fixes
+
+* Our command manipulation was broken by [#925](https://github.com/Wynntils/Artemis/issues/925) ([#935](https://github.com/Wynntils/Artemis/issues/935)) ([b8f212c](https://github.com/Wynntils/Artemis/commit/b8f212c1949a268f34591e0dd9d463c13c08fe83))
+
 ## [0.0.2-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.30...v0.0.2-alpha.31) (2022-12-25)
 
 
 ### New Features
 
 * Update README.md's hotswap settings info ([#934](https://github.com/Wynntils/Artemis/issues/934)) ([a009958](https://github.com/Wynntils/Artemis/commit/a0099582c1b2318d53a20df7898923e2e8c6777c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.31 [skip ci] ([e97f8b4](https://github.com/Wynntils/Artemis/commit/e97f8b46d76bdde7356351d15e49d17b1a1adf7d))
 
 ## [0.0.2-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.29...v0.0.2-alpha.30) (2022-12-24)
 
@@ -37,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.28 [skip ci] ([7c7603f](https://github.com/Wynntils/Artemis/commit/7c7603fab0d65d58aed670b9c886896f60ae8c66))
-
-## [0.0.2-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.26...v0.0.2-alpha.27) (2022-12-24)
-
-
-### New Features
-
-* Split `/wynntils reload` into `/wynntils reauth`, `/wynntils clearcaches` and `/wynntils reloadcaches` ([#916](https://github.com/Wynntils/Artemis/issues/916)) ([8e8f782](https://github.com/Wynntils/Artemis/commit/8e8f7820328773b32b03d898e1a76ecc0f103ae7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.27 [skip ci] ([dd7c59b](https://github.com/Wynntils/Artemis/commit/dd7c59b41253c9b4d9e228d825e68e3717f2a3dd))
 
