@@ -1,9 +1,21 @@
+## [0.0.2-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.38...v0.0.2-alpha.39) (2022-12-26)
+
+
+### New Features
+
+* Add /quest command ([#766](https://github.com/Wynntils/Artemis/issues/766)) ([525a432](https://github.com/Wynntils/Artemis/commit/525a432a26c8e5b01aa9bf82b88eebe77eaabe41))
+
 ## [0.0.2-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.37...v0.0.2-alpha.38) (2022-12-25)
 
 
 ### New Features
 
 * zh lang files ([#937](https://github.com/Wynntils/Artemis/issues/937)) ([036ca6d](https://github.com/Wynntils/Artemis/commit/036ca6d62832b550bafd7a15244d40dda10eaf93))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.38 [skip ci] ([a679072](https://github.com/Wynntils/Artemis/commit/a679072bf2a6c4035101c9815affc71b58d666b7))
 
 ## [0.0.2-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.36...v0.0.2-alpha.37) (2022-12-25)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.35 [skip ci] ([98263e8](https://github.com/Wynntils/Artemis/commit/98263e8d6c5e73677158c2aaeaa31393919ca461))
-
-## [0.0.2-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.33...v0.0.2-alpha.34) (2022-12-25)
-
-
-### New Features
-
-* Add coordinate parsing for local messages (fixes bug where lootrun load coordinates aren't clickable) ([#938](https://github.com/Wynntils/Artemis/issues/938)) ([bb45b40](https://github.com/Wynntils/Artemis/commit/bb45b4004f5e370bd23d03aff1022a46e9467079))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.34 [skip ci] ([735b605](https://github.com/Wynntils/Artemis/commit/735b6053902f44ae0dd17c2eeae84e18ce44a8f0))
 
