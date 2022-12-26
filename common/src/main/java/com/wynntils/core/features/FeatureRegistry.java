@@ -5,13 +5,12 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.CrashReportManager;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
@@ -20,7 +19,6 @@ import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AbbreviateMobHealthFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
-import com.wynntils.features.user.AuraTimerOverlayFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.BombBellTrackingFeature;
@@ -28,6 +26,7 @@ import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
+import com.wynntils.features.user.CombatXpGainMessageFeature;
 import com.wynntils.features.user.CommandAliasesFeature;
 import com.wynntils.features.user.CommandsFeature;
 import com.wynntils.features.user.ContainerSearchFeature;
@@ -53,6 +52,7 @@ import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
+import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
@@ -75,13 +75,14 @@ import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.map.MinimapFeature;
+import com.wynntils.features.user.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.user.overlays.InfoBoxFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
-import com.wynntils.features.user.overlays.PowderAbilityBarOverlayFeature;
+import com.wynntils.features.user.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.user.players.PlayerArmorHidingFeature;
@@ -89,6 +90,7 @@ import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.players.PreventTradesDuelsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
+import com.wynntils.features.user.redirects.ChatRedirectFeature;
 import com.wynntils.features.user.redirects.InventoryRedirectFeature;
 import com.wynntils.features.user.redirects.TerritoryMessageRedirectFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
@@ -132,27 +134,30 @@ public final class FeatureRegistry {
         registerFeature(new BombBellTrackingFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
+        registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new CommandAliasesFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
         registerFeature(new CosmeticsPreviewFeature());
-        registerFeature(new CustomNametagRendererFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
+        registerFeature(new CustomNametagRendererFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new FilterAdminCommandsFeature());
-        registerFeature(new FixPacketBugsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
+        registerFeature(new FixPacketBugsFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new GuildMapFeature());
+        registerFeature(new HadesFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
         registerFeature(new InfoBoxFeature());
@@ -171,39 +176,39 @@ public final class FeatureRegistry {
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new LowHealthVignetteFeature());
         registerFeature(new MapFeature());
-        registerFeature(new HadesFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MountHorseHotkeyFeature());
         registerFeature(new MythicBlockerFeature());
+        registerFeature(new MythicBoxScalerFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new PowderAbilityBarOverlayFeature());
+        registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
-        registerFeature(new TerritoryDefenseMessageFeature());
-        registerFeature(new UpdatesFeature());
         registerFeature(new UnidentifiedItemIconFeature());
+        registerFeature(new UpdatesFeature());
         registerFeature(new WorldWaypointDistanceFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         // save/create default config file containing all config holders
-        ConfigManager.saveDefaultConfig();
+        Managers.Config.saveDefaultConfig();
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
@@ -274,7 +279,7 @@ public final class FeatureRegistry {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        ConfigManager.registerFeature(feature);
+        Managers.Config.registerFeature(feature);
 
         // initialize & enable
         feature.init();
@@ -303,19 +308,16 @@ public final class FeatureRegistry {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("Loaded Features") {
-            @Override
-            public Object generate() {
-                StringBuilder result = new StringBuilder();
+        Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
+            StringBuilder result = new StringBuilder();
 
-                for (Feature feature : FEATURES) {
-                    if (feature.isEnabled()) {
-                        result.append("\n\t\t").append(feature.getTranslatedName());
-                    }
+            for (Feature feature : FEATURES) {
+                if (feature.isEnabled()) {
+                    result.append("\n\t\t").append(feature.getTranslatedName());
                 }
-
-                return result.toString();
             }
+
+            return result.toString();
         });
     }
 }

@@ -10,13 +10,12 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired when an item is set in a slot */
-@Cancelable
-public class SetSlotEvent extends Event {
+public abstract class SetSlotEvent extends Event {
     private final Container container;
     private final int slot;
-    private ItemStack item;
+    protected ItemStack item;
 
-    public SetSlotEvent(Container container, int slot, ItemStack item) {
+    protected SetSlotEvent(Container container, int slot, ItemStack item) {
         this.container = container;
         this.slot = slot;
         this.item = item;
@@ -34,7 +33,20 @@ public class SetSlotEvent extends Event {
         return item;
     }
 
-    public void setItem(ItemStack item) {
-        this.item = item;
+    @Cancelable
+    public static class Pre extends SetSlotEvent {
+        public Pre(Container container, int slot, ItemStack item) {
+            super(container, slot, item);
+        }
+
+        public void setItem(ItemStack item) {
+            this.item = item;
+        }
+    }
+
+    public static class Post extends SetSlotEvent {
+        public Post(Container container, int slot, ItemStack item) {
+            super(container, slot, item);
+        }
     }
 }

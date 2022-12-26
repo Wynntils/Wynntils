@@ -10,7 +10,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 
-public class PlayerInfoUtils {
+public final class PlayerInfoUtils {
     public static ResourceLocation getSkin(UUID uuid) {
         ClientPacketListener connection = McUtils.mc().getConnection();
 

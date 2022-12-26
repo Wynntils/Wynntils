@@ -11,35 +11,37 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.QuestBookSearchWidget;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extends WynntilsMenuPagedScreenBase
+public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extends WynntilsMenuPagedScreenBase
         implements TextboxScreen {
+    protected double currentScroll = 0;
+
     protected int currentPage = 0;
     protected int maxPage = 0;
     protected List<E> elements = new ArrayList<>();
 
     protected final List<B> elementButtons = new ArrayList<>();
     protected final QuestBookSearchWidget searchWidget;
-    protected Widget hovered = null;
+    protected Renderable hovered = null;
 
     @Override
-    protected void init() {
+    protected void doInit() {
         reloadElements(searchWidget.getTextBoxInput());
 
         this.addRenderableWidget(searchWidget);
     }
 
-    public WynntilsMenuListScreen(Component component) {
+    protected WynntilsMenuListScreen(Component component) {
         super(component);
 
         // Do not lose search info on re-init
@@ -58,10 +60,10 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
-        for (Widget renderable : new ArrayList<>(this.renderables)) {
+        for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
-            if (renderable instanceof AbstractButton button) {
+            if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                     this.hovered = button;
                 }
@@ -124,7 +126,24 @@ public abstract class WynntilsMenuListScreen<E, B extends AbstractButton> extend
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setCurrentPage(getCurrentPage() + (delta > 0 ? -1 : 1));
+        // Usually, mouse scroll wheel delta is always (-)1
+        if (Math.abs(delta) == 1) {
+            setCurrentPage(getCurrentPage() - (int) delta);
+            return true;
+        }
+
+        // Now we handle touchpad scrolling
+
+        // Delta is divided by 10 to make it more precise
+        // We subtract so scrolling down actually scrolls down
+        currentScroll -= delta / 10d;
+
+        if (Math.abs(currentScroll) < 1) return true;
+
+        int scroll = (int) (currentScroll);
+        currentScroll = currentScroll % 1;
+
+        setCurrentPage(getCurrentPage() + scroll);
 
         return true;
     }

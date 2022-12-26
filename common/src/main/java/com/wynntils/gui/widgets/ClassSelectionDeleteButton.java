@@ -5,29 +5,26 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.wynn.model.CharacterSelectionManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
-public class ClassSelectionDeleteButton extends AbstractButton {
+public class ClassSelectionDeleteButton extends WynntilsButton {
     private static final List<Component> TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.delete.name").withStyle(ChatFormatting.RED),
-            new TranslatableComponent("screens.wynntils.characterSelection.delete.discussion")
+            Component.translatable("screens.wynntils.characterSelection.delete.name")
+                    .withStyle(ChatFormatting.RED),
+            Component.translatable("screens.wynntils.characterSelection.delete.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public ClassSelectionDeleteButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Selection Delete Button"));
+        super(x, y, width, height, Component.literal("Class Selection Delete Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 
@@ -35,7 +32,7 @@ public class ClassSelectionDeleteButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getSelected() == null) return;
 
-        CharacterSelectionManager.deleteCharacter(
+        Managers.CharacterSelection.deleteCharacter(
                 characterSelectorScreen.getSelected().getClassInfo().slot());
     }
 
@@ -44,8 +41,8 @@ public class ClassSelectionDeleteButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.REMOVE_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -67,7 +64,4 @@ public class ClassSelectionDeleteButton extends AbstractButton {
                     true);
         }
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

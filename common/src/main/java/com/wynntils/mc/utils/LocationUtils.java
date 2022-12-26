@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LocationUtils {
+public final class LocationUtils {
     private static final Pattern COORDINATE_PATTERN =
             Pattern.compile("(?<x>[-+]?\\d+)([^0-9+-]{1,5}(?<y>[-+]?\\d+))?[^0-9+-]{1,5}(?<z>[-+]?\\d+)");
 
     private static final Pattern STRICT_COORDINATE_PATTERN =
-            Pattern.compile("([-+]?\\d{1,4})([,\\s]{1,2}([-+]?\\d{1,4}))?[,\\s]{1,2}([-+]?\\d{1,4})");
+            Pattern.compile("([-+]?\\d{1,5})([,\\s]{1,2}([-+]?\\d{1,4}))?[,\\s]{1,2}([-+]?\\d{1,5})");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
@@ -33,5 +33,30 @@ public class LocationUtils {
 
     public static Matcher strictCoordinateMatcher(String string) {
         return STRICT_COORDINATE_PATTERN.matcher(string);
+    }
+
+    public static void shareLocation(String target) {
+        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
+                + (int) McUtils.player().position().y + ", "
+                + (int) McUtils.player().position().z + "]";
+
+        LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    public static void shareCompass(String target, Location compass) {
+        String locationString =
+                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+
+        LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    private static void sendShareMessage(String target, String locationString) {
+        if (target.equals("guild")) {
+            McUtils.sendCommand("g " + locationString);
+        } else if (target.equals("party")) {
+            McUtils.sendCommand("p " + locationString);
+        } else {
+            McUtils.sendCommand("msg " + target + " " + locationString);
+        }
     }
 }

@@ -22,14 +22,14 @@ import com.wynntils.wynn.objects.ClassInfo;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
-public class CharacterSelectorScreen extends Screen {
+public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
 
     private final AbstractContainerScreen<?> actualClassSelectionScreen;
@@ -43,8 +43,8 @@ public class CharacterSelectorScreen extends Screen {
     private double lastMouseY = 0;
     private ClassInfoButton selected = null;
 
-    public CharacterSelectorScreen() {
-        super(new TranslatableComponent("screens.wynntils.characterSelection.name"));
+    private CharacterSelectorScreen() {
+        super(Component.translatable("screens.wynntils.characterSelection.name"));
 
         if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             actualClassSelectionScreen = abstractContainerScreen;
@@ -54,6 +54,10 @@ public class CharacterSelectorScreen extends Screen {
         }
     }
 
+    public static Screen create() {
+        return new CharacterSelectorScreen();
+    }
+
     @Override
     public void onClose() {
         ContainerUtils.closeContainer(actualClassSelectionScreen.getMenu().containerId);
@@ -61,7 +65,7 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         currentTextureScale = (float) this.height / Texture.LIST_BACKGROUND.height();
 
         float listWidth = Texture.LIST_BACKGROUND.width() * currentTextureScale;
@@ -106,7 +110,7 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (Math.abs(lastMouseY - mouseY) > 20f && draggingScroll) {
             setScrollOffset(lastMouseY > mouseY ? 1 : -1);
             lastMouseY = mouseY;
@@ -332,7 +336,7 @@ public class CharacterSelectorScreen extends Screen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        for (Widget renderable : this.renderables) {
+        for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 

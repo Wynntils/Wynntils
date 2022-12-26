@@ -24,46 +24,41 @@ import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.item.generator.PowderGenerator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItemStack, GuidePowderItemStack> {
+public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItemStack, GuidePowderItemStack> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
     private List<PowderItemStack> parsedItemCache;
 
-    public WynntilsPowderGuideScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.powder.name"));
+    private WynntilsPowderGuideScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.powder.name"));
+    }
+
+    public static Screen create() {
+        return new WynntilsPowderGuideScreen();
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
-    protected void init() {
+    protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = PowderGenerator.getAllPowderProfiles().stream()
                     .map(PowderItemStack::new)
                     .toList();
         }
 
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
-        super.init();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsGuidesListScreen()));
+                WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -82,7 +77,7 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -110,14 +105,14 @@ public class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItem
         if (hovered instanceof GuidePowderItemStack guidePowderItemStack) {
             PowderItemStack itemStack = guidePowderItemStack.getItemStack();
 
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.Default.NORMAL);
-            tooltipLines.add(TextComponent.EMPTY);
+            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
+            tooltipLines.add(Component.empty());
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
                     ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                         .withStyle(ChatFormatting.GREEN));
             }
 

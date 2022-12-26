@@ -5,6 +5,8 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -23,6 +25,7 @@ import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.EmeraldUnits;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -43,12 +46,17 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     @Config
     public boolean showContainerEmeraldCount = true;
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.PlayerInventory);
+    }
+
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         int emeralds = ContainerUtils.getEmeraldCountInContainer(McUtils.containerMenu());
 
         if (!(event.getScreen() instanceof InventoryScreen)) {
-            emeralds -= ContainerUtils.getEmeraldCountInContainer(McUtils.inventoryMenu());
+            emeralds -= Models.PlayerInventory.getCurrentEmeraldCount();
         }
 
         if (emeralds == 0) return;

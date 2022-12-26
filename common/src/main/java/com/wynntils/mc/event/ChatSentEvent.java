@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ChatSentEvent extends Event {
-    private String message;
+    private final String message;
 
     public ChatSentEvent(String message) {
         this.message = message;
@@ -17,9 +17,5 @@ public class ChatSentEvent extends Event {
 
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

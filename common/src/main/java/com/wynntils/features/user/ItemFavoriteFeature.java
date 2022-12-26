@@ -6,6 +6,8 @@ package com.wynntils.features.user;
 
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -19,14 +21,16 @@ import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -39,17 +43,22 @@ public class ItemFavoriteFeature extends UserFeature {
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.GearItemStack, Models.IngredientItemStack, Models.UnidentifiedItemStack);
+    }
+
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
-        if (!ContainerUtils.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!WynnScreenMatchers.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
             ItemStack stack = items.get(i);
 
             if (isFavorited(stack)) {
-                McUtils.sendMessageToClient(new TranslatableComponent("feature.wynntils.itemFavorite.closingBlocked")
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;

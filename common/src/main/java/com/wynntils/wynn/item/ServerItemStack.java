@@ -4,15 +4,14 @@
  */
 package com.wynntils.wynn.item;
 
-import com.wynntils.core.webapi.ServerListModel;
-import com.wynntils.core.webapi.profiles.ServerProfile;
+import com.wynntils.core.components.Models;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -42,12 +41,12 @@ public class ServerItemStack extends WynnItemStack {
         List<Component> newTooltip = new ArrayList<>(getOriginalTooltip());
 
         String serverId = "WC" + id;
-        ServerProfile serverProfile = ServerListModel.getServer(serverId);
+        ServerProfile serverProfile = Models.ServerList.getServer(serverId);
         String uptimeString = serverProfile == null ? "Unknown" : serverProfile.getUptime();
 
-        newTooltip.add(new TextComponent("Uptime: ")
+        newTooltip.add(Component.literal("Uptime: ")
                 .withStyle(ChatFormatting.DARK_GREEN)
-                .append(new TextComponent(uptimeString).withStyle(ChatFormatting.GREEN)));
+                .append(Component.literal(uptimeString).withStyle(ChatFormatting.GREEN)));
         tooltip = newTooltip;
     }
 

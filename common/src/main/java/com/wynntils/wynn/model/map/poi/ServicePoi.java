@@ -4,12 +4,13 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
+import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
 
 public class ServicePoi extends StaticIconPoi {
     private final ServiceKind kind;
 
-    public ServicePoi(MapLocation location, ServiceKind kind) {
+    public ServicePoi(PoiLocation location, ServiceKind kind) {
         super(location);
         this.kind = kind;
     }
@@ -20,11 +21,21 @@ public class ServicePoi extends StaticIconPoi {
     }
 
     @Override
+    public float getMinZoomForRender() {
+        return MapFeature.INSTANCE.servicePoiMinZoom;
+    }
+
+    @Override
     public String getName() {
         return kind.getName();
     }
 
     public ServiceKind getKind() {
         return kind;
+    }
+
+    @Override
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOWEST;
     }
 }

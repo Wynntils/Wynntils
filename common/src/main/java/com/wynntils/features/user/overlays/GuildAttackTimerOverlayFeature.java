@@ -6,6 +6,8 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -15,17 +17,15 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wynn.model.GuildAttackTimerModel;
+import com.wynntils.wynn.model.guild.TerritoryAttackTimer;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.model.scoreboard.guild.TerritoryAttackTimer;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -41,8 +41,8 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     public boolean disableAttackTimersOnScoreboard = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ScoreboardModel.class, GuildAttackTimerModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Scoreboard, Models.GuildAttackTimer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -81,7 +81,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            GuildAttackTimerModel.getAttackTimers().stream()
+                            Models.GuildAttackTimer.getAttackTimers().stream()
                                     .sorted(Comparator.comparing(TerritoryAttackTimer::asSeconds))
                                     .map(territoryAttackTimer ->
                                             new TextRenderTask(territoryAttackTimer.asString(), textRenderSetting))

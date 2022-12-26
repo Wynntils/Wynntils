@@ -4,15 +4,16 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.IdentificationProfile;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -27,10 +28,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ChatItemModel {
+public final class ChatItemModel extends Model {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -74,7 +74,7 @@ public final class ChatItemModel {
      * modified without also changing the encoding in legacy.
      *
      */
-    public static String encodeItem(GearItemStack item) {
+    public String encodeItem(GearItemStack item) {
         String itemName = item.getSimpleName();
 
         // get identification data - ordered for consistency
@@ -135,7 +135,7 @@ public final class ChatItemModel {
         return encoded.toString();
     }
 
-    private static GearItemStack decodeItem(String encoded) {
+    private GearItemStack decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 
@@ -144,8 +144,7 @@ public final class ChatItemModel {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item =
-                WebManager.getItemsMap() != null ? WebManager.getItemsMap().get(name) : null;
+        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids
@@ -213,11 +212,11 @@ public final class ChatItemModel {
         return new GearItemStack(item, idContainers, powderList, rerolls);
     }
 
-    public static Matcher chatItemMatcher(String text) {
+    public Matcher chatItemMatcher(String text) {
         return ENCODED_PATTERN.matcher(text);
     }
 
-    public static Component insertItemComponents(Component message) {
+    public Component insertItemComponents(Component message) {
         // no item tooltips to insert
         if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
@@ -225,7 +224,7 @@ public final class ChatItemModel {
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
         components.add(0, message.plainCopy().withStyle(message.getStyle()));
 
-        MutableComponent temp = new TextComponent("");
+        MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
             Matcher m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp));
@@ -245,7 +244,7 @@ public final class ChatItemModel {
                     continue;
                 }
 
-                MutableComponent preText = new TextComponent(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(text.substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -253,7 +252,7 @@ public final class ChatItemModel {
                 Component itemComponent = createItemComponent(item);
                 temp.append(itemComponent);
 
-                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
                                 + text.substring(m.end()))
                         .withStyle(style);
                 m = ENCODED_PATTERN.matcher(ComponentUtils.getCoded(comp)); // recreate matcher for new substring
@@ -265,8 +264,8 @@ public final class ChatItemModel {
         return temp;
     }
 
-    private static Component createItemComponent(GearItemStack item) {
-        MutableComponent itemComponent = new TextComponent(item.getItemProfile().getDisplayName())
+    private Component createItemComponent(GearItemStack item) {
+        MutableComponent itemComponent = Component.literal(item.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(item.getItemProfile().getTier().getChatFormatting());
 
@@ -277,7 +276,7 @@ public final class ChatItemModel {
         return itemComponent;
     }
 
-    private static String encodeString(String text) {
+    private String encodeString(String text) {
         StringBuilder encoded = new StringBuilder();
         for (char c : text.toCharArray()) {
             int value = c - 32; // offset by 32 to ignore ascii control characters
@@ -286,11 +285,11 @@ public final class ChatItemModel {
         return encoded.toString();
     }
 
-    private static String encodeNumber(int value) {
+    private String encodeNumber(int value) {
         return new String(Character.toChars(value + OFFSET));
     }
 
-    private static String decodeString(String text) {
+    private String decodeString(String text) {
         StringBuilder decoded = new StringBuilder();
         for (int i = 0; i < text.length(); i += 2) {
             int value = text.codePointAt(i) - OFFSET + 32;
@@ -299,7 +298,7 @@ public final class ChatItemModel {
         return decoded.toString();
     }
 
-    private static int[] decodeNumbers(String text) {
+    private int[] decodeNumbers(String text) {
         int[] decoded = new int[text.length() / 2];
         for (int i = 0; i < text.length(); i += 2) {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;

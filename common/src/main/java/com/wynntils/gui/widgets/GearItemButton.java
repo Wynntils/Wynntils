@@ -7,17 +7,15 @@ package com.wynntils.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.GearViewerScreen;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class GearItemButton extends AbstractButton {
+public class GearItemButton extends WynntilsButton {
     private final GearViewerScreen gearViewerScreen;
     private final ItemStack itemStack;
 
     public GearItemButton(int x, int y, int width, int height, GearViewerScreen gearViewerScreen, ItemStack itemStack) {
-        super(x, y, width, height, new TextComponent("Gear Item Button"));
+        super(x, y, width, height, Component.literal("Gear Item Button"));
         this.gearViewerScreen = gearViewerScreen;
         this.itemStack = itemStack;
     }
@@ -28,16 +26,13 @@ public class GearItemButton extends AbstractButton {
 
         RenderUtils.renderGuiItem(
                 itemStack,
-                (int) (gearViewerScreen.getTranslationX() + this.x),
-                (int) (gearViewerScreen.getTranslationY() + this.y),
+                (int) (gearViewerScreen.getTranslationX() + this.getX()),
+                (int) (gearViewerScreen.getTranslationY() + this.getY()),
                 1);
     }
 
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     public ItemStack getItemStack() {
         return itemStack;

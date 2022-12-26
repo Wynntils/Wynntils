@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.wynn.model.BombBellModel;
+import com.wynntils.core.components.Models;
 import com.wynntils.wynn.objects.BombInfo;
 import com.wynntils.wynn.objects.BombType;
 import java.util.Arrays;
@@ -20,8 +20,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class BombBellCommand extends CommandBase {
     private final SuggestionProvider<CommandSourceStack> bombTypeSuggestionProvider = (context, builder) ->
@@ -43,11 +43,12 @@ public class BombBellCommand extends CommandBase {
         try {
             bombType = BombType.valueOf(context.getArgument("bombType", String.class));
         } catch (IllegalArgumentException e) {
-            context.getSource().sendFailure(new TextComponent("Invalid bomb type").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Invalid bomb type").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Set<BombInfo> bombBells = BombBellModel.getBombBells().stream()
+        Set<BombInfo> bombBells = Models.BombBell.getBombBells().stream()
                 .filter(bombInfo -> bombInfo.bomb() == bombType)
                 .collect(Collectors.toSet());
 
@@ -59,7 +60,7 @@ public class BombBellCommand extends CommandBase {
     }
 
     private int listBombs(CommandContext<CommandSourceStack> context) {
-        Set<BombInfo> bombBells = BombBellModel.getBombBells();
+        Set<BombInfo> bombBells = Models.BombBell.getBombBells();
 
         MutableComponent component = getBombListComponent(bombBells);
 
@@ -69,14 +70,14 @@ public class BombBellCommand extends CommandBase {
     }
 
     private static MutableComponent getBombListComponent(Set<BombInfo> bombBells) {
-        MutableComponent response = new TextComponent("Bomb Bells: ").withStyle(ChatFormatting.GOLD);
+        MutableComponent response = Component.literal("Bomb Bells: ").withStyle(ChatFormatting.GOLD);
 
         if (bombBells.isEmpty()) {
-            response.append(new TextComponent(
+            response.append(Component.literal(
                                     "There are no active bombs at the moment! This might be because you do not have the ")
                             .withStyle(ChatFormatting.RED))
-                    .append(new TextComponent("CHAMPION").withStyle(ChatFormatting.YELLOW))
-                    .append(new TextComponent(" rank on Wynncraft, which is necessary to use this feature.")
+                    .append(Component.literal("CHAMPION").withStyle(ChatFormatting.YELLOW))
+                    .append(Component.literal(" rank on Wynncraft, which is necessary to use this feature.")
                             .withStyle(ChatFormatting.RED));
             return response;
         }
@@ -87,13 +88,13 @@ public class BombBellCommand extends CommandBase {
                         .thenComparing(BombInfo::startTime)
                         .reversed())
                 .toList()) {
-            response.append(new TextComponent("\n" + bomb.bomb().getName())
+            response.append(Component.literal("\n" + bomb.bomb().getName())
                             .withStyle(ChatFormatting.WHITE)
-                            .append(new TextComponent(" on ").withStyle(ChatFormatting.GRAY))
-                            .append(new TextComponent(bomb.server()).withStyle(ChatFormatting.WHITE)))
-                    .append(new TextComponent(" for: ")
+                            .append(Component.literal(" on ").withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal(bomb.server()).withStyle(ChatFormatting.WHITE)))
+                    .append(Component.literal(" for: ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(bomb.getRemainingString()).withStyle(ChatFormatting.WHITE)));
+                            .append(Component.literal(bomb.getRemainingString()).withStyle(ChatFormatting.WHITE)));
         }
 
         return response;

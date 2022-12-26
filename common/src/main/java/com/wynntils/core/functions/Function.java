@@ -13,7 +13,7 @@ public abstract class Function<T> implements Translatable {
     private final String name;
     private final String translationName;
 
-    public Function() {
+    protected Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");
         this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
         this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
@@ -29,6 +29,7 @@ public abstract class Function<T> implements Translatable {
         return List.of();
     }
 
+    @Override
     public String getTranslatedName() {
         return getTranslation("name");
     }
@@ -41,6 +42,7 @@ public abstract class Function<T> implements Translatable {
         return translationName;
     }
 
+    @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("function.wynntils." + getTranslationKeyName() + "." + keySuffix);
     }

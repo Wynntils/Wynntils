@@ -7,14 +7,13 @@ package com.wynntils.gui.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
-public class ScrollButton extends AbstractButton {
+public class ScrollButton extends WynntilsButton {
     private final Consumer<Integer> onScroll;
     private final int y2;
     private final int maxScroll;
@@ -22,8 +21,10 @@ public class ScrollButton extends AbstractButton {
     private final CustomColor scrollAreaColor;
     private final float requiredChangePerElement;
     private int currentScroll = 0;
-    private double currentUnusedDrag = 0;
 
+    private double currentUnusedScroll = 0;
+
+    private double currentUnusedDrag = 0;
     private boolean dragging = false;
 
     public ScrollButton(
@@ -36,7 +37,7 @@ public class ScrollButton extends AbstractButton {
             int perScrollIncrement,
             Consumer<Integer> onScroll,
             CustomColor scrollAreaColor) {
-        super(x, y, width, height, new TextComponent("Scroll Button"));
+        super(x, y, width, height, Component.literal("Scroll Button"));
         this.y2 = y2;
         this.maxScroll = maxScroll;
         this.perScrollIncrement = perScrollIncrement;
@@ -51,20 +52,27 @@ public class ScrollButton extends AbstractButton {
 
         if (scrollAreaColor != CustomColor.NONE) {
             RenderUtils.drawRect(
-                    poseStack, scrollAreaColor, this.x, this.y + 2, 0, this.width, this.y2 - this.y - 4 + this.height);
+                    poseStack,
+                    scrollAreaColor,
+                    this.getX(),
+                    this.getY() + 2,
+                    0,
+                    this.width,
+                    this.y2 - this.getY() - 4 + this.height);
         }
 
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, y, y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.SETTING_SCROLL_BUTTON, this.x, renderY, isHovered);
+        RenderUtils.drawHoverableTexturedRect(
+                poseStack, Texture.SETTING_SCROLL_BUTTON, this.getX(), renderY, isHovered);
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        float renderY = MathUtils.map(currentScroll, 0, maxScroll, y, y2);
+        float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
-        return mouseX >= this.x
-                && mouseX <= this.x + this.width
+        return mouseX >= this.getX()
+                && mouseX <= this.getX() + this.width
                 && mouseY >= renderY
                 && mouseY <= renderY + this.height;
     }
@@ -93,12 +101,12 @@ public class ScrollButton extends AbstractButton {
             currentUnusedDrag += dragY;
 
             while (currentUnusedDrag >= requiredChangePerElement) {
-                scroll(-1);
+                scroll(1);
                 currentUnusedDrag -= requiredChangePerElement;
             }
 
             while (currentUnusedDrag <= -requiredChangePerElement) {
-                scroll(1);
+                scroll(-1);
                 currentUnusedDrag += requiredChangePerElement;
             }
         }
@@ -108,15 +116,30 @@ public class ScrollButton extends AbstractButton {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scroll(delta > 0 ? 1 : -1);
+        // Usually, mouse scroll wheel delta is always (-)1
+        if (Math.abs(delta) == 1) {
+            scroll((int) -delta);
+            return true;
+        }
+
+        // Now we handle touchpad scrolling
+
+        // Delta is divided by 10 to make it more precise
+        // We subtract so scrolling down actually scrolls down
+        currentUnusedScroll -= delta / 10d;
+
+        if (Math.abs(currentUnusedScroll) < 1) return true;
+
+        int scroll = (int) (currentUnusedScroll);
+        currentUnusedScroll = currentUnusedScroll % 1;
+
+        scroll(scroll);
+
         return true;
     }
 
-    private void scroll(double delta) {
-        onScroll.accept((int) delta * perScrollIncrement);
-        currentScroll = MathUtils.clamp((int) (currentScroll - delta * perScrollIncrement), 0, maxScroll);
+    private void scroll(int scroll) {
+        onScroll.accept(scroll * perScrollIncrement);
+        currentScroll = MathUtils.clamp(currentScroll + scroll * perScrollIncrement, 0, maxScroll);
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TerritoryDefenseMessageFeature extends UserFeature {
-    private final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
-    private final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
+    private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
+    private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
@@ -32,7 +32,7 @@ public class TerritoryDefenseMessageFeature extends UserFeature {
             String unformatted = ComponentUtils.getUnformatted(tooltipLine);
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {
-                McUtils.player().chat("/g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
+                McUtils.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }

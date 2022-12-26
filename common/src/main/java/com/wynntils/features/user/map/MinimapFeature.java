@@ -7,6 +7,8 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -16,7 +18,6 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
@@ -29,12 +30,9 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.model.HadesUserModel;
 import com.wynntils.utils.BoundingBox;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.MapTexture;
 import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
@@ -54,8 +52,8 @@ public class MinimapFeature extends UserFeature {
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(MapModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Map);
     }
 
     public static class MinimapOverlay extends Overlay {
@@ -90,9 +88,6 @@ public class MinimapFeature extends UserFeature {
 
         @Config
         public CompassRenderType showCompass = CompassRenderType.All;
-
-        @Config
-        public boolean showCoords = true;
 
         @Config(subcategory = "Remote Players")
         public boolean renderRemoteFriendPlayers = true;
@@ -166,7 +161,7 @@ public class MinimapFeature extends UserFeature {
                 }
             }
 
-            List<MapTexture> maps = MapModel.getMapsForBoundingBox(textureBoundingBox);
+            List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
             for (MapTexture map : maps) {
                 float textureX = map.getTextureXPosition(playerX);
                 float textureZ = map.getTextureZPosition(playerZ);
@@ -211,21 +206,6 @@ public class MinimapFeature extends UserFeature {
 
             // Directional Text
             renderCardinalDirections(poseStack, width, height, centerX, centerZ);
-
-            // Coordinates
-            if (showCoords) {
-                String coords = String.format(
-                        "%s, %s, %s", (int) playerX, (int) McUtils.player().getY(), (int) playerZ);
-
-                FontRenderer.getInstance()
-                        .renderText(
-                                poseStack,
-                                centerX,
-                                renderY + height + 10 * height / DEFAULT_SIZE,
-                                new TextRenderTask(
-                                        coords,
-                                        TextRenderSetting.CENTERED.withTextShadow(FontRenderer.TextShadow.OUTLINE)));
-            }
         }
 
         private void renderPois(
@@ -249,17 +229,19 @@ public class MinimapFeature extends UserFeature {
 
             float currentZoom = 1f / scale;
 
-            List<Poi> poisToRender = new ArrayList<>(MapModel.getServicePois());
+            List<Poi> poisToRender = new ArrayList<>(Models.Map.getServicePois());
             poisToRender.addAll(MapFeature.INSTANCE.customPois);
-            List<PlayerMiniMapPoi> playerPois = HadesUserModel.getHadesUserMap().values().stream()
+            List<PlayerMiniMapPoi> playerPois = Models.HadesUser.getHadesUserMap().values().stream()
                     .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                             || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .sorted(Comparator.comparing(
-                            hadesUser -> hadesUser.getMapLocation().getY()))
                     .map(PlayerMiniMapPoi::new)
                     .toList();
             poisToRender.addAll(playerPois);
 
+            poisToRender.addAll(Models.Map.getCombatPois());
+
+            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+            poisToRender.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
             for (Poi poi : poisToRender) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
@@ -286,7 +268,7 @@ public class MinimapFeature extends UserFeature {
             }
 
             // Compass icon
-            Optional<WaypointPoi> compassOpt = CompassModel.getCompassWaypoint();
+            Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
 
             if (compassOpt.isEmpty()) return;
 

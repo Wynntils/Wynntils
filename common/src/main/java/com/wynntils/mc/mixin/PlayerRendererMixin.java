@@ -50,6 +50,8 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
         List<MutableComponent> injected = event.getInjectedLines();
 
         for (MutableComponent component : injected) {
+            // Note that the super qualifier is really needed, since this code is actually executing
+            // in this.renderNameTag
             super.renderNameTag(entity, component, matrixStack, buffer, packedLight);
             matrixStack.translate(0.0, 0.25875f, 0.0);
         }

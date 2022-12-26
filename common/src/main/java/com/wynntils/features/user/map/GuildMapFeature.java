@@ -10,12 +10,9 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.territory.GuildTerritoryModel;
-import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)
@@ -40,11 +37,6 @@ public class GuildMapFeature extends UserFeature {
             return;
         }
 
-        McUtils.mc().setScreen(new GuildMapScreen());
+        McUtils.mc().setScreen(GuildMapScreen.create());
     });
-
-    @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(GuildTerritoryModel.class);
-    }
 }

@@ -8,23 +8,19 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.keybinds.KeyBindManager;
-import com.wynntils.core.managers.ManagerRegistry;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.event.WebSetupEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
@@ -70,7 +66,7 @@ public abstract class Feature extends AbstractConfigurable
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                OverlayManager.registerOverlay(overlay, annotation, this);
+                Managers.Overlay.registerOverlay(overlay, annotation, this);
                 overlays.add(overlay);
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
@@ -144,14 +140,14 @@ public abstract class Feature extends AbstractConfigurable
         onEnable();
         state = FeatureState.ENABLED;
 
-        ManagerRegistry.addAllDependencies(this);
+        ModelRegistry.addAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
-        OverlayManager.enableOverlays(this.overlays, false);
+        Managers.Overlay.enableOverlays(this.overlays, false);
         for (KeyBind keyBind : keyBinds) {
-            KeyBindManager.registerKeybind(keyBind);
+            Managers.KeyBind.registerKeybind(keyBind);
         }
 
         // Reload configs to load new keybinds
@@ -172,14 +168,14 @@ public abstract class Feature extends AbstractConfigurable
 
         state = FeatureState.DISABLED;
 
-        ManagerRegistry.removeAllDependencies(this);
+        ModelRegistry.removeAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
         }
-        OverlayManager.disableOverlays(this.overlays);
+        Managers.Overlay.disableOverlays(this.overlays);
         for (KeyBind keyBind : keyBinds) {
-            KeyBindManager.unregisterKeybind(keyBind);
+            Managers.KeyBind.unregisterKeybind(keyBind);
         }
     }
 
@@ -198,7 +194,7 @@ public abstract class Feature extends AbstractConfigurable
     }
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
+    public List<Model> getModelDependencies() {
         return List.of();
     }
 
@@ -221,29 +217,6 @@ public abstract class Feature extends AbstractConfigurable
                 .result();
     }
 
-    public static class WebLoadedCondition extends Condition {
-        @Override
-        public void init() {
-            if (WebManager.isSetup()) {
-                setSatisfied(true);
-                return;
-            }
-
-            WynntilsMod.registerEventListener(this);
-        }
-
-        @SubscribeEvent
-        public void onWebSetup(WebSetupEvent e) {
-            setSatisfied(true);
-            WynntilsMod.unregisterEventListener(this);
-        }
-
-        @Override
-        public boolean isSatisfied() {
-            return super.isSatisfied() || WebManager.isSetup();
-        }
-    }
-
     public abstract static class Condition {
         private boolean satisfied = false;
 
@@ -261,6 +234,6 @@ public abstract class Feature extends AbstractConfigurable
     public enum FeatureState {
         UNINITALIZED,
         DISABLED,
-        ENABLED;
+        ENABLED
     }
 }

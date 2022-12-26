@@ -16,13 +16,14 @@ import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
+import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServerCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.CoreManager;
+import com.wynntils.core.components.Manager;
 import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,53 +36,44 @@ import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public final class ClientCommandManager extends CoreManager {
-    private static final Set<CommandBase> commandInstanceSet = new HashSet<>();
-    private static final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
+public final class ClientCommandManager extends Manager {
+    private final Set<CommandBase> commandInstanceSet = new HashSet<>();
+    private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
-    public static CommandDispatcher<CommandSourceStack> getClientDispatcher() {
+    public ClientCommandManager() {
+        super(List.of());
+        registerAllCommands();
+    }
+
+    public CommandDispatcher<CommandSourceStack> getClientDispatcher() {
         return clientDispatcher;
     }
 
-    public static void init() {
-        registerCommand(new BombBellCommand());
-        registerCommand(new CompassCommand());
-        registerCommand(new ConfigCommand());
-        registerCommand(new FeatureCommand());
-        registerCommand(new FunctionCommand());
-        registerCommand(new LocateCommand());
-        registerCommand(new LootrunCommand());
-        registerCommand(new UpdateCommand());
-        registerCommand(new ServerCommand());
-        registerCommand(new TerritoryCommand());
-        registerCommand(new TokenCommand());
-        registerCommand(new WynntilsCommand());
-    }
-
-    private static void registerCommand(CommandBase command) {
+    private void registerCommand(CommandBase command) {
         commandInstanceSet.add(command);
         command.register(clientDispatcher);
     }
 
-    public static boolean handleCommand(String message) {
-        assert message.startsWith("/");
-
-        StringReader reader = new StringReader(message);
-        reader.skip();
-        return ClientCommandManager.executeCommand(reader, message);
+    private void registerCommandWithCommandSet(WynntilsCommand command) {
+        command.registerWithCommands(clientDispatcher, commandInstanceSet);
+        commandInstanceSet.add(command);
     }
 
-    public static CompletableFuture<Suggestions> getCompletionSuggestions(
+    public boolean handleCommand(String message) {
+        StringReader reader = new StringReader(message);
+        return executeCommand(reader, message);
+    }
+
+    public CompletableFuture<Suggestions> getCompletionSuggestions(
             String cmd,
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<CommandSourceStack> clientParse,
@@ -91,8 +83,6 @@ public final class ClientCommandManager extends CoreManager {
         if (stringReader.canRead() && stringReader.peek() == '/') {
             stringReader.skip();
         }
-
-        CommandDispatcher<CommandSourceStack> clientDispatcher = getClientDispatcher();
 
         CompletableFuture<Suggestions> clientSuggestions =
                 clientDispatcher.getCompletionSuggestions(clientParse, cursor);
@@ -111,7 +101,7 @@ public final class ClientCommandManager extends CoreManager {
         return result;
     }
 
-    public static ClientCommandSourceStack getSource() {
+    public ClientCommandSourceStack getSource() {
         LocalPlayer player = McUtils.player();
 
         if (player == null) return null;
@@ -119,7 +109,7 @@ public final class ClientCommandManager extends CoreManager {
         return new ClientCommandSourceStack(player);
     }
 
-    private static boolean executeCommand(StringReader reader, String command) {
+    private boolean executeCommand(StringReader reader, String command) {
         ClientCommandSourceStack source = getSource();
 
         if (source == null) return false;
@@ -135,12 +125,12 @@ public final class ClientCommandManager extends CoreManager {
         try {
             clientDispatcher.execute(parse);
         } catch (CommandRuntimeException e) {
-            sendError(new TextComponent(e.getMessage()));
+            sendError(Component.literal(e.getMessage()));
         } catch (CommandSyntaxException e) {
-            sendError(new TextComponent(e.getRawMessage().getString()));
+            sendError(Component.literal(e.getRawMessage().getString()));
             if (e.getInput() != null && e.getCursor() >= 0) {
                 int cursor = Math.min(e.getCursor(), e.getInput().length());
-                MutableComponent text = new TextComponent("")
+                MutableComponent text = Component.literal("")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.GRAY)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command)));
@@ -148,18 +138,18 @@ public final class ClientCommandManager extends CoreManager {
 
                 text.append(e.getInput().substring(Math.max(0, cursor - 10), cursor));
                 if (cursor < e.getInput().length()) {
-                    text.append(new TextComponent(e.getInput().substring(cursor))
+                    text.append(Component.literal(e.getInput().substring(cursor))
                             .withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE));
                 }
 
-                text.append(new TranslatableComponent("command.context.here")
+                text.append(Component.translatable("command.context.here")
                         .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-                ClientCommandManager.sendError(text);
+                sendError(text);
             }
         } catch (RuntimeException e) {
-            TextComponent error =
-                    new TextComponent(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
-            ClientCommandManager.sendError(new TranslatableComponent("command.failed")
+            MutableComponent error =
+                    Component.literal(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
+            sendError(Component.translatable("command.failed")
                     .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
             WynntilsMod.error("Failed to execute command.", e);
         }
@@ -167,11 +157,30 @@ public final class ClientCommandManager extends CoreManager {
         return true;
     }
 
-    private static void sendError(MutableComponent error) {
+    private void sendError(MutableComponent error) {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public static Set<CommandBase> getCommandInstanceSet() {
+    public Set<CommandBase> getCommandInstanceSet() {
         return commandInstanceSet;
+    }
+
+    private void registerAllCommands() {
+        registerCommand(new BombBellCommand());
+        registerCommand(new CompassCommand());
+        registerCommand(new ConfigCommand());
+        registerCommand(new FeatureCommand());
+        registerCommand(new FunctionCommand());
+        registerCommand(new LocateCommand());
+        registerCommand(new LootrunCommand());
+        registerCommand(new QuestCommand());
+        registerCommand(new UpdateCommand());
+        registerCommand(new ServerCommand());
+        registerCommand(new TerritoryCommand());
+        registerCommand(new TokenCommand());
+
+        // The WynntilsCommand must be registered last, since it
+        // need the above commands as aliases
+        registerCommandWithCommandSet(new WynntilsCommand());
     }
 }

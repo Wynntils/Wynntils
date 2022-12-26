@@ -8,16 +8,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.utils.McUtils;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
-public class BackButton extends AbstractButton {
+public class BackButton extends WynntilsButton {
     private final Screen backTo;
 
     public BackButton(int x, int y, int width, int height, Screen backTo) {
-        super(x, y, width, height, new TextComponent("Back Button"));
+        super(x, y, width, height, Component.literal("Back Button"));
         this.backTo = backTo;
     }
 
@@ -28,8 +26,8 @@ public class BackButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -43,8 +41,8 @@ public class BackButton extends AbstractButton {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     backArrow.resource(),
-                    this.x,
-                    this.y,
+                    this.getX(),
+                    this.getY(),
                     0,
                     this.width,
                     this.height,
@@ -61,7 +59,4 @@ public class BackButton extends AbstractButton {
     public void onPress() {
         McUtils.mc().setScreen(backTo);
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

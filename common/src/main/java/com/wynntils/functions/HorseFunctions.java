@@ -4,10 +4,10 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.ActiveFunction;
-import com.wynntils.core.managers.Model;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.utils.InventoryUtils;
@@ -33,8 +33,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(ItemStackTransformModel.class);
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -52,8 +52,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(ItemStackTransformModel.class);
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -71,8 +71,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(ItemStackTransformModel.class);
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -90,8 +90,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(ItemStackTransformModel.class);
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -110,8 +110,8 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Class<? extends Model>> getModelDependencies() {
-            return List.of(ItemStackTransformModel.class);
+        public List<Model> getModelDependencies() {
+            return List.of(Models.HorseProperty);
         }
 
         @Override

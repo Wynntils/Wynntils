@@ -6,6 +6,7 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -16,7 +17,6 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
@@ -48,6 +48,16 @@ public class InfoBoxFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox6Overlay = new InfoBoxOverlay(6);
 
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
+    private final Overlay infoBox7Overlay = new InfoBoxOverlay(
+            7,
+            "%x% %y% %z%",
+            new OverlayPosition(
+                    160, 20, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
+            HorizontalAlignment.Center,
+            VerticalAlignment.Middle,
+            0);
+
     public static class InfoBoxOverlay extends Overlay {
         @Config
         public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
@@ -77,13 +87,26 @@ public class InfoBoxFeature extends UserFeature {
             this.id = id;
         }
 
+        protected InfoBoxOverlay(
+                int id,
+                String content,
+                OverlayPosition position,
+                HorizontalAlignment horizontalAlignment,
+                VerticalAlignment verticalAlignment,
+                float secondsPerRecalculation) {
+            super(position, new GuiScaledOverlaySize(120, 10), horizontalAlignment, verticalAlignment);
+            this.id = id;
+            this.content = content;
+            this.secondsPerRecalculation = secondsPerRecalculation;
+        }
+
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                cachedLines = FunctionManager.getLinesFromLegacyTemplate(content);
+                cachedLines = Managers.Function.getLinesFromLegacyTemplate(content);
             }
 
             float renderX = this.getRenderX();
@@ -114,35 +137,44 @@ public class InfoBoxFeature extends UserFeature {
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment
 
-            String line = FunctionManager.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%")[0];
+            String[] renderedLines;
+            if (content.isEmpty()) {
+                renderedLines = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%");
+            } else {
+                renderedLines = cachedLines;
+            }
 
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            line,
-                            renderX,
-                            renderX + this.getWidth(),
-                            renderY,
-                            renderY + this.getHeight(),
-                            0,
-                            CommonColors.WHITE,
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment(),
-                            FontRenderer.TextShadow.OUTLINE);
+            for (String line : renderedLines) {
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                line,
+                                renderX,
+                                renderX + this.getWidth(),
+                                renderY,
+                                renderY + this.getHeight(),
+                                0,
+                                CommonColors.WHITE,
+                                this.getRenderHorizontalAlignment(),
+                                this.getRenderVerticalAlignment(),
+                                this.textShadow);
+
+                renderY += FontRenderer.getInstance().getFont().lineHeight;
+            }
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             for (Function<?> oldDependency : functionDependencies) {
-                FunctionManager.disableFunction(oldDependency);
+                Managers.Function.disableFunction(oldDependency);
             }
 
             functionDependencies.clear();
 
-            for (Function<?> function : FunctionManager.getDependenciesFromStringLegacy(content)) {
-                FunctionManager.enableFunction(function);
+            for (Function<?> function : Managers.Function.getDependenciesFromStringLegacy(content)) {
+                Managers.Function.enableFunction(function);
             }
         }
 

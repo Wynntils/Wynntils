@@ -6,6 +6,8 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -13,14 +15,12 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
-import com.wynntils.wynn.model.ShamanMaskModel;
 import com.wynntils.wynn.objects.ShamanMaskType;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,8 +35,8 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     public boolean hideMaskTitles = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ShamanMaskModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ShamanMask);
     }
 
     @SubscribeEvent
@@ -69,7 +69,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            ShamanMaskType currentMaskType = ShamanMaskModel.getCurrentMaskType();
+            ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
             if (currentMaskType == ShamanMaskType.NONE && !displayNone) return;
 

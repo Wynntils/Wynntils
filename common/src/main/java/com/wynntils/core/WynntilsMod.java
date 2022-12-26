@@ -4,19 +4,23 @@
  */
 package com.wynntils.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.CrashReportManager;
-import com.wynntils.core.managers.ManagerRegistry;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
@@ -25,6 +29,7 @@ import org.slf4j.LoggerFactory;
 /** The common implementation of Wynntils */
 public final class WynntilsMod {
     public static final String MOD_ID = "wynntils";
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
@@ -95,7 +100,7 @@ public final class WynntilsMod {
         //       event, and we send a new message about disabling X feature,
         //       causing a new exception in client-side message event.
         if (!(event instanceof ClientsideMessageEvent)) {
-            McUtils.sendMessageToClient(new TextComponent("Wynntils error: Feature '" + feature.getTranslatedName()
+            McUtils.sendMessageToClient(Component.literal("Wynntils error: Feature '" + feature.getTranslatedName()
                             + "' has crashed and will be disabled")
                     .withStyle(ChatFormatting.RED));
         }
@@ -119,6 +124,10 @@ public final class WynntilsMod {
 
     public static File getModStorageDir(String dirName) {
         return new File(MOD_STORAGE_ROOT, dirName);
+    }
+
+    public static InputStream getModResourceAsStream(String resourceName) {
+        return WynntilsMod.class.getClassLoader().getResourceAsStream("assets/" + MOD_ID + "/" + resourceName);
     }
 
     public static Logger getLogger() {
@@ -173,11 +182,12 @@ public final class WynntilsMod {
                 modLoader,
                 Minecraft.getInstance().getLaunchedVersion());
 
-        addCrashCallbacks();
-
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
-        ManagerRegistry.init();
+        Managers.init();
+        Handlers.init();
+        ModelRegistry.init();
+        addCrashCallbacks();
     }
 
     private static void parseVersion(String modVersion) {
@@ -199,12 +209,7 @@ public final class WynntilsMod {
     }
 
     private static void addCrashCallbacks() {
-        CrashReportManager.registerCrashContext(new CrashReportManager.ICrashContext("In Development") {
-            @Override
-            public Object generate() {
-                return isDevelopmentEnvironment() ? "Yes" : "No";
-            }
-        });
+        Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
     public enum ModLoader {

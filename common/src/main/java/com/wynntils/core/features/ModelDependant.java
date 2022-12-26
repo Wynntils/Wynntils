@@ -4,9 +4,9 @@
  */
 package com.wynntils.core.features;
 
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import java.util.List;
 
 public interface ModelDependant {
-    List<Class<? extends Model>> getModelDependencies();
+    List<Model> getModelDependencies();
 }

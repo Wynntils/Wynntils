@@ -5,12 +5,13 @@
 package com.wynntils.features.user.tooltips;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -19,7 +20,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -42,8 +42,8 @@ public class ItemCompareFeature extends UserFeature {
     private boolean compareToEquipped = false;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.GearItemStack);
     }
 
     @SubscribeEvent

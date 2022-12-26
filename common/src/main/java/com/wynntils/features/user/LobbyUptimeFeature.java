@@ -4,15 +4,14 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.ServerListModel;
-import com.wynntils.wynn.item.ItemStackTransformModel;
 import java.util.List;
 
 public class LobbyUptimeFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ServerListModel.class, ItemStackTransformModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ServerList, Models.ServerItemStack);
     }
 }

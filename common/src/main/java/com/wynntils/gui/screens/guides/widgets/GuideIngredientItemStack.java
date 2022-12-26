@@ -5,27 +5,27 @@
 package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
+import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.utils.Utils;
 import com.wynntils.wynn.item.IngredientItemStack;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import java.util.Map;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideIngredientItemStack extends AbstractButton {
+public class GuideIngredientItemStack extends WynntilsButton {
     private final IngredientItemStack itemStack;
     private final WynntilsIngredientGuideScreen screen;
 
     public GuideIngredientItemStack(
             int x, int y, int width, int height, IngredientItemStack itemStack, WynntilsIngredientGuideScreen screen) {
-        super(x, y, width, height, new TextComponent("Guide IngredientItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide IngredientItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }
@@ -34,8 +34,8 @@ public class GuideIngredientItemStack extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getIngredientProfile().getTier().getHighlightColor();
 
-        float actualX = screen.getTranslationX() + x;
-        float actualY = screen.getTranslationY() + y;
+        float actualX = screen.getTranslationX() + getX();
+        float actualY = screen.getTranslationY() + getY();
 
         RenderUtils.drawTexturedRectWithColor(
                 Texture.HIGHLIGHT.resource(),
@@ -55,8 +55,8 @@ public class GuideIngredientItemStack extends AbstractButton {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
-                    x + 12,
-                    y - 4,
+                    getX() + 12,
+                    getY() - 4,
                     200,
                     9,
                     9,
@@ -73,7 +73,7 @@ public class GuideIngredientItemStack extends AbstractButton {
 
         String unformattedName = itemStack.getIngredientProfile().getDisplayName();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Utils.openUrl("https://www.wynndata.tk/i/" + Utils.encodeUrl(unformattedName));
+            Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
@@ -82,7 +82,7 @@ public class GuideIngredientItemStack extends AbstractButton {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
             }
 
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
 
         return true;
@@ -91,9 +91,6 @@ public class GuideIngredientItemStack extends AbstractButton {
     /* no-op */
     @Override
     public void onPress() {}
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 
     public IngredientItemStack getItemStack() {
         return itemStack;

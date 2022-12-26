@@ -11,8 +11,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.overlays.Overlay;
@@ -26,9 +26,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 public class ConfigCommand extends CommandBase {
@@ -88,6 +88,7 @@ public class ConfigCommand extends CommandBase {
                     },
                     builder);
 
+    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("config")
                 .then(this.buildGetConfigNode())
@@ -98,7 +99,7 @@ public class ConfigCommand extends CommandBase {
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
 
@@ -187,13 +188,14 @@ public class ConfigCommand extends CommandBase {
     }
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        ConfigManager.loadConfigFile();
-        ConfigManager.loadAllConfigOptions(true);
-        ConfigManager.saveConfig();
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadAllConfigOptions(true);
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully reloaded configs from file.").withStyle(ChatFormatting.GREEN),
+                        Component.literal("Successfully reloaded configs from file.")
+                                .withStyle(ChatFormatting.GREEN),
                         false);
 
         return 1;
@@ -212,16 +214,16 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully reset ")
+                        Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getDisplayName())
+                                .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
                         false);
 
         return 1;
@@ -236,14 +238,14 @@ public class ConfigCommand extends CommandBase {
 
         overlay.getConfigOptions().forEach(ConfigHolder::reset);
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully reset ")
+                        Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(featureName).withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent("'s config options.").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
+                                .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),
                         false);
         return 1;
     }
@@ -255,9 +257,9 @@ public class ConfigCommand extends CommandBase {
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
         if (overlay == null) return 0;
 
-        MutableComponent response = new TextComponent(overlayName)
+        MutableComponent response = Component.literal(overlayName)
                 .withStyle(ChatFormatting.AQUA)
-                .append(new TextComponent("'s config options:\n").withStyle(ChatFormatting.WHITE));
+                .append(Component.literal("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
         for (ConfigHolder config : overlay.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfigHolder(config);
@@ -292,7 +294,7 @@ public class ConfigCommand extends CommandBase {
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining(" "));
 
-        MutableComponent response = new TextComponent(longParentName + "\n").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal(longParentName + "\n").withStyle(ChatFormatting.AQUA);
 
         response.append(getSpecificConfigComponent(configHolder));
 
@@ -317,7 +319,7 @@ public class ConfigCommand extends CommandBase {
 
         if (parsedValue == null) {
             context.getSource()
-                    .sendFailure(new TextComponent("Failed to parse the inputted value to the correct type!")
+                    .sendFailure(Component.literal("Failed to parse the inputted value to the correct type!")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
@@ -326,35 +328,36 @@ public class ConfigCommand extends CommandBase {
 
         if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
-                    .sendFailure(new TextComponent("The new value is the same as the current setting.")
+                    .sendFailure(Component.literal("The new value is the same as the current setting.")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (!config.setValue(parsedValue)) {
             context.getSource()
-                    .sendFailure(new TextComponent("Failed to set config field!").withStyle(ChatFormatting.RED));
+                    .sendFailure(
+                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully set ")
+                        Component.literal("Successfully set ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getDisplayName())
+                                .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(oldValue == null ? "null" : oldValue.toString())
+                                .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
+                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
-                                .append(new TextComponent(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(parsedValue.toString())
+                                .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
+                                .append(Component.literal(parsedValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
                         false);
 
         return 1;
@@ -376,7 +379,7 @@ public class ConfigCommand extends CommandBase {
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining(" "));
 
-        MutableComponent response = new TextComponent(longParentName + "\n").withStyle(ChatFormatting.YELLOW);
+        MutableComponent response = Component.literal(longParentName + "\n").withStyle(ChatFormatting.YELLOW);
 
         response.append(getSpecificConfigComponent(configHolder));
 
@@ -391,9 +394,9 @@ public class ConfigCommand extends CommandBase {
         Feature feature = getFeatureFromArguments(context, featureName);
         if (feature == null) return 0;
 
-        MutableComponent response = new TextComponent(featureName)
+        MutableComponent response = Component.literal(featureName)
                 .withStyle(ChatFormatting.YELLOW)
-                .append(new TextComponent("'s config options:\n").withStyle(ChatFormatting.WHITE));
+                .append(Component.literal("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
         for (ConfigHolder config : feature.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfigHolder(config);
@@ -407,9 +410,9 @@ public class ConfigCommand extends CommandBase {
 
         // list overlays
         response.append("\n")
-                .append(new TextComponent(featureName)
+                .append(Component.literal(featureName)
                         .withStyle(ChatFormatting.YELLOW)
-                        .append(new TextComponent("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
+                        .append(Component.literal("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
 
         for (Overlay overlay : feature.getOverlays()) {
             MutableComponent current = getComponentForOverlay(overlay);
@@ -441,7 +444,7 @@ public class ConfigCommand extends CommandBase {
 
         if (parsedValue == null) {
             context.getSource()
-                    .sendFailure(new TextComponent("Failed to parse the inputted value to the correct type!")
+                    .sendFailure(Component.literal("Failed to parse the inputted value to the correct type!")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
@@ -450,35 +453,36 @@ public class ConfigCommand extends CommandBase {
 
         if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
-                    .sendFailure(new TextComponent("The new value is the same as the current setting.")
+                    .sendFailure(Component.literal("The new value is the same as the current setting.")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (!config.setValue(parsedValue)) {
             context.getSource()
-                    .sendFailure(new TextComponent("Failed to set config field!").withStyle(ChatFormatting.RED));
+                    .sendFailure(
+                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully set ")
+                        Component.literal("Successfully set ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getDisplayName())
+                                .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(oldValue == null ? "null" : oldValue.toString())
+                                .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
+                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
-                                .append(new TextComponent(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(parsedValue.toString())
+                                .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
+                                .append(Component.literal(parsedValue.toString())
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GREEN))
-                                .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
                         false);
 
         return 1;
@@ -496,16 +500,16 @@ public class ConfigCommand extends CommandBase {
 
         config.reset();
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully reset ")
+                        Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(config.getDisplayName())
+                                .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent(".").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
                         false);
         return 1;
     }
@@ -517,14 +521,14 @@ public class ConfigCommand extends CommandBase {
         if (feature == null) return 0;
         feature.getVisibleConfigOptions().forEach(ConfigHolder::reset);
 
-        ConfigManager.saveConfig();
+        Managers.Config.saveConfig();
 
         context.getSource()
                 .sendSuccess(
-                        new TextComponent("Successfully reset ")
+                        Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
-                                .append(new TextComponent(featureName).withStyle(ChatFormatting.YELLOW))
-                                .append(new TextComponent("'s config options.").withStyle(ChatFormatting.GREEN)),
+                                .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
+                                .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),
                         false);
         return 1;
     }
@@ -533,7 +537,8 @@ public class ConfigCommand extends CommandBase {
         Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return null;
         }
 
@@ -549,7 +554,8 @@ public class ConfigCommand extends CommandBase {
         Optional<ConfigHolder> configOptional = feature.getConfigOptionFromString(configName);
 
         if (configOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Config not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Config not found!").withStyle(ChatFormatting.RED));
             return null;
         }
 
@@ -565,7 +571,8 @@ public class ConfigCommand extends CommandBase {
         Optional<ConfigHolder> configOptional = overlay.getConfigOptionFromString(configName);
 
         if (configOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Config not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Config not found!").withStyle(ChatFormatting.RED));
             return null;
         }
 
@@ -577,7 +584,8 @@ public class ConfigCommand extends CommandBase {
         Feature feature = getFeatureFromArguments(context, featureName);
 
         if (feature == null) {
-            context.getSource().sendFailure(new TextComponent("Feature not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return null;
         }
 
@@ -586,7 +594,8 @@ public class ConfigCommand extends CommandBase {
                 .findFirst();
 
         if (overlayOptional.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Overlay not found!").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Overlay not found!").withStyle(ChatFormatting.RED));
             return null;
         }
 
@@ -600,27 +609,27 @@ public class ConfigCommand extends CommandBase {
         String configTypeString = " (" + ((Class<?>) config.getType()).getSimpleName() + ")";
         String valueString = value == null ? "Value is null." : value.toString();
 
-        return new TextComponent("\n - ")
+        return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent(configNameString)
+                .append(Component.literal(configNameString)
                         .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
-                                new TextComponent("Description: " + config.getDescription())
+                                Component.literal("Description: " + config.getDescription())
                                         .withStyle(ChatFormatting.LIGHT_PURPLE))))
                         .withStyle(ChatFormatting.YELLOW)
-                        .append(new TextComponent(configTypeString).withStyle(ChatFormatting.WHITE))
-                        .append(new TextComponent(": "))
-                        .append(new TextComponent(valueString)
+                        .append(Component.literal(configTypeString).withStyle(ChatFormatting.WHITE))
+                        .append(Component.literal(": "))
+                        .append(Component.literal(valueString)
                                 .withStyle(ChatFormatting.GREEN)
                                 .withStyle(style -> style.withHoverEvent(new HoverEvent(
                                         HoverEvent.Action.SHOW_TEXT,
-                                        new TextComponent("Click here to change this setting."))))));
+                                        Component.literal("Click here to change this setting."))))));
     }
 
     private MutableComponent getComponentForOverlay(Overlay overlay) {
-        return new TextComponent("\n - ")
+        return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
-                .append(new TextComponent(overlay.getShortName()).withStyle(ChatFormatting.AQUA));
+                .append(Component.literal(overlay.getShortName()).withStyle(ChatFormatting.AQUA));
     }
 
     private MutableComponent getSpecificConfigComponent(ConfigHolder config) {
@@ -629,25 +638,25 @@ public class ConfigCommand extends CommandBase {
         String valueString = value == null ? "Value is null." : value.toString();
         String configTypeString = "(" + ((Class<?>) config.getType()).getSimpleName() + ")";
 
-        MutableComponent response = new TextComponent("");
-        response.append(new TextComponent("Config option: ")
+        MutableComponent response = Component.literal("");
+        response.append(Component.literal("Config option: ")
                 .withStyle(ChatFormatting.WHITE)
-                .append(new TextComponent(config.getDisplayName()).withStyle(ChatFormatting.YELLOW))
+                .append(Component.literal(config.getDisplayName()).withStyle(ChatFormatting.YELLOW))
                 .append("\n"));
 
-        response.append(new TextComponent("Value: ")
+        response.append(Component.literal("Value: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(new TextComponent(configTypeString))
-                        .append(new TextComponent(": "))
-                        .append(new TextComponent(valueString).withStyle(ChatFormatting.GREEN)))
+                        .append(Component.literal(configTypeString))
+                        .append(Component.literal(": "))
+                        .append(Component.literal(valueString).withStyle(ChatFormatting.GREEN)))
                 .append("\n");
-        response.append(new TextComponent("Subcategory: ")
+        response.append(Component.literal("Subcategory: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(new TextComponent(config.getMetadata().subcategory())))
+                        .append(Component.literal(config.getMetadata().subcategory())))
                 .append("\n");
-        response.append(new TextComponent("Description: ")
+        response.append(Component.literal("Description: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(new TextComponent(config.getDescription())))
+                        .append(Component.literal(config.getDescription())))
                 .append("\n");
         return response;
     }

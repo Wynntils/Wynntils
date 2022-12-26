@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
@@ -15,15 +15,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ShamanMaskModel extends Model {
+public final class ShamanMaskModel extends Model {
     private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
 
-    private static ShamanMaskType currentMaskType = ShamanMaskType.NONE;
-
-    public static void init() {}
+    private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
 
     @SubscribeEvent
-    public static void onTitle(SubtitleSetTextEvent event) {
+    public void onTitle(SubtitleSetTextEvent event) {
         String title = ComponentUtils.getCoded(event.getComponent());
 
         if (title.contains("Mask of the ") || title.contains("➤")) {
@@ -38,11 +36,11 @@ public class ShamanMaskModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         currentMaskType = ShamanMaskType.NONE;
     }
 
-    private static void parseMask(String title) {
+    private void parseMask(String title) {
         Matcher matcher = MASK_PATTERN.matcher(title);
 
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
@@ -63,7 +61,7 @@ public class ShamanMaskModel extends Model {
         currentMaskType = parsedMask;
     }
 
-    public static ShamanMaskType getCurrentMaskType() {
+    public ShamanMaskType getCurrentMaskType() {
         return currentMaskType;
     }
 }

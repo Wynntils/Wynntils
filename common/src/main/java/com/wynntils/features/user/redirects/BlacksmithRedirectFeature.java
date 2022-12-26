@@ -4,18 +4,15 @@
  */
 package com.wynntils.features.user.redirects;
 
-import com.wynntils.core.chat.ChatModel;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.core.webapi.profiles.item.ItemTier;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -27,12 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
-    private static final Pattern ITEM_PATTERN = Pattern.compile("§r§([fedacb53])([A-Z][a-zA-Z\\s]+)");
-
-    @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ChatModel.class);
-    }
+    private static final Pattern ITEM_PATTERN = Pattern.compile("§([fedacb53])([A-Z][a-zA-Z-'\\s]+)");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {

@@ -17,13 +17,13 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
+import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.NotificationEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,8 +48,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Queue event) {
-        messageQueue.add(new TimedMessageContainer(
-                event.getMessageContainer(), (long) gameNotificationOverlay.messageTimeLimit * 1000));
+        messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
 
         if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
                 && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
@@ -59,13 +58,19 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onGameNotification(NotificationEvent.Edit event) {
+        // On edit, we want to reset the display time of the message, for the overlay
         MessageContainer newContainer = event.getMessageContainer();
+
         messageQueue.stream()
                 .filter(timedMessageContainer ->
-                        timedMessageContainer.getMessageContainer().hashCode() == newContainer.hashCode())
+                        timedMessageContainer.getMessageContainer().equals(newContainer))
                 .findFirst()
-                .ifPresent(timedMessageContainer -> timedMessageContainer.update(
-                        newContainer, (long) gameNotificationOverlay.messageTimeLimit * 1000));
+                .ifPresent(
+                        timedMessageContainer -> timedMessageContainer.resetRemainingTime(getMessageDisplayLength()));
+    }
+
+    private long getMessageDisplayLength() {
+        return (long) gameNotificationOverlay.messageTimeLimit * 1000;
     }
 
     public static class GameNotificationOverlay extends Overlay {

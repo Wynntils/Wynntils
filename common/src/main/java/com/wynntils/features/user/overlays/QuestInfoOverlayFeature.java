@@ -6,6 +6,9 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -15,20 +18,17 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ScoreboardSegmentAdditionEvent;
-import com.wynntils.wynn.event.TrackedQuestUpdateEvent;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.model.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +45,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
     public boolean autoTrackQuestCoordinates = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ScoreboardModel.class, CompassModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Scoreboard, Models.Compass);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -61,9 +61,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
         if (!autoTrackQuestCoordinates) return;
+        if (event.getQuestInfo() == null) return;
 
         // set if valid
-        CompassModel.setDynamicCompassLocation(QuestManager::getCurrentQuestLocation);
+        Models.Compass.setDynamicCompassLocation(Managers.Quest::getTrackedQuestNextLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -140,14 +141,14 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            QuestInfo currentQuest = QuestManager.getCurrentQuest();
+            QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
 
-            if (currentQuest == null) {
+            if (trackedQuest == null) {
                 return;
             }
 
-            toRender.get(1).setText(currentQuest.getName());
-            toRender.get(2).setText(currentQuest.getNextTask());
+            toRender.get(1).setText(trackedQuest.getName());
+            toRender.get(2).setText(trackedQuest.getNextTask());
 
             FontRenderer.getInstance()
                     .renderTextsWithAlignment(

@@ -5,12 +5,11 @@
 package com.wynntils.gui.screens.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.SectionCoordinates;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -20,6 +19,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -35,16 +35,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
-public class OverlayManagementScreen extends Screen {
+public final class OverlayManagementScreen extends WynntilsScreen {
     // This is used to calculate alignment lines
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
     // of the screen both vertically and horizontally.
@@ -59,26 +58,22 @@ public class OverlayManagementScreen extends Screen {
     private static final int ANIMATION_LENGTH = 30;
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
-            new TextComponent("Resize the overlay by dragging the edges or corners."),
-            new TextComponent("Move it by dragging the center of the overlay."),
-            new TextComponent("By holding shift, you can disable alignment lines."),
-            new TextComponent("Use your arrows to change vertical"),
-            new TextComponent("and horizontal alignment."),
-            new TextComponent("The overlay name will render respecting"),
-            new TextComponent("the current overlay alignments."),
-            new TextComponent("Shift-Middle click on an overlay to reset it to it's original state.")
+            Component.literal("Resize the overlay by dragging the edges or corners."),
+            Component.literal("Move it by dragging the center of the overlay."),
+            Component.literal("By holding shift, you can disable alignment lines."),
+            Component.literal("Use your arrows to change vertical"),
+            Component.literal("and horizontal alignment."),
+            Component.literal("The overlay name will render respecting"),
+            Component.literal("the current overlay alignments."),
+            Component.literal("Shift-Middle click on an overlay to reset it to it's original state.")
                     .withStyle(ChatFormatting.RED));
 
-    private static final List<Component> CLOSE_TOOLTIP_LINES =
-            List.of(new TextComponent("Click here to stop editing and reset changes."));
+    private static final Component CLOSE_TOOLTIP = Component.literal("Click here to stop editing and reset changes.");
 
-    private static final List<Component> TEST_TOOLTIP_LINES = List.of(
-            new TextComponent("Click here to toggle test mode."),
-            new TextComponent("In test mode, you can see how your overlay setup would look in-game,"),
-            new TextComponent("using preview render mode."));
+    private static final Component TEST_TOOLTIP = Component.literal(
+            "Click here to toggle test mode. In test mode, you can see how your overlay setup would look in-game, using preview render mode.");
 
-    private static final List<Component> APPLY_TOOLTIP_LINES =
-            List.of(new TextComponent("Click here to apply changes to current overlay."));
+    private static final Component APPLY_TOOLTIP = Component.literal("Click here to apply changes to current overlay.");
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
@@ -98,22 +93,30 @@ public class OverlayManagementScreen extends Screen {
     private boolean userInteracted = false;
     private int animationLengthRemaining;
 
-    public OverlayManagementScreen(Overlay overlay) {
-        super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
+    private OverlayManagementScreen(Overlay overlay) {
+        super(Component.translatable("screens.wynntils.overlayManagement.name"));
         selectedOverlay = overlay;
         fixedSelection = true;
         animationLengthRemaining = ANIMATION_LENGTH;
     }
 
-    public OverlayManagementScreen() {
-        super(new TranslatableComponent("screens.wynntils.overlayManagement.name"));
+    private OverlayManagementScreen() {
+        super(Component.translatable("screens.wynntils.overlayManagement.name"));
         selectedOverlay = null;
         fixedSelection = false;
         animationLengthRemaining = 0;
     }
 
+    public static Screen create() {
+        return new OverlayManagementScreen();
+    }
+
+    public static Screen create(Overlay overlay) {
+        return new OverlayManagementScreen(overlay);
+    }
+
     @Override
-    protected void init() {
+    protected void doInit() {
         setupButtons();
         calculateAlignmentLinePositions();
     }
@@ -135,7 +138,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (testMode) {
             TextRenderTask renderTask = new TextRenderTask(
                     I18n.get("screens.wynntils.overlayManagement.testModeOn"),
@@ -153,14 +156,12 @@ public class OverlayManagementScreen extends Screen {
                 renderSections(poseStack);
             }
 
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                CustomColor color = overlay == selectedOverlay
-                        ? CommonColors.GREEN
-                        : (fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE);
+                CustomColor color = getOverlayColor(overlay);
                 RenderUtils.drawRectBorders(
                         poseStack,
                         color,
@@ -234,7 +235,18 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        super.render(poseStack, mouseX, mouseY, partialTick); // This renders widgets
+        super.doRender(poseStack, mouseX, mouseY, partialTick); // This renders widgets
+        // This renders button tooltips
+        if (this.deferredTooltipRendering != null) {
+            this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
+            this.deferredTooltipRendering = null;
+        }
+    }
+
+    private CustomColor getOverlayColor(Overlay overlay) {
+        if (overlay == selectedOverlay) return CommonColors.GREEN;
+
+        return fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE;
     }
 
     @Override
@@ -255,8 +267,8 @@ public class OverlayManagementScreen extends Screen {
         resetSelection();
 
         if (!fixedSelection) {
-            Set<Overlay> overlays = OverlayManager.getOverlays().stream()
-                    .filter(OverlayManager::isEnabled)
+            Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                    .filter(Managers.Overlay::isEnabled)
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
@@ -371,51 +383,77 @@ public class OverlayManagementScreen extends Screen {
         animationLengthRemaining = 0;
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            ConfigManager.saveConfig();
-            McUtils.mc().setScreen(new OverlaySelectionScreen());
+            Managers.Config.saveConfig();
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            McUtils.mc().setScreen(new OverlaySelectionScreen());
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
             return true;
         }
 
         if (selectedOverlay == null) return false;
 
-        if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
-            int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
+        // Shirt + Arrow keys change overlay alignment
+        if (KeyboardUtils.isShiftDown()) {
+            if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
+                int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
-            if (keyCode == GLFW.GLFW_KEY_DOWN) {
-                index += 1;
-            } else {
-                index -= 1;
+                if (keyCode == GLFW.GLFW_KEY_DOWN) {
+                    index += 1;
+                } else {
+                    index -= 1;
+                }
+
+                VerticalAlignment[] values = VerticalAlignment.values();
+                index = (values.length + index) % values.length;
+
+                int finalIndex = index;
+                selectedOverlay
+                        .getConfigOptionFromString("verticalAlignmentOverride")
+                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
+            } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
+                int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
+
+                if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+                    index += 1;
+                } else {
+                    index -= 1;
+                }
+
+                HorizontalAlignment[] values = HorizontalAlignment.values();
+                index = (values.length + index) % values.length;
+
+                int finalIndex = index;
+                selectedOverlay
+                        .getConfigOptionFromString("horizontalAlignmentOverride")
+                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
             }
+        } else {
+            // Arrow keys change overlay position
+            int offsetX = 0;
+            int offsetY = 0;
 
-            VerticalAlignment[] values = VerticalAlignment.values();
-            index = (values.length + index) % values.length;
+            if (keyCode == GLFW.GLFW_KEY_UP) offsetY = -1;
+            else if (keyCode == GLFW.GLFW_KEY_DOWN) offsetY = 1;
+            else if (keyCode == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
+            else if (keyCode == GLFW.GLFW_KEY_LEFT) offsetX = -1;
 
-            int finalIndex = index;
+            final int finalOffsetX = offsetX;
+            final int finalOffsetY = offsetY;
+
             selectedOverlay
-                    .getConfigOptionFromString("verticalAlignmentOverride")
-                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
-        } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
-            int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
+                    .getConfigOptionFromString("position")
+                    .ifPresent(configHolder -> configHolder.setValue(OverlayPosition.getBestPositionFor(
+                            selectedOverlay,
+                            selectedOverlay.getRenderX(),
+                            selectedOverlay.getRenderY(),
+                            finalOffsetX,
+                            finalOffsetY)));
+        }
 
-            if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-                index += 1;
-            } else {
-                index -= 1;
-            }
-
-            HorizontalAlignment[] values = HorizontalAlignment.values();
-            index = (values.length + index) % values.length;
-
-            int finalIndex = index;
-            selectedOverlay
-                    .getConfigOptionFromString("horizontalAlignmentOverride")
-                    .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
-        } else if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             snappingEnabled = false;
             edgeAlignmentSnapMap.clear();
             alignmentLinesToRender.clear();
@@ -460,8 +498,8 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void reloadConfigForOverlay() {
-        ConfigManager.loadConfigFile();
-        ConfigManager.loadAllConfigOptions(true);
+        Managers.Config.loadConfigFile();
+        Managers.Config.loadAllConfigOptions(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
@@ -639,7 +677,7 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void renderSections(PoseStack poseStack) {
-        for (SectionCoordinates section : OverlayManager.getSections()) {
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
             RenderUtils.drawRectBorders(
                     poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
         }
@@ -687,8 +725,9 @@ public class OverlayManagementScreen extends Screen {
             }
         }
 
-        for (Overlay overlay :
-                OverlayManager.getOverlays().stream().filter(Overlay::isEnabled).toList()) {
+        for (Overlay overlay : Managers.Overlay.getOverlays().stream()
+                .filter(Overlay::isEnabled)
+                .toList()) {
             if (overlay == selectedOverlay) continue;
 
             for (Edge edge : Edge.values()) {
@@ -704,58 +743,34 @@ public class OverlayManagementScreen extends Screen {
     }
 
     private void setupButtons() {
-        this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH * 2,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                new TranslatableComponent("screens.wynntils.overlayManagement.closeSettingsScreen"),
-                button -> {
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
-                    onClose();
-                },
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        CLOSE_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
-        this.addRenderableWidget(new Button(
-                this.width / 2 - BUTTON_WIDTH / 2,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                new TranslatableComponent("screens.wynntils.overlayManagement.testSettings"),
-                button -> testMode = !testMode,
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        TEST_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
-        this.addRenderableWidget(new Button(
-                this.width / 2 + BUTTON_WIDTH,
-                this.height - 150,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-                new TranslatableComponent("screens.wynntils.overlayManagement.applySettings"),
-                button -> {
-                    ConfigManager.saveConfig();
-                    McUtils.mc().setScreen(new OverlaySelectionScreen());
-                    onClose();
-                },
-                (button, poseStack, renderX, renderY) -> RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        APPLY_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false)));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"), button -> {
+                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+                            onClose();
+                        })
+                .pos(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(CLOSE_TOOLTIP))
+                .build());
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.testSettings"),
+                        button -> testMode = !testMode)
+                .pos(this.width / 2 - BUTTON_WIDTH / 2, this.height - 150)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(TEST_TOOLTIP))
+                .build());
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.overlayManagement.applySettings"), button -> {
+                            Managers.Config.saveConfig();
+                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+                            onClose();
+                        })
+                .pos(this.width / 2 + BUTTON_WIDTH, this.height - 150)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(APPLY_TOOLTIP))
+                .build());
     }
 
     private void resetSelection() {

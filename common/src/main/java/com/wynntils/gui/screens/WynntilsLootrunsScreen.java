@@ -5,6 +5,8 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -13,42 +15,62 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
+import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.TaskUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import com.wynntils.wynn.model.LootrunModel;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
-    public WynntilsLootrunsScreen() {
-        super(new TranslatableComponent("screens.wynntils.lootruns.name"));
+public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
+    private WynntilsLootrunsScreen() {
+        super(Component.translatable("screens.wynntils.lootruns.name"));
+
+        WynntilsMod.registerEventListener(this);
+    }
+
+    public static Screen create() {
+        return new WynntilsLootrunsScreen();
     }
 
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
+        WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
 
-    @Override
-    protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+    @SubscribeEvent
+    public void onLootrunCacheRefresh(LootrunCacheRefreshEvent event) {
+        reloadElements();
+    }
 
-        super.init();
+    @Override
+    protected void doInit() {
+        super.doInit();
+
+        TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
+
+        this.addRenderableWidget(new ReloadButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                11,
+                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                () -> TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -66,33 +88,33 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
                 this));
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+            LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
-                        new TextComponent(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.loaded")
+                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.loaded")
                                 .withStyle(ChatFormatting.YELLOW),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.viewInFolder")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
                                 .withStyle(ChatFormatting.GOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.openOnMap")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.openOnMap")
                                 .withStyle(ChatFormatting.BLUE),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.unload")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.unload")
                                 .withStyle(ChatFormatting.GREEN));
             } else {
                 tooltipLines = List.of(
-                        new TextComponent(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.load")
+                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.load")
                                 .withStyle(ChatFormatting.GREEN),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.viewInFolder")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
                                 .withStyle(ChatFormatting.GOLD),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.openOnMap")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.openOnMap")
                                 .withStyle(ChatFormatting.BLUE),
-                        new TranslatableComponent("screens.wynntils.lootruns.lootrunButton.remove")
+                        Component.translatable("screens.wynntils.lootruns.lootrunButton.remove")
                                 .withStyle(ChatFormatting.RED));
             }
 
@@ -108,7 +130,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -136,8 +158,8 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    protected void renderDescription(PoseStack poseStack) {
-        LootrunModel.LootrunInstance currentLootrun = LootrunModel.getCurrentLootrun();
+    private void renderDescription(PoseStack poseStack) {
+        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -251,7 +273,7 @@ public class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(LootrunModel.getLootruns().stream()
+        elements.addAll(Models.Lootrun.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

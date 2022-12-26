@@ -8,29 +8,34 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.ClientCommandManager;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.net.UrlId;
+import com.wynntils.utils.Delay;
+import com.wynntils.utils.FileUtils;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 public class WynntilsCommand extends CommandBase {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        throw new UnsupportedOperationException("WynntilsCommand need special treatment");
+    }
+
+    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, Set<CommandBase> commands) {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : ClientCommandManager.getCommandInstanceSet()) {
+        for (CommandBase commandInstance : commands) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
@@ -45,22 +50,90 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
-                .then(Commands.literal("reload").executes(this::reload))
+                .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("clearcaches")
+                        .then(Commands.literal("run").executes(this::doClearCaches))
+                        .executes(this::clearCaches))
+                .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
     }
 
-    private int version(CommandContext<CommandSourceStack> context) {
-        // TODO: Handle if dev env
+    private int reauth(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.reauth.tryReauth")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
+        Models.Hades.tryDisconnect();
+        Managers.WynntilsAccount.reauth();
+        // No need to try to re-connect to Hades, we will do that automatically when we get the new token
+
+        return 1;
+    }
+
+    private int clearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.warn")
+                                .withStyle(ChatFormatting.DARK_RED),
+                        false);
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.clickHere")
+                                .withStyle(ChatFormatting.BLUE)
+                                .withStyle(ChatFormatting.UNDERLINE)
+                                .withStyle(style -> style.withClickEvent(
+                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils clearcaches run"))),
+                        false);
+
+        return 1;
+    }
+
+    private int doClearCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.clearCaches.deleting")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Delay.create(
+                () -> {
+                    FileUtils.deleteFolder(Managers.Net.getCacheDir());
+                    FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
+
+                    System.exit(0);
+                },
+                100);
+
+        return 1;
+    }
+
+    private int reloadCaches(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.reloadCaches.reloading")
+                                .withStyle(ChatFormatting.YELLOW),
+                        false);
+
+        Managers.Url.reloadUrls();
+        Managers.ItemProfiles.reloadData();
+        Managers.Discovery.reloadData();
+        Models.Map.reloadData();
+
+        return 1;
+    }
+
+    private int version(CommandContext<CommandSourceStack> context) {
         MutableComponent buildText;
 
         if (WynntilsMod.getVersion().isEmpty()) {
-            buildText = new TextComponent("Unknown Version");
+            buildText = Component.literal("Unknown Version");
         } else if (WynntilsMod.isDevelopmentBuild()) {
-            buildText = new TextComponent("Development Build");
+            buildText = Component.literal("Development Build");
         } else {
-            buildText = new TextComponent("Version " + WynntilsMod.getVersion());
+            buildText = Component.literal("Version " + WynntilsMod.getVersion());
         }
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
@@ -69,52 +142,18 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
-    private int reload(CommandContext<CommandSourceStack> context) {
-        List<Feature> enabledFeatures = FeatureRegistry.getFeatures().stream()
-                .filter(Feature::isEnabled)
-                .toList();
-
-        for (Feature feature : enabledFeatures) { // disable all active features before resetting web
-            feature.disable();
-        }
-
-        WebManager.reset();
-        WebManager.init(); // reloads api urls as well as web manager
-
-        for (Feature feature : enabledFeatures) { // re-enable all features which should be
-            if (feature.canEnable()) {
-                feature.enable();
-
-                if (feature.isEnabled()) {
-                    McUtils.sendMessageToClient(new TextComponent("Reloaded ")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.AQUA)));
-
-                    continue;
-                }
-            }
-
-            McUtils.sendMessageToClient(new TextComponent("Failed to reload ")
-                    .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent(feature.getTranslatedName()).withStyle(ChatFormatting.RED)));
-        }
-
-        context.getSource()
-                .sendSuccess(new TextComponent("Finished reloading everything").withStyle(ChatFormatting.GREEN), false);
-
-        return 1;
-    }
-
     private int donateLink(CommandContext<CommandSourceStack> context) {
-        MutableComponent c = new TextComponent("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
-        MutableComponent url = new TextComponent("https://www.patreon.com/Wynntils")
+        MutableComponent c =
+                Component.literal("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
+        MutableComponent url = Component.literal(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.patreon.com/Wynntils"))
+                        .withClickEvent(new ClickEvent(
+                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
-                                new TextComponent("Click here to open in your" + " browser."))));
+                                Component.literal("Click here to open in your" + " browser."))));
 
         context.getSource().sendSuccess(c.append(url), false);
         return 1;
@@ -122,7 +161,7 @@ public class WynntilsCommand extends CommandBase {
 
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text =
-                new TextComponent("Wynntils' command list: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
+                Component.literal("Wynntils' command list: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
         addCommandDescription(
                 text, "wynntils", List.of("help"), "This shows a list of all available commands for Wynntils.");
         addCommandDescription(
@@ -131,7 +170,10 @@ public class WynntilsCommand extends CommandBase {
         //            addCommandDescription(text, "-wynntils", " changelog [major/latest]",
         // "This shows the changelog of your installed version.");
         //            text.append("\n");
-        addCommandDescription(text, "wynntils", List.of("reload"), "This reloads all API data.");
+        addCommandDescription(text, "wynntils", List.of("reauth"), "This re-auths into Athena and Hades.");
+        addCommandDescription(
+                text, "wynntils", List.of("clearcaches"), "This clears all Wynntils caches and closes the game.");
+        addCommandDescription(text, "wynntils", List.of("reloadcaches"), "This attempts to re-download caches.");
         addCommandDescription(text, "wynntils", List.of("donate"), "This provides our Patreon link.");
         addCommandDescription(
                 text,
@@ -145,20 +187,16 @@ public class WynntilsCommand extends CommandBase {
     }
 
     private int discordLink(CommandContext<CommandSourceStack> context) {
-        MutableComponent msg =
-                new TextComponent("You're welcome to join our Discord server at:\n").withStyle(ChatFormatting.GOLD);
-        String discordInvite = WebManager.getApiUrls().isEmpty()
-                ? null
-                : WebManager.getApiUrls().get().get("DiscordInvite");
-        MutableComponent link = new TextComponent(discordInvite == null ? "<Wynntils servers are down>" : discordInvite)
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
-        if (discordInvite != null) {
-            link.setStyle(link.getStyle()
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
-                    .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new TextComponent("Click here to join our Discord" + " server."))));
-        }
+        MutableComponent msg = Component.literal("You're welcome to join our Discord server at:\n")
+                .withStyle(ChatFormatting.GOLD);
+        String discordInvite = Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE);
+        MutableComponent link =
+                Component.literal(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
+        link.setStyle(link.getStyle()
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
+                .withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.literal("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(msg.append(link), false);
         return 1;
     }
@@ -173,26 +211,27 @@ public class WynntilsCommand extends CommandBase {
             suffixString.append(" ").append(argument);
         }
 
-        MutableComponent clickComponent = new TextComponent("");
+        MutableComponent clickComponent = Component.literal("");
         {
             clickComponent.setStyle(clickComponent
                     .getStyle()
                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + prefix + suffixString))
                     .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT, new TextComponent("Click here to run this command."))));
+                            HoverEvent.Action.SHOW_TEXT, Component.literal("Click here to run this command."))));
 
-            MutableComponent prefixText = new TextComponent("-" + prefix).withStyle(ChatFormatting.DARK_GRAY);
+            MutableComponent prefixText = Component.literal("-" + prefix).withStyle(ChatFormatting.DARK_GRAY);
             clickComponent.append(prefixText);
 
             if (!suffix.isEmpty()) {
-                MutableComponent nameText = new TextComponent(suffixString.toString()).withStyle(ChatFormatting.GREEN);
+                MutableComponent nameText =
+                        Component.literal(suffixString.toString()).withStyle(ChatFormatting.GREEN);
                 clickComponent.append(nameText);
             }
 
             clickComponent.append(" ");
 
             MutableComponent descriptionText =
-                    new TextComponent(description).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
+                    Component.literal(description).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
             clickComponent.append(descriptionText);
         }
 

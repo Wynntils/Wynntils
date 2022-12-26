@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.MinecraftSchedulerManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ public abstract class MinecraftMixin {
     private void tickPre(CallbackInfo ci) {
         EventFactory.onTickStart();
 
-        MinecraftSchedulerManager.onTick();
+        Managers.MinecraftScheduler.onTick();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))

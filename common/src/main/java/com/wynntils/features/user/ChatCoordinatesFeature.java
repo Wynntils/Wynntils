@@ -4,13 +4,14 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.LocationUtils;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +23,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatCoordinatesFeature extends UserFeature {
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(CompassModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -37,6 +37,15 @@ public class ChatCoordinatesFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         Component message = e.getMessage();
+
+        e.setMessage(insertCoordinateComponents(message));
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onClientsideMessage(ClientsideMessageEvent e) {
+        if (!WynnUtils.onWorld()) return;
+
+        Component message = e.getComponent();
 
         e.setMessage(insertCoordinateComponents(message));
     }
@@ -50,7 +59,7 @@ public class ChatCoordinatesFeature extends UserFeature {
                 message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
         components.add(0, message.plainCopy().withStyle(message.getStyle()));
 
-        MutableComponent temp = new TextComponent("");
+        MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
             Matcher m = LocationUtils.strictCoordinateMatcher((ComponentUtils.getCoded(comp)));
@@ -70,7 +79,7 @@ public class ChatCoordinatesFeature extends UserFeature {
                     continue;
                 }
 
-                MutableComponent preText = new TextComponent(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(text.substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -78,7 +87,7 @@ public class ChatCoordinatesFeature extends UserFeature {
                 Component compassComponent = createLocationComponent(location.get());
                 temp.append(compassComponent);
 
-                comp = new TextComponent(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
                                 + text.substring(m.end()))
                         .withStyle(style);
                 m = LocationUtils.strictCoordinateMatcher(
@@ -92,7 +101,7 @@ public class ChatCoordinatesFeature extends UserFeature {
     }
 
     private static Component createLocationComponent(Location location) {
-        MutableComponent component = new TextComponent(
+        MutableComponent component = Component.literal(
                         "[%d, %d, %d]".formatted((int) location.x, (int) location.y, (int) location.z))
                 .withStyle(ChatFormatting.DARK_AQUA)
                 .withStyle(ChatFormatting.UNDERLINE);
@@ -100,7 +109,7 @@ public class ChatCoordinatesFeature extends UserFeature {
         component.withStyle(style -> style.withClickEvent(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND, "/compass at " + location.x + " " + location.y + " " + location.z)));
         component.withStyle(style -> style.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, new TextComponent("Click here to set your compass to this location"))));
+                HoverEvent.Action.SHOW_TEXT, Component.literal("Click here to set your compass to this location"))));
 
         return component;
     }

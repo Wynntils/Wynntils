@@ -6,6 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -22,42 +23,44 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.QuestBookReloadedEvent;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.QuestManager;
 import com.wynntils.wynn.model.quests.QuestSortOrder;
 import com.wynntils.wynn.model.quests.QuestStatus;
+import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
-            new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.name").withStyle(ChatFormatting.WHITE),
-            new TranslatableComponent("screens.wynntils.wynntilsQuestBook.reload.description")
+            Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
+                    .withStyle(ChatFormatting.WHITE),
+            Component.translatable("screens.wynntils.wynntilsQuestBook.reload.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    private QuestInfo tracked = null;
+    private QuestInfo trackingRequested = null;
     private boolean miniQuestMode = false;
     private QuestSortOrder questSortOrder = QuestSortOrder.LEVEL;
 
-    public WynntilsQuestBookScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.name"));
+    private WynntilsQuestBookScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
 
         // Only register this once
         WynntilsMod.registerEventListener(this);
     }
 
+    public static Screen create() {
+        return new WynntilsQuestBookScreen();
+    }
+
     @Override
     public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
         WynntilsMod.unregisterEventListener(this);
         super.onClose();
     }
@@ -65,26 +68,24 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     /** This is called on every resize. Re-registering widgets are required, re-creating them is not.
      * */
     @Override
-    protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
+    protected void doInit() {
+        Managers.Quest.rescanQuestBook(true, true);
 
-        QuestManager.rescanQuestBook(true, true);
-
-        super.init();
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                () -> QuestManager.rescanQuestBook(!miniQuestMode, miniQuestMode)));
+                () -> Managers.Quest.rescanQuestBook(!miniQuestMode, miniQuestMode)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -122,7 +123,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -154,32 +155,18 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
         if (miniQuestMode) return;
 
-        this.setQuests(QuestManager.getQuests(questSortOrder));
-
-        for (QuestInfo quest : elements) {
-            if (!quest.isTracked()) {
-                continue;
-            }
-
-            tracked = quest;
-            return;
-        }
+        this.setQuests(getSortedQuests());
+        setTrackingRequested(null);
+        reloadElements();
     }
 
     @SubscribeEvent
     public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
         if (!miniQuestMode) return;
 
-        this.setQuests(QuestManager.getMiniQuests(questSortOrder));
-
-        for (QuestInfo quest : elements) {
-            if (!quest.isTracked()) {
-                continue;
-            }
-
-            tracked = quest;
-            return;
-        }
+        this.setQuests(getSortedQuests());
+        setTrackingRequested(null);
+        reloadElements();
     }
 
     // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
@@ -207,7 +194,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                         FontRenderer.TextShadow.NONE);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof ReloadButton) {
@@ -219,39 +206,39 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
             tooltipLines = QuestInfo.generateTooltipForQuest(questInfo);
 
-            tooltipLines.add(new TextComponent(""));
+            tooltipLines.add(Component.literal(""));
 
-            if (questInfo.getStatus() != QuestStatus.CANNOT_START) {
-                if (this.tracked == questInfo) {
-                    tooltipLines.add(new TextComponent("Left click to unpin it!")
+            if (questInfo.isTrackable()) {
+                if (questInfo.equals(Managers.Quest.getTrackedQuest())) {
+                    tooltipLines.add(Component.literal("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
                             .withStyle(ChatFormatting.BOLD));
                 } else {
-                    tooltipLines.add(new TextComponent("Left click to pin it!")
+                    tooltipLines.add(Component.literal("Left click to track it!")
                             .withStyle(ChatFormatting.GREEN)
                             .withStyle(ChatFormatting.BOLD));
                 }
             }
 
-            tooltipLines.add(new TextComponent("Middle click to view on map!")
+            tooltipLines.add(Component.literal("Middle click to view on map!")
                     .withStyle(ChatFormatting.YELLOW)
                     .withStyle(ChatFormatting.BOLD));
-            tooltipLines.add(new TextComponent("Right to open on the wiki!")
+            tooltipLines.add(Component.literal("Right to open on the wiki!")
                     .withStyle(ChatFormatting.GOLD)
                     .withStyle(ChatFormatting.BOLD));
         }
 
         if (this.hovered instanceof DialogueHistoryButton) {
             tooltipLines = List.of(
-                    new TextComponent("[>] ")
+                    Component.literal("[>] ")
                             .withStyle(ChatFormatting.GOLD)
-                            .append(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
+                            .append(Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
                                     .withStyle(ChatFormatting.BOLD)
                                     .withStyle(ChatFormatting.GOLD)),
-                    new TranslatableComponent("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                    Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
                             .withStyle(ChatFormatting.GRAY),
-                    new TextComponent(""),
-                    new TranslatableComponent("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                    Component.literal(""),
+                    Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                             .withStyle(ChatFormatting.GREEN));
         }
 
@@ -259,9 +246,9 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
             tooltipLines = new ArrayList<>();
 
             if (miniQuestMode) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.miniQuestInfo.name"));
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.miniQuestInfo.name"));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.name"));
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.questInfo.name"));
             }
 
             for (int i = 1; i <= 100; i += 25) {
@@ -278,8 +265,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                                 && questInfo.getSortLevel() <= maxLevel)
                         .count();
 
-                tooltipLines.add(new TextComponent("- Lv. " + minLevel + "-" + maxLevel)
-                        .append(new TextComponent(" [" + completedCount + "/" + count + "]")
+                tooltipLines.add(Component.literal("- Lv. " + minLevel + "-" + maxLevel)
+                        .append(Component.literal(" [" + completedCount + "/" + count + "]")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(" ")
                         .append(getPercentageComponent((int) completedCount, (int) count, 5)));
@@ -295,8 +282,8 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                         .filter(questInfo ->
                                 questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getSortLevel() >= 101)
                         .count();
-                tooltipLines.add(new TextComponent("- Lv. 101+")
-                        .append(new TextComponent(" [" + completedCount + "/" + count + "]")
+                tooltipLines.add(Component.literal("- Lv. 101+")
+                        .append(Component.literal(" [" + completedCount + "/" + count + "]")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(" ")
                         .append(getPercentageComponent((int) completedCount, (int) count, 5)));
@@ -307,19 +294,19 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                     .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED)
                     .count();
 
-            tooltipLines.add(new TextComponent(""));
-            tooltipLines.add(new TextComponent(this.miniQuestMode ? "Total Mini-Quests: " : "Total Quests: ")
+            tooltipLines.add(Component.literal(""));
+            tooltipLines.add(Component.literal(this.miniQuestMode ? "Total Mini-Quests: " : "Total Quests: ")
                     .withStyle(ChatFormatting.AQUA)
-                    .append(new TextComponent("[" + completedCount + "/" + count + "]")
+                    .append(Component.literal("[" + completedCount + "/" + count + "]")
                             .withStyle(ChatFormatting.DARK_AQUA)));
             tooltipLines.add(getPercentageComponent((int) completedCount, (int) count, 15));
-            tooltipLines.add(new TextComponent(""));
+            tooltipLines.add(Component.literal(""));
 
             if (!this.miniQuestMode) {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.questInfo.click")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.questInfo.click")
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                tooltipLines.add(new TranslatableComponent("screens.wynntils.wynntilsQuestBook.miniQuestInfo.click")
+                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.miniQuestInfo.click")
                         .withStyle(ChatFormatting.GREEN));
             }
         }
@@ -327,14 +314,14 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
         if (this.hovered instanceof SortOrderWidget) {
             switch (questSortOrder) {
                 case LEVEL -> tooltipLines = List.of(
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.level.name"),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.level.description"));
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.name"),
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.description"));
                 case DISTANCE -> tooltipLines = List.of(
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.distance.name"),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.distance.description"));
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.name"),
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.description"));
                 case ALPHABETIC -> tooltipLines = List.of(
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.alphabetical.name"),
-                        new TranslatableComponent("screens.wynntils.wynntilsQuestBook.sort.alphabetical.description"));
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.name"),
+                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.description"));
             }
         }
 
@@ -378,9 +365,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
 
     @Override
     protected void reloadElementsList(String searchText) {
-        List<QuestInfo> newQuests =
-                miniQuestMode ? QuestManager.getMiniQuests(questSortOrder) : QuestManager.getQuests(questSortOrder);
-
+        List<QuestInfo> newQuests = getSortedQuests();
         elements = newQuests.stream()
                 .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
                 .collect(Collectors.toList());
@@ -412,10 +397,14 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
                 Math.min(insideText.length(), Math.round((insideText.length() - 2) * (float) count / totalCount) + 2);
         insideText.insert(insertAt, ChatFormatting.DARK_GRAY);
 
-        return new TextComponent("[")
+        return Component.literal("[")
                 .withStyle(braceColor)
-                .append(new TextComponent(insideText.toString()))
-                .append(new TextComponent("]").withStyle(braceColor));
+                .append(Component.literal(insideText.toString()))
+                .append(Component.literal("]").withStyle(braceColor));
+    }
+
+    private List<QuestInfo> getSortedQuests() {
+        return miniQuestMode ? Managers.Quest.getMiniQuests(questSortOrder) : Managers.Quest.getQuests(questSortOrder);
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -423,15 +412,14 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
         this.maxPage = Math.max(
                 0,
                 (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
-        this.setCurrentPage(0);
     }
 
-    public void setTracked(QuestInfo tracked) {
-        this.tracked = tracked;
+    public void setTrackingRequested(QuestInfo questInfo) {
+        this.trackingRequested = questInfo;
     }
 
-    public QuestInfo getTracked() {
-        return tracked;
+    public QuestInfo getTrackingRequested() {
+        return trackingRequested;
     }
 
     @Override
@@ -453,9 +441,10 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
     public void setMiniQuestMode(boolean miniQuestMode) {
         this.miniQuestMode = miniQuestMode;
 
-        this.setQuests(List.of());
+        this.setQuests(getSortedQuests());
+        this.setCurrentPage(0);
 
-        QuestManager.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
+        Managers.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
     }
 
     public QuestSortOrder getQuestSortOrder() {
@@ -468,11 +457,7 @@ public class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, Q
         }
 
         this.questSortOrder = newSortOrder;
-
-        if (miniQuestMode) {
-            setQuests(QuestManager.getMiniQuests(questSortOrder));
-        } else {
-            setQuests(QuestManager.getQuests(questSortOrder));
-        }
+        setQuests(getSortedQuests());
+        this.setCurrentPage(0);
     }
 }

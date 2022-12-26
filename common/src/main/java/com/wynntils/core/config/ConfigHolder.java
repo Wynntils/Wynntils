@@ -7,6 +7,7 @@ package com.wynntils.core.config;
 import com.google.common.base.CaseFormat;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
@@ -47,8 +48,7 @@ public class ConfigHolder {
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue =
-                ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(getValue()), this.fieldType);
+        this.defaultValue = Managers.Config.deepCopy(getValue(), this.fieldType);
     }
 
     private Type calculateType(Type typeOverride, Object value, Field field) {
@@ -129,6 +129,10 @@ public class ConfigHolder {
         }
     }
 
+    public Object getDefaultValue() {
+        return defaultValue;
+    }
+
     public boolean setValue(Object value) {
         try {
             FieldUtils.writeField(field, parent, value, true);
@@ -164,7 +168,7 @@ public class ConfigHolder {
     public void reset() {
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(ConfigManager.getGson().fromJson(ConfigManager.getGson().toJson(defaultValue), this.fieldType));
+        setValue(Managers.Config.deepCopy(defaultValue, this.fieldType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }

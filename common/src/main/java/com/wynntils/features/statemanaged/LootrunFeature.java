@@ -5,6 +5,7 @@
 package com.wynntils.features.statemanaged;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.StateManagedFeature;
@@ -16,8 +17,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.wynn.model.LootrunModel;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.wynn.screens.WynnScreenMatchers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,37 +47,37 @@ public class LootrunFeature extends StateManagedFeature {
 
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        FileUtils.mkdir(LootrunModel.LOOTRUNS);
+        FileUtils.mkdir(Models.Lootrun.LOOTRUNS);
     }
 
     @SubscribeEvent
     public void recordMovement(ClientTickEvent.Start event) {
-        LootrunModel.recordMovementIfRecording();
+        Models.Lootrun.recordMovementIfRecording();
     }
 
     @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         BlockState block = event.getWorld().getBlockState(event.getPos());
         if (block.is(Blocks.CHEST)) {
-            LootrunModel.setLastChestIfRecording(event.getPos());
+            Models.Lootrun.setLastChestIfRecording(event.getPos());
         }
     }
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
-        if (ContainerUtils.isLootChest(event.getScreen())) {
-            LootrunModel.addChestIfRecording();
+        if (WynnScreenMatchers.isLootChest(event.getScreen())) {
+            Models.Lootrun.addChestIfRecording();
         }
     }
 
     @SubscribeEvent
     public void onRenderLastLevel(RenderLevelEvent.Post event) {
-        LootrunModel.render(event.getPoseStack());
+        Models.Lootrun.render(event.getPoseStack());
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        LootrunModel.recompileLootrun(false);
+        Models.Lootrun.recompileLootrun(false);
     }
 
     public enum PathType {

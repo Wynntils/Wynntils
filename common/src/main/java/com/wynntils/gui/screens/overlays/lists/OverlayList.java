@@ -5,8 +5,8 @@
 package com.wynntils.gui.screens.overlays.lists;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -19,19 +19,18 @@ import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     private static final int ITEM_HEIGHT = 25;
     private static final int ROW_WIDTH = 161;
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
-            new TextComponent("Left click on the overlay to edit it."),
-            new TextComponent("Right click on the overlay to disable/enable it."));
+            Component.literal("Left click on the overlay to edit it."),
+            Component.literal("Right click on the overlay to disable/enable it."));
 
     private static final List<Component> DISABLED_PARENT_TOOLTIP_LINES = List.of(
-            new TextComponent("This overlay's parent feature is disabled.").withStyle(ChatFormatting.RED),
-            new TextComponent("Enable the feature to edit this overlay.").withStyle(ChatFormatting.RED));
+            Component.literal("This overlay's parent feature is disabled.").withStyle(ChatFormatting.RED),
+            Component.literal("Enable the feature to edit this overlay.").withStyle(ChatFormatting.RED));
 
     public OverlayList(OverlaySelectionScreen screen) {
         super(
@@ -42,8 +41,9 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                 screen.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() - 15,
                 ITEM_HEIGHT);
 
-        List<Overlay> overlays =
-                OverlayManager.getOverlays().stream().sorted(Overlay::compareTo).toList();
+        List<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                .sorted(Overlay::compareTo)
+                .toList();
 
         for (Overlay overlay : overlays) {
             this.addEntry(new OverlayEntry(overlay));
@@ -62,9 +62,10 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
         if (hovered != null) {
             if (!hovered.getOverlay().isParentEnabled()) {
                 List<Component> helpModified = new ArrayList<>(DISABLED_PARENT_TOOLTIP_LINES);
-                helpModified.add(new TextComponent(""));
-                helpModified.add(new TextComponent("Feature: "
-                        + OverlayManager.getOverlayParent(hovered.getOverlay()).getTranslatedName()));
+                helpModified.add(Component.literal(""));
+                helpModified.add(Component.literal("Feature: "
+                        + Managers.Overlay.getOverlayParent(hovered.getOverlay())
+                                .getTranslatedName()));
 
                 RenderUtils.drawTooltipAt(
                         poseStack,
@@ -88,7 +89,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     }
 
     @Override
-    protected void renderList(PoseStack poseStack, int x, int y, int mouseX, int mouseY, float partialTick) {
+    protected void renderList(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         int itemCount = this.getItemCount();
 
         int renderedCount = 0;

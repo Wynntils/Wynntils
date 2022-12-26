@@ -16,26 +16,24 @@ import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class GearViewerScreen extends Screen {
+public final class GearViewerScreen extends WynntilsScreen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
-            List.of(new TranslatableComponent("screens.wynntils.gearViewer.viewStats"));
+            List.of(Component.translatable("screens.wynntils.gearViewer.viewStats"));
 
     private final Player player;
     private final ItemStack heldItem;
     private final List<ItemStack> armorItems;
 
-    public GearViewerScreen(Player player) {
-        super(TextComponent.EMPTY);
+    private GearViewerScreen(Player player) {
+        super(Component.empty());
         this.player = player;
         this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
 
@@ -47,8 +45,12 @@ public class GearViewerScreen extends Screen {
         Collections.reverse(armorItems);
     }
 
+    public static Screen create(Player player) {
+        return new GearViewerScreen(player);
+    }
+
     @Override
-    protected void init() {
+    protected void doInit() {
         this.addRenderableWidget(new ViewPlayerStatsButton(
                 -20,
                 Texture.GEAR_VIEWER_BACKGROUND.height() / 3,
@@ -71,7 +73,7 @@ public class GearViewerScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         float translationX = getTranslationX();
         float translationY = getTranslationY();
 
@@ -118,7 +120,7 @@ public class GearViewerScreen extends Screen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        for (Widget renderable : renderables) {
+        for (Renderable renderable : renderables) {
             renderable.render(
                     poseStack, (int) (mouseX - getTranslationX()), (int) (mouseY - getTranslationY()), partialTick);
         }

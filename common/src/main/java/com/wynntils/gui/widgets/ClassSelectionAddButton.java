@@ -5,34 +5,31 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.wynn.model.CharacterSelectionManager;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
-public class ClassSelectionAddButton extends AbstractButton {
+public class ClassSelectionAddButton extends WynntilsButton {
     private static final List<Component> TOOLTIP_CANNOT_ADD = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.cannotAdd.name")
+            Component.translatable("screens.wynntils.characterSelection.cannotAdd.name")
                     .withStyle(ChatFormatting.DARK_RED),
-            new TranslatableComponent("screens.wynntils.characterSelection.cannotAdd.discussion")
+            Component.translatable("screens.wynntils.characterSelection.cannotAdd.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private static final List<Component> TOOLTIP_CAN_ADD = List.of(
-            new TranslatableComponent("screens.wynntils.characterSelection.add.name").withStyle(ChatFormatting.GREEN),
-            new TranslatableComponent("screens.wynntils.characterSelection.add.discussion")
+            Component.translatable("screens.wynntils.characterSelection.add.name")
+                    .withStyle(ChatFormatting.GREEN),
+            Component.translatable("screens.wynntils.characterSelection.add.discussion")
                     .withStyle(ChatFormatting.GRAY));
     private final CharacterSelectorScreen characterSelectorScreen;
 
     public ClassSelectionAddButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, new TextComponent("Class Selection Delete Button"));
+        super(x, y, width, height, Component.literal("Class Selection Delete Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 
@@ -40,7 +37,7 @@ public class ClassSelectionAddButton extends AbstractButton {
     public void onPress() {
         if (characterSelectorScreen.getFirstNewCharacterSlot() == -1) return;
 
-        CharacterSelectionManager.createNewClass();
+        Managers.CharacterSelection.createNewClass();
     }
 
     @Override
@@ -48,8 +45,8 @@ public class ClassSelectionAddButton extends AbstractButton {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.ADD_BUTTON.resource(),
-                this.x,
-                this.y,
+                this.getX(),
+                this.getY(),
                 0,
                 this.width,
                 this.height,
@@ -71,7 +68,4 @@ public class ClassSelectionAddButton extends AbstractButton {
                     true);
         }
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
 }

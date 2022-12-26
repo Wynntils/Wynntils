@@ -4,18 +4,18 @@
  */
 package com.wynntils.wynn.model;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.gui.render.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.io.File;
@@ -45,6 +45,7 @@ import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -52,8 +53,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
-public final class LootrunModel {
+public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -65,25 +67,27 @@ public final class LootrunModel {
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
 
-    private static LootrunState state = LootrunState.DISABLED;
+    private static List<LootrunInstance> LOOTRUN_INSTANCE_CACHE = new ArrayList<>();
 
-    private static LootrunInstance lootrun = null;
+    private LootrunState state = LootrunState.DISABLED;
+
+    private LootrunInstance lootrun = null;
     private static LootrunUncompiled uncompiled = null;
-    private static LootrunInstance recordingCompiled = null;
-    private static LootrunUncompiled recording = null;
+    private LootrunInstance recordingCompiled = null;
+    private LootrunUncompiled recording = null;
 
-    private static RecordingInformation recordingInformation = null;
+    private RecordingInformation recordingInformation = null;
 
-    public static LootrunState getState() {
+    public LootrunState getState() {
         return state;
     }
 
-    public static void render(PoseStack poseStack) {
+    public void render(PoseStack poseStack) {
         renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
         renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
     }
 
-    private static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
+    private void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
         if (lootrun == null) {
             return;
         }
@@ -102,7 +106,7 @@ public final class LootrunModel {
 
         MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
-        int renderDistance = McUtils.options().renderDistance;
+        int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
@@ -134,7 +138,7 @@ public final class LootrunModel {
         poseStack.popPose();
     }
 
-    private static void renderNotes(
+    private void renderNotes(
             PoseStack poseStack, LootrunInstance lootrun, int color, MultiBufferSource source, long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
@@ -158,7 +162,7 @@ public final class LootrunModel {
         }
     }
 
-    private static void renderChests(
+    private void renderChests(
             PoseStack poseStack,
             LootrunInstance lootrun,
             int color,
@@ -178,7 +182,7 @@ public final class LootrunModel {
         source.endBatch();
     }
 
-    private static void renderPoints(
+    private void renderPoints(
             PoseStack poseStack,
             MultiBufferSource.BufferSource source,
             Long2ObjectMap<List<ColoredPath>> points,
@@ -191,7 +195,7 @@ public final class LootrunModel {
         renderNonTexturedLootrunPoints(poseStack, source, locations, level, CustomRenderType.LOOTRUN_LINE);
     }
 
-    private static void renderNonTexturedLootrunPoints(
+    private void renderNonTexturedLootrunPoints(
             PoseStack poseStack,
             MultiBufferSource.BufferSource source,
             List<ColoredPath> locations,
@@ -251,13 +255,13 @@ public final class LootrunModel {
         }
     }
 
-    private static void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
+    private void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
         for (ColoredPoint location : toRender.points()) {
             renderPoint(consumer, lastMatrix, location);
         }
     }
 
-    private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPoint location) {
+    private void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPoint location) {
         Vec3 rawLocation = location.vec3();
         int pathColor = location.color();
         consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
@@ -266,7 +270,7 @@ public final class LootrunModel {
                 .endVertex();
     }
 
-    private static BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
+    private BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
         BlockValidness state = BlockValidness.INVALID;
         Iterable<BlockPos> blocks = getBlocksForPoint(point);
 
@@ -283,14 +287,14 @@ public final class LootrunModel {
         return state;
     }
 
-    private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
+    private Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
         BlockPos minPos = new BlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
         BlockPos maxPos = new BlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
 
         return BlockPos.betweenClosed(minPos, maxPos);
     }
 
-    public static int addNote(Component text) {
+    public int addNote(Component text) {
         Entity root = McUtils.player().getRootVehicle();
 
         LootrunUncompiled current = getActiveLootrun();
@@ -301,7 +305,7 @@ public final class LootrunModel {
         return recompileLootrun(true);
     }
 
-    public static LootrunUncompiled getActiveLootrun() {
+    public LootrunUncompiled getActiveLootrun() {
         LootrunUncompiled instance = null;
         if (recording != null) instance = recording;
         else if (uncompiled != null) instance = uncompiled;
@@ -309,18 +313,18 @@ public final class LootrunModel {
         return instance;
     }
 
-    public static LootrunInstance getCurrentLootrun() {
+    public LootrunInstance getCurrentLootrun() {
         return lootrun;
     }
 
-    public static int recompileLootrun(boolean saveToFile) {
+    public int recompileLootrun(boolean saveToFile) {
         if (recording != null) {
             recordingInformation.setDirty(true);
         } else if (uncompiled != null) {
             lootrun = compile(uncompiled, false);
             if (saveToFile && uncompiled.file() != null) {
                 LootrunSaveResult lootrunSaveResult =
-                        trySaveCurrentLootrun(uncompiled.file().getName());
+                        trySaveCurrentLootrun(uncompiled.file().getName().replace(".json", ""));
 
                 if (lootrunSaveResult == null) {
                     return 0;
@@ -339,20 +343,23 @@ public final class LootrunModel {
         return 1;
     }
 
-    private static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+    private LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
         Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<Note>> notes = getNotes(uncompiled.notes());
 
-        String lootrunName = recording
-                ? "recorded_lootrun"
-                : (uncompiled.file() == null
-                        ? "lootrun"
-                        : uncompiled.file().getName().replace(".json", ""));
+        String lootrunName = getLootrunName(uncompiled, recording);
         return new LootrunInstance(lootrunName, uncompiled.path, points, chests, notes);
     }
 
-    private static List<Path> sample(Path raw, float sampleRate) {
+    private String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
+        if (recording) return "recorded_lootrun";
+        if (uncompiled.file() == null) return "lootrun";
+
+        return uncompiled.file().getName().replace(".json", "");
+    }
+
+    private List<Path> sample(Path raw, float sampleRate) {
         List<Path> vec3s = new ArrayList<>();
         Path currentVec3s = new Path(new ArrayList<>());
         vec3s.add(currentVec3s);
@@ -372,9 +379,9 @@ public final class LootrunModel {
         List<Path> result = new ArrayList<>();
         for (Path current : vec3s) {
             float distance = 0f;
-            CubicSpline.Builder<Float> builderX = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderY = CubicSpline.builder((value) -> value);
-            CubicSpline.Builder<Float> builderZ = CubicSpline.builder((value) -> value);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 vec3 = current.points().get(i);
                 if (i > 0) {
@@ -394,9 +401,9 @@ public final class LootrunModel {
                 builderY.addPoint(distance, (float) vec3.y, slopeY);
                 builderZ.addPoint(distance, (float) vec3.z, slopeZ);
             }
-            CubicSpline<Float> splineX = builderX.build();
-            CubicSpline<Float> splineY = builderY.build();
-            CubicSpline<Float> splineZ = builderZ.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<Float, ToFloatFunction<Float>> splineZ = builderZ.build();
 
             Path newResult = new Path(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {
@@ -407,7 +414,7 @@ public final class LootrunModel {
         return result;
     }
 
-    private static Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw, boolean recording) {
+    private Long2ObjectMap<List<ColoredPath>> generatePointsByChunk(Path raw, boolean recording) {
         float sampleRate = 10f;
 
         List<List<Vec3>> sampled =
@@ -488,7 +495,7 @@ public final class LootrunModel {
         return sampleByChunk;
     }
 
-    private static Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
+    private Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
         Long2ObjectMap<Set<BlockPos>> result = new Long2ObjectOpenHashMap<>();
         for (BlockPos pos : chests) {
             Set<BlockPos> addTo = result.computeIfAbsent(new ChunkPos(pos).toLong(), (chunk) -> new HashSet<>());
@@ -497,7 +504,7 @@ public final class LootrunModel {
         return result;
     }
 
-    private static Long2ObjectMap<List<Note>> getNotes(List<Note> notes) {
+    private Long2ObjectMap<List<Note>> getNotes(List<Note> notes) {
         Long2ObjectMap<List<Note>> result = new Long2ObjectOpenHashMap<>();
         for (Note note : notes) {
             ChunkPos chunk = new ChunkPos(new BlockPos(note.position()));
@@ -507,7 +514,7 @@ public final class LootrunModel {
         return result;
     }
 
-    private static LootrunUncompiled readJson(File file, JsonObject json) {
+    private LootrunUncompiled readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
         Path pointsList = new Path(new ArrayList<>());
         for (JsonElement element : points) {
@@ -535,7 +542,14 @@ public final class LootrunModel {
         if (notesJson != null) {
             for (JsonElement element : notesJson) {
                 JsonObject noteJson = element.getAsJsonObject();
-                JsonObject positionJson = noteJson.getAsJsonObject("location");
+                JsonObject positionJson = noteJson.getAsJsonObject("position");
+
+                // Artemis builds, until this point have used a slightly different format for notes
+                // This perserves support for those files, as this commit fixes the format to match legacy
+                if (positionJson == null) {
+                    positionJson = noteJson.getAsJsonObject("location");
+                }
+
                 Vec3 position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
@@ -548,7 +562,7 @@ public final class LootrunModel {
         return new LootrunUncompiled(pointsList, chests, notes, file);
     }
 
-    public static void clearCurrentLootrun() {
+    public void clearCurrentLootrun() {
         LootrunFeature.INSTANCE.disable();
         state = LootrunState.DISABLED;
         lootrun = null;
@@ -558,7 +572,7 @@ public final class LootrunModel {
         recordingInformation = null;
     }
 
-    public static void stopRecording() {
+    public void stopRecording() {
         // At this point, we already have LootrunFeature registered to the event bus
         state = LootrunState.LOADED;
         lootrun = compile(recording, false);
@@ -568,14 +582,18 @@ public final class LootrunModel {
         recordingInformation = null;
     }
 
-    public static void startRecording() {
+    public void startRecording() {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new Path(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
         LootrunFeature.INSTANCE.enable();
     }
 
-    public static List<LootrunInstance> getLootruns() {
+    public List<LootrunInstance> getLootruns() {
+        return LOOTRUN_INSTANCE_CACHE;
+    }
+
+    public void refreshLootrunCache() {
         List<LootrunInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
@@ -592,18 +610,19 @@ public final class LootrunModel {
             }
         }
 
-        return lootruns;
+        LOOTRUN_INSTANCE_CACHE = lootruns;
+        WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
-    public static boolean tryLoadFile(String fileName) {
-        String lootrun = fileName + ".json";
-        File lootrunFile = new File(LOOTRUNS, lootrun);
+    public boolean tryLoadFile(String fileName) {
+        String lootrunFileName = fileName + ".json";
+        File lootrunFile = new File(LOOTRUNS, lootrunFileName);
         if (lootrunFile.exists()) {
             try {
                 FileReader file = new FileReader(lootrunFile, StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
                 uncompiled = readJson(lootrunFile, json);
-                LootrunModel.lootrun = compile(uncompiled, false);
+                lootrun = compile(uncompiled, false);
                 state = LootrunState.LOADED;
                 LootrunFeature.INSTANCE.enable();
                 file.close();
@@ -616,7 +635,7 @@ public final class LootrunModel {
         return false;
     }
 
-    public static LootrunUndoResult tryUndo() {
+    public LootrunUndoResult tryUndo() {
         Vec3 position = McUtils.player().position();
         Path points = recording.path();
         Path removed = new Path(new ArrayList<>());
@@ -646,22 +665,22 @@ public final class LootrunModel {
         return LootrunUndoResult.SUCCESSFUL;
     }
 
-    public static boolean addChest(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+    public boolean addChest(BlockPos pos) {
+        LootrunUncompiled current = getActiveLootrun();
         if (current == null) return false;
         return current.chests().add(pos);
     }
 
-    public static boolean removeChest(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+    public boolean removeChest(BlockPos pos) {
+        LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return false;
 
         return current.chests().remove(pos);
     }
 
-    public static Note deleteNoteAt(BlockPos pos) {
-        LootrunUncompiled current = LootrunModel.getActiveLootrun();
+    public Note deleteNoteAt(BlockPos pos) {
+        LootrunUncompiled current = getActiveLootrun();
 
         if (current == null) return null;
 
@@ -675,7 +694,7 @@ public final class LootrunModel {
         return null;
     }
 
-    public static List<Note> getCurrentNotes() {
+    public List<Note> getCurrentNotes() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun != null) return activeLootrun.notes();
@@ -683,7 +702,7 @@ public final class LootrunModel {
         return new ArrayList<>();
     }
 
-    public static void setLastChestIfRecording(BlockPos pos) {
+    public void setLastChestIfRecording(BlockPos pos) {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -691,7 +710,7 @@ public final class LootrunModel {
         recordingInformation.setLastChest(pos);
     }
 
-    public static void addChestIfRecording() {
+    public void addChestIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -705,7 +724,7 @@ public final class LootrunModel {
         recordingInformation.setLastChest(null);
     }
 
-    public static void recordMovementIfRecording() {
+    public void recordMovementIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -728,7 +747,7 @@ public final class LootrunModel {
         }
     }
 
-    public static Vec3 getStartingPoint() {
+    public Vec3 getStartingPoint() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun == null) {
@@ -740,7 +759,7 @@ public final class LootrunModel {
         return activeLootrun.path.points().get(0);
     }
 
-    public static LootrunSaveResult trySaveCurrentLootrun(String name) {
+    public LootrunSaveResult trySaveCurrentLootrun(String name) {
         LootrunUncompiled activeLootrun = getActiveLootrun();
 
         if (activeLootrun == null) {
@@ -821,8 +840,8 @@ public final class LootrunModel {
 
         private LootrunSaveResult saveLootrun(String name) {
             try {
-                File file = new File(LootrunModel.LOOTRUNS, name + ".json");
-                LootrunModel.uncompiled = new LootrunUncompiled(this, file);
+                File file = new File(LOOTRUNS, name + ".json");
+                uncompiled = new LootrunUncompiled(this, file);
 
                 boolean result = file.createNewFile();
 
@@ -860,7 +879,7 @@ public final class LootrunModel {
                     locationJson.addProperty("x", location.x);
                     locationJson.addProperty("y", location.y);
                     locationJson.addProperty("z", location.z);
-                    noteJson.add("position", locationJson);
+                    noteJson.add("location", locationJson);
 
                     noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
                     notes.add(noteJson);
@@ -872,7 +891,7 @@ public final class LootrunModel {
                         DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
                                 .format(new Date()));
                 FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
-                new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
+                WynntilsMod.GSON.toJson(json, writer);
                 writer.close();
                 return LootrunSaveResult.SAVED;
             } catch (IOException ex) {

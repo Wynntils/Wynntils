@@ -12,7 +12,7 @@ public abstract class RelationsUpdateEvent extends Event {
     private final Set<String> changedPlayers;
     private final ChangeType changeType;
 
-    public RelationsUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
+    protected RelationsUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
         this.changedPlayers = changedPlayers;
         this.changeType = changeType;
     }

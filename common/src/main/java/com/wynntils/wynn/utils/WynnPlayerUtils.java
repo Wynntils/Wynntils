@@ -5,6 +5,7 @@
 package com.wynntils.wynn.utils;
 
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Team;
 
@@ -31,5 +32,36 @@ public final class WynnPlayerUtils {
     // Returns true if the player is on the same server and is not a npc
     public static boolean isLocalPlayer(Player player) {
         return !isNpc(player) && !isPlayerGhost(player);
+    }
+
+    public static String getFormattedRank(String rank) {
+        ChatFormatting primaryColor;
+        ChatFormatting secondaryColor;
+
+        switch (rank) {
+            case "VIP" -> {
+                primaryColor = ChatFormatting.DARK_GREEN;
+                secondaryColor = ChatFormatting.GREEN;
+            }
+            case "VIP+" -> {
+                primaryColor = ChatFormatting.DARK_AQUA;
+                secondaryColor = ChatFormatting.AQUA;
+            }
+            case "HERO" -> {
+                primaryColor = ChatFormatting.DARK_PURPLE;
+                secondaryColor = ChatFormatting.LIGHT_PURPLE;
+            }
+            case "CHAMPION" -> {
+                primaryColor = ChatFormatting.YELLOW;
+                secondaryColor = ChatFormatting.GOLD;
+            }
+            default -> {
+                // Should not happen
+                primaryColor = ChatFormatting.DARK_GRAY;
+                secondaryColor = ChatFormatting.DARK_GRAY;
+            }
+        }
+
+        return primaryColor + "[" + secondaryColor + rank + primaryColor + "] " + secondaryColor;
     }
 }

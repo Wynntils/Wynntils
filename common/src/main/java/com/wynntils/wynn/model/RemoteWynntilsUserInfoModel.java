@@ -5,10 +5,10 @@
 package com.wynntils.wynn.model;
 
 import com.google.gson.JsonObject;
-import com.wynntils.core.managers.Model;
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.request.PostRequestBuilder;
-import com.wynntils.core.webapi.request.Request;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.account.AccountType;
@@ -20,59 +20,44 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class RemoteWynntilsUserInfoModel extends Model {
-    public static void init() {}
+public final class RemoteWynntilsUserInfoModel extends Model {
+    private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
+    private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
-    private static final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
-    private static final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
-
-    public static void loadUser(UUID uuid) {
-        if (!WebManager.isAthenaOnline() || WebManager.getApiUrls().isEmpty()) return;
+    public void loadUser(UUID uuid) {
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads
 
-        JsonObject body = new JsonObject();
-        body.addProperty("uuid", uuid.toString());
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
+        apiResponse.handleJsonObject(json -> {
+            if (!json.has("user")) return;
 
-        Request req = new PostRequestBuilder(
-                        WebManager.getApiUrls().get().get("Athena") + "/user/getInfo", "getInfo(" + uuid + ")")
-                .postJsonElement(body)
-                .handleJsonObject(json -> {
-                    if (!json.has("user")) return false;
-
-                    JsonObject user = json.getAsJsonObject("user");
-                    users.put(
-                            uuid,
-                            new WynntilsUser(
-                                    AccountType.valueOf(user.get("accountType").getAsString())));
-                    fetching.remove(uuid);
-
-                    return true;
-                })
-                .onError(() -> {})
-                .build();
-
-        WebManager.getHandler().addAndDispatch(req, true);
+            JsonObject user = json.getAsJsonObject("user");
+            users.put(
+                    uuid,
+                    new WynntilsUser(AccountType.valueOf(user.get("accountType").getAsString())));
+            fetching.remove(uuid);
+        });
     }
 
-    public static WynntilsUser getUser(UUID uuid) {
+    public WynntilsUser getUser(UUID uuid) {
         return users.getOrDefault(uuid, null);
     }
 
-    private static void clearUserCache() {
+    private void clearUserCache() {
         users.clear();
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
+    public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
             case NOT_CONNECTED, CONNECTING -> clearUserCache();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerJoinedWorldEvent event) {
+    public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         if (event.getPlayerId() == null || event.getPlayerInfo() == null) return;
         String name = event.getPlayerInfo().getProfile().getName();
         if (WynnPlayerUtils.isNpc(name)) return; // avoid player npcs

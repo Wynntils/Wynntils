@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -13,10 +14,8 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.model.ActionBarModel;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -47,12 +46,12 @@ public class HealthPotionBlockerFeature extends UserFeature {
         ItemStack stack = McUtils.inventory().getSelected();
         if (!WynnItemMatchers.isHealingPotion(stack)) return null;
 
-        if (ActionBarModel.getCurrentHealth() * 100 < ActionBarModel.getMaxHealth() * threshold) return null;
+        if (Models.ActionBar.getCurrentHealth() * 100 < Models.ActionBar.getMaxHealth() * threshold) return null;
 
         if (threshold < 100)
-            return new TranslatableComponent("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
+            return Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
                     .withStyle(ChatFormatting.RED);
-        return new TranslatableComponent("feature.wynntils.healthPotionBlocker.healthFull")
+        return Component.translatable("feature.wynntils.healthPotionBlocker.healthFull")
                 .withStyle(ChatFormatting.RED);
     }
 }

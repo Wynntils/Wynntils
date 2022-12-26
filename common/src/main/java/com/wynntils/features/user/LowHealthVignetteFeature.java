@@ -4,16 +4,16 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.WorldStateManager;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,21 +38,21 @@ public class LowHealthVignetteFeature extends UserFeature {
     private boolean shouldRender = false;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(ActionBarModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.ActionBar);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
-        if (!WorldStateManager.onWorld()) return;
+        if (!Managers.WorldState.onWorld()) return;
 
         RenderUtils.renderVignetteOverlay(event.getPoseStack(), color, value);
     }
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.Start event) {
-        float healthPercent = (float) ActionBarModel.getCurrentHealth() / ActionBarModel.getMaxHealth();
+        float healthPercent = (float) Models.ActionBar.getCurrentHealth() / Models.ActionBar.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;
 

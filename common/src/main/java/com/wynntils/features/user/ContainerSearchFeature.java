@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
@@ -23,6 +25,7 @@ import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -49,6 +52,11 @@ public class ContainerSearchFeature extends UserFeature {
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.SearchOverlayProperty);
+    }
+
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
@@ -61,10 +69,10 @@ public class ContainerSearchFeature extends UserFeature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        SearchableContainerType SearchableContainerType = getCurrentSearchableContainerType(title);
-        if (SearchableContainerType == null) return;
+        SearchableContainerType searchableContainerType = getCurrentSearchableContainerType(title);
+        if (searchableContainerType == null) return;
 
-        currentSearchableContainerType = SearchableContainerType;
+        currentSearchableContainerType = searchableContainerType;
 
         addSearchWidget(screen, renderX, renderY);
     }
@@ -178,7 +186,7 @@ public class ContainerSearchFeature extends UserFeature {
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
-            boolean filtered = !search.equals("") && name.contains(search) && item.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
 
             wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
 

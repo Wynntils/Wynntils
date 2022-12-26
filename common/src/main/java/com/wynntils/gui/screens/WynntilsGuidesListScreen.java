@@ -17,42 +17,37 @@ import com.wynntils.gui.widgets.GuidesButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
-public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
-    private final List<Screen> GUIDES = List.of(
-            new WynntilsItemGuideScreen(),
-            new WynntilsIngredientGuideScreen(),
-            new WynntilsEmeraldPouchGuideScreen(),
-            new WynntilsPowderGuideScreen());
+public final class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, GuidesButton> {
+    private static final List<Screen> GUIDES = List.of(
+            WynntilsItemGuideScreen.create(),
+            WynntilsIngredientGuideScreen.create(),
+            WynntilsEmeraldPouchGuideScreen.create(),
+            WynntilsPowderGuideScreen.create());
 
-    public WynntilsGuidesListScreen() {
-        super(new TranslatableComponent("screens.wynntils.wynntilsGuides.name"));
+    private WynntilsGuidesListScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.name"));
+    }
+
+    public static Screen create() {
+        return new WynntilsGuidesListScreen();
     }
 
     @Override
-    public void onClose() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(false);
-        super.onClose();
-    }
-
-    @Override
-    protected void init() {
-        McUtils.mc().keyboardHandler.setSendRepeatsToGui(true);
-
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
-                new WynntilsMenuScreen()));
+                WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -71,7 +66,7 @@ public class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Screen, Gui
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background

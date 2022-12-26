@@ -4,15 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.managers.Model;
 import com.wynntils.hades.protocol.enums.SocialType;
-import com.wynntils.sockets.model.HadesModel;
-import com.wynntils.sockets.model.HadesUserModel;
-import com.wynntils.wynn.model.ActionBarModel;
-import com.wynntils.wynn.model.PlayerRelationsModel;
 import java.util.List;
 
 public class HadesFeature extends UserFeature {
@@ -31,12 +28,14 @@ public class HadesFeature extends UserFeature {
     public boolean shareWithGuild = true;
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        // SocketModel
-        //      needs ActionBarModel for updating player info
+    public List<Model> getModelDependencies() {
+        // We need:
+        //      HadesModel to communicate with Hades server
         //      HadesUserModel for storing remote HadesUser info
         //      PlayerRelationsModel to parse player relations
-        return List.of(HadesModel.class, PlayerRelationsModel.class, HadesUserModel.class, ActionBarModel.class);
+        // Inter-model dependencies, that cannot be tracked otherwise:
+        //      HadesModel needs ActionBarModel for updating player info
+        return List.of(Models.Hades, Models.PlayerRelations, Models.HadesUser, Models.ActionBar);
     }
 
     @Override
@@ -44,23 +43,23 @@ public class HadesFeature extends UserFeature {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo) {
-                    HadesModel.tryResendWorldData();
+                    Models.Hades.tryResendWorldData();
                 } else {
-                    HadesUserModel.getHadesUserMap().clear();
+                    Models.HadesUser.getHadesUserMap().clear();
                 }
             }
             case "shareWithParty" -> {
                 if (shareWithParty) {
-                    PlayerRelationsModel.requestPartyListUpdate();
+                    Models.PlayerRelations.requestPartyListUpdate();
                 } else {
-                    HadesModel.resetSocialType(SocialType.PARTY);
+                    Models.Hades.resetSocialType(SocialType.PARTY);
                 }
             }
             case "shareWithFriends" -> {
                 if (shareWithFriends) {
-                    PlayerRelationsModel.requestFriendListUpdate();
+                    Models.PlayerRelations.requestFriendListUpdate();
                 } else {
-                    HadesModel.resetSocialType(SocialType.FRIEND);
+                    Models.Hades.resetSocialType(SocialType.FRIEND);
                 }
             }
             case "shareWithGuild" -> {

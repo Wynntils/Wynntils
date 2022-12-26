@@ -4,14 +4,14 @@
  */
 package com.wynntils.wynn.item.parsers;
 
-import com.wynntils.core.webapi.WebManager;
-import com.wynntils.core.webapi.profiles.item.ItemProfile;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +54,7 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isIntelligenceSkillPoints(ItemStack itemStack) {
-        if (itemStack.getItem() != Items.BOOK) return false;
+        if (itemStack.getItem() != Items.GOLDEN_AXE) return false;
 
         Component name = itemStack.getHoverName();
         String unformattedLoreLine = ComponentUtils.getCoded(name);
@@ -150,10 +150,10 @@ public final class WynnItemMatchers {
     public static boolean isKnownGear(ItemStack itemStack) {
         String name = itemStack.getHoverName().getString();
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        if (WebManager.getItemsMap() == null || !WebManager.getItemsMap().containsKey(strippedName)) return false;
-        ItemProfile profile = WebManager.getItemsMap().get(strippedName);
-        return (profile != null
-                && name.startsWith(profile.getTier().getChatFormatting().toString()));
+        ItemProfile profile = Managers.ItemProfiles.getItemsProfile(strippedName);
+        if (profile == null) return false;
+
+        return name.startsWith(profile.getTier().getChatFormatting().toString());
     }
 
     public static boolean isCraftedGear(ItemStack itemStack) {
@@ -164,9 +164,13 @@ public final class WynnItemMatchers {
 
     public static boolean isMythic(ItemStack itemStack) {
         // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack))) return false;
+        if (!(isUnidentified(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
 
         return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
+    }
+
+    public static boolean isMythicBox(ItemStack itemStack) {
+        return itemStack.is(Items.STONE_SHOVEL) && itemStack.getDamageValue() == 6;
     }
 
     /**

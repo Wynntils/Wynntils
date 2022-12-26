@@ -5,15 +5,16 @@
 package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.managers.Model;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.Texture;
@@ -24,9 +25,8 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.objects.HealthTexture;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
@@ -36,7 +36,7 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,6 +51,30 @@ public class MapFeature extends UserFeature {
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
+
+    @Config
+    public float poiFadeDistance = 0.6f;
+
+    @Config
+    public float combatPoiMinZoom = 0.1f;
+
+    @Config
+    public float servicePoiMinZoom = 1f;
+
+    @Config
+    public float customPoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier1PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier2PoiMinZoom = 1f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.1f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.1f;
 
     @Config
     public PointerType pointerType = PointerType.Arrow;
@@ -99,12 +123,12 @@ public class MapFeature extends UserFeature {
             return;
         }
 
-        McUtils.mc().setScreen(new MainMapScreen());
+        McUtils.mc().setScreen(MainMapScreen.create());
     });
 
     @Override
-    public List<Class<? extends Model>> getModelDependencies() {
-        return List.of(MapModel.class);
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Map);
     }
 
     @SubscribeEvent
@@ -130,18 +154,22 @@ public class MapFeature extends UserFeature {
 
         if (tier.ordinal() < minTierForAutoWaypoint.ordinal()) return;
 
-        MapLocation location = new MapLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
+        PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
-                location, tier.getWaypointName(), CommonColors.WHITE, tier.getWaypointTexture(), Integer.MIN_VALUE);
+                location,
+                tier.getWaypointName(),
+                CommonColors.WHITE,
+                tier.getWaypointTexture(),
+                CustomPoi.Visibility.DEFAULT);
 
         if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
             MapFeature.INSTANCE.customPois.add(newPoi);
 
             // TODO: Replace this notification with a popup
-            NotificationManager.queueMessage(new TextComponent("Added new waypoint for " + tier.getWaypointName())
+            NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            ConfigManager.saveConfig();
+            Managers.Config.saveConfig();
         }
     }
 

@@ -7,7 +7,7 @@ package com.wynntils.gui.screens.maps;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.ConfigManager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -20,17 +20,17 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.MapLocation;
+import com.wynntils.wynn.model.map.poi.PoiLocation;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class PoiCreationScreen extends Screen implements TextboxScreen {
+public final class PoiCreationScreen extends Screen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
 
     private static final List<Texture> POI_ICONS = List.of(
@@ -60,31 +60,45 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     private Button saveButton;
 
     private int selectedIconIndex = 0;
-    private Visibility selectedVisiblity = Visibility.DEFAULT;
+    private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
     private final MainMapScreen oldMapScreen;
     private CustomPoi oldPoi;
-    private MapLocation setupLocation;
-    private boolean firstSetup = false;
+    private PoiLocation setupLocation;
+    private boolean firstSetup;
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen) {
-        super(new TextComponent("Poi Creation Screen"));
+    private PoiCreationScreen(MainMapScreen oldMapScreen) {
+        super(Component.literal("Poi Creation Screen"));
         this.oldMapScreen = oldMapScreen;
+
+        this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, MapLocation setupLocation) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
         this(oldMapScreen);
 
         this.oldPoi = poi;
         this.firstSetup = true;
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen) {
+        return new PoiCreationScreen(oldMapScreen);
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+        return new PoiCreationScreen(oldMapScreen, setupLocation);
+    }
+
+    public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
+        return new PoiCreationScreen(oldMapScreen, poi);
     }
 
     @Override
@@ -103,6 +117,10 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                         nameInput));
         if (oldPoi != null && firstSetup) {
             nameInput.setTextBoxInput(oldPoi.getName());
+        }
+
+        if (firstSetup) {
+            setFocusedTextInput(nameInput);
         }
         // endregion
 
@@ -133,7 +151,6 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
                         },
                         this,
                         yInput));
-        ;
         this.addRenderableWidget(
                 zInput = new TextInputBoxWidget(
                         this.width / 2 + 15,
@@ -150,11 +167,13 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         if (firstSetup) {
             if (oldPoi != null) {
                 xInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getX()));
-                yInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getY()));
+                Optional<Integer> y = oldPoi.getLocation().getY();
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(oldPoi.getLocation().getZ()));
             } else if (setupLocation != null) {
                 xInput.setTextBoxInput(String.valueOf(setupLocation.getX()));
-                yInput.setTextBoxInput(String.valueOf(setupLocation.getY()));
+                Optional<Integer> y = setupLocation.getY();
+                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
                 zInput.setTextBoxInput(String.valueOf(setupLocation.getZ()));
             }
         }
@@ -162,22 +181,26 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Icon
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 40, 20, 20, new TextComponent("<"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
                         selectedIconIndex = POI_ICONS.size() - 1;
                     } else {
                         selectedIconIndex--;
                     }
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 40, this.height / 2 + 40, 20, 20, new TextComponent(">"), (button) -> {
+                })
+                .pos(this.width / 2 - 100, this.height / 2 + 40)
+                .size(20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
                     if (selectedIconIndex + 1 >= POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
                         selectedIconIndex++;
                     }
-                }));
+                })
+                .pos(this.width / 2 - 40, this.height / 2 + 40)
+                .size(20, 20)
+                .build());
         if (oldPoi != null && firstSetup) {
             int index = POI_ICONS.indexOf(oldPoi.getIcon());
             selectedIconIndex = index == -1 ? 0 : index;
@@ -215,43 +238,43 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(
-                new Button(this.width / 2 - 100, this.height / 2 + 90, 20, 20, new TextComponent("<"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() - 1 + Visibility.values().length)
-                                    % Visibility.values().length];
-                }));
-        this.addRenderableWidget(
-                new Button(this.width / 2 + 80, this.height / 2 + 90, 20, 20, new TextComponent(">"), (button) -> {
-                    selectedVisiblity = Visibility.values()[
-                            (selectedVisiblity.ordinal() + 1 + Visibility.values().length)
-                                    % Visibility.values().length];
-                }));
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal("<"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
+                .pos(this.width / 2 - 100, this.height / 2 + 90)
+                .size(20, 20)
+                .build());
+        this.addRenderableWidget(new Button.Builder(
+                        Component.literal(">"),
+                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
+                                (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                                        % CustomPoi.Visibility.values().length])
+                .pos(this.width / 2 + 80, this.height / 2 + 90)
+                .size(20, 20)
+                .build());
+
         if (oldPoi != null && firstSetup) {
-            selectedVisiblity = Visibility.fromMinZoom(oldPoi.getMinZoom());
+            selectedVisiblity = oldPoi.getVisibility();
         }
         // endregion
 
         // region Screen Interactions
         this.addRenderableWidget(
-                saveButton = new Button(
-                        this.width / 2 + 50,
-                        this.height / 2 + 140,
-                        100,
-                        20,
-                        new TranslatableComponent("screens.wynntils.poiCreation.save"),
-                        (button) -> {
-                            savePoi();
-                            this.onClose();
-                        }));
-
-        this.addRenderableWidget(new Button(
-                this.width / 2 - 150,
-                this.height / 2 + 140,
-                100,
-                20,
-                new TranslatableComponent("screens.wynntils.poiCreation.cancel"),
-                (button) -> this.onClose()));
+                saveButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
+                                    savePoi();
+                                    this.onClose();
+                                })
+                        .pos(this.width / 2 + 50, this.height / 2 + 140)
+                        .size(100, 20)
+                        .build());
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                .pos(this.width / 2 - 150, this.height / 2 + 140)
+                .size(100, 20)
+                .build());
         // endregion
 
         updateSaveStatus();
@@ -260,7 +283,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+        renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
@@ -379,6 +402,12 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // When tab is pressed, focus the next text box
         if (keyCode == GLFW.GLFW_KEY_TAB) {
@@ -389,7 +418,7 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
             // From index - end
             for (int i = actualIndex; i < children().size(); i++) {
                 if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    focusedTextInput = textInputBoxWidget;
+                    setFocusedTextInput(textInputBoxWidget);
                     return true;
                 }
             }
@@ -397,13 +426,14 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
             // From 0 - index
             for (int i = 0; i < Math.min(actualIndex, children().size()); i++) {
                 if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    focusedTextInput = textInputBoxWidget;
+                    setFocusedTextInput(textInputBoxWidget);
                     return true;
                 }
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -427,20 +457,21 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
         saveButton.active = !nameInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(colorInput.getTextBoxInput()) != CustomColor.NONE
                 && COORDINATE_PATTERN.matcher(xInput.getTextBoxInput()).matches()
-                && COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
+                && (COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
+                        || yInput.getTextBoxInput().isEmpty())
                 && COORDINATE_PATTERN.matcher(zInput.getTextBoxInput()).matches();
     }
 
     private void savePoi() {
         CustomPoi poi = new CustomPoi(
-                new MapLocation(
+                new PoiLocation(
                         Integer.parseInt(xInput.getTextBoxInput()),
-                        Integer.parseInt(yInput.getTextBoxInput()),
+                        yInput.getTextBoxInput().isEmpty() ? null : Integer.parseInt(yInput.getTextBoxInput()),
                         Integer.parseInt(zInput.getTextBoxInput())),
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
                 POI_ICONS.get(selectedIconIndex),
-                selectedVisiblity.getMinZoom());
+                selectedVisiblity);
 
         if (oldPoi != null) {
             MapFeature.INSTANCE.customPois.remove(oldPoi);
@@ -448,36 +479,6 @@ public class PoiCreationScreen extends Screen implements TextboxScreen {
 
         MapFeature.INSTANCE.customPois.add(poi);
 
-        ConfigManager.saveConfig();
-    }
-
-    public enum Visibility {
-        DEFAULT("screens.wynntils.poiCreation.visibility.default", 1.5f),
-        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible", Integer.MIN_VALUE),
-        HIDDEN("screens.wynntils.poiCreation.visibility.hidden", Integer.MAX_VALUE);
-
-        private final String translationKey;
-        private final float minZoom;
-
-        Visibility(String translationKey, float minZoom) {
-            this.translationKey = translationKey;
-            this.minZoom = minZoom;
-        }
-
-        public String getTranslationKey() {
-            return translationKey;
-        }
-
-        public float getMinZoom() {
-            return minZoom;
-        }
-
-        public static Visibility fromMinZoom(float value) {
-            for (Visibility v : values()) {
-                if (v.getMinZoom() == value) return v;
-            }
-
-            return DEFAULT;
-        }
+        Managers.Config.saveConfig();
     }
 }

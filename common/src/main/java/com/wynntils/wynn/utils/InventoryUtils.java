@@ -60,6 +60,15 @@ public final class InventoryUtils {
         return -1;
     }
 
+    public static int getEmptySlots(Inventory inventory) {
+        if (inventory == null) return 0;
+        int slots = 0;
+        for (ItemStack itemStack : inventory.items) {
+            if (itemStack.isEmpty()) slots++;
+        }
+        return slots;
+    }
+
     public enum MouseClickType {
         LEFT_CLICK,
         RIGHT_CLICK

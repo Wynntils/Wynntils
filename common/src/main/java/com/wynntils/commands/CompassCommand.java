@@ -9,12 +9,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.LocationUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
@@ -30,8 +29,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
@@ -91,21 +90,18 @@ public class CompassCommand extends CommandBase {
     }
 
     private int shareCompass(CommandContext<CommandSourceStack> context) {
-        Optional<Location> compassLocation = CompassModel.getCompassLocation();
+        Optional<Location> compassLocation = Models.Compass.getCompassLocation();
 
         if (compassLocation.isEmpty()) {
             context.getSource()
-                    .sendFailure(new TextComponent("You don't have a compass set!").withStyle(ChatFormatting.RED));
+                    .sendFailure(
+                            Component.literal("You don't have a compass set!").withStyle(ChatFormatting.RED));
             return 1;
         }
 
         String target = StringArgumentType.getString(context, "target");
 
-        Location compass = compassLocation.get();
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareCompass(target, compassLocation.get());
 
         return 1;
     }
@@ -113,32 +109,18 @@ public class CompassCommand extends CommandBase {
     private int shareLocation(CommandContext<CommandSourceStack> context) {
         String target = StringArgumentType.getString(context, "target");
 
-        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
-                + (int) McUtils.player().position().y + ", "
-                + (int) McUtils.player().position().z + "]";
-
-        sendShareMessage(target, locationString);
+        LocationUtils.shareLocation(target);
 
         return 1;
-    }
-
-    private static void sendShareMessage(String target, String locationString) {
-        if (target.equals("guild")) {
-            McUtils.player().chat("/g " + locationString);
-        } else if (target.equals("party")) {
-            McUtils.player().chat("/p " + locationString);
-        } else {
-            McUtils.player().chat("/msg " + target + " " + locationString);
-        }
     }
 
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
-        CompassModel.setCompassLocation(location);
+        Models.Compass.setCompassLocation(location);
 
-        MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(location.toString()).withStyle(ChatFormatting.WHITE));
+        MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
+        response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -147,14 +129,14 @@ public class CompassCommand extends CommandBase {
         String coordinates = StringArgumentType.getString(context, "location");
         Optional<Location> location = LocationUtils.parseFromString(coordinates);
         if (location.isEmpty()) {
-            context.getSource().sendFailure(new TextComponent("Incorrect coordinates!"));
+            context.getSource().sendFailure(Component.literal("Incorrect coordinates!"));
             return 0;
         }
 
-        CompassModel.setCompassLocation(location.get());
+        Models.Compass.setCompassLocation(location.get());
 
-        MutableComponent response = new TextComponent("Compass set to ").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(location.get().toString()).withStyle(ChatFormatting.WHITE));
+        MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
+        response.append(Component.literal(location.get().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -167,17 +149,17 @@ public class CompassCommand extends CommandBase {
                 .toList();
 
         if (matchedKinds.isEmpty()) {
-            MutableComponent response = new TextComponent("Found no services matching '" + searchedName + "'")
+            MutableComponent response = Component.literal("Found no services matching '" + searchedName + "'")
                     .withStyle(ChatFormatting.RED);
             context.getSource().sendFailure(response);
             return 0;
         }
 
         if (matchedKinds.size() > 1) {
-            MutableComponent response = new TextComponent("Found multiple services matching '" + searchedName
+            MutableComponent response = Component.literal("Found multiple services matching '" + searchedName
                             + "'. Pleace specify with more detail. Matching: ")
                     .withStyle(ChatFormatting.RED);
-            response.append(new TextComponent(String.join(
+            response.append(Component.literal(String.join(
                     ", ", matchedKinds.stream().map(ServiceKind::getName).toList())));
             context.getSource().sendFailure(response);
             return 0;
@@ -186,27 +168,28 @@ public class CompassCommand extends CommandBase {
         ServiceKind selectedKind = matchedKinds.get(0);
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = MapModel.getServicePois().stream()
-                .filter(poi -> poi.getKind().equals(selectedKind))
+        Optional<ServicePoi> closestServiceOptional = Models.Map.getServicePois().stream()
+                .filter(poi -> poi.getKind() == selectedKind)
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
-                        poi.getLocation().getY(),
+                        poi.getLocation().getY().orElse((int) currentLocation.y),
                         poi.getLocation().getZ())));
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...
-            MutableComponent response = new TextComponent("Found no services of kind '" + selectedKind.getName() + "'")
+            MutableComponent response = Component.literal("Found no services of kind '" + selectedKind.getName() + "'")
                     .withStyle(ChatFormatting.RED);
             context.getSource().sendFailure(response);
             return 0;
         }
         Poi closestService = closestServiceOptional.get();
-        CompassModel.setCompassLocation(
+        Models.Compass.setCompassLocation(
                 closestService.getLocation().asLocation(),
                 closestServiceOptional.get().getIcon());
 
-        MutableComponent response =
-                new TextComponent("Compass set to " + selectedKind.getName() + " at ").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+        MutableComponent response = Component.literal("Compass set to " + selectedKind.getName() + " at ")
+                .withStyle(ChatFormatting.AQUA);
+        response.append(
+                Component.literal(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -214,13 +197,13 @@ public class CompassCommand extends CommandBase {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(MapModel.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Map.getLabelPois().stream()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
         if (places.isEmpty()) {
-            MutableComponent response =
-                    new TextComponent("Found no places matching '" + searchedName + "'").withStyle(ChatFormatting.RED);
+            MutableComponent response = Component.literal("Found no places matching '" + searchedName + "'")
+                    .withStyle(ChatFormatting.RED);
             context.getSource().sendFailure(response);
             return 0;
         }
@@ -233,10 +216,10 @@ public class CompassCommand extends CommandBase {
                     .filter(poi -> poi.getName().equals(searchedName))
                     .findFirst();
             if (exactMatch.isEmpty()) {
-                MutableComponent response = new TextComponent("Found multiple places matching '" + searchedName
+                MutableComponent response = Component.literal("Found multiple places matching '" + searchedName
                                 + "', but none matched exactly. Matching: ")
                         .withStyle(ChatFormatting.RED);
-                response.append(new TextComponent(
+                response.append(Component.literal(
                         String.join(", ", places.stream().map(Poi::getName).toList())));
                 context.getSource().sendFailure(response);
                 return 0;
@@ -246,30 +229,30 @@ public class CompassCommand extends CommandBase {
             place = places.get(0);
         }
 
-        CompassModel.setCompassLocation(place.getLocation().asLocation());
+        Models.Compass.setCompassLocation(place.getLocation().asLocation());
 
-        MutableComponent response =
-                new TextComponent("Setting compass to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
-        response.append(new TextComponent(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+        MutableComponent response = Component.literal("Setting compass to " + place.getName() + " at ")
+                .withStyle(ChatFormatting.AQUA);
+        response.append(Component.literal(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
 
     private int compassClear(CommandContext<CommandSourceStack> context) {
-        CompassModel.reset();
+        Models.Compass.reset();
 
-        MutableComponent response = new TextComponent("Compass cleared").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal("Compass cleared").withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
 
     private int notImplemented(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Not implemented yet").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Not implemented yet").withStyle(ChatFormatting.RED));
         return 0;
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(new TextComponent("Missing argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
 }

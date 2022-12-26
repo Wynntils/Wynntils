@@ -5,13 +5,13 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.MessageType;
-import com.wynntils.core.managers.Model;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.net.hades.event.HadesEvent;
+import com.wynntils.handlers.chat.MessageType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.sockets.events.SocketEvent;
-import com.wynntils.sockets.model.HadesUserModel;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * This model handles the player's in-game relations, like friends, party info, guild info.
  */
-public class PlayerRelationsModel extends Model {
+public final class PlayerRelationsModel extends Model {
     private static final Pattern FRIEND_LIST_MESSAGE_PATTERN = Pattern.compile(".+'s friends \\(.+\\): (.*)");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 = Pattern.compile("§eWe couldn't find any friends.");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_2 =
@@ -38,38 +38,40 @@ public class PlayerRelationsModel extends Model {
     private static final Pattern PARTY_NO_LIST_MESSAGE_PATTERN = Pattern.compile("§eYou must be in a party to list.");
     private static final Pattern PARTY_OTHER_LEAVE_MESSAGE_PATTERN = Pattern.compile("§e(.+) has left the party.");
     private static final Pattern PARTY_OTHER_JOIN_MESSAGE_PATTERN = Pattern.compile("§e(.+) has joined the party.");
+    private static final Pattern PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN =
+            Pattern.compile("§eSay hello to (.+) which just joined your party!");
     private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
             Pattern.compile("§eYou have been removed from the party.");
     private static final Pattern PARTY_SELF_JOIN_MESSAGE_PATTERN =
             Pattern.compile("§eYou have successfully joined the party.");
     private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded.");
 
-    private static boolean expectingFriendMessage = false;
-    private static boolean expectingPartyMessage = false;
+    private boolean expectingFriendMessage = false;
+    private boolean expectingPartyMessage = false;
 
-    private static Set<String> friends;
-    private static Set<String> partyMembers;
+    private Set<String> friends;
+    private Set<String> partyMembers;
 
-    public static void init() {
+    @Override
+    public void init() {
         resetRelations();
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         resetRelations();
     }
 
     @SubscribeEvent
-    public static void onAuth(SocketEvent.Authenticated event) {
-        if (!WorldStateManager.onWorld()) return;
+    public void onAuth(HadesEvent.Authenticated event) {
+        if (!Managers.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
         requestPartyListUpdate();
     }
 
     @SubscribeEvent
-    public static void onWorldStateChange(WorldStateEvent event) {
-        HadesUserModel.getHadesUserMap().clear();
-
+    public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldStateManager.State.WORLD) {
             requestFriendListUpdate();
             requestPartyListUpdate();
@@ -79,8 +81,8 @@ public class PlayerRelationsModel extends Model {
     }
 
     @SubscribeEvent
-    public static void onChatReceived(ChatMessageReceivedEvent event) {
-        if (event.getMessageType() != MessageType.SYSTEM) return;
+    public void onChatReceived(ChatMessageReceivedEvent event) {
+        if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
@@ -118,7 +120,7 @@ public class PlayerRelationsModel extends Model {
 
     // region Party List Parsing
 
-    private static boolean tryParsePartyMessages(String coded) {
+    private boolean tryParsePartyMessages(String coded) {
         if (PARTY_DISBAND.matcher(coded).matches()
                 || PARTY_SELF_LEAVE_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
@@ -148,6 +150,18 @@ public class PlayerRelationsModel extends Model {
             return true;
         }
 
+        matcher = PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN.matcher(coded);
+        if (matcher.matches()) {
+            String player = matcher.group(1);
+
+            WynntilsMod.info("Player's party has a new member #2: " + player);
+
+            partyMembers.add(player);
+            WynntilsMod.postEvent(
+                    new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
+            return true;
+        }
+
         matcher = PARTY_OTHER_LEAVE_MESSAGE_PATTERN.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
@@ -163,7 +177,7 @@ public class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseNoPartyMessage(String coded) {
+    private boolean tryParseNoPartyMessage(String coded) {
         if (PARTY_NO_LIST_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -172,7 +186,7 @@ public class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParsePartyList(String unformatted) {
+    private boolean tryParsePartyList(String unformatted) {
         Matcher matcher = PARTY_LIST_MESSAGE_PATTERN.matcher(unformatted);
         if (!matcher.matches()) return false;
 
@@ -189,7 +203,7 @@ public class PlayerRelationsModel extends Model {
 
     // region Friend List Parsing
 
-    private static boolean tryParseNoFriendList(String coded) {
+    private boolean tryParseNoFriendList(String coded) {
         if (FRIEND_NO_LIST_MESSAGE_PATTERN_2.matcher(coded).matches()) {
             WynntilsMod.info("Player has no friends!");
             return true;
@@ -198,7 +212,7 @@ public class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseFriendMessages(String coded) {
+    private boolean tryParseFriendMessages(String coded) {
         Matcher matcher = FRIEND_REMOVE_MESSAGE_PATTERN.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
@@ -226,7 +240,7 @@ public class PlayerRelationsModel extends Model {
         return false;
     }
 
-    private static boolean tryParseFriendList(String unformatted) {
+    private boolean tryParseFriendList(String unformatted) {
         Matcher matcher = FRIEND_LIST_MESSAGE_PATTERN.matcher(unformatted);
         if (!matcher.matches()) return false;
 
@@ -241,7 +255,7 @@ public class PlayerRelationsModel extends Model {
 
     // endregion
 
-    private static void resetRelations() {
+    private void resetRelations() {
         friends = new HashSet<>();
         partyMembers = new HashSet<>();
 
@@ -249,19 +263,19 @@ public class PlayerRelationsModel extends Model {
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    public static void requestFriendListUpdate() {
+    public void requestFriendListUpdate() {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
-        McUtils.player().chat("/friend list");
+        McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
-    public static void requestPartyListUpdate() {
+    public void requestPartyListUpdate() {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
-        McUtils.player().chat("/party list");
+        McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 }

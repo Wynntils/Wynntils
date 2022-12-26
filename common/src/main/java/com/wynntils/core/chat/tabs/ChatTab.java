@@ -4,26 +4,33 @@
  */
 package com.wynntils.core.chat.tabs;
 
-import com.wynntils.core.chat.RecipientType;
+import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.wynn.event.ChatMessageReceivedEvent;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ChatTab {
-    private String name;
-    private boolean consuming;
+    private final String name;
+    private final boolean consuming;
+    private final String autoCommand;
 
     // Filters
-    private Set<RecipientType> filteredTypes;
-    private String customRegexString;
+    private final Set<RecipientType> filteredTypes;
+    private final String customRegexString;
 
     private transient Pattern customRegex;
 
-    public ChatTab(String name, boolean consuming, Set<RecipientType> filteredTypes, String customRegexString) {
+    public ChatTab(
+            String name,
+            boolean consuming,
+            String autoCommand,
+            Set<RecipientType> filteredTypes,
+            String customRegexString) {
         this.name = name;
         this.consuming = consuming;
+        this.autoCommand = autoCommand;
         this.filteredTypes = filteredTypes;
         this.customRegexString = customRegexString;
     }
@@ -34,6 +41,7 @@ public class ChatTab {
         }
 
         if (customRegexString != null
+                && !customRegexString.isBlank()
                 && !getCustomRegex().matcher(event.getOriginalCodedMessage()).matches()) {
             return false;
         }
@@ -50,7 +58,7 @@ public class ChatTab {
             return true;
         }
 
-        return getCustomRegex().matcher(event.getCodedMessage()).matches();
+        return getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     public String getName() {
@@ -61,10 +69,27 @@ public class ChatTab {
         return consuming;
     }
 
-    public Pattern getCustomRegex() {
-        return customRegex == null && customRegexString != null
-                ? customRegex = Pattern.compile(customRegexString, Pattern.DOTALL)
-                : customRegex;
+    public String getAutoCommand() {
+        return autoCommand;
+    }
+
+    /** This is only allowed to be called if customRegexString != null.
+     */
+    private Pattern getCustomRegex() {
+        assert (customRegexString != null);
+
+        if (customRegex == null) {
+            customRegex = Pattern.compile(customRegexString, Pattern.DOTALL);
+        }
+        return customRegex;
+    }
+
+    public String getCustomRegexString() {
+        return customRegexString;
+    }
+
+    public Set<RecipientType> getFilteredTypes() {
+        return filteredTypes;
     }
 
     @Override

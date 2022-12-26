@@ -4,19 +4,16 @@
  */
 package com.wynntils.wynn.model.discoveries.objects;
 
-import com.wynntils.core.webapi.TerritoryManager;
-import com.wynntils.core.webapi.profiles.DiscoveryProfile;
-import com.wynntils.core.webapi.profiles.TerritoryProfile;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.model.CharacterManager;
+import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
@@ -24,7 +21,6 @@ public class DiscoveryInfo {
     private final DiscoveryType type;
     private final String description;
     private final int minLevel;
-    private final TerritoryProfile guildTerritory;
     private final boolean discovered;
     private final List<String> requirements;
     private List<Component> displayLore = null;
@@ -34,7 +30,6 @@ public class DiscoveryInfo {
         this.type = DiscoveryType.valueOf(discoveryProfile.getType().toUpperCase(Locale.ROOT));
         this.description = "";
         this.minLevel = discoveryProfile.getLevel();
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = false;
         this.requirements = discoveryProfile.getRequirements();
     }
@@ -44,7 +39,6 @@ public class DiscoveryInfo {
         this.type = type;
         this.description = description;
         this.minLevel = minLevel;
-        this.guildTerritory = TerritoryManager.getTerritories().get(name);
         this.discovered = true;
         this.requirements = List.of();
     }
@@ -81,41 +75,45 @@ public class DiscoveryInfo {
     private List<Component> generateLore() {
         displayLore = new ArrayList<>();
 
-        displayLore.add(new TextComponent(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
+        displayLore.add(Component.literal(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
 
-        if (CharacterManager.getCharacterInfo().getLevel() >= minLevel) {
-            displayLore.add(new TextComponent("✔")
+        if (Managers.Character.getCharacterInfo().getLevel() >= minLevel) {
+            displayLore.add(Component.literal("✔")
                     .withStyle(ChatFormatting.GREEN)
-                    .append(new TextComponent(" Combat Lv. Min: ")
+                    .append(Component.literal(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
+                            .append(Component.literal(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         } else {
-            displayLore.add(new TextComponent("✘")
+            displayLore.add(Component.literal("✘")
                     .withStyle(ChatFormatting.RED)
-                    .append(new TextComponent(" Combat Lv. Min: ")
+                    .append(Component.literal(" Combat Lv. Min: ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(new TextComponent(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
+                            .append(Component.literal(String.valueOf(minLevel)).withStyle(ChatFormatting.WHITE))));
         }
 
-        displayLore.add(TextComponent.EMPTY);
+        displayLore.add(Component.empty());
 
         if (discovered) {
-            displayLore.add(new TextComponent("Discovered").withStyle(ChatFormatting.GREEN));
+            displayLore.add(Component.literal("Discovered").withStyle(ChatFormatting.GREEN));
         } else {
-            displayLore.add(new TextComponent("Not Discovered").withStyle(ChatFormatting.RED));
+            displayLore.add(Component.literal("Not Discovered").withStyle(ChatFormatting.RED));
         }
 
         if (!description.isEmpty()) {
-            displayLore.add(TextComponent.EMPTY);
+            displayLore.add(Component.empty());
             displayLore.addAll(ComponentUtils.wrapTooltips(
-                    List.of(new TextComponent(description).withStyle(ChatFormatting.GRAY)), 300));
+                    List.of(Component.literal(description).withStyle(ChatFormatting.GRAY)), 300));
         }
 
         return displayLore;
     }
 
     public List<Component> getLore() {
-        return displayLore == null ? displayLore = generateLore() : displayLore;
+        if (displayLore == null) {
+            displayLore = generateLore();
+        }
+
+        return displayLore;
     }
 
     public String getName() {
@@ -132,10 +130,6 @@ public class DiscoveryInfo {
 
     public int getMinLevel() {
         return minLevel;
-    }
-
-    public TerritoryProfile getGuildTerritory() {
-        return guildTerritory;
     }
 
     public List<String> getRequirements() {
