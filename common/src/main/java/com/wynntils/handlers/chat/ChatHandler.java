@@ -94,7 +94,7 @@ public final class ChatHandler extends Handler {
                 return;
             }
 
-            Component updatedMessage = handleChatLine(message, codedMessage, recipientType, messageType);
+            Component updatedMessage = handleChatLine(message, codedMessage, recipientType, MessageType.FOREGROUND);
             if (updatedMessage == null) {
                 e.setCanceled(true);
             } else if (!updatedMessage.equals(message)) {
