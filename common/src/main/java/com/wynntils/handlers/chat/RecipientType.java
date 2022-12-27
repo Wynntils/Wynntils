@@ -9,8 +9,7 @@ import java.util.regex.Pattern;
 public enum RecipientType {
     INFO(null, null, "Info"),
     CLIENTSIDE(null, null, "Clientside"),
-    // FIXME: NPC cannot really be in the "background"
-    NPC("(?:§r)?§7\\[\\d+\\/\\d+\\] §r§2.+: §r§..*", "(?:§r)?§7\\[\\d+\\/\\d+\\] §r§2.+: §r§..*", "NPC"),
+    NPC("(?:§r)?§7\\[\\d+\\/\\d+\\] §r§2.+: §r§..*", "(?:§r)?§8\\[\\d+\\/\\d+\\] .+: §r§..*", "NPC"),
     GLOBAL(
             "^§8\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\]§r§7 \\[[A-Z0-9]+\\]§r.*$",
             "^(§r§8)?\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\] \\[[A-Z0-9]+\\](§r§7)?( \\[(§k\\|)?§r§.[A-Z+]+§r§.(§k\\|§r§7)?\\])?(§r§7)? (§r§8)?.*$",
