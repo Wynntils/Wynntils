@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.handlers.chat.NpcDialogueType;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -12,19 +13,15 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class NpcDialogEvent extends Event {
     private final List<Component> chatMessage;
-    private final boolean needsConfirmation;
+    private final NpcDialogueType type;
 
-    public NpcDialogEvent(List<Component> chatMessage, boolean needsConfirmation) {
+    public NpcDialogEvent(List<Component> chatMessage, NpcDialogueType type) {
         this.chatMessage = chatMessage;
-        this.needsConfirmation = needsConfirmation;
+        this.type = type;
     }
 
-    /**
-     * Return true if this message needs to be confirmed using the sneak key to
-     * progress the dialogue.
-     */
-    public boolean needsConfirmation() {
-        return needsConfirmation;
+    public NpcDialogueType getType() {
+        return type;
     }
 
     public List<Component> getChatMessage() {

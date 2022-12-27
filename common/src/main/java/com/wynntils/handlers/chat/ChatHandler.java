@@ -93,7 +93,7 @@ public final class ChatHandler extends Handler {
 
             boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
             if (separateNPC && recipientType == RecipientType.NPC) {
-                handleNpcDialog(List.of(message), false, false);
+                handleNpcDialog(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
                 return;
             }
 
@@ -132,7 +132,7 @@ public final class ChatHandler extends Handler {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNpcDialog(List.of(), true, false);
+            handleNpcDialog(List.of(), NpcDialogueType.NONE);
             return;
         }
 
@@ -231,6 +231,9 @@ public final class ChatHandler extends Handler {
             handleFakeChatLine(line, noConfirmationDialog);
         });
         if (!noConfirmationDialog.isEmpty()) {
+            // We found a confirmationless NPC dialogue in the background
+            // This happens for instance in King's Recruit where one NPC can
+            // offer reminders to move along while in a dialog with a second NPC
             if (!dialog.isEmpty()) {
                 WynntilsMod.warn("Malformed dialog [#4]: " + ComponentUtils.getCoded(dialog.get(0)) + ", "
                         + ComponentUtils.getCoded(noConfirmationDialog.get(0)));
@@ -240,12 +243,12 @@ public final class ChatHandler extends Handler {
                 // Keep going anyway and post the first line of the dialog
             }
             lastNpcDialog = noConfirmationDialog;
-            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, false);
+            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS);
             WynntilsMod.postEvent(event);
         } else {
             // Update the new confirmation requred dialog
             System.out.println(isSelectionDialog);
-            handleNpcDialog(dialog, true, isSelectionDialog);
+            handleNpcDialog(dialog, isSelectionDialog ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL);
         }
     }
 
@@ -306,7 +309,7 @@ public final class ChatHandler extends Handler {
         return event.getMessage();
     }
 
-    private void handleNpcDialog(List<Component> dialog, boolean needsConfirmation, boolean isSelectionDialog) {
+    private void handleNpcDialog(List<Component> dialog, NpcDialogueType type) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
@@ -314,7 +317,7 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog, needsConfirmation);
+            NpcDialogEvent event = new NpcDialogEvent(dialog, type);
             WynntilsMod.postEvent(event);
         }
     }

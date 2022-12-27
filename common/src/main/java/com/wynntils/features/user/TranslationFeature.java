@@ -11,6 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.services.TranslationModel;
+import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -94,14 +95,13 @@ public class TranslationFeature extends UserFeature {
                         .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
                         .toList();
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent =
-                            new TranslatedNpcDialogEvent(translatedComponents, e.needsConfirmation());
+                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(translatedComponents, e.getType());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.needsConfirmation());
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
@@ -118,8 +118,8 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, boolean needsConfirmation) {
-            super(chatMsg, needsConfirmation);
+        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type) {
+            super(chatMsg, type);
         }
     }
 }

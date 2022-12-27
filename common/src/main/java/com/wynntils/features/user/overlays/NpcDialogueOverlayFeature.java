@@ -25,6 +25,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -53,7 +54,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private List<String> currentDialogue = List.of();
-    private boolean needsConfirmation;
+    private NpcDialogueType dialogueType;
 
     @Config
     public boolean autoProgress = false;
@@ -84,7 +85,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             NotificationManager.queueMessage(msg.get(0));
         }
         currentDialogue = msg;
-        needsConfirmation = e.needsConfirmation();
+        dialogueType = e.getType();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -175,7 +176,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             }
         }
 
-        private void renderDialogue(PoseStack poseStack, List<String> currentDialogue, boolean needsConfirmation) {
+        private void renderDialogue(PoseStack poseStack, List<String> currentDialogue, NpcDialogueType dialogueType) {
             List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
                     .map(s -> new TextRenderTask(s, renderSetting))
                     .toList();
@@ -185,13 +186,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                         dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText())));
             }
 
-            float textHeight = dialogueRenderTasks.stream()
+            float textHeight = (float) dialogueRenderTasks.stream()
                     .map(dialogueRenderTask -> FontRenderer.getInstance()
                             .calculateRenderHeight(
                                     dialogueRenderTask.getText(),
                                     dialogueRenderTask.getSetting().maxWidth()))
-                    .max(Float::compareTo)
-                    .orElse(10f);
+                    .mapToDouble(f -> f)
+                    .sum();
 
             // Draw a translucent background
             float rectHeight = textHeight + 10;
@@ -226,8 +227,12 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             if (showHelperTexts) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                if (needsConfirmation) {
+                if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+                    renderTaskList.add(pressSneakMessage);
+                } else if (dialogueType == NpcDialogueType.SELECTION) {
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask("§cSelect an option to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 
@@ -264,7 +269,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             if (currentDialogue.isEmpty()) return;
 
-            renderDialogue(poseStack, currentDialogue, NpcDialogueOverlayFeature.this.needsConfirmation);
+            renderDialogue(poseStack, currentDialogue, NpcDialogueOverlayFeature.this.dialogueType);
         }
 
         @Override
@@ -274,7 +279,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             // we have to force update every time
             updateTextRenderSettings();
 
-            renderDialogue(poseStack, fakeDialogue, true);
+            renderDialogue(poseStack, fakeDialogue, NpcDialogueType.NORMAL);
         }
     }
 }
