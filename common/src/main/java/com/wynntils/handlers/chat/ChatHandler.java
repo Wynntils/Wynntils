@@ -70,7 +70,7 @@ public final class ChatHandler extends Handler {
     private static final Pattern NPC_FINAL_PATTERN =
             Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern NPC_SELECT_PATTERN =
-            Pattern.compile("^ +§[c47](Select|CLICK) §r§[4cf]an option (§r§[47])?to continue§r$");
+            Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
@@ -175,8 +175,8 @@ public final class ChatHandler extends Handler {
                 }
             }
         } else if (NPC_SELECT_PATTERN.matcher(firstLineCoded).find()) {
-            // This is an NPC dialog screen.
-            // First remove the "Press SHIFT to continue" trailer.
+            // This is an NPC selection screen.
+            // First remove the "Select an option to continue" trailer.
             newLines.removeFirst();
             if (newLines.getFirst().getString().isEmpty()) {
                 newLines.removeFirst();
@@ -187,13 +187,19 @@ public final class ChatHandler extends Handler {
             isSelectionDialog = true;
             // Separate the dialog part from any potential new "real" chat lines
             boolean dialogDone = false;
+            boolean optionsFound = false;
             for (Component line : newLines) {
                 String codedLine = ComponentUtils.getCoded(line);
                 if (!dialogDone) {
-                    if (codedLine.matches("^ *§[78]")) {
-                        dialogDone = true;
-                        // This is the first background line
-                        newChatLines.push(line);
+                    if (EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
+                        if (!optionsFound) {
+                            // First part of the dialogue found
+                            optionsFound = true;
+                            dialog.push(line);
+                        } else {
+                            dialogDone = true;
+                        }
+                        // Intentionally throw away this line
                     } else {
                         dialog.push(line);
                     }
