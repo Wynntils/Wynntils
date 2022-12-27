@@ -97,7 +97,8 @@ public final class ChatHandler extends Handler {
 
             if (recipientType == RecipientType.NPC) {
                 if (shouldSeparateNPC()) {
-                    NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+                    NpcDialogEvent event =
+                            new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                     WynntilsMod.postEvent(event);
                     e.setCanceled(true);
                     return;
