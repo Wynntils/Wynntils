@@ -95,12 +95,16 @@ public final class ChatHandler extends Handler {
             saveLastChat(message);
             RecipientType recipientType = getRecipientType(message, MessageType.FOREGROUND);
 
-            boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
-            if (separateNPC && recipientType == RecipientType.NPC) {
-                NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
-                WynntilsMod.postEvent(event);
-                e.setCanceled(true);
-                return;
+            if (recipientType == RecipientType.NPC) {
+                if (shouldSeparateNPC()) {
+                    NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+                    WynntilsMod.postEvent(event);
+                    e.setCanceled(true);
+                    return;
+                } else {
+                    // Reclassify this as a INFO type for the chat
+                    recipientType = RecipientType.INFO;
+                }
             }
 
             Component updatedMessage = handleChatLine(message, codedMessage, recipientType, MessageType.FOREGROUND);
@@ -112,7 +116,7 @@ public final class ChatHandler extends Handler {
             return;
         }
 
-        if (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled)) {
+        if (shouldSeparateNPC()) {
             handleMultilineMessage(message);
             e.setCanceled(true);
         }
@@ -149,12 +153,14 @@ public final class ChatHandler extends Handler {
 
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<Component> dialog = new LinkedList<>();
-        boolean isSelectionDialog;
 
         String firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        if (NPC_CONFIRM_PATTERN.matcher(firstLineCoded).find()) {
-            // This is an NPC dialog screen.
-            // First remove the "Press SHIFT to continue" trailer.
+        boolean isNpcConfirm = NPC_CONFIRM_PATTERN.matcher(firstLineCoded).find();
+        boolean isNpcSelect = NPC_SELECT_PATTERN.matcher(firstLineCoded).find();
+
+        if (isNpcConfirm || isNpcSelect) {
+            // This is an NPC dialogue screen.
+            // First remove the "Press SHIFT/Select an option to continue" trailer.
             newLines.removeFirst();
             if (newLines.getFirst().getString().isEmpty()) {
                 newLines.removeFirst();
@@ -162,38 +168,11 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
             }
 
-            isSelectionDialog = false;
-            // Separate the dialog part from any potential new "real" chat lines
             boolean dialogDone = false;
-            for (Component line : newLines) {
-                String codedLine = ComponentUtils.getCoded(line);
-                if (!dialogDone) {
-                    if (EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
-                        dialogDone = true;
-                        // Intentionally throw away this line
-                    } else {
-                        dialog.push(line);
-                    }
-                } else {
-                    if (!EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
-                        newChatLines.push(line);
-                    }
-                }
-            }
-        } else if (NPC_SELECT_PATTERN.matcher(firstLineCoded).find()) {
-            // This is an NPC selection screen.
-            // First remove the "Select an option to continue" trailer.
-            newLines.removeFirst();
-            if (newLines.getFirst().getString().isEmpty()) {
-                newLines.removeFirst();
-            } else {
-                WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
-            }
+            // This need to be false if we are to look for options
+            boolean optionsFound = !isNpcSelect;
 
-            isSelectionDialog = true;
             // Separate the dialog part from any potential new "real" chat lines
-            boolean dialogDone = false;
-            boolean optionsFound = false;
             for (Component line : newLines) {
                 String codedLine = ComponentUtils.getCoded(line);
                 if (!dialogDone) {
@@ -216,7 +195,6 @@ public final class ChatHandler extends Handler {
                 }
             }
         } else {
-            isSelectionDialog = false;
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
@@ -233,19 +211,18 @@ public final class ChatHandler extends Handler {
         // Register all new chat lines
         LinkedList<Component> noConfirmationDialog = new LinkedList<>();
 
-        newChatLines.forEach((line) -> {
-            handleFakeChatLine(line, noConfirmationDialog);
-        });
+        newChatLines.forEach((line) -> handleFakeChatLine(line, noConfirmationDialog));
+
         if (!noConfirmationDialog.isEmpty()) {
             if (noConfirmationDialog.size() > 1) {
-                WynntilsMod.warn("Malformed dialog [#5]: " + noConfirmationDialog);
+                WynntilsMod.warn("Malformed dialog [#2]: " + noConfirmationDialog);
                 // Keep going anyway and post the first line of the dialog
             }
             NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS, false);
             WynntilsMod.postEvent(event);
         }
 
-        handleNpcDialog(dialog, isSelectionDialog ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL);
+        handleNpcDialog(dialog, isNpcSelect ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL);
     }
 
     private void handleFakeChatLine(Component chatMsg, LinkedList<Component> noConfirmationDialog) {
@@ -253,8 +230,7 @@ public final class ChatHandler extends Handler {
         String coded = ComponentUtils.getCoded(chatMsg);
 
         RecipientType recipientType = getRecipientType(chatMsg, MessageType.BACKGROUND);
-        boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
-        if (separateNPC) {
+        if (shouldSeparateNPC()) {
             // It can be a background NPC chat message
             if (recipientType == RecipientType.NPC) {
                 saveLastChat(chatMsg);
@@ -270,6 +246,10 @@ public final class ChatHandler extends Handler {
             }
         }
 
+        if (recipientType == RecipientType.NPC) {
+            // Reclassify this as a INFO type for the chat
+            recipientType = RecipientType.INFO;
+        }
         saveLastChat(chatMsg);
         Component updatedMessage = handleChatLine(chatMsg, coded, recipientType, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
@@ -328,6 +308,10 @@ public final class ChatHandler extends Handler {
             NpcDialogEvent event = new NpcDialogEvent(dialog, type, isProtected);
             WynntilsMod.postEvent(event);
         }
+    }
+
+    private boolean shouldSeparateNPC() {
+        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
     }
 
     public void addNpcDialogExtractionDependent(Feature feature) {
