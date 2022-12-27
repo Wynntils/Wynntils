@@ -33,6 +33,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -79,13 +80,23 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public void onNpcDialogue(NpcDialogEvent e) {
         List<String> msg =
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
+        if (e.getType() == NpcDialogueType.CONFIRMATIONLESS && !currentDialogue.isEmpty()) {
+            // Now we have two concurrent dialogues, so combine the two into one instead of
+            // just replacing the old.
+            ArrayList<String> combinedDialogue = new ArrayList<>(currentDialogue);
+            combinedDialogue.add("");
+            combinedDialogue.addAll(msg);
+            currentDialogue = combinedDialogue;
+        } else {
+            currentDialogue = msg;
+            dialogueType = e.getType();
+        }
+
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             NotificationManager.queueMessage(msg.get(0));
         }
-        currentDialogue = msg;
-        dialogueType = e.getType();
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
