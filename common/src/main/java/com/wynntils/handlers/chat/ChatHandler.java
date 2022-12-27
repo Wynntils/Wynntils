@@ -67,7 +67,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * importantly, a way to update already printed chat lines.
  */
 public final class ChatHandler extends Handler {
-    private static final Pattern NPC_FINAL_PATTERN =
+    private static final Pattern NPC_CONFIRM_PATTERN =
             Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
@@ -148,7 +148,7 @@ public final class ChatHandler extends Handler {
         boolean isSelectionDialog;
 
         String firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        if (NPC_FINAL_PATTERN.matcher(firstLineCoded).find()) {
+        if (NPC_CONFIRM_PATTERN.matcher(firstLineCoded).find()) {
             // This is an NPC dialog screen.
             // First remove the "Press SHIFT to continue" trailer.
             newLines.removeFirst();
