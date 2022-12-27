@@ -246,7 +246,6 @@ public final class ChatHandler extends Handler {
 
     private void handleFakeChatLine(Component chatMsg, LinkedList<Component> noConfirmationDialog) {
         // This is a normal, single line chat
-        saveLastChat(chatMsg);
         String coded = ComponentUtils.getCoded(chatMsg);
 
         RecipientType recipientType = getRecipientType(chatMsg, MessageType.BACKGROUND);
@@ -254,16 +253,20 @@ public final class ChatHandler extends Handler {
         if (separateNPC) {
             // It can be a background NPC chat message
             if (recipientType == RecipientType.NPC) {
+                saveLastChat(chatMsg);
                 noConfirmationDialog.add(chatMsg);
                 return;
             }
             // But it can actually also be a foreground NPC chat message...
             if (getRecipientType(chatMsg, MessageType.FOREGROUND) == RecipientType.NPC) {
+                // In this case, do *not* save this as last chat, since it will soon disappear
+                // from history!
                 noConfirmationDialog.add(chatMsg);
                 return;
             }
         }
 
+        saveLastChat(chatMsg);
         Component updatedMessage = handleChatLine(chatMsg, coded, recipientType, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
