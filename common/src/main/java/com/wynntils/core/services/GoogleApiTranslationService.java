@@ -9,7 +9,9 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -20,12 +22,13 @@ import java.util.function.Consumer;
  */
 public class GoogleApiTranslationService extends CachingTranslationService {
     @Override
-    protected void translateNew(String message, String toLanguage, Consumer<String> handleTranslation) {
+    protected void translateNew(List<String> messageList, String toLanguage, Consumer<List<String>> handleTranslation) {
         if (toLanguage == null || toLanguage.isEmpty()) {
             handleTranslation.accept(null);
             return;
         }
 
+        String message = String.join("{NL}", messageList);
         Map<String, String> arguments = new HashMap<>();
         arguments.put("lang", toLanguage);
         arguments.put("text", message);
@@ -40,8 +43,10 @@ public class GoogleApiTranslationService extends CachingTranslationService {
                         builder.append(part);
                     }
                     String translatedMessage = builder.toString();
-                    saveTranslation(toLanguage, message, translatedMessage);
-                    handleTranslation.accept(translatedMessage);
+                    List<String> result =
+                            Arrays.stream(translatedMessage.split("\\{NL\\}")).toList();
+                    saveTranslation(toLanguage, messageList, result);
+                    handleTranslation.accept(result);
                 },
                 onError -> {
                     // If Google translate return no data ( 500 error ), display default lang

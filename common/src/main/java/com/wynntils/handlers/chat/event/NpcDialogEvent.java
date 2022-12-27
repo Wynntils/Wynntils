@@ -4,16 +4,17 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class NpcDialogEvent extends Event {
-    private final Component chatMessage;
+    private final List<Component> chatMessage;
     private final boolean needsConfirmation;
 
-    public NpcDialogEvent(Component chatMessage, boolean needsConfirmation) {
+    public NpcDialogEvent(List<Component> chatMessage, boolean needsConfirmation) {
         this.chatMessage = chatMessage;
         this.needsConfirmation = needsConfirmation;
     }
@@ -26,7 +27,7 @@ public class NpcDialogEvent extends Event {
         return needsConfirmation;
     }
 
-    public Component getChatMessage() {
+    public List<Component> getChatMessage() {
         return chatMessage;
     }
 }

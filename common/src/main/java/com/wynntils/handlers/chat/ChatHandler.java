@@ -68,7 +68,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public final class ChatHandler extends Handler {
     private static final Pattern NPC_FINAL_PATTERN =
-            Pattern.compile(" +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
+            Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
+    private static final Pattern NPC_SELECT_PATTERN =
+            Pattern.compile("^ +§[c47](Select|CLICK) §r§[4cf]an option (§r§[47])?to continue§r$");
+
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
@@ -90,7 +93,7 @@ public final class ChatHandler extends Handler {
 
             boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
             if (separateNPC && recipientType == RecipientType.NPC) {
-                handleNpcDialog(List.of(message), false);
+                handleNpcDialog(List.of(message), false, false);
                 return;
             }
 
@@ -129,7 +132,7 @@ public final class ChatHandler extends Handler {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNpcDialog(List.of(), true);
+            handleNpcDialog(List.of(), true, false);
             return;
         }
 
@@ -140,10 +143,10 @@ public final class ChatHandler extends Handler {
 
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<Component> dialog = new LinkedList<>();
+        boolean isSelectionDialog;
 
-        if (NPC_FINAL_PATTERN
-                .matcher(ComponentUtils.getCoded(newLines.getFirst()))
-                .find()) {
+        String firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
+        if (NPC_FINAL_PATTERN.matcher(firstLineCoded).find()) {
             // This is an NPC dialog screen.
             // First remove the "Press SHIFT to continue" trailer.
             newLines.removeFirst();
@@ -153,6 +156,7 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
             }
 
+            isSelectionDialog = false;
             // Separate the dialog part from any potential new "real" chat lines
             boolean dialogDone = false;
             for (Component line : newLines) {
@@ -170,7 +174,37 @@ public final class ChatHandler extends Handler {
                     }
                 }
             }
+        } else if (NPC_SELECT_PATTERN.matcher(firstLineCoded).find()) {
+            // This is an NPC dialog screen.
+            // First remove the "Press SHIFT to continue" trailer.
+            newLines.removeFirst();
+            if (newLines.getFirst().getString().isEmpty()) {
+                newLines.removeFirst();
+            } else {
+                WynntilsMod.warn("Malformed dialog [#1]: " + newLines.getFirst());
+            }
+
+            isSelectionDialog = true;
+            // Separate the dialog part from any potential new "real" chat lines
+            boolean dialogDone = false;
+            for (Component line : newLines) {
+                String codedLine = ComponentUtils.getCoded(line);
+                if (!dialogDone) {
+                    if (codedLine.matches("^ *§[78]")) {
+                        dialogDone = true;
+                        // This is the first background line
+                        newChatLines.push(line);
+                    } else {
+                        dialog.push(line);
+                    }
+                } else {
+                    if (!EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
+                        newChatLines.push(line);
+                    }
+                }
+            }
         } else {
+            isSelectionDialog = false;
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
@@ -200,11 +234,12 @@ public final class ChatHandler extends Handler {
                 // Keep going anyway and post the first line of the dialog
             }
             lastNpcDialog = noConfirmationDialog;
-            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog.get(0), false);
+            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, false);
             WynntilsMod.postEvent(event);
         } else {
             // Update the new confirmation requred dialog
-            handleNpcDialog(dialog, true);
+            System.out.println(isSelectionDialog);
+            handleNpcDialog(dialog, true, isSelectionDialog);
         }
     }
 
@@ -265,7 +300,7 @@ public final class ChatHandler extends Handler {
         return event.getMessage();
     }
 
-    private void handleNpcDialog(List<Component> dialog, boolean needsConfirmation) {
+    private void handleNpcDialog(List<Component> dialog, boolean needsConfirmation, boolean isSelectionDialog) {
         // dialog could be the empty list, this means the last dialog is removed
         if (!dialog.equals(lastNpcDialog)) {
             lastNpcDialog = dialog;
@@ -273,7 +308,7 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog.isEmpty() ? null : dialog.get(0), needsConfirmation);
+            NpcDialogEvent event = new NpcDialogEvent(dialog, needsConfirmation);
             WynntilsMod.postEvent(event);
         }
     }

@@ -52,7 +52,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
-    private String currentDialogue;
+    private List<String> currentDialogue = List.of();
     private boolean needsConfirmation;
 
     @Config
@@ -76,11 +76,12 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        String msg = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
-        if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
+        List<String> msg =
+                e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
+        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            NotificationManager.queueMessage(msg);
+            NotificationManager.queueMessage(msg.get(0));
         }
         currentDialogue = msg;
         needsConfirmation = e.needsConfirmation();
@@ -103,8 +104,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
     }
 
-    private ScheduledFuture<?> scheduledSneakPress(String msg) {
-        int words = msg.split(" ").length;
+    private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
+        int words = String.join(" ", msg).split(" ").length;
         long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
 
         return autoProgressExecutor.schedule(
@@ -116,7 +117,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        currentDialogue = null;
+        currentDialogue = List.of();
         cancelAutoProgress();
     }
 
@@ -170,22 +171,27 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
-                currentDialogue = null;
+                currentDialogue = List.of();
             }
         }
 
-        private void renderDialogue(PoseStack poseStack, String currentDialogue, boolean needsConfirmation) {
-            // List<TextRenderTask> dialogueRenderTask = List.of(new TextRenderTask(currentDialogue, renderSetting));
-            TextRenderTask dialogueRenderTask = new TextRenderTask(currentDialogue, renderSetting);
+        private void renderDialogue(PoseStack poseStack, List<String> currentDialogue, boolean needsConfirmation) {
+            List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
+                    .map(s -> new TextRenderTask(s, renderSetting))
+                    .toList();
 
             if (stripColors) {
-                dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText()));
+                dialogueRenderTasks.forEach(dialogueRenderTask ->
+                        dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText())));
             }
 
-            float textHeight = FontRenderer.getInstance()
-                    .calculateRenderHeight(
-                            dialogueRenderTask.getText(),
-                            dialogueRenderTask.getSetting().maxWidth());
+            float textHeight = dialogueRenderTasks.stream()
+                    .map(dialogueRenderTask -> FontRenderer.getInstance()
+                            .calculateRenderHeight(
+                                    dialogueRenderTask.getText(),
+                                    dialogueRenderTask.getSetting().maxWidth()))
+                    .max(Float::compareTo)
+                    .orElse(10f);
 
             // Draw a translucent background
             float rectHeight = textHeight + 10;
@@ -207,11 +213,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             // Render the message
             FontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            dialogueRenderTask,
+                            dialogueRenderTasks,
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -254,17 +260,17 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            String currentDialogue = NpcDialogueOverlayFeature.this.currentDialogue;
+            List<String> currentDialogue = NpcDialogueOverlayFeature.this.currentDialogue;
 
-            if (currentDialogue == null) return;
+            if (currentDialogue.isEmpty()) return;
 
             renderDialogue(poseStack, currentDialogue, NpcDialogueOverlayFeature.this.needsConfirmation);
         }
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            String fakeDialogue =
-                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r";
+            List<String> fakeDialogue = List.of(
+                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
             // we have to force update every time
             updateTextRenderSettings();
 

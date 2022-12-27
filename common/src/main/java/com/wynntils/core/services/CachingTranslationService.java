@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -20,14 +21,15 @@ public abstract class CachingTranslationService implements TranslationService {
     private static final File TRANSLATION_CACHE_ROOT = WynntilsMod.getModStorageDir("translationcache");
 
     // Map language code (String) to a translation map (String -> String)
-    private static Map<String, ConcurrentHashMap<String, String>> translationCaches = new HashMap<>();
+    private static Map<String, ConcurrentHashMap<String, List<String>>> translationCaches = new HashMap<>();
     private static int counter;
 
-    protected abstract void translateNew(String message, String toLanguage, Consumer<String> handleTranslation);
+    protected abstract void translateNew(
+            List<String> message, String toLanguage, Consumer<List<String>> handleTranslation);
 
-    protected void saveTranslation(String toLanguage, String message, String translatedMessage) {
-        Map<String, String> translationCache = translationCaches.get(toLanguage);
-        translationCache.put(message, translatedMessage);
+    protected void saveTranslation(String toLanguage, List<String> message, List<String> translatedMessage) {
+        Map<String, List<String>> translationCache = translationCaches.get(toLanguage);
+        translationCache.put(createKey(message), translatedMessage);
         if (++counter % 16 == 0) {
             // Persist translation cache in background
             TaskUtils.runAsync(CachingTranslationService::saveTranslationCache);
@@ -35,15 +37,15 @@ public abstract class CachingTranslationService implements TranslationService {
     }
 
     @Override
-    public void translate(String message, String toLanguage, Consumer<String> handleTranslation) {
-        if (message == null || message.isEmpty()) {
-            TaskUtils.runAsync(() -> handleTranslation.accept(""));
+    public void translate(List<String> message, String toLanguage, Consumer<List<String>> handleTranslation) {
+        if (message.isEmpty()) {
+            TaskUtils.runAsync(() -> handleTranslation.accept(List.of()));
             return;
         }
 
-        Map<String, String> translationCache =
+        Map<String, List<String>> translationCache =
                 translationCaches.computeIfAbsent(toLanguage, k -> new ConcurrentHashMap<>());
-        String cachedTranslation = translationCache.get(message);
+        List<String> cachedTranslation = translationCache.get(createKey(message));
         if (cachedTranslation != null) {
             TaskUtils.runAsync(() -> handleTranslation.accept(cachedTranslation));
             return;
@@ -84,5 +86,9 @@ public abstract class CachingTranslationService implements TranslationService {
                 translationCaches = new HashMap<>();
             }
         }
+    }
+
+    private String createKey(List<String> message) {
+        return String.join("", message);
     }
 }

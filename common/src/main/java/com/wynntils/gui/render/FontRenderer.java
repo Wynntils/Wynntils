@@ -283,7 +283,10 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, x, currentY, line);
-            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
+            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
+            currentY += calculateRenderHeight(
+                    line.getText().isEmpty() ? " " : line.getText(),
+                    line.getSetting().maxWidth());
         }
     }
 

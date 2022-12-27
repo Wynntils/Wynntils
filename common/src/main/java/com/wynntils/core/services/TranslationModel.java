@@ -10,6 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class TranslationModel extends Model {
@@ -79,22 +81,26 @@ public final class TranslationModel extends Model {
      */
     public static class PigLatinTranslationService implements TranslationService {
         @Override
-        public void translate(String message, String toLanguage, Consumer<String> handleTranslation) {
-            StringBuilder latinString = new StringBuilder();
-            if (message != null && !message.isEmpty()) {
-                for (String word : message.split("\\s")) {
-                    if (word.isEmpty()) continue;
-                    if ("AEIOUaeiou".indexOf(word.charAt(0)) != -1) {
-                        latinString.append(word).append("ay ");
-                    } else {
-                        latinString
-                                .append(word.substring(1))
-                                .append(word.charAt(0))
-                                .append("ay ");
+        public void translate(List<String> messageList, String toLanguage, Consumer<List<String>> handleTranslation) {
+            List<String> resultList = new ArrayList<>();
+            for (String message : messageList) {
+                StringBuilder latinString = new StringBuilder();
+                if (!message.isEmpty()) {
+                    for (String word : message.split("\\s")) {
+                        if (word.isEmpty()) continue;
+                        if ("AEIOUaeiou".indexOf(word.charAt(0)) != -1) {
+                            latinString.append(word).append("ay ");
+                        } else {
+                            latinString
+                                    .append(word.substring(1))
+                                    .append(word.charAt(0))
+                                    .append("ay ");
+                        }
                     }
                 }
+                resultList.add(latinString.toString());
             }
-            TaskUtils.runAsync(() -> handleTranslation.accept(latinString.toString()));
+            TaskUtils.runAsync(() -> handleTranslation.accept(resultList));
         }
     }
 }

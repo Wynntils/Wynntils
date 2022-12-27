@@ -58,10 +58,11 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsg -> {
+        Models.Translation.getTranslator().translate(List.of(wrapped), languageName, translatedMsgList -> {
             String messageToSend;
-            if (translatedMsg != null) {
-                messageToSend = unwrapCoding(translatedMsg);
+            if (!translatedMsgList.isEmpty()) {
+                String result = translatedMsgList.get(0);
+                messageToSend = unwrapCoding(result);
             } else {
                 if (keepOriginal) return;
 
@@ -80,23 +81,27 @@ public class TranslationFeature extends UserFeature {
         if (!translateNpc) return;
         if (e instanceof TranslatedNpcDialogEvent) return;
 
-        String origCoded = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
-        if (origCoded != null) {
-            String wrapped = wrapCoding(origCoded);
-            Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsg -> {
-                String unwrapped = unwrapCoding(translatedMsg);
+        if (!e.getChatMessage().isEmpty()) {
+            List<String> wrapped = e.getChatMessage().stream()
+                    .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
+                    .toList();
+            Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsgList -> {
+                List<String> unwrapped =
+                        translatedMsgList.stream().map(this::unwrapCoding).toList();
                 // FIXME: We need a ComponentUtils.componentFromCoded()...
                 // This will currently remove all formatting :(
-                Component translatedComponent = Component.literal(ComponentUtils.stripFormatting(unwrapped));
+                List<Component> translatedComponents = unwrapped.stream()
+                        .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
+                        .toList();
                 McUtils.mc().doRunTask(() -> {
                     NpcDialogEvent translatedEvent =
-                            new TranslatedNpcDialogEvent(translatedComponent, e.needsConfirmation());
+                            new TranslatedNpcDialogEvent(translatedComponents, e.needsConfirmation());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(null, e.needsConfirmation());
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.needsConfirmation());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
@@ -113,7 +118,7 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(Component chatMsg, boolean needsConfirmation) {
+        protected TranslatedNpcDialogEvent(List<Component> chatMsg, boolean needsConfirmation) {
             super(chatMsg, needsConfirmation);
         }
     }
