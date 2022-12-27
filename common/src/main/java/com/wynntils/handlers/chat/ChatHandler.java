@@ -91,12 +91,16 @@ public final class ChatHandler extends Handler {
             saveLastChat(message);
             RecipientType recipientType = getRecipientType(message, MessageType.FOREGROUND);
 
-            boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
-            if (separateNPC && recipientType == RecipientType.NPC) {
-                NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
-                WynntilsMod.postEvent(event);
-                e.setCanceled(true);
-                return;
+            if (recipientType == RecipientType.NPC) {
+                if (shouldSeparateNPC()) {
+                    NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
+                    WynntilsMod.postEvent(event);
+                    e.setCanceled(true);
+                    return;
+                } else {
+                    // Reclassify this as a INFO type for the chat
+                    recipientType = RecipientType.INFO;
+                }
             }
 
             Component updatedMessage = handleChatLine(message, codedMessage, recipientType, MessageType.FOREGROUND);
@@ -108,7 +112,7 @@ public final class ChatHandler extends Handler {
             return;
         }
 
-        if (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled)) {
+        if (shouldSeparateNPC()) {
             handleMultilineMessage(message);
             e.setCanceled(true);
         }
@@ -145,7 +149,6 @@ public final class ChatHandler extends Handler {
 
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<Component> dialog = new LinkedList<>();
-        boolean isSelectionDialog;
 
         String firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
         boolean isNpcConfirm = NPC_CONFIRM_PATTERN.matcher(firstLineCoded).find();
@@ -188,7 +191,6 @@ public final class ChatHandler extends Handler {
                 }
             }
         } else {
-            isSelectionDialog = false;
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
@@ -205,9 +207,8 @@ public final class ChatHandler extends Handler {
         // Register all new chat lines
         LinkedList<Component> noConfirmationDialog = new LinkedList<>();
 
-        newChatLines.forEach((line) -> {
-            handleFakeChatLine(line, noConfirmationDialog);
-        });
+        newChatLines.forEach((line) -> handleFakeChatLine(line, noConfirmationDialog));
+
         if (!noConfirmationDialog.isEmpty()) {
             if (noConfirmationDialog.size() > 1) {
                 WynntilsMod.warn("Malformed dialog [#2]: " + noConfirmationDialog);
@@ -225,8 +226,7 @@ public final class ChatHandler extends Handler {
         String coded = ComponentUtils.getCoded(chatMsg);
 
         RecipientType recipientType = getRecipientType(chatMsg, MessageType.BACKGROUND);
-        boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
-        if (separateNPC) {
+        if (shouldSeparateNPC()) {
             // It can be a background NPC chat message
             if (recipientType == RecipientType.NPC) {
                 saveLastChat(chatMsg);
@@ -242,6 +242,10 @@ public final class ChatHandler extends Handler {
             }
         }
 
+        if (recipientType == RecipientType.NPC) {
+            // Reclassify this as a INFO type for the chat
+            recipientType = RecipientType.INFO;
+        }
         saveLastChat(chatMsg);
         Component updatedMessage = handleChatLine(chatMsg, coded, recipientType, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
@@ -249,6 +253,10 @@ public final class ChatHandler extends Handler {
         if (updatedMessage == null) return;
 
         McUtils.sendMessageToClient(updatedMessage);
+    }
+
+    private boolean shouldSeparateNPC() {
+        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
     }
 
     private void saveLastChat(Component chatMsg) {
