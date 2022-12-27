@@ -95,13 +95,14 @@ public class TranslationFeature extends UserFeature {
                         .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
                         .toList();
                 McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(translatedComponents, e.getType());
+                    NpcDialogEvent translatedEvent =
+                            new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
                     WynntilsMod.postEvent(translatedEvent);
                 });
             });
         } else {
             // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType());
+            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
             WynntilsMod.postEvent(translatedEvent);
         }
         if (!keepOriginal) {
@@ -118,8 +119,8 @@ public class TranslationFeature extends UserFeature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type) {
-            super(chatMsg, type);
+        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
+            super(chatMsg, type, isProtected);
         }
     }
 }

@@ -10,6 +10,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -73,9 +75,11 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
+    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
+    private long lastSlowdownApplied = 0;
     private List<Component> lastNpcDialog = List.of();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -93,7 +97,7 @@ public final class ChatHandler extends Handler {
 
             boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
             if (separateNPC && recipientType == RecipientType.NPC) {
-                NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
+                NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 WynntilsMod.postEvent(event);
                 e.setCanceled(true);
                 return;
@@ -237,7 +241,7 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#5]: " + noConfirmationDialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS);
+            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS, false);
             WynntilsMod.postEvent(event);
         }
 
@@ -319,7 +323,9 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            NpcDialogEvent event = new NpcDialogEvent(dialog, type);
+            // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
+            boolean isProtected = (System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS);
+            NpcDialogEvent event = new NpcDialogEvent(dialog, type, isProtected);
             WynntilsMod.postEvent(event);
         }
     }
@@ -330,5 +336,25 @@ public final class ChatHandler extends Handler {
 
     public void removeNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.remove(feature);
+    }
+
+    @SubscribeEvent
+    public void onStatusEffectUpdate(MobEffectEvent.Update event) {
+        if (event.getEntity() != McUtils.player()) return;
+
+        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN
+                && event.getEffectAmplifier() == 3
+                && event.getEffectDurationTicks() == 32767) {
+            lastSlowdownApplied = System.currentTimeMillis();
+        }
+    }
+
+    @SubscribeEvent
+    public void onStatusEffectRemove(MobEffectEvent.Remove event) {
+        if (event.getEntity() != McUtils.player()) return;
+
+        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN) {
+            lastSlowdownApplied = 0;
+        }
     }
 }
