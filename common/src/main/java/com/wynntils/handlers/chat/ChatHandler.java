@@ -255,10 +255,6 @@ public final class ChatHandler extends Handler {
         McUtils.sendMessageToClient(updatedMessage);
     }
 
-    private boolean shouldSeparateNPC() {
-        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
-    }
-
     private void saveLastChat(Component chatMsg) {
         String plainText = chatMsg.getString();
         if (!plainText.isBlank()) {
@@ -306,6 +302,10 @@ public final class ChatHandler extends Handler {
             NpcDialogEvent event = new NpcDialogEvent(dialog, type);
             WynntilsMod.postEvent(event);
         }
+    }
+
+    private boolean shouldSeparateNPC() {
+        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
     }
 
     public void addNpcDialogExtractionDependent(Feature feature) {
