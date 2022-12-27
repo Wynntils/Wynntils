@@ -251,10 +251,17 @@ public final class ChatHandler extends Handler {
 
         RecipientType recipientType = getRecipientType(chatMsg, MessageType.BACKGROUND);
         boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
-
-        if (separateNPC && recipientType == RecipientType.NPC) {
-            noConfirmationDialog.add(chatMsg);
-            return;
+        if (separateNPC) {
+            // It can be a background NPC chat message
+            if (recipientType == RecipientType.NPC) {
+                noConfirmationDialog.add(chatMsg);
+                return;
+            }
+            // But it can actually also be a foreground NPC chat message...
+            if (getRecipientType(chatMsg, MessageType.FOREGROUND) == RecipientType.NPC) {
+                noConfirmationDialog.add(chatMsg);
+                return;
+            }
         }
 
         Component updatedMessage = handleChatLine(chatMsg, coded, recipientType, MessageType.BACKGROUND);
