@@ -69,6 +69,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
+    private long removeTime;
 
     private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
@@ -87,9 +88,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             combinedDialogue.add("");
             combinedDialogue.addAll(msg);
             currentDialogue = combinedDialogue;
+            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+                // If it was confirmationless, delay it's removal
+                removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
+            }
         } else {
             currentDialogue = msg;
             dialogueType = e.getType();
+            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+                removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
+            }
         }
 
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
@@ -108,23 +116,28 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress) {
+        if (autoProgress && dialogueType == NpcDialogueType.NORMAL) {
             // Schedule a new sneak key press if this is not the end of the dialogue
-            if (msg != null) {
+            if (!msg.isEmpty()) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
             }
         }
     }
 
     private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
-        int words = String.join(" ", msg).split(" ").length;
-        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+        long delay = calculateMessageReadTime(msg);
 
         return autoProgressExecutor.schedule(
                 () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
                         McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
                 delay,
                 TimeUnit.MILLISECONDS);
+    }
+
+    private long calculateMessageReadTime(List<String> msg) {
+        int words = String.join(" ", msg).split(" ").length;
+        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+        return delay;
     }
 
     @SubscribeEvent
@@ -276,11 +289,15 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            List<String> currentDialogue = NpcDialogueOverlayFeature.this.currentDialogue;
+            if (NpcDialogueOverlayFeature.this.currentDialogue.isEmpty()) return;
+            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+                if (System.currentTimeMillis() >= removeTime) {
+                    NpcDialogueOverlayFeature.this.currentDialogue = List.of();
+                    return;
+                }
+            }
 
-            if (currentDialogue.isEmpty()) return;
-
-            renderDialogue(poseStack, currentDialogue, NpcDialogueOverlayFeature.this.dialogueType);
+            renderDialogue(poseStack, NpcDialogueOverlayFeature.this.currentDialogue, NpcDialogueOverlayFeature.this.dialogueType);
         }
 
         @Override
