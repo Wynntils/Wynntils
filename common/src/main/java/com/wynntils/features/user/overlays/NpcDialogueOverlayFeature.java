@@ -89,16 +89,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             combinedDialogue.add("");
             combinedDialogue.addAll(msg);
             currentDialogue = combinedDialogue;
-            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
-                // If it was confirmationless, delay it's removal
-                removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
-            }
         } else {
             currentDialogue = msg;
             dialogueType = e.getType();
-            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
-                removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
-            }
+        }
+        if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+            // If we already had a confirmationless dialogue ongoing, reset its removal time
+            removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
         }
 
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
