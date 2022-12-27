@@ -93,7 +93,9 @@ public final class ChatHandler extends Handler {
 
             boolean separateNPC = (dialogExtractionDependents.stream().anyMatch(Feature::isEnabled));
             if (separateNPC && recipientType == RecipientType.NPC) {
-                handleNpcDialog(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
+                NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
+                WynntilsMod.postEvent(event);
+                e.setCanceled(true);
                 return;
             }
 
@@ -231,25 +233,15 @@ public final class ChatHandler extends Handler {
             handleFakeChatLine(line, noConfirmationDialog);
         });
         if (!noConfirmationDialog.isEmpty()) {
-            // We found a confirmationless NPC dialogue in the background
-            // This happens for instance in King's Recruit where one NPC can
-            // offer reminders to move along while in a dialog with a second NPC
-            if (!dialog.isEmpty()) {
-                WynntilsMod.warn("Malformed dialog [#4]: " + ComponentUtils.getCoded(dialog.get(0)) + ", "
-                        + ComponentUtils.getCoded(noConfirmationDialog.get(0)));
-            }
             if (noConfirmationDialog.size() > 1) {
                 WynntilsMod.warn("Malformed dialog [#5]: " + noConfirmationDialog);
                 // Keep going anyway and post the first line of the dialog
             }
-            lastNpcDialog = noConfirmationDialog;
             NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS);
             WynntilsMod.postEvent(event);
-        } else {
-            // Update the new confirmation requred dialog
-            System.out.println(isSelectionDialog);
-            handleNpcDialog(dialog, isSelectionDialog ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL);
         }
+
+        handleNpcDialog(dialog, isSelectionDialog ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL);
     }
 
     private void handleFakeChatLine(Component chatMsg, LinkedList<Component> noConfirmationDialog) {
