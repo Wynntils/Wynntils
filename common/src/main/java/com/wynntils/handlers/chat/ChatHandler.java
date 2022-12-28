@@ -312,7 +312,7 @@ public final class ChatHandler extends Handler {
             return;
         }
 
-        if ((System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS)) {
+        if (System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             NpcDialogEvent event = new NpcDialogEvent(dialog, type, true);
             lastNpcDialog = dialog;
