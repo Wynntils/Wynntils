@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.services;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface TranslationService {
@@ -17,5 +18,5 @@ public interface TranslationService {
      * @param toLanguage        The target language code
      * @param handleTranslation Handler for the translation. The argument is the translated string.
      */
-    void translate(String message, String toLanguage, Consumer<String> handleTranslation);
+    void translate(List<String> message, String toLanguage, Consumer<List<String>> handleTranslation);
 }

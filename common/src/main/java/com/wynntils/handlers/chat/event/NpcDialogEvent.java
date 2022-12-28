@@ -4,19 +4,27 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.handlers.chat.NpcDialogueType;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class NpcDialogEvent extends Event {
-    private final Component chatMessage;
+    private final List<Component> chatMessage;
+    private final NpcDialogueType type;
 
-    public NpcDialogEvent(Component chatMessage) {
+    public NpcDialogEvent(List<Component> chatMessage, NpcDialogueType type) {
         this.chatMessage = chatMessage;
+        this.type = type;
     }
 
-    public Component getChatMessage() {
+    public NpcDialogueType getType() {
+        return type;
+    }
+
+    public List<Component> getChatMessage() {
         return chatMessage;
     }
 }
