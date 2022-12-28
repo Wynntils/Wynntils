@@ -1,9 +1,21 @@
+## [0.0.2-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.39...v0.0.2-alpha.40) (2022-12-28)
+
+
+### New Features
+
+* Handle more types of NPC dialogues ([#767](https://github.com/Wynntils/Artemis/issues/767)) ([fcc3aa1](https://github.com/Wynntils/Artemis/commit/fcc3aa1ddbaeb2cda1f3ed9a556eb82967060281))
+
 ## [0.0.2-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.38...v0.0.2-alpha.39) (2022-12-26)
 
 
 ### New Features
 
 * Add /quest command ([#766](https://github.com/Wynntils/Artemis/issues/766)) ([525a432](https://github.com/Wynntils/Artemis/commit/525a432a26c8e5b01aa9bf82b88eebe77eaabe41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.39 [skip ci] ([90bc7a9](https://github.com/Wynntils/Artemis/commit/90bc7a975582babf93d0fcae39dedb5146c99e7a))
 
 ## [0.0.2-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.37...v0.0.2-alpha.38) (2022-12-25)
 
@@ -36,16 +48,4 @@
 
 * IntelliJ inspection profile fixes ([#933](https://github.com/Wynntils/Artemis/issues/933)) ([e859715](https://github.com/Wynntils/Artemis/commit/e859715ad9161532d6a9e4d23dc75228ea2f6915))
 * **release:** v0.0.2-alpha.36 [skip ci] ([23a3822](https://github.com/Wynntils/Artemis/commit/23a382217597975816ea257c02a621f40af7cc3d))
-
-## [0.0.2-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.34...v0.0.2-alpha.35) (2022-12-25)
-
-
-### Bug Fixes
-
-* Default config file should contain default config values ([#940](https://github.com/Wynntils/Artemis/issues/940)) ([c641df3](https://github.com/Wynntils/Artemis/commit/c641df3740d36fe7657faecad1da98685bce6816))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.35 [skip ci] ([98263e8](https://github.com/Wynntils/Artemis/commit/98263e8d6c5e73677158c2aaeaa31393919ca461))
 
