@@ -61,8 +61,7 @@ public class ItemLockFeature extends UserFeature {
         // Don't render lock on ability tree slots
         if (WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        for (Integer slotId : classSlotLockMap.getOrDefault(
-                Managers.Character.getCharacterInfo().getId(), Set.of())) {
+        for (Integer slotId : classSlotLockMap.getOrDefault(Managers.Character.getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -98,7 +97,7 @@ public class ItemLockFeature extends UserFeature {
         }
 
         if (classSlotLockMap
-                .getOrDefault(Managers.Character.getCharacterInfo().getId(), Set.of())
+                .getOrDefault(Managers.Character.getId(), Set.of())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -113,7 +112,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
-                .getOrDefault(Managers.Character.getCharacterInfo().getId(), Set.of())
+                .getOrDefault(Managers.Character.getId(), Set.of())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -135,11 +134,9 @@ public class ItemLockFeature extends UserFeature {
     private static void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(
-                Managers.Character.getCharacterInfo().getId(), new HashSet<>());
+        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(Managers.Character.getId(), new HashSet<>());
 
-        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(
-                Managers.Character.getCharacterInfo().getId());
+        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(Managers.Character.getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

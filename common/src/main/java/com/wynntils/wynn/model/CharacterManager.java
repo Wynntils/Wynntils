@@ -120,7 +120,33 @@ public final class CharacterManager extends Manager {
         return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
     }
 
-    public CharacterInfo getCharacterInfo() {
+    public ClassType getClassType() {
+        return getCharacterInfo().getClassType();
+    }
+
+    public boolean isReskinned() {
+        return getCharacterInfo().isReskinned();
+    }
+
+    /** Returns the current class name, wrt reskinned or not.
+     */
+    public String getActualName() {
+        return getCharacterInfo().getActualName();
+    }
+
+    public int getLevel() {
+        return getCharacterInfo().getLevel();
+    }
+
+    public int getId() {
+        return getCharacterInfo().getId();
+    }
+
+    public ProfessionInfo getProfessionInfo() {
+        return getCharacterInfo().getProfessionInfo();
+    }
+
+    private CharacterInfo getCharacterInfo() {
         if (currentCharacter == null) {
             currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0, new ProfessionInfo());
         }
@@ -258,7 +284,7 @@ public final class CharacterManager extends Manager {
     }
 
     // TODO: We don't have a way get CharacterInfo id if auto select class is on for the player.
-    public static final class CharacterInfo {
+    private static final class CharacterInfo {
         private final ClassType classType;
         private final boolean reskinned;
         private final int level;
@@ -303,16 +329,6 @@ public final class CharacterManager extends Manager {
 
         public ProfessionInfo getProfessionInfo() {
             return professionInfo;
-        }
-
-        @Override
-        public String toString() {
-            return "CharacterInfo{" + "classType="
-                    + classType + ", reskinned="
-                    + reskinned + ", level="
-                    + level + ", id="
-                    + id + ", professionInfo="
-                    + professionInfo + '}';
         }
     }
 }

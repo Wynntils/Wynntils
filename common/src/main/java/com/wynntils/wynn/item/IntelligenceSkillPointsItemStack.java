@@ -52,13 +52,12 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
         int intelligencePoints = property.getSkillPoints();
 
         int closestUpgradeLevel = Integer.MAX_VALUE;
-        int level = Managers.Character.getCharacterInfo().getLevel();
+        int level = Managers.Character.getLevel();
 
         LinkedList<Component> newLore = new LinkedList<>();
 
         for (int j = 0; j < 4; j++) {
-            SpellType spell =
-                    SpellType.forClass(Managers.Character.getCharacterInfo().getClassType(), j + 1);
+            SpellType spell = SpellType.forClass(Managers.Character.getClassType(), j + 1);
 
             if (spell.getUnlockLevel(1) <= level) {
                 // The spell has been unlocked

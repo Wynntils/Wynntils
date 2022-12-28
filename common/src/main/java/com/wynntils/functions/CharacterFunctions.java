@@ -109,7 +109,7 @@ public class CharacterFunctions {
         // FIXME: original had upper/lower case versions. Make a upper/lower function instead.
         @Override
         public String getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getActualName();
+            return Managers.Character.getActualName();
         }
     }
 
@@ -338,7 +338,7 @@ public class CharacterFunctions {
     public static class WoodcuttingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
         }
 
         @Override
@@ -350,7 +350,7 @@ public class CharacterFunctions {
     public static class MiningLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.MINING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.MINING);
         }
 
         @Override
@@ -362,7 +362,7 @@ public class CharacterFunctions {
     public static class FishingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.FISHING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.FISHING);
         }
 
         @Override
@@ -374,7 +374,7 @@ public class CharacterFunctions {
     public static class FarmingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.FARMING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.FARMING);
         }
 
         @Override
@@ -386,7 +386,7 @@ public class CharacterFunctions {
     public static class AlchemismLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
         }
 
         @Override
@@ -398,7 +398,7 @@ public class CharacterFunctions {
     public static class ArmouringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.ARMOURING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.ARMOURING);
         }
 
         @Override
@@ -410,7 +410,7 @@ public class CharacterFunctions {
     public static class CookingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.COOKING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.COOKING);
         }
 
         @Override
@@ -422,7 +422,7 @@ public class CharacterFunctions {
     public static class JewelingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.JEWELING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.JEWELING);
         }
 
         @Override
@@ -434,7 +434,7 @@ public class CharacterFunctions {
     public static class ScribingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.SCRIBING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.SCRIBING);
         }
 
         @Override
@@ -446,7 +446,7 @@ public class CharacterFunctions {
     public static class TailoringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.TAILORING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.TAILORING);
         }
 
         @Override
@@ -458,7 +458,7 @@ public class CharacterFunctions {
     public static class WeaponsmithingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
         }
 
         @Override
@@ -470,7 +470,7 @@ public class CharacterFunctions {
     public static class WoodworkingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
+            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
         }
 
         @Override
