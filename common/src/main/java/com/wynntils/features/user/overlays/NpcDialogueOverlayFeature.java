@@ -56,6 +56,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     private List<String> currentDialogue = List.of();
     private NpcDialogueType dialogueType;
+    private boolean isProtected;
 
     @Config
     public boolean autoProgress = false;
@@ -92,6 +93,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         } else {
             currentDialogue = msg;
             dialogueType = e.getType();
+            isProtected = e.isProtected();
         }
         if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
             // If we already had a confirmationless dialogue ongoing, reset its removal time
@@ -249,12 +251,14 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             if (showHelperTexts) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
+                String protection = isProtected ? "§f<protected> §r" : "";
                 if (dialogueType == NpcDialogueType.NORMAL) {
-                    TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     TextRenderTask pressSneakMessage =
-                            new TextRenderTask("§cSelect an option to continue", renderSetting);
+                            new TextRenderTask(protection + "§cSelect an option to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 

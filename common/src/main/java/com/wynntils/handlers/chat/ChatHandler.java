@@ -6,10 +6,12 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -19,7 +21,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -73,10 +78,14 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
+    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
+    private long lastSlowdownApplied = 0;
     private List<Component> lastNpcDialog = List.of();
+    private List<Component> delayedDialogue;
+    private NpcDialogueType delayedType;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatPacketReceivedEvent e) {
@@ -93,7 +102,8 @@ public final class ChatHandler extends Handler {
 
             if (recipientType == RecipientType.NPC) {
                 if (shouldSeparateNPC()) {
-                    NpcDialogEvent event = new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS);
+                    NpcDialogEvent event =
+                            new NpcDialogEvent(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                     WynntilsMod.postEvent(event);
                     e.setCanceled(true);
                     return;
@@ -138,7 +148,11 @@ public final class ChatHandler extends Handler {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            handleNpcDialog(List.of(), NpcDialogueType.NONE);
+            if (!lastNpcDialog.isEmpty()) {
+                lastNpcDialog = List.of();
+                NpcDialogEvent event = new NpcDialogEvent(lastNpcDialog, NpcDialogueType.NONE, false);
+                WynntilsMod.postEvent(event);
+            }
             return;
         }
 
@@ -210,11 +224,7 @@ public final class ChatHandler extends Handler {
         newChatLines.forEach((line) -> handleFakeChatLine(line, noConfirmationDialog));
 
         if (!noConfirmationDialog.isEmpty()) {
-            if (noConfirmationDialog.size() > 1) {
-                WynntilsMod.warn("Malformed dialog [#2]: " + noConfirmationDialog);
-                // Keep going anyway and post the first line of the dialog
-            }
-            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS);
+            NpcDialogEvent event = new NpcDialogEvent(noConfirmationDialog, NpcDialogueType.CONFIRMATIONLESS, false);
             WynntilsMod.postEvent(event);
         }
 
@@ -293,15 +303,46 @@ public final class ChatHandler extends Handler {
 
     private void handleNpcDialog(List<Component> dialog, NpcDialogueType type) {
         // dialog could be the empty list, this means the last dialog is removed
-        if (!dialog.equals(lastNpcDialog)) {
+        if (dialog.equals(lastNpcDialog)) return;
+
+        if (dialog.isEmpty()) {
+            NpcDialogEvent event = new NpcDialogEvent(dialog, NpcDialogueType.NONE, false);
             lastNpcDialog = dialog;
-            if (dialog.size() > 1) {
-                WynntilsMod.warn("Malformed dialog [#3]: " + dialog);
-                // Keep going anyway and post the first line of the dialog
-            }
-            NpcDialogEvent event = new NpcDialogEvent(dialog, type);
             WynntilsMod.postEvent(event);
+            return;
         }
+
+        if (System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS) {
+            // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
+            NpcDialogEvent event = new NpcDialogEvent(dialog, type, true);
+            lastNpcDialog = dialog;
+            WynntilsMod.postEvent(event);
+            return;
+        }
+
+        // Maybe this should be a protected dialogue but packets came in the wrong order.
+        // Wait a tick for slowdown, and then send the event
+        delayedDialogue = dialog;
+        delayedType = type;
+        Managers.MinecraftScheduler.queueRunnable(() -> {
+            if (delayedDialogue != null) {
+                List<Component> dialogToSend = delayedDialogue;
+                delayedDialogue = null;
+                // If we got here, then we did not get the slowdown effect, otherwise we would
+                // have sent the dialogue already
+                NpcDialogEvent event = new NpcDialogEvent(dialogToSend, delayedType, false);
+                lastNpcDialog = dialogToSend;
+                WynntilsMod.postEvent(event);
+                if (type == NpcDialogueType.SELECTION) {
+                    // This is a bit of a workaround to be able to select the options
+                    MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.")
+                            .withStyle(ChatFormatting.AQUA);
+                    dialogToSend.forEach(
+                            line -> clickMsg.append(Component.literal("\n").append(line)));
+                    McUtils.sendMessageToClient(clickMsg);
+                }
+            }
+        });
     }
 
     private boolean shouldSeparateNPC() {
@@ -314,5 +355,32 @@ public final class ChatHandler extends Handler {
 
     public void removeNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.remove(feature);
+    }
+
+    @SubscribeEvent
+    public void onStatusEffectUpdate(MobEffectEvent.Update event) {
+        if (event.getEntity() != McUtils.player()) return;
+
+        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN
+                && event.getEffectAmplifier() == 3
+                && event.getEffectDurationTicks() == 32767) {
+            if (delayedDialogue != null) {
+                NpcDialogEvent dialogueEvent = new NpcDialogEvent(delayedDialogue, delayedType, true);
+                lastNpcDialog = delayedDialogue;
+                delayedDialogue = null;
+                WynntilsMod.postEvent(dialogueEvent);
+            } else {
+                lastSlowdownApplied = System.currentTimeMillis();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onStatusEffectRemove(MobEffectEvent.Remove event) {
+        if (event.getEntity() != McUtils.player()) return;
+
+        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN) {
+            lastSlowdownApplied = 0;
+        }
     }
 }
