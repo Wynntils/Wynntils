@@ -1,9 +1,21 @@
+## [0.0.2-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.42...v0.0.2-alpha.43) (2022-12-28)
+
+
+### Code Refactoring
+
+* NPC Dialogue cleanup ([#944](https://github.com/Wynntils/Artemis/issues/944)) ([d7f64d4](https://github.com/Wynntils/Artemis/commit/d7f64d4decf24554775c9a1db01477fe39585472))
+
 ## [0.0.2-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.41...v0.0.2-alpha.42) (2022-12-28)
 
 
 ### New Features
 
 * Detect if NPC dialogue is protected ([#942](https://github.com/Wynntils/Artemis/issues/942)) ([da3abb3](https://github.com/Wynntils/Artemis/commit/da3abb37c47890ef22b0b1a497eec1b6b3d37a37))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.42 [skip ci] ([9b125b0](https://github.com/Wynntils/Artemis/commit/9b125b05da39409cb44c118747f16d59692eb5a0))
 
 ## [0.0.2-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.40...v0.0.2-alpha.41) (2022-12-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.39 [skip ci] ([90bc7a9](https://github.com/Wynntils/Artemis/commit/90bc7a975582babf93d0fcae39dedb5146c99e7a))
-
-## [0.0.2-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.37...v0.0.2-alpha.38) (2022-12-25)
-
-
-### New Features
-
-* zh lang files ([#937](https://github.com/Wynntils/Artemis/issues/937)) ([036ca6d](https://github.com/Wynntils/Artemis/commit/036ca6d62832b550bafd7a15244d40dda10eaf93))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.38 [skip ci] ([a679072](https://github.com/Wynntils/Artemis/commit/a679072bf2a6c4035101c9815affc71b58d666b7))
 
