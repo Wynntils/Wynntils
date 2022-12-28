@@ -11,7 +11,6 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
-import com.wynntils.wynn.item.IntelligenceSkillPointsItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
@@ -25,14 +24,14 @@ import net.minecraft.world.item.ItemStack;
 public class ItemModel extends Model {
     @Override
     public void init() {
-        Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
-        Handlers.Item.registerAnnotator(new IntelligenceSkillPointsAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
+        Handlers.Item.registerAnnotator(new UnidentifiedAnnotator());
+        Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
+
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
-        Handlers.Item.registerAnnotator(new UnidentifiedAnnotator());
     }
 
     @Override
@@ -74,12 +73,6 @@ public class ItemModel extends Model {
     public static final class IngredientAnnotator extends Annotator {
         public IngredientAnnotator() {
             super(WynnItemMatchers::isIngredient, IngredientItemStack::new);
-        }
-    }
-
-    public static final class IntelligenceSkillPointsAnnotator extends Annotator {
-        public IntelligenceSkillPointsAnnotator() {
-            super(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
         }
     }
 
