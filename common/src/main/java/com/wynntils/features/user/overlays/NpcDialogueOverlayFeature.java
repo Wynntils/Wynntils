@@ -42,6 +42,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -104,6 +106,15 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             NotificationManager.queueMessage(msg.get(0));
+        }
+
+        if (e.getType() == NpcDialogueType.SELECTION && e.isProtected()) {
+            // This is a bit of a workaround to be able to select the options
+            MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.")
+                    .withStyle(ChatFormatting.AQUA);
+            e.getChatMessage()
+                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
+            McUtils.sendMessageToClient(clickMsg);
         }
 
         if (scheduledAutoProgressKeyPress != null) {
