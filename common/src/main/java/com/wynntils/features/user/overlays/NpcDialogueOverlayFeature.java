@@ -253,11 +253,12 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
                 String protection = isProtected ? "§a<protected>️§r " : "";
                 if (dialogueType == NpcDialogueType.NORMAL) {
-                    TextRenderTask pressSneakMessage = new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection+ "§cSelect an option to continue", renderSetting);
+                            new TextRenderTask(protection + "§cSelect an option to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 
