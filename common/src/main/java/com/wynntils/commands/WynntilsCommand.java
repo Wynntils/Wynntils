@@ -164,10 +164,18 @@ public class WynntilsCommand extends CommandBase {
 
     private int simulate(CommandContext<CommandSourceStack> context) {
         // Code for simulating chat messages that can be picked up by other Wynntils features
-        MutableComponent component = Component.literal("§b[106/502/Ma/✫✫MALD]§r").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Realname Captain of guild"))));
-        component.append(Component.literal(" [WC1]").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to switch world")))));
-        component.append(Component.literal("§e [§r§b§k|§r§6CHAMPION§r§b§k|§r§e]§r ").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("CHAMPION")))));
-        component.append(Component.literal("§e§oFakeNickname§r§e").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("FakeNickname's real username is RealName")))));
+        MutableComponent component = Component.literal("§b[106/502/Ma/✫✫MALD]§r")
+                .withStyle(style -> style.withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Realname Captain of guild"))));
+        component.append(Component.literal(" [WC1]")
+                .withStyle(style -> style.withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to switch world")))));
+        component.append(Component.literal("§e [§r§b§k|§r§6CHAMPION§r§b§k|§r§e]§r ")
+                .withStyle(style -> style.withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("CHAMPION")))));
+        component.append(Component.literal("§e§oFakeNickname§r§e")
+                .withStyle(style -> style.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT, Component.literal("FakeNickname's real username is RealName")))));
         component.append(Component.literal(": §r§ftestmessage").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         WynntilsMod.postEvent(new ChatPacketReceivedEvent(ChatType.CHAT, component));
         context.getSource().sendSuccess(Component.literal(""), false);
