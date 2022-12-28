@@ -4,18 +4,15 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.mc.objects.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ChatPacketReceivedEvent extends Event {
-    private final ChatType type;
+public abstract class ChatPacketReceivedEvent extends Event {
     private Component message;
 
-    public ChatPacketReceivedEvent(ChatType type, Component message) {
-        this.type = type;
+    public ChatPacketReceivedEvent(Component message) {
         this.message = message;
     }
 
@@ -23,11 +20,23 @@ public class ChatPacketReceivedEvent extends Event {
         return message;
     }
 
-    public ChatType getType() {
-        return type;
-    }
-
     public void setMessage(Component message) {
         this.message = message;
+    }
+
+    public static final class GameInfo extends ChatPacketReceivedEvent {
+        public GameInfo(Component message) {
+            super(message);
+        }
+    }
+    public static final class System extends ChatPacketReceivedEvent {
+        public System(Component message) {
+            super(message);
+        }
+    }
+    public static final class Player extends ChatPacketReceivedEvent {
+        public Player(Component message) {
+            super(message);
+        }
     }
 }

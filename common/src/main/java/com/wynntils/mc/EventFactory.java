@@ -78,7 +78,6 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
-import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
@@ -427,8 +426,13 @@ public final class EventFactory {
         return post(new CommandSentEvent(command, signed));
     }
 
-    public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
-        return post(new ChatPacketReceivedEvent(type, message));
+    public static ChatPacketReceivedEvent onPlayerChatReceived(Component message) {
+        return post(new ChatPacketReceivedEvent.Player(message));
+    }
+
+    public static ChatPacketReceivedEvent onSystemChatReceived(Component message, boolean isInfo) {
+        ChatPacketReceivedEvent event = isInfo ? new ChatPacketReceivedEvent.GameInfo(message) : new ChatPacketReceivedEvent.System(message);
+        return post(event);
     }
 
     public static ClientsideMessageEvent onClientsideMessage(Component component) {

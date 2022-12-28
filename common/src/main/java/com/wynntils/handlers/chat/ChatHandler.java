@@ -12,7 +12,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
-import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Collections;
@@ -95,7 +94,7 @@ public final class ChatHandler extends Handler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatPacketReceivedEvent e) {
-        if (e.getType() == ChatType.GAME_INFO) return;
+        if (e instanceof ChatPacketReceivedEvent.GameInfo) return;
 
         Component message = e.getMessage();
         String codedMessage = ComponentUtils.getCoded(message);
