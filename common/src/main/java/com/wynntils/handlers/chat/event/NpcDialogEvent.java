@@ -14,10 +14,12 @@ import net.minecraftforge.eventbus.api.Event;
 public class NpcDialogEvent extends Event {
     private final List<Component> chatMessage;
     private final NpcDialogueType type;
+    private final boolean isProtected;
 
-    public NpcDialogEvent(List<Component> chatMessage, NpcDialogueType type) {
+    public NpcDialogEvent(List<Component> chatMessage, NpcDialogueType type, boolean isProtected) {
         this.chatMessage = chatMessage;
         this.type = type;
+        this.isProtected = isProtected;
     }
 
     public NpcDialogueType getType() {
@@ -26,5 +28,9 @@ public class NpcDialogEvent extends Event {
 
     public List<Component> getChatMessage() {
         return chatMessage;
+    }
+
+    public boolean isProtected() {
+        return isProtected;
     }
 }
