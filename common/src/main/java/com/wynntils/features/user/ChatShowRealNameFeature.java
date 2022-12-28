@@ -69,15 +69,7 @@ public class ChatShowRealNameFeature extends UserFeature {
                 else {
                     System.out.println("Message not found in siblings");
                 }
-                // Add all old siblings to the real name
-                //fullMessage.getSiblings().addAll(siblings);
-                // Clears everything except for the nickname (and [***] stuff if in guild chat)
-                //message.getSiblings().clear();
-                // Adds the real name + the original message after the nickname
-                //message.getSiblings().add(fullMessage);
-                //System.out.println(message);
             }
-//            message.getSiblings().addAll(TextElement.of("§c(" + realName + ")§f").getWithStyle(message.getStyle())); // This is not used due to it appearing after the message in guild chat
         }
     }
 
