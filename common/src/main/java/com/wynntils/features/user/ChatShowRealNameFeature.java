@@ -10,8 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatShowRealNameFeature extends UserFeature {
     // credits to avomod for part of the code
@@ -43,13 +41,9 @@ public class ChatShowRealNameFeature extends UserFeature {
             if (hover == null) return;
             if (hover.getValue(hover.getAction()) instanceof Component hoverText) {
                 String realName = hoverText.getString().split(" ")[hoverText.getString().split(" ").length - 1];
-                // Save all sibling of the message
                 List<Component> siblings = parentMessage.getSiblings();
-                // Make a TextElement with the real name
-                //Component fullMessage = Component.literal("§c(" + realName + ")§f");
                 // Champion: §e, Hero: §5, VIP+: §b, VIP: §2, None: §7
                 System.out.println("Parent message: " + parentMessage + " | Siblings: " + parentMessage.getSiblings());
-                //Component fullMessage = Component.literal("§r§" + finalColourCode + realName).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal( "§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f" + ChatFormatting.stripFormatting(message.getString())))));
                 String colourCode = getColourCodeByRank(eventOriginalColorMessage);
                 Component fullMessage = Component.literal("§r§" + colourCode + realName).withStyle().withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal( "§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f" + ChatFormatting.stripFormatting(message.getString())))));
                 System.out.println("Message in siblings: " + siblings.contains(message));
@@ -92,7 +86,7 @@ public class ChatShowRealNameFeature extends UserFeature {
             return "2";
         }
         else {
-            return "7";
+            return "e";
         }
     }
 }
