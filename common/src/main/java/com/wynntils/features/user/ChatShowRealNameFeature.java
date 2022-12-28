@@ -20,8 +20,6 @@ public class ChatShowRealNameFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        // if module is enabled
-        // if message matches
         eventOriginalMessage = event.getOriginalMessage();
         eventOriginalColorMessage = event.getOriginalCodedMessage();
         System.out.println("Original Coloured message: " + event.getOriginalCodedMessage());
