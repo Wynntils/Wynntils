@@ -12,6 +12,8 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.objects.ChatType;
 import com.wynntils.utils.Delay;
 import com.wynntils.utils.FileUtils;
 import java.util.List;
@@ -56,6 +58,7 @@ public class WynntilsCommand extends CommandBase {
                         .executes(this::clearCaches))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
+                .then(Commands.literal("simulate").executes(this::simulate))
                 .executes(this::help);
     }
 
@@ -156,6 +159,17 @@ public class WynntilsCommand extends CommandBase {
                                 Component.literal("Click here to open in your" + " browser."))));
 
         context.getSource().sendSuccess(c.append(url), false);
+        return 1;
+    }
+
+    private int simulate(CommandContext<CommandSourceStack> context) {
+        MutableComponent component = Component.literal("§b[106/502/Ma/✫✫MALD]§r").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Realname Captain of guild"))));
+        component.append(Component.literal(" [WC1]").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to switch world")))));
+        component.append(Component.literal("§e [§r§b§k|§r§6CHAMPION§r§b§k|§r§e]§r ").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("CHAMPION")))));
+        component.append(Component.literal("§e§oFakeNickname§r§e").withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("FakeNickname's real username is RealName")))));
+        component.append(Component.literal(": §r§ftestmessage").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        WynntilsMod.postEvent(new ChatPacketReceivedEvent(ChatType.CHAT, component));
+        context.getSource().sendSuccess(Component.literal(""), false);
         return 1;
     }
 
