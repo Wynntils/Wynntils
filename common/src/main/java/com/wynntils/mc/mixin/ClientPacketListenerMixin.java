@@ -307,8 +307,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result =
-                EventFactory.onChatReceived(com.wynntils.mc.objects.ChatType.CHAT, packet.unsignedContent());
+        ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;
@@ -357,9 +356,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
-                packet.overlay() ? com.wynntils.mc.objects.ChatType.GAME_INFO : com.wynntils.mc.objects.ChatType.SYSTEM,
-                packet.content());
+        ChatPacketReceivedEvent result = EventFactory.onSystemChatReceived(packet.content(), packet.overlay());
         if (result.isCanceled()) {
             ci.cancel();
             return;

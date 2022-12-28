@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
-import com.wynntils.mc.objects.ChatType;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -56,8 +55,8 @@ public final class ChatTabModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatPacket(ChatPacketReceivedEvent event) {
-        if (event.getType() != ChatType.CHAT) return;
+    public void onChatPacket(ChatPacketReceivedEvent.Player event) {
+        // FIXME: I don't believe this ever happens?
         if (focusedTab == null) return;
 
         // Cancel all remaining messages, if we have a focused tab, we will handle it.
