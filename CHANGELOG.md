@@ -1,9 +1,21 @@
+## [0.0.2-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.41...v0.0.2-alpha.42) (2022-12-28)
+
+
+### New Features
+
+* Detect if NPC dialogue is protected ([#942](https://github.com/Wynntils/Artemis/issues/942)) ([da3abb3](https://github.com/Wynntils/Artemis/commit/da3abb37c47890ef22b0b1a497eec1b6b3d37a37))
+
 ## [0.0.2-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.40...v0.0.2-alpha.41) (2022-12-28)
 
 
 ### Bug Fixes
 
 * Combat Level info variable auto updating ([#943](https://github.com/Wynntils/Artemis/issues/943)) ([db7a367](https://github.com/Wynntils/Artemis/commit/db7a367083f0a47c71fbfeca6ead5e22b1403a78))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.41 [skip ci] ([8033cc5](https://github.com/Wynntils/Artemis/commit/8033cc55fdd41b7dd49cf2ab04153260ca5153bd))
 
 ## [0.0.2-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.39...v0.0.2-alpha.40) (2022-12-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.38 [skip ci] ([a679072](https://github.com/Wynntils/Artemis/commit/a679072bf2a6c4035101c9815affc71b58d666b7))
-
-## [0.0.2-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.36...v0.0.2-alpha.37) (2022-12-25)
-
-
-### New Features
-
-* Remove unused translation keys and duplicate functionality ([#929](https://github.com/Wynntils/Artemis/issues/929)) ([8ae4e3b](https://github.com/Wynntils/Artemis/commit/8ae4e3b90a8293d8b8e8ff1c0c187e734207e328))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.37 [skip ci] ([7f906f4](https://github.com/Wynntils/Artemis/commit/7f906f4cbfdaad107246beb0ce61fe4ce42628ac))
 
