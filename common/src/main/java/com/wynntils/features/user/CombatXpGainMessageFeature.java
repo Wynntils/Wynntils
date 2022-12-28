@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.notifications.NotificationManager;
@@ -41,7 +42,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
     }
 
     private void gatherAndDispatchMessage() {
-        CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo data = Managers.Character.getCharacterInfo();
 
         int newLevel = data.getXpLevel();
 

@@ -21,7 +21,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,7 +62,7 @@ public class ItemLockFeature extends UserFeature {
         // Don't render lock on ability tree slots
         if (WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
 
         if (characterInfo == null) return;
 
@@ -87,7 +86,7 @@ public class ItemLockFeature extends UserFeature {
                 || WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
-        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
 
         if (characterInfo == null) return;
 
@@ -115,7 +114,7 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
 
         if (characterInfo == null) return;
         ItemStack selected = McUtils.inventory().getSelected();
@@ -147,7 +146,7 @@ public class ItemLockFeature extends UserFeature {
     private static void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         if (characterInfo == null) return;
 
         ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());

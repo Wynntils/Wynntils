@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
     }
 
     private List<Component> getManaTables() {
-        CharacterManager.CharacterInfo characterInfo = WynnUtils.getCharacterInfo();
+        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         SkillPointProperty property = getProperty(ItemProperty.SKILL_POINT);
         int intelligencePoints = property.getSkillPoints();
 
