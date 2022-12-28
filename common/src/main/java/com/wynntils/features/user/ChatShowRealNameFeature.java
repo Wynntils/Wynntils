@@ -15,14 +15,15 @@ import java.util.regex.Pattern;
 
 public class ChatShowRealNameFeature extends UserFeature {
     // credits to avomod for part of the code
-    private static final Pattern CHAT_PATTERN = Pattern.compile("§([e5b273])§o([A-Z][a-zA-Z_\\s]+)");
     private static Component eventOriginalMessage;
+    private static String eventOriginalColorMessage;
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         // if module is enabled
         // if message matches
         eventOriginalMessage = event.getOriginalMessage();
+        eventOriginalColorMessage = event.getOriginalCodedMessage();
         System.out.println("Original Coloured message: " + event.getOriginalCodedMessage());
         if (event.getOriginalCodedMessage().contains("§3[")) {
             for (Component siblingMessage: event.getOriginalMessage().getSiblings()) {
@@ -34,7 +35,6 @@ public class ChatShowRealNameFeature extends UserFeature {
     }
 
     private static void addRealNameToMessage(Component message, Component parentMessage) {
-        char colourCode = 'f';
         if (message.getSiblings().size() > 0) {
             for (Component siblingMessage : message.getSiblings()) {
                 addRealNameToMessage(siblingMessage, message);
@@ -50,13 +50,10 @@ public class ChatShowRealNameFeature extends UserFeature {
                 // Make a TextElement with the real name
                 //Component fullMessage = Component.literal("§c(" + realName + ")§f");
                 // Champion: §e, Hero: §5, VIP+: §b, VIP: §2, None: §7
-                Matcher matcher = CHAT_PATTERN.matcher(message.getString());
-                if (matcher.lookingAt()) {
-                    colourCode = matcher.group(1).charAt(0);
-                    System.out.println("Colour code: " + colourCode);
-                }
-                char finalColourCode = colourCode;
-                Component fullMessage = Component.literal("§r§" + finalColourCode + realName).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal( "§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f" + ChatFormatting.stripFormatting(message.getString())))));
+                System.out.println("Parent message: " + parentMessage + " | Siblings: " + parentMessage.getSiblings());
+                //Component fullMessage = Component.literal("§r§" + finalColourCode + realName).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal( "§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f" + ChatFormatting.stripFormatting(message.getString())))));
+                String colourCode = getColourCodeByRank(eventOriginalColorMessage);
+                Component fullMessage = Component.literal("§r§" + colourCode + realName).withStyle().withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal( "§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f" + ChatFormatting.stripFormatting(message.getString())))));
                 System.out.println("Message in siblings: " + siblings.contains(message));
                 System.out.println("Message: " + message.getString());
 
@@ -69,6 +66,8 @@ public class ChatShowRealNameFeature extends UserFeature {
                 else {
                     System.out.println("Message not found in siblings");
                 }
+
+                System.out.println(parentMessage.getSiblings());
             }
         }
     }
@@ -79,5 +78,23 @@ public class ChatShowRealNameFeature extends UserFeature {
             return hoverText.getString().contains("real username");
         }
         return false;
+    }
+
+    private static String getColourCodeByRank(String message) {
+        if (message.contains("[§r§b§k|§r§6CHAMPION§r§b§k|§r§e]")) {
+            return "e";
+        }
+        else if (message.contains("[§r§dHERO§r§5]")) {
+            return "5";
+        }
+        else if (message.contains("[§r§3VIP+§r§b]")) {
+            return "b";
+        }
+        else if (message.contains("[§r§aVIP§r§2]")) {
+            return "2";
+        }
+        else {
+            return "7";
+        }
     }
 }
