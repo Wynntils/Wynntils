@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.type.PropertyType;
@@ -14,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class WynnItemStack extends ItemStack {
+public class WynnItemStack extends ItemStack implements ItemAnnotation {
     protected final String itemName;
     private final List<ItemProperty> properties = new ArrayList<>();
 
