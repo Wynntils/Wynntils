@@ -149,7 +149,7 @@ public final class CharacterManager extends Manager {
         return getClassType().getActualName(isReskinned());
     }
 
-    public int getLevel() {
+    public int getLevelAtLogin() {
         if (!hasCharacter) return 1;
 
         return level;

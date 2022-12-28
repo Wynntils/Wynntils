@@ -52,7 +52,7 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
         int intelligencePoints = property.getSkillPoints();
 
         int closestUpgradeLevel = Integer.MAX_VALUE;
-        int level = Managers.Character.getLevel();
+        int level = Managers.Character.getXpLevel();
 
         LinkedList<Component> newLore = new LinkedList<>();
 
