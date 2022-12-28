@@ -19,7 +19,7 @@ public class CharacterFunctions {
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getSoulPoints();
+            return Managers.Character.getSoulPoints();
         }
 
         @Override
@@ -31,7 +31,7 @@ public class CharacterFunctions {
     public static class SoulpointMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getMaxSoulPoints();
+            return Managers.Character.getMaxSoulPoints();
         }
 
         @Override
@@ -64,7 +64,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
 
             int seconds = totalSeconds % 60;
             int minutes = totalSeconds / 60;
@@ -80,7 +80,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerMFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds / 60;
         }
@@ -94,7 +94,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerSFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds % 60;
         }
@@ -291,7 +291,7 @@ public class CharacterFunctions {
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getXpLevel();
+            return Managers.Character.getXpLevel();
         }
 
         @Override
@@ -303,37 +303,35 @@ public class CharacterFunctions {
     public static class XpFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString(
-                    (int) Managers.Character.getCharacterInfo().getCurrentXp());
+            return StringUtils.integerToShortString((int) Managers.Character.getCurrentXp());
         }
     }
 
     public static class XpRawFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getCurrentXp();
+            return Managers.Character.getCurrentXp();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString(
-                    Managers.Character.getCharacterInfo().getXpPointsNeededToLevelUp());
+            return StringUtils.integerToShortString(Managers.Character.getXpPointsNeededToLevelUp());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getXpPointsNeededToLevelUp();
+            return Managers.Character.getXpPointsNeededToLevelUp();
         }
     }
 
     public static class XpPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getXpProgress() * 100.0f;
+            return Managers.Character.getXpProgress() * 100.0f;
         }
     }
 

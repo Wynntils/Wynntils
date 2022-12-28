@@ -60,8 +60,64 @@ public final class CharacterManager extends Manager {
         super(List.of());
     }
 
-    public boolean hasCharacter() {
-        return currentCharacter != null;
+    /**
+     * Return the maximum number of soul points the character can currently have
+     */
+    public int getMaxSoulPoints() {
+        // FIXME: If player is veteran, we should always return 15
+        int maxIfNotVeteran = 10 + MathUtils.clamp(getXpLevel() / 15, 0, 5);
+        if (getSoulPoints() > maxIfNotVeteran) {
+            return 15;
+        }
+        return maxIfNotVeteran;
+    }
+
+    /**
+     * Return the current number of soul points of the character, or -1 if unable to determine
+     */
+    public int getSoulPoints() {
+        ItemStack soulPoints = McUtils.inventory().getItem(8);
+        if (soulPoints.getItem() != Items.NETHER_STAR) {
+            return -1;
+        }
+
+        return soulPoints.getCount();
+    }
+
+    /**
+     * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
+     *
+     * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
+     * in which case soul points are already full
+     */
+    public int getTicksToNextSoulPoint() {
+        if (McUtils.mc().level == null) return -1;
+        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
+    }
+
+    public float getCurrentXp() {
+        // We calculate our level in points by seeing how far we've progress towards our
+        // current XP level's max
+        return getXpProgress() * getXpPointsNeededToLevelUp();
+    }
+
+    public float getXpProgress() {
+        return McUtils.player().experienceProgress;
+    }
+
+    public int getXpLevel() {
+        return McUtils.player().experienceLevel;
+    }
+
+    public int getXpPointsNeededToLevelUp() {
+        int levelIndex = getXpLevel() - 1;
+        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+            return Integer.MAX_VALUE;
+        }
+        if (levelIndex < 0) {
+            return 0;
+        }
+        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
     }
 
     public CharacterInfo getCharacterInfo() {
@@ -117,8 +173,7 @@ public final class CharacterManager extends Manager {
 
                     // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
                     // default to oldId
-                    currentCharacter =
-                            CharacterInfo.parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    currentCharacter = parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + currentCharacter);
                 })
@@ -127,14 +182,79 @@ public final class CharacterManager extends Manager {
         query.executeQuery();
     }
 
+    private static CharacterInfo parseCharacterFromCharacterMenu(
+            ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
+        List<String> lore = ItemUtils.getLore(characterInfoItem);
+
+        int level = 0;
+        String className = "";
+
+        for (String line : lore) {
+            Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line);
+            if (levelMatcher.matches()) {
+                level = Integer.parseInt(levelMatcher.group(1));
+                continue;
+            }
+
+            Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line);
+
+            if (classMatcher.matches()) {
+                className = classMatcher.group(1);
+            }
+        }
+        ClassType classType = ClassType.fromName(className);
+
+        Map<ProfessionType, Integer> levels = new HashMap<>();
+        List<String> professionLore = ItemUtils.getLore(professionInfoItem);
+        for (String line : professionLore) {
+            Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
+
+            if (matcher.matches()) {
+                levels.put(ProfessionType.fromString(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+            }
+        }
+
+        return new CharacterInfo(
+                classType,
+                classType != null && ClassType.isReskinned(className),
+                level,
+                id,
+                new ProfessionInfo(levels));
+    }
+
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
-            currentCharacter = CharacterInfo.parseCharacter(e.getItemStack(), e.getSlotNum());
+            currentCharacter = parseCharacter(e.getItemStack(), e.getSlotNum());
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + currentCharacter);
         }
+    }
+
+    private static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
+        List<String> lore = ItemUtils.getLore(itemStack);
+
+        int level = 0;
+        String className = "";
+
+        for (String line : lore) {
+            Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line);
+            if (levelMatcher.matches()) {
+                level = Integer.parseInt(levelMatcher.group(1));
+                continue;
+            }
+
+            Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line);
+
+            if (classMatcher.matches()) {
+                className = classMatcher.group(1);
+            }
+        }
+        ClassType classType = ClassType.fromName(className);
+
+        return new CharacterInfo(
+                classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
     }
 
     // TODO: We don't have a way get CharacterInfo id if auto select class is on for the player.
@@ -185,71 +305,6 @@ public final class CharacterManager extends Manager {
             return professionInfo;
         }
 
-        private static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
-            List<String> lore = ItemUtils.getLore(itemStack);
-
-            int level = 0;
-            String className = "";
-
-            for (String line : lore) {
-                Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line);
-                if (levelMatcher.matches()) {
-                    level = Integer.parseInt(levelMatcher.group(1));
-                    continue;
-                }
-
-                Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line);
-
-                if (classMatcher.matches()) {
-                    className = classMatcher.group(1);
-                }
-            }
-            ClassType classType = ClassType.fromName(className);
-
-            return new CharacterInfo(
-                    classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
-        }
-
-        private static CharacterInfo parseCharacterFromCharacterMenu(
-                ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
-            List<String> lore = ItemUtils.getLore(characterInfoItem);
-
-            int level = 0;
-            String className = "";
-
-            for (String line : lore) {
-                Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line);
-                if (levelMatcher.matches()) {
-                    level = Integer.parseInt(levelMatcher.group(1));
-                    continue;
-                }
-
-                Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line);
-
-                if (classMatcher.matches()) {
-                    className = classMatcher.group(1);
-                }
-            }
-            ClassType classType = ClassType.fromName(className);
-
-            Map<ProfessionType, Integer> levels = new HashMap<>();
-            List<String> professionLore = ItemUtils.getLore(professionInfoItem);
-            for (String line : professionLore) {
-                Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
-
-                if (matcher.matches()) {
-                    levels.put(ProfessionType.fromString(matcher.group(2)), Integer.parseInt(matcher.group(1)));
-                }
-            }
-
-            return new CharacterInfo(
-                    classType,
-                    classType != null && ClassType.isReskinned(className),
-                    level,
-                    id,
-                    new ProfessionInfo(levels));
-        }
-
         @Override
         public String toString() {
             return "CharacterInfo{" + "classType="
@@ -258,66 +313,6 @@ public final class CharacterManager extends Manager {
                     + level + ", id="
                     + id + ", professionInfo="
                     + professionInfo + '}';
-        }
-
-        /**
-         * Return the maximum number of soul points the character can currently have
-         */
-        public int getMaxSoulPoints() {
-            // FIXME: If player is veteran, we should always return 15
-            int maxIfNotVeteran = 10 + MathUtils.clamp(getLevel() / 15, 0, 5);
-            if (getSoulPoints() > maxIfNotVeteran) {
-                return 15;
-            }
-            return maxIfNotVeteran;
-        }
-
-        /**
-         * Return the current number of soul points of the character, or -1 if unable to determine
-         */
-        public int getSoulPoints() {
-            ItemStack soulPoints = McUtils.inventory().getItem(8);
-            if (soulPoints.getItem() != Items.NETHER_STAR) {
-                return -1;
-            }
-
-            return soulPoints.getCount();
-        }
-
-        /**
-         * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
-         *
-         * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
-         * in which case soul points are already full
-         */
-        public int getTicksToNextSoulPoint() {
-            if (McUtils.mc().level == null) return -1;
-            return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
-        }
-
-        public float getCurrentXp() {
-            // We calculate our level in points by seeing how far we've progress towards our
-            // current XP level's max
-            return getXpProgress() * getXpPointsNeededToLevelUp();
-        }
-
-        public float getXpProgress() {
-            return McUtils.player().experienceProgress;
-        }
-
-        public int getXpLevel() {
-            return McUtils.player().experienceLevel;
-        }
-
-        public int getXpPointsNeededToLevelUp() {
-            int levelIndex = getXpLevel() - 1;
-            if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
-                return Integer.MAX_VALUE;
-            }
-            if (levelIndex < 0) {
-                return 0;
-            }
-            return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
         }
     }
 }
