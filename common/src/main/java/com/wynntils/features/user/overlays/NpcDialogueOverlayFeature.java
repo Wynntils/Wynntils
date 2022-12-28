@@ -251,7 +251,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             if (showHelperTexts) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                String protection = isProtected ? "§f<>protected> §r" : "";
+                String protection = isProtected ? "§f<protected> §r" : "";
                 if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage =
                             new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
