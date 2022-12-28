@@ -19,7 +19,6 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -62,11 +61,8 @@ public class ItemLockFeature extends UserFeature {
         // Don't render lock on ability tree slots
         if (WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
-
-        if (characterInfo == null) return;
-
-        for (Integer slotId : classSlotLockMap.getOrDefault(characterInfo.getId(), Set.of())) {
+        for (Integer slotId : classSlotLockMap.getOrDefault(
+                Managers.Character.getCharacterInfo().getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -86,10 +82,6 @@ public class ItemLockFeature extends UserFeature {
                 || WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
-
-        if (characterInfo == null) return;
-
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
                 .filter(slot -> slot.container instanceof Inventory && slot.getItem() == event.getItemStack())
                 .findFirst();
@@ -106,7 +98,7 @@ public class ItemLockFeature extends UserFeature {
         }
 
         if (classSlotLockMap
-                .getOrDefault(characterInfo.getId(), Set.of())
+                .getOrDefault(Managers.Character.getCharacterInfo().getId(), Set.of())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -114,9 +106,6 @@ public class ItemLockFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
-
-        if (characterInfo == null) return;
         ItemStack selected = McUtils.inventory().getSelected();
         Optional<Slot> heldItemSlot = McUtils.inventoryMenu().slots.stream()
                 .filter(slot -> slot.getItem() == selected)
@@ -124,7 +113,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
-                .getOrDefault(characterInfo.getId(), Set.of())
+                .getOrDefault(Managers.Character.getCharacterInfo().getId(), Set.of())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -146,12 +135,11 @@ public class ItemLockFeature extends UserFeature {
     private static void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
-        if (characterInfo == null) return;
+        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(
+                Managers.Character.getCharacterInfo().getId(), new HashSet<>());
 
-        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(characterInfo.getId(), new HashSet<>());
-
-        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(characterInfo.getId());
+        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(
+                Managers.Character.getCharacterInfo().getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

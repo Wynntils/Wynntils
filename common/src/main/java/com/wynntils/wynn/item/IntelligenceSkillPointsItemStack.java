@@ -7,7 +7,6 @@ package com.wynntils.wynn.item;
 import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.item.properties.ItemProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -49,17 +48,17 @@ public class IntelligenceSkillPointsItemStack extends WynnItemStack {
     }
 
     private List<Component> getManaTables() {
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         SkillPointProperty property = getProperty(ItemProperty.SKILL_POINT);
         int intelligencePoints = property.getSkillPoints();
 
         int closestUpgradeLevel = Integer.MAX_VALUE;
-        int level = characterInfo.getLevel();
+        int level = Managers.Character.getCharacterInfo().getLevel();
 
         LinkedList<Component> newLore = new LinkedList<>();
 
         for (int j = 0; j < 4; j++) {
-            SpellType spell = SpellType.forClass(characterInfo.getClassType(), j + 1);
+            SpellType spell =
+                    SpellType.forClass(Managers.Character.getCharacterInfo().getClassType(), j + 1);
 
             if (spell.getUnlockLevel(1) <= level) {
                 // The spell has been unlocked
