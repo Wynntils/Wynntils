@@ -291,7 +291,7 @@ public class CharacterFunctions {
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getCharacterInfo().getLevel();
+            return Managers.Character.getCharacterInfo().getXpLevel();
         }
 
         @Override
