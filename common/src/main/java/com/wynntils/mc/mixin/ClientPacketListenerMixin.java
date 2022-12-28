@@ -307,8 +307,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result =
-                EventFactory.onPlayerChatReceived(packet.unsignedContent());
+        ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;

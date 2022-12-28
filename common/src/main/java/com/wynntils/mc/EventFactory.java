@@ -431,7 +431,8 @@ public final class EventFactory {
     }
 
     public static ChatPacketReceivedEvent onSystemChatReceived(Component message, boolean isInfo) {
-        ChatPacketReceivedEvent event = isInfo ? new ChatPacketReceivedEvent.GameInfo(message) : new ChatPacketReceivedEvent.System(message);
+        ChatPacketReceivedEvent event =
+                isInfo ? new ChatPacketReceivedEvent.GameInfo(message) : new ChatPacketReceivedEvent.System(message);
         return post(event);
     }
 

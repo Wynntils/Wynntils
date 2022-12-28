@@ -29,11 +29,13 @@ public abstract class ChatPacketReceivedEvent extends Event {
             super(message);
         }
     }
+
     public static final class System extends ChatPacketReceivedEvent {
         public System(Component message) {
             super(message);
         }
     }
+
     public static final class Player extends ChatPacketReceivedEvent {
         public Player(Component message) {
             super(message);
