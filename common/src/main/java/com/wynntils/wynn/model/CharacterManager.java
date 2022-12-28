@@ -53,8 +53,19 @@ public final class CharacterManager extends Manager {
         21196500, 23315500, 25649000, 249232940
     };
 
-    private CharacterInfo currentCharacter;
     private boolean inCharacterSelection;
+    private boolean hasCharacter;
+
+    private ClassType classType;
+    private boolean reskinned;
+    private int level;
+
+    // This field is basically the slot id of the class,
+    // meaning that if a class changes slots, the ID will not be persistent.
+    // This was implemented the same way by legacy.
+    private int id;
+
+    private ProfessionInfo professionInfo;
 
     public CharacterManager() {
         super(List.of());
@@ -121,36 +132,39 @@ public final class CharacterManager extends Manager {
     }
 
     public ClassType getClassType() {
-        return getCharacterInfo().getClassType();
+        if (!hasCharacter) return ClassType.None;
+
+        return classType;
     }
 
     public boolean isReskinned() {
-        return getCharacterInfo().isReskinned();
+        if (!hasCharacter) return false;
+
+        return reskinned;
     }
 
     /** Returns the current class name, wrt reskinned or not.
      */
     public String getActualName() {
-        return getCharacterInfo().getActualName();
+        return getClassType().getActualName(isReskinned());
     }
 
     public int getLevel() {
-        return getCharacterInfo().getLevel();
+        if (!hasCharacter) return 1;
+
+        return level;
     }
 
     public int getId() {
-        return getCharacterInfo().getId();
+        if (!hasCharacter) return 0;
+
+        return id;
     }
 
     public ProfessionInfo getProfessionInfo() {
-        return getCharacterInfo().getProfessionInfo();
-    }
+        if (!hasCharacter) return new ProfessionInfo();
 
-    private CharacterInfo getCharacterInfo() {
-        if (currentCharacter == null) {
-            currentCharacter = new CharacterInfo(ClassType.None, false, 1, 0, new ProfessionInfo());
-        }
-        return currentCharacter;
+        return professionInfo;
     }
 
     @SubscribeEvent
@@ -162,7 +176,7 @@ public final class CharacterManager extends Manager {
     public void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldStateManager.State.WORLD) {
-            currentCharacter = null;
+            hasCharacter = false;
             // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
@@ -183,7 +197,7 @@ public final class CharacterManager extends Manager {
                 scanCharacterInfoPage(-1);
             } else {
                 // We did not auto-join, we have a correct ID already.
-                int oldId = currentCharacter.id;
+                int oldId = getId();
                 scanCharacterInfoPage(oldId);
             }
         }
@@ -199,17 +213,26 @@ public final class CharacterManager extends Manager {
 
                     // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
                     // default to oldId
-                    currentCharacter = parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    hasCharacter = true;
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
-                    WynntilsMod.info("Deducing character " + currentCharacter);
+                    WynntilsMod.info("Deducing character " + getCharacterString());
                 })
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
                 .build();
         query.executeQuery();
     }
 
-    private static CharacterInfo parseCharacterFromCharacterMenu(
-            ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
+    private String getCharacterString() {
+        return "CharacterInfo{" + "classType="
+                + classType + ", reskinned="
+                + reskinned + ", level="
+                + level + ", id="
+                + id + ", professionInfo="
+                + professionInfo + '}';
+    }
+
+    private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
         List<String> lore = ItemUtils.getLore(characterInfoItem);
 
         int level = 0;
@@ -240,7 +263,7 @@ public final class CharacterManager extends Manager {
             }
         }
 
-        return new CharacterInfo(
+        updateCharacterInfo(
                 classType,
                 classType != null && ClassType.isReskinned(className),
                 level,
@@ -252,13 +275,14 @@ public final class CharacterManager extends Manager {
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
-            currentCharacter = parseCharacter(e.getItemStack(), e.getSlotNum());
+            parseCharacter(e.getItemStack(), e.getSlotNum());
+            hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
-            WynntilsMod.info("Selected character " + currentCharacter);
+            WynntilsMod.info("Selected character " + getCharacterString());
         }
     }
 
-    private static CharacterInfo parseCharacter(ItemStack itemStack, int id) {
+    private void parseCharacter(ItemStack itemStack, int id) {
         List<String> lore = ItemUtils.getLore(itemStack);
 
         int level = 0;
@@ -279,56 +303,16 @@ public final class CharacterManager extends Manager {
         }
         ClassType classType = ClassType.fromName(className);
 
-        return new CharacterInfo(
+        updateCharacterInfo(
                 classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
     }
 
-    // TODO: We don't have a way get CharacterInfo id if auto select class is on for the player.
-    private static final class CharacterInfo {
-        private final ClassType classType;
-        private final boolean reskinned;
-        private final int level;
-
-        // This field is basically the slot id of the class,
-        // meaning that if a class changes slots, the ID will not be persistent.
-        // This was implemented the same way by legacy.
-        private final int id;
-
-        private final ProfessionInfo professionInfo;
-
-        private CharacterInfo(
-                ClassType classType, boolean reskinned, int level, int id, ProfessionInfo professionInfo) {
-            this.classType = classType;
-            this.reskinned = reskinned;
-            this.level = level;
-            this.professionInfo = professionInfo;
-            this.id = id;
-        }
-
-        public ClassType getClassType() {
-            return classType;
-        }
-
-        public boolean isReskinned() {
-            return reskinned;
-        }
-
-        /** Returns the current class name, wrt reskinned or not.
-         */
-        public String getActualName() {
-            return classType.getActualName(reskinned);
-        }
-
-        public int getLevel() {
-            return level;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public ProfessionInfo getProfessionInfo() {
-            return professionInfo;
-        }
+    private void updateCharacterInfo(
+            ClassType classType, boolean reskinned, int level, int id, ProfessionInfo professionInfo) {
+        this.classType = classType;
+        this.reskinned = reskinned;
+        this.level = level;
+        this.professionInfo = professionInfo;
+        this.id = id;
     }
 }
