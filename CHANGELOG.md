@@ -1,9 +1,21 @@
+## [0.0.2-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.40...v0.0.2-alpha.41) (2022-12-28)
+
+
+### Bug Fixes
+
+* Combat Level info variable auto updating ([#943](https://github.com/Wynntils/Artemis/issues/943)) ([db7a367](https://github.com/Wynntils/Artemis/commit/db7a367083f0a47c71fbfeca6ead5e22b1403a78))
+
 ## [0.0.2-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.39...v0.0.2-alpha.40) (2022-12-28)
 
 
 ### New Features
 
 * Handle more types of NPC dialogues ([#767](https://github.com/Wynntils/Artemis/issues/767)) ([fcc3aa1](https://github.com/Wynntils/Artemis/commit/fcc3aa1ddbaeb2cda1f3ed9a556eb82967060281))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.40 [skip ci] ([a4c881d](https://github.com/Wynntils/Artemis/commit/a4c881d054a6516cb7dc40158285bbecff27e027))
 
 ## [0.0.2-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.38...v0.0.2-alpha.39) (2022-12-26)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.37 [skip ci] ([7f906f4](https://github.com/Wynntils/Artemis/commit/7f906f4cbfdaad107246beb0ce61fe4ce42628ac))
-
-## [0.0.2-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.35...v0.0.2-alpha.36) (2022-12-25)
-
-
-### Miscellaneous Chores
-
-* IntelliJ inspection profile fixes ([#933](https://github.com/Wynntils/Artemis/issues/933)) ([e859715](https://github.com/Wynntils/Artemis/commit/e859715ad9161532d6a9e4d23dc75228ea2f6915))
-* **release:** v0.0.2-alpha.36 [skip ci] ([23a3822](https://github.com/Wynntils/Artemis/commit/23a382217597975816ea257c02a621f40af7cc3d))
 
