@@ -63,6 +63,11 @@ public final class StringUtils {
         return Character.toLowerCase(input.charAt(0)) + input.substring(1);
     }
 
+    public static String capitalized(String input) {
+        if (input.isEmpty()) return "";
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase(Locale.ROOT);
+    }
+
     /**
      * Format an integer to have SI suffixes, if it is sufficiently large
      */
@@ -124,6 +129,7 @@ public final class StringUtils {
 
         return fractionalFormat.format(value) + suffixes[suffix];
     }
+
     /**
      * Matches a string to a specific search term
      */
@@ -146,6 +152,19 @@ public final class StringUtils {
         }
 
         return true;
+    }
+
+    /** This is slightly less generous in allowing a match than partialMatch,
+     * but not as strict as a contains(). It will require all sequences of characters
+     * in the searchTerm to be consecutive in the toMatch string as well, until
+     * a whitespace is encountered. E.g. "t vo" would match "The void", but "tvo" would not.
+     */
+    public static boolean initialMatch(String toMatch, String searchTerm) {
+        String lookAt = toMatch.toLowerCase(Locale.ROOT);
+        String searchFor = searchTerm.strip().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+        // Turn all spaces into .*, including start and end
+        String regex = (" " + searchFor + " ").replace(" ", ".*");
+        return lookAt.matches(regex);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
