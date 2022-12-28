@@ -335,10 +335,10 @@ public final class ChatHandler extends Handler {
                 WynntilsMod.postEvent(event);
                 if (type == NpcDialogueType.SELECTION) {
                     // This is a bit of a workaround to be able to select the options
-                    MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.").withStyle(ChatFormatting.AQUA);
-                    dialogToSend.forEach(line -> clickMsg.append(
-                            Component.literal("\n").append(line)
-                    ));
+                    MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.")
+                            .withStyle(ChatFormatting.AQUA);
+                    dialogToSend.forEach(
+                            line -> clickMsg.append(Component.literal("\n").append(line)));
                     McUtils.sendMessageToClient(clickMsg);
                 }
             }
