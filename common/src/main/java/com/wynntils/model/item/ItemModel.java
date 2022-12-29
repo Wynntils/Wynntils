@@ -17,7 +17,6 @@ import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
-import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -81,12 +80,6 @@ public class ItemModel extends Model {
     public static final class DurabilityAnnotator extends PropertyAnnotator {
         public DurabilityAnnotator() {
             super(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
-        }
-    }
-
-    public static final class HorseAnnotator extends PropertyAnnotator {
-        public HorseAnnotator() {
-            super(WynnItemMatchers::isHorse, HorseProperty::new);
         }
     }
 
