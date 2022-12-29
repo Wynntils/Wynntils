@@ -39,6 +39,8 @@ public class ItemHandler extends Handler {
     }
 
     private ItemStack annotate(ItemStack item) {
+        if (item instanceof AnnotatedItemStack) return item;
+
         Optional<ItemAnnotation> annotationOpt = annotators.stream()
                 .map(annotator -> annotator.getAnnotation(item))
                 .filter(Objects::nonNull)
