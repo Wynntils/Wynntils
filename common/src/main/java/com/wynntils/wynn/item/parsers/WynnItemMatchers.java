@@ -7,12 +7,16 @@ package com.wynntils.wynn.item.parsers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
+import com.wynntils.wynn.objects.SpellType;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -21,6 +25,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
@@ -321,5 +326,28 @@ public final class WynnItemMatchers {
 
     public static Matcher gatheringToolMatcher(Component text) {
         return GATHERING_TOOL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
+    }
+
+    public static CappedValue getDurability(ItemStack itemStack) {
+        List<Component> lore = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
+        for (Component line : lore) {
+            Matcher durabilityMatcher = durabilityLineMatcher(line);
+            if (!durabilityMatcher.find()) continue;
+
+            var currentDurability = Integer.parseInt(durabilityMatcher.group(1));
+            var maxDurability = Integer.parseInt(durabilityMatcher.group(2));
+            return new CappedValue(currentDurability, maxDurability);
+        }
+
+        return CappedValue.EMPTY;
+    }
+
+    public static String getShortIdentificationName(String fullIdName, boolean isRaw) {
+        SpellType spell = SpellType.fromName(fullIdName);
+        if (spell != null) {
+            return spell.getShortIdName(isRaw);
+        }
+
+        return IdentificationProfile.getAsShortName(fullIdName, isRaw);
     }
 }

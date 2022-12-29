@@ -10,9 +10,8 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.model.item.game.GearIdentification;
 import com.wynntils.model.item.game.GearItem;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import net.minecraft.world.item.TooltipFlag;
 public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
-    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
+    public static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
@@ -86,8 +85,8 @@ public final class GearAnnotator implements ItemAnnotator {
             // Look for identifications
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
-                String idName =
-                        getShortName(identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
+                String idName = WynnItemMatchers.getShortIdentificationName(
+                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
                 int stars = identificationMatcher.group("Stars").length();
                 identifications.add(new GearIdentification(idName, value, stars));
@@ -95,14 +94,5 @@ public final class GearAnnotator implements ItemAnnotator {
         }
 
         return new GearItem(itemProfile, identifications, powders, rerolls, setBonus);
-    }
-
-    private String getShortName(String fullIdName, boolean isRaw) {
-        SpellType spell = SpellType.fromName(fullIdName);
-        if (spell != null) {
-            return spell.getShortIdName(isRaw);
-        }
-
-        return IdentificationProfile.getAsShortName(fullIdName, isRaw);
     }
 }

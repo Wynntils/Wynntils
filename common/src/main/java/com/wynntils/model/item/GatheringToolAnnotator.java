@@ -12,12 +12,9 @@ import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.ToolProfile;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class GatheringToolAnnotator implements ItemAnnotator {
     private static final Pattern GATHERING_TOOL_PATTERN =
@@ -35,22 +32,8 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
         ToolProfile toolProfile = ToolProfile.fromString(toolType, tier);
         if (toolProfile == null) return null;
 
-        CappedValue durability = getDurability(itemStack);
+        CappedValue durability = WynnItemMatchers.getDurability(itemStack);
 
         return new ToolItem(toolProfile, durability);
-    }
-
-    private CappedValue getDurability(ItemStack itemStack) {
-        List<Component> lore = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
-        for (Component line : lore) {
-            Matcher durabilityMatcher = WynnItemMatchers.durabilityLineMatcher(line);
-            if (!durabilityMatcher.find()) continue;
-
-            var currentDurability = Integer.parseInt(durabilityMatcher.group(1));
-            var maxDurability = Integer.parseInt(durabilityMatcher.group(2));
-            return new CappedValue(currentDurability, maxDurability);
-        }
-
-        return CappedValue.EMPTY;
     }
 }

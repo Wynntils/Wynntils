@@ -14,7 +14,6 @@ import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -38,11 +37,11 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
         Handlers.Item.registerAnnotator(new ConsumableAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
-        Handlers.Item.registerAnnotator(new DurabilityAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
+        Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
 
         // === gui
         Handlers.Item.registerAnnotator(new ServerAnnotator());
@@ -63,11 +62,8 @@ public class ItemModel extends Model {
 
     /// ==== game ====
 
-    public static final class DurabilityAnnotator extends PropertyAnnotator {
-        public DurabilityAnnotator() {
-            super(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
-        }
-    }
+    // CraftedConsumables -- Scroll, Food, Potion
+    // Potions
 
     /// ==== gui ====
 
