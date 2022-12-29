@@ -42,14 +42,14 @@ public final class ItemStackTransformManager extends Manager {
         properties.remove(writer);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        event.setItem(transformItem(event.getItem()));
+        //   event.setItem(transformItem(event.getItem()));
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        event.getItems().replaceAll(this::transformItem);
+        //    event.getItems().replaceAll(this::transformItem);
     }
 
     private ItemStack transformItem(ItemStack stack) {

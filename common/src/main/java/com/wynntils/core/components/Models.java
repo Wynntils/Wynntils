@@ -8,6 +8,7 @@ import com.wynntils.core.chat.tabs.ChatTabModel;
 import com.wynntils.core.net.hades.model.HadesModel;
 import com.wynntils.core.net.hades.model.HadesUserModel;
 import com.wynntils.core.services.TranslationModel;
+import com.wynntils.model.item.ItemModel;
 import com.wynntils.wynn.model.BombBellModel;
 import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.model.CompassModel;
@@ -77,6 +78,7 @@ public final class Models {
     public static final IngredientPropertyModel IngredientProperty = new IngredientPropertyModel();
     public static final IntelligenceSkillPointsItemStackModel IntelligenceSkillPointsItemStack =
             new IntelligenceSkillPointsItemStackModel();
+    public static final ItemModel Item = new ItemModel();
     public static final ItemTierPropertyModel ItemTierProperty = new ItemTierPropertyModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();

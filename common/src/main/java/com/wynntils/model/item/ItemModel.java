@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
-import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
 import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.item.ServerItemStack;
@@ -56,17 +55,10 @@ public class ItemModel extends Model {
         }
     }
 
-
     /** Model Declarations **/
     public static final class EmeraldPouchAnnotator extends Annotator {
         public EmeraldPouchAnnotator() {
             super(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
-        }
-    }
-
-    public static final class GearAnnotator extends Annotator {
-        public GearAnnotator() {
-            super(WynnItemMatchers::isKnownGear, GearItemStack::new);
         }
     }
 
