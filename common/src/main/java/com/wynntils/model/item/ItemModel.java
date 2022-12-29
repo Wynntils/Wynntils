@@ -20,7 +20,6 @@ import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
-import com.wynntils.wynn.item.properties.MaterialProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -103,12 +102,6 @@ public class ItemModel extends Model {
     public static final class HorseAnnotator extends PropertyAnnotator {
         public HorseAnnotator() {
             super(WynnItemMatchers::isHorse, HorseProperty::new);
-        }
-    }
-
-    public static final class MaterialAnnotator extends PropertyAnnotator {
-        public MaterialAnnotator() {
-            super(WynnItemMatchers::isMaterial, MaterialProperty::new);
         }
     }
 

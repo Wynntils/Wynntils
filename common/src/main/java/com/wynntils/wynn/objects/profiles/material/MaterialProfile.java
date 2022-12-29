@@ -6,90 +6,98 @@ package com.wynntils.wynn.objects.profiles.material;
 
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MaterialProfile {
-    public static final Map<MaterialType, List<LeveledMaterial>> LEVELED_MATERIALS = Map.of(
+    public static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
             MaterialType.ORE,
             List.of(
-                    new LeveledMaterial("Copper", 1),
-                    new LeveledMaterial("Granite", 10),
-                    new LeveledMaterial("Gold", 20),
-                    new LeveledMaterial("Sandstone", 30),
-                    new LeveledMaterial("Iron", 40),
-                    new LeveledMaterial("Silver", 50),
-                    new LeveledMaterial("Cobalt", 60),
-                    new LeveledMaterial("Kanderstone", 70),
-                    new LeveledMaterial("Diamond", 80),
-                    new LeveledMaterial("Molten", 90),
-                    new LeveledMaterial("Voidstone", 100),
-                    new LeveledMaterial("Dernic", 110)),
+                    new SourceMaterial("Copper", 1),
+                    new SourceMaterial("Granite", 10),
+                    new SourceMaterial("Gold", 20),
+                    new SourceMaterial("Sandstone", 30),
+                    new SourceMaterial("Iron", 40),
+                    new SourceMaterial("Silver", 50),
+                    new SourceMaterial("Cobalt", 60),
+                    new SourceMaterial("Kanderstone", 70),
+                    new SourceMaterial("Diamond", 80),
+                    new SourceMaterial("Molten", 90),
+                    new SourceMaterial("Voidstone", 100),
+                    new SourceMaterial("Dernic", 110)),
             MaterialType.LOG,
             List.of(
-                    new LeveledMaterial("Oak", 1),
-                    new LeveledMaterial("Birch", 10),
-                    new LeveledMaterial("Willow", 20),
-                    new LeveledMaterial("Acacia", 30),
-                    new LeveledMaterial("Spruce", 40),
-                    new LeveledMaterial("Jungle", 50),
-                    new LeveledMaterial("Dark", 60),
-                    new LeveledMaterial("Light", 70),
-                    new LeveledMaterial("Pine", 80),
-                    new LeveledMaterial("Avo", 90),
-                    new LeveledMaterial("Sky", 100),
-                    new LeveledMaterial("Dernic", 110)),
+                    new SourceMaterial("Oak", 1),
+                    new SourceMaterial("Birch", 10),
+                    new SourceMaterial("Willow", 20),
+                    new SourceMaterial("Acacia", 30),
+                    new SourceMaterial("Spruce", 40),
+                    new SourceMaterial("Jungle", 50),
+                    new SourceMaterial("Dark", 60),
+                    new SourceMaterial("Light", 70),
+                    new SourceMaterial("Pine", 80),
+                    new SourceMaterial("Avo", 90),
+                    new SourceMaterial("Sky", 100),
+                    new SourceMaterial("Dernic", 110)),
             MaterialType.CROP,
             List.of(
-                    new LeveledMaterial("Wheat", 1),
-                    new LeveledMaterial("Barley", 10),
-                    new LeveledMaterial("Oat", 20),
-                    new LeveledMaterial("Malt", 30),
-                    new LeveledMaterial("Hops", 40),
-                    new LeveledMaterial("Rye", 50),
-                    new LeveledMaterial("Millet", 60),
-                    new LeveledMaterial("Decay_Roots", 70),
-                    new LeveledMaterial("Rice", 80),
-                    new LeveledMaterial("Sorghum", 90),
-                    new LeveledMaterial("Hemp", 100),
-                    new LeveledMaterial("Dernic_Seed", 110)),
+                    new SourceMaterial("Wheat", 1),
+                    new SourceMaterial("Barley", 10),
+                    new SourceMaterial("Oat", 20),
+                    new SourceMaterial("Malt", 30),
+                    new SourceMaterial("Hops", 40),
+                    new SourceMaterial("Rye", 50),
+                    new SourceMaterial("Millet", 60),
+                    new SourceMaterial("Decay Roots", 70),
+                    new SourceMaterial("Rice", 80),
+                    new SourceMaterial("Sorghum", 90),
+                    new SourceMaterial("Hemp", 100),
+                    new SourceMaterial("Dernic Seed", 110)),
             MaterialType.FISH,
             List.of(
-                    new LeveledMaterial("Gudgeon", 1),
-                    new LeveledMaterial("Trout", 10),
-                    new LeveledMaterial("Salmon", 20),
-                    new LeveledMaterial("Carp", 30),
-                    new LeveledMaterial("Icefish", 40),
-                    new LeveledMaterial("Piranha", 50),
-                    new LeveledMaterial("Koi", 60),
-                    new LeveledMaterial("Gylia_Fish", 70),
-                    new LeveledMaterial("Bass", 80),
-                    new LeveledMaterial("Molten_Eel", 90),
-                    new LeveledMaterial("Starfish", 100),
-                    new LeveledMaterial("Dernic_Fish", 110)));
+                    new SourceMaterial("Gudgeon", 1),
+                    new SourceMaterial("Trout", 10),
+                    new SourceMaterial("Salmon", 20),
+                    new SourceMaterial("Carp", 30),
+                    new SourceMaterial("Icefish", 40),
+                    new SourceMaterial("Piranha", 50),
+                    new SourceMaterial("Koi", 60),
+                    new SourceMaterial("Gylia Fish", 70),
+                    new SourceMaterial("Bass", 80),
+                    new SourceMaterial("Molten Eel", 90),
+                    new SourceMaterial("Starfish", 100),
+                    new SourceMaterial("Dernic Fish", 110)));
 
     private final ResourceType resourceType;
-    private final LeveledMaterial leveledMaterial;
+    private final SourceMaterial sourceMaterial;
     private final int tier;
 
-    public MaterialProfile(ResourceType resourceType, LeveledMaterial leveledMaterial, int tier) {
+    private MaterialProfile(ResourceType resourceType, SourceMaterial sourceMaterial, int tier) {
         this.resourceType = resourceType;
-        this.leveledMaterial = leveledMaterial;
+        this.sourceMaterial = sourceMaterial;
         this.tier = tier;
     }
 
-    public static MaterialProfile fromCodedString(String name) {
-        // FIXME
-        // §fWheat String§6 [§e✫§8✫✫§6]
-        // §fSalmon Oil§6 [§e✫§8✫✫§6]
-        return null;
+    public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, int tier) {
+        SourceMaterial sourceMaterial = SOURCE_MATERIALS.values().stream()
+                .flatMap(list -> list.stream())
+                .filter(material -> material.name().equals(sourceMaterialName))
+                .findFirst()
+                .orElseGet(null);
+        if (sourceMaterial == null) return null;
+
+        ResourceType resourceType = ResourceType.fromString(resourceTypeName);
+        if (resourceType == null) return null;
+
+        return new MaterialProfile(resourceType, sourceMaterial, tier);
     }
 
     public ResourceType getResourceType() {
         return resourceType;
     }
 
-    public LeveledMaterial getLeveledMaterial() {
-        return leveledMaterial;
+    public SourceMaterial getSourceMaterial() {
+        return sourceMaterial;
     }
 
     public int getTier() {
@@ -124,7 +132,15 @@ public class MaterialProfile {
         ResourceType(MaterialType materialType) {
             this.materialType = materialType;
         }
+
+        public static ResourceType fromString(String str) {
+            try {
+                return ResourceType.valueOf(str.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
     }
 
-    public record LeveledMaterial(String name, int level) {}
+    public record SourceMaterial(String name, int level) {}
 }
