@@ -4,4 +4,16 @@
  */
 package com.wynntils.model.item.game;
 
-public class IngredientItem extends GameItem {}
+import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
+
+public class IngredientItem extends GameItem {
+    private final IngredientProfile ingredientProfile;
+
+    public IngredientItem(IngredientProfile ingredientProfile) {
+        this.ingredientProfile = ingredientProfile;
+    }
+
+    public IngredientProfile getIngredientProfile() {
+        return ingredientProfile;
+    }
+}
