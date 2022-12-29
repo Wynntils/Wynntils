@@ -6,10 +6,11 @@ package com.wynntils.model.item.game;
 
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public class GearItem extends GameItem {
+public class GearItem extends GameItem implements GearTierItemProperty {
     private final ItemProfile itemProfile;
     private final List<GearIdentification> identifications;
     private final List<Powder> powders;
@@ -47,5 +48,10 @@ public class GearItem extends GameItem {
 
     public List<Component> getSetBonus() {
         return setBonus;
+    }
+
+    @Override
+    public ItemTier getGearTier() {
+        return itemProfile.getTier();
     }
 }

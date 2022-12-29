@@ -11,7 +11,7 @@ import com.wynntils.wynn.objects.profiles.item.ItemType;
 import java.util.List;
 import java.util.Map;
 
-public class GearBoxItem extends GameItem {
+public class GearBoxItem extends GameItem implements GearTierItemProperty {
     private final ItemType itemType;
     private final ItemTier itemTier;
     private final String levelRange;
@@ -43,5 +43,10 @@ public class GearBoxItem extends GameItem {
 
         List<String> itemPossibilities = rarityMap.get(itemTier);
         return itemPossibilities;
+    }
+
+    @Override
+    public ItemTier getGearTier() {
+        return itemTier;
     }
 }

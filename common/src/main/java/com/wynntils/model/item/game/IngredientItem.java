@@ -6,7 +6,7 @@ package com.wynntils.model.item.game;
 
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 
-public class IngredientItem extends GameItem {
+public class IngredientItem extends GameItem implements QualityTierItemProperty {
     private final IngredientProfile ingredientProfile;
 
     public IngredientItem(IngredientProfile ingredientProfile) {
@@ -15,5 +15,9 @@ public class IngredientItem extends GameItem {
 
     public IngredientProfile getIngredientProfile() {
         return ingredientProfile;
+    }
+
+    public int getQualityTier() {
+        return ingredientProfile.getTier().getTierInt();
     }
 }

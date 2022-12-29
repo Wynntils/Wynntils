@@ -4,7 +4,7 @@
  */
 package com.wynntils.model.item.game;
 
-public class EmeraldPouchItem extends GameItem implements TieredItemProperty {
+public class EmeraldPouchItem extends GameItem implements NumberedTierItemProperty {
     private final int tier;
 
     public EmeraldPouchItem(int tier) {

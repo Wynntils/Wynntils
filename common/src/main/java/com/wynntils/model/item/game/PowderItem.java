@@ -6,7 +6,7 @@ package com.wynntils.model.item.game;
 
 import com.wynntils.wynn.item.generator.PowderProfile;
 
-public class PowderItem extends GameItem implements TieredItemProperty {
+public class PowderItem extends GameItem implements NumberedTierItemProperty {
     private final PowderProfile powderProfile;
 
     public PowderItem(PowderProfile powderProfile) {
