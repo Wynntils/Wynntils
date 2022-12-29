@@ -19,7 +19,6 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +58,7 @@ public class ItemLockFeature extends UserFeature {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         // Don't render lock on ability tree slots
-        if (WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
+        if (Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
 
         for (Integer slotId : classSlotLockMap.getOrDefault(Managers.Character.getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
@@ -78,7 +77,7 @@ public class ItemLockFeature extends UserFeature {
     public void onInventoryClickEvent(ContainerClickEvent event) {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || WynnScreenMatchers.isAbilityTreeScreen(abstractContainerScreen)) return;
+                || Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()

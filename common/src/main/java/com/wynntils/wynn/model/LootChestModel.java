@@ -13,7 +13,6 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import com.wynntils.wynn.screens.WynnScreenMatchers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -24,7 +23,7 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (WynnScreenMatchers.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
+        if (Managers.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
             DataStorageFeature.INSTANCE.dryCount++;
