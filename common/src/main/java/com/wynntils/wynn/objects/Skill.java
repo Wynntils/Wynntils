@@ -5,18 +5,21 @@
 package com.wynntils.wynn.objects;
 
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 
 public enum Skill {
-    STRENGTH("✤"),
-    DEXTERITY("✦"),
-    INTELLIGENCE("✽"),
-    DEFENSE("✹"),
-    AGILITY("❋");
+    STRENGTH("✤", ChatFormatting.DARK_GREEN),
+    DEXTERITY("✦", ChatFormatting.YELLOW),
+    INTELLIGENCE("✽", ChatFormatting.AQUA),
+    DEFENSE("✹", ChatFormatting.RED),
+    AGILITY("❋", ChatFormatting.WHITE);
 
     private final String symbol;
+    private final ChatFormatting color;
 
-    Skill(String symbol) {
+    Skill(String symbol, ChatFormatting color) {
         this.symbol = symbol;
+        this.color = color;
     }
 
     public static Skill fromString(String str) {
@@ -29,5 +32,9 @@ public enum Skill {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public ChatFormatting getColor() {
+        return color;
     }
 }

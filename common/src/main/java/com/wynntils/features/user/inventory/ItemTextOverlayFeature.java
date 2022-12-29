@@ -26,6 +26,7 @@ import com.wynntils.model.item.game.EmeraldPouchItem;
 import com.wynntils.model.item.game.GameItem;
 import com.wynntils.model.item.game.GatheringToolItem;
 import com.wynntils.model.item.game.PowderItem;
+import com.wynntils.model.item.game.SkillPotionItem;
 import com.wynntils.model.item.game.TeleportScrollItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.properties.type.PropertyType;
@@ -196,6 +197,9 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
+        }
+        if (wynnItem instanceof SkillPotionItem skillPotionItem) {
+            return new SkillPotionOverlay(skillPotionItem);
         }
 
         return null;
@@ -371,7 +375,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    public class PowderOverlay implements TextOverlayInfo {
+    public static class PowderOverlay implements TextOverlayInfo {
         private final PowderItem item;
 
         public PowderOverlay(PowderItem item) {
@@ -401,6 +405,35 @@ public class ItemTextOverlayFeature extends UserFeature {
                     -1,
                     1,
                     0.75f);
+        }
+    }
+
+    public static class SkillPotionOverlay implements TextOverlayInfo {
+        private final SkillPotionItem item;
+
+        public SkillPotionOverlay(SkillPotionItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            String icon = item.getSkill().getSymbol();
+            CustomColor color = CustomColor.fromChatFormatting(item.getSkill().getColor());
+
+            return new TextOverlayProperty.TextOverlay(
+                    new TextRenderTask(
+                            icon,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(color)
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.skillIconShadow)),
+                    -1,
+                    1,
+                    0.9f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.skillIconEnabled;
         }
     }
 }
