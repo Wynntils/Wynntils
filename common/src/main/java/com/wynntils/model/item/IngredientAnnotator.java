@@ -21,6 +21,8 @@ public final class IngredientAnnotator implements ItemAnnotator {
             return null;
         }
         IngredientProfile ingredientProfile = Managers.ItemProfiles.getIngredient(matcher.group(1));
+        if (ingredientProfile == null) return null;
+
         return new IngredientItem(ingredientProfile);
     }
 }
