@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -129,6 +130,8 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
         Texture icon = Models.Compass.getTargetIcon();
+        float[] color = Models.Compass.getTargetColor().asFloatArray();
+        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
         // The set waypoint is visible on the screen, so we render the icon + distance
         if (intersectPoint == null) {
@@ -145,6 +148,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                     icon.height(),
                     icon.width(),
                     icon.height());
+            RenderSystem.setShaderColor(1, 1, 1, 1);
             RenderUtils.drawRect(
                     event.getPoseStack(),
                     CommonColors.BLACK.withAlpha(backgroundOpacity),
@@ -180,6 +184,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                     icon.height(),
                     icon.width(),
                     icon.height());
+            RenderSystem.setShaderColor(1, 1, 1, 1);
 
             // pointer position is determined by finding the point on circle centered around displayPosition
             double angle = Math.toDegrees(StrictMath.atan2(
@@ -203,6 +208,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                     .getPointerPoi()
                     .renderAt(poseStack, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
             poseStack.popPose();
+
         }
     }
 
