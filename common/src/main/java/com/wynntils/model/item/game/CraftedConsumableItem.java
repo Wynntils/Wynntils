@@ -6,11 +6,17 @@ package com.wynntils.model.item.game;
 
 import com.wynntils.utils.CappedValue;
 
-public class ConsumableItem extends GameItem implements UsesItemPropery {
+public class CraftedConsumableItem extends GameItem implements UsesItemPropery {
+    private final String name;
     private final CappedValue uses;
 
-    public ConsumableItem(CappedValue uses) {
+    public CraftedConsumableItem(String name, CappedValue uses) {
+        this.name = name;
         this.uses = uses;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public CappedValue getUses() {

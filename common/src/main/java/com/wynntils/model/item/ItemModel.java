@@ -42,6 +42,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
+        Handlers.Item.registerAnnotator(new CraftedConsumableAnnotator());
 
         // === gui
         Handlers.Item.registerAnnotator(new ServerAnnotator());
