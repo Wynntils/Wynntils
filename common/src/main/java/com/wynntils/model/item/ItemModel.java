@@ -16,7 +16,6 @@ import com.wynntils.wynn.item.properties.AmplifierTierProperty;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
@@ -77,12 +76,6 @@ public class ItemModel extends Model {
     public static final class ConsumableChargeAnnotator extends PropertyAnnotator {
         public ConsumableChargeAnnotator() {
             super(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
-        }
-    }
-
-    public static final class DungeonKeyAnnotator extends PropertyAnnotator {
-        public DungeonKeyAnnotator() {
-            super(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
         }
     }
 

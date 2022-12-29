@@ -1,0 +1,27 @@
+/*
+ * Copyright © Wynntils 2022.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.model.item.game;
+
+public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
+    private final String dungeon;
+    private final boolean corrupted;
+
+    public DungeonKeyItem(String dungeon, boolean corrupted) {
+        this.dungeon = dungeon;
+        this.corrupted = corrupted;
+    }
+
+    public String getDungeon() {
+        return dungeon;
+    }
+
+    public boolean isCorrupted() {
+        return corrupted;
+    }
+
+    public String getTarget() {
+        return dungeon;
+    }
+}
