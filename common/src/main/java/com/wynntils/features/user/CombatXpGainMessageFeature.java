@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -41,9 +41,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
     }
 
     private void gatherAndDispatchMessage() {
-        CharacterManager.CharacterInfo data = WynnUtils.getCharacterInfo();
-
-        int newLevel = data.getXpLevel();
+        int newLevel = Managers.Character.getXpLevel();
 
         if (trackedLevel == 0) {
             trackedLevel = newLevel;
@@ -56,11 +54,11 @@ public class CombatXpGainMessageFeature extends UserFeature {
             trackedPercentage = 0;
         }
 
-        newTickXp = data.getCurrentXp();
+        newTickXp = Managers.Character.getCurrentXp();
 
         if (newTickXp == lastTickXp) return;
 
-        int neededXp = data.getXpPointsNeededToLevelUp();
+        int neededXp = Managers.Character.getXpPointsNeededToLevelUp();
 
         // Something went wrong, or you're at the level cap.
         if (neededXp == 0) return;

@@ -5,7 +5,6 @@
 package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.wynn.model.CharacterManager;
 
 public final class WynnUtils {
     /**
@@ -31,13 +30,5 @@ public final class WynnUtils {
 
     public static boolean onWorld() {
         return Managers.WorldState.onWorld();
-    }
-
-    public static CharacterManager.CharacterInfo getCharacterInfo() {
-        return Managers.Character.getCharacterInfo();
-    }
-
-    public static boolean hasCharacterInfo() {
-        return Managers.Character.hasCharacter();
     }
 }

@@ -77,7 +77,7 @@ public class DiscoveryInfo {
 
         displayLore.add(Component.literal(name).withStyle(type.getColor()).withStyle(ChatFormatting.BOLD));
 
-        if (Managers.Character.getCharacterInfo().getLevel() >= minLevel) {
+        if (Managers.Character.getXpLevel() >= minLevel) {
             displayLore.add(Component.literal("✔")
                     .withStyle(ChatFormatting.GREEN)
                     .append(Component.literal(" Combat Lv. Min: ")
