@@ -205,7 +205,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         return null;
     }
 
-    public interface TextOverlayInfo extends PropertyType {
+    public interface TextOverlayInfo {
         TextOverlayProperty.TextOverlay getTextOverlay();
 
         boolean isTextOverlayEnabled();
