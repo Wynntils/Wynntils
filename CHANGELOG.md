@@ -1,9 +1,21 @@
+## [0.0.2-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.43...v0.0.2-alpha.44) (2022-12-29)
+
+
+### Bug Fixes
+
+* Use current combat level, and refactor CharacterManager  ([#945](https://github.com/Wynntils/Artemis/issues/945)) ([d5d66de](https://github.com/Wynntils/Artemis/commit/d5d66dec0bb42060035b9fe3e324244257e73546))
+
 ## [0.0.2-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.42...v0.0.2-alpha.43) (2022-12-28)
 
 
 ### Code Refactoring
 
 * NPC Dialogue cleanup ([#944](https://github.com/Wynntils/Artemis/issues/944)) ([d7f64d4](https://github.com/Wynntils/Artemis/commit/d7f64d4decf24554775c9a1db01477fe39585472))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.43 [skip ci] ([8de1194](https://github.com/Wynntils/Artemis/commit/8de1194a106772925448d3dbcb910cc8bbef51c5))
 
 ## [0.0.2-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.41...v0.0.2-alpha.42) (2022-12-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.40 [skip ci] ([a4c881d](https://github.com/Wynntils/Artemis/commit/a4c881d054a6516cb7dc40158285bbecff27e027))
-
-## [0.0.2-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.38...v0.0.2-alpha.39) (2022-12-26)
-
-
-### New Features
-
-* Add /quest command ([#766](https://github.com/Wynntils/Artemis/issues/766)) ([525a432](https://github.com/Wynntils/Artemis/commit/525a432a26c8e5b01aa9bf82b88eebe77eaabe41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.39 [skip ci] ([90bc7a9](https://github.com/Wynntils/Artemis/commit/90bc7a975582babf93d0fcae39dedb5146c99e7a))
 
