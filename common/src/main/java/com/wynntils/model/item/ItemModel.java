@@ -35,7 +35,6 @@ public class ItemModel extends Model {
 
         // === game, left
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
-        Handlers.Item.registerAnnotator(new ConsumableAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
@@ -43,6 +42,10 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
         Handlers.Item.registerAnnotator(new CraftedConsumableAnnotator());
+        Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
+        Handlers.Item.registerAnnotator(new HealthPotionAnnotator());
+        Handlers.Item.registerAnnotator(new ManaPotionAnnotator());
+        Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // === gui
         Handlers.Item.registerAnnotator(new ServerAnnotator());
@@ -60,11 +63,6 @@ public class ItemModel extends Model {
     public void disable() {
         // FIXME
     }
-
-    /// ==== game ====
-
-    // CraftedConsumables -- Scroll, Food, Potion
-    // Potions
 
     /// ==== gui ====
 
