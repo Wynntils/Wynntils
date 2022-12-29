@@ -26,25 +26,25 @@ import net.minecraft.world.item.ItemStack;
 public class ItemModel extends Model {
     @Override
     public void init() {
-        // === game, done
+        // For efficiency, register these annotator first
         Handlers.Item.registerAnnotator(new GearAnnotator());
-        Handlers.Item.registerAnnotator(new IngredientAnnotator());
-        Handlers.Item.registerAnnotator(new PowderAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());
-        Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
-
-        // === game, left
-        Handlers.Item.registerAnnotator(new AmplifierAnnotator());
-        Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
-        Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
-        Handlers.Item.registerAnnotator(new HorseAnnotator());
+        Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
-        Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
-        Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
+
+        // Then alphabetically
+        Handlers.Item.registerAnnotator(new AmplifierAnnotator());
         Handlers.Item.registerAnnotator(new CraftedConsumableAnnotator());
-        Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
+        Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
+        Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
+        Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
+        Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HealthPotionAnnotator());
+        Handlers.Item.registerAnnotator(new HorseAnnotator());
         Handlers.Item.registerAnnotator(new ManaPotionAnnotator());
+        Handlers.Item.registerAnnotator(new PowderAnnotator());
+        Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
+        Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // === gui
