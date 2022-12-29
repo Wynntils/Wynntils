@@ -70,7 +70,7 @@
   "feature.wynntils.chatRedirect.toolDurability.name": "Gather Tool Durability Filtering",
   "feature.wynntils.chatRedirect.unusedPoints.description": "How should messages about unused ability or skill points appear?",
   "feature.wynntils.chatRedirect.unusedPoints.name": "Unused Ability and Skill Point Message Filtering",
-  "feature.wynntils.chatShowRealName.name": "Chat replace nicknames with player's actual name",
+  "feature.wynntils.chatShowRealName.name": "Chat Replace Nicknames",
   "feature.wynntils.chatTabs.name": "Chat Tabs",
   "feature.wynntils.chatTimestamp.formatPattern.description": "How should the timestamp look like in chat?",
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
