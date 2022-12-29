@@ -160,7 +160,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((Managers.Character.getCharacterInfo().getLevel() >= questInfo.getLevel()
+            tooltipLines.add((Managers.Character.getXpLevel() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
                     .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -169,8 +169,7 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = Managers.Character.getCharacterInfo()
-                                    .getProfessionInfo()
+            MutableComponent base = Managers.Character.getProfessionInfo()
                                     .getLevel(ProfessionType.fromString(additionalRequirement.a()))
                             >= additionalRequirement.b()
                     ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
