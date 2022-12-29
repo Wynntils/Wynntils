@@ -9,8 +9,12 @@ import net.minecraft.world.item.ItemStack;
 public class AnnotatedItemStack extends ItemStack {
     private final ItemAnnotation annotation;
 
-    public AnnotatedItemStack(ItemStack stack, ItemAnnotation annotation) {
-        super(stack.getItem(), stack.getCount());
+    public AnnotatedItemStack(ItemStack itemStack, ItemAnnotation annotation) {
+        super(itemStack.getItem(), itemStack.getCount());
+        if (itemStack.getTag() != null) {
+            setTag(itemStack.getTag());
+        }
+
         this.annotation = annotation;
     }
 
