@@ -208,7 +208,6 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                     .getPointerPoi()
                     .renderAt(poseStack, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
             poseStack.popPose();
-
         }
     }
 
