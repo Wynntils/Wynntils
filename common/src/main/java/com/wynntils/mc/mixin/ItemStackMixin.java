@@ -4,16 +4,22 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin {
+public abstract class ItemStackMixin implements AnnotatedItemStack {
+    @Unique
+    private ItemAnnotation wynntilsAnnotation;
+
     @Redirect(
             method =
                     "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
@@ -25,5 +31,15 @@ public abstract class ItemStackMixin {
     private Component redirectGetHoveredName(ItemStack instance) {
         ItemTooltipHoveredNameEvent event = EventFactory.onGetHoverName(instance.getHoverName(), instance);
         return event.getHoveredName();
+    }
+
+    @Override
+    public ItemAnnotation getAnnotation() {
+        return wynntilsAnnotation;
+    }
+
+    @Override
+    public void setAnnotation(ItemAnnotation annotation) {
+        this.wynntilsAnnotation = annotation;
     }
 }

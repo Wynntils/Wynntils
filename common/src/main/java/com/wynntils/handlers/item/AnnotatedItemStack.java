@@ -4,21 +4,8 @@
  */
 package com.wynntils.handlers.item;
 
-import net.minecraft.world.item.ItemStack;
+public interface AnnotatedItemStack {
+    ItemAnnotation getAnnotation();
 
-public class AnnotatedItemStack extends ItemStack {
-    private final ItemAnnotation annotation;
-
-    public AnnotatedItemStack(ItemStack itemStack, ItemAnnotation annotation) {
-        super(itemStack.getItem(), itemStack.getCount());
-        if (itemStack.getTag() != null) {
-            setTag(itemStack.getTag());
-        }
-
-        this.annotation = annotation;
-    }
-
-    public ItemAnnotation getAnnotation() {
-        return annotation;
-    }
+    void setAnnotation(ItemAnnotation annotation);
 }

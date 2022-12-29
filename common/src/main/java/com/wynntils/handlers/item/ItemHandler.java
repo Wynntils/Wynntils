@@ -19,9 +19,8 @@ public class ItemHandler extends Handler {
     private final List<ItemAnnotator> annotators = new ArrayList<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
-        if (!(item instanceof AnnotatedItemStack annotatedItemStack)) return Optional.empty();
-
-        return Optional.of(annotatedItemStack.getAnnotation());
+        ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
+        return Optional.ofNullable(annotation);
     }
 
     public void registerAnnotator(ItemAnnotator annotator) {
@@ -30,24 +29,26 @@ public class ItemHandler extends Handler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        event.setItem(annotate(event.getItem()));
+        annotate(event.getItem());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        event.getItems().replaceAll(this::annotate);
+        event.getItems().forEach(this::annotate);
     }
 
-    private ItemStack annotate(ItemStack item) {
-        if (item instanceof AnnotatedItemStack) return item;
+    private void annotate(ItemStack item) {
+        ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
+        // Don't redo if we already have an annotation
+        if (annotation != null) return;
 
         Optional<ItemAnnotation> annotationOpt = annotators.stream()
                 .map(annotator -> annotator.getAnnotation(item))
                 .filter(Objects::nonNull)
                 .findFirst();
 
-        if (annotationOpt.isEmpty()) return item;
+        if (annotationOpt.isEmpty()) return;
 
-        return new AnnotatedItemStack(item, annotationOpt.get());
+        ((AnnotatedItemStack) item).setAnnotation(annotationOpt.get());
     }
 }
