@@ -22,7 +22,6 @@ import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
-import com.wynntils.wynn.item.properties.TeleportScrollProperty;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -88,12 +87,6 @@ public class ItemModel extends Model {
     public static final class HorseAnnotator extends PropertyAnnotator {
         public HorseAnnotator() {
             super(WynnItemMatchers::isHorse, HorseProperty::new);
-        }
-    }
-
-    public static final class TeleportScrollAnnotator extends PropertyAnnotator {
-        public TeleportScrollAnnotator() {
-            super(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
         }
     }
 
