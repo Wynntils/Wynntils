@@ -19,7 +19,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.CharacterManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -222,12 +221,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         FontRenderer.TextShadow.NONE);
-        CharacterManager.CharacterInfo characterInfo = Managers.Character.getCharacterInfo();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        characterInfo.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                + characterInfo.getLevel(),
+                        Managers.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
+                                + Managers.Character.getXpLevel(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         145,

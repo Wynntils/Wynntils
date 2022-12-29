@@ -5,6 +5,7 @@
 package com.wynntils.features.statemanaged;
 
 import com.google.common.collect.ImmutableList;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -17,7 +18,6 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.FileUtils;
-import com.wynntils.wynn.screens.WynnScreenMatchers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +65,7 @@ public class LootrunFeature extends StateManagedFeature {
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
-        if (WynnScreenMatchers.isLootChest(event.getScreen())) {
+        if (Managers.Container.isLootChest(event.getScreen())) {
             Models.Lootrun.addChestIfRecording();
         }
     }

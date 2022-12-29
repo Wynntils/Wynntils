@@ -28,7 +28,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.map.poi.CustomPoi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.objects.HealthTexture;
-import com.wynntils.wynn.screens.WynnScreenMatchers;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +146,7 @@ public class MapFeature extends UserFeature {
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
-        Matcher matcher = WynnScreenMatchers.lootChestMatcher(event.getScreen());
+        Matcher matcher = Managers.Container.lootChestMatcher(event.getScreen());
         if (!matcher.matches()) return;
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));
