@@ -1,9 +1,21 @@
+## [0.0.2-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.44...v0.0.2-alpha.45) (2022-12-29)
+
+
+### Code Refactoring
+
+* Create ContainerManager from WynnScreenMatchers ([#946](https://github.com/Wynntils/Artemis/issues/946)) ([10e8e08](https://github.com/Wynntils/Artemis/commit/10e8e08d051f5ec86eda0e043ae7b83b8ed98362))
+
 ## [0.0.2-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.43...v0.0.2-alpha.44) (2022-12-29)
 
 
 ### Bug Fixes
 
 * Use current combat level, and refactor CharacterManager  ([#945](https://github.com/Wynntils/Artemis/issues/945)) ([d5d66de](https://github.com/Wynntils/Artemis/commit/d5d66dec0bb42060035b9fe3e324244257e73546))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.44 [skip ci] ([461a19e](https://github.com/Wynntils/Artemis/commit/461a19ee246f3426f8af3982a43ca476407fc775))
 
 ## [0.0.2-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.42...v0.0.2-alpha.43) (2022-12-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.41 [skip ci] ([8033cc5](https://github.com/Wynntils/Artemis/commit/8033cc55fdd41b7dd49cf2ab04153260ca5153bd))
-
-## [0.0.2-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.39...v0.0.2-alpha.40) (2022-12-28)
-
-
-### New Features
-
-* Handle more types of NPC dialogues ([#767](https://github.com/Wynntils/Artemis/issues/767)) ([fcc3aa1](https://github.com/Wynntils/Artemis/commit/fcc3aa1ddbaeb2cda1f3ed9a556eb82967060281))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.40 [skip ci] ([a4c881d](https://github.com/Wynntils/Artemis/commit/a4c881d054a6516cb7dc40158285bbecff27e027))
 
