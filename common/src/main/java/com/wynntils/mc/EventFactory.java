@@ -41,6 +41,7 @@ import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuOpenedEvent;
+import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
@@ -77,7 +78,7 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
-import com.wynntils.mc.objects.ChatType;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +108,7 @@ import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
@@ -116,6 +118,7 @@ import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -423,8 +426,14 @@ public final class EventFactory {
         return post(new CommandSentEvent(command, signed));
     }
 
-    public static ChatPacketReceivedEvent onChatReceived(ChatType type, Component message) {
-        return post(new ChatPacketReceivedEvent(type, message));
+    public static ChatPacketReceivedEvent onPlayerChatReceived(Component message) {
+        return post(new ChatPacketReceivedEvent.Player(message));
+    }
+
+    public static ChatPacketReceivedEvent onSystemChatReceived(Component message, boolean isInfo) {
+        ChatPacketReceivedEvent event =
+                isInfo ? new ChatPacketReceivedEvent.GameInfo(message) : new ChatPacketReceivedEvent.System(message);
+        return post(event);
     }
 
     public static ClientsideMessageEvent onClientsideMessage(Component component) {
@@ -533,6 +542,19 @@ public final class EventFactory {
         return post(new ScoreboardSetScoreEvent(
                 packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()));
     }
+
+    public static void onUpdateMobEffect(ClientboundUpdateMobEffectPacket packet) {
+        post(new MobEffectEvent.Update(
+                McUtils.mc().level.getEntity(packet.getEntityId()),
+                packet.getEffect(),
+                packet.getEffectAmplifier(),
+                packet.getEffectDurationTicks()));
+    }
+
+    public static void onRemoveMobEffect(ClientboundRemoveMobEffectPacket packet) {
+        post(new MobEffectEvent.Remove(packet.getEntity(McUtils.mc().level), packet.getEffect()));
+    }
+
     // endregion
 
     // region Packet Events

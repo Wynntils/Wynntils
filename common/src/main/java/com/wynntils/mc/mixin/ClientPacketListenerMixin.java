@@ -37,6 +37,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
@@ -48,6 +49,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
 import net.minecraft.world.flag.FeatureFlagSet;
 import org.spongepowered.asm.mixin.Final;
@@ -305,8 +307,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result =
-                EventFactory.onChatReceived(com.wynntils.mc.objects.ChatType.CHAT, packet.unsignedContent());
+        ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;
@@ -355,9 +356,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onChatReceived(
-                packet.overlay() ? com.wynntils.mc.objects.ChatType.GAME_INFO : com.wynntils.mc.objects.ChatType.SYSTEM,
-                packet.content());
+        ChatPacketReceivedEvent result = EventFactory.onSystemChatReceived(packet.content(), packet.overlay());
         if (result.isCanceled()) {
             ci.cancel();
             return;
@@ -394,5 +393,21 @@ public abstract class ClientPacketListenerMixin {
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         EventFactory.onUpdateAdvancements(packet);
+    }
+
+    @Inject(
+            method = "handleUpdateMobEffect(Lnet/minecraft/network/protocol/game/ClientboundUpdateMobEffectPacket;)V",
+            at = @At("RETURN"))
+    private void handleUpdateMobEffectPost(ClientboundUpdateMobEffectPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onUpdateMobEffect(packet);
+    }
+
+    @Inject(
+            method = "handleRemoveMobEffect(Lnet/minecraft/network/protocol/game/ClientboundRemoveMobEffectPacket;)V",
+            at = @At("RETURN"))
+    private void handleRemoveMobEffectPost(ClientboundRemoveMobEffectPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onRemoveMobEffect(packet);
     }
 }

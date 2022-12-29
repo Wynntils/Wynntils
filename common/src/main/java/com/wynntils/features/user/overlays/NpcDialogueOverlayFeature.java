@@ -25,6 +25,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -32,6 +33,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -40,6 +42,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,7 +56,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
-    private String currentDialogue;
+    private List<String> currentDialogue = List.of();
+    private NpcDialogueType dialogueType;
+    private boolean isProtected;
 
     @Config
     public boolean autoProgress = false;
@@ -67,6 +73,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
+    private long removeTime;
+
     private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
 
@@ -75,13 +83,39 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        String msg = e.getChatMessage() == null ? null : ComponentUtils.getCoded(e.getChatMessage());
-        if (msg != null && NEW_QUEST_STARTED.matcher(msg).find()) {
+        List<String> msg =
+                e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
+        if (e.getType() == NpcDialogueType.CONFIRMATIONLESS && !currentDialogue.isEmpty()) {
+            // Now we have two concurrent dialogues, so combine the two into one instead of
+            // just replacing the old.
+            ArrayList<String> combinedDialogue = new ArrayList<>(currentDialogue);
+            combinedDialogue.add("");
+            combinedDialogue.addAll(msg);
+            currentDialogue = combinedDialogue;
+        } else {
+            currentDialogue = msg;
+            dialogueType = e.getType();
+            isProtected = e.isProtected();
+        }
+        if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+            // If we already had a confirmationless dialogue ongoing, reset its removal time
+            removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
+        }
+
+        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            NotificationManager.queueMessage(msg);
+            NotificationManager.queueMessage(msg.get(0));
         }
-        currentDialogue = msg;
+
+        if (e.getType() == NpcDialogueType.SELECTION && e.isProtected()) {
+            // This is a bit of a workaround to be able to select the options
+            MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.")
+                    .withStyle(ChatFormatting.AQUA);
+            e.getChatMessage()
+                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
+            McUtils.sendMessageToClient(clickMsg);
+        }
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
@@ -93,17 +127,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress) {
+        if (autoProgress && dialogueType == NpcDialogueType.NORMAL) {
             // Schedule a new sneak key press if this is not the end of the dialogue
-            if (msg != null) {
+            if (!msg.isEmpty()) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
             }
         }
     }
 
-    private ScheduledFuture<?> scheduledSneakPress(String msg) {
-        int words = msg.split(" ").length;
-        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+    private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
+        long delay = calculateMessageReadTime(msg);
 
         return autoProgressExecutor.schedule(
                 () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
@@ -112,9 +145,15 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 TimeUnit.MILLISECONDS);
     }
 
+    private long calculateMessageReadTime(List<String> msg) {
+        int words = String.join(" ", msg).split(" ").length;
+        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+        return delay;
+    }
+
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        currentDialogue = null;
+        currentDialogue = List.of();
         cancelAutoProgress();
     }
 
@@ -168,21 +207,27 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
-                currentDialogue = null;
+                currentDialogue = List.of();
             }
         }
 
-        private void renderDialogue(PoseStack poseStack, String currentDialogue) {
-            TextRenderTask dialogueRenderTask = new TextRenderTask(currentDialogue, renderSetting);
+        private void renderDialogue(PoseStack poseStack, List<String> currentDialogue, NpcDialogueType dialogueType) {
+            List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
+                    .map(s -> new TextRenderTask(s, renderSetting))
+                    .toList();
 
             if (stripColors) {
-                dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText()));
+                dialogueRenderTasks.forEach(dialogueRenderTask ->
+                        dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText())));
             }
 
-            float textHeight = FontRenderer.getInstance()
-                    .calculateRenderHeight(
-                            dialogueRenderTask.getText(),
-                            dialogueRenderTask.getSetting().maxWidth());
+            float textHeight = (float) dialogueRenderTasks.stream()
+                    .map(dialogueRenderTask -> FontRenderer.getInstance()
+                            .calculateRenderHeight(
+                                    dialogueRenderTask.getText(),
+                                    dialogueRenderTask.getSetting().maxWidth()))
+                    .mapToDouble(f -> f)
+                    .sum();
 
             // Draw a translucent background
             float rectHeight = textHeight + 10;
@@ -204,11 +249,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
             // Render the message
             FontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            dialogueRenderTask,
+                            dialogueRenderTasks,
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -217,8 +262,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             if (showHelperTexts) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                TextRenderTask pressSneakMessage = new TextRenderTask("§cPress SNEAK to continue", renderSetting);
-                renderTaskList.add(pressSneakMessage);
+                String protection = isProtected ? "§f<protected> §r" : "";
+                if (dialogueType == NpcDialogueType.NORMAL) {
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
+                    renderTaskList.add(pressSneakMessage);
+                } else if (dialogueType == NpcDialogueType.SELECTION) {
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(protection + "§cSelect an option to continue", renderSetting);
+                    renderTaskList.add(pressSneakMessage);
+                }
 
                 if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
                     long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
@@ -249,21 +302,28 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            String currentDialogue = NpcDialogueOverlayFeature.this.currentDialogue;
+            if (NpcDialogueOverlayFeature.this.currentDialogue.isEmpty()) return;
+            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
+                if (System.currentTimeMillis() >= removeTime) {
+                    NpcDialogueOverlayFeature.this.currentDialogue = List.of();
+                    return;
+                }
+            }
 
-            if (currentDialogue == null) return;
-
-            renderDialogue(poseStack, currentDialogue);
+            renderDialogue(
+                    poseStack,
+                    NpcDialogueOverlayFeature.this.currentDialogue,
+                    NpcDialogueOverlayFeature.this.dialogueType);
         }
 
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            String fakeDialogue =
-                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r";
+            List<String> fakeDialogue = List.of(
+                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
             // we have to force update every time
             updateTextRenderSettings();
 
-            renderDialogue(poseStack, fakeDialogue);
+            renderDialogue(poseStack, fakeDialogue, NpcDialogueType.NORMAL);
         }
     }
 }

@@ -19,6 +19,7 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
+import com.wynntils.wynn.model.ContainerManager;
 import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -39,6 +40,7 @@ public final class Managers {
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
+    public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();

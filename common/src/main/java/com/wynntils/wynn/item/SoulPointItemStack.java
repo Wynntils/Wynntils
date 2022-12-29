@@ -31,7 +31,7 @@ public class SoulPointItemStack extends WynnItemStack {
 
             copy.add(Component.literal(" "));
 
-            int rawSecondsUntilSoulPoint = Managers.Character.getCharacterInfo().getTicksToNextSoulPoint() / 20;
+            int rawSecondsUntilSoulPoint = Managers.Character.getTicksToNextSoulPoint() / 20;
             int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
             int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 

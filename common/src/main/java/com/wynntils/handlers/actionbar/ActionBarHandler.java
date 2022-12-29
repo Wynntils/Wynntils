@@ -7,7 +7,6 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.objects.ChatType;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +48,8 @@ public final class ActionBarHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onActionBarUpdate(ChatPacketReceivedEvent event) {
-        if (!WynnUtils.onWorld() || event.getType() != ChatType.GAME_INFO) return;
+    public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
+        if (!WynnUtils.onWorld()) return;
 
         String content = event.getMessage().getString();
         if (content.equals(previousRawContent)) {
