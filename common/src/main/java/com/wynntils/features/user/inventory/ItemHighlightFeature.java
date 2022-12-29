@@ -13,13 +13,15 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
-import com.wynntils.wynn.item.properties.type.HighlightProperty;
+import com.wynntils.model.item.game.GameItem;
+import com.wynntils.model.item.game.IngredientItem;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,6 +35,17 @@ public class ItemHighlightFeature extends UserFeature {
             Models.IngredientProperty,
             Models.ItemTierProperty,
             Models.PowderTierProperty);
+    private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
+        @Override
+        public CustomColor getHighlightColor() {
+            return null;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return false;
+        }
+    };
 
     public static ItemHighlightFeature INSTANCE;
 
@@ -182,14 +195,78 @@ public class ItemHighlightFeature extends UserFeature {
     }
 
     private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        if (!(item instanceof WynnItemStack wynnItem)) return CustomColor.NONE;
-
-        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return CustomColor.NONE;
-        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
+        if (annotationOpt.isEmpty()) return CustomColor.NONE;
+        if (!(annotationOpt.get() instanceof GameItem wynnItem)) return CustomColor.NONE;
+        HighlightInfo highlight = wynnItem.getCached(HighlightInfo.class);
+        if (highlight == NO_HIGHLIGHT) return CustomColor.NONE;
+        if (highlight == null) {
+            highlight = calculateHighlightInfo(wynnItem);
+            if (highlight == null) {
+                wynnItem.storeInCache(NO_HIGHLIGHT);
+                return CustomColor.NONE;
+            }
+            wynnItem.storeInCache(highlight);
+        }
 
         boolean contextEnabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
         if (!highlight.isHighlightEnabled() || !contextEnabled) return CustomColor.NONE;
 
         return highlight.getHighlightColor();
+    }
+
+    private HighlightInfo calculateHighlightInfo(GameItem wynnItem) {
+        if (wynnItem instanceof IngredientItem ingredientItem) {
+            return new IngredientHighlight(ingredientItem);
+        }
+
+        return null;
+    }
+
+    public interface HighlightInfo {
+
+        CustomColor getHighlightColor();
+
+        boolean isHighlightEnabled();
+
+        /** Whether this highlight should be shown in inventories */
+        default boolean isInventoryHighlight() {
+            return true;
+        }
+
+        /** Whether this highlight should be shown in the hotbar */
+        default boolean isHotbarHighlight() {
+            return true;
+        }
+    }
+
+    public static class IngredientHighlight implements HighlightInfo {
+        private final IngredientItem item;
+
+        public IngredientHighlight(IngredientItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getQualityTier()) {
+                case 0 -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightColor;
+                case 1 -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightColor;
+                case 2 -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightColor;
+                case 3 -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightColor;
+                default -> CustomColor.NONE;
+            };
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getQualityTier()) {
+                case 0 -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightEnabled;
+                case 1 -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightEnabled;
+                case 2 -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightEnabled;
+                case 3 -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightEnabled;
+                default -> false;
+            };
+        }
     }
 }
