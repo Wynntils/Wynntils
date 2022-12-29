@@ -22,7 +22,9 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.model.item.game.AmplifierItem;
 import com.wynntils.model.item.game.DungeonKeyItem;
+import com.wynntils.model.item.game.EmeraldPouchItem;
 import com.wynntils.model.item.game.GameItem;
+import com.wynntils.model.item.game.TeleportScrollItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.properties.type.PropertyType;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
@@ -36,17 +38,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
     public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
-            Models.AmplifierTierProperty,
             Models.ConsumableChargeProperty,
             Models.DailyRewardMultiplierProperty,
-            Models.DungeonKeyProperty,
-            Models.EmeraldPouchTierProperty,
             Models.GatheringToolProperty,
             Models.PowderTierProperty,
             Models.ServerCountProperty,
             Models.SkillIconProperty,
-            Models.SkillPointProperty,
-            Models.TeleportScrollProperty);
+            Models.SkillPointProperty);
 
     private static final TextOverlayInfo NO_OVERLAY = new TextOverlayInfo() {
         @Override
@@ -187,6 +185,13 @@ public class ItemTextOverlayFeature extends UserFeature {
         if (wynnItem instanceof AmplifierItem amplifierItem) {
             return new AmplifierOverlay(amplifierItem);
         }
+        if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
+            return new TeleportScrollOverlay(teleportScrollItem);
+        }
+        if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
+            return new EmeraldPouchTierProperty(emeraldPouchItem);
+        }
+
         return null;
     }
 
@@ -222,12 +227,10 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlayProperty.TextOverlay getTextOverlay() {
-            if (!ItemTextOverlayFeature.INSTANCE.dungeonKeyEnabled) return null;
-
             CustomColor textColor = item.isCorrupted() ? CORRUPTED_COLOR : STANDARD_COLOR;
             String dungeon = item.getDungeon();
 
-            TextOverlayProperty.TextOverlay textOverlay = new TextOverlayProperty.TextOverlay(
+            return new TextOverlayProperty.TextOverlay(
                     new TextRenderTask(
                             dungeon,
                             TextRenderSetting.DEFAULT
@@ -236,8 +239,6 @@ public class ItemTextOverlayFeature extends UserFeature {
                     -1,
                     1,
                     1f);
-
-            return textOverlay;
         }
 
         @Override
@@ -255,13 +256,11 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlayProperty.TextOverlay getTextOverlay() {
-            if (!ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled) return null;
-
             String text = ItemTextOverlayFeature.INSTANCE.amplifierTierRomanNumerals
                     ? MathUtils.toRoman(item.getTier())
                     : String.valueOf(item.getTier());
 
-            TextOverlayProperty.TextOverlay textOverlay = new TextOverlayProperty.TextOverlay(
+            return new TextOverlayProperty.TextOverlay(
                     new TextRenderTask(
                             text,
                             TextRenderSetting.DEFAULT
@@ -270,13 +269,72 @@ public class ItemTextOverlayFeature extends UserFeature {
                     -1,
                     1,
                     0.75f);
-
-            return textOverlay;
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
             return ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled;
+        }
+    }
+
+    public static class TeleportScrollOverlay implements TextOverlayInfo {
+        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+        private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+
+        private final TeleportScrollItem item;
+
+        public TeleportScrollOverlay(TeleportScrollItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.teleportScrollEnabled;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            CustomColor textColor = item.isDungeon() ? DUNGEON_COLOR : CITY_COLOR;
+            String location = item.getDestination();
+
+            return new TextOverlayProperty.TextOverlay(
+                    new TextRenderTask(
+                            location,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(textColor)
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.teleportScrollShadow)),
+                    0,
+                    0,
+                    1f);
+        }
+    }
+
+    public static class EmeraldPouchTierProperty implements TextOverlayInfo {
+        private static final CustomColor HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
+
+        private final EmeraldPouchItem item;
+
+        public EmeraldPouchTierProperty(EmeraldPouchItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.emeraldPouchTierEnabled;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            // convert from roman to arabic if necessary
+            String text = ItemTextOverlayFeature.INSTANCE.emeraldPouchTierRomanNumerals
+                    ? MathUtils.toRoman(item.getTier())
+                    : String.valueOf(item.getTier());
+
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(HIGHLIGHT_COLOR)
+                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.emeraldPouchTierShadow);
+
+            return new TextOverlayProperty.TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
     }
 }
