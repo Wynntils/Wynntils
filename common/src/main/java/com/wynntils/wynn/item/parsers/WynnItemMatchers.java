@@ -101,7 +101,7 @@ public final class WynnItemMatchers {
         return consumableNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static boolean isUnidentified(ItemStack itemStack) {
+    public static boolean isGearBox(ItemStack itemStack) {
         return (itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6);
@@ -164,7 +164,7 @@ public final class WynnItemMatchers {
 
     public static boolean isMythic(ItemStack itemStack) {
         // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
+        if (!(isGearBox(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
 
         return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
@@ -187,7 +187,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item is within the Wynncraft tier system (mythic, legendary, etc.)
      */
     public static boolean isTieredItem(ItemStack itemStack) {
-        return isGear(itemStack) || isCraftedGear(itemStack) || isUnidentified(itemStack);
+        return isGear(itemStack) || isCraftedGear(itemStack) || isGearBox(itemStack);
     }
 
     public static boolean isCosmetic(ItemStack itemStack) {

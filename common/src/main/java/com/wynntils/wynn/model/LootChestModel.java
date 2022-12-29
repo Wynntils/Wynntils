@@ -38,7 +38,7 @@ public final class LootChestModel extends Model {
 
         ItemStack itemStack = event.getItemStack();
 
-        if (!WynnItemMatchers.isUnidentified(itemStack)) return;
+        if (!WynnItemMatchers.isGearBox(itemStack)) return;
 
         ItemTier itemTier = ItemTier.fromComponent(itemStack.getHoverName());
 

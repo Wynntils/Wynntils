@@ -11,7 +11,6 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
-import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import java.util.function.Function;
@@ -24,7 +23,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
-        Handlers.Item.registerAnnotator(new UnidentifiedAnnotator());
+        Handlers.Item.registerAnnotator(new GearBoxAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
 
         Handlers.Item.registerAnnotator(new ServerAnnotator());
@@ -72,9 +71,4 @@ public class ItemModel extends Model {
         }
     }
 
-    public static final class UnidentifiedAnnotator extends Annotator {
-        public UnidentifiedAnnotator() {
-            super(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
-        }
-    }
 }

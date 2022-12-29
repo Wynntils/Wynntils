@@ -83,7 +83,7 @@ public abstract class ItemStackModel extends Model {
 
     public static final class UnidentifiedItemStackModel extends ItemStackModel {
         public UnidentifiedItemStackModel() {
-            super(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
+            super(WynnItemMatchers::isGearBox, UnidentifiedItemStack::new);
         }
     }
 }
