@@ -5,5 +5,17 @@
 package com.wynntils.model.item.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
+import java.util.HashMap;
+import java.util.Map;
 
-public class GameItem implements ItemAnnotation {}
+public class GameItem implements ItemAnnotation {
+    private Map<Class<?>, Object> cache = new HashMap<>();
+
+    public<T> T getCached(Class<T> clazz) {
+        return (T)cache.get(clazz);
+    }
+
+    public<T> void storeInCache(T obj) {
+        cache.put(obj.getClass(), obj);
+    }
+}

@@ -13,12 +13,23 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.model.item.game.AmplifierItem;
+import com.wynntils.model.item.game.DungeonKeyItem;
+import com.wynntils.model.item.game.GameItem;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.wynn.item.properties.type.PropertyType;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -36,6 +47,18 @@ public class ItemTextOverlayFeature extends UserFeature {
             Models.SkillIconProperty,
             Models.SkillPointProperty,
             Models.TeleportScrollProperty);
+
+    private static final TextOverlayInfo NO_OVERLAY = new TextOverlayInfo() {
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            return null;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return false;
+        }
+    };
 
     public static ItemTextOverlayFeature INSTANCE;
 
@@ -125,26 +148,135 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        if (!(item instanceof WynnItemStack wynnItem)) return;
-        if (!wynnItem.hasProperty(ItemProperty.TEXT_OVERLAY)) return;
-
-        for (TextOverlayProperty overlayProperty : wynnItem.getProperties(ItemProperty.TEXT_OVERLAY)) {
-            boolean contextEnabled = hotbar ? overlayProperty.isHotbarText() : overlayProperty.isInventoryText();
-            if (!overlayProperty.isTextOverlayEnabled() || !contextEnabled) continue; // not enabled or wrong context
-
-            TextOverlayProperty.TextOverlay textOverlay = overlayProperty.getTextOverlay();
-
-            if (textOverlay == null) {
-                WynntilsMod.error(overlayProperty + "'s textOverlay was null.");
-                continue;
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
+        if (annotationOpt.isEmpty()) return;
+        if (!(annotationOpt.get() instanceof GameItem wynnItem)) return;
+        TextOverlayInfo overlayProperty = wynnItem.getCached(TextOverlayInfo.class);
+        if (overlayProperty == NO_OVERLAY) return;
+        if (overlayProperty == null) {
+            overlayProperty = calculateOverlay(wynnItem);
+            if (overlayProperty == null) {
+                wynnItem.storeInCache(NO_OVERLAY);
+                return;
             }
+            wynnItem.storeInCache(overlayProperty);
+        }
 
-            PoseStack poseStack = new PoseStack();
-            poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-            poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
-            float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
-            float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-            FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
+        boolean contextEnabled = hotbar ? overlayProperty.isHotbarText() : overlayProperty.isInventoryText();
+        if (!overlayProperty.isTextOverlayEnabled() || !contextEnabled) return; // not enabled or wrong context
+
+        TextOverlayProperty.TextOverlay textOverlay = overlayProperty.getTextOverlay();
+
+        if (textOverlay == null) {
+            WynntilsMod.error(overlayProperty + "'s textOverlay was null.");
+            return;
+        }
+
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
+        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+        float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
+        float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
+        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
+    }
+
+    private TextOverlayInfo calculateOverlay(GameItem wynnItem) {
+        if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
+            return new DungeonKeyOverlay(dungeonKeyItem);
+        }
+        if (wynnItem instanceof AmplifierItem amplifierItem) {
+            return new AmplifierOverlay(amplifierItem);
+        }
+        return null;
+    }
+
+    public interface TextOverlayInfo extends PropertyType {
+        TextOverlayProperty.TextOverlay getTextOverlay();
+
+        boolean isTextOverlayEnabled();
+
+        /**
+         * Whether this overlay is allowed to be rendered in inventories.
+         */
+        default boolean isInventoryText() {
+            return true;
+        }
+
+        /**
+         * Whether this overlay is allowed to be rendered in the hotbar.
+         */
+        default boolean isHotbarText() {
+            return true;
+        }
+    }
+
+    public static class DungeonKeyOverlay implements TextOverlayInfo {
+        private static final CustomColor STANDARD_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        private static final CustomColor CORRUPTED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_RED);
+
+        private final DungeonKeyItem item;
+
+        public DungeonKeyOverlay(DungeonKeyItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            if (!ItemTextOverlayFeature.INSTANCE.dungeonKeyEnabled) return null;
+
+            CustomColor textColor = item.isCorrupted() ? CORRUPTED_COLOR : STANDARD_COLOR;
+            String dungeon = item.getDungeon();
+
+            TextOverlayProperty.TextOverlay textOverlay = new TextOverlayProperty.TextOverlay(
+                    new TextRenderTask(
+                            dungeon,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(textColor)
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.dungeonKeyShadow)),
+                    -1,
+                    1,
+                    1f);
+
+            return textOverlay;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.dungeonKeyEnabled;
+        }
+    }
+
+    public static class AmplifierOverlay implements TextOverlayInfo {
+        private final AmplifierItem item;
+
+        public AmplifierOverlay(AmplifierItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            if (!ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled) return null;
+
+            String text = ItemTextOverlayFeature.INSTANCE.amplifierTierRomanNumerals
+                    ? MathUtils.toRoman(item.getTier())
+                    : String.valueOf(item.getTier());
+
+            TextOverlayProperty.TextOverlay textOverlay = new TextOverlayProperty.TextOverlay(
+                    new TextRenderTask(
+                            text,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(ItemTier.LEGENDARY.getHighlightColor())
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.amplifierTierShadow)),
+                    -1,
+                    1,
+                    0.75f);
+
+            return textOverlay;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled;
         }
     }
 }
