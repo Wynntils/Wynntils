@@ -7,7 +7,7 @@ package com.wynntils.model.item.annotators;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.model.item.game.ToolItem;
+import com.wynntils.model.item.game.GatheringToolItem;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.ToolProfile;
@@ -34,6 +34,6 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
 
         CappedValue durability = WynnItemMatchers.getDurability(itemStack);
 
-        return new ToolItem(toolProfile, durability);
+        return new GatheringToolItem(toolProfile, durability);
     }
 }

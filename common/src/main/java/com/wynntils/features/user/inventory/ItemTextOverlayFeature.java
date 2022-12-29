@@ -24,6 +24,8 @@ import com.wynntils.model.item.game.AmplifierItem;
 import com.wynntils.model.item.game.DungeonKeyItem;
 import com.wynntils.model.item.game.EmeraldPouchItem;
 import com.wynntils.model.item.game.GameItem;
+import com.wynntils.model.item.game.GatheringToolItem;
+import com.wynntils.model.item.game.PowderItem;
 import com.wynntils.model.item.game.TeleportScrollItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.properties.type.PropertyType;
@@ -40,8 +42,6 @@ public class ItemTextOverlayFeature extends UserFeature {
     public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
             Models.ConsumableChargeProperty,
             Models.DailyRewardMultiplierProperty,
-            Models.GatheringToolProperty,
-            Models.PowderTierProperty,
             Models.ServerCountProperty,
             Models.SkillIconProperty,
             Models.SkillPointProperty);
@@ -189,7 +189,13 @@ public class ItemTextOverlayFeature extends UserFeature {
             return new TeleportScrollOverlay(teleportScrollItem);
         }
         if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
-            return new EmeraldPouchTierProperty(emeraldPouchItem);
+            return new EmeraldPouchOverlay(emeraldPouchItem);
+        }
+        if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
+            return new GatheringToolOverlay(gatheringToolItem);
+        }
+        if (wynnItem instanceof PowderItem powderItem) {
+            return new PowderOverlay(powderItem);
         }
 
         return null;
@@ -309,12 +315,12 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    public static class EmeraldPouchTierProperty implements TextOverlayInfo {
+    public static class EmeraldPouchOverlay implements TextOverlayInfo {
         private static final CustomColor HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
         private final EmeraldPouchItem item;
 
-        public EmeraldPouchTierProperty(EmeraldPouchItem item) {
+        public EmeraldPouchOverlay(EmeraldPouchItem item) {
             this.item = item;
         }
 
@@ -335,6 +341,66 @@ public class ItemTextOverlayFeature extends UserFeature {
                     .withTextShadow(ItemTextOverlayFeature.INSTANCE.emeraldPouchTierShadow);
 
             return new TextOverlayProperty.TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+        }
+    }
+
+    public static class GatheringToolOverlay implements TextOverlayInfo {
+        private final GatheringToolItem item;
+
+        public GatheringToolOverlay(GatheringToolItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.gatheringToolTierEnabled;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            // convert from roman to arabic if necessary
+            String text = ItemTextOverlayFeature.INSTANCE.gatheringToolTierRomanNumerals
+                    ? MathUtils.toRoman(item.getTier())
+                    : String.valueOf(item.getTier());
+
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
+                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.gatheringToolTierShadow);
+
+            return new TextOverlayProperty.TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+        }
+    }
+
+    public class PowderOverlay implements TextOverlayInfo {
+        private final PowderItem item;
+
+        public PowderOverlay(PowderItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.powderTierEnabled;
+        }
+
+        @Override
+        public TextOverlayProperty.TextOverlay getTextOverlay() {
+            CustomColor highlightColor = item.getPowderProfile().element().getColor();
+
+            // convert from roman to arabic if necessary
+            String text = ItemTextOverlayFeature.INSTANCE.powderTierRomanNumerals
+                    ? MathUtils.toRoman(item.getTier())
+                    : String.valueOf(item.getTier());
+
+            return new TextOverlayProperty.TextOverlay(
+                    new TextRenderTask(
+                            text,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(highlightColor)
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.powderTierShadow)),
+                    -1,
+                    1,
+                    0.75f);
         }
     }
 }
