@@ -12,7 +12,6 @@ import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
@@ -37,7 +36,7 @@ public class ItemModel extends Model {
 
         // === game, left
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
-        Handlers.Item.registerAnnotator(new ConsumableChargeAnnotator());
+        Handlers.Item.registerAnnotator(new ConsumableAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
         Handlers.Item.registerAnnotator(new DurabilityAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
@@ -63,12 +62,6 @@ public class ItemModel extends Model {
     }
 
     /// ==== game ====
-
-    public static final class ConsumableChargeAnnotator extends PropertyAnnotator {
-        public ConsumableChargeAnnotator() {
-            super(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
-        }
-    }
 
     public static final class DurabilityAnnotator extends PropertyAnnotator {
         public DurabilityAnnotator() {
