@@ -40,7 +40,7 @@ public class PowderItemStack extends WynnItemStack {
 
         element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));
         tier = MathUtils.integerFromRoman(matcher.group(2));
-        powderProfile = PowderGenerator.generatePowderProfile(element, tier);
+        powderProfile = PowderGenerator.getPowderProfile(element, tier);
         generated = false;
         generatedTooltip = List.of();
     }

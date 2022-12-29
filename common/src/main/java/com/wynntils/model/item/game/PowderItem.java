@@ -4,4 +4,16 @@
  */
 package com.wynntils.model.item.game;
 
-public class PowderItem extends GameItem {}
+import com.wynntils.wynn.item.generator.PowderProfile;
+
+public class PowderItem extends GameItem {
+    private final PowderProfile powderProfile;
+
+    public PowderItem(PowderProfile powderProfile) {
+        this.powderProfile = powderProfile;
+    }
+
+    public PowderProfile getPowderProfile() {
+        return powderProfile;
+    }
+}

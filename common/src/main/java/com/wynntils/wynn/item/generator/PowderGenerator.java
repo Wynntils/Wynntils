@@ -67,7 +67,7 @@ public final class PowderGenerator {
         return powderProfileMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    public static PowderProfile generatePowderProfile(Powder element, int tier) {
+    public static PowderProfile getPowderProfile(Powder element, int tier) {
         return powderProfileMap.get(element).get(tier - 1);
     }
 }
