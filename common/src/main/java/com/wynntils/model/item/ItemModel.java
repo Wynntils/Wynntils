@@ -50,8 +50,6 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new DurabilityAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
-        Handlers.Item.registerAnnotator(new IngredientAnnotator());
-        Handlers.Item.registerAnnotator(new ItemTierAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
 
@@ -107,18 +105,6 @@ public class ItemModel extends Model {
     public static final class HorseAnnotator extends PropertyAnnotator {
         public HorseAnnotator() {
             super(WynnItemMatchers::isHorse, HorseProperty::new);
-        }
-    }
-
-    public static final class IngredientAnnotator extends PropertyAnnotator {
-        public IngredientAnnotator() {
-            super(WynnItemMatchers::isIngredient, IngredientProperty::new);
-        }
-    }
-
-    public static final class ItemTierAnnotator extends PropertyAnnotator {
-        public ItemTierAnnotator() {
-            super(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         }
     }
 
