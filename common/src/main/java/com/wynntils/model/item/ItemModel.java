@@ -18,13 +18,11 @@ import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
-import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.MaterialProperty;
-import com.wynntils.wynn.item.properties.PowderTierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -50,13 +48,11 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ConsumableChargeAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
         Handlers.Item.registerAnnotator(new DurabilityAnnotator());
-        Handlers.Item.registerAnnotator(new EmeraldPouchTierAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new ItemTierAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
-        Handlers.Item.registerAnnotator(new PowderTierAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
 
         // === gui
@@ -102,12 +98,6 @@ public class ItemModel extends Model {
         }
     }
 
-    public static final class EmeraldPouchTierAnnotator extends PropertyAnnotator {
-        public EmeraldPouchTierAnnotator() {
-            super(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
-        }
-    }
-
     public static final class GatheringToolAnnotator extends PropertyAnnotator {
         public GatheringToolAnnotator() {
             super(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
@@ -135,12 +125,6 @@ public class ItemModel extends Model {
     public static final class MaterialAnnotator extends PropertyAnnotator {
         public MaterialAnnotator() {
             super(WynnItemMatchers::isMaterial, MaterialProperty::new);
-        }
-    }
-
-    public static final class PowderTierAnnotator extends PropertyAnnotator {
-        public PowderTierAnnotator() {
-            super(WynnItemMatchers::isPowder, PowderTierProperty::new);
         }
     }
 
