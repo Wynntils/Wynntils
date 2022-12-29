@@ -13,10 +13,14 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.UnidentifiedItemStack;
+import com.wynntils.model.item.game.GearBoxItem;
+import com.wynntils.wynn.objects.profiles.item.ItemType;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -41,8 +45,11 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     }
 
     private void drawIcon(ItemStack item, int slotX, int slotY) {
-        if (!(item instanceof UnidentifiedItemStack unidentifiedItem)) return;
-        if (unidentifiedItem.getItemType().isEmpty()) return;
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
+        if (annotationOpt.isEmpty()) return;
+        if (!(annotationOpt.get() instanceof GearBoxItem gearBoxItem)) return;
+
+        ItemType itemType = gearBoxItem.getItemType();
 
         RenderUtils.drawTexturedRect(
                 new PoseStack(),
@@ -52,8 +59,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 400,
                 12,
                 12,
-                unidentifiedItem.getItemType().get().getIconTextureX(),
-                unidentifiedItem.getItemType().get().getIconTextureY() + texture.getTextureYOffset(),
+                itemType.getIconTextureX(),
+                itemType.getIconTextureY() + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),
