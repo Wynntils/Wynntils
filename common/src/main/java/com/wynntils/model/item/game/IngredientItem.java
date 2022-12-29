@@ -4,6 +4,7 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.QualityTierItemProperty;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 
 public class IngredientItem extends GameItem implements QualityTierItemProperty {

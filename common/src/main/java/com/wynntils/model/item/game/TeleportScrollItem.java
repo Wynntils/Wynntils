@@ -4,6 +4,8 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.TargetedItemProperty;
+
 public class TeleportScrollItem extends GameItem implements TargetedItemProperty {
     private final String destination;
     private final boolean dungeon;

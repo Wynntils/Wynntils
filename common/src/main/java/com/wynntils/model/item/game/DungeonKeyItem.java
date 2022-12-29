@@ -4,6 +4,8 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.TargetedItemProperty;
+
 public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
     private final String dungeon;
     private final boolean corrupted;

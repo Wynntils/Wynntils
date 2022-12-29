@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.AnnotatedItemStack;
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import net.minecraft.network.chat.Component;

@@ -4,6 +4,8 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.NumberedTierItemProperty;
+
 public class AmplifierItem extends GameItem implements NumberedTierItemProperty {
     private final int tier;
 

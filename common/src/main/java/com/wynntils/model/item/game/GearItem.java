@@ -4,7 +4,9 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;

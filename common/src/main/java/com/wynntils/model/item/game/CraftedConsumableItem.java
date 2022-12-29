@@ -4,6 +4,7 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.UsesItemPropery;
 import com.wynntils.utils.CappedValue;
 
 public class CraftedConsumableItem extends GameItem implements UsesItemPropery {

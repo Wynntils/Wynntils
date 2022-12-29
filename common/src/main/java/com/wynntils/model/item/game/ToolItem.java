@@ -4,6 +4,8 @@
  */
 package com.wynntils.model.item.game;
 
+import com.wynntils.model.item.properties.DurableItemProperty;
+import com.wynntils.model.item.properties.NumberedTierItemProperty;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.objects.profiles.ToolProfile;
 

@@ -5,6 +5,7 @@
 package com.wynntils.model.item.game;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
