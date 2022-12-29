@@ -4,4 +4,14 @@
  */
 package com.wynntils.model.item.game;
 
-public class EmeraldPouchItem extends GameItem {}
+public class EmeraldPouchItem extends GameItem {
+    private final int tier;
+
+    public EmeraldPouchItem(int tier) {
+        this.tier = tier;
+    }
+
+    public int getTier() {
+        return tier;
+    }
+}
