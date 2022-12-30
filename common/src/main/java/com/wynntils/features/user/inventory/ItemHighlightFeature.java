@@ -18,10 +18,11 @@ import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.model.item.game.GameItem;
+import com.wynntils.model.item.WynnItem;
 import com.wynntils.model.item.game.IngredientItem;
 import com.wynntils.model.item.game.MaterialItem;
 import com.wynntils.model.item.game.PowderItem;
+import com.wynntils.model.item.gui.CosmeticItem;
 import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
@@ -195,7 +196,7 @@ public class ItemHighlightFeature extends UserFeature {
     private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
         Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
         if (annotationOpt.isEmpty()) return CustomColor.NONE;
-        if (!(annotationOpt.get() instanceof GameItem wynnItem)) return CustomColor.NONE;
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return CustomColor.NONE;
         HighlightInfo highlight = wynnItem.getCached(HighlightInfo.class);
         if (highlight == NO_HIGHLIGHT) return CustomColor.NONE;
         if (highlight == null) {
@@ -213,7 +214,7 @@ public class ItemHighlightFeature extends UserFeature {
         return highlight.getHighlightColor();
     }
 
-    private HighlightInfo calculateHighlightInfo(GameItem wynnItem) {
+    private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return new IngredientHighlight(ingredientItem);
         }
@@ -222,6 +223,9 @@ public class ItemHighlightFeature extends UserFeature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderHighlight(powderItem);
+        }
+        if (wynnItem instanceof CosmeticItem cosmeticItem) {
+            return new CosmeticHighlight(cosmeticItem);
         }
         if (wynnItem instanceof GearTierItemProperty gearItem) {
             return new GearHighlight(gearItem);
@@ -320,6 +324,24 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return item.getPowderProfile().element().getColor();
+        }
+    }
+
+    public static class CosmeticHighlight implements HighlightInfo {
+        private final CosmeticItem item;
+
+        public CosmeticHighlight(CosmeticItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return ItemHighlightFeature.INSTANCE.cosmeticHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return item.getHighlightColor();
         }
     }
 

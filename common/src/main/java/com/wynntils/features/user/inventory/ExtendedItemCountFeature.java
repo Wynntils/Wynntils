@@ -135,7 +135,6 @@ public class ExtendedItemCountFeature extends UserFeature {
         }
     }
 
-
     /**
      * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
      */

@@ -25,5 +25,4 @@ public interface TextOverlayProperty extends PropertyType {
     default boolean isHotbarText() {
         return true;
     }
-
 }

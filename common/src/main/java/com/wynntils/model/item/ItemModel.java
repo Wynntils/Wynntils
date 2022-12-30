@@ -25,13 +25,13 @@ import com.wynntils.model.item.annotators.PowderAnnotator;
 import com.wynntils.model.item.annotators.SkillPotionAnnotator;
 import com.wynntils.model.item.annotators.TeleportScrollAnnotator;
 import com.wynntils.model.item.annotators.XpPotionAnnotator;
+import com.wynntils.model.item.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.model.item.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.model.item.annotators.gui.ServerAnnotator;
 import com.wynntils.model.item.annotators.gui.SkillPointAnnotator;
-import com.wynntils.wynn.item.SoulPointItemStack;
+import com.wynntils.model.item.annotators.gui.SoulPointAnnotator;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import java.util.function.Consumer;
@@ -67,8 +67,8 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
-
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
+
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new SearchOverlayAnnotator());
         Handlers.Item.registerAnnotator(new SkillIconAnnotator());
@@ -80,18 +80,6 @@ public class ItemModel extends Model {
     }
 
     /// ==== gui ====
-
-    public static final class SoulPointAnnotator extends Annotator {
-        public SoulPointAnnotator() {
-            super(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
-        }
-    }
-
-    public static final class CosmeticTierAnnotator extends PropertyAnnotator {
-        public CosmeticTierAnnotator() {
-            super(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
-        }
-    }
 
     public static final class SearchOverlayAnnotator extends PropertyAnnotator {
         public SearchOverlayAnnotator() {

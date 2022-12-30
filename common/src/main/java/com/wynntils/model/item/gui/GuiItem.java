@@ -4,6 +4,6 @@
  */
 package com.wynntils.model.item.gui;
 
-import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.model.item.WynnItem;
 
-public class GuiItem implements ItemAnnotation {}
+public class GuiItem extends WynnItem {}
