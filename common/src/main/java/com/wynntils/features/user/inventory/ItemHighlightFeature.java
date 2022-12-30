@@ -19,7 +19,10 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.model.item.game.GameItem;
+import com.wynntils.model.item.game.GearItem;
 import com.wynntils.model.item.game.IngredientItem;
+import com.wynntils.model.item.game.MaterialItem;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -31,8 +34,6 @@ public class ItemHighlightFeature extends UserFeature {
     public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(
             Models.CosmeticTierProperty,
             Models.EmeraldPouchItemStack,
-            Models.MaterialProperty,
-            Models.IngredientProperty,
             Models.ItemTierProperty,
             Models.PowderTierProperty);
     private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
@@ -219,6 +220,9 @@ public class ItemHighlightFeature extends UserFeature {
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return new IngredientHighlight(ingredientItem);
         }
+        if (wynnItem instanceof MaterialItem materialItem) {
+            return new MaterialHighlight(materialItem);
+        }
 
         return null;
     }
@@ -269,4 +273,75 @@ public class ItemHighlightFeature extends UserFeature {
             };
         }
     }
+
+    public static class MaterialHighlight implements HighlightInfo  {
+        private final MaterialItem item;
+
+        public MaterialHighlight(MaterialItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getQualityTier()) {
+                case 1 -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightColor;
+                case 2 -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightColor;
+                case 3 -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightColor;
+                default -> CustomColor.NONE;
+            };
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getQualityTier()) {
+                case 1 -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightEnabled;
+                case 2 -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightEnabled;
+                case 3 -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightEnabled;
+                default -> false; // should not happen
+            };
+        }
+    }
+
+
+    public static class GearHighlight implements HighlightInfo {
+        private final GearItem item;
+
+        public GearHighlight(GearItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getGearTier()) {
+                case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightEnabled;
+                case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightEnabled;
+                case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightEnabled;
+                case SET -> ItemHighlightFeature.INSTANCE.setHighlightEnabled;
+                case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightEnabled;
+                case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightEnabled;
+                case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightEnabled;
+                default -> false;
+            };
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return ItemHighlightFeature.getHighlightColor(item.getGearTier());
+        }
+    }
+
+    // This is a bit ugly, but it is used in GuideGearItemStack...
+    public static CustomColor getHighlightColor(ItemTier itemTier) {
+        return switch (itemTier) {
+            case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightColor;
+            case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightColor;
+            case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightColor;
+            case SET -> ItemHighlightFeature.INSTANCE.setHighlightColor;
+            case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightColor;
+            case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightColor;
+            case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightColor;
+            default -> CustomColor.NONE;
+        };
+    }
+
 }

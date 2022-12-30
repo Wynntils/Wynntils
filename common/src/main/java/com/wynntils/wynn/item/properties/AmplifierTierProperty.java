@@ -7,6 +7,7 @@ package com.wynntils.wynn.item.properties;
 import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
@@ -35,7 +36,7 @@ public class AmplifierTierProperty extends ItemProperty implements TextOverlayPr
                 new TextRenderTask(
                         text,
                         TextRenderSetting.DEFAULT
-                                .withCustomColor(ItemTier.LEGENDARY.getHighlightColor())
+                                .withCustomColor(CustomColor.NONE)
                                 .withTextShadow(ItemTextOverlayFeature.INSTANCE.amplifierTierShadow)),
                 -1,
                 1,

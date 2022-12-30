@@ -31,11 +31,11 @@ public class ItemTierProperty extends ItemProperty implements HighlightProperty 
 
     @Override
     public boolean isHighlightEnabled() {
-        return tier != null && tier.isHighlightEnabled();
+        return false;
     }
 
     @Override
     public CustomColor getHighlightColor() {
-        return tier == null ? CustomColor.NONE : tier.getHighlightColor();
+        return CustomColor.NONE;
     }
 }
