@@ -34,10 +34,7 @@ import com.wynntils.wynn.model.item.ItemStackModel.UnidentifiedItemStackModel;
 import com.wynntils.wynn.model.item.PropertyModel.ConsumableChargePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.CosmeticTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.GatheringToolPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.IngredientPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ItemTierPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.MaterialPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SearchOverlayPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ServerCountPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SkillIconPropertyModel;
@@ -57,13 +54,11 @@ public final class Models {
     public static final DailyRewardMultiplierPropertyModel DailyRewardMultiplierProperty =
             new DailyRewardMultiplierPropertyModel();
     public static final EmeraldPouchItemStackModel EmeraldPouchItemStack = new EmeraldPouchItemStackModel();
-    public static final GatheringToolPropertyModel GatheringToolProperty = new GatheringToolPropertyModel();
     public static final GearItemStackModel GearItemStack = new GearItemStackModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();
     public static final HadesUserModel HadesUser = new HadesUserModel();
     public static final IngredientItemStackModel IngredientItemStack = new IngredientItemStackModel();
-    public static final IngredientPropertyModel IngredientProperty = new IngredientPropertyModel();
     public static final IntelligenceSkillPointsItemStackModel IntelligenceSkillPointsItemStack =
             new IntelligenceSkillPointsItemStackModel();
     public static final ItemModel Item = new ItemModel();
@@ -71,7 +66,6 @@ public final class Models {
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
     public static final MapModel Map = new MapModel();
-    public static final MaterialPropertyModel MaterialProperty = new MaterialPropertyModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final PowderItemStackModel PowderItemStack = new PowderItemStackModel();

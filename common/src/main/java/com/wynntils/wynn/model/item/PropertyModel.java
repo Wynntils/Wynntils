@@ -11,10 +11,7 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.GatheringToolProperty;
-import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
-import com.wynntils.wynn.item.properties.MaterialProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -60,27 +57,9 @@ public abstract class PropertyModel extends Model {
         }
     }
 
-    public static final class GatheringToolPropertyModel extends PropertyModel {
-        public GatheringToolPropertyModel() {
-            super(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
-        }
-    }
-
-    public static final class IngredientPropertyModel extends PropertyModel {
-        public IngredientPropertyModel() {
-            super(WynnItemMatchers::isIngredient, IngredientProperty::new);
-        }
-    }
-
     public static final class ItemTierPropertyModel extends PropertyModel {
         public ItemTierPropertyModel() {
             super(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
-        }
-    }
-
-    public static final class MaterialPropertyModel extends PropertyModel {
-        public MaterialPropertyModel() {
-            super(WynnItemMatchers::isMaterial, MaterialProperty::new);
         }
     }
 
