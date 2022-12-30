@@ -246,6 +246,10 @@ public class GearItemStack extends WynnItemStack {
         return rerolls;
     }
 
+    public Component getOriginalHoverName() {
+        return super.getHoverName();
+    }
+
     @Override
     public Component getHoverName() {
         if (isGuideStack || isChatItem) return customName;

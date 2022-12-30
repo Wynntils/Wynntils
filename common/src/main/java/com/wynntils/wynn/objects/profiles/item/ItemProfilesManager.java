@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
@@ -68,6 +69,10 @@ public final class ItemProfilesManager extends Manager {
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
         loadData();
+
+        // This is slightly hacky, awaiting the full refactoring
+        WynntilsMod.registerEventListener(Models.Item);
+        Models.Item.init();
     }
 
     public boolean isInverted(String id) {
