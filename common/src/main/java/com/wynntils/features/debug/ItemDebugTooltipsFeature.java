@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemDebugTooltipFeature extends DebugFeature {
-    @SubscribeEvent
+public class ItemDebugTooltipsFeature extends DebugFeature {
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<WynnItem> wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;

@@ -248,6 +248,7 @@
   "feature.wynntils.inventoryRedirect.redirectPotionStack.description": "Should messages about potions being added to your inventory be redirected to the game update ticker?",
   "feature.wynntils.inventoryRedirect.redirectPotionStack.name": "Redirect Potion Stack Messages",
   "feature.wynntils.itemCompare.name": "Item Compare",
+  "feature.wynntils.itemDebugTooltips.name": "Item Debug Tooltips",
   "feature.wynntils.itemFavorite.closingBlocked": "You cannot close this chest as it has a favorited item inside!",
   "feature.wynntils.itemFavorite.favoriteItems.description": "Favorite Items Set",
   "feature.wynntils.itemFavorite.favoriteItems.name": "Favorite Items",

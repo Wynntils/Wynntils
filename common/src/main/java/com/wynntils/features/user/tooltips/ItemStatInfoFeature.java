@@ -9,6 +9,16 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.model.item.ItemModel;
+import com.wynntils.model.item.game.GearItem;
+import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.wynn.utils.GearTooltipBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
@@ -40,4 +50,18 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Config
     public boolean groupIdentifications = true;
+
+    @SubscribeEvent
+    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+        var wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
+        if (wynnItemOpt.isEmpty()) return;
+        if (!(wynnItemOpt.get() instanceof GearItem gearItem)) return;
+
+        // FIXME!
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
+            List<Component> tooltips = new ArrayList<>();
+            tooltips.addAll(new GearTooltipBuilder(gearItem).getTooltipLines());
+            event.setTooltips(tooltips);
+        }
+    }
 }

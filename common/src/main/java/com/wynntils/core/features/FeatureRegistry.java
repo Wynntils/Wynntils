@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.features.debug.ConnectionProgressFeature;
+import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
@@ -45,7 +46,6 @@ import com.wynntils.features.user.HadesFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
-import com.wynntils.features.debug.ItemDebugTooltipFeature;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
@@ -95,7 +95,6 @@ import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.user.redirects.ChatRedirectFeature;
 import com.wynntils.features.user.redirects.InventoryRedirectFeature;
 import com.wynntils.features.user.redirects.TerritoryMessageRedirectFeature;
-import com.wynntils.features.user.tooltips.GearTooltipFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
@@ -117,7 +116,7 @@ public final class FeatureRegistry {
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
-        registerFeature(new ItemDebugTooltipFeature());
+        registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());
         registerFeature(new PacketDebuggerFeature());
 
@@ -160,7 +159,6 @@ public final class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
-        registerFeature(new GearTooltipFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new HadesFeature());
