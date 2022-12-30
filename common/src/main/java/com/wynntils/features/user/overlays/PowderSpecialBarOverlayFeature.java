@@ -26,8 +26,8 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -68,14 +68,8 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             float powderSpecialCharge = Models.ActionBar.getPowderSpecialCharge();
             Powder powderSpecialType = Models.ActionBar.getPowderSpecialType();
-            // FIXME
             if (this.onlyIfWeaponHeld
-                    && (!(McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack)
-                            || !gearItemStack
-                                    .getItemProfile()
-                                    .getItemInfo()
-                                    .getType()
-                                    .isWeapon())) return;
+                    && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
