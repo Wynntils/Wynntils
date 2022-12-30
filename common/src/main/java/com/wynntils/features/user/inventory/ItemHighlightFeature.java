@@ -19,9 +19,9 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.model.item.game.GameItem;
-import com.wynntils.model.item.game.GearItem;
 import com.wynntils.model.item.game.IngredientItem;
 import com.wynntils.model.item.game.MaterialItem;
+import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +31,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(
-            Models.CosmeticTierProperty,
-            Models.EmeraldPouchItemStack,
-            Models.ItemTierProperty,
-            Models.PowderTierProperty);
+    public static final List<Model> HIGHLIGHT_PROPERTIES =
+            List.of(Models.CosmeticTierProperty, Models.EmeraldPouchItemStack, Models.PowderTierProperty);
     private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
         @Override
         public CustomColor getHighlightColor() {
@@ -223,6 +220,9 @@ public class ItemHighlightFeature extends UserFeature {
         if (wynnItem instanceof MaterialItem materialItem) {
             return new MaterialHighlight(materialItem);
         }
+        if (wynnItem instanceof GearTierItemProperty gearItem) {
+            return new GearHighlight(gearItem);
+        }
 
         return null;
     }
@@ -274,7 +274,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public static class MaterialHighlight implements HighlightInfo  {
+    public static class MaterialHighlight implements HighlightInfo {
         private final MaterialItem item;
 
         public MaterialHighlight(MaterialItem item) {
@@ -302,26 +302,16 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-
     public static class GearHighlight implements HighlightInfo {
-        private final GearItem item;
+        private final GearTierItemProperty item;
 
-        public GearHighlight(GearItem item) {
+        public GearHighlight(GearTierItemProperty item) {
             this.item = item;
         }
 
         @Override
         public boolean isHighlightEnabled() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightEnabled;
-                case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightEnabled;
-                case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightEnabled;
-                case SET -> ItemHighlightFeature.INSTANCE.setHighlightEnabled;
-                case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightEnabled;
-                case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightEnabled;
-                case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightEnabled;
-                default -> false;
-            };
+            return ItemHighlightFeature.isHighlightEnabled(item.getGearTier());
         }
 
         @Override
@@ -344,4 +334,16 @@ public class ItemHighlightFeature extends UserFeature {
         };
     }
 
+    public static boolean isHighlightEnabled(ItemTier itemTier) {
+        return switch (itemTier) {
+            case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightEnabled;
+            case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightEnabled;
+            case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightEnabled;
+            case SET -> ItemHighlightFeature.INSTANCE.setHighlightEnabled;
+            case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightEnabled;
+            case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightEnabled;
+            case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightEnabled;
+            default -> false;
+        };
+    }
 }
