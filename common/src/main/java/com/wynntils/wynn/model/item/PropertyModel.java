@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.AmplifierTierProperty;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
@@ -48,12 +47,6 @@ public abstract class PropertyModel extends Model {
     }
 
     /** Model Declarations **/
-    public static final class AmplifierTierPropertyModel extends PropertyModel {
-        public AmplifierTierPropertyModel() {
-            super(WynnItemMatchers::isAmplifier, AmplifierTierProperty::new);
-        }
-    }
-
     public static final class ConsumableChargePropertyModel extends PropertyModel {
         public ConsumableChargePropertyModel() {
             super(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);

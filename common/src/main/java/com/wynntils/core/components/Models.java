@@ -31,11 +31,9 @@ import com.wynntils.wynn.model.item.ItemStackModel.PowderItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.ServerItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.SoulPointItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.UnidentifiedItemStackModel;
-import com.wynntils.wynn.model.item.PropertyModel.AmplifierTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ConsumableChargePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.CosmeticTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.DungeonKeyPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DurabilityPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.EmeraldPouchTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.GatheringToolPropertyModel;
@@ -54,7 +52,6 @@ import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
 public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
-    public static final AmplifierTierPropertyModel AmplifierTierProperty = new AmplifierTierPropertyModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final ChatItemModel ChatItem = new ChatItemModel();

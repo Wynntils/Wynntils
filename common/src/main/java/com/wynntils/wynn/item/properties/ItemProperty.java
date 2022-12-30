@@ -9,7 +9,6 @@ import com.wynntils.wynn.item.properties.type.HighlightProperty;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 
 public abstract class ItemProperty {
-    public static final Class<AmplifierTierProperty> AMPLIFIER_TIER = AmplifierTierProperty.class;
     public static final Class<ConsumableChargeProperty> CONSUMABLE_CHARGE = ConsumableChargeProperty.class;
     public static final Class<CosmeticTierProperty> COSMETIC_TIER = CosmeticTierProperty.class;
     public static final Class<DurabilityProperty> DURABILITY = DurabilityProperty.class;
