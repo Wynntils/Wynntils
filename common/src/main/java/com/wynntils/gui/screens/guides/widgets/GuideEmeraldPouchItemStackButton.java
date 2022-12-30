@@ -17,21 +17,21 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.item.EmeraldPouchItemStack;
+import com.wynntils.gui.screens.guides.GuideEmeraldPouchItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideEmeraldPouchItemStack extends WynntilsButton {
-    private final EmeraldPouchItemStack itemStack;
+public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
+    private final GuideEmeraldPouchItemStack itemStack;
     private final WynntilsEmeraldPouchGuideScreen screen;
 
-    public GuideEmeraldPouchItemStack(
+    public GuideEmeraldPouchItemStackButton(
             int x,
             int y,
             int width,
             int height,
-            EmeraldPouchItemStack itemStack,
+            GuideEmeraldPouchItemStack itemStack,
             WynntilsEmeraldPouchGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
@@ -112,7 +112,7 @@ public class GuideEmeraldPouchItemStack extends WynntilsButton {
     @Override
     public void onPress() {}
 
-    public EmeraldPouchItemStack getItemStack() {
+    public GuideEmeraldPouchItemStack getItemStack() {
         return itemStack;
     }
 }

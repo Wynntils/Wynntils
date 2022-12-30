@@ -7,7 +7,6 @@ package com.wynntils.wynn.item.parsers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
@@ -78,10 +77,6 @@ public final class WynnItemMatchers {
     }
 
     public static boolean isEmeraldPouch(ItemStack itemStack) {
-        if (itemStack instanceof EmeraldPouchItemStack) {
-            return true;
-        }
-
         // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
         return (itemStack.getItem() == Items.DIAMOND_AXE || itemStack.getItem() == Items.GOLDEN_SHOVEL)
                 && itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
