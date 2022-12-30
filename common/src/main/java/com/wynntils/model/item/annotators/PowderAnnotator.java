@@ -8,10 +8,9 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.model.item.game.PowderItem;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.item.generator.PowderGenerator;
-import com.wynntils.wynn.item.generator.PowderProfile;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +25,7 @@ public final class PowderAnnotator implements ItemAnnotator {
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));
         int tier = MathUtils.integerFromRoman(matcher.group(2));
 
-        PowderProfile powderProfile = PowderGenerator.getPowderProfile(element, tier);
+        PowderProfile powderProfile = PowderProfile.getPowderProfile(element, tier);
 
         return new PowderItem(powderProfile);
     }

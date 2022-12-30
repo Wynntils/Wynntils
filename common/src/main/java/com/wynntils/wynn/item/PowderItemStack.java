@@ -6,10 +6,9 @@ package com.wynntils.wynn.item;
 
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.generator.PowderGenerator;
-import com.wynntils.wynn.item.generator.PowderProfile;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +39,7 @@ public class PowderItemStack extends WynnItemStack {
 
         element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));
         tier = MathUtils.integerFromRoman(matcher.group(2));
-        powderProfile = PowderGenerator.getPowderProfile(element, tier);
+        powderProfile = PowderProfile.getPowderProfile(element, tier);
         generated = false;
         generatedTooltip = List.of();
     }

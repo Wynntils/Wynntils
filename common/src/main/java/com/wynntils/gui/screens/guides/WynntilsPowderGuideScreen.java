@@ -21,7 +21,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.item.PowderItemStack;
-import com.wynntils.wynn.item.generator.PowderGenerator;
+import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -46,7 +46,7 @@ public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<Powd
     @Override
     protected void doInit() {
         if (parsedItemCache == null) {
-            parsedItemCache = PowderGenerator.getAllPowderProfiles().stream()
+            parsedItemCache = PowderProfile.getAllPowderProfiles().stream()
                     .map(PowderItemStack::new)
                     .toList();
         }
