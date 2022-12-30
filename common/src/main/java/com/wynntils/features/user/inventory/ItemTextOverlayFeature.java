@@ -20,14 +20,15 @@ import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.model.item.WynnItem;
 import com.wynntils.model.item.game.AmplifierItem;
 import com.wynntils.model.item.game.DungeonKeyItem;
 import com.wynntils.model.item.game.EmeraldPouchItem;
-import com.wynntils.model.item.game.GameItem;
 import com.wynntils.model.item.game.GatheringToolItem;
 import com.wynntils.model.item.game.PowderItem;
 import com.wynntils.model.item.game.SkillPotionItem;
 import com.wynntils.model.item.game.TeleportScrollItem;
+import com.wynntils.model.item.gui.SkillPointItem;
 import com.wynntils.utils.MathUtils;
 import java.util.List;
 import java.util.Optional;
@@ -139,7 +140,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
         Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
         if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof GameItem wynnItem)) return;
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
         TextOverlayInfo overlayProperty = wynnItem.getCached(TextOverlayInfo.class);
         if (overlayProperty == NO_OVERLAY) return;
         if (overlayProperty == null) {
@@ -169,7 +170,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
     }
 
-    private TextOverlayInfo calculateOverlay(GameItem wynnItem) {
+    private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {
         if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
             return new DungeonKeyOverlay(dungeonKeyItem);
         }
@@ -190,6 +191,9 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
         if (wynnItem instanceof SkillPotionItem skillPotionItem) {
             return new SkillPotionOverlay(skillPotionItem);
+        }
+        if (wynnItem instanceof SkillPointItem skillPointItem) {
+            return new SkillPointOverlay(skillPointItem);
         }
 
         return null;
@@ -429,8 +433,37 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
+    public static class SkillPointOverlay implements TextOverlayInfo {
+        private final SkillPointItem item;
+
+        public SkillPointOverlay(SkillPointItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
+            String symbol = item.getSkill().getSymbol();
+            CustomColor color = CustomColor.fromChatFormatting(item.getSkill().getColor());
+
+            return new TextOverlay(
+                    new TextRenderTask(
+                            symbol,
+                            TextRenderSetting.DEFAULT
+                                    .withCustomColor(color)
+                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.skillIconShadow)),
+                    -1,
+                    1,
+                    0.9f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return ItemTextOverlayFeature.INSTANCE.skillIconEnabled;
+        }
+    }
+
     /**
      * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
      */
-    public static final record TextOverlay(TextRenderTask task, int xOffset, int yOffset, float scale) {}
+    public record TextOverlay(TextRenderTask task, int xOffset, int yOffset, float scale) {}
 }

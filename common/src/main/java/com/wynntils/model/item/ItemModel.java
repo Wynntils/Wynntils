@@ -42,6 +42,9 @@ import net.minecraft.world.item.ItemStack;
 public class ItemModel extends Model {
     @Override
     public void init() {
+        // FIXME: What is stealing our item stacks?!
+        Handlers.Item.registerAnnotator(new SkillPointAnnotator());
+
         // For efficiency, register these annotator first
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());
@@ -66,12 +69,10 @@ public class ItemModel extends Model {
         // === gui
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
-        Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
-
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
+
         Handlers.Item.registerAnnotator(new SearchOverlayAnnotator());
-        Handlers.Item.registerAnnotator(new SkillIconAnnotator());
     }
 
     @Override
@@ -84,12 +85,6 @@ public class ItemModel extends Model {
     public static final class SearchOverlayAnnotator extends PropertyAnnotator {
         public SearchOverlayAnnotator() {
             super(itemstack -> true, SearchOverlayProperty::new);
-        }
-    }
-
-    public static final class SkillIconAnnotator extends PropertyAnnotator {
-        public SkillIconAnnotator() {
-            super(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
         }
     }
 
