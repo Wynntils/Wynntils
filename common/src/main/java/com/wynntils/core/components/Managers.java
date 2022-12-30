@@ -27,7 +27,6 @@ import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.model.item.ItemManager;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -45,7 +44,6 @@ public final class Managers {
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final HorseManager Horse = new HorseManager();
-    public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
     public static final ObjectivesManager Objectives = new ObjectivesManager();

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.model.item.annotators.AmplifierAnnotator;
 import com.wynntils.model.item.annotators.CraftedConsumableAnnotator;
 import com.wynntils.model.item.annotators.CraftedGearAnnotator;
@@ -30,6 +31,7 @@ import com.wynntils.model.item.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.model.item.annotators.gui.ServerAnnotator;
 import com.wynntils.model.item.annotators.gui.SkillPointAnnotator;
 import com.wynntils.model.item.annotators.gui.SoulPointAnnotator;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
@@ -67,6 +69,14 @@ public class ItemModel extends Model {
 
         // This must be done last
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
+    }
+
+    public static Optional<WynnItem> getWynnItem(ItemStack itemStack) {
+        var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+
+        return Optional.of(wynnItem);
     }
 
     public static final class FallbackAnnotator implements ItemAnnotator {

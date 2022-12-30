@@ -7,8 +7,6 @@ package com.wynntils.features.user;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -18,15 +16,13 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.IngredientItemStack;
-import com.wynntils.wynn.item.UnidentifiedItemStack;
-import com.wynntils.wynn.item.WynnItemStack;
+import com.wynntils.model.item.ItemModel;
+import com.wynntils.model.item.game.GearBoxItem;
+import com.wynntils.model.item.game.IngredientItem;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -42,11 +38,6 @@ public class ItemFavoriteFeature extends UserFeature {
 
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.GearItemStack, Models.IngredientItemStack, Models.UnidentifiedItemStack);
-    }
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
@@ -82,14 +73,15 @@ public class ItemFavoriteFeature extends UserFeature {
             return true;
         }
 
-        if (itemStack instanceof IngredientItemStack ingredientItemStack) {
-            return ingredientItemStack.getIngredientProfile() != null
-                    && favoriteItems.contains(
-                            ingredientItemStack.getIngredientProfile().getDisplayName());
+        var wynnItemOpt = ItemModel.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return false;
+
+        if (wynnItemOpt.get() instanceof IngredientItem ingredientItem) {
+            return favoriteItems.contains(ingredientItem.getIngredientProfile().getDisplayName());
         }
 
-        if (itemStack instanceof UnidentifiedItemStack unidentifiedItemStack) {
-            for (String possibleItem : unidentifiedItemStack.getPossibleItems()) {
+        if (wynnItemOpt.get() instanceof GearBoxItem gearBoxItem) {
+            for (String possibleItem : gearBoxItem.getItemPossibilities()) {
                 if (favoriteItems.contains(possibleItem)) {
                     return true;
                 }
@@ -100,17 +92,8 @@ public class ItemFavoriteFeature extends UserFeature {
     }
 
     private static String getUnformattedItemName(ItemStack itemStack) {
-        String unformattedName;
-
-        if (itemStack instanceof GearItemStack gearItemStack) {
-            unformattedName = gearItemStack.getItemProfile().getDisplayName();
-        } else if (itemStack instanceof WynnItemStack wynnItemStack) {
-            unformattedName = wynnItemStack.getSimpleName();
-        } else {
-            unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        }
-
-        return unformattedName;
+        return WynnUtils.normalizeBadString(
+                ComponentUtils.stripFormatting(itemStack.getHoverName().getString()));
     }
 
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {

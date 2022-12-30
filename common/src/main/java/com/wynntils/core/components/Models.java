@@ -23,9 +23,6 @@ import com.wynntils.wynn.model.TabModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
 import com.wynntils.wynn.model.guild.GuildAttackTimerModel;
-import com.wynntils.wynn.model.item.ItemStackModel.GearItemStackModel;
-import com.wynntils.wynn.model.item.ItemStackModel.IngredientItemStackModel;
-import com.wynntils.wynn.model.item.ItemStackModel.UnidentifiedItemStackModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
@@ -36,11 +33,9 @@ public final class Models {
     public static final ChatItemModel ChatItem = new ChatItemModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
-    public static final GearItemStackModel GearItemStack = new GearItemStackModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();
     public static final HadesUserModel HadesUser = new HadesUserModel();
-    public static final IngredientItemStackModel IngredientItemStack = new IngredientItemStackModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
@@ -53,5 +48,4 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final TabModel Tab = new TabModel();
     public static final TranslationModel Translation = new TranslationModel();
-    public static final UnidentifiedItemStackModel UnidentifiedItemStack = new UnidentifiedItemStackModel();
 }
