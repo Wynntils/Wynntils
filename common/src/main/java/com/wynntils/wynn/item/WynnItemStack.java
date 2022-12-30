@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.item;
 
+import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.properties.ItemProperty;
@@ -22,6 +23,10 @@ public class WynnItemStack extends ItemStack implements ItemAnnotation {
     public WynnItemStack(ItemStack stack) {
         super(stack.getItem(), stack.getCount());
         if (stack.getTag() != null) setTag(stack.getTag());
+        ItemAnnotation annotation = ((AnnotatedItemStack) stack).getAnnotation();
+        if (annotation != null) {
+            ((AnnotatedItemStack) this).setAnnotation(annotation);
+        }
 
         itemName = WynnUtils.normalizeBadString(
                 ComponentUtils.stripFormatting(super.getHoverName().getString()));
