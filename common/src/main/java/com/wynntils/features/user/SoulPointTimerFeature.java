@@ -41,8 +41,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
         addon.add(Component.translatable(
                         "feature.wynntils.soulPointTimer.lore",
-                        ChatFormatting.WHITE
-                                + String.format("%d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
+                        ChatFormatting.WHITE + String.format("%d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
                 .withStyle(ChatFormatting.AQUA));
 
         return addon;

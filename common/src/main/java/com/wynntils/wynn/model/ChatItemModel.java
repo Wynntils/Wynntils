@@ -9,12 +9,11 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.item.GearItemStack;
-import com.wynntils.wynn.item.IdentificationOrderer;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -151,7 +150,7 @@ public final class ChatItemModel extends Model {
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(IdentificationOrderer.INSTANCE::getOrder));
+        sortedIds.sort(Comparator.comparingInt(ItemProfilesManager.identificationOrderer::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {
@@ -189,7 +188,7 @@ public final class ChatItemModel extends Model {
 
             // create ID and append to list
             ItemIdentificationContainer idContainer =
-                    WynnItemUtils.identificationFromValue(null, item, longIdName, shortIdName, value, stars);
+                    ItemProfilesManager.identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
         }
 

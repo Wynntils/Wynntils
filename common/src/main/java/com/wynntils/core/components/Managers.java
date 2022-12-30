@@ -21,7 +21,6 @@ import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
 import com.wynntils.wynn.model.HorseManager;
-import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
@@ -30,6 +29,7 @@ import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.model.item.ItemManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
