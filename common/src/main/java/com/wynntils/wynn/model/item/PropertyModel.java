@@ -8,10 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -38,13 +36,6 @@ public abstract class PropertyModel extends Model {
         Managers.ItemStackTransform.unregisterProperty(writer);
     }
 
-    /** Model Declarations **/
-    public static final class ConsumableChargePropertyModel extends PropertyModel {
-        public ConsumableChargePropertyModel() {
-            super(WynnItemMatchers::isConsumable, ConsumableChargeProperty::new);
-        }
-    }
-
     public static final class CosmeticTierPropertyModel extends PropertyModel {
         public CosmeticTierPropertyModel() {
             super(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
@@ -54,12 +45,6 @@ public abstract class PropertyModel extends Model {
     public static final class DailyRewardMultiplierPropertyModel extends PropertyModel {
         public DailyRewardMultiplierPropertyModel() {
             super(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
-        }
-    }
-
-    public static final class ItemTierPropertyModel extends PropertyModel {
-        public ItemTierPropertyModel() {
-            super(WynnItemMatchers::isTieredItem, ItemTierProperty::new);
         }
     }
 

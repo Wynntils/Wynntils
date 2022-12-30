@@ -31,10 +31,8 @@ import com.wynntils.wynn.model.item.ItemStackModel.PowderItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.ServerItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.SoulPointItemStackModel;
 import com.wynntils.wynn.model.item.ItemStackModel.UnidentifiedItemStackModel;
-import com.wynntils.wynn.model.item.PropertyModel.ConsumableChargePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.CosmeticTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.ItemTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SearchOverlayPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ServerCountPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SkillIconPropertyModel;
@@ -49,7 +47,6 @@ public final class Models {
     public static final ChatItemModel ChatItem = new ChatItemModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
-    public static final ConsumableChargePropertyModel ConsumableChargeProperty = new ConsumableChargePropertyModel();
     public static final CosmeticTierPropertyModel CosmeticTierProperty = new CosmeticTierPropertyModel();
     public static final DailyRewardMultiplierPropertyModel DailyRewardMultiplierProperty =
             new DailyRewardMultiplierPropertyModel();
@@ -62,7 +59,6 @@ public final class Models {
     public static final IntelligenceSkillPointsItemStackModel IntelligenceSkillPointsItemStack =
             new IntelligenceSkillPointsItemStackModel();
     public static final ItemModel Item = new ItemModel();
-    public static final ItemTierPropertyModel ItemTierProperty = new ItemTierPropertyModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
     public static final MapModel Map = new MapModel();

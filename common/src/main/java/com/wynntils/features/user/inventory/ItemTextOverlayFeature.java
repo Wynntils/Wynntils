@@ -39,7 +39,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
     public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
-            Models.ConsumableChargeProperty,
             Models.DailyRewardMultiplierProperty,
             Models.ServerCountProperty,
             Models.SkillIconProperty,
