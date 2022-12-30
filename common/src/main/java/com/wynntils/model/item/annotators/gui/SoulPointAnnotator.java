@@ -7,13 +7,19 @@ package com.wynntils.model.item.annotators.gui;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.model.item.gui.SoulPointItem;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class SoulPointAnnotator implements ItemAnnotator {
+    private static boolean isSoulPoint(ItemStack itemStack) {
+        return !itemStack.isEmpty()
+                && (itemStack.getItem() == Items.NETHER_STAR || itemStack.getItem() == Items.SNOW)
+                && itemStack.getDisplayName().getString().contains("Soul Point");
+    }
+
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        if (!WynnItemMatchers.isSoulPoint(itemStack)) return null;
+        if (!isSoulPoint(itemStack)) return null;
 
         return new SoulPointItem();
     }

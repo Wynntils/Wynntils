@@ -9,18 +9,23 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.model.item.game.HorseItem;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class HorseAnnotator implements ItemAnnotator {
     private static final Pattern HORSE_PATTERN = Pattern.compile(
             "§7Tier (\\d)§6Speed: (\\d+)/(\\d+)§6Jump: \\d+/\\d+§5Armour: None§bXp: (\\d+)/100(?:§cUntradable Item)?(:?§7Name: (.+))?");
 
+    private static boolean isHorse(ItemStack itemStack) {
+        return itemStack.getItem() == Items.SADDLE
+                && itemStack.getHoverName().getString().contains("Horse");
+    }
+
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        if (!WynnItemMatchers.isHorse(itemStack)) return null;
+        if (!isHorse(itemStack)) return null;
 
         String lore = ItemUtils.getStringLore(itemStack);
         Matcher m = HORSE_PATTERN.matcher(lore);

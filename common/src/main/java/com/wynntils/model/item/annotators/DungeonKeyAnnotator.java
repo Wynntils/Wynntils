@@ -8,17 +8,24 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.model.item.game.DungeonKeyItem;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class DungeonKeyAnnotator implements ItemAnnotator {
+    private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
+
+    public static Matcher dungeonKeyNameMatcher(Component text) {
+        return DUNGEON_KEY_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
+    }
+
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        Matcher keyMatcher = WynnItemMatchers.dungeonKeyNameMatcher(itemStack.getHoverName());
+        Matcher keyMatcher = dungeonKeyNameMatcher(itemStack.getHoverName());
         if (!keyMatcher.matches()) return null;
 
         if (!verifyDungeonKey(itemStack)) return null;
