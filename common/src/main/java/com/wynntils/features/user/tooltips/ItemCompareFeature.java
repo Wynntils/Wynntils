@@ -43,7 +43,7 @@ public class ItemCompareFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.GearItemStack);
+        return List.of();
     }
 
     @SubscribeEvent
@@ -75,6 +75,7 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
+        // FIXME
         if (!(hoveredItemStack instanceof GearItemStack hoveredGearItemStack)) {
             return;
         }

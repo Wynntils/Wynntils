@@ -37,7 +37,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar, Models.GearItemStack);
+        return List.of(Models.ActionBar);
     }
 
     public static class PowderSpecialBarOverlay extends Overlay {
@@ -68,6 +68,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             float powderSpecialCharge = Models.ActionBar.getPowderSpecialCharge();
             Powder powderSpecialType = Models.ActionBar.getPowderSpecialType();
+            // FIXME
             if (this.onlyIfWeaponHeld
                     && (!(McUtils.inventory().getSelected() instanceof GearItemStack gearItemStack)
                             || !gearItemStack
