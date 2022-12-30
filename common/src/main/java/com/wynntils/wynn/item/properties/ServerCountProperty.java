@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.item.properties;
 
+import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
@@ -14,7 +15,7 @@ import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 import java.util.regex.Matcher;
 
 public class ServerCountProperty extends ItemProperty implements TextOverlayProperty {
-    private final TextOverlay textOverlay;
+    private final ItemTextOverlayFeature.TextOverlay textOverlay;
 
     public ServerCountProperty(WynnItemStack item) {
         super(item);
@@ -31,7 +32,7 @@ public class ServerCountProperty extends ItemProperty implements TextOverlayProp
         item.setCount(1);
 
         float scale = serverId > 100 ? 0.85f : 1f;
-        textOverlay = new TextOverlay(
+        textOverlay = new ItemTextOverlayFeature.TextOverlay(
                 new TextRenderTask(
                         String.valueOf(serverId),
                         TextRenderSetting.DEFAULT
@@ -43,7 +44,7 @@ public class ServerCountProperty extends ItemProperty implements TextOverlayProp
     }
 
     @Override
-    public TextOverlay getTextOverlay() {
+    public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
         return textOverlay;
     }
 

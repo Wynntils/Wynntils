@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.item.properties.type;
 
-import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
 
 public interface TextOverlayProperty extends PropertyType {
 
-    TextOverlay getTextOverlay();
+    ItemTextOverlayFeature.TextOverlay getTextOverlay();
 
     boolean isTextOverlayEnabled();
 
@@ -26,8 +26,4 @@ public interface TextOverlayProperty extends PropertyType {
         return true;
     }
 
-    /**
-     * Describes an item's text overlay, with its color, position relative to the item's slot, and text scale.
-     */
-    record TextOverlay(TextRenderTask task, int xOffset, int yOffset, float scale) {}
 }

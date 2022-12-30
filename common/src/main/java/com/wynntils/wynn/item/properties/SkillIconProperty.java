@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 
 public class SkillIconProperty extends ItemProperty implements TextOverlayProperty {
-    private final TextOverlay textOverlay;
+    private final ItemTextOverlayFeature.TextOverlay textOverlay;
 
     public SkillIconProperty(WynnItemStack item) {
         super(item);
@@ -29,7 +29,7 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
                     ChatFormatting.getByCode(matcher.group(1).charAt(0)));
         }
 
-        textOverlay = new TextOverlay(
+        textOverlay = new ItemTextOverlayFeature.TextOverlay(
                 new TextRenderTask(
                         icon,
                         TextRenderSetting.DEFAULT
@@ -41,7 +41,7 @@ public class SkillIconProperty extends ItemProperty implements TextOverlayProper
     }
 
     @Override
-    public TextOverlay getTextOverlay() {
+    public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
         return textOverlay;
     }
 
