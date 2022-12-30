@@ -19,10 +19,4 @@ public class HidePotionGlintFeature extends UserFeature {
     public void onPotionGlint(DrawPotionGlintEvent e) {
         e.setCanceled(true);
     }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        // FIXME: Hacky as hell!
-        return List.of(Models.Item);
-    }
 }
