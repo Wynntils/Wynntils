@@ -35,7 +35,8 @@ public class GuideGearItemStack extends WynntilsButton {
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         // FIXME: This is kind of an ugly reference...
-        CustomColor color = ItemHighlightFeature.getHighlightColor(itemStack.getItemProfile().getTier());
+        CustomColor color = ItemHighlightFeature.getHighlightColor(
+                itemStack.getItemProfile().getTier());
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();

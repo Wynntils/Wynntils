@@ -12,7 +12,6 @@ import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
-import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.MaterialProperty;
@@ -64,12 +63,6 @@ public abstract class PropertyModel extends Model {
     public static final class GatheringToolPropertyModel extends PropertyModel {
         public GatheringToolPropertyModel() {
             super(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
-        }
-    }
-
-    public static final class HorsePropertyModel extends PropertyModel {
-        public HorsePropertyModel() {
-            super(WynnItemMatchers::isHorse, HorseProperty::new);
         }
     }
 

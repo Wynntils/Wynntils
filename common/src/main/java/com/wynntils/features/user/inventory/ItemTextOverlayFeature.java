@@ -30,7 +30,6 @@ import com.wynntils.model.item.game.SkillPotionItem;
 import com.wynntils.model.item.game.TeleportScrollItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -257,7 +256,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     public static class AmplifierOverlay implements TextOverlayInfo {
-        private final static CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
+        private static final CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
 
         private final AmplifierItem item;
 

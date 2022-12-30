@@ -12,7 +12,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
-import com.wynntils.wynn.utils.EntityUtils;
+import com.wynntils.wynn.model.HorseManager;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
@@ -46,9 +46,9 @@ public class MountHorseHotkeyFeature extends UserFeature {
             return;
         }
 
-        AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
+        AbstractHorse horse = HorseManager.searchForHorseNearby(SEARCH_RADIUS);
         if (horse == null) { // Horse has not spawned, we should do that
-            int horseInventorySlot = InventoryUtils.findHorseSlotNum();
+            int horseInventorySlot = HorseManager.findHorseSlotNum();
             if (horseInventorySlot > 8 || horseInventorySlot == -1) {
                 postHorseErrorMessage(MountHorseStatus.NO_HORSE);
                 return;
@@ -81,7 +81,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
 
         Delay.create(
                 () -> {
-                    AbstractHorse horse = EntityUtils.searchForHorseNearby(SEARCH_RADIUS);
+                    AbstractHorse horse = HorseManager.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;

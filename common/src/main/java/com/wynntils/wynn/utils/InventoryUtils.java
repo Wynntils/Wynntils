@@ -49,17 +49,6 @@ public final class InventoryUtils {
                 changedSlots));
     }
 
-    public static int findHorseSlotNum() {
-        Inventory inventory = McUtils.inventory();
-        for (int slotNum = 0; slotNum <= 44; slotNum++) {
-            ItemStack stack = inventory.getItem(slotNum);
-            if (WynnItemMatchers.isHorse(stack)) {
-                return slotNum;
-            }
-        }
-        return -1;
-    }
-
     public static int getEmptySlots(Inventory inventory) {
         if (inventory == null) return 0;
         int slots = 0;

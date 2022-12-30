@@ -20,6 +20,7 @@ import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
+import com.wynntils.wynn.model.HorseManager;
 import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
@@ -43,6 +44,7 @@ public final class Managers {
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
+    public static final HorseManager Horse = new HorseManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();

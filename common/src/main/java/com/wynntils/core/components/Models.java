@@ -35,7 +35,6 @@ import com.wynntils.wynn.model.item.PropertyModel.ConsumableChargePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.CosmeticTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DailyRewardMultiplierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.GatheringToolPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.HorsePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.IngredientPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ItemTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.MaterialPropertyModel;
@@ -63,7 +62,6 @@ public final class Models {
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();
     public static final HadesUserModel HadesUser = new HadesUserModel();
-    public static final HorsePropertyModel HorseProperty = new HorsePropertyModel();
     public static final IngredientItemStackModel IngredientItemStack = new IngredientItemStackModel();
     public static final IngredientPropertyModel IngredientProperty = new IngredientPropertyModel();
     public static final IntelligenceSkillPointsItemStackModel IntelligenceSkillPointsItemStack =

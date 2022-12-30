@@ -5,7 +5,6 @@
 package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
