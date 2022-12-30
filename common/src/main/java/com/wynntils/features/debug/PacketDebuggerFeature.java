@@ -6,6 +6,7 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.Arrays;
@@ -34,9 +35,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@StartDisabled
 public class PacketDebuggerFeature extends DebugFeature {
-    private static final boolean DEBUG_PACKETS = false;
-
     /* These packets just spam the log; ignore them. */
     private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
             // General
@@ -74,8 +74,6 @@ public class PacketDebuggerFeature extends DebugFeature {
 
     @SubscribeEvent
     public void onPacketSent(PacketSentEvent<?> e) {
-        if (!DEBUG_PACKETS) return;
-
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 
@@ -84,8 +82,6 @@ public class PacketDebuggerFeature extends DebugFeature {
 
     @SubscribeEvent
     public void onPacketReceived(PacketReceivedEvent<?> e) {
-        if (!DEBUG_PACKETS) return;
-
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
 

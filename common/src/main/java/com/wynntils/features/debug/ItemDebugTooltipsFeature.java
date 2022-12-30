@@ -5,17 +5,23 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.model.item.ItemModel;
 import com.wynntils.model.item.WynnItem;
+import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
+@StartDisabled
 public class ItemDebugTooltipsFeature extends DebugFeature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -31,9 +37,19 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        addon.add(Component.literal("Wynn Item Type: ")
-                .withStyle(ChatFormatting.DARK_GREEN)
-                .append(Component.literal(wynnItem.toString()).withStyle(ChatFormatting.GREEN)));
+        addon.add(Component.literal("Wynn Item Type: ").withStyle(ChatFormatting.GREEN));
+
+        List<String> wrappedDescription = Arrays.stream(StringUtils.wrapTextBySize(wynnItem.toString(), 150))
+                .toList();
+        if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
+            wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 4));
+            wrappedDescription.add("...");
+            wrappedDescription.add("Press Right Shift for all");
+        }
+
+        for (String line : wrappedDescription) {
+            addon.add(Component.literal(line).withStyle(ChatFormatting.DARK_GREEN));
+        }
 
         return addon;
     }
