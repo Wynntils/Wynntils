@@ -85,5 +85,6 @@
   "feature.wynntils.containerSearch.filterInGuildMemberList.name": "Keresési Sáv a Szövetség Tagjainál",
   "feature.wynntils.containerSearch.highlightColor.description": "Milyen színűek legyenek a kiemeléses körök?",
   "feature.wynntils.itemScreenshot.chatItemMessage": "Kattintson ide az tárgy másolásához a chat-hez!",
-  "feature.wynntils.itemScreenshot.chatItemTooltip": "Illeszd be ezt az üzenetet a chat-be hogy megjelenjen a tárgyad más Wynntils felhasználóknak"
+  "feature.wynntils.itemScreenshot.chatItemTooltip": "Illeszd be ezt az üzenetet a chat-be hogy megjelenjen a tárgyad más Wynntils felhasználóknak",
+  "feature.wynntils.map.lootChestTier1PoiMinZoom.name": "1-es Szintű Láda Jelölés Minimum Nagyítás"
 }
