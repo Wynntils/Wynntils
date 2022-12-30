@@ -4,13 +4,18 @@
  */
 package com.wynntils.handlers.item;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.McUtils;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,13 +47,35 @@ public class ItemHandler extends Handler {
         // Don't redo if we already have an annotation
         if (annotation != null) return;
 
-        Optional<ItemAnnotation> annotationOpt = annotators.stream()
-                .map(annotator -> annotator.getAnnotation(item))
-                .filter(Objects::nonNull)
-                .findFirst();
+        List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
+        for (ItemAnnotator annotator : annotators) {
+            try {
+                annotation = annotator.getAnnotation(item);
+                if (annotation != null) {
+                    break;
+                }
+            } catch (Throwable t) {
+                String annotatorName = annotator.getClass().getSimpleName();
+                WynntilsMod.error("Exception when processing item annotator " + annotatorName, t);
+                WynntilsMod.warn("This annotator will be disabled");
+                WynntilsMod.warn("Problematic item:" + item);
+                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(item.getHoverName()));
+                WynntilsMod.warn("Problematic item tags:" + item.getTag());
+                McUtils.sendMessageToClient(Component.literal("Wynntils error: Item Annotator '" + annotatorName
+                                + "' has crashed and will be disabled. Not all items will be properly parsed.")
+                        .withStyle(ChatFormatting.RED));
+                // We can't disable it right away since that will cause ConcurrentModificationException
+                crashedAnnotators.add(annotator);
+            }
+        }
 
-        if (annotationOpt.isEmpty()) return;
+        // Hopefully we have none :)
+        for (ItemAnnotator annotator : crashedAnnotators) {
+            annotators.remove(annotator);
+        }
 
-        ((AnnotatedItemStack) item).setAnnotation(annotationOpt.get());
+        if (annotation == null) return;
+
+        ((AnnotatedItemStack) item).setAnnotation(annotation);
     }
 }
