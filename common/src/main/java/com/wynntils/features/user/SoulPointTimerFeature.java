@@ -25,8 +25,9 @@ public class SoulPointTimerFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof SoulPointItem soulPointItem)) return;
 
-        List<Component> tooltips = event.getTooltips();
+        List<Component> tooltips = new ArrayList<>(event.getTooltips());
         tooltips.addAll(getTooltipAddon());
+        event.setTooltips(tooltips);
     }
 
     private List<Component> getTooltipAddon() {
