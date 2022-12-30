@@ -21,6 +21,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.model.item.game.GameItem;
 import com.wynntils.model.item.game.IngredientItem;
 import com.wynntils.model.item.game.MaterialItem;
+import com.wynntils.model.item.game.PowderItem;
 import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
@@ -31,8 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public static final List<Model> HIGHLIGHT_PROPERTIES =
-            List.of(Models.CosmeticTierProperty, Models.EmeraldPouchItemStack, Models.PowderTierProperty);
+    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(Models.CosmeticTierProperty);
     private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
         @Override
         public CustomColor getHighlightColor() {
@@ -220,6 +220,9 @@ public class ItemHighlightFeature extends UserFeature {
         if (wynnItem instanceof MaterialItem materialItem) {
             return new MaterialHighlight(materialItem);
         }
+        if (wynnItem instanceof PowderItem powderItem) {
+            return new PowderHighlight(powderItem);
+        }
         if (wynnItem instanceof GearTierItemProperty gearItem) {
             return new GearHighlight(gearItem);
         }
@@ -299,6 +302,24 @@ public class ItemHighlightFeature extends UserFeature {
                 case 3 -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightEnabled;
                 default -> false; // should not happen
             };
+        }
+    }
+
+    public static class PowderHighlight implements HighlightInfo {
+        private final PowderItem item;
+
+        public PowderHighlight(PowderItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return ItemHighlightFeature.INSTANCE.powderHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return item.getPowderProfile().element().getColor();
         }
     }
 
