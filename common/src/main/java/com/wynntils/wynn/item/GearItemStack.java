@@ -235,7 +235,7 @@ public class GearItemStack extends WynnItemStack {
     }
 
     public List<ItemIdentificationContainer> getOrderedIdentifications() {
-        return Managers.ItemProfiles.identificationOrderer.orderIdentifications(identifications);
+        return Managers.ItemProfiles.orderIdentifications(identifications);
     }
 
     public List<Powder> getPowders() {
@@ -408,11 +408,11 @@ public class GearItemStack extends WynnItemStack {
             Collection<Component> orderedRerolls;
 
             if (ItemStatInfoFeature.INSTANCE.reorderIdentifications || isGuideStack) {
-                orderedPercents = Managers.ItemProfiles.identificationOrderer.orderComponents(
+                orderedPercents = Managers.ItemProfiles.orderComponents(
                         percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRanges = Managers.ItemProfiles.identificationOrderer.orderComponents(
+                orderedRanges = Managers.ItemProfiles.orderComponents(
                         rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRerolls = Managers.ItemProfiles.identificationOrderer.orderComponents(
+                orderedRerolls = Managers.ItemProfiles.orderComponents(
                         rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
             } else {
                 orderedPercents = percentMap.values();

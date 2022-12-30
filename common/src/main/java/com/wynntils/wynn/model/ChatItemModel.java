@@ -149,7 +149,7 @@ public final class ChatItemModel extends Model {
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles.identificationOrderer::getOrder));
+        sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {

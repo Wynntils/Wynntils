@@ -47,7 +47,6 @@ public final class ItemProfilesManager extends Manager {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
-    public static IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
 
     static {
         COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
@@ -56,6 +55,7 @@ public final class ItemProfilesManager extends Manager {
         COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
     }
 
+    private IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
     private Map<String, ItemProfile> items = Map.of();
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = Map.of();
@@ -70,8 +70,20 @@ public final class ItemProfilesManager extends Manager {
         loadData();
     }
 
-    public static boolean isInverted(String id) {
+    public boolean isInverted(String id) {
         return identificationOrderer.isInverted(id);
+    }
+
+    public List<Component> orderComponents(Map<String, Component> holder, boolean groups) {
+        return identificationOrderer.orderComponents(holder, groups);
+    }
+
+    public List<ItemIdentificationContainer> orderIdentifications(List<ItemIdentificationContainer> ids) {
+        return identificationOrderer.orderIdentifications(ids);
+    }
+
+    public int getOrder(String id) {
+        return identificationOrderer.getOrder(id);
     }
 
     /**
@@ -82,7 +94,7 @@ public final class ItemProfilesManager extends Manager {
      * @param item the ItemProfile of the given item
      * @return the parsed ItemIdentificationContainer, or null if invalid lore line
      */
-    public static ItemIdentificationContainer identificationFromLore(Component lore, ItemProfile item) {
+    public ItemIdentificationContainer identificationFromLore(Component lore, ItemProfile item) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return null; // not a valid id line
@@ -115,7 +127,7 @@ public final class ItemProfilesManager extends Manager {
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    public static ItemIdentificationContainer identificationFromValue(
+    public ItemIdentificationContainer identificationFromValue(
             Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         boolean isInverted = idProfile != null ? idProfile.isInverted() : identificationOrderer.isInverted(shortIdName);
@@ -184,7 +196,7 @@ public final class ItemProfilesManager extends Manager {
      * @param percentage the percent roll of the ID
      * @return the styled percentage text component
      */
-    public static MutableComponent getPercentageTextComponent(float percentage) {
+    public MutableComponent getPercentageTextComponent(float percentage) {
         Style color = Style.EMPTY
                 .withColor(
                         ItemStatInfoFeature.INSTANCE.colorLerp
@@ -204,7 +216,7 @@ public final class ItemProfilesManager extends Manager {
      * @param max the maximum stat roll
      * @return the styled ID range text component
      */
-    public static MutableComponent getRangeTextComponent(int min, int max) {
+    public MutableComponent getRangeTextComponent(int min, int max) {
         return Component.literal(" [")
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")
@@ -219,7 +231,7 @@ public final class ItemProfilesManager extends Manager {
      * @param decrease the chance of a decreased roll
      * @return the styled reroll chance text component
      */
-    public static MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
+    public MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
         return Component.literal(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
@@ -228,7 +240,7 @@ public final class ItemProfilesManager extends Manager {
                         .withStyle(ChatFormatting.RED));
     }
 
-    private static TextColor getPercentageColor(float percentage) {
+    private TextColor getPercentageColor(float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = COLOR_MAP.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = COLOR_MAP.ceilingEntry(percentage);
 
@@ -255,7 +267,7 @@ public final class ItemProfilesManager extends Manager {
         return TextColor.fromRgb((r << 16) | (g << 8) | b);
     }
 
-    private static TextColor getFlatPercentageColor(float percentage) {
+    private TextColor getFlatPercentageColor(float percentage) {
         if (percentage < 30f) {
             return TextColor.fromLegacyFormat(ChatFormatting.RED);
         } else if (percentage < 80f) {
@@ -306,7 +318,6 @@ public final class ItemProfilesManager extends Manager {
             Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
-            // FIXME: We should not be doing Singleton housekeeping for IdentificationOrderer!
             identificationOrderer =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
