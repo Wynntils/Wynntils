@@ -42,7 +42,7 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
         List<String> wrappedDescription = Arrays.stream(StringUtils.wrapTextBySize(wynnItem.toString(), 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
-            wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 4));
+            wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));
             wrappedDescription.add("...");
             wrappedDescription.add("Press Right Shift for all");
         }
