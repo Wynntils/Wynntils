@@ -45,6 +45,7 @@ import com.wynntils.features.user.HadesFeature;
 import com.wynntils.features.user.HealthPotionBlockerFeature;
 import com.wynntils.features.user.InfoMessageFilterFeature;
 import com.wynntils.features.user.IngredientPouchHotkeyFeature;
+import com.wynntils.features.debug.ItemDebugTooltipFeature;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.ItemLockFeature;
 import com.wynntils.features.user.ItemScreenshotFeature;
@@ -115,6 +116,7 @@ public final class FeatureRegistry {
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new ItemDebugTooltipFeature());
         registerFeature(new LogItemInfoFeature());
         registerFeature(new PacketDebuggerFeature());
 
