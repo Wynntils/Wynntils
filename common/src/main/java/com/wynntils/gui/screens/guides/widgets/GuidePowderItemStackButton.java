@@ -17,16 +17,16 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.item.PowderItemStack;
+import com.wynntils.gui.screens.guides.GuidePowderItemStack;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuidePowderItemStack extends WynntilsButton {
-    private final PowderItemStack itemStack;
+public class GuidePowderItemStackButton extends WynntilsButton {
+    private final GuidePowderItemStack itemStack;
     private final WynntilsPowderGuideScreen screen;
 
-    public GuidePowderItemStack(
-            int x, int y, int width, int height, PowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
+    public GuidePowderItemStackButton(
+            int x, int y, int width, int height, GuidePowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide PowderItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
@@ -106,7 +106,7 @@ public class GuidePowderItemStack extends WynntilsButton {
     @Override
     public void onPress() {}
 
-    public PowderItemStack getItemStack() {
+    public GuidePowderItemStack getItemStack() {
         return itemStack;
     }
 }

@@ -13,14 +13,13 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuidePowderItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuidePowderItemStackButton;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -29,11 +28,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<PowderItemStack, GuidePowderItemStack> {
+public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<GuidePowderItemStack, GuidePowderItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<PowderItemStack> parsedItemCache;
+    private List<GuidePowderItemStack> parsedItemCache;
 
     private WynntilsPowderGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.powder.name"));
@@ -47,7 +46,7 @@ public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<Powd
     protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = PowderProfile.getAllPowderProfiles().stream()
-                    .map(PowderItemStack::new)
+                    .map(GuidePowderItemStack::new)
                     .toList();
         }
 
@@ -102,8 +101,8 @@ public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<Powd
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuidePowderItemStack guidePowderItemStack) {
-            PowderItemStack itemStack = guidePowderItemStack.getItemStack();
+        if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
+            GuidePowderItemStack itemStack = guidePowderItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
@@ -141,11 +140,11 @@ public final class WynntilsPowderGuideScreen extends WynntilsMenuListScreen<Powd
     }
 
     @Override
-    protected GuidePowderItemStack getButtonFromElement(int i) {
+    protected GuidePowderItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuidePowderItemStack(
+        return new GuidePowderItemStackButton(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 

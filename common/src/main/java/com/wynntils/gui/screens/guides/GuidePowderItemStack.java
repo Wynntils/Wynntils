@@ -2,73 +2,47 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item;
+package com.wynntils.gui.screens.guides;
 
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class PowderItemStack extends WynnItemStack {
+public class GuidePowderItemStack extends WynnItemStack {
     private final int tier;
     private final Powder element;
     private final PowderProfile powderProfile;
 
-    private final boolean generated;
-
     private final List<Component> generatedTooltip;
 
-    public PowderItemStack(ItemStack stack) {
-        super(stack);
-
-        Matcher matcher = WynnItemMatchers.powderNameMatcher(this.getHoverName());
-
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("ItemStack name did not match powder matcher");
-        }
-
-        element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));
-        tier = MathUtils.integerFromRoman(matcher.group(2));
-        powderProfile = PowderProfile.getPowderProfile(element, tier);
-        generated = false;
-        generatedTooltip = List.of();
-    }
-
-    public PowderItemStack(PowderProfile profile) {
+    public GuidePowderItemStack(PowderProfile profile) {
         super(getItemStack(profile));
 
         this.element = profile.element();
         this.tier = profile.tier();
         this.powderProfile = profile;
-        this.generated = true;
         this.generatedTooltip = generateLore();
     }
 
     @Override
     public Component getHoverName() {
-        return generated
-                ? Component.literal(
-                                element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
-                        .withStyle(element.getLightColor())
-                : super.getHoverName();
+        return Component.literal(
+                        element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
+                .withStyle(element.getLightColor());
     }
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
-        if (!generated) {
-            return super.getTooltipLines(player, flag);
-        }
-
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
