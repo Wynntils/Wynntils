@@ -35,7 +35,7 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        addon.add(Component.literal("Wynn Item Type: ").withStyle(ChatFormatting.GREEN));
+        addon.add(Component.literal("Wynn Item Type:").withStyle(ChatFormatting.GREEN));
 
         List<String> wrappedDescription = Arrays.stream(StringUtils.wrapTextBySize(wynnItem.toString(), 150))
                 .toList();
