@@ -113,4 +113,19 @@ public class IngredientProfile {
 
         return itemStack;
     }
+
+    @Override
+    public String toString() {
+        return "IngredientProfile{" + "name='"
+                + name + '\'' + ", ingredientTier="
+                + ingredientTier + ", untradeable="
+                + untradeable + ", level="
+                + level + ", material='"
+                + material + '\'' + ", professions="
+                + professions + ", statuses="
+                + statuses + ", itemModifiers="
+                + itemModifiers + ", ingredientModifiers="
+                + ingredientModifiers + ", ingredientInfo="
+                + ingredientInfo + '}';
+    }
 }
