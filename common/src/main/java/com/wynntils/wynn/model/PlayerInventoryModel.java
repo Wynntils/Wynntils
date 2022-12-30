@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -16,8 +15,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
-
-    private int emeralds = 0;
     private int openSlots = 0;
 
     @Override
@@ -57,17 +54,11 @@ public final class PlayerInventoryModel extends Model {
 
     private void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
-        emeralds = Managers.Emerald.getEmeraldCountInContainer(inventory);
         openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
     private void resetCache() {
-        emeralds = 0;
         openSlots = 0;
-    }
-
-    public int getCurrentEmeraldCount() {
-        return emeralds;
     }
 
     public int getOpenInvSlots() {

@@ -6,21 +6,29 @@ package com.wynntils.wynn.model.emeralds;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Tools for retrieving information about emerald pouches */
 public final class EmeraldManager extends Manager {
@@ -28,9 +36,14 @@ public final class EmeraldManager extends Manager {
             Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
+    public int emeralds = 0;
 
     public EmeraldManager() {
         super(List.of());
+    }
+
+    public int getCurrentEmeraldCount() {
+        return emeralds;
     }
 
     public int getPouchUsage(ItemStack stack) {
@@ -98,5 +111,39 @@ public final class EmeraldManager extends Manager {
             }
         }
         return emeraldPouches;
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        if (e.getNewState() == WorldStateManager.State.WORLD) {
+            updateCache();
+        } else {
+            resetCache();
+        }
+    }
+
+    @SubscribeEvent
+    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        // Only update if the container is the player inventory
+        if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
+            updateCache();
+        }
+    }
+
+    @SubscribeEvent
+    public void onSlotSetEvent(SetSlotEvent.Post e) {
+        // Only update if the container is the player inventory
+        if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
+            updateCache();
+        }
+    }
+
+    private void updateCache() {
+        InventoryMenu inventory = McUtils.inventoryMenu();
+        emeralds = getEmeraldCountInContainer(inventory);
+    }
+
+    private void resetCache() {
+        emeralds = 0;
     }
 }

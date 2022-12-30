@@ -56,7 +56,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int emeralds = Managers.Emerald.getEmeraldCountInContainer(McUtils.containerMenu());
 
         if (!(event.getScreen() instanceof InventoryScreen)) {
-            emeralds -= Models.PlayerInventory.getCurrentEmeraldCount();
+            emeralds -= Managers.Emerald.getCurrentEmeraldCount();
         }
 
         if (emeralds == 0) return;
