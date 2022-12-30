@@ -33,6 +33,8 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
+    private List<GearItemStack> allGearItems = List.of();
+
     private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
     }
@@ -144,10 +146,21 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Managers.Item.getAllGearItems().stream()
+        elements.addAll(getAllGearItems().stream()
                 .filter(gearItemStack -> StringUtils.partialMatch(
                         ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
                 .toList());
+    }
+
+    public List<GearItemStack> getAllGearItems() {
+        if (allGearItems.isEmpty()) {
+            // Populate list
+            allGearItems = Managers.ItemProfiles.getItemsCollection().stream()
+                    .map(GearItemStack::new)
+                    .toList();
+        }
+
+        return allGearItems;
     }
 
     @Override
