@@ -10,21 +10,26 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.guides.GuideIngredientItemStack;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.item.IngredientItemStack;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideIngredientItemStack extends WynntilsButton {
-    private final IngredientItemStack itemStack;
+public class GuideIngredientItemStackButton extends WynntilsButton {
+    private final GuideIngredientItemStack itemStack;
     private final WynntilsIngredientGuideScreen screen;
 
-    public GuideIngredientItemStack(
-            int x, int y, int width, int height, IngredientItemStack itemStack, WynntilsIngredientGuideScreen screen) {
+    public GuideIngredientItemStackButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            GuideIngredientItemStack itemStack,
+            WynntilsIngredientGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide IngredientItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
@@ -92,7 +97,7 @@ public class GuideIngredientItemStack extends WynntilsButton {
     @Override
     public void onPress() {}
 
-    public IngredientItemStack getItemStack() {
+    public GuideIngredientItemStack getItemStack() {
         return itemStack;
     }
 }

@@ -36,8 +36,7 @@ public class GuidePowderItemStack extends WynnItemStack {
 
     @Override
     public Component getHoverName() {
-        return Component.literal(
-                        element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
+        return Component.literal(element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
                 .withStyle(element.getLightColor());
     }
 

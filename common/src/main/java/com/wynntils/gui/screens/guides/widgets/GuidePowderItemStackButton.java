@@ -11,13 +11,13 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.guides.GuidePowderItemStack;
 import com.wynntils.gui.screens.guides.WynntilsPowderGuideScreen;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.gui.screens.guides.GuidePowderItemStack;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 

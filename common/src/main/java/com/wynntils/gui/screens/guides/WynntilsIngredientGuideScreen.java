@@ -14,14 +14,13 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuideIngredientItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuideIngredientItemStackButton;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.IngredientItemStack;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,9 +29,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class WynntilsIngredientGuideScreen
-        extends WynntilsMenuListScreen<IngredientItemStack, GuideIngredientItemStack> {
+        extends WynntilsMenuListScreen<GuideIngredientItemStack, GuideIngredientItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
+
+    private List<GuideIngredientItemStack> allIngredientItems = List.of();
 
     private WynntilsIngredientGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
@@ -118,8 +119,8 @@ public final class WynntilsIngredientGuideScreen
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuideIngredientItemStack guideGearItemStack) {
-            IngredientItemStack itemStack = guideGearItemStack.getItemStack();
+        if (hovered instanceof GuideIngredientItemStackButton guideGearItemStack) {
+            GuideIngredientItemStack itemStack = guideGearItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
@@ -159,20 +160,30 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
-    protected GuideIngredientItemStack getButtonFromElement(int i) {
+    protected GuideIngredientItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideIngredientItemStack(
+        return new GuideIngredientItemStackButton(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Managers.Item.getAllIngredientItems().stream()
+        elements.addAll(getAllIngredientItems().stream()
                 .filter(itemStack ->
                         StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
                 .toList());
+    }
+
+    private List<GuideIngredientItemStack> getAllIngredientItems() {
+        if (allIngredientItems.isEmpty()) {
+            allIngredientItems = Managers.ItemProfiles.getIngredientsCollection().stream()
+                    .map(GuideIngredientItemStack::new)
+                    .toList();
+        }
+
+        return allIngredientItems;
     }
 
     @Override

@@ -2,10 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item;
+package com.wynntils.gui.screens.guides;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientItemModifiers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientModifiers;
@@ -15,37 +14,19 @@ import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class IngredientItemStack extends WynnItemStack {
-    private final boolean isGuideStack;
-
+public class GuideIngredientItemStack extends WynnItemStack {
     private final List<MutableComponent> guideTooltip;
 
     private final IngredientProfile ingredientProfile;
 
-    public IngredientItemStack(ItemStack stack) {
-        super(stack);
-
-        Matcher matcher = WynnItemMatchers.ingredientOrMaterialMatcher(stack.getHoverName());
-        if (!matcher.matches()) {
-            throw new IllegalStateException("Matcher did not match for IngredientItemStack");
-        }
-
-        ingredientProfile = Managers.ItemProfiles.getIngredient(matcher.group(1));
-
-        isGuideStack = false;
-        guideTooltip = List.of();
-    }
-
-    public IngredientItemStack(IngredientProfile ingredientProfile) {
+    public GuideIngredientItemStack(IngredientProfile ingredientProfile) {
         super(ingredientProfile.asItemStack());
 
         CompoundTag tag = this.getOrCreateTag();
@@ -53,7 +34,6 @@ public class IngredientItemStack extends WynnItemStack {
 
         this.ingredientProfile = ingredientProfile;
 
-        isGuideStack = true;
         guideTooltip = generateGuideTooltip();
     }
 
@@ -62,23 +42,15 @@ public class IngredientItemStack extends WynnItemStack {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
 
-        if (isGuideStack) {
-            tooltip.addAll(guideTooltip);
-            return tooltip;
-        }
-
-        return super.getTooltipLines(player, isAdvanced);
+        tooltip.addAll(guideTooltip);
+        return tooltip;
     }
 
     @Override
     public Component getHoverName() {
-        if (isGuideStack) {
-            return Component.literal(ingredientProfile.getDisplayName())
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(" " + ingredientProfile.getTier().getTierString()));
-        }
-
-        return super.getHoverName();
+        return Component.literal(ingredientProfile.getDisplayName())
+                .withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(" " + ingredientProfile.getTier().getTierString()));
     }
 
     private List<MutableComponent> generateGuideTooltip() {
