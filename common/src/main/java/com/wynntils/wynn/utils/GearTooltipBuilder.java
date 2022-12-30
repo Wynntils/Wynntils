@@ -6,9 +6,9 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
-import com.wynntils.model.item.game.GearItem;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;

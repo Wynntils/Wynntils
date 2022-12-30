@@ -15,7 +15,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.model.item.game.GearBoxItem;
+import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;

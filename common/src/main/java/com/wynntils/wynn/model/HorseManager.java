@@ -8,7 +8,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.model.item.game.HorseItem;
+import com.wynntils.wynn.handleditems.items.game.HorseItem;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
