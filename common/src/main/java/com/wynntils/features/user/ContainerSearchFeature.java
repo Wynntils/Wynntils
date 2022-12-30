@@ -11,6 +11,8 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.widgets.SearchWidget;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -21,12 +23,12 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.model.item.WynnItem;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
@@ -80,10 +82,11 @@ public class ContainerSearchFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
+        if (annotationOpt.isEmpty()) return;
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
 
-        if (!(item instanceof WynnItemStack wynnItemStack)) return;
-
-        if (!wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).isSearched()) return;
+        if (!wynnItem.isSearched()) return;
 
         RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
@@ -181,14 +184,16 @@ public class ContainerSearchFeature extends UserFeature {
 
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack item : screen.getMenu().getItems()) {
-            if (!(item instanceof WynnItemStack wynnItemStack)) continue;
+            Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
+            if (annotationOpt.isEmpty()) return;
+            if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
             if (playerItems.contains(item)) continue;
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
 
-            wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
+            wynnItem.setSearched(filtered);
 
             if (filtered) {
                 autoSearching = false;

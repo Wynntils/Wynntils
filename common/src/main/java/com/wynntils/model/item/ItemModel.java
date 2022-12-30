@@ -30,13 +30,6 @@ import com.wynntils.model.item.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.model.item.annotators.gui.ServerAnnotator;
 import com.wynntils.model.item.annotators.gui.SkillPointAnnotator;
 import com.wynntils.model.item.annotators.gui.SoulPointAnnotator;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.SearchOverlayProperty;
-import com.wynntils.wynn.item.properties.SkillIconProperty;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
@@ -72,54 +65,14 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
 
-        Handlers.Item.registerAnnotator(new SearchOverlayAnnotator());
+        // This must be done last
+        Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 
-    @Override
-    public void disable() {
-        // FIXME
-    }
-
-    /// ==== gui ====
-
-    public static final class SearchOverlayAnnotator extends PropertyAnnotator {
-        public SearchOverlayAnnotator() {
-            super(itemstack -> true, SearchOverlayProperty::new);
-        }
-    }
-
-    public abstract static class Annotator implements ItemAnnotator {
-        private final Predicate<ItemStack> pred;
-        private final Function<ItemStack, WynnItemStack> cons;
-
-        protected Annotator(Predicate<ItemStack> pred, Function<ItemStack, WynnItemStack> cons) {
-            this.pred = pred;
-            this.cons = cons;
-        }
-
-        public ItemAnnotation getAnnotation(ItemStack itemStack) {
-            if (!pred.test(itemStack)) return null;
-            WynnItemStack converted = cons.apply(itemStack);
-
-            return converted;
-        }
-    }
-
-    public abstract static class PropertyAnnotator implements ItemAnnotator {
-        private final Predicate<ItemStack> pred;
-        private final Consumer<WynnItemStack> cons;
-
-        protected PropertyAnnotator(Predicate<ItemStack> pred, Consumer<WynnItemStack> cons) {
-            this.pred = pred;
-            this.cons = cons;
-        }
-
+    public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
         public ItemAnnotation getAnnotation(ItemStack itemStack) {
-            if (!pred.test(itemStack)) return null;
-
-            cons.accept(new WynnItemStack(itemStack));
-            return null;
+            return new WynnItem();
         }
     }
 }

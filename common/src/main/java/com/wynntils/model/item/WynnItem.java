@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class WynnItem implements ItemAnnotation {
     private Map<Class<?>, Object> cache = new HashMap<>();
+    private boolean searched = false;
 
     public <T> T getCached(Class<T> clazz) {
         return (T) cache.get(clazz);
@@ -17,5 +18,13 @@ public class WynnItem implements ItemAnnotation {
 
     public <T> void storeInCache(T obj) {
         cache.put(obj.getClass(), obj);
+    }
+
+    public void setSearched(boolean searched) {
+        this.searched = searched;
+    }
+
+    public boolean isSearched() {
+        return searched;
     }
 }
