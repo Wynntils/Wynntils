@@ -64,7 +64,6 @@ public final class Models {
     public static final CosmeticTierPropertyModel CosmeticTierProperty = new CosmeticTierPropertyModel();
     public static final DailyRewardMultiplierPropertyModel DailyRewardMultiplierProperty =
             new DailyRewardMultiplierPropertyModel();
-    public static final DungeonKeyPropertyModel DungeonKeyProperty = new DungeonKeyPropertyModel();
     public static final DurabilityPropertyModel DurabilityProperty = new DurabilityPropertyModel();
     public static final EmeraldPouchItemStackModel EmeraldPouchItemStack = new EmeraldPouchItemStackModel();
     public static final EmeraldPouchTierPropertyModel EmeraldPouchTierProperty = new EmeraldPouchTierPropertyModel();

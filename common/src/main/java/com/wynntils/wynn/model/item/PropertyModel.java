@@ -12,7 +12,6 @@ import com.wynntils.wynn.item.properties.AmplifierTierProperty;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.DungeonKeyProperty;
 import com.wynntils.wynn.item.properties.DurabilityProperty;
 import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
@@ -70,12 +69,6 @@ public abstract class PropertyModel extends Model {
     public static final class DailyRewardMultiplierPropertyModel extends PropertyModel {
         public DailyRewardMultiplierPropertyModel() {
             super(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
-        }
-    }
-
-    public static final class DungeonKeyPropertyModel extends PropertyModel {
-        public DungeonKeyPropertyModel() {
-            super(WynnItemMatchers::isDungeonKey, DungeonKeyProperty::new);
         }
     }
 
