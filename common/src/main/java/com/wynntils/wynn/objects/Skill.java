@@ -11,7 +11,7 @@ public enum Skill {
     STRENGTH("✤", ChatFormatting.DARK_GREEN),
     DEXTERITY("✦", ChatFormatting.YELLOW),
     INTELLIGENCE("✽", ChatFormatting.AQUA),
-    DEFENCE("✹", ChatFormatting.RED),  // Note! Must be spelled with "C" to match in-game
+    DEFENCE("✹", ChatFormatting.RED), // Note! Must be spelled with "C" to match in-game
     AGILITY("❋", ChatFormatting.WHITE);
 
     private final String symbol;

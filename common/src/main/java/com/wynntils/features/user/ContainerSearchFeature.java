@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
@@ -56,7 +55,7 @@ public class ContainerSearchFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.SearchOverlayProperty);
+        return List.of();
     }
 
     @SubscribeEvent

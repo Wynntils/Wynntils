@@ -6,8 +6,6 @@ package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -30,7 +28,6 @@ import com.wynntils.model.item.game.SkillPotionItem;
 import com.wynntils.model.item.game.TeleportScrollItem;
 import com.wynntils.model.item.gui.SkillPointItem;
 import com.wynntils.utils.MathUtils;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
@@ -38,12 +35,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    public static final List<Model> TEXT_OVERLAY_PROPERTIES = List.of(
-            Models.DailyRewardMultiplierProperty,
-            Models.ServerCountProperty,
-            Models.SkillIconProperty,
-            Models.SkillPointProperty);
-
     private static final TextOverlayInfo NO_OVERLAY = new TextOverlayInfo() {
         @Override
         public TextOverlay getTextOverlay() {
@@ -117,11 +108,6 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @Config
     public boolean hotbarTextOverlayEnabled = true;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return TEXT_OVERLAY_PROPERTIES;
-    }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {

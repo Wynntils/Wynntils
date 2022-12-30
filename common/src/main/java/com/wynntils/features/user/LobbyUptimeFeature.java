@@ -12,6 +12,6 @@ import java.util.List;
 public class LobbyUptimeFeature extends UserFeature {
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.ServerList, Models.ServerItemStack);
+        return List.of(Models.ServerList);
     }
 }

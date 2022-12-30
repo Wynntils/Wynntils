@@ -6,12 +6,8 @@ package com.wynntils.wynn.model.item;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
-import com.wynntils.wynn.item.IntelligenceSkillPointsItemStack;
-import com.wynntils.wynn.item.PowderItemStack;
-import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
@@ -39,12 +35,6 @@ public abstract class ItemStackModel extends Model {
     }
 
     /** Model Declarations **/
-    public static final class EmeraldPouchItemStackModel extends ItemStackModel {
-        public EmeraldPouchItemStackModel() {
-            super(WynnItemMatchers::isEmeraldPouch, EmeraldPouchItemStack::new);
-        }
-    }
-
     public static final class GearItemStackModel extends ItemStackModel {
         public GearItemStackModel() {
             super(WynnItemMatchers::isKnownGear, GearItemStack::new);
@@ -54,30 +44,6 @@ public abstract class ItemStackModel extends Model {
     public static final class IngredientItemStackModel extends ItemStackModel {
         public IngredientItemStackModel() {
             super(WynnItemMatchers::isIngredient, IngredientItemStack::new);
-        }
-    }
-
-    public static final class IntelligenceSkillPointsItemStackModel extends ItemStackModel {
-        public IntelligenceSkillPointsItemStackModel() {
-            super(WynnItemMatchers::isIntelligenceSkillPoints, IntelligenceSkillPointsItemStack::new);
-        }
-    }
-
-    public static final class PowderItemStackModel extends ItemStackModel {
-        public PowderItemStackModel() {
-            super(WynnItemMatchers::isPowder, PowderItemStack::new);
-        }
-    }
-
-    public static final class ServerItemStackModel extends ItemStackModel {
-        public ServerItemStackModel() {
-            super(WynnItemMatchers::isServerItem, ServerItemStack::new);
-        }
-    }
-
-    public static final class SoulPointItemStackModel extends ItemStackModel {
-        public SoulPointItemStackModel() {
-            super(WynnItemMatchers::isSoulPoint, SoulPointItemStack::new);
         }
     }
 

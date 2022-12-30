@@ -7,13 +7,6 @@ package com.wynntils.wynn.model.item;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
-import com.wynntils.wynn.item.properties.CosmeticTierProperty;
-import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.SearchOverlayProperty;
-import com.wynntils.wynn.item.properties.ServerCountProperty;
-import com.wynntils.wynn.item.properties.SkillIconProperty;
-import com.wynntils.wynn.item.properties.SkillPointProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -34,41 +27,5 @@ public abstract class PropertyModel extends Model {
     @Override
     public void disable() {
         Managers.ItemStackTransform.unregisterProperty(writer);
-    }
-
-    public static final class CosmeticTierPropertyModel extends PropertyModel {
-        public CosmeticTierPropertyModel() {
-            super(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
-        }
-    }
-
-    public static final class DailyRewardMultiplierPropertyModel extends PropertyModel {
-        public DailyRewardMultiplierPropertyModel() {
-            super(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
-        }
-    }
-
-    public static final class SearchOverlayPropertyModel extends PropertyModel {
-        public SearchOverlayPropertyModel() {
-            super(itemstack -> true, SearchOverlayProperty::new);
-        }
-    }
-
-    public static final class ServerCountPropertyModel extends PropertyModel {
-        public ServerCountPropertyModel() {
-            super(WynnItemMatchers::isServerItem, ServerCountProperty::new);
-        }
-    }
-
-    public static final class SkillIconPropertyModel extends PropertyModel {
-        public SkillIconPropertyModel() {
-            super(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
-        }
-    }
-
-    public static final class SkillPointPropertyModel extends PropertyModel {
-        public SkillPointPropertyModel() {
-            super(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
-        }
     }
 }

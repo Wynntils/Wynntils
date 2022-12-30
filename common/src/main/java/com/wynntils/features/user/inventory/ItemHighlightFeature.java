@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -25,7 +23,6 @@ import com.wynntils.model.item.game.PowderItem;
 import com.wynntils.model.item.gui.CosmeticItem;
 import com.wynntils.model.item.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -33,7 +30,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(Models.CosmeticTierProperty);
     private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
         @Override
         public CustomColor getHighlightColor() {
@@ -158,11 +154,6 @@ public class ItemHighlightFeature extends UserFeature {
 
     @Config
     public float hotbarOpacity = .5f;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return HIGHLIGHT_PROPERTIES;
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {

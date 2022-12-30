@@ -5,8 +5,6 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -19,7 +17,6 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.model.item.game.GearBoxItem;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,11 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class UnidentifiedItemIconFeature extends UserFeature {
     @Config
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.UnidentifiedItemStack);
-    }
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.Post e) {
