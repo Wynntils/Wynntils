@@ -25,12 +25,12 @@ import com.wynntils.model.item.annotators.PowderAnnotator;
 import com.wynntils.model.item.annotators.SkillPotionAnnotator;
 import com.wynntils.model.item.annotators.TeleportScrollAnnotator;
 import com.wynntils.model.item.annotators.XpPotionAnnotator;
+import com.wynntils.model.item.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
-import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
@@ -98,12 +98,6 @@ public class ItemModel extends Model {
     public static final class CosmeticTierAnnotator extends PropertyAnnotator {
         public CosmeticTierAnnotator() {
             super(WynnItemMatchers::isCosmetic, CosmeticTierProperty::new);
-        }
-    }
-
-    public static final class DailyRewardMultiplierAnnotator extends PropertyAnnotator {
-        public DailyRewardMultiplierAnnotator() {
-            super(WynnItemMatchers::isDailyRewardsChest, DailyRewardMultiplierProperty::new);
         }
     }
 
