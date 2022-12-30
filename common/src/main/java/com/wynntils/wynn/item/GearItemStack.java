@@ -14,7 +14,6 @@ import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import com.wynntils.wynn.utils.WynnItemUtils;
@@ -116,7 +115,8 @@ public class GearItemStack extends WynnItemStack {
                 continue;
             }
 
-            ItemIdentificationContainer idContainer = ItemProfilesManager.identificationFromLore(loreLine, itemProfile);
+            ItemIdentificationContainer idContainer =
+                    Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
             if (idContainer == null) { // not an ID line
                 baseTooltip.add(loreLine);
                 continue;
@@ -235,7 +235,7 @@ public class GearItemStack extends WynnItemStack {
     }
 
     public List<ItemIdentificationContainer> getOrderedIdentifications() {
-        return ItemProfilesManager.identificationOrderer.orderIdentifications(identifications);
+        return Managers.ItemProfiles.identificationOrderer.orderIdentifications(identifications);
     }
 
     public List<Powder> getPowders() {
@@ -378,7 +378,7 @@ public class GearItemStack extends WynnItemStack {
             isPerfect = overallPercentage >= 100d;
             isDefective = overallPercentage == 0;
 
-            name.append(ItemProfilesManager.getPercentageTextComponent(overallPercentage));
+            name.append(Managers.ItemProfiles.getPercentageTextComponent(overallPercentage));
         }
 
         customName = name;
@@ -408,11 +408,11 @@ public class GearItemStack extends WynnItemStack {
             Collection<Component> orderedRerolls;
 
             if (ItemStatInfoFeature.INSTANCE.reorderIdentifications || isGuideStack) {
-                orderedPercents = ItemProfilesManager.identificationOrderer.orderComponents(
+                orderedPercents = Managers.ItemProfiles.identificationOrderer.orderComponents(
                         percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRanges = ItemProfilesManager.identificationOrderer.orderComponents(
+                orderedRanges = Managers.ItemProfiles.identificationOrderer.orderComponents(
                         rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRerolls = ItemProfilesManager.identificationOrderer.orderComponents(
+                orderedRerolls = Managers.ItemProfiles.identificationOrderer.orderComponents(
                         rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
             } else {
                 orderedPercents = percentMap.values();

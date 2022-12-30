@@ -13,7 +13,6 @@ import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -150,7 +149,7 @@ public final class ChatItemModel extends Model {
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(ItemProfilesManager.identificationOrderer::getOrder));
+        sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles.identificationOrderer::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {
@@ -188,7 +187,7 @@ public final class ChatItemModel extends Model {
 
             // create ID and append to list
             ItemIdentificationContainer idContainer =
-                    ItemProfilesManager.identificationFromValue(null, item, longIdName, shortIdName, value, stars);
+                    Managers.ItemProfiles.identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
         }
 

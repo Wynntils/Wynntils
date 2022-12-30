@@ -18,7 +18,6 @@ import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +27,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class WynnItemUtils {
-
-    static {
-        ItemProfilesManager.COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-        ItemProfilesManager.COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-        ItemProfilesManager.COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-        ItemProfilesManager.COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-    }
-
     /**
      * Create a list of ItemIdentificationContainer corresponding to the given ItemProfile, formatted for item guide items
      *
@@ -169,7 +159,7 @@ public final class WynnItemUtils {
                     value = 1;
                 }
 
-                idContainers.add(ItemProfilesManager.identificationFromValue(
+                idContainers.add(Managers.ItemProfiles.identificationFromValue(
                         null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
             }
         }

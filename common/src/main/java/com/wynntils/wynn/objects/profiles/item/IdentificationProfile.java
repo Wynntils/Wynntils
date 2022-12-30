@@ -5,6 +5,7 @@
 package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class IdentificationProfile {
     }
 
     public void calculateMinMax(String shortId) {
-        isInverted = ItemProfilesManager.identificationOrderer.isInverted(shortId);
+        isInverted = Managers.ItemProfiles.isInverted(shortId);
 
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;

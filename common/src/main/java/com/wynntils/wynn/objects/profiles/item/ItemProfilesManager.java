@@ -49,6 +49,13 @@ public final class ItemProfilesManager extends Manager {
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
     public static IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
 
+    static {
+        COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
+        COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+    }
+
     private Map<String, ItemProfile> items = Map.of();
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = Map.of();
@@ -61,6 +68,10 @@ public final class ItemProfilesManager extends Manager {
     public ItemProfilesManager(NetManager netManager) {
         super(List.of(netManager));
         loadData();
+    }
+
+    public static boolean isInverted(String id) {
+        return identificationOrderer.isInverted(id);
     }
 
     /**
