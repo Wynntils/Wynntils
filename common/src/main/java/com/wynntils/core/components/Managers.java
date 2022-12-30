@@ -25,6 +25,7 @@ import com.wynntils.wynn.model.ItemProfilesManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
+import com.wynntils.wynn.model.emeralds.EmeraldManager;
 import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.model.item.ItemManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
@@ -42,6 +43,7 @@ public final class Managers {
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
+    public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
