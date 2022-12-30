@@ -11,22 +11,22 @@ import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.screens.guides.GuideGearItemStack;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.item.GearItemStack;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideGearItemStack extends WynntilsButton {
-    private final GearItemStack itemStack;
+public class GuideGearItemStackButton extends WynntilsButton {
+    private final GuideGearItemStack itemStack;
     private final WynntilsItemGuideScreen screen;
 
-    public GuideGearItemStack(
-            int x, int y, int width, int height, GearItemStack itemStack, WynntilsItemGuideScreen screen) {
+    public GuideGearItemStackButton(
+            int x, int y, int width, int height, GuideGearItemStack itemStack, WynntilsItemGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
@@ -96,7 +96,7 @@ public class GuideGearItemStack extends WynntilsButton {
     @Override
     public void onPress() {}
 
-    public GearItemStack getItemStack() {
+    public GuideGearItemStack getItemStack() {
         return itemStack;
     }
 }

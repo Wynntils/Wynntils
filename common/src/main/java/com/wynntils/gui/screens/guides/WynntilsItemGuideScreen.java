@@ -14,7 +14,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuideGearItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuideGearItemStackButton;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
@@ -29,11 +29,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearItemStack, GuideGearItemStack> {
+public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GuideGearItemStack, GuideGearItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GearItemStack> allGearItems = List.of();
+    private List<GuideGearItemStack> allGearItems = List.of();
 
     private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
@@ -96,8 +96,8 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuideGearItemStack guideGearItemStack) {
-            GearItemStack itemStack = guideGearItemStack.getItemStack();
+        if (hovered instanceof GuideGearItemStackButton guideGearItemStackButton) {
+            GuideGearItemStack itemStack = guideGearItemStackButton.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
@@ -136,11 +136,11 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
     }
 
     @Override
-    protected GuideGearItemStack getButtonFromElement(int i) {
+    protected GuideGearItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideGearItemStack(
+        return new GuideGearItemStackButton(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 
@@ -152,11 +152,11 @@ public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GearIt
                 .toList());
     }
 
-    public List<GearItemStack> getAllGearItems() {
+    public List<GuideGearItemStack> getAllGearItems() {
         if (allGearItems.isEmpty()) {
             // Populate list
             allGearItems = Managers.ItemProfiles.getItemsCollection().stream()
-                    .map(GearItemStack::new)
+                    .map(GuideGearItemStack::new)
                     .toList();
         }
 

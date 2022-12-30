@@ -95,6 +95,7 @@ import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.user.redirects.ChatRedirectFeature;
 import com.wynntils.features.user.redirects.InventoryRedirectFeature;
 import com.wynntils.features.user.redirects.TerritoryMessageRedirectFeature;
+import com.wynntils.features.user.tooltips.GearTooltipFeature;
 import com.wynntils.features.user.tooltips.ItemCompareFeature;
 import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
@@ -159,6 +160,7 @@ public final class FeatureRegistry {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new GearViewerFeature());
+        registerFeature(new GearTooltipFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new HadesFeature());
