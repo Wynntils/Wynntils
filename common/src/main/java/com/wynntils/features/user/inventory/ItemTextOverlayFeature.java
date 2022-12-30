@@ -106,12 +106,6 @@ public class ItemTextOverlayFeature extends UserFeature {
     public FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
 
     @Config
-    public boolean consumableChargeEnabled = true;
-
-    @Config
-    public FontRenderer.TextShadow consumableChargeShadow = FontRenderer.TextShadow.NORMAL;
-
-    @Config
     public boolean skillIconEnabled = true;
 
     @Config

@@ -67,6 +67,7 @@ import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
+import com.wynntils.features.user.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
 import com.wynntils.features.user.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.user.inventory.ItemHighlightFeature;
@@ -149,6 +150,7 @@ public final class FeatureRegistry {
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new ExtendedItemCountFeature());
         registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new FixPacketBugsFeature());
