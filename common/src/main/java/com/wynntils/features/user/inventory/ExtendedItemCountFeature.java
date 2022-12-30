@@ -49,7 +49,9 @@ public class ExtendedItemCountFeature extends UserFeature {
         if (annotationOpt.isEmpty()) return;
         if (!(annotationOpt.get() instanceof CountedItemProperty wynnItem)) return;
 
-        int count = item.getCount();
+        int count = wynnItem.getCount();
+        // This is a bit ugly; would rather we hid the drawing...
+        item.setCount(1);
 
         TextRenderTask task = new TextRenderTask(
                 Integer.toString(count), TextRenderSetting.DEFAULT.withHorizontalAlignment(HorizontalAlignment.Right));

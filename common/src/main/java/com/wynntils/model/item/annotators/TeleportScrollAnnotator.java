@@ -37,29 +37,29 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
 
         Component itemName = itemStack.getHoverName();
         Matcher nameMatcher = teleportScrollNameMatcher(itemName);
-        if (nameMatcher.find()) {
-            String scrollName = ComponentUtils.stripFormatting(nameMatcher.group(1));
+        if (!nameMatcher.matches()) return null;
 
-            if (scrollName.equals("Dungeon")) {
-                dungeon = true;
-                for (Component line : itemStack.getTooltipLines(null, TooltipFlag.NORMAL)) {
-                    Matcher locationMatcher = teleportScrollLocationMatcher(line);
-                    if (!locationMatcher.matches()) continue;
+        String scrollName = ComponentUtils.stripFormatting(nameMatcher.group(1));
 
-                    // remove "the" to properly represent forgery scrolls
-                    destination = WynnUtils.normalizeBadString(locationMatcher.group(1))
-                            .replace("the ", "");
+        if (scrollName.equals("Dungeon")) {
+            dungeon = true;
+            for (Component line : itemStack.getTooltipLines(null, TooltipFlag.NORMAL)) {
+                Matcher locationMatcher = teleportScrollLocationMatcher(line);
+                if (!locationMatcher.matches()) continue;
 
-                    destination = Arrays.stream(destination.split(" ", 2))
-                            .map(s -> s.substring(0, 1))
-                            .collect(Collectors.joining())
-                            .toUpperCase(Locale.ROOT);
+                // remove "the" to properly represent forgery scrolls
+                destination =
+                        WynnUtils.normalizeBadString(locationMatcher.group(1)).replace("the ", "");
 
-                    break;
-                }
-            } else {
-                destination = scrollName.substring(0, 2);
+                destination = Arrays.stream(destination.split(" ", 2))
+                        .map(s -> s.substring(0, 1))
+                        .collect(Collectors.joining())
+                        .toUpperCase(Locale.ROOT);
+
+                break;
             }
+        } else {
+            destination = scrollName.substring(0, 2);
         }
 
         return new TeleportScrollItem(destination, dungeon);

@@ -6,6 +6,10 @@ package com.wynntils.model.item.properties;
 
 import com.wynntils.utils.CappedValue;
 
-public interface UsesItemPropery {
+public interface UsesItemPropery extends CountedItemProperty {
     CappedValue getUses();
+
+    default int getCount() {
+        return getUses().getCurrent();
+    }
 }
