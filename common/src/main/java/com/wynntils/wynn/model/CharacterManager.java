@@ -72,6 +72,16 @@ public final class CharacterManager extends Manager {
     }
 
     /**
+     * @return Time in game ticks (1/20th of a second, 50ms) until next soul point
+     *     <p>-1 if unable to determine
+     */
+    public static int getTicksTillNextSoulPoint() {
+        if (McUtils.mc().level == null) return -1;
+
+        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
+    }
+
+    /**
      * Return the maximum number of soul points the character can currently have
      */
     public int getMaxSoulPoints() {
