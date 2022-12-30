@@ -34,19 +34,15 @@ import com.wynntils.wynn.model.item.ItemStackModel.UnidentifiedItemStackModel;
 import com.wynntils.wynn.model.item.PropertyModel.ConsumableChargePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.CosmeticTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.DailyRewardMultiplierPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.DurabilityPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.EmeraldPouchTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.GatheringToolPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.HorsePropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.IngredientPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ItemTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.MaterialPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.PowderTierPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SearchOverlayPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.ServerCountPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SkillIconPropertyModel;
 import com.wynntils.wynn.model.item.PropertyModel.SkillPointPropertyModel;
-import com.wynntils.wynn.model.item.PropertyModel.TeleportScrollPropertyModel;
 import com.wynntils.wynn.model.map.MapModel;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
@@ -61,9 +57,7 @@ public final class Models {
     public static final CosmeticTierPropertyModel CosmeticTierProperty = new CosmeticTierPropertyModel();
     public static final DailyRewardMultiplierPropertyModel DailyRewardMultiplierProperty =
             new DailyRewardMultiplierPropertyModel();
-    public static final DurabilityPropertyModel DurabilityProperty = new DurabilityPropertyModel();
     public static final EmeraldPouchItemStackModel EmeraldPouchItemStack = new EmeraldPouchItemStackModel();
-    public static final EmeraldPouchTierPropertyModel EmeraldPouchTierProperty = new EmeraldPouchTierPropertyModel();
     public static final GatheringToolPropertyModel GatheringToolProperty = new GatheringToolPropertyModel();
     public static final GearItemStackModel GearItemStack = new GearItemStackModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
@@ -83,7 +77,6 @@ public final class Models {
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final PowderItemStackModel PowderItemStack = new PowderItemStackModel();
-    public static final PowderTierPropertyModel PowderTierProperty = new PowderTierPropertyModel();
     public static final RemoteWynntilsUserInfoModel RemoteWynntilsUserInfo = new RemoteWynntilsUserInfoModel();
     public static final ScoreboardModel Scoreboard = new ScoreboardModel();
     public static final SearchOverlayPropertyModel SearchOverlayProperty = new SearchOverlayPropertyModel();
@@ -95,7 +88,6 @@ public final class Models {
     public static final SkillPointPropertyModel SkillPointProperty = new SkillPointPropertyModel();
     public static final SoulPointItemStackModel SoulPointItemStack = new SoulPointItemStackModel();
     public static final TabModel Tab = new TabModel();
-    public static final TeleportScrollPropertyModel TeleportScrollProperty = new TeleportScrollPropertyModel();
     public static final TranslationModel Translation = new TranslationModel();
     public static final UnidentifiedItemStackModel UnidentifiedItemStack = new UnidentifiedItemStackModel();
 }

@@ -35,7 +35,7 @@ public class DurabilityArcFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.DurabilityProperty);
+        return List.of();
     }
 
     @SubscribeEvent

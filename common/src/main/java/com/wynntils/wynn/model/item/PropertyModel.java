@@ -11,19 +11,15 @@ import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.ConsumableChargeProperty;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.DailyRewardMultiplierProperty;
-import com.wynntils.wynn.item.properties.DurabilityProperty;
-import com.wynntils.wynn.item.properties.EmeraldPouchTierProperty;
 import com.wynntils.wynn.item.properties.GatheringToolProperty;
 import com.wynntils.wynn.item.properties.HorseProperty;
 import com.wynntils.wynn.item.properties.IngredientProperty;
 import com.wynntils.wynn.item.properties.ItemTierProperty;
 import com.wynntils.wynn.item.properties.MaterialProperty;
-import com.wynntils.wynn.item.properties.PowderTierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
 import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
 import com.wynntils.wynn.item.properties.SkillPointProperty;
-import com.wynntils.wynn.item.properties.TeleportScrollProperty;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemPropertyWriter;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -65,18 +61,6 @@ public abstract class PropertyModel extends Model {
         }
     }
 
-    public static final class DurabilityPropertyModel extends PropertyModel {
-        public DurabilityPropertyModel() {
-            super(WynnItemMatchers::isDurabilityItem, DurabilityProperty::new);
-        }
-    }
-
-    public static final class EmeraldPouchTierPropertyModel extends PropertyModel {
-        public EmeraldPouchTierPropertyModel() {
-            super(WynnItemMatchers::isEmeraldPouch, EmeraldPouchTierProperty::new);
-        }
-    }
-
     public static final class GatheringToolPropertyModel extends PropertyModel {
         public GatheringToolPropertyModel() {
             super(WynnItemMatchers::isGatheringTool, GatheringToolProperty::new);
@@ -107,12 +91,6 @@ public abstract class PropertyModel extends Model {
         }
     }
 
-    public static final class PowderTierPropertyModel extends PropertyModel {
-        public PowderTierPropertyModel() {
-            super(WynnItemMatchers::isPowder, PowderTierProperty::new);
-        }
-    }
-
     public static final class SearchOverlayPropertyModel extends PropertyModel {
         public SearchOverlayPropertyModel() {
             super(itemstack -> true, SearchOverlayProperty::new);
@@ -134,12 +112,6 @@ public abstract class PropertyModel extends Model {
     public static final class SkillPointPropertyModel extends PropertyModel {
         public SkillPointPropertyModel() {
             super(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
-        }
-    }
-
-    public static final class TeleportScrollPropertyModel extends PropertyModel {
-        public TeleportScrollPropertyModel() {
-            super(WynnItemMatchers::isTeleportScroll, TeleportScrollProperty::new);
         }
     }
 }
