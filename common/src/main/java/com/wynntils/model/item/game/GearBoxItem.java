@@ -50,4 +50,12 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
     public ItemTier getGearTier() {
         return itemTier;
     }
+
+    @Override
+    public String toString() {
+        return "GearBoxItem{" + "itemType="
+                + itemType + ", itemTier="
+                + itemTier + ", levelRange='"
+                + levelRange + '\'' + '}';
+    }
 }

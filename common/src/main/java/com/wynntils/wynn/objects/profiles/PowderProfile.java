@@ -71,4 +71,9 @@ public record PowderProfile(
     public static PowderProfile getPowderProfile(Powder element, int tier) {
         return powderProfileMap.get(element).get(tier - 1);
     }
+
+    @Override
+    public String toString() {
+        return "PowderProfile{" + "element=" + element + ", tier=" + tier + '}';
+    }
 }

@@ -16,4 +16,9 @@ public class CosmeticItem extends GuiItem {
     public CustomColor getHighlightColor() {
         return highlightColor;
     }
+
+    @Override
+    public String toString() {
+        return "CosmeticItem{" + "highlightColor=" + highlightColor + '}';
+    }
 }

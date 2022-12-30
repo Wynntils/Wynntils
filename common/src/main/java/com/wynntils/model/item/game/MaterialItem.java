@@ -21,4 +21,9 @@ public class MaterialItem extends GameItem implements QualityTierItemProperty {
     public int getQualityTier() {
         return materialProfile.getTier();
     }
+
+    @Override
+    public String toString() {
+        return "MaterialItem{" + "materialProfile=" + materialProfile + '}';
+    }
 }

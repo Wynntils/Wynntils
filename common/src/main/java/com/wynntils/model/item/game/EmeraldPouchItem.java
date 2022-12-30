@@ -16,4 +16,9 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
     public int getTier() {
         return tier;
     }
+
+    @Override
+    public String toString() {
+        return "EmeraldPouchItem{" + "tier=" + tier + '}';
+    }
 }

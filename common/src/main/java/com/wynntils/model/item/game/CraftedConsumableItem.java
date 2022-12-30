@@ -23,4 +23,9 @@ public class CraftedConsumableItem extends GameItem implements UsesItemPropery {
     public CappedValue getUses() {
         return uses;
     }
+
+    @Override
+    public String toString() {
+        return "CraftedConsumableItem{" + "name='" + name + '\'' + ", uses=" + uses + '}';
+    }
 }

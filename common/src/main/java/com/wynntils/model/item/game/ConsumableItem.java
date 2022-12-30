@@ -17,4 +17,9 @@ public class ConsumableItem extends GameItem implements UsesItemPropery {
     public CappedValue getUses() {
         return uses;
     }
+
+    @Override
+    public String toString() {
+        return "ConsumableItem{" + "uses=" + uses + '}';
+    }
 }

@@ -27,4 +27,9 @@ public class TeleportScrollItem extends GameItem implements TargetedItemProperty
     public String getTarget() {
         return destination;
     }
+
+    @Override
+    public String toString() {
+        return "TeleportScrollItem{" + "destination='" + destination + '\'' + ", dungeon=" + dungeon + '}';
+    }
 }

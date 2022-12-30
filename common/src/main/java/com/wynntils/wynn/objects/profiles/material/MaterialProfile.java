@@ -142,5 +142,13 @@ public class MaterialProfile {
         }
     }
 
+    @Override
+    public String toString() {
+        return "MaterialProfile{" + "resourceType="
+                + resourceType + ", sourceMaterial="
+                + sourceMaterial + ", tier="
+                + tier + '}';
+    }
+
     public record SourceMaterial(String name, int level) {}
 }

@@ -51,4 +51,9 @@ public class ToolProfile {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "ToolProfile{" + "toolType=" + toolType + ", tier=" + tier + '}';
+    }
 }

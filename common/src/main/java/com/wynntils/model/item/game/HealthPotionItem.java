@@ -24,4 +24,9 @@ public class HealthPotionItem extends GameItem implements UsesItemPropery {
     public CappedValue getUses() {
         return uses;
     }
+
+    @Override
+    public String toString() {
+        return "HealthPotionItem{" + "hearts=" + hearts + ", uses=" + uses + '}';
+    }
 }

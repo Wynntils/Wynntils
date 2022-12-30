@@ -29,4 +29,9 @@ public class GatheringToolItem extends GameItem implements NumberedTierItemPrope
     public int getTier() {
         return toolProfile.getTier();
     }
+
+    @Override
+    public String toString() {
+        return "GatheringToolItem{" + "toolProfile=" + toolProfile + ", durability=" + durability + '}';
+    }
 }

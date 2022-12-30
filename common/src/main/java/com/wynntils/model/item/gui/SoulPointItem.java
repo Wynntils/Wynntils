@@ -4,4 +4,9 @@
  */
 package com.wynntils.model.item.gui;
 
-public class SoulPointItem extends GuiItem {}
+public class SoulPointItem extends GuiItem {
+    @Override
+    public String toString() {
+        return "SoulPointItem{}";
+    }
+}

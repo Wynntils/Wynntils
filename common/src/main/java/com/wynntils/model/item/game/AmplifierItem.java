@@ -16,4 +16,9 @@ public class AmplifierItem extends GameItem implements NumberedTierItemProperty 
     public int getTier() {
         return tier;
     }
+
+    @Override
+    public String toString() {
+        return "AmplifierItem{" + "tier=" + tier + '}';
+    }
 }

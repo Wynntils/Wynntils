@@ -57,4 +57,14 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
     public ItemTier getGearTier() {
         return ItemTier.CRAFTED;
     }
+
+    @Override
+    public String toString() {
+        return "CraftedGearItem{" + "damages="
+                + damages + ", requirements="
+                + requirements + ", identifications="
+                + identifications + ", powders="
+                + powders + ", durability="
+                + durability + '}';
+    }
 }

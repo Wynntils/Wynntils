@@ -21,7 +21,6 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.GearItemStack;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,7 +28,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public final class WynntilsItemGuideScreen extends WynntilsMenuListScreen<GuideGearItemStack, GuideGearItemStackButton> {
+public final class WynntilsItemGuideScreen
+        extends WynntilsMenuListScreen<GuideGearItemStack, GuideGearItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 

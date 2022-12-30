@@ -18,4 +18,9 @@ public class ManaPotionItem extends GameItem implements UsesItemPropery {
     public CappedValue getUses() {
         return uses;
     }
+
+    @Override
+    public String toString() {
+        return "ManaPotionItem{" + "uses=" + uses + '}';
+    }
 }

@@ -22,4 +22,9 @@ public class PowderItem extends GameItem implements NumberedTierItemProperty {
     public int getTier() {
         return powderProfile.tier();
     }
+
+    @Override
+    public String toString() {
+        return "PowderItem{" + "powderProfile=" + powderProfile + '}';
+    }
 }

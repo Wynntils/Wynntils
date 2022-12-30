@@ -21,4 +21,9 @@ public class IngredientItem extends GameItem implements QualityTierItemProperty 
     public int getQualityTier() {
         return ingredientProfile.getTier().getTierInt();
     }
+
+    @Override
+    public String toString() {
+        return "IngredientItem{" + "ingredientProfile=" + ingredientProfile + '}';
+    }
 }

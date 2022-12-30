@@ -4,4 +4,9 @@
  */
 package com.wynntils.model.item.game;
 
-public class XpPotionItem extends GameItem {}
+public class XpPotionItem extends GameItem {
+    @Override
+    public String toString() {
+        return "XpPotionItem{}";
+    }
+}

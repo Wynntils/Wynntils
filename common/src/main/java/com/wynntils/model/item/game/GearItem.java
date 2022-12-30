@@ -56,4 +56,14 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     public ItemTier getGearTier() {
         return itemProfile.getTier();
     }
+
+    @Override
+    public String toString() {
+        return "GearItem{" + "itemProfile="
+                + itemProfile + ", identifications="
+                + identifications + ", powders="
+                + powders + ", rerolls="
+                + rerolls + ", setBonus="
+                + setBonus + '}';
+    }
 }

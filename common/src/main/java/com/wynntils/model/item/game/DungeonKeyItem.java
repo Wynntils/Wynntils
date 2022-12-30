@@ -26,4 +26,9 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
     public String getTarget() {
         return dungeon;
     }
+
+    @Override
+    public String toString() {
+        return "DungeonKeyItem{" + "dungeon='" + dungeon + '\'' + ", corrupted=" + corrupted + '}';
+    }
 }

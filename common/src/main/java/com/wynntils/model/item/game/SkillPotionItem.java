@@ -24,4 +24,9 @@ public class SkillPotionItem extends GameItem implements UsesItemPropery {
     public CappedValue getUses() {
         return uses;
     }
+
+    @Override
+    public String toString() {
+        return "SkillPotionItem{" + "skill=" + skill + ", uses=" + uses + '}';
+    }
 }

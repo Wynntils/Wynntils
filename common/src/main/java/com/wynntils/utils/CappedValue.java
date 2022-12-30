@@ -4,6 +4,8 @@
  */
 package com.wynntils.utils;
 
+import java.util.Objects;
+
 public class CappedValue {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
     private int current;
@@ -28,5 +30,23 @@ public class CappedValue {
 
     public void setMax(int max) {
         this.max = max;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + current + "/" + max + ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CappedValue that = (CappedValue) o;
+        return current == that.current && max == that.max;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(current, max);
     }
 }

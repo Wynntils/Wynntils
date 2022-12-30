@@ -28,4 +28,9 @@ public class SkillPointItem extends GuiItem implements CountedItemProperty {
     public int getCount() {
         return skillPoints;
     }
+
+    @Override
+    public String toString() {
+        return "SkillPointItem{" + "skill=" + skill + ", skillPoints=" + skillPoints + '}';
+    }
 }

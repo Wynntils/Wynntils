@@ -21,4 +21,9 @@ public class ServerItem extends GuiItem implements CountedItemProperty {
     public int getCount() {
         return serverId;
     }
+
+    @Override
+    public String toString() {
+        return "ServerItem{" + "serverId=" + serverId + '}';
+    }
 }
