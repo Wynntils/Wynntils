@@ -4,4 +4,21 @@
  */
 package com.wynntils.model.item.gui;
 
-public class ServerItem extends GuiItem {}
+import com.wynntils.model.item.properties.CountedItemProperty;
+
+public class ServerItem extends GuiItem implements CountedItemProperty {
+    private final int serverId;
+
+    public ServerItem(int serverId) {
+        this.serverId = serverId;
+    }
+
+    public int getServerId() {
+        return serverId;
+    }
+
+    @Override
+    public int getCount() {
+        return serverId;
+    }
+}

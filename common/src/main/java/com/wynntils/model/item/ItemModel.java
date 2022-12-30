@@ -26,15 +26,14 @@ import com.wynntils.model.item.annotators.SkillPotionAnnotator;
 import com.wynntils.model.item.annotators.TeleportScrollAnnotator;
 import com.wynntils.model.item.annotators.XpPotionAnnotator;
 import com.wynntils.model.item.annotators.gui.DailyRewardMultiplierAnnotator;
-import com.wynntils.wynn.item.ServerItemStack;
+import com.wynntils.model.item.annotators.gui.ServerAnnotator;
+import com.wynntils.model.item.annotators.gui.SkillPointAnnotator;
 import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.CosmeticTierProperty;
 import com.wynntils.wynn.item.properties.SearchOverlayProperty;
-import com.wynntils.wynn.item.properties.ServerCountProperty;
 import com.wynntils.wynn.item.properties.SkillIconProperty;
-import com.wynntils.wynn.item.properties.SkillPointProperty;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -65,15 +64,14 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // === gui
-        Handlers.Item.registerAnnotator(new ServerAnnotator());
-        Handlers.Item.registerAnnotator(new SoulPointAnnotator());
-
-        Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
-        Handlers.Item.registerAnnotator(new SearchOverlayAnnotator());
-        Handlers.Item.registerAnnotator(new ServerCountAnnotator());
-        Handlers.Item.registerAnnotator(new SkillIconAnnotator());
+        Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
+
+        Handlers.Item.registerAnnotator(new SoulPointAnnotator());
+        Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
+        Handlers.Item.registerAnnotator(new SearchOverlayAnnotator());
+        Handlers.Item.registerAnnotator(new SkillIconAnnotator());
     }
 
     @Override
@@ -82,12 +80,6 @@ public class ItemModel extends Model {
     }
 
     /// ==== gui ====
-
-    public static final class ServerAnnotator extends Annotator {
-        public ServerAnnotator() {
-            super(WynnItemMatchers::isServerItem, ServerItemStack::new);
-        }
-    }
 
     public static final class SoulPointAnnotator extends Annotator {
         public SoulPointAnnotator() {
@@ -107,21 +99,9 @@ public class ItemModel extends Model {
         }
     }
 
-    public static final class ServerCountAnnotator extends PropertyAnnotator {
-        public ServerCountAnnotator() {
-            super(WynnItemMatchers::isServerItem, ServerCountProperty::new);
-        }
-    }
-
     public static final class SkillIconAnnotator extends PropertyAnnotator {
         public SkillIconAnnotator() {
             super(WynnItemMatchers::isSkillTyped, SkillIconProperty::new);
-        }
-    }
-
-    public static final class SkillPointAnnotator extends PropertyAnnotator {
-        public SkillPointAnnotator() {
-            super(WynnItemMatchers::isSkillPoint, SkillPointProperty::new);
         }
     }
 
