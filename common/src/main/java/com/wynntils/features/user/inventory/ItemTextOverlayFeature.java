@@ -47,8 +47,6 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     };
 
-    public static ItemTextOverlayFeature INSTANCE;
-
     @Config
     public boolean powderTierEnabled = true;
 
@@ -205,7 +203,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    public static class DungeonKeyOverlay implements TextOverlayInfo {
+    public class DungeonKeyOverlay implements TextOverlayInfo {
         private static final CustomColor STANDARD_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
         private static final CustomColor CORRUPTED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_RED);
 
@@ -223,9 +221,7 @@ public class ItemTextOverlayFeature extends UserFeature {
             return new TextOverlay(
                     new TextRenderTask(
                             dungeon,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(textColor)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.dungeonKeyShadow)),
+                            TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow)),
                     -1,
                     1,
                     1f);
@@ -233,11 +229,11 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.dungeonKeyEnabled;
+            return dungeonKeyEnabled;
         }
     }
 
-    public static class AmplifierOverlay implements TextOverlayInfo {
+    public class AmplifierOverlay implements TextOverlayInfo {
         private static final CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
 
         private final AmplifierItem item;
@@ -248,16 +244,15 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = ItemTextOverlayFeature.INSTANCE.amplifierTierRomanNumerals
-                    ? MathUtils.toRoman(item.getTier())
-                    : String.valueOf(item.getTier());
+            String text =
+                    amplifierTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
 
             return new TextOverlay(
                     new TextRenderTask(
                             text,
                             TextRenderSetting.DEFAULT
                                     .withCustomColor(HIGHLIGHT_COLOR)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.amplifierTierShadow)),
+                                    .withTextShadow(amplifierTierShadow)),
                     -1,
                     1,
                     0.75f);
@@ -265,11 +260,11 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.amplifierTierEnabled;
+            return amplifierTierEnabled;
         }
     }
 
-    public static class TeleportScrollOverlay implements TextOverlayInfo {
+    public class TeleportScrollOverlay implements TextOverlayInfo {
         private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
         private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
 
@@ -281,7 +276,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.teleportScrollEnabled;
+            return teleportScrollEnabled;
         }
 
         @Override
@@ -292,16 +287,14 @@ public class ItemTextOverlayFeature extends UserFeature {
             return new TextOverlay(
                     new TextRenderTask(
                             location,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(textColor)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.teleportScrollShadow)),
+                            TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow)),
                     0,
                     0,
                     1f);
         }
     }
 
-    public static class EmeraldPouchOverlay implements TextOverlayInfo {
+    public class EmeraldPouchOverlay implements TextOverlayInfo {
         private static final CustomColor HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
         private final EmeraldPouchItem item;
@@ -312,25 +305,23 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.emeraldPouchTierEnabled;
+            return emeraldPouchTierEnabled;
         }
 
         @Override
         public TextOverlay getTextOverlay() {
             // convert from roman to arabic if necessary
-            String text = ItemTextOverlayFeature.INSTANCE.emeraldPouchTierRomanNumerals
-                    ? MathUtils.toRoman(item.getTier())
-                    : String.valueOf(item.getTier());
+            String text =
+                    emeraldPouchTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
 
-            TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(HIGHLIGHT_COLOR)
-                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.emeraldPouchTierShadow);
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(HIGHLIGHT_COLOR).withTextShadow(emeraldPouchTierShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
     }
 
-    public static class GatheringToolOverlay implements TextOverlayInfo {
+    public class GatheringToolOverlay implements TextOverlayInfo {
         private final GatheringToolItem item;
 
         public GatheringToolOverlay(GatheringToolItem item) {
@@ -339,25 +330,24 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.gatheringToolTierEnabled;
+            return gatheringToolTierEnabled;
         }
 
         @Override
         public TextOverlay getTextOverlay() {
             // convert from roman to arabic if necessary
-            String text = ItemTextOverlayFeature.INSTANCE.gatheringToolTierRomanNumerals
-                    ? MathUtils.toRoman(item.getTier())
-                    : String.valueOf(item.getTier());
+            String text =
+                    gatheringToolTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
 
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.gatheringToolTierShadow);
+                    .withTextShadow(gatheringToolTierShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
     }
 
-    public static class PowderOverlay implements TextOverlayInfo {
+    public class PowderOverlay implements TextOverlayInfo {
         private final PowderItem item;
 
         public PowderOverlay(PowderItem item) {
@@ -366,7 +356,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.powderTierEnabled;
+            return powderTierEnabled;
         }
 
         @Override
@@ -374,23 +364,21 @@ public class ItemTextOverlayFeature extends UserFeature {
             CustomColor highlightColor = item.getPowderProfile().element().getColor();
 
             // convert from roman to arabic if necessary
-            String text = ItemTextOverlayFeature.INSTANCE.powderTierRomanNumerals
-                    ? MathUtils.toRoman(item.getTier())
-                    : String.valueOf(item.getTier());
+            String text = powderTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
 
             return new TextOverlay(
                     new TextRenderTask(
                             text,
                             TextRenderSetting.DEFAULT
                                     .withCustomColor(highlightColor)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.powderTierShadow)),
+                                    .withTextShadow(powderTierShadow)),
                     -1,
                     1,
                     0.75f);
         }
     }
 
-    public static class SkillPotionOverlay implements TextOverlayInfo {
+    public class SkillPotionOverlay implements TextOverlayInfo {
         private final SkillPotionItem item;
 
         public SkillPotionOverlay(SkillPotionItem item) {
@@ -405,9 +393,7 @@ public class ItemTextOverlayFeature extends UserFeature {
             return new TextOverlay(
                     new TextRenderTask(
                             icon,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(color)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.skillIconShadow)),
+                            TextRenderSetting.DEFAULT.withCustomColor(color).withTextShadow(skillIconShadow)),
                     -1,
                     1,
                     0.9f);
@@ -415,11 +401,11 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.skillIconEnabled;
+            return skillIconEnabled;
         }
     }
 
-    public static class SkillPointOverlay implements TextOverlayInfo {
+    public class SkillPointOverlay implements TextOverlayInfo {
         private final SkillPointItem item;
 
         public SkillPointOverlay(SkillPointItem item) {
@@ -434,9 +420,7 @@ public class ItemTextOverlayFeature extends UserFeature {
             return new TextOverlay(
                     new TextRenderTask(
                             symbol,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(color)
-                                    .withTextShadow(ItemTextOverlayFeature.INSTANCE.skillIconShadow)),
+                            TextRenderSetting.DEFAULT.withCustomColor(color).withTextShadow(skillIconShadow)),
                     -1,
                     1,
                     0.9f);
@@ -444,7 +428,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return ItemTextOverlayFeature.INSTANCE.skillIconEnabled;
+            return skillIconEnabled;
         }
     }
 
