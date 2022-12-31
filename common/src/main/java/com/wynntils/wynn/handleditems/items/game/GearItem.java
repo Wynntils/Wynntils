@@ -74,4 +74,14 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 + rerolls + ", setBonus="
                 + setBonus + '}';
     }
+
+    public boolean isPerfect() {
+        // FIXME
+        return false;
+    }
+
+    public boolean isDefective() {
+        // FIXME
+        return false;
+    }
 }
