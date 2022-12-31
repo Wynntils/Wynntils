@@ -70,7 +70,7 @@ public class ItemModel extends Model {
     }
 
     public static Optional<WynnItem> getWynnItem(ItemStack itemStack) {
-        var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
 
