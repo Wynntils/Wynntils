@@ -6,6 +6,8 @@ package com.wynntils.wynn.item;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
+import com.wynntils.handlers.item.AnnotatedItemStack;
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
@@ -16,7 +18,6 @@ import com.wynntils.wynn.objects.profiles.item.DamageType;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
-import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,11 +39,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-public class GearItemStack extends WynnItemStack {
+public class GearItemStack extends ItemStack implements ItemAnnotation {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
 
     private static final Component ID_PLACEHOLDER = Component.literal("ID_PLACEHOLDER");
+    protected String itemName;
 
     private ItemProfile itemProfile;
     private boolean isPerfect;
@@ -58,109 +59,11 @@ public class GearItemStack extends WynnItemStack {
 
     private List<ItemIdentificationContainer> identifications;
     private List<Powder> powders;
-    private int rerolls = 0;
+    private int rerolls;
 
     private List<Component> percentTooltip;
     private List<Component> rangeTooltip;
     private List<Component> rerollTooltip;
-
-    public GearItemStack(ItemStack stack) {
-        super(stack);
-
-        // get item profile
-        itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
-        if (itemProfile == null) return;
-
-        // identification parsing & tooltip creation
-        identifications = new ArrayList<>();
-
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(getOriginalTooltip());
-        lore.remove(0); // remove item name
-
-        List<Component> baseTooltip = new ArrayList<>();
-
-        boolean hasIds = false;
-        boolean setBonusIDs = false;
-        for (Component loreLine : lore) {
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
-
-            if (unformattedLoreLine.equals("Set Bonus:")) {
-                baseTooltip.add(loreLine);
-                setBonusIDs = true;
-                continue;
-            }
-
-            if (setBonusIDs) {
-                baseTooltip.add(loreLine);
-
-                if (unformattedLoreLine.isBlank()) {
-                    setBonusIDs = false;
-                }
-
-                continue;
-            }
-
-            if (unformattedLoreLine.contains("] Powder Slots")) {
-                powders = Powder.findPowders(unformattedLoreLine);
-                baseTooltip.add(loreLine);
-                continue;
-            }
-
-            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
-            if (rerollMatcher.find()) {
-                baseTooltip.add(loreLine);
-
-                if (rerollMatcher.group("Rolls") == null) continue;
-                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
-                continue;
-            }
-
-            ItemIdentificationContainer idContainer =
-                    Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
-            if (idContainer == null) { // not an ID line
-                baseTooltip.add(loreLine);
-                continue;
-            }
-
-            // if we've reached this point, we have an id
-            if (!hasIds) {
-                hasIds = true;
-                baseTooltip.add(ID_PLACEHOLDER);
-                baseTooltip.add(Component.literal(""));
-            }
-
-            identifications.add(idContainer);
-        }
-
-        if (!identifications.isEmpty()) {
-            baseTooltip = ComponentUtils.stripDuplicateBlank(baseTooltip);
-        }
-
-        constructTooltips(baseTooltip);
-
-        // overall percent & name
-        parseIDs();
-    }
-
-    public GearItemStack(ItemProfile itemProfile) {
-        super(itemProfile.getItemInfo().asItemStack());
-
-        this.itemProfile = itemProfile;
-        isGuideStack = true;
-
-        CompoundTag tag = this.getOrCreateTag();
-        tag.putBoolean("Unbreakable", true);
-        if (itemProfile.getItemInfo().isArmorColorValid())
-            tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
-        this.setTag(tag);
-
-        customName = Component.literal(itemProfile.getDisplayName())
-                .withStyle(itemProfile.getTier().getChatFormatting());
-
-        List<Component> baseTooltip = constructBaseTooltip();
-        identifications = WynnItemUtils.identificationsFromProfile(itemProfile);
-        constructTooltips(baseTooltip);
-    }
 
     /** Chat item constructor - used when decoding an encoded chat string */
     public GearItemStack(
@@ -168,7 +71,18 @@ public class GearItemStack extends WynnItemStack {
             List<ItemIdentificationContainer> identifications,
             List<Powder> powders,
             int rerolls) {
-        super(itemProfile.getItemInfo().asItemStack());
+        super(
+                itemProfile.getItemInfo().asItemStack().getItem(),
+                itemProfile.getItemInfo().asItemStack().getCount());
+        ItemStack stack = itemProfile.getItemInfo().asItemStack();
+        if (stack.getTag() != null) setTag(stack.getTag());
+        ItemAnnotation annotation = ((AnnotatedItemStack) stack).getAnnotation();
+        if (annotation != null) {
+            ((AnnotatedItemStack) this).setAnnotation(annotation);
+        }
+
+        this.itemName = WynnUtils.normalizeBadString(
+                ComponentUtils.stripFormatting(super.getHoverName().getString()));
 
         this.itemProfile = itemProfile;
         this.identifications = identifications;
@@ -197,7 +111,15 @@ public class GearItemStack extends WynnItemStack {
             List<ItemIdentificationContainer> identifications,
             List<Powder> powders,
             int rerolls) {
-        super(oldStack);
+        super(oldStack.getItem(), oldStack.getCount());
+        if (oldStack.getTag() != null) setTag(oldStack.getTag());
+        ItemAnnotation annotation = ((AnnotatedItemStack) oldStack).getAnnotation();
+        if (annotation != null) {
+            ((AnnotatedItemStack) this).setAnnotation(annotation);
+        }
+
+        this.itemName = WynnUtils.normalizeBadString(
+                ComponentUtils.stripFormatting(super.getHoverName().getString()));
 
         this.itemProfile = itemProfile;
         this.identifications = identifications;
@@ -222,18 +144,6 @@ public class GearItemStack extends WynnItemStack {
         return itemProfile;
     }
 
-    public float getOverallPercentage() {
-        return overallPercentage;
-    }
-
-    public boolean hasNew() {
-        return hasNew;
-    }
-
-    public List<ItemIdentificationContainer> getIdentifications() {
-        return identifications;
-    }
-
     public List<ItemIdentificationContainer> getOrderedIdentifications() {
         return Managers.ItemProfiles.orderIdentifications(identifications);
     }
@@ -244,10 +154,6 @@ public class GearItemStack extends WynnItemStack {
 
     public int getRerolls() {
         return rerolls;
-    }
-
-    public Component getOriginalHoverName() {
-        return super.getHoverName();
     }
 
     @Override
@@ -546,4 +452,13 @@ public class GearItemStack extends WynnItemStack {
 
         return baseTooltip;
     }
+
+    public String getSimpleName() {
+        return itemName;
+    }
+
+    /**
+     * Called when all properties are setup on this stack
+     */
+    public void init() {}
 }
