@@ -13,13 +13,10 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -88,13 +85,13 @@ public class GearTooltipBuilder {
         List<Component> tooltips = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
 
         // Skip first line which contains name
-        Pair<List<Component>, List<Component>> splittedLore = splitLore(tooltips.subList(1, tooltips.size()), gearProfile);
+        Pair<List<Component>, List<Component>> splittedLore =
+                splitLore(tooltips.subList(1, tooltips.size()), gearProfile);
 
         return new GearTooltipBuilder(gearProfile, gearItem, isChatItem, splittedLore.a(), splittedLore.b());
     }
 
-    static Pair<List<Component>,List<Component>> splitLore(List<Component> lore, ItemProfile gearProfile) {
-
+    static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, ItemProfile gearProfile) {
         List<Component> topTooltip = new ArrayList<>();
         List<Component> bottomTooltip = new ArrayList<>();
 
@@ -302,52 +299,37 @@ public class GearTooltipBuilder {
     }
 
     private void constructMiddleTooltips() {
-        percentTooltip = new ArrayList<>();
-        rangeTooltip = new ArrayList<>();
-        rerollTooltip = new ArrayList<>();
+        List<ItemIdentificationContainer> identifications = gearItem.getIdContainers();
 
-        List<Component> orderedPercents;
-        List<Component> orderedRanges;
-        List<Component> orderedRerolls;
-
-        Map<String, Component> percentMap;
-        Map<String, Component> rangeMap;
-        Map<String, Component> rerollMap;
-
-        if (gearItem == null) {
-            Collection<IdentificationProfile> ids = itemProfile.getStatuses().values();
-
-            // FIXME: broken
-            List<ItemIdentificationContainer> identifications = WynnItemUtils.identificationsFromProfile(itemProfile);
-            percentMap =
-                    ids.stream().collect(Collectors.toMap(id -> id.toString(), id -> Component.literal(id.toString())));
-            rangeMap =
-                    ids.stream().collect(Collectors.toMap(id -> id.toString(), id -> Component.literal(id.toString())));
-            rerollMap =
-                    ids.stream().collect(Collectors.toMap(id -> id.toString(), id -> Component.literal(id.toString())));
-        } else {
-            // ItemIdentificationContainer
-            List<GearIdentification> identifications = gearItem.getIdentifications();
-
-            // FIXME: BROKEN
-            percentMap = identifications.stream()
-                    .collect(Collectors.toMap(id -> id.getIdName(), id -> Component.literal(id.getIdName())));
-            rangeMap = identifications.stream()
-                    .collect(Collectors.toMap(id -> id.getIdName(), id -> Component.literal(id.getIdName())));
-            rerollMap = identifications.stream()
-                    .collect(Collectors.toMap(id -> id.getIdName(), id -> Component.literal(id.getIdName())));
+        if (identifications.isEmpty()) {
+            percentTooltip = List.of();
+            rangeTooltip = List.of();
+            rerollTooltip = List.of();
+            return;
         }
 
-        orderedPercents =
-                Managers.ItemProfiles.orderComponents(percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-        orderedRanges =
-                Managers.ItemProfiles.orderComponents(rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-        orderedRerolls =
-                Managers.ItemProfiles.orderComponents(rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
+        Map<String, Component> percentMap = identifications.stream()
+                .collect(Collectors.toMap(
+                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::percentLoreLine));
+        Map<String, Component> rangeMap = identifications.stream()
+                .collect(Collectors.toMap(
+                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rangeLoreLine));
+        Map<String, Component> rerollMap = identifications.stream()
+                .collect(Collectors.toMap(
+                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rerollLoreLine));
 
-        percentTooltip = orderedPercents;
-        rangeTooltip = orderedRanges;
-        rerollTooltip = orderedRerolls;
+        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
+            percentTooltip = Managers.ItemProfiles.orderComponents(
+                    percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
+            rangeTooltip =
+                    Managers.ItemProfiles.orderComponents(rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
+            rerollTooltip =
+                    Managers.ItemProfiles.orderComponents(rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
+        } else {
+            percentTooltip = new ArrayList<>(percentMap.values());
+            rangeTooltip = new ArrayList<>(rangeMap.values());
+            rerollTooltip = new ArrayList<>(rerollMap.values());
+        }
     }
 
     public List<Component> getTooltipLines() {

@@ -9,6 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
@@ -33,6 +34,7 @@ public final class GearAnnotator implements ItemAnnotator {
     public ItemAnnotation getAnnotation(ItemStack itemStack) {
         ItemProfile itemProfile;
         List<GearIdentification> identifications = new ArrayList<>();
+        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
         List<Component> setBonus = new ArrayList<>();
@@ -90,9 +92,14 @@ public final class GearAnnotator implements ItemAnnotator {
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
                 int stars = identificationMatcher.group("Stars").length();
                 identifications.add(new GearIdentification(idName, value, stars));
+
+                // This is partially overlapping with GearIdentification, sort this out later
+                ItemIdentificationContainer idContainer =
+                        Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
+                idContainers.add(idContainer);
             }
         }
 
-        return new GearItem(itemProfile, identifications, powders, rerolls, setBonus);
+        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, setBonus);
     }
 }
