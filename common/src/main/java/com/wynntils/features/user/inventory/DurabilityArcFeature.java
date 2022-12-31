@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -18,7 +17,6 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.properties.DurableItemProperty;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;

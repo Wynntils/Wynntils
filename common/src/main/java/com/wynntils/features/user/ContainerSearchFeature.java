@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
@@ -25,7 +24,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
