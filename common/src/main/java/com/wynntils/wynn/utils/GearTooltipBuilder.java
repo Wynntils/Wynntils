@@ -110,8 +110,8 @@ public class GearTooltipBuilder {
                 DamageType type = entry.getKey();
                 MutableComponent defense =
                         Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
-                defense.append(
-                        Component.literal(" Defence: " + withSign(entry.getValue())).withStyle(ChatFormatting.GRAY));
+                defense.append(Component.literal(" Defence: " + withSign(entry.getValue()))
+                        .withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(defense);
             }
 
@@ -277,7 +277,8 @@ public class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        return Component.literal(gearItem.getItemProfile().getDisplayName()).withStyle(gearItem.getGearTier().getChatFormatting());
+        return Component.literal(gearItem.getItemProfile().getDisplayName())
+                .withStyle(gearItem.getGearTier().getChatFormatting());
     }
 
     public List<Component> getMiddlePart() {
