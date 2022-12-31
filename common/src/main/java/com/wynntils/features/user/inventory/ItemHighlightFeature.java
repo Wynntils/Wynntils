@@ -42,8 +42,6 @@ public class ItemHighlightFeature extends UserFeature {
         }
     };
 
-    public static ItemHighlightFeature INSTANCE;
-
     @Config
     public boolean normalHighlightEnabled = true;
 
@@ -242,7 +240,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public static class IngredientHighlight implements HighlightInfo {
+    public class IngredientHighlight implements HighlightInfo {
         private final IngredientItem item;
 
         public IngredientHighlight(IngredientItem item) {
@@ -252,10 +250,10 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 0 -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightColor;
-                case 1 -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightColor;
-                case 2 -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightColor;
-                case 3 -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightColor;
+                case 0 -> zeroStarIngredientHighlightColor;
+                case 1 -> oneStarIngredientHighlightColor;
+                case 2 -> twoStarIngredientHighlightColor;
+                case 3 -> threeStarIngredientHighlightColor;
                 default -> CustomColor.NONE;
             };
         }
@@ -263,16 +261,16 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 0 -> ItemHighlightFeature.INSTANCE.zeroStarIngredientHighlightEnabled;
-                case 1 -> ItemHighlightFeature.INSTANCE.oneStarIngredientHighlightEnabled;
-                case 2 -> ItemHighlightFeature.INSTANCE.twoStarIngredientHighlightEnabled;
-                case 3 -> ItemHighlightFeature.INSTANCE.threeStarIngredientHighlightEnabled;
+                case 0 -> zeroStarIngredientHighlightEnabled;
+                case 1 -> oneStarIngredientHighlightEnabled;
+                case 2 -> twoStarIngredientHighlightEnabled;
+                case 3 -> threeStarIngredientHighlightEnabled;
                 default -> false;
             };
         }
     }
 
-    public static class MaterialHighlight implements HighlightInfo {
+    public class MaterialHighlight implements HighlightInfo {
         private final MaterialItem item;
 
         public MaterialHighlight(MaterialItem item) {
@@ -282,9 +280,9 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 1 -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightColor;
-                case 2 -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightColor;
-                case 3 -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightColor;
+                case 1 -> oneStarMaterialHighlightColor;
+                case 2 -> twoStarMaterialHighlightColor;
+                case 3 -> threeStarMaterialHighlightColor;
                 default -> CustomColor.NONE;
             };
         }
@@ -292,15 +290,15 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 1 -> ItemHighlightFeature.INSTANCE.oneStarMaterialHighlightEnabled;
-                case 2 -> ItemHighlightFeature.INSTANCE.twoStarMaterialHighlightEnabled;
-                case 3 -> ItemHighlightFeature.INSTANCE.threeStarMaterialHighlightEnabled;
+                case 1 -> oneStarMaterialHighlightEnabled;
+                case 2 -> twoStarMaterialHighlightEnabled;
+                case 3 -> threeStarMaterialHighlightEnabled;
                 default -> false; // should not happen
             };
         }
     }
 
-    public static class PowderHighlight implements HighlightInfo {
+    public class PowderHighlight implements HighlightInfo {
         private final PowderItem item;
 
         public PowderHighlight(PowderItem item) {
@@ -309,7 +307,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return ItemHighlightFeature.INSTANCE.powderHighlightEnabled;
+            return powderHighlightEnabled;
         }
 
         @Override
@@ -318,7 +316,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public static class CosmeticHighlight implements HighlightInfo {
+    public class CosmeticHighlight implements HighlightInfo {
         private final CosmeticItem item;
 
         public CosmeticHighlight(CosmeticItem item) {
@@ -327,7 +325,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return ItemHighlightFeature.INSTANCE.cosmeticHighlightEnabled;
+            return cosmeticHighlightEnabled;
         }
 
         @Override
@@ -336,7 +334,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public static class GearHighlight implements HighlightInfo {
+    public class GearHighlight implements HighlightInfo {
         private final GearTierItemProperty item;
 
         public GearHighlight(GearTierItemProperty item) {
@@ -345,38 +343,38 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return ItemHighlightFeature.isHighlightEnabled(item.getGearTier());
+            return ItemHighlightFeature.this.isHighlightEnabled(item.getGearTier());
         }
 
         @Override
         public CustomColor getHighlightColor() {
-            return ItemHighlightFeature.getHighlightColor(item.getGearTier());
+            return ItemHighlightFeature.this.getHighlightColor(item.getGearTier());
         }
     }
 
     // This is a bit ugly, but it is used in GuideGearItemStack...
-    public static CustomColor getHighlightColor(ItemTier itemTier) {
+    public CustomColor getHighlightColor(ItemTier itemTier) {
         return switch (itemTier) {
-            case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightColor;
-            case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightColor;
-            case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightColor;
-            case SET -> ItemHighlightFeature.INSTANCE.setHighlightColor;
-            case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightColor;
-            case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightColor;
-            case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightColor;
+            case NORMAL -> normalHighlightColor;
+            case UNIQUE -> uniqueHighlightColor;
+            case RARE -> rareHighlightColor;
+            case SET -> setHighlightColor;
+            case LEGENDARY -> legendaryHighlightColor;
+            case FABLED -> fabledHighlightColor;
+            case MYTHIC -> mythicHighlightColor;
             default -> CustomColor.NONE;
         };
     }
 
-    public static boolean isHighlightEnabled(ItemTier itemTier) {
+    public boolean isHighlightEnabled(ItemTier itemTier) {
         return switch (itemTier) {
-            case NORMAL -> ItemHighlightFeature.INSTANCE.normalHighlightEnabled;
-            case UNIQUE -> ItemHighlightFeature.INSTANCE.uniqueHighlightEnabled;
-            case RARE -> ItemHighlightFeature.INSTANCE.rareHighlightEnabled;
-            case SET -> ItemHighlightFeature.INSTANCE.setHighlightEnabled;
-            case LEGENDARY -> ItemHighlightFeature.INSTANCE.legendaryHighlightEnabled;
-            case FABLED -> ItemHighlightFeature.INSTANCE.fabledHighlightEnabled;
-            case MYTHIC -> ItemHighlightFeature.INSTANCE.mythicHighlightEnabled;
+            case NORMAL -> normalHighlightEnabled;
+            case UNIQUE -> uniqueHighlightEnabled;
+            case RARE -> rareHighlightEnabled;
+            case SET -> setHighlightEnabled;
+            case LEGENDARY -> legendaryHighlightEnabled;
+            case FABLED -> fabledHighlightEnabled;
+            case MYTHIC -> mythicHighlightEnabled;
             default -> false;
         };
     }
