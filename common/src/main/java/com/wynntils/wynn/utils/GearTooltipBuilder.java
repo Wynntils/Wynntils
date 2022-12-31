@@ -87,6 +87,11 @@ public class GearTooltipBuilder {
                                         : ChatFormatting.GRAY)); // neutral is all gold
                 baseTooltip.add(damage);
             }
+            // dps
+            MutableComponent dpsLine = Component.literal("   Average DPS: ").withStyle(ChatFormatting.DARK_GRAY);
+            // FIXME: calculate DPS
+            dpsLine.append(Component.literal("???").withStyle(ChatFormatting.GRAY));
+            baseTooltip.add(dpsLine);
 
             baseTooltip.add(Component.literal(""));
         }
@@ -106,7 +111,7 @@ public class GearTooltipBuilder {
                 MutableComponent defense =
                         Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
                 defense.append(
-                        Component.literal(" Defence: " + entry.getValue()).withStyle(ChatFormatting.GRAY));
+                        Component.literal(" Defence: " + withSign(entry.getValue())).withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(defense);
             }
 
@@ -199,7 +204,11 @@ public class GearTooltipBuilder {
                     .withStyle(ChatFormatting.RED));
         }
 
-        // FIXME: missing lore
+        String lore = itemProfile.getLore();
+        if (lore != null) {
+            Stream.of(StringUtils.wrapTextBySize(lore, 150))
+                    .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
+        }
 
         return baseTooltip;
     }
