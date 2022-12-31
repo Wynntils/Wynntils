@@ -8,7 +8,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

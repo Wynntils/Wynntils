@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item.parsers;
+package com.wynntils.wynn.utils;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
@@ -10,7 +10,6 @@ import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
