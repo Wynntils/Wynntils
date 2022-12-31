@@ -4,7 +4,6 @@
  */
 package com.wynntils.gui.screens.guides;
 
-import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideGearItemStack extends WynnItemStack {
+public class GuideGearItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
     private final MutableComponent name;
     private final ItemProfile itemProfile;

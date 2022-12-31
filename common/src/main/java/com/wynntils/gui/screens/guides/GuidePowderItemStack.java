@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.guides;
 
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuidePowderItemStack extends WynnItemStack {
+public class GuidePowderItemStack extends GuideItemStack {
     private final int tier;
     private final Powder element;
     private final PowderProfile powderProfile;

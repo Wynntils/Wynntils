@@ -5,7 +5,6 @@
 package com.wynntils.gui.screens.guides;
 
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideEmeraldPouchItemStack extends WynnItemStack {
+public class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final int tier;
 
     private final List<Component> generatedTooltip;

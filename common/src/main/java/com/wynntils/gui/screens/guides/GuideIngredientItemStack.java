@@ -4,7 +4,6 @@
  */
 package com.wynntils.gui.screens.guides;
 
-import com.wynntils.wynn.item.WynnItemStack;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientItemModifiers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientModifiers;
@@ -21,7 +20,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideIngredientItemStack extends WynnItemStack {
+public class GuideIngredientItemStack extends GuideItemStack {
     private final List<MutableComponent> guideTooltip;
 
     private final IngredientProfile ingredientProfile;
