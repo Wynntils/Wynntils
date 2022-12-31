@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
@@ -72,11 +73,12 @@ public final class ChatItemModel extends Model {
      * modified without also changing the encoding in legacy.
      *
      */
-    public String encodeItem(GearItemStack item) {
-        String itemName = item.getSimpleName();
+    public String encodeItem(GearItem gearItem) {
+        String itemName = gearItem.getItemProfile().getDisplayName();
 
         // get identification data - ordered for consistency
-        List<ItemIdentificationContainer> sortedIds = item.getOrderedIdentifications();
+        List<ItemIdentificationContainer> sortedIds =
+                Managers.ItemProfiles.orderIdentifications(gearItem.getIdContainers());
 
         // name
         StringBuilder encoded = new StringBuilder(START);
@@ -106,7 +108,7 @@ public final class ChatItemModel extends Model {
         }
 
         // powders
-        List<Powder> powders = item.getPowders();
+        List<Powder> powders = gearItem.getPowders();
         if (powders != null && !powders.isEmpty()) {
             encoded.append(SEPARATOR);
 
@@ -127,7 +129,7 @@ public final class ChatItemModel extends Model {
         }
 
         // rerolls
-        encoded.append(encodeNumber(item.getRerolls()));
+        encoded.append(encodeNumber(gearItem.getRerolls()));
 
         encoded.append(END);
         return encoded.toString();

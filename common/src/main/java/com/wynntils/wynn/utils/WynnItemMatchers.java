@@ -7,7 +7,6 @@ package com.wynntils.wynn.utils;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.List;
@@ -93,10 +92,6 @@ public final class WynnItemMatchers {
      * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
      */
     private static boolean isGear(ItemStack itemStack) {
-        if (itemStack instanceof GearItemStack) {
-            return true;
-        }
-
         for (Component line : ItemUtils.getTooltipLines(itemStack)) {
             if (rarityLineMatcher(line).find()) return true;
         }

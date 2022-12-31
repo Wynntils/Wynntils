@@ -20,7 +20,6 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.item.GearItemStack;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -80,7 +79,7 @@ public class ItemCompareFeature extends UserFeature {
         if (compareToEquipped) {
             List<ItemStack> armorSlots = McUtils.inventory().armor;
 
-            Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
+            Optional<ItemStack> matchingArmorItemStack = armorSlots.stream()
                     .filter(itemStack -> {
                         Optional<GearItem> gearOpt = ItemModel.asWynnItem(itemStack, GearItem.class);
                         if (gearOpt.isEmpty()) return false;
@@ -91,7 +90,6 @@ public class ItemCompareFeature extends UserFeature {
                                         .getItemInfo()
                                         .getType();
                     })
-                    .map(itemStack -> (GearItemStack) itemStack)
                     .findFirst();
 
             itemToCompare = matchingArmorItemStack.orElse(null);
