@@ -18,7 +18,6 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -119,7 +118,7 @@ public class ItemScreenshotFeature extends UserFeature {
                             .withStyle(ChatFormatting.RED));
         }
 
-        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(stack, GearItem.class);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(stack, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
         String encoded = Models.ChatItem.encodeItem(gearItemOpt.get());

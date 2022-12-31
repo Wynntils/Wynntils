@@ -69,7 +69,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 
-    public static Optional<WynnItem> getWynnItem(ItemStack itemStack) {
+    public Optional<WynnItem> getWynnItem(ItemStack itemStack) {
         Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
@@ -77,7 +77,7 @@ public class ItemModel extends Model {
         return Optional.of(wynnItem);
     }
 
-    public static <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
+    public <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
         var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();

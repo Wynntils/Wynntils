@@ -5,11 +5,11 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SoulPointTimerFeature extends UserFeature {
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        Optional<SoulPointItem> soulPointItemOpt = ItemModel.asWynnItem(event.getItemStack(), SoulPointItem.class);
+        Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
         if (soulPointItemOpt.isEmpty()) return;
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());

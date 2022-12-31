@@ -5,6 +5,7 @@
 package com.wynntils.features.user.tooltips;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -12,7 +13,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
@@ -34,7 +34,7 @@ public class ItemGuessFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        Optional<GearBoxItem> gearBoxItemOpt = ItemModel.asWynnItem(event.getItemStack(), GearBoxItem.class);
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());

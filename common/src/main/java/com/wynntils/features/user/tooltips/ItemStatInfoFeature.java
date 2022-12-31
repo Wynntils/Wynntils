@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.tooltips;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -11,7 +12,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(event.getItemStack(), GearItem.class);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;

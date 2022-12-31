@@ -5,6 +5,7 @@
 package com.wynntils.features.user.tooltips;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -17,7 +18,6 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
-        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(hoveredItemStack, GearItem.class);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredItemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
         ItemStack itemToCompare = null;
@@ -81,7 +81,7 @@ public class ItemCompareFeature extends UserFeature {
 
             Optional<ItemStack> matchingArmorItemStack = armorSlots.stream()
                     .filter(itemStack -> {
-                        Optional<GearItem> gearOpt = ItemModel.asWynnItem(itemStack, GearItem.class);
+                        Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
                         if (gearOpt.isEmpty()) return false;
                         return gearOpt.get().getItemProfile().getItemInfo().getType()
                                 == gearItemOpt
@@ -148,7 +148,7 @@ public class ItemCompareFeature extends UserFeature {
         if (hoveredSlot == null) return;
 
         ItemStack itemStack = hoveredSlot.getItem();
-        Optional<WynnItem> wynnItemOpt = ItemModel.getWynnItem(itemStack);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (wynnItemOpt.get() instanceof GearItem gearItemStack) {
             if (comparedItem == itemStack) {

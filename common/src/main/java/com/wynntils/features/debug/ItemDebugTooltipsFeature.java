@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.debug;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.WynnItem;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 public class ItemDebugTooltipsFeature extends DebugFeature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        Optional<WynnItem> wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;
         WynnItem wynnItem = wynnItemOpt.get();
 

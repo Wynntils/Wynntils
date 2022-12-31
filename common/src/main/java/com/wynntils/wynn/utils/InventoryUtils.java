@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -45,7 +45,7 @@ public final class InventoryUtils {
     }
 
     public static boolean isWeapon(ItemStack itemStack) {
-        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(itemStack, GearItem.class);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return false;
 
         return gearItemOpt.get().getItemProfile().getItemInfo().getType().isWeapon();

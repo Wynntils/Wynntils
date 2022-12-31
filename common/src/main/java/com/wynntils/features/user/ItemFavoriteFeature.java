@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -16,7 +17,6 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.utils.ContainerUtils;
@@ -73,7 +73,7 @@ public class ItemFavoriteFeature extends UserFeature {
             return true;
         }
 
-        var wynnItemOpt = ItemModel.getWynnItem(itemStack);
+        var wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
 
         if (wynnItemOpt.get() instanceof IngredientItem ingredientItem) {
