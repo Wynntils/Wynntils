@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.features.user.inventory.ItemHighlightFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.GuideGearItemStack;
@@ -34,9 +33,8 @@ public class GuideGearItemStackButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        // FIXME: This is kind of an ugly reference...
-        CustomColor color = ItemHighlightFeature.getHighlightColor(
-                itemStack.getItemProfile().getTier());
+        CustomColor color = CustomColor.fromChatFormatting(
+                itemStack.getItemProfile().getTier().getChatFormatting());
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();
