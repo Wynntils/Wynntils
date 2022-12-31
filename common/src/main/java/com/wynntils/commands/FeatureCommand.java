@@ -57,7 +57,7 @@ public class FeatureCommand extends CommandBase {
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
         List<Feature> features = FeatureRegistry.getFeatures().stream()
-                .filter(feature -> isVisible(feature))
+                .filter(FeatureCommand::isVisible)
                 .sorted(Feature::compareTo)
                 .toList();
 
@@ -69,7 +69,7 @@ public class FeatureCommand extends CommandBase {
         for (Feature feature : features) {
             Class<?> superclass = feature.getClass().getSuperclass();
 
-            ChatFormatting color = ChatFormatting.WHITE;
+            ChatFormatting color;
             String translatedName = feature.getTranslatedName();
 
             if (feature instanceof DebugFeature) {
