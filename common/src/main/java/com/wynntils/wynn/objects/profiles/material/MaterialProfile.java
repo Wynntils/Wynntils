@@ -5,11 +5,12 @@
 package com.wynntils.wynn.objects.profiles.material;
 
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class MaterialProfile {
+public final class MaterialProfile {
     public static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
             MaterialType.ORE,
             List.of(
@@ -80,7 +81,7 @@ public class MaterialProfile {
 
     public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, int tier) {
         SourceMaterial sourceMaterial = SOURCE_MATERIALS.values().stream()
-                .flatMap(list -> list.stream())
+                .flatMap(Collection::stream)
                 .filter(material -> material.name().equals(sourceMaterialName))
                 .findFirst()
                 .orElseGet(null);
