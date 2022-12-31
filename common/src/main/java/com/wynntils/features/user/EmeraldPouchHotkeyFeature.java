@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -14,8 +15,8 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.model.emeralds.EmeraldPouch;
 import com.wynntils.wynn.utils.InventoryUtils;
-import com.wynntils.wynn.utils.InventoryUtils.EmeraldPouch;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -33,7 +34,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         Player player = McUtils.player();
-        List<EmeraldPouch> emeraldPouches = InventoryUtils.getEmeraldPouches(player.getInventory());
+        List<EmeraldPouch> emeraldPouches = Managers.Emerald.getEmeraldPouches(player.getInventory());
 
         if (emeraldPouches.isEmpty()) {
             NotificationManager.queueMessage(new TextRenderTask(

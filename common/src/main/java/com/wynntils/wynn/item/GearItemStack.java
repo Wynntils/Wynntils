@@ -115,7 +115,8 @@ public class GearItemStack extends WynnItemStack {
                 continue;
             }
 
-            ItemIdentificationContainer idContainer = WynnItemUtils.identificationFromLore(loreLine, itemProfile);
+            ItemIdentificationContainer idContainer =
+                    Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
             if (idContainer == null) { // not an ID line
                 baseTooltip.add(loreLine);
                 continue;
@@ -234,7 +235,7 @@ public class GearItemStack extends WynnItemStack {
     }
 
     public List<ItemIdentificationContainer> getOrderedIdentifications() {
-        return IdentificationOrderer.INSTANCE.orderIdentifications(identifications);
+        return Managers.ItemProfiles.orderIdentifications(identifications);
     }
 
     public List<Powder> getPowders() {
@@ -381,7 +382,7 @@ public class GearItemStack extends WynnItemStack {
             isPerfect = overallPercentage >= 100d;
             isDefective = overallPercentage == 0;
 
-            name.append(WynnItemUtils.getPercentageTextComponent(overallPercentage));
+            name.append(Managers.ItemProfiles.getPercentageTextComponent(overallPercentage));
         }
 
         customName = name;
@@ -411,11 +412,11 @@ public class GearItemStack extends WynnItemStack {
             Collection<Component> orderedRerolls;
 
             if (ItemStatInfoFeature.INSTANCE.reorderIdentifications || isGuideStack) {
-                orderedPercents = IdentificationOrderer.INSTANCE.orderComponents(
+                orderedPercents = Managers.ItemProfiles.orderComponents(
                         percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRanges = IdentificationOrderer.INSTANCE.orderComponents(
+                orderedRanges = Managers.ItemProfiles.orderComponents(
                         rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-                orderedRerolls = IdentificationOrderer.INSTANCE.orderComponents(
+                orderedRerolls = Managers.ItemProfiles.orderComponents(
                         rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
             } else {
                 orderedPercents = percentMap.values();
