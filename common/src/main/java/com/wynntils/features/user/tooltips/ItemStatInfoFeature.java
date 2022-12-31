@@ -57,11 +57,18 @@ public class ItemStatInfoFeature extends UserFeature {
         Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(event.getItemStack(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        // FIXME!
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
-            List<Component> tooltips = new ArrayList<>();
-            tooltips.addAll(new GearTooltipBuilder(gearItemOpt.get()).getTooltipLines());
-            event.setTooltips(tooltips);
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
+
+        GearItem gearItem = gearItemOpt.get();
+        GearTooltipBuilder builder = gearItem.getCached(GearTooltipBuilder.class);
+        if (builder == null) {
+            builder =
+                    GearTooltipBuilder.fromItemStack(event.getItemStack(), gearItem.getItemProfile(), gearItem, false);
+            gearItem.storeInCache(builder);
         }
+
+        List<Component> tooltips = new ArrayList<>();
+        tooltips.addAll(builder.getTooltipLines());
+        event.setTooltips(tooltips);
     }
 }

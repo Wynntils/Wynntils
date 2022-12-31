@@ -7,6 +7,7 @@ package com.wynntils.wynn.utils;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -21,15 +22,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
 public class GearTooltipBuilder {
-    private static final Component ID_PLACEHOLDER = Component.literal("ID_PLACEHOLDER");
+    private static final Pattern ITEM_TIER =
+            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
 
     private final ItemProfile itemProfile;
     private final GearItem gearItem;
@@ -54,17 +60,99 @@ public class GearTooltipBuilder {
         this.itemProfile = gearProfile;
         this.gearItem = gearItem;
         this.isChatItem = isChatItem;
-        buildTooltips();
+
+        topTooltip = buildTooltipTop();
+        bottomTooltip = buildTooltipBottom();
+
+        constructMiddleTooltips();
     }
 
-    private void buildTooltips() {
-        topTooltip = getTooltipTop();
-        bottomTooltip = getTooltipBottom();
+    public GearTooltipBuilder(
+            ItemProfile gearProfile,
+            GearItem gearItem,
+            boolean isChatItem,
+            List<Component> topTooltip,
+            List<Component> bottomTooltip) {
+        this.itemProfile = gearProfile;
+        this.gearItem = gearItem;
+        this.isChatItem = isChatItem;
 
-        constructTooltips();
+        this.topTooltip = topTooltip;
+        this.bottomTooltip = bottomTooltip;
+
+        constructMiddleTooltips();
     }
 
-    private List<Component> getTooltipTop() {
+    public static GearTooltipBuilder fromItemStack(
+            ItemStack itemStack, ItemProfile gearProfile, GearItem gearItem, boolean isChatItem) {
+        List<Component> tooltips = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
+
+        // Skip first line which contains name
+        Pair<List<Component>, List<Component>> splittedLore = splitLore(tooltips.subList(1, tooltips.size()), gearProfile);
+
+        return new GearTooltipBuilder(gearProfile, gearItem, isChatItem, splittedLore.a(), splittedLore.b());
+    }
+
+    static Pair<List<Component>,List<Component>> splitLore(List<Component> lore, ItemProfile gearProfile) {
+
+        List<Component> topTooltip = new ArrayList<>();
+        List<Component> bottomTooltip = new ArrayList<>();
+
+        List<Component> baseTooltip = topTooltip;
+
+        boolean setBonusIDs = false;
+        for (Component loreLine : lore) {
+            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
+
+            if (unformattedLoreLine.equals("Set Bonus:")) {
+                baseTooltip.add(loreLine);
+                setBonusIDs = true;
+                continue;
+            }
+
+            if (setBonusIDs) {
+                baseTooltip.add(loreLine);
+                if (unformattedLoreLine.isBlank()) {
+                    setBonusIDs = false;
+                }
+                continue;
+            }
+
+            if (unformattedLoreLine.contains("] Powder Slots")) {
+                baseTooltip.add(loreLine);
+                continue;
+            }
+
+            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
+            if (rerollMatcher.find()) {
+                baseTooltip.add(loreLine);
+                continue;
+            }
+
+            ItemIdentificationContainer idContainer =
+                    Managers.ItemProfiles.identificationFromLore(loreLine, gearProfile);
+            if (idContainer == null) { // not an ID line
+                baseTooltip.add(loreLine);
+                continue;
+            }
+
+            // if we've reached this point, we have an id. It should not be stored anywhere
+            if (baseTooltip == topTooltip) {
+                // switch to bottom part
+                baseTooltip = bottomTooltip;
+            }
+        }
+
+        return Pair.of(topTooltip, bottomTooltip);
+    }
+
+    private static List<Component> extractTooltipBottom(List<Component> tooltips) {
+        List<Component> list = new ArrayList<>();
+        list.add(Component.literal("BOTTOM"));
+        return list;
+    }
+
+    private List<Component> buildTooltipTop() {
         List<Component> baseTooltip = new ArrayList<>();
 
         // attack speed
@@ -155,7 +243,7 @@ public class GearTooltipBuilder {
         }
     }
 
-    private List<Component> getTooltipBottom() {
+    private List<Component> buildTooltipBottom() {
         List<Component> baseTooltip = new ArrayList<>();
 
         // major ids
@@ -213,7 +301,7 @@ public class GearTooltipBuilder {
         return baseTooltip;
     }
 
-    private void constructTooltips() {
+    private void constructMiddleTooltips() {
         percentTooltip = new ArrayList<>();
         rangeTooltip = new ArrayList<>();
         rerollTooltip = new ArrayList<>();
