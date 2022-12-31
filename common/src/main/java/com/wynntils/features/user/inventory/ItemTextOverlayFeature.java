@@ -209,7 +209,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         private final DungeonKeyItem item;
 
-        public DungeonKeyOverlay(DungeonKeyItem item) {
+        private DungeonKeyOverlay(DungeonKeyItem item) {
             this.item = item;
         }
 
@@ -238,7 +238,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         private final AmplifierItem item;
 
-        public AmplifierOverlay(AmplifierItem item) {
+        private AmplifierOverlay(AmplifierItem item) {
             this.item = item;
         }
 
@@ -270,7 +270,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         private final TeleportScrollItem item;
 
-        public TeleportScrollOverlay(TeleportScrollItem item) {
+        private TeleportScrollOverlay(TeleportScrollItem item) {
             this.item = item;
         }
 
@@ -299,7 +299,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         private final EmeraldPouchItem item;
 
-        public EmeraldPouchOverlay(EmeraldPouchItem item) {
+        private EmeraldPouchOverlay(EmeraldPouchItem item) {
             this.item = item;
         }
 
@@ -324,7 +324,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     private class GatheringToolOverlay implements TextOverlayInfo {
         private final GatheringToolItem item;
 
-        public GatheringToolOverlay(GatheringToolItem item) {
+        private GatheringToolOverlay(GatheringToolItem item) {
             this.item = item;
         }
 
@@ -350,7 +350,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     private class PowderOverlay implements TextOverlayInfo {
         private final PowderItem item;
 
-        public PowderOverlay(PowderItem item) {
+        private PowderOverlay(PowderItem item) {
             this.item = item;
         }
 
@@ -381,7 +381,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     private class SkillPotionOverlay implements TextOverlayInfo {
         private final SkillPotionItem item;
 
-        public SkillPotionOverlay(SkillPotionItem item) {
+        private SkillPotionOverlay(SkillPotionItem item) {
             this.item = item;
         }
 
@@ -408,7 +408,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     private class SkillPointOverlay implements TextOverlayInfo {
         private final SkillPointItem item;
 
-        public SkillPointOverlay(SkillPointItem item) {
+        private SkillPointOverlay(SkillPointItem item) {
             this.item = item;
         }
 

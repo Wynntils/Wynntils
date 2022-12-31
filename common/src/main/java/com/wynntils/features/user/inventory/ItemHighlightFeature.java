@@ -241,7 +241,7 @@ public class ItemHighlightFeature extends UserFeature {
     private class IngredientHighlight implements HighlightInfo {
         private final IngredientItem item;
 
-        public IngredientHighlight(IngredientItem item) {
+        private IngredientHighlight(IngredientItem item) {
             this.item = item;
         }
 
@@ -271,7 +271,7 @@ public class ItemHighlightFeature extends UserFeature {
     private class MaterialHighlight implements HighlightInfo {
         private final MaterialItem item;
 
-        public MaterialHighlight(MaterialItem item) {
+        private MaterialHighlight(MaterialItem item) {
             this.item = item;
         }
 
@@ -299,7 +299,7 @@ public class ItemHighlightFeature extends UserFeature {
     private class PowderHighlight implements HighlightInfo {
         private final PowderItem item;
 
-        public PowderHighlight(PowderItem item) {
+        private PowderHighlight(PowderItem item) {
             this.item = item;
         }
 
@@ -317,7 +317,7 @@ public class ItemHighlightFeature extends UserFeature {
     private class CosmeticHighlight implements HighlightInfo {
         private final CosmeticItem item;
 
-        public CosmeticHighlight(CosmeticItem item) {
+        private CosmeticHighlight(CosmeticItem item) {
             this.item = item;
         }
 
@@ -335,7 +335,7 @@ public class ItemHighlightFeature extends UserFeature {
     private class GearHighlight implements HighlightInfo {
         private final GearTierItemProperty item;
 
-        public GearHighlight(GearTierItemProperty item) {
+        private GearHighlight(GearTierItemProperty item) {
             this.item = item;
         }
 

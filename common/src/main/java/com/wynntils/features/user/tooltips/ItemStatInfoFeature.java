@@ -67,8 +67,7 @@ public class ItemStatInfoFeature extends UserFeature {
             gearItem.storeInCache(builder);
         }
 
-        List<Component> tooltips = new ArrayList<>();
-        tooltips.addAll(builder.getTooltipLines());
+        List<Component> tooltips = new ArrayList<>(builder.getTooltipLines());
         event.setTooltips(tooltips);
     }
 }

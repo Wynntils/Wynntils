@@ -32,11 +32,6 @@ public class DurabilityArcFeature extends UserFeature {
     @Config
     public boolean renderDurabilityArcHotbar = true;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
-    }
-
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!renderDurabilityArcHotbar) return;

@@ -322,7 +322,7 @@ public final class CharacterManager extends Manager {
     public boolean isRequirementSatisfied(RequirementType type, String value) {
         return switch (type) {
             case LEVEL -> getXpLevel() > Integer.parseInt(value);
-            case CLASSTYPE -> getClassType().equals(value);
+            case CLASSTYPE -> getClassType().toString().equals(value);
             default -> getSkillLevel(type.getSkill()) >= Integer.parseInt(value);
         };
     }

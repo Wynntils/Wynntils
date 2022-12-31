@@ -53,11 +53,6 @@ public class ContainerSearchFeature extends UserFeature {
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
-    }
-
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
