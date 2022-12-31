@@ -37,6 +37,10 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
         // Parse lore for identifications and powders
         List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        if (lore.size() <= 1) {
+            // We should always have the item name as the first line, unless some other mod interacts badly...
+            return null;
+        }
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
