@@ -32,7 +32,7 @@ public class FeatureCommand extends CommandBase {
     private static final SuggestionProvider<CommandSourceStack> USER_FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     FeatureRegistry.getFeatures().stream()
-                            .filter(feature -> feature.getClass().getSuperclass() == UserFeature.class)
+                            .filter(feature -> feature instanceof UserFeature && isVisible(feature))
                             .map(Feature::getShortName),
                     builder);
 
@@ -57,7 +57,7 @@ public class FeatureCommand extends CommandBase {
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
         List<Feature> features = FeatureRegistry.getFeatures().stream()
-                .filter(feature -> !(feature instanceof DebugFeature) || WynntilsMod.isDevelopmentEnvironment())
+                .filter(feature -> isVisible(feature))
                 .sorted(Feature::compareTo)
                 .toList();
 
@@ -72,19 +72,22 @@ public class FeatureCommand extends CommandBase {
             ChatFormatting color = ChatFormatting.WHITE;
             String translatedName = feature.getTranslatedName();
 
-            if (superclass == UserFeature.class || superclass == StateManagedFeature.class) {
-                if (feature.isEnabled()) {
-                    color = ChatFormatting.GREEN;
-                } else {
-                    color = ChatFormatting.RED;
-                }
-            } else if (superclass == DebugFeature.class) {
+            if (feature instanceof DebugFeature) {
                 color = ChatFormatting.YELLOW;
 
                 if (feature.isEnabled()) {
                     translatedName += " {ENABLED DEBUG}";
                 } else {
                     translatedName += " {DISABLED DEBUG}";
+                }
+            } else {
+                if (feature.isEnabled()) {
+                    color = ChatFormatting.GREEN;
+                } else {
+                    color = ChatFormatting.RED;
+                }
+                if (feature instanceof StateManagedFeature) {
+                    translatedName += " {SYSTEM CONTROLLED}";
                 }
             }
 
@@ -105,6 +108,11 @@ public class FeatureCommand extends CommandBase {
         context.getSource().sendSuccess(response, false);
 
         return 1;
+    }
+
+    private static boolean isVisible(Feature feature) {
+        if (!(feature instanceof DebugFeature)) return true;
+        return WynntilsMod.isDevelopmentEnvironment();
     }
 
     private LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
