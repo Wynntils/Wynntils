@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.wynn.handleditems.ItemModel;
-import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.gui.ServerItem;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.ArrayList;

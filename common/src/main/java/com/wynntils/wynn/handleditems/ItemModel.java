@@ -83,7 +83,7 @@ public class ItemModel extends Model {
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
         if (wynnItem.getClass() != clazz) return Optional.empty();
 
-        return Optional.of((T)wynnItem);
+        return Optional.of((T) wynnItem);
     }
 
     public static final class FallbackAnnotator implements ItemAnnotator {
