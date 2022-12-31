@@ -34,12 +34,11 @@ public class ItemGuessFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        var wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof GearBoxItem gearBoxItem)) return;
+        Optional<GearBoxItem> gearBoxItemOpt = ItemModel.asWynnItem(event.getItemStack(), GearBoxItem.class);
+        if (gearBoxItemOpt.isEmpty()) return;
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
-        tooltips.addAll(getTooltipAddon(gearBoxItem));
+        tooltips.addAll(getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
     }
 

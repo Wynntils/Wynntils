@@ -71,9 +71,8 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
-        Optional<WynnItem> wynnItemOpt = ItemModel.getWynnItem(hoveredItemStack);
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof GearItem hoveredGearItemStack)) return;
+        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(hoveredItemStack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
 
         ItemStack itemToCompare = null;
 
@@ -83,11 +82,10 @@ public class ItemCompareFeature extends UserFeature {
 
             Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
                     .filter(itemStack -> {
-                        Optional<WynnItem> itemOpt = ItemModel.getWynnItem(itemStack);
-                        if (itemOpt.isEmpty()) return false;
-                        if (!(itemOpt.get() instanceof GearItem gItemStack)) return false;
-                        return gItemStack.getItemProfile().getItemInfo().getType()
-                                == hoveredGearItemStack
+                        Optional<GearItem> gearOpt = ItemModel.asWynnItem(itemStack, GearItem.class);
+                        if (gearOpt.isEmpty()) return false;
+                        return gearOpt.get().getItemProfile().getItemInfo().getType()
+                                == gearItemOpt.get()
                                         .getItemProfile()
                                         .getItemInfo()
                                         .getType();

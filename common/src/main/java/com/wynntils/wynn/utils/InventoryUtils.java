@@ -46,11 +46,10 @@ public final class InventoryUtils {
     }
 
     public static boolean isWeapon(ItemStack itemStack) {
-        Optional<WynnItem> wynnItemOpt = ItemModel.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return false;
-        if (!(wynnItemOpt.get() instanceof GearItem gearItem)) return false;
+        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(itemStack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return false;
 
-        return gearItem.getItemProfile().getItemInfo().getType().isWeapon();
+        return gearItemOpt.get().getItemProfile().getItemInfo().getType().isWeapon();
     }
 
     public enum MouseClickType {

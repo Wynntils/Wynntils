@@ -77,13 +77,13 @@ public class ItemModel extends Model {
         return Optional.of(wynnItem);
     }
 
-    public static <T extends WynnItem> Optional<WynnItem> asWynnItem(ItemStack itemStack, Class<? extends T> clazz) {
+    public static <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
         var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
         if (wynnItem.getClass() != clazz) return Optional.empty();
 
-        return Optional.of(wynnItem);
+        return Optional.of((T)wynnItem);
     }
 
     public static final class FallbackAnnotator implements ItemAnnotator {

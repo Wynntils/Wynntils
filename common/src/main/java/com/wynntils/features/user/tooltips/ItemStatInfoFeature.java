@@ -16,6 +16,7 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -53,14 +54,13 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        var wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof GearItem gearItem)) return;
+        Optional<GearItem> gearItemOpt = ItemModel.asWynnItem(event.getItemStack(), GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
 
         // FIXME!
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
             List<Component> tooltips = new ArrayList<>();
-            tooltips.addAll(new GearTooltipBuilder(gearItem).getTooltipLines());
+            tooltips.addAll(new GearTooltipBuilder(gearItemOpt.get()).getTooltipLines());
             event.setTooltips(tooltips);
         }
     }

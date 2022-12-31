@@ -13,6 +13,7 @@ import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,9 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SoulPointTimerFeature extends UserFeature {
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        var wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof SoulPointItem soulPointItem)) return;
+        Optional<SoulPointItem> soulPointItemOpt = ItemModel.asWynnItem(event.getItemStack(), SoulPointItem.class);
+        if (soulPointItemOpt.isEmpty()) return;
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
         tooltips.addAll(getTooltipAddon());

@@ -9,10 +9,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.wynn.handleditems.ItemModel;
+import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.gui.ServerItem;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,12 +27,11 @@ public class LobbyUptimeFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        var wynnItemOpt = ItemModel.getWynnItem(event.getItemStack());
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof ServerItem serverItem)) return;
+        Optional<ServerItem> serverItemOpt = ItemModel.asWynnItem(event.getItemStack(), ServerItem.class);
+        if (serverItemOpt.isEmpty()) return;
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
-        tooltips.addAll(getTooltipAddon(serverItem));
+        tooltips.addAll(getTooltipAddon(serverItemOpt.get()));
         event.setTooltips(tooltips);
     }
 
