@@ -22,7 +22,6 @@ import com.wynntils.wynn.handleditems.items.game.MaterialItem;
 import com.wynntils.wynn.handleditems.items.game.PowderItem;
 import com.wynntils.wynn.handleditems.items.gui.CosmeticItem;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -223,8 +222,7 @@ public class ItemHighlightFeature extends UserFeature {
         return null;
     }
 
-    public interface HighlightInfo {
-
+    private interface HighlightInfo {
         CustomColor getHighlightColor();
 
         boolean isHighlightEnabled();
@@ -240,7 +238,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public class IngredientHighlight implements HighlightInfo {
+    private class IngredientHighlight implements HighlightInfo {
         private final IngredientItem item;
 
         public IngredientHighlight(IngredientItem item) {
@@ -270,7 +268,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public class MaterialHighlight implements HighlightInfo {
+    private class MaterialHighlight implements HighlightInfo {
         private final MaterialItem item;
 
         public MaterialHighlight(MaterialItem item) {
@@ -298,7 +296,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public class PowderHighlight implements HighlightInfo {
+    private class PowderHighlight implements HighlightInfo {
         private final PowderItem item;
 
         public PowderHighlight(PowderItem item) {
@@ -316,7 +314,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public class CosmeticHighlight implements HighlightInfo {
+    private class CosmeticHighlight implements HighlightInfo {
         private final CosmeticItem item;
 
         public CosmeticHighlight(CosmeticItem item) {
@@ -334,7 +332,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    public class GearHighlight implements HighlightInfo {
+    private class GearHighlight implements HighlightInfo {
         private final GearTierItemProperty item;
 
         public GearHighlight(GearTierItemProperty item) {
@@ -343,39 +341,30 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return ItemHighlightFeature.this.isHighlightEnabled(item.getGearTier());
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightEnabled;
+                case UNIQUE -> uniqueHighlightEnabled;
+                case RARE -> rareHighlightEnabled;
+                case SET -> setHighlightEnabled;
+                case LEGENDARY -> legendaryHighlightEnabled;
+                case FABLED -> fabledHighlightEnabled;
+                case MYTHIC -> mythicHighlightEnabled;
+                default -> false;
+            };
         }
 
         @Override
         public CustomColor getHighlightColor() {
-            return ItemHighlightFeature.this.getHighlightColor(item.getGearTier());
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightColor;
+                case UNIQUE -> uniqueHighlightColor;
+                case RARE -> rareHighlightColor;
+                case SET -> setHighlightColor;
+                case LEGENDARY -> legendaryHighlightColor;
+                case FABLED -> fabledHighlightColor;
+                case MYTHIC -> mythicHighlightColor;
+                default -> CustomColor.NONE;
+            };
         }
-    }
-
-    // This is a bit ugly, but it is used in GuideGearItemStack...
-    public CustomColor getHighlightColor(ItemTier itemTier) {
-        return switch (itemTier) {
-            case NORMAL -> normalHighlightColor;
-            case UNIQUE -> uniqueHighlightColor;
-            case RARE -> rareHighlightColor;
-            case SET -> setHighlightColor;
-            case LEGENDARY -> legendaryHighlightColor;
-            case FABLED -> fabledHighlightColor;
-            case MYTHIC -> mythicHighlightColor;
-            default -> CustomColor.NONE;
-        };
-    }
-
-    public boolean isHighlightEnabled(ItemTier itemTier) {
-        return switch (itemTier) {
-            case NORMAL -> normalHighlightEnabled;
-            case UNIQUE -> uniqueHighlightEnabled;
-            case RARE -> rareHighlightEnabled;
-            case SET -> setHighlightEnabled;
-            case LEGENDARY -> legendaryHighlightEnabled;
-            case FABLED -> fabledHighlightEnabled;
-            case MYTHIC -> mythicHighlightEnabled;
-            default -> false;
-        };
     }
 }
