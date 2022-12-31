@@ -10,7 +10,9 @@ import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearItem extends GameItem implements GearTierItemProperty {
@@ -20,6 +22,9 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
+    private final boolean isPerfect;
+    private final boolean isDefective;
+    private final float overallPercentage;
 
     public GearItem(
             ItemProfile itemProfile,
@@ -34,6 +39,18 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         this.powders = powders;
         this.rerolls = rerolls;
         this.setBonus = setBonus;
+
+        DoubleSummaryStatistics percents = idContainers.stream()
+                .filter(Predicate.not(ItemIdentificationContainer::isFixed))
+                .mapToDouble(ItemIdentificationContainer::percent)
+                .summaryStatistics();
+        int idAmount = (int) percents.getCount();
+        float percentTotal = (float) percents.getSum();
+        overallPercentage = percentTotal / idAmount;
+
+        // check for perfect/0% items
+        isPerfect = overallPercentage >= 100d;
+        isDefective = overallPercentage == 0;
     }
 
     public ItemProfile getItemProfile() {
@@ -75,13 +92,15 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 + setBonus + '}';
     }
 
+    public float getOverallPercentage() {
+        return overallPercentage;
+    }
+
     public boolean isPerfect() {
-        // FIXME
-        return false;
+        return isPerfect;
     }
 
     public boolean isDefective() {
-        // FIXME
-        return false;
+        return isDefective;
     }
 }
