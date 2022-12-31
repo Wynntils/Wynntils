@@ -11,11 +11,11 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     NEUTRAL("✣", ChatFormatting.GOLD),
-    EARTH("✤", ChatFormatting.DARK_GREEN),
     FIRE("✹", ChatFormatting.RED),
     WATER("❉", ChatFormatting.AQUA),
+    AIR("❋", ChatFormatting.WHITE),
     THUNDER("✦", ChatFormatting.YELLOW),
-    AIR("❋", ChatFormatting.WHITE);
+    EARTH("✤", ChatFormatting.DARK_GREEN);
 
     private final String symbol;
     private final ChatFormatting color;

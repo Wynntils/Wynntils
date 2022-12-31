@@ -96,7 +96,7 @@ public class GearTooltipBuilder {
             int health = itemProfile.getHealth();
             if (health != 0) {
                 MutableComponent healthComp =
-                        Component.literal("❤ Health: " + health).withStyle(ChatFormatting.DARK_RED);
+                        Component.literal("❤ Health: " + withSign(health)).withStyle(ChatFormatting.DARK_RED);
                 baseTooltip.add(healthComp);
             }
 
@@ -116,9 +116,16 @@ public class GearTooltipBuilder {
         // requirements
         if (itemProfile.hasRequirements()) {
             Map<RequirementType, String> requirements = itemProfile.getRequirements();
+            // fire, water, air, thunder, earth
             for (Map.Entry<RequirementType, String> entry : requirements.entrySet()) {
                 RequirementType type = entry.getKey();
-                MutableComponent requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
+                MutableComponent requirement;
+
+                if (Managers.Character.isRequirementSatisfied(type, entry.getValue())) {
+                    requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
+                } else {
+                    requirement = Component.literal("✖ ").withStyle(ChatFormatting.RED);
+                }
                 requirement.append(
                         Component.literal(type.asLore() + entry.getValue()).withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(requirement);
@@ -133,6 +140,14 @@ public class GearTooltipBuilder {
         }
 
         return baseTooltip;
+    }
+
+    private String withSign(int value) {
+        if (value >= 0) {
+            return "+" + value;
+        } else {
+            return Integer.toString(value);
+        }
     }
 
     private List<Component> getTooltipBottom() {
@@ -253,7 +268,7 @@ public class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        return Component.literal("FIXME");
+        return Component.literal(gearItem.getItemProfile().getDisplayName()).withStyle(gearItem.getGearTier().getChatFormatting());
     }
 
     public List<Component> getMiddlePart() {
