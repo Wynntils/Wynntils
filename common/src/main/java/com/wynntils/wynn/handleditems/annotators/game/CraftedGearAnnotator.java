@@ -54,6 +54,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
             }
 
             // Look for identifications
+            // FIXME: This pattern is likely to fail, needs fixing
             Matcher identificationMatcher = GearAnnotator.ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
                 String idName = WynnItemMatchers.getShortIdentificationName(
