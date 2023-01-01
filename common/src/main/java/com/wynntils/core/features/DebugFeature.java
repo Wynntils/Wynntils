@@ -6,21 +6,15 @@ package com.wynntils.core.features;
 
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 
 /** Feature for debugging */
 @FeatureInfo(stability = Stability.UNSTABLE)
-public abstract class DebugFeature extends Feature {
+public abstract class DebugFeature extends UserFeature {
     @Override
     protected void onInit(ImmutableList.Builder<Condition> conditions) {
         conditions.add(new DevelopmentCondition());
-    }
-
-    @Override
-    public final void updateConfigOption(ConfigHolder configHolder) {
-        onConfigUpdate(configHolder);
     }
 
     public static class DevelopmentCondition extends Condition {
