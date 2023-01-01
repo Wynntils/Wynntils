@@ -1,9 +1,21 @@
+## [0.0.2-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.46...v0.0.2-alpha.47) (2023-01-01)
+
+
+### Code Refactoring
+
+* Create HorseManager, EmeraldManager and clean up ItemProfilesManager ([#955](https://github.com/Wynntils/Artemis/issues/955)) ([0df882a](https://github.com/Wynntils/Artemis/commit/0df882a18b9dca2cb57fc743ed14f2c31fc5a4a7))
+
 ## [0.0.2-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.45...v0.0.2-alpha.46) (2023-01-01)
 
 
 ### New Features
 
 * Add ItemHandler, Annotators and WynnItem models ([#952](https://github.com/Wynntils/Artemis/issues/952)) ([a5dc4d9](https://github.com/Wynntils/Artemis/commit/a5dc4d94721a4cc4a91ae62f8fff5a70abe47c4f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.46 [skip ci] ([0fcf3b2](https://github.com/Wynntils/Artemis/commit/0fcf3b2145c70c8fe08586b98995a93a0a01c48d))
 
 ## [0.0.2-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.44...v0.0.2-alpha.45) (2022-12-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.43 [skip ci] ([8de1194](https://github.com/Wynntils/Artemis/commit/8de1194a106772925448d3dbcb910cc8bbef51c5))
-
-## [0.0.2-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.41...v0.0.2-alpha.42) (2022-12-28)
-
-
-### New Features
-
-* Detect if NPC dialogue is protected ([#942](https://github.com/Wynntils/Artemis/issues/942)) ([da3abb3](https://github.com/Wynntils/Artemis/commit/da3abb37c47890ef22b0b1a497eec1b6b3d37a37))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.42 [skip ci] ([9b125b0](https://github.com/Wynntils/Artemis/commit/9b125b05da39409cb44c118747f16d59692eb5a0))
 
