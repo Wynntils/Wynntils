@@ -34,11 +34,13 @@ public abstract class ItemStackMixin implements AnnotatedItemStack {
     }
 
     @Override
+    @Unique
     public ItemAnnotation getAnnotation() {
         return wynntilsAnnotation;
     }
 
     @Override
+    @Unique
     public void setAnnotation(ItemAnnotation annotation) {
         this.wynntilsAnnotation = annotation;
     }
