@@ -40,7 +40,6 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         this.rerolls = rerolls;
         this.setBonus = setBonus;
 
-
         DoubleSummaryStatistics percents = idContainers.stream()
                 .filter(Predicate.not(ItemIdentificationContainer::isFixed))
                 .mapToDouble(ItemIdentificationContainer::percent)
