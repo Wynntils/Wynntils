@@ -18,12 +18,13 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -117,18 +118,19 @@ public class ItemScreenshotFeature extends UserFeature {
                             .withStyle(ChatFormatting.RED));
         }
 
-        // chat item prompt
-        if (stack instanceof GearItemStack gearItem) {
-            String encoded = Models.ChatItem.encodeItem(gearItem);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(stack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
 
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
-                    .withStyle(ChatFormatting.DARK_GREEN)
-                    .withStyle(ChatFormatting.UNDERLINE)
-                    .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
-                    .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
-                                    .withStyle(ChatFormatting.DARK_AQUA)))));
-        }
+        String encoded = Models.ChatItem.encodeItem(gearItemOpt.get());
+
+        // chat item prompt
+        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
+                .withStyle(ChatFormatting.DARK_GREEN)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
+                .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
+                                .withStyle(ChatFormatting.DARK_AQUA)))));
     }
 }

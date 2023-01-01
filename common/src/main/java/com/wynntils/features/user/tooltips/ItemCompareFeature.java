@@ -5,7 +5,6 @@
 package com.wynntils.features.user.tooltips;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -19,7 +18,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.item.GearItemStack;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -38,13 +37,8 @@ public class ItemCompareFeature extends UserFeature {
     private final KeyBind compareSelectKeyBind =
             new KeyBind("Select for comparing", GLFW.GLFW_KEY_C, true, null, this::onSelectKeyPress);
 
-    private GearItemStack comparedItem = null;
+    private ItemStack comparedItem = null;
     private boolean compareToEquipped = false;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.GearItemStack);
-    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -75,24 +69,17 @@ public class ItemCompareFeature extends UserFeature {
             return;
         }
 
-        if (!(hoveredItemStack instanceof GearItemStack hoveredGearItemStack)) {
-            return;
-        }
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredItemStack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
 
-        GearItemStack itemToCompare = null;
+        ItemStack itemToCompare = null;
 
         // No compared item selected, try compare to equipped armor
         if (compareToEquipped) {
             List<ItemStack> armorSlots = McUtils.inventory().armor;
 
-            Optional<GearItemStack> matchingArmorItemStack = armorSlots.stream()
-                    .filter(itemStack -> itemStack instanceof GearItemStack gItemStack
-                            && gItemStack.getItemProfile().getItemInfo().getType()
-                                    == hoveredGearItemStack
-                                            .getItemProfile()
-                                            .getItemInfo()
-                                            .getType())
-                    .map(itemStack -> (GearItemStack) itemStack)
+            Optional<ItemStack> matchingArmorItemStack = armorSlots.stream()
+                    .filter(itemStack -> isMatchingType(itemStack, gearItemOpt.get()))
                     .findFirst();
 
             itemToCompare = matchingArmorItemStack.orElse(null);
@@ -102,7 +89,7 @@ public class ItemCompareFeature extends UserFeature {
 
         if (itemToCompare == null) return;
 
-        if (itemToCompare == hoveredGearItemStack) {
+        if (itemToCompare == hoveredItemStack) {
             return;
         }
 
@@ -119,7 +106,7 @@ public class ItemCompareFeature extends UserFeature {
                 .max(Integer::compareTo)
                 .orElse(0);
 
-        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(hoveredGearItemStack).stream()
+        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(hoveredItemStack).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
@@ -131,6 +118,14 @@ public class ItemCompareFeature extends UserFeature {
         }
 
         poseStack.popPose();
+    }
+
+    private boolean isMatchingType(ItemStack itemStack, GearItem gearItemReference) {
+        Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearOpt.isEmpty()) return false;
+
+        return gearOpt.get().getItemProfile().getItemInfo().getType()
+                == gearItemReference.getItemProfile().getItemInfo().getType();
     }
 
     @SubscribeEvent
@@ -150,13 +145,15 @@ public class ItemCompareFeature extends UserFeature {
     private void onSelectKeyPress(Slot hoveredSlot) {
         if (hoveredSlot == null) return;
 
-        if (hoveredSlot.getItem() instanceof GearItemStack gearItemStack) {
-            if (comparedItem == gearItemStack) {
-                comparedItem = null;
-            } else {
-                comparedItem = gearItemStack;
-                compareToEquipped = false;
-            }
+        ItemStack itemStack = hoveredSlot.getItem();
+        Optional<GearItem> wynnItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (wynnItemOpt.isEmpty()) return;
+
+        if (comparedItem == itemStack) {
+            comparedItem = null;
+        } else {
+            comparedItem = itemStack;
+            compareToEquipped = false;
         }
     }
 }

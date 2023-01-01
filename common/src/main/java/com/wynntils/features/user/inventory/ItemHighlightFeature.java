@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -16,24 +15,20 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
-import com.wynntils.wynn.item.properties.type.HighlightProperty;
-import java.util.List;
+import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
+import com.wynntils.wynn.handleditems.items.game.IngredientItem;
+import com.wynntils.wynn.handleditems.items.game.MaterialItem;
+import com.wynntils.wynn.handleditems.items.game.PowderItem;
+import com.wynntils.wynn.handleditems.items.gui.CosmeticItem;
+import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public static final List<Model> HIGHLIGHT_PROPERTIES = List.of(
-            Models.CosmeticTierProperty,
-            Models.EmeraldPouchItemStack,
-            Models.MaterialProperty,
-            Models.IngredientProperty,
-            Models.ItemTierProperty,
-            Models.PowderTierProperty);
-
     public static ItemHighlightFeature INSTANCE;
 
     @Config
@@ -147,11 +142,6 @@ public class ItemHighlightFeature extends UserFeature {
     @Config
     public float hotbarOpacity = .5f;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return HIGHLIGHT_PROPERTIES;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled) return;
@@ -182,14 +172,172 @@ public class ItemHighlightFeature extends UserFeature {
     }
 
     private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        if (!(item instanceof WynnItemStack wynnItem)) return CustomColor.NONE;
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
 
-        if (!wynnItem.hasProperty(ItemProperty.HIGHLIGHT)) return CustomColor.NONE;
-        HighlightProperty highlight = wynnItem.getProperty(ItemProperty.HIGHLIGHT);
+        WynnItem wynnItem = wynnItemOpt.get();
+        HighlightInfo highlight = wynnItem.getCache()
+                .getOrCalculate(WynnItemCache.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItemOpt.get()));
+        if (highlight == null) return CustomColor.NONE;
 
-        boolean contextEnabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
-        if (!highlight.isHighlightEnabled() || !contextEnabled) return CustomColor.NONE;
+        if (!highlight.isHighlightEnabled()) return CustomColor.NONE;
 
         return highlight.getHighlightColor();
+    }
+
+    private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
+        if (wynnItem instanceof CosmeticItem cosmeticItem) {
+            return new CosmeticHighlight(cosmeticItem);
+        }
+        if (wynnItem instanceof GearTierItemProperty gearItem) {
+            return new GearHighlight(gearItem);
+        }
+        if (wynnItem instanceof IngredientItem ingredientItem) {
+            return new IngredientHighlight(ingredientItem);
+        }
+        if (wynnItem instanceof MaterialItem materialItem) {
+            return new MaterialHighlight(materialItem);
+        }
+        if (wynnItem instanceof PowderItem powderItem) {
+            return new PowderHighlight(powderItem);
+        }
+
+        return null;
+    }
+
+    private interface HighlightInfo {
+        CustomColor getHighlightColor();
+
+        boolean isHighlightEnabled();
+    }
+
+    private class CosmeticHighlight implements HighlightInfo {
+        private final CosmeticItem item;
+
+        private CosmeticHighlight(CosmeticItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return cosmeticHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return item.getHighlightColor();
+        }
+    }
+
+    private class GearHighlight implements HighlightInfo {
+        private final GearTierItemProperty item;
+
+        private GearHighlight(GearTierItemProperty item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightEnabled;
+                case UNIQUE -> uniqueHighlightEnabled;
+                case RARE -> rareHighlightEnabled;
+                case SET -> setHighlightEnabled;
+                case LEGENDARY -> legendaryHighlightEnabled;
+                case FABLED -> fabledHighlightEnabled;
+                case MYTHIC -> mythicHighlightEnabled;
+                default -> false;
+            };
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightColor;
+                case UNIQUE -> uniqueHighlightColor;
+                case RARE -> rareHighlightColor;
+                case SET -> setHighlightColor;
+                case LEGENDARY -> legendaryHighlightColor;
+                case FABLED -> fabledHighlightColor;
+                case MYTHIC -> mythicHighlightColor;
+                default -> CustomColor.NONE;
+            };
+        }
+    }
+
+    private class IngredientHighlight implements HighlightInfo {
+        private final IngredientItem item;
+
+        private IngredientHighlight(IngredientItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getQualityTier()) {
+                case 0 -> zeroStarIngredientHighlightColor;
+                case 1 -> oneStarIngredientHighlightColor;
+                case 2 -> twoStarIngredientHighlightColor;
+                case 3 -> threeStarIngredientHighlightColor;
+                default -> CustomColor.NONE;
+            };
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getQualityTier()) {
+                case 0 -> zeroStarIngredientHighlightEnabled;
+                case 1 -> oneStarIngredientHighlightEnabled;
+                case 2 -> twoStarIngredientHighlightEnabled;
+                case 3 -> threeStarIngredientHighlightEnabled;
+                default -> false;
+            };
+        }
+    }
+
+    private class MaterialHighlight implements HighlightInfo {
+        private final MaterialItem item;
+
+        private MaterialHighlight(MaterialItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getQualityTier()) {
+                case 1 -> oneStarMaterialHighlightColor;
+                case 2 -> twoStarMaterialHighlightColor;
+                case 3 -> threeStarMaterialHighlightColor;
+                default -> CustomColor.NONE;
+            };
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getQualityTier()) {
+                case 1 -> oneStarMaterialHighlightEnabled;
+                case 2 -> twoStarMaterialHighlightEnabled;
+                case 3 -> threeStarMaterialHighlightEnabled;
+                default -> false; // should not happen
+            };
+        }
+    }
+
+    private class PowderHighlight implements HighlightInfo {
+        private final PowderItem item;
+
+        private PowderHighlight(PowderItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return powderHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return item.getPowderProfile().element().getColor();
+        }
     }
 }

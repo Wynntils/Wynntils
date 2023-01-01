@@ -4,20 +4,48 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class SoulPointTimerFeature extends UserFeature {
+    public static SoulPointTimerFeature INSTANCE;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.SoulPointItemStack);
+    @SubscribeEvent
+    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+        Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
+        if (soulPointItemOpt.isEmpty()) return;
+
+        List<Component> tooltips = new ArrayList<>(event.getTooltips());
+        tooltips.addAll(getTooltipAddon());
+        event.setTooltips(tooltips);
     }
 
-    public static SoulPointTimerFeature INSTANCE;
+    private List<Component> getTooltipAddon() {
+        List<Component> addon = new ArrayList<>();
+
+        addon.add(Component.literal(" "));
+
+        int rawSecondsUntilSoulPoint = Managers.Character.getTicksToNextSoulPoint() / 20;
+        int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
+        int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
+
+        addon.add(Component.translatable(
+                        "feature.wynntils.soulPointTimer.lore",
+                        ChatFormatting.WHITE + String.format("%d:%02d", minutesUntilSoulPoint, secondsUntilSoulPoint))
+                .withStyle(ChatFormatting.AQUA));
+
+        return addon;
+    }
 }
