@@ -69,12 +69,21 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 
-    public static Optional<WynnItem> getWynnItem(ItemStack itemStack) {
-        var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+    public Optional<WynnItem> getWynnItem(ItemStack itemStack) {
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
 
         return Optional.of(wynnItem);
+    }
+
+    public <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
+        var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+        if (wynnItem.getClass() != clazz) return Optional.empty();
+
+        return Optional.of((T) wynnItem);
     }
 
     public static final class FallbackAnnotator implements ItemAnnotator {

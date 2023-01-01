@@ -5,6 +5,7 @@
 package com.wynntils.wynn.handleditems.items.game;
 
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
+import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.Component;
 public class GearItem extends GameItem implements GearTierItemProperty {
     private final ItemProfile itemProfile;
     private final List<GearIdentification> identifications;
+    private final List<ItemIdentificationContainer> idContainers;
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
@@ -22,11 +24,13 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     public GearItem(
             ItemProfile itemProfile,
             List<GearIdentification> identifications,
+            List<ItemIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,
             List<Component> setBonus) {
         this.itemProfile = itemProfile;
         this.identifications = identifications;
+        this.idContainers = idContainers;
         this.powders = powders;
         this.rerolls = rerolls;
         this.setBonus = setBonus;
@@ -38,6 +42,10 @@ public class GearItem extends GameItem implements GearTierItemProperty {
 
     public List<GearIdentification> getIdentifications() {
         return identifications;
+    }
+
+    public List<ItemIdentificationContainer> getIdContainers() {
+        return idContainers;
     }
 
     public List<Powder> getPowders() {

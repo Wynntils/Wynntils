@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item;
+package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -15,8 +15,6 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 
 public class IdentificationOrderer {
-    public static IdentificationOrderer INSTANCE = new IdentificationOrderer(null, null, null);
-
     private final Map<String, Integer> order = new HashMap<>();
     private final List<String> groups = new ArrayList<>();
     private final List<String> inverted = new ArrayList<>();
