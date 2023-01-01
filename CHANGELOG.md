@@ -1,9 +1,21 @@
+## [0.0.2-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.45...v0.0.2-alpha.46) (2023-01-01)
+
+
+### New Features
+
+* Add ItemHandler, Annotators and WynnItem models ([#952](https://github.com/Wynntils/Artemis/issues/952)) ([a5dc4d9](https://github.com/Wynntils/Artemis/commit/a5dc4d94721a4cc4a91ae62f8fff5a70abe47c4f))
+
 ## [0.0.2-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.44...v0.0.2-alpha.45) (2022-12-29)
 
 
 ### Code Refactoring
 
 * Create ContainerManager from WynnScreenMatchers ([#946](https://github.com/Wynntils/Artemis/issues/946)) ([10e8e08](https://github.com/Wynntils/Artemis/commit/10e8e08d051f5ec86eda0e043ae7b83b8ed98362))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.45 [skip ci] ([4204d88](https://github.com/Wynntils/Artemis/commit/4204d8875145c811f966145559abc41511a464bb))
 
 ## [0.0.2-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.43...v0.0.2-alpha.44) (2022-12-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.42 [skip ci] ([9b125b0](https://github.com/Wynntils/Artemis/commit/9b125b05da39409cb44c118747f16d59692eb5a0))
-
-## [0.0.2-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.40...v0.0.2-alpha.41) (2022-12-28)
-
-
-### Bug Fixes
-
-* Combat Level info variable auto updating ([#943](https://github.com/Wynntils/Artemis/issues/943)) ([db7a367](https://github.com/Wynntils/Artemis/commit/db7a367083f0a47c71fbfeca6ead5e22b1403a78))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.41 [skip ci] ([8033cc5](https://github.com/Wynntils/Artemis/commit/8033cc55fdd41b7dd49cf2ab04153260ca5153bd))
 
