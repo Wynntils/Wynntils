@@ -1,9 +1,21 @@
+## [0.0.2-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.47...v0.0.2-alpha.48) (2023-01-01)
+
+
+### New Features
+
+* Make debug features like user features ([#956](https://github.com/Wynntils/Artemis/issues/956)) ([fa7954d](https://github.com/Wynntils/Artemis/commit/fa7954d3120f14ca0a4cec371a133e2d116b6a41))
+
 ## [0.0.2-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.46...v0.0.2-alpha.47) (2023-01-01)
 
 
 ### Code Refactoring
 
 * Create HorseManager, EmeraldManager and clean up ItemProfilesManager ([#955](https://github.com/Wynntils/Artemis/issues/955)) ([0df882a](https://github.com/Wynntils/Artemis/commit/0df882a18b9dca2cb57fc743ed14f2c31fc5a4a7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.47 [skip ci] ([b93fc8b](https://github.com/Wynntils/Artemis/commit/b93fc8b36ed32df599f8efe3fb981d1b69912c67))
 
 ## [0.0.2-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.45...v0.0.2-alpha.46) (2023-01-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.44 [skip ci] ([461a19e](https://github.com/Wynntils/Artemis/commit/461a19ee246f3426f8af3982a43ca476407fc775))
-
-## [0.0.2-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.42...v0.0.2-alpha.43) (2022-12-28)
-
-
-### Code Refactoring
-
-* NPC Dialogue cleanup ([#944](https://github.com/Wynntils/Artemis/issues/944)) ([d7f64d4](https://github.com/Wynntils/Artemis/commit/d7f64d4decf24554775c9a1db01477fe39585472))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.43 [skip ci] ([8de1194](https://github.com/Wynntils/Artemis/commit/8de1194a106772925448d3dbcb910cc8bbef51c5))
 
