@@ -20,15 +20,17 @@ import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
-import com.wynntils.wynn.model.ItemProfilesManager;
+import com.wynntils.wynn.model.HorseManager;
 import com.wynntils.wynn.model.SplashManager;
 import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
+import com.wynntils.wynn.model.emeralds.EmeraldManager;
 import com.wynntils.wynn.model.guild.territory.TerritoryManager;
 import com.wynntils.wynn.model.item.ItemManager;
 import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
+import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
@@ -42,8 +44,10 @@ public final class Managers {
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
+    public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
+    public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
     public static final ObjectivesManager Objectives = new ObjectivesManager();

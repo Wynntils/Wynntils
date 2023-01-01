@@ -10,7 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.IngredientItemStack;
-import com.wynntils.wynn.model.ItemProfilesManager;
+import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
 import java.util.List;
 
 public class ItemManager extends Manager {
