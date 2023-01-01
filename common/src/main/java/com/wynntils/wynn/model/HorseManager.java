@@ -23,14 +23,14 @@ public class HorseManager extends Manager {
         super(List.of());
     }
 
-    public static HorseItem getHorse() {
+    public HorseItem getHorse() {
         int horseSlot = findHorseSlotNum();
         if (horseSlot == -1) return null;
 
         return getHorseItem(McUtils.inventory().getItem(horseSlot));
     }
 
-    public static int findHorseSlotNum() {
+    public int findHorseSlotNum() {
         Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum <= 44; slotNum++) {
             ItemStack stack = inventory.getItem(slotNum);
@@ -41,7 +41,7 @@ public class HorseManager extends Manager {
         return -1;
     }
 
-    public static HorseItem getHorseItem(ItemStack itemStack) {
+    public HorseItem getHorseItem(ItemStack itemStack) {
         Optional<ItemAnnotation> horseOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (horseOpt.isEmpty()) return null;
         if (!(horseOpt.get() instanceof HorseItem horseItem)) return null;
@@ -49,7 +49,7 @@ public class HorseManager extends Manager {
         return horseItem;
     }
 
-    public static AbstractHorse searchForHorseNearby(int searchRadius) {
+    public AbstractHorse searchForHorseNearby(int searchRadius) {
         Player player = McUtils.player();
         List<AbstractHorse> horses = McUtils.mc()
                 .level
@@ -69,7 +69,7 @@ public class HorseManager extends Manager {
                 .orElse(null);
     }
 
-    private static boolean isPlayersHorse(AbstractHorse horse, Player player) {
+    private boolean isPlayersHorse(AbstractHorse horse, Player player) {
         if (horse == null) return false;
         Component horseName = horse.getCustomName();
         if (horseName == null) return false;

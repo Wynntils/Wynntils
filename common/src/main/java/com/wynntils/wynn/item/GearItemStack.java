@@ -156,6 +156,10 @@ public class GearItemStack extends ItemStack implements ItemAnnotation {
         return rerolls;
     }
 
+    public Component getOriginalHoverName() {
+        return super.getHoverName();
+    }
+
     @Override
     public Component getHoverName() {
         if (isGuideStack || isChatItem) return customName;

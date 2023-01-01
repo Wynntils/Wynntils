@@ -9,6 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
@@ -41,6 +42,11 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String name = itemStack.getHoverName().getString();
+
+        // FIXME: Temporary workaround awaiting full merge
+        if (!(itemStack instanceof GearItemStack gearItemStack)) return null;
+        name = gearItemStack.getOriginalHoverName().getString();
+
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
         itemProfile = Managers.ItemProfiles.getItemsProfile(strippedName);
         if (itemProfile == null) return null;
