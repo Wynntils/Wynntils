@@ -6,34 +6,41 @@ package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.ItemFavoriteFeature;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
+import com.wynntils.gui.screens.guides.GuideEmeraldPouchItemStack;
+import com.wynntils.gui.screens.guides.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.item.GearItemStack;
-import java.util.Map;
+import com.wynntils.utils.MathUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideGearItemStack extends WynntilsButton {
-    private final GearItemStack itemStack;
-    private final WynntilsItemGuideScreen screen;
+public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
+    private final GuideEmeraldPouchItemStack itemStack;
+    private final WynntilsEmeraldPouchGuideScreen screen;
 
-    public GuideGearItemStack(
-            int x, int y, int width, int height, GearItemStack itemStack, WynntilsItemGuideScreen screen) {
-        super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
+    public GuideEmeraldPouchItemStackButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            GuideEmeraldPouchItemStack itemStack,
+            WynntilsEmeraldPouchGuideScreen screen) {
+        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.getItemProfile().getTier().getHighlightColor();
+        CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();
@@ -50,6 +57,21 @@ public class GuideGearItemStack extends WynntilsButton {
                 Texture.HIGHLIGHT.height());
 
         RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+
+        poseStack.pushPose();
+        poseStack.translate(0, 0, 200);
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        MathUtils.toRoman(itemStack.getTier()),
+                        getX() + 2,
+                        getX() + 14,
+                        getY() + 8,
+                        0,
+                        color,
+                        HorizontalAlignment.Center,
+                        FontRenderer.TextShadow.OUTLINE);
+        poseStack.popPose();
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
@@ -73,10 +95,7 @@ public class GuideGearItemStack extends WynntilsButton {
         }
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
-            return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
                 ItemFavoriteFeature.INSTANCE.favoriteItems.remove(unformattedName);
             } else {
@@ -93,7 +112,7 @@ public class GuideGearItemStack extends WynntilsButton {
     @Override
     public void onPress() {}
 
-    public GearItemStack getItemStack() {
+    public GuideEmeraldPouchItemStack getItemStack() {
         return itemStack;
     }
 }
