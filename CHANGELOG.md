@@ -1,9 +1,21 @@
+## [0.0.2-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.48...v0.0.2-alpha.49) (2023-01-01)
+
+
+### Code Refactoring
+
+* Create special "fake" itemstacks for the guides ([#954](https://github.com/Wynntils/Artemis/issues/954)) ([f3c9fb8](https://github.com/Wynntils/Artemis/commit/f3c9fb834626eb02437db3af301b0f2c58a1448f))
+
 ## [0.0.2-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.47...v0.0.2-alpha.48) (2023-01-01)
 
 
 ### New Features
 
 * Make debug features like user features ([#956](https://github.com/Wynntils/Artemis/issues/956)) ([fa7954d](https://github.com/Wynntils/Artemis/commit/fa7954d3120f14ca0a4cec371a133e2d116b6a41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.48 [skip ci] ([a27dc49](https://github.com/Wynntils/Artemis/commit/a27dc49e041a1706acefbbc914b01e63b7dac480))
 
 ## [0.0.2-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.46...v0.0.2-alpha.47) (2023-01-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.45 [skip ci] ([4204d88](https://github.com/Wynntils/Artemis/commit/4204d8875145c811f966145559abc41511a464bb))
-
-## [0.0.2-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.43...v0.0.2-alpha.44) (2022-12-29)
-
-
-### Bug Fixes
-
-* Use current combat level, and refactor CharacterManager  ([#945](https://github.com/Wynntils/Artemis/issues/945)) ([d5d66de](https://github.com/Wynntils/Artemis/commit/d5d66dec0bb42060035b9fe3e324244257e73546))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.44 [skip ci] ([461a19e](https://github.com/Wynntils/Artemis/commit/461a19ee246f3426f8af3982a43ca476407fc775))
 
