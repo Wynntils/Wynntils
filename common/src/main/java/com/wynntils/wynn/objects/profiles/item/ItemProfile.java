@@ -223,4 +223,21 @@ public class ItemProfile {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "ItemProfile{" + "displayName='"
+                + displayName + '\'' + ", tier="
+                + tier + ", powderAmount="
+                + powderAmount + ", attackSpeed="
+                + attackSpeed + ", itemInfo="
+                + itemInfo + ", requirements="
+                + requirements + ", damageTypes="
+                + damageTypes + ", defenseTypes="
+                + defenseTypes + ", statuses="
+                + statuses + ", restriction='"
+                + restriction + '\'' + ", lore='"
+                + lore + '\'' + ", majorIdentifications="
+                + majorIdentifications + '}';
+    }
 }

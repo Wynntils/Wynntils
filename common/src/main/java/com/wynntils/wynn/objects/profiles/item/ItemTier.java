@@ -105,6 +105,14 @@ public enum ItemTier {
         }
     }
 
+    public static ItemTier fromString(String name) {
+        if (name.charAt(0) == '§') {
+            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
+        }
+
+        return null;
+    }
+
     public static ItemTier fromComponent(Component component) {
         String name = component.getString();
 
