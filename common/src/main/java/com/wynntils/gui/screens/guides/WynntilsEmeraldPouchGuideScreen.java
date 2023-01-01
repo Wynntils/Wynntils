@@ -13,14 +13,13 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsGuidesListScreen;
 import com.wynntils.gui.screens.WynntilsMenuListScreen;
-import com.wynntils.gui.screens.guides.widgets.GuideEmeraldPouchItemStack;
+import com.wynntils.gui.screens.guides.widgets.GuideEmeraldPouchItemStackButton;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.item.EmeraldPouchItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -30,11 +29,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class WynntilsEmeraldPouchGuideScreen
-        extends WynntilsMenuListScreen<EmeraldPouchItemStack, GuideEmeraldPouchItemStack> {
+        extends WynntilsMenuListScreen<GuideEmeraldPouchItemStack, GuideEmeraldPouchItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<EmeraldPouchItemStack> parsedItemCache;
+    private List<GuideEmeraldPouchItemStack> parsedItemCache;
 
     private WynntilsEmeraldPouchGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
@@ -50,7 +49,7 @@ public final class WynntilsEmeraldPouchGuideScreen
             parsedItemCache = new ArrayList<>();
 
             for (int i = 1; i <= 10; i++) {
-                parsedItemCache.add(new EmeraldPouchItemStack(i));
+                parsedItemCache.add(new GuideEmeraldPouchItemStack(i));
             }
         }
 
@@ -128,8 +127,8 @@ public final class WynntilsEmeraldPouchGuideScreen
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof GuideEmeraldPouchItemStack guideEmeraldPouchItemStack) {
-            EmeraldPouchItemStack itemStack = guideEmeraldPouchItemStack.getItemStack();
+        if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
+            GuideEmeraldPouchItemStack itemStack = guideEmeraldPouchItemStack.getItemStack();
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
@@ -167,11 +166,11 @@ public final class WynntilsEmeraldPouchGuideScreen
     }
 
     @Override
-    protected GuideEmeraldPouchItemStack getButtonFromElement(int i) {
+    protected GuideEmeraldPouchItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideEmeraldPouchItemStack(
+        return new GuideEmeraldPouchItemStackButton(
                 xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 
