@@ -14,6 +14,7 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.awt.Color;
@@ -62,18 +63,19 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
+
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
-
         GearItem gearItem = gearItemOpt.get();
-        GearTooltipBuilder builder = gearItem.getCached(GearTooltipBuilder.class);
-        if (builder == null) {
-            builder =
-                    GearTooltipBuilder.fromItemStack(event.getItemStack(), gearItem.getItemProfile(), gearItem, false);
-            gearItem.storeInCache(builder);
-        }
+
+        GearTooltipBuilder builder = gearItem.getCache()
+                .getOrCalculate(
+                        WynnItemCache.TOOLTIP_KEY,
+                        () -> GearTooltipBuilder.fromItemStack(
+                                event.getItemStack(), gearItem.getItemProfile(), gearItem, false));
+        if (builder == null) return;
 
         LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines());
 

@@ -6,6 +6,7 @@ package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -13,13 +14,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.AmplifierItem;
 import com.wynntils.wynn.handleditems.items.game.DungeonKeyItem;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
@@ -122,19 +122,13 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
-        TextOverlayInfo overlayProperty = wynnItem.getCached(TextOverlayInfo.class);
-        if (overlayProperty == NO_OVERLAY) return;
-        if (overlayProperty == null) {
-            overlayProperty = calculateOverlay(wynnItem);
-            if (overlayProperty == null) {
-                wynnItem.storeInCache(NO_OVERLAY);
-                return;
-            }
-            wynnItem.storeInCache(overlayProperty);
-        }
+        Optional<WynnItem> wynnItemOpt = Models.Item.asWynnItem(item, WynnItem.class);
+        if (wynnItemOpt.isEmpty()) return;
+        WynnItem wynnItem = wynnItemOpt.get();
+
+        TextOverlayInfo overlayProperty =
+                wynnItem.getCache().getOrCalculate(WynnItemCache.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
+        if (overlayProperty == null) return;
 
         boolean contextEnabled = hotbar ? overlayProperty.isHotbarText() : overlayProperty.isInventoryText();
         if (!overlayProperty.isTextOverlayEnabled() || !contextEnabled) return; // not enabled or wrong context

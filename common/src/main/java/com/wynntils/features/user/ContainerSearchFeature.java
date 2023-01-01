@@ -22,6 +22,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.Locale;
@@ -78,7 +79,8 @@ public class ContainerSearchFeature extends UserFeature {
         if (annotationOpt.isEmpty()) return;
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
 
-        if (!wynnItem.isSearched()) return;
+        boolean result = wynnItem.getCache().get(WynnItemCache.SEARCHED_KEY);
+        if (!result) return;
 
         RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
@@ -185,7 +187,7 @@ public class ContainerSearchFeature extends UserFeature {
 
             boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
 
-            wynnItem.setSearched(filtered);
+            wynnItem.getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
 
             if (filtered) {
                 autoSearching = false;

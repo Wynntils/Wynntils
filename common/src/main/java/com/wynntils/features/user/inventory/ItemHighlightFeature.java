@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -11,12 +12,11 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.handleditems.items.game.MaterialItem;
 import com.wynntils.wynn.handleditems.items.game.PowderItem;
@@ -29,18 +29,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    private static final HighlightInfo NO_HIGHLIGHT = new HighlightInfo() {
-        @Override
-        public CustomColor getHighlightColor() {
-            return null;
-        }
-
-        @Override
-        public boolean isHighlightEnabled() {
-            return false;
-        }
-    };
-
     @Config
     public boolean normalHighlightEnabled = true;
 
@@ -182,19 +170,13 @@ public class ItemHighlightFeature extends UserFeature {
     }
 
     private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return CustomColor.NONE;
-        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return CustomColor.NONE;
-        HighlightInfo highlight = wynnItem.getCached(HighlightInfo.class);
-        if (highlight == NO_HIGHLIGHT) return CustomColor.NONE;
-        if (highlight == null) {
-            highlight = calculateHighlightInfo(wynnItem);
-            if (highlight == null) {
-                wynnItem.storeInCache(NO_HIGHLIGHT);
-                return CustomColor.NONE;
-            }
-            wynnItem.storeInCache(highlight);
-        }
+        Optional<WynnItem> wynnItemOpt = Models.Item.asWynnItem(item, WynnItem.class);
+        if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
+        WynnItem wynnItem = wynnItemOpt.get();
+
+        HighlightInfo highlight =
+                wynnItem.getCache().getOrCalculate(WynnItemCache.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItem));
+        if (highlight == null) return CustomColor.NONE;
 
         boolean contextEnabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
         if (!highlight.isHighlightEnabled() || !contextEnabled) return CustomColor.NONE;
