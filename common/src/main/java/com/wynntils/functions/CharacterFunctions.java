@@ -116,7 +116,7 @@ public class CharacterFunctions {
     public static class LiquidEmeraldFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Models.PlayerInventory.getCurrentEmeraldCount();
+            int ems = Managers.Emerald.getCurrentEmeraldCount();
             return ems / 4096;
         }
 
@@ -134,7 +134,7 @@ public class CharacterFunctions {
     public static class EmeraldBlockFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Models.PlayerInventory.getCurrentEmeraldCount();
+            int ems = Managers.Emerald.getCurrentEmeraldCount();
             return (ems % 4096) / 64;
         }
 
@@ -152,7 +152,7 @@ public class CharacterFunctions {
     public static class EmeraldsFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.PlayerInventory.getCurrentEmeraldCount() % 64;
+            return Managers.Emerald.getCurrentEmeraldCount() % 64;
         }
 
         @Override
@@ -169,7 +169,7 @@ public class CharacterFunctions {
     public static class MoneyFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.PlayerInventory.getCurrentEmeraldCount();
+            return Managers.Emerald.getCurrentEmeraldCount();
         }
 
         @Override

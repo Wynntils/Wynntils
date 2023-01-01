@@ -15,7 +15,6 @@ import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +100,8 @@ public final class GearAnnotator implements ItemAnnotator {
                 identifications.add(new GearIdentification(idName, value, stars));
 
                 // This is partially overlapping with GearIdentification, sort this out later
-                ItemIdentificationContainer idContainer = WynnItemUtils.identificationFromLore(loreLine, itemProfile);
+                ItemIdentificationContainer idContainer =
+                        Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
                 idContainers.add(idContainer);
             }
         }
