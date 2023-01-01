@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.objects.profiles.item;
 
+import com.wynntils.wynn.objects.Skill;
+
 public enum RequirementType {
     QUEST("Quest Req: "),
     CLASSTYPE("Class Req: "),
@@ -22,5 +24,16 @@ public enum RequirementType {
 
     public String asLore() {
         return lore;
+    }
+
+    public Skill getSkill() {
+        return switch (this) {
+            case STRENGTH -> Skill.STRENGTH;
+            case DEXTERITY -> Skill.DEXTERITY;
+            case INTELLIGENCE -> Skill.INTELLIGENCE;
+            case DEFENSE -> Skill.DEFENCE;
+            case AGILITY -> Skill.AGILITY;
+            default -> null;
+        };
     }
 }
