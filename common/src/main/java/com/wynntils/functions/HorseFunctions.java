@@ -4,32 +4,21 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.ActiveFunction;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
-import com.wynntils.wynn.utils.InventoryUtils;
+import com.wynntils.wynn.handleditems.items.game.HorseItem;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class HorseFunctions {
-
-    private static WynnItemStack getHorse() {
-        int horseSlot = InventoryUtils.findHorseSlotNum();
-        if (horseSlot == -1) return null;
-        ItemStack is = McUtils.inventory().getItem(horseSlot);
-        if (!(is instanceof WynnItemStack horse)) return null;
-        return horse;
-    }
 
     public static class HorseLevelFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            WynnItemStack horse = getHorse();
+            HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getProperty(ItemProperty.HORSE).getLevel();
+            return horse.getLevel().getCurrent();
         }
 
         @Override
@@ -46,9 +35,9 @@ public class HorseFunctions {
     public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            WynnItemStack horse = getHorse();
+            HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getProperty(ItemProperty.HORSE).getMaxLevel();
+            return horse.getLevel().getMax();
         }
 
         @Override
@@ -65,9 +54,9 @@ public class HorseFunctions {
     public static class HorseXpFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            WynnItemStack horse = getHorse();
+            HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getProperty(ItemProperty.HORSE).getXp();
+            return horse.getXp();
         }
 
         @Override
@@ -84,9 +73,9 @@ public class HorseFunctions {
     public static class HorseTierFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            WynnItemStack horse = getHorse();
+            HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getProperty(ItemProperty.HORSE).getTier();
+            return horse.getTier();
         }
 
         @Override
@@ -103,9 +92,9 @@ public class HorseFunctions {
     public static class HorseNameFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            WynnItemStack horse = getHorse();
+            HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
-            String name = horse.getProperty(ItemProperty.HORSE).getName();
+            String name = horse.getName();
             return (name.isEmpty()) ? null : name;
         }
 

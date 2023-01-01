@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.features.debug.ConnectionProgressFeature;
+import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
@@ -114,6 +115,7 @@ public final class FeatureRegistry {
     public static void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
+        registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());
         registerFeature(new PacketDebuggerFeature());
 
