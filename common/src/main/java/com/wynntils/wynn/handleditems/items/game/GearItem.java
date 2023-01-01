@@ -40,17 +40,17 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         this.rerolls = rerolls;
         this.setBonus = setBonus;
 
+
         DoubleSummaryStatistics percents = idContainers.stream()
                 .filter(Predicate.not(ItemIdentificationContainer::isFixed))
                 .mapToDouble(ItemIdentificationContainer::percent)
                 .summaryStatistics();
-        int idAmount = (int) percents.getCount();
-        float percentTotal = (float) percents.getSum();
-        overallPercentage = percentTotal / idAmount;
+        overallPercentage = (float) percents.getAverage();
 
+        // FIXME: only check if we actually have variable identifications!
         // check for perfect/0% items
-        isPerfect = overallPercentage >= 100d;
-        isDefective = overallPercentage == 0;
+        isPerfect = overallPercentage >= 100f;
+        isDefective = overallPercentage == 0f;
     }
 
     public ItemProfile getItemProfile() {

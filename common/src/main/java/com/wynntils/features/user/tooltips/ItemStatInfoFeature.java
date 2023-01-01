@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.tooltips;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -56,6 +57,9 @@ public class ItemStatInfoFeature extends UserFeature {
     @Config
     public boolean groupIdentifications = true;
 
+    @Config
+    public boolean overallPercentageInName = true;
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearItem.class);
@@ -72,14 +76,19 @@ public class ItemStatInfoFeature extends UserFeature {
         }
 
         LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines());
+
         if (perfect && gearItem.isPerfect()) {
             tooltips.removeFirst();
             tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
-        }
-
-        if (defective && gearItem.isDefective()) {
+        } else if (defective && gearItem.isDefective()) {
             tooltips.removeFirst();
             tooltips.addFirst(getDefectiveName(gearItem.getItemProfile().getDisplayName()));
+        } else if (overallPercentageInName) {
+            MutableComponent name = Component.literal(tooltips.getFirst().getString())
+                    .withStyle(tooltips.getFirst().getStyle());
+            name.append(Managers.ItemProfiles.getPercentageTextComponent(gearItem.getOverallPercentage()));
+            tooltips.removeFirst();
+            tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
         }
 
         event.setTooltips(tooltips);
