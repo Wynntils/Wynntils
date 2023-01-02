@@ -18,6 +18,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -60,10 +61,17 @@ public class ItemScreenshotFeature extends UserFeature {
 
         // has to be called during a render period
         takeScreenshot(screen, screenshotSlot);
+        makeChatPrompt(screenshotSlot);
         screenshotSlot = null;
     }
 
     private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
+        if (Utils.isMac()) {
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.mac")
+                    .withStyle(ChatFormatting.GRAY));
+            return;
+        }
+
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
@@ -117,13 +125,15 @@ public class ItemScreenshotFeature extends UserFeature {
                     Component.translatable("feature.wynntils.itemScreenshot.error", stack.getHoverName())
                             .withStyle(ChatFormatting.RED));
         }
+    }
 
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(stack, GearItem.class);
+    private static void makeChatPrompt(Slot hoveredSlot) {
+        // chat item prompt
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
         String encoded = Models.ChatItem.encodeItem(gearItemOpt.get());
 
-        // chat item prompt
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
