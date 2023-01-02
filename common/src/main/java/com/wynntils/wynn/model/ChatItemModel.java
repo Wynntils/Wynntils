@@ -6,16 +6,15 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -29,9 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class ChatItemModel extends Model {
@@ -277,7 +274,7 @@ public final class ChatItemModel extends Model {
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
 
-        ItemStack itemStack = new ChatItemStack(gearItem);
+        ItemStack itemStack = new FakeItemStack(gearItem, "From chat");
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
         ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         itemComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent)));
@@ -313,27 +310,5 @@ public final class ChatItemModel extends Model {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;
         }
         return decoded;
-    }
-
-    private static class ChatItemStack extends ItemStack {
-        private final GearItem gearItem;
-
-        private ChatItemStack(GearItem gearItem) {
-            super(gearItem.getItemProfile().getItemInfo().asItemStack().getItem(), 1);
-            ((AnnotatedItemStack) this).setAnnotation(gearItem);
-            this.gearItem = gearItem;
-        }
-
-        @Override
-        public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-            GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
-            List<Component> tooltip = tooltipBuilder.getTooltipLines();
-            tooltip.add(
-                    1,
-                    Component.literal("From chat")
-                            .withStyle(ChatFormatting.DARK_GRAY)
-                            .withStyle(ChatFormatting.ITALIC));
-            return tooltip;
-        }
     }
 }
