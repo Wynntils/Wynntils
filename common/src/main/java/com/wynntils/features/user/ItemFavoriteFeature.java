@@ -17,12 +17,14 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -73,7 +75,7 @@ public class ItemFavoriteFeature extends UserFeature {
             return true;
         }
 
-        var wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
 
         if (wynnItemOpt.get() instanceof IngredientItem ingredientItem) {

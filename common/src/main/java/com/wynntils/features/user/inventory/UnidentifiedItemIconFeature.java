@@ -5,14 +5,13 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
@@ -37,11 +36,10 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     }
 
     private void drawIcon(ItemStack item, int slotX, int slotY) {
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof GearBoxItem gearBoxItem)) return;
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(item, GearBoxItem.class);
+        if (gearBoxItemOpt.isEmpty()) return;
 
-        ItemType itemType = gearBoxItem.getItemType();
+        ItemType itemType = gearBoxItemOpt.get().getItemType();
 
         RenderUtils.drawTexturedRect(
                 new PoseStack(),

@@ -18,7 +18,6 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import java.util.List;
 import java.util.Optional;
@@ -80,16 +79,7 @@ public class ItemCompareFeature extends UserFeature {
             List<ItemStack> armorSlots = McUtils.inventory().armor;
 
             Optional<ItemStack> matchingArmorItemStack = armorSlots.stream()
-                    .filter(itemStack -> {
-                        Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-                        if (gearOpt.isEmpty()) return false;
-                        return gearOpt.get().getItemProfile().getItemInfo().getType()
-                                == gearItemOpt
-                                        .get()
-                                        .getItemProfile()
-                                        .getItemInfo()
-                                        .getType();
-                    })
+                    .filter(itemStack -> isMatchingType(itemStack, gearItemOpt.get()))
                     .findFirst();
 
             itemToCompare = matchingArmorItemStack.orElse(null);
@@ -130,6 +120,14 @@ public class ItemCompareFeature extends UserFeature {
         poseStack.popPose();
     }
 
+    private boolean isMatchingType(ItemStack itemStack, GearItem gearItemReference) {
+        Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearOpt.isEmpty()) return false;
+
+        return gearOpt.get().getItemProfile().getItemInfo().getType()
+                == gearItemReference.getItemProfile().getItemInfo().getType();
+    }
+
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent event) {
         compareToEquipped = false;
@@ -148,15 +146,14 @@ public class ItemCompareFeature extends UserFeature {
         if (hoveredSlot == null) return;
 
         ItemStack itemStack = hoveredSlot.getItem();
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        Optional<GearItem> wynnItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (wynnItemOpt.isEmpty()) return;
-        if (wynnItemOpt.get() instanceof GearItem gearItemStack) {
-            if (comparedItem == itemStack) {
-                comparedItem = null;
-            } else {
-                comparedItem = itemStack;
-                compareToEquipped = false;
-            }
+
+        if (comparedItem == itemStack) {
+            comparedItem = null;
+        } else {
+            comparedItem = itemStack;
+            compareToEquipped = false;
         }
     }
 }

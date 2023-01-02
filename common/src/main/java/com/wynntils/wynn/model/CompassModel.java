@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
@@ -21,6 +22,7 @@ public final class CompassModel extends Model {
     private Supplier<Location> locationSupplier = null;
     private Location compassLocation = null; // this field acts as a cache for the supplier
     private Texture targetIcon = null;
+    private CustomColor targetColor = null;
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.Start e) {
@@ -61,11 +63,19 @@ public final class CompassModel extends Model {
         return targetIcon;
     }
 
+    public CustomColor getTargetColor() {
+        return targetColor;
+    }
+
     public void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
         setDynamicCompassLocation(compassSupplier, Texture.WAYPOINT);
     }
 
     public void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon) {
+        setDynamicCompassLocation(compassSupplier, icon, CustomColor.fromHexString("#FFFFFF"));
+    }
+
+    public void setDynamicCompassLocation(Supplier<Location> compassSupplier, Texture icon, CustomColor color) {
         if (compassSupplier == null) {
             return;
         }
@@ -73,6 +83,7 @@ public final class CompassModel extends Model {
         locationSupplier = compassSupplier;
         compassLocation = compassSupplier.get();
         targetIcon = icon;
+        targetColor = color;
     }
 
     public void setCompassLocation(Location location) {
@@ -80,9 +91,14 @@ public final class CompassModel extends Model {
     }
 
     public void setCompassLocation(Location location, Texture icon) {
+        setCompassLocation(location, icon, CustomColor.fromHexString("#FFFFFF"));
+    }
+
+    public void setCompassLocation(Location location, Texture icon, CustomColor color) {
         locationSupplier = () -> location;
         compassLocation = location;
         targetIcon = icon;
+        targetColor = color;
     }
 
     public void reset() {

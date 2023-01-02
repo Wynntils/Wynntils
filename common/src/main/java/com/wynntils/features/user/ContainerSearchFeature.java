@@ -4,13 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.gui.widgets.SearchWidget;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -75,12 +74,11 @@ public class ContainerSearchFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        if (wynnItemOpt.isEmpty()) return;
 
-        boolean result = wynnItem.getCache().get(WynnItemCache.SEARCHED_KEY);
-        if (!result) return;
+        Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
+        if (result == null || !result.booleanValue()) return;
 
         RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
@@ -178,17 +176,14 @@ public class ContainerSearchFeature extends UserFeature {
 
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack item : screen.getMenu().getItems()) {
-            Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-            if (annotationOpt.isEmpty()) return;
-            if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return;
+            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+            if (wynnItemOpt.isEmpty()) return;
             if (playerItems.contains(item)) continue;
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
-
-            wynnItem.getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
-
+            wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;
             }

@@ -170,21 +170,26 @@ public class ItemHighlightFeature extends UserFeature {
     }
 
     private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.asWynnItem(item, WynnItem.class);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
         if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
-        WynnItem wynnItem = wynnItemOpt.get();
 
-        HighlightInfo highlight =
-                wynnItem.getCache().getOrCalculate(WynnItemCache.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItem));
+        WynnItem wynnItem = wynnItemOpt.get();
+        HighlightInfo highlight = wynnItem.getCache()
+                .getOrCalculate(WynnItemCache.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItemOpt.get()));
         if (highlight == null) return CustomColor.NONE;
 
-        boolean contextEnabled = hotbarHighlight ? highlight.isHotbarHighlight() : highlight.isInventoryHighlight();
-        if (!highlight.isHighlightEnabled() || !contextEnabled) return CustomColor.NONE;
+        if (!highlight.isHighlightEnabled()) return CustomColor.NONE;
 
         return highlight.getHighlightColor();
     }
 
     private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
+        if (wynnItem instanceof CosmeticItem cosmeticItem) {
+            return new CosmeticHighlight(cosmeticItem);
+        }
+        if (wynnItem instanceof GearTierItemProperty gearItem) {
+            return new GearHighlight(gearItem);
+        }
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return new IngredientHighlight(ingredientItem);
         }
@@ -194,12 +199,6 @@ public class ItemHighlightFeature extends UserFeature {
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderHighlight(powderItem);
         }
-        if (wynnItem instanceof CosmeticItem cosmeticItem) {
-            return new CosmeticHighlight(cosmeticItem);
-        }
-        if (wynnItem instanceof GearTierItemProperty gearItem) {
-            return new GearHighlight(gearItem);
-        }
 
         return null;
     }
@@ -208,15 +207,59 @@ public class ItemHighlightFeature extends UserFeature {
         CustomColor getHighlightColor();
 
         boolean isHighlightEnabled();
+    }
 
-        /** Whether this highlight should be shown in inventories */
-        default boolean isInventoryHighlight() {
-            return true;
+    private class CosmeticHighlight implements HighlightInfo {
+        private final CosmeticItem item;
+
+        private CosmeticHighlight(CosmeticItem item) {
+            this.item = item;
         }
 
-        /** Whether this highlight should be shown in the hotbar */
-        default boolean isHotbarHighlight() {
-            return true;
+        @Override
+        public boolean isHighlightEnabled() {
+            return cosmeticHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return item.getHighlightColor();
+        }
+    }
+
+    private class GearHighlight implements HighlightInfo {
+        private final GearTierItemProperty item;
+
+        private GearHighlight(GearTierItemProperty item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightEnabled;
+                case UNIQUE -> uniqueHighlightEnabled;
+                case RARE -> rareHighlightEnabled;
+                case SET -> setHighlightEnabled;
+                case LEGENDARY -> legendaryHighlightEnabled;
+                case FABLED -> fabledHighlightEnabled;
+                case MYTHIC -> mythicHighlightEnabled;
+                default -> false;
+            };
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return switch (item.getGearTier()) {
+                case NORMAL -> normalHighlightColor;
+                case UNIQUE -> uniqueHighlightColor;
+                case RARE -> rareHighlightColor;
+                case SET -> setHighlightColor;
+                case LEGENDARY -> legendaryHighlightColor;
+                case FABLED -> fabledHighlightColor;
+                case MYTHIC -> mythicHighlightColor;
+                default -> CustomColor.NONE;
+            };
         }
     }
 
@@ -293,60 +336,6 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return item.getPowderProfile().element().getColor();
-        }
-    }
-
-    private class CosmeticHighlight implements HighlightInfo {
-        private final CosmeticItem item;
-
-        private CosmeticHighlight(CosmeticItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public boolean isHighlightEnabled() {
-            return cosmeticHighlightEnabled;
-        }
-
-        @Override
-        public CustomColor getHighlightColor() {
-            return item.getHighlightColor();
-        }
-    }
-
-    private class GearHighlight implements HighlightInfo {
-        private final GearTierItemProperty item;
-
-        private GearHighlight(GearTierItemProperty item) {
-            this.item = item;
-        }
-
-        @Override
-        public boolean isHighlightEnabled() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightEnabled;
-                case UNIQUE -> uniqueHighlightEnabled;
-                case RARE -> rareHighlightEnabled;
-                case SET -> setHighlightEnabled;
-                case LEGENDARY -> legendaryHighlightEnabled;
-                case FABLED -> fabledHighlightEnabled;
-                case MYTHIC -> mythicHighlightEnabled;
-                default -> false;
-            };
-        }
-
-        @Override
-        public CustomColor getHighlightColor() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightColor;
-                case UNIQUE -> uniqueHighlightColor;
-                case RARE -> rareHighlightColor;
-                case SET -> setHighlightColor;
-                case LEGENDARY -> legendaryHighlightColor;
-                case FABLED -> fabledHighlightColor;
-                case MYTHIC -> mythicHighlightColor;
-                default -> CustomColor.NONE;
-            };
         }
     }
 }

@@ -4,18 +4,18 @@
  */
 package com.wynntils.features.user.inventory;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.CappedValue;
+import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.properties.DurableItemProperty;
 import java.util.Optional;
 import net.minecraft.util.Mth;
@@ -43,11 +43,11 @@ public class DurabilityArcFeature extends UserFeature {
     }
 
     private void drawDurabilityArc(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof DurableItemProperty wynnItem)) return;
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        if (wynnItemOpt.isEmpty()) return;
+        if (!(wynnItemOpt.get() instanceof DurableItemProperty durableItem)) return;
 
-        CappedValue durability = wynnItem.getDurability();
+        CappedValue durability = durableItem.getDurability();
 
         // calculate color of arc
         float durabilityFraction = (float) durability.getCurrent() / durability.getMax();

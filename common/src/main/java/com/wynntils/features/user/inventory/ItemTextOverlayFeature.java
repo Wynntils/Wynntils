@@ -28,6 +28,7 @@ import com.wynntils.wynn.handleditems.items.game.PowderItem;
 import com.wynntils.wynn.handleditems.items.game.SkillPotionItem;
 import com.wynntils.wynn.handleditems.items.game.TeleportScrollItem;
 import com.wynntils.wynn.handleditems.items.gui.SkillPointItem;
+import com.wynntils.wynn.objects.Skill;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
@@ -35,18 +36,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    private static final TextOverlayInfo NO_OVERLAY = new TextOverlayInfo() {
-        @Override
-        public TextOverlay getTextOverlay() {
-            return null;
-        }
-
-        @Override
-        public boolean isTextOverlayEnabled() {
-            return false;
-        }
-    };
-
     @Config
     public boolean powderTierEnabled = true;
 
@@ -122,19 +111,17 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.asWynnItem(item, WynnItem.class);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
         if (wynnItemOpt.isEmpty()) return;
-        WynnItem wynnItem = wynnItemOpt.get();
 
+        WynnItem wynnItem = wynnItemOpt.get();
         TextOverlayInfo overlayProperty =
                 wynnItem.getCache().getOrCalculate(WynnItemCache.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
         if (overlayProperty == null) return;
 
-        boolean contextEnabled = hotbar ? overlayProperty.isHotbarText() : overlayProperty.isInventoryText();
-        if (!overlayProperty.isTextOverlayEnabled() || !contextEnabled) return; // not enabled or wrong context
+        if (!overlayProperty.isTextOverlayEnabled()) return;
 
         TextOverlay textOverlay = overlayProperty.getTextOverlay();
-
         if (textOverlay == null) {
             WynntilsMod.error(overlayProperty + "'s textOverlay was null.");
             return;
@@ -149,14 +136,11 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {
-        if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
-            return new DungeonKeyOverlay(dungeonKeyItem);
-        }
         if (wynnItem instanceof AmplifierItem amplifierItem) {
             return new AmplifierOverlay(amplifierItem);
         }
-        if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
-            return new TeleportScrollOverlay(teleportScrollItem);
+        if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
+            return new DungeonKeyOverlay(dungeonKeyItem);
         }
         if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
             return new EmeraldPouchOverlay(emeraldPouchItem);
@@ -167,33 +151,50 @@ public class ItemTextOverlayFeature extends UserFeature {
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
         }
-        if (wynnItem instanceof SkillPotionItem skillPotionItem) {
-            return new SkillPotionOverlay(skillPotionItem);
-        }
         if (wynnItem instanceof SkillPointItem skillPointItem) {
             return new SkillPointOverlay(skillPointItem);
         }
+        if (wynnItem instanceof SkillPotionItem skillPotionItem) {
+            return new SkillPotionOverlay(skillPotionItem);
+        }
+        if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
+            return new TeleportScrollOverlay(teleportScrollItem);
+        }
 
         return null;
+    }
+
+    private String valueToString(int value, boolean useRomanNumerals) {
+        return useRomanNumerals ? MathUtils.toRoman(value) : String.valueOf(value);
     }
 
     private interface TextOverlayInfo {
         TextOverlay getTextOverlay();
 
         boolean isTextOverlayEnabled();
+    }
 
-        /**
-         * Whether this overlay is allowed to be rendered in inventories.
-         */
-        default boolean isInventoryText() {
-            return true;
+    private class AmplifierOverlay implements TextOverlayInfo {
+        private static final CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
+
+        private final AmplifierItem item;
+
+        private AmplifierOverlay(AmplifierItem item) {
+            this.item = item;
         }
 
-        /**
-         * Whether this overlay is allowed to be rendered in the hotbar.
-         */
-        default boolean isHotbarText() {
-            return true;
+        @Override
+        public TextOverlay getTextOverlay() {
+            String text = valueToString(item.getTier(), amplifierTierRomanNumerals);
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(HIGHLIGHT_COLOR).withTextShadow(amplifierTierShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return amplifierTierEnabled;
         }
     }
 
@@ -210,81 +211,17 @@ public class ItemTextOverlayFeature extends UserFeature {
         @Override
         public TextOverlay getTextOverlay() {
             CustomColor textColor = item.isCorrupted() ? CORRUPTED_COLOR : STANDARD_COLOR;
-            String dungeon = item.getDungeon();
 
-            return new TextOverlay(
-                    new TextRenderTask(
-                            dungeon,
-                            TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow)),
-                    -1,
-                    1,
-                    1f);
+            String text = item.getDungeon();
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 1f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
             return dungeonKeyEnabled;
-        }
-    }
-
-    private class AmplifierOverlay implements TextOverlayInfo {
-        private static final CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
-
-        private final AmplifierItem item;
-
-        private AmplifierOverlay(AmplifierItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public TextOverlay getTextOverlay() {
-            String text =
-                    amplifierTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
-
-            return new TextOverlay(
-                    new TextRenderTask(
-                            text,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(HIGHLIGHT_COLOR)
-                                    .withTextShadow(amplifierTierShadow)),
-                    -1,
-                    1,
-                    0.75f);
-        }
-
-        @Override
-        public boolean isTextOverlayEnabled() {
-            return amplifierTierEnabled;
-        }
-    }
-
-    private class TeleportScrollOverlay implements TextOverlayInfo {
-        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
-        private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
-
-        private final TeleportScrollItem item;
-
-        private TeleportScrollOverlay(TeleportScrollItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public boolean isTextOverlayEnabled() {
-            return teleportScrollEnabled;
-        }
-
-        @Override
-        public TextOverlay getTextOverlay() {
-            CustomColor textColor = item.isDungeon() ? DUNGEON_COLOR : CITY_COLOR;
-            String location = item.getDestination();
-
-            return new TextOverlay(
-                    new TextRenderTask(
-                            location,
-                            TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow)),
-                    0,
-                    0,
-                    1f);
         }
     }
 
@@ -304,10 +241,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            // convert from roman to arabic if necessary
-            String text =
-                    emeraldPouchTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
-
+            String text = valueToString(item.getTier(), emeraldPouchTierRomanNumerals);
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(HIGHLIGHT_COLOR).withTextShadow(emeraldPouchTierShadow);
 
@@ -329,10 +263,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            // convert from roman to arabic if necessary
-            String text =
-                    gatheringToolTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
-
+            String text = valueToString(item.getTier(), gatheringToolTierRomanNumerals);
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(gatheringToolTierShadow);
@@ -357,45 +288,11 @@ public class ItemTextOverlayFeature extends UserFeature {
         public TextOverlay getTextOverlay() {
             CustomColor highlightColor = item.getPowderProfile().element().getColor();
 
-            // convert from roman to arabic if necessary
-            String text = powderTierRomanNumerals ? MathUtils.toRoman(item.getTier()) : String.valueOf(item.getTier());
+            String text = valueToString(item.getTier(), powderTierRomanNumerals);
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(powderTierShadow);
 
-            return new TextOverlay(
-                    new TextRenderTask(
-                            text,
-                            TextRenderSetting.DEFAULT
-                                    .withCustomColor(highlightColor)
-                                    .withTextShadow(powderTierShadow)),
-                    -1,
-                    1,
-                    0.75f);
-        }
-    }
-
-    private class SkillPotionOverlay implements TextOverlayInfo {
-        private final SkillPotionItem item;
-
-        private SkillPotionOverlay(SkillPotionItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public TextOverlay getTextOverlay() {
-            String icon = item.getSkill().getSymbol();
-            CustomColor color = CustomColor.fromChatFormatting(item.getSkill().getColor());
-
-            return new TextOverlay(
-                    new TextRenderTask(
-                            icon,
-                            TextRenderSetting.DEFAULT.withCustomColor(color).withTextShadow(skillIconShadow)),
-                    -1,
-                    1,
-                    0.9f);
-        }
-
-        @Override
-        public boolean isTextOverlayEnabled() {
-            return skillIconEnabled;
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
         }
     }
 
@@ -408,21 +305,71 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
-            String symbol = item.getSkill().getSymbol();
-            CustomColor color = CustomColor.fromChatFormatting(item.getSkill().getColor());
+            Skill skill = item.getSkill();
 
-            return new TextOverlay(
-                    new TextRenderTask(
-                            symbol,
-                            TextRenderSetting.DEFAULT.withCustomColor(color).withTextShadow(skillIconShadow)),
-                    -1,
-                    1,
-                    0.9f);
+            String text = skill.getSymbol();
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColor()))
+                    .withTextShadow(skillIconShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
             return skillIconEnabled;
+        }
+    }
+
+    private class SkillPotionOverlay implements TextOverlayInfo {
+        private final SkillPotionItem item;
+
+        private SkillPotionOverlay(SkillPotionItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            Skill skill = item.getSkill();
+
+            String text = skill.getSymbol();
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColor()))
+                    .withTextShadow(skillIconShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return skillIconEnabled;
+        }
+    }
+
+    private class TeleportScrollOverlay implements TextOverlayInfo {
+        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+        private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+
+        private final TeleportScrollItem item;
+
+        private TeleportScrollOverlay(TeleportScrollItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return teleportScrollEnabled;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            CustomColor textColor = item.isDungeon() ? DUNGEON_COLOR : CITY_COLOR;
+
+            String text = item.getDestination();
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
         }
     }
 

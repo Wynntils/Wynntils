@@ -5,6 +5,7 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -13,10 +14,9 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.properties.CountedItemProperty;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -45,12 +45,13 @@ public class ExtendedItemCountFeature extends UserFeature {
     }
 
     private void drawTextOverlay(ItemStack item, int slotX, int slotY) {
-        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(item);
-        if (annotationOpt.isEmpty()) return;
-        if (!(annotationOpt.get() instanceof CountedItemProperty wynnItem)) return;
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        if (wynnItemOpt.isEmpty()) return;
+        if (!(wynnItemOpt.get() instanceof CountedItemProperty countedItem)) return;
 
-        int count = wynnItem.getCount();
-        // This is a bit ugly; would rather we hid the drawing...
+        int count = countedItem.getCount();
+        // This is a bit ugly; would rather we hid the drawing but that was tricky to do
+        // with mixins...
         item.setCount(1);
 
         TextRenderTask task = new TextRenderTask(
