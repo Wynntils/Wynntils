@@ -15,12 +15,14 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class GearItemManager extends Manager {
@@ -47,16 +50,94 @@ public final class GearItemManager extends Manager {
             "[" + new String(Character.toChars(0xF5000)) + "-" + new String(Character.toChars(0xF5F00)) + "]";
     private static final int OFFSET = 0xF5000;
 
-    private static final boolean ENCODE_NAME = false;
-
     private static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>"
             + RANGE + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
+    private static final Pattern ITEM_TIER =
+            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
+    private static final boolean ENCODE_NAME = false;
+
+    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
+            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
+                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     public GearItemManager() {
         super(List.of());
     }
 
-    public static GearItem fromJsonLore(ItemStack itemStack) {
+    public GearItem fromItemStack(ItemStack itemStack) {
+        ItemProfile itemProfile;
+        List<GearIdentification> identifications = new ArrayList<>();
+        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<Powder> powders = List.of();
+        int rerolls = 0;
+        List<Component> setBonus = new ArrayList<>();
+
+        // Lookup Gear Profile
+        String name = itemStack.getHoverName().getString();
+        String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
+        itemProfile = Managers.ItemProfiles.getItemsProfile(strippedName);
+        if (itemProfile == null) return null;
+
+        // Verify that rarity matches
+        if (!name.startsWith(itemProfile.getTier().getChatFormatting().toString())) return null;
+
+        // Parse lore for identifications, powders and rerolls
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        lore.remove(0); // remove item name
+
+        boolean collectingSetBonus = false;
+        for (Component loreLine : lore) {
+            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
+
+            // Look for Set Bonus
+            if (unformattedLoreLine.equals("Set Bonus:")) {
+                collectingSetBonus = true;
+                continue;
+            }
+            if (collectingSetBonus) {
+                setBonus.add(loreLine);
+
+                if (unformattedLoreLine.isBlank()) {
+                    collectingSetBonus = false;
+                }
+                continue;
+            }
+
+            // Look for Powder
+            if (unformattedLoreLine.contains("] Powder Slots")) {
+                powders = Powder.findPowders(unformattedLoreLine);
+                continue;
+            }
+
+            // Look for Rerolls
+            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
+            if (rerollMatcher.find()) {
+                if (rerollMatcher.group("Rolls") == null) continue;
+                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
+                continue;
+            }
+
+            // Look for identifications
+            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
+            if (identificationMatcher.find()) {
+                String idName = WynnItemMatchers.getShortIdentificationName(
+                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
+                int value = Integer.parseInt(identificationMatcher.group("Value"));
+                int stars = identificationMatcher.group("Stars").length();
+                identifications.add(new GearIdentification(idName, value, stars));
+
+                // This is partially overlapping with GearIdentification, sort this out later
+                ItemIdentificationContainer idContainer =
+                        Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
+                if (idContainer == null) continue;
+                idContainers.add(idContainer);
+            }
+        }
+
+        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, setBonus);
+    }
+
+    public GearItem fromJsonLore(ItemStack itemStack) {
         String itemName = WynnItemUtils.getTranslatedName(itemStack);
 
         ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
@@ -126,98 +207,6 @@ public final class GearItemManager extends Manager {
         }
 
         return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
-    }
-
-    /**
-     * Encodes the given item, as long as it is a standard gear item, into the following format
-     *
-     * START character (U+F5FF0)
-     * Item name (optionally encoded)
-     * SEPARATOR character (U+F5FF2)
-     * Identifications/stars (encoded)
-     * SEPARATOR (only if powdered)
-     * Powders (encoded) (only if powdered)
-     * Rerolls (encoded)
-     * END character (U+F5FF1)
-     *
-     * Any encoded "value" is added to the OFFSET character value U+F5000 and then converted into the corresponding Unicode character:
-     *
-     * The name is encoded based on the ASCII value of each character minus 32
-     *
-     * Identifications are encoded either as the raw value minus the minimum value of that ID, or if the range is larger than 100,
-     * the percent value 0 to 100 of the given roll.
-     * Regardless of either case, this number is multiplied by 4, and the number of stars present on that ID is added.
-     * This ensures that the value and star count can be encoded into a single character and be decoded later.
-     *
-     * Powders are encoded as numerical values 1-5. Up to 4 powders are encoded into a single character - for each new powder,
-     * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
-     *
-     * Rerolls are simply encoded as a raw number.
-     *
-     * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
-     * modified without also changing the encoding in legacy.
-     *
-     */
-    public String encodeToString(GearItem gearItem) {
-        String itemName = gearItem.getItemProfile().getDisplayName();
-
-        // get identification data - ordered for consistency
-        List<ItemIdentificationContainer> sortedIds =
-                Managers.ItemProfiles.orderIdentifications(gearItem.getIdContainers());
-
-        // name
-        StringBuilder encoded = new StringBuilder(START);
-        encoded.append(ENCODE_NAME ? encodeString(itemName) : itemName);
-        encoded.append(SEPARATOR);
-
-        // ids
-        for (ItemIdentificationContainer id : sortedIds) {
-            if (id.identification().isFixed()) continue; // don't care about these
-
-            int idValue = id.value();
-            IdentificationProfile idProfile = id.identification();
-
-            int translatedValue;
-            if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
-                translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
-            } else { // raw value
-                // min/max must be flipped for inverted IDs to avoid negative values
-                translatedValue = idProfile.isInverted() ? idValue - idProfile.getMax() : idValue - idProfile.getMin();
-            }
-
-            // stars
-            int stars = id.stars();
-
-            // encode value + stars in one character
-            encoded.append(encodeNumber(translatedValue * 4 + stars));
-        }
-
-        // powders
-        List<Powder> powders = gearItem.getPowders();
-        if (powders != null && !powders.isEmpty()) {
-            encoded.append(SEPARATOR);
-
-            int counter = 0;
-            int encodedPowders = 0;
-            for (Powder p : powders) {
-                encodedPowders *= 6; // shift left
-                encodedPowders += p.ordinal() + 1; // 0 represents no more powders
-                counter++;
-
-                if (counter == 4) { // max # of powders encoded in a single char
-                    encoded.append(encodeNumber(encodedPowders));
-                    encodedPowders = 0;
-                    counter = 0;
-                }
-            }
-            if (encodedPowders != 0) encoded.append(encodeNumber(encodedPowders)); // catch any leftover powders
-        }
-
-        // rerolls
-        encoded.append(encodeNumber(gearItem.getRerolls()));
-
-        encoded.append(END);
-        return encoded.toString();
     }
 
     private GearItem fromEncodedString(String encoded) {
@@ -297,6 +286,98 @@ public final class GearItemManager extends Manager {
 
         // create chat gear stack
         return new GearItem(item, identifications, idContainers, powderList, rerolls, List.of());
+    }
+
+    /**
+     * Encodes the given item, as long as it is a standard gear item, into the following format
+     *
+     * START character (U+F5FF0)
+     * Item name (optionally encoded)
+     * SEPARATOR character (U+F5FF2)
+     * Identifications/stars (encoded)
+     * SEPARATOR (only if powdered)
+     * Powders (encoded) (only if powdered)
+     * Rerolls (encoded)
+     * END character (U+F5FF1)
+     *
+     * Any encoded "value" is added to the OFFSET character value U+F5000 and then converted into the corresponding Unicode character:
+     *
+     * The name is encoded based on the ASCII value of each character minus 32
+     *
+     * Identifications are encoded either as the raw value minus the minimum value of that ID, or if the range is larger than 100,
+     * the percent value 0 to 100 of the given roll.
+     * Regardless of either case, this number is multiplied by 4, and the number of stars present on that ID is added.
+     * This ensures that the value and star count can be encoded into a single character and be decoded later.
+     *
+     * Powders are encoded as numerical values 1-5. Up to 4 powders are encoded into a single character - for each new powder,
+     * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
+     *
+     * Rerolls are simply encoded as a raw number.
+     *
+     * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
+     * modified without also changing the encoding in legacy.
+     *
+     */
+    public String toEncodedString(GearItem gearItem) {
+        String itemName = gearItem.getItemProfile().getDisplayName();
+
+        // get identification data - ordered for consistency
+        List<ItemIdentificationContainer> sortedIds =
+                Managers.ItemProfiles.orderIdentifications(gearItem.getIdContainers());
+
+        // name
+        StringBuilder encoded = new StringBuilder(START);
+        encoded.append(ENCODE_NAME ? encodeString(itemName) : itemName);
+        encoded.append(SEPARATOR);
+
+        // ids
+        for (ItemIdentificationContainer id : sortedIds) {
+            if (id.identification().isFixed()) continue; // don't care about these
+
+            int idValue = id.value();
+            IdentificationProfile idProfile = id.identification();
+
+            int translatedValue;
+            if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
+                translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
+            } else { // raw value
+                // min/max must be flipped for inverted IDs to avoid negative values
+                translatedValue = idProfile.isInverted() ? idValue - idProfile.getMax() : idValue - idProfile.getMin();
+            }
+
+            // stars
+            int stars = id.stars();
+
+            // encode value + stars in one character
+            encoded.append(encodeNumber(translatedValue * 4 + stars));
+        }
+
+        // powders
+        List<Powder> powders = gearItem.getPowders();
+        if (powders != null && !powders.isEmpty()) {
+            encoded.append(SEPARATOR);
+
+            int counter = 0;
+            int encodedPowders = 0;
+            for (Powder p : powders) {
+                encodedPowders *= 6; // shift left
+                encodedPowders += p.ordinal() + 1; // 0 represents no more powders
+                counter++;
+
+                if (counter == 4) { // max # of powders encoded in a single char
+                    encoded.append(encodeNumber(encodedPowders));
+                    encodedPowders = 0;
+                    counter = 0;
+                }
+            }
+            if (encodedPowders != 0) encoded.append(encodeNumber(encodedPowders)); // catch any leftover powders
+        }
+
+        // rerolls
+        encoded.append(encodeNumber(gearItem.getRerolls()));
+
+        encoded.append(END);
+        return encoded.toString();
     }
 
     public Matcher chatItemMatcher(String text) {

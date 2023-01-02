@@ -57,7 +57,7 @@ public final class Managers {
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
-    public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net);
+    public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net, GearItem);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);

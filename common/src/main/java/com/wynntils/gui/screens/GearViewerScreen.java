@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -14,7 +15,6 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.model.GearItemManager;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearItem gearItem = GearItemManager.fromJsonLore(itemStack);
+        GearItem gearItem = Managers.GearItem.fromJsonLore(itemStack);
         if (gearItem == null) {
             return itemStack;
         }

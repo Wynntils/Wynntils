@@ -17,6 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
+import com.wynntils.wynn.model.GearItemManager;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
@@ -66,10 +67,12 @@ public final class ItemProfilesManager extends Manager {
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
 
-    public ItemProfilesManager(NetManager netManager) {
-        super(List.of(netManager));
+    public ItemProfilesManager(NetManager netManager, GearItemManager gearItemManager) {
+        super(List.of(netManager, gearItemManager));
         loadData();
 
+        // The dependency on GearItemManager is due to the Item model by its
+        // GearAnnotator
         // This is slightly hacky, awaiting the full refactoring
         WynntilsMod.registerEventListener(Models.Item);
         Models.Item.init();
