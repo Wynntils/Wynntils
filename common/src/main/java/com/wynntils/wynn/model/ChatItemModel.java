@@ -328,9 +328,11 @@ public final class ChatItemModel extends Model {
         public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
             GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
             List<Component> tooltip = tooltipBuilder.getTooltipLines();
-            tooltip.add(1, Component.literal("From chat")
-                    .withStyle(ChatFormatting.DARK_GRAY)
-                    .withStyle(ChatFormatting.ITALIC));
+            tooltip.add(
+                    1,
+                    Component.literal("From chat")
+                            .withStyle(ChatFormatting.DARK_GRAY)
+                            .withStyle(ChatFormatting.ITALIC));
             return tooltip;
         }
     }
