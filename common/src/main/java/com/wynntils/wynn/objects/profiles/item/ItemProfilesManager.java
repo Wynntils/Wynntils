@@ -78,6 +78,10 @@ public final class ItemProfilesManager extends Manager {
         Models.Item.init();
     }
 
+    public IdentificationOrderer getIdentificationOrderer() {
+        return identificationOrderer;
+    }
+
     public boolean isInverted(String id) {
         return identificationOrderer.isInverted(id);
     }

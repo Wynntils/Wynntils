@@ -10,8 +10,10 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
@@ -32,6 +34,9 @@ import net.minecraft.world.item.TooltipFlag;
 public final class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
+    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
+            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
+                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     private final ItemProfile itemProfile;
     private final GearItem gearItem;
@@ -127,9 +132,7 @@ public final class GearTooltipBuilder {
                 continue;
             }
 
-            ItemIdentificationContainer idContainer =
-                    Managers.ItemProfiles.identificationFromLore(loreLine, gearProfile);
-            if (idContainer == null) { // not an ID line
+            if (!isIdLine(loreLine, gearProfile)) {
                 baseTooltip.add(loreLine);
                 continue;
             }
@@ -142,6 +145,32 @@ public final class GearTooltipBuilder {
         }
 
         return Pair.of(topTooltip, bottomTooltip);
+    }
+
+    public static boolean isIdLine(Component lore, ItemProfile item) {
+        // This looks quite messy, but is in effect what we did before
+        // FIXME: Clean up?
+        String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
+        Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
+        if (!identificationMatcher.find()) return false; // not a valid id line
+
+        String idName = identificationMatcher.group("ID");
+        boolean isRaw = identificationMatcher.group("Suffix") == null;
+
+        String shortIdName;
+        SpellType spell = SpellType.fromName(idName);
+        if (spell != null) {
+            shortIdName = spell.getShortIdName(isRaw);
+        } else {
+            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
+        }
+
+        IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
+        if (idProfile != null) {
+            return idProfile.getType() != null;
+        } else {
+            return IdentificationProfile.getTypeFromName(shortIdName) != null;
+        }
     }
 
     private List<Component> buildTopTooltip() {
