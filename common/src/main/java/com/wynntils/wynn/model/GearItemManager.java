@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.model;
 
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
@@ -31,7 +31,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ChatItemModel extends Model {
+public final class GearItemManager extends Manager {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -44,6 +44,10 @@ public final class ChatItemModel extends Model {
 
     private static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>"
             + RANGE + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
+
+    public GearItemManager() {
+        super(List.of());
+    }
 
     /**
      * Encodes the given item, as long as it is a standard gear item, into the following format

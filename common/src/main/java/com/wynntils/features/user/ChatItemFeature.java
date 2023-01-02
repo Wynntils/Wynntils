@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -41,7 +41,7 @@ public class ChatItemFeature extends UserFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.ChatItem.chatItemMatcher(chatInput.getValue());
+        Matcher m = Managers.GearItem.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -60,6 +60,6 @@ public class ChatItemFeature extends UserFeature {
 
         Component message = e.getMessage();
 
-        e.setMessage(Models.ChatItem.insertItemComponents(message));
+        e.setMessage(Managers.GearItem.insertItemComponents(message));
     }
 }

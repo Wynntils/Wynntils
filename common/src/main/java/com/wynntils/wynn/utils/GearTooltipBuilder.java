@@ -11,6 +11,7 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
+import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
@@ -290,23 +291,24 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
-        List<ItemIdentificationContainer> identifications = gearItem.getIdContainers();
+        List<ItemIdentificationContainer> idContainers = gearItem.getIdContainers();
+        List<GearIdentification> identifications = gearItem.getIdentifications();
 
-        if (identifications.isEmpty()) {
+        if (idContainers.isEmpty()) {
             return List.of();
         }
 
         Map<String, Component> map =
                 switch (style.decorations()) {
-                    case PERCENT -> identifications.stream()
+                    case PERCENT -> idContainers.stream()
                             .collect(Collectors.toMap(
                                     ItemIdentificationContainer::shortIdName,
                                     ItemIdentificationContainer::percentLoreLine));
-                    case RANGE -> identifications.stream()
+                    case RANGE -> idContainers.stream()
                             .collect(Collectors.toMap(
                                     ItemIdentificationContainer::shortIdName,
                                     ItemIdentificationContainer::rangeLoreLine));
-                    case REROLL_CHANCE -> identifications.stream()
+                    case REROLL_CHANCE -> idContainers.stream()
                             .collect(Collectors.toMap(
                                     ItemIdentificationContainer::shortIdName,
                                     ItemIdentificationContainer::rerollLoreLine));
