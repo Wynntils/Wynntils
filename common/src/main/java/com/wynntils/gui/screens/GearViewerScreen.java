@@ -40,11 +40,11 @@ public final class GearViewerScreen extends WynntilsScreen {
     private GearViewerScreen(Player player) {
         super(Component.empty());
         this.player = player;
-        this.heldItem = createFakeItemStack(player.getMainHandItem(), player.getName());
+        this.heldItem = createDecoratedItemStack(player.getMainHandItem(), player.getName());
 
         this.armorItems = new ArrayList<>();
         for (ItemStack armorSlot : player.getArmorSlots()) {
-            armorItems.add(createFakeItemStack(armorSlot, player.getName()));
+            armorItems.add(createDecoratedItemStack(armorSlot, player.getName()));
         }
 
         Collections.reverse(armorItems);
@@ -54,8 +54,7 @@ public final class GearViewerScreen extends WynntilsScreen {
         return new GearViewerScreen(player);
     }
 
-    // Get gear item from un-parsed wynn item
-    public ItemStack createFakeItemStack(ItemStack itemStack, Component playerName) {
+    public ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
         if (itemStack.getItem() == Items.AIR) {
             return itemStack;
         }
