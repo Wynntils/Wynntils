@@ -1,9 +1,21 @@
+## [0.0.2-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.52...v0.0.2-alpha.53) (2023-01-02)
+
+
+### Bug Fixes
+
+* Material names parsing failed ([#963](https://github.com/Wynntils/Artemis/issues/963)) ([847f37a](https://github.com/Wynntils/Artemis/commit/847f37a5e679070a9f1f3b51179fa6234b839aee))
+
 ## [0.0.2-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.51...v0.0.2-alpha.52) (2023-01-02)
 
 
 ### Bug Fixes
 
 * Better handling of item screenshot on macOS ([#960](https://github.com/Wynntils/Artemis/issues/960)) ([b884d95](https://github.com/Wynntils/Artemis/commit/b884d95145d6b8c131410385d4a8d623cbb8f45f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.52 [skip ci] ([20b6333](https://github.com/Wynntils/Artemis/commit/20b63331a6649a1d851ef8b2d04675f69add313b))
 
 ## [0.0.2-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.50...v0.0.2-alpha.51) (2023-01-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.49 [skip ci] ([b47466d](https://github.com/Wynntils/Artemis/commit/b47466df605eaf43b9d2b50f0f4dd732a91c419d))
-
-## [0.0.2-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.47...v0.0.2-alpha.48) (2023-01-01)
-
-
-### New Features
-
-* Make debug features like user features ([#956](https://github.com/Wynntils/Artemis/issues/956)) ([fa7954d](https://github.com/Wynntils/Artemis/commit/fa7954d3120f14ca0a4cec371a133e2d116b6a41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.48 [skip ci] ([a27dc49](https://github.com/Wynntils/Artemis/commit/a27dc49e041a1706acefbbc914b01e63b7dac480))
 
