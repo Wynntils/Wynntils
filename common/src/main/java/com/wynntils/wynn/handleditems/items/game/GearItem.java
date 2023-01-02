@@ -10,7 +10,9 @@ import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearItem extends GameItem implements GearTierItemProperty {
@@ -20,6 +22,9 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
+    private final boolean isPerfect;
+    private final boolean isDefective;
+    private final float overallPercentage;
 
     public GearItem(
             ItemProfile itemProfile,
@@ -34,6 +39,17 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         this.powders = powders;
         this.rerolls = rerolls;
         this.setBonus = setBonus;
+
+        DoubleSummaryStatistics percents = idContainers.stream()
+                .filter(Predicate.not(ItemIdentificationContainer::isFixed))
+                .mapToDouble(ItemIdentificationContainer::percent)
+                .summaryStatistics();
+        overallPercentage = (float) percents.getAverage();
+
+        // FIXME: only check if we actually have variable identifications!
+        // check for perfect/0% items
+        isPerfect = overallPercentage >= 100f;
+        isDefective = overallPercentage == 0f;
     }
 
     public ItemProfile getItemProfile() {
@@ -73,5 +89,17 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 + powders + ", rerolls="
                 + rerolls + ", setBonus="
                 + setBonus + '}';
+    }
+
+    public float getOverallPercentage() {
+        return overallPercentage;
+    }
+
+    public boolean isPerfect() {
+        return isPerfect;
+    }
+
+    public boolean isDefective() {
+        return isDefective;
     }
 }

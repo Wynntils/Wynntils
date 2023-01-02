@@ -356,6 +356,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceEnd.name": "Obfuscation End Chance",
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.description": "What is the highest chance of defective names to have letters scrambled?",
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Obfuscation Start Chance",
+  "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Should the overall percentage of a gear be displayed in the name?",
+  "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Overall Percentage in Name",
   "feature.wynntils.itemStatInfo.perfect.description": "Should the names of perfect (100%) items be rainbow colored?",
   "feature.wynntils.itemStatInfo.perfect.name": "Rainbow Perfect Items",
   "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Should identifications be reordered according to Wynntils order?",
