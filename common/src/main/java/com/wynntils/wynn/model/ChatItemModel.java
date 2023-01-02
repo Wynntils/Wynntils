@@ -6,12 +6,13 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import java.math.BigDecimal;
@@ -138,7 +139,7 @@ public final class ChatItemModel extends Model {
         return encoded.toString();
     }
 
-    private GearItemStack decodeItem(String encoded) {
+    private GearItem decodeItem(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 
@@ -152,6 +153,7 @@ public final class ChatItemModel extends Model {
 
         // ids
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentification> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
         sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles::getOrder));
@@ -194,6 +196,7 @@ public final class ChatItemModel extends Model {
             ItemIdentificationContainer idContainer =
                     Managers.ItemProfiles.identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
+            identifications.add(new GearIdentification(shortIdName, value, stars));
         }
 
         // powders
@@ -212,7 +215,7 @@ public final class ChatItemModel extends Model {
         }
 
         // create chat gear stack
-        return new GearItemStack(item, idContainers, powderList, rerolls);
+        return new GearItem(item, identifications, idContainers, powderList, rerolls, List.of());
     }
 
     public Matcher chatItemMatcher(String text) {
@@ -241,7 +244,7 @@ public final class ChatItemModel extends Model {
                 String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
-                GearItemStack item = decodeItem(m.group());
+                GearItem item = decodeItem(m.group());
                 if (item == null) { // couldn't decode, skip
                     comp = comp.copy();
                     continue;
@@ -267,13 +270,16 @@ public final class ChatItemModel extends Model {
         return temp;
     }
 
-    private Component createItemComponent(GearItemStack item) {
-        MutableComponent itemComponent = Component.literal(item.getItemProfile().getDisplayName())
+    private Component createItemComponent(GearItem gearItem) {
+        MutableComponent itemComponent = Component.literal(
+                        gearItem.getItemProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(item.getItemProfile().getTier().getChatFormatting());
+                .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
 
-        HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(item);
-        ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(item);
+        ItemStack itemStack = gearItem.getItemProfile().getItemInfo().asItemStack();
+        ((AnnotatedItemStack) itemStack).setAnnotation(gearItem);
+        HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
+        ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         itemComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent)));
 
         return itemComponent;
