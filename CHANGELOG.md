@@ -1,9 +1,21 @@
+## [0.0.2-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.49...v0.0.2-alpha.50) (2023-01-02)
+
+
+### Bug Fixes
+
+* make WorldWaypointDistanceFeature also tint the displayed icon if the poi have one ([#947](https://github.com/Wynntils/Artemis/issues/947)) ([0b9ee4b](https://github.com/Wynntils/Artemis/commit/0b9ee4bedd25084e9394859cde00968651659b83))
+
 ## [0.0.2-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.48...v0.0.2-alpha.49) (2023-01-01)
 
 
 ### Code Refactoring
 
 * Create special "fake" itemstacks for the guides ([#954](https://github.com/Wynntils/Artemis/issues/954)) ([f3c9fb8](https://github.com/Wynntils/Artemis/commit/f3c9fb834626eb02437db3af301b0f2c58a1448f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.49 [skip ci] ([b47466d](https://github.com/Wynntils/Artemis/commit/b47466df605eaf43b9d2b50f0f4dd732a91c419d))
 
 ## [0.0.2-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.47...v0.0.2-alpha.48) (2023-01-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.46 [skip ci] ([0fcf3b2](https://github.com/Wynntils/Artemis/commit/0fcf3b2145c70c8fe08586b98995a93a0a01c48d))
-
-## [0.0.2-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.44...v0.0.2-alpha.45) (2022-12-29)
-
-
-### Code Refactoring
-
-* Create ContainerManager from WynnScreenMatchers ([#946](https://github.com/Wynntils/Artemis/issues/946)) ([10e8e08](https://github.com/Wynntils/Artemis/commit/10e8e08d051f5ec86eda0e043ae7b83b8ed98362))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.45 [skip ci] ([4204d88](https://github.com/Wynntils/Artemis/commit/4204d8875145c811f966145559abc41511a464bb))
 
