@@ -7,6 +7,7 @@ package com.wynntils.wynn.handleditems;
 import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -27,8 +28,8 @@ public class FakeItemStack extends ItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-        GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
-        List<Component> tooltip = tooltipBuilder.getTooltipLines();
+        GearTooltipBuilder tooltipBuilder = GearTooltipBuilder.fromGearItem(gearItem);
+        List<Component> tooltip = tooltipBuilder.getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations());
         tooltip.add(
                 1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         return tooltip;

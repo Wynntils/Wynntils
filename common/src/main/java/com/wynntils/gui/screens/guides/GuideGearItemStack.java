@@ -6,6 +6,7 @@ package com.wynntils.gui.screens.guides;
 
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +33,7 @@ public class GuideGearItemStack extends GuideItemStack {
         name = Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
-        this.generatedTooltip = new GearTooltipBuilder(itemProfile).getTooltipLines();
+        this.generatedTooltip = GearTooltipBuilder.fromItemProfile(itemProfile).getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations());
     }
 
     @Override

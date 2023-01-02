@@ -11,6 +11,7 @@ import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
@@ -28,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public final class WynnItemUtils {
     /**
@@ -163,5 +165,15 @@ public final class WynnItemUtils {
         }
 
         return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
+    }
+
+    public static GearTooltipBuilder.IdentificationDecorations getCurrentIdentificationDecorations() {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            return GearTooltipBuilder.IdentificationDecorations.RANGE;
+        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+            return GearTooltipBuilder.IdentificationDecorations.REROLL_CHANCE;
+        } else {
+            return GearTooltipBuilder.IdentificationDecorations.PERCENT;
+        }
     }
 }

@@ -16,6 +16,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
+import com.wynntils.wynn.utils.WynnItemUtils;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -89,10 +90,10 @@ public class ItemStatInfoFeature extends UserFeature {
                 .getOrCalculate(
                         WynnItemCache.TOOLTIP_KEY,
                         () -> GearTooltipBuilder.fromItemStack(
-                                event.getItemStack(), gearItem.getItemProfile(), gearItem, false));
+                                event.getItemStack(), gearItem.getItemProfile(), gearItem));
         if (builder == null) return;
 
-        LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines());
+        LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations()));
 
         if (gearItem.hasVariableIds()) {
             if (perfect && gearItem.isPerfect()) {

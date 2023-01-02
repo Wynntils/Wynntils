@@ -256,4 +256,12 @@ public final class StringUtils {
 
         return color;
     }
+
+    public static String toSignedString(int value) {
+        if (value >= 0) {
+            return "+" + value;
+        } else {
+            return Integer.toString(value);
+        }
+    }
 }
