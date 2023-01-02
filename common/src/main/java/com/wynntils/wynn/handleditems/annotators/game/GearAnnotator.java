@@ -9,7 +9,6 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.item.GearItemStack;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
