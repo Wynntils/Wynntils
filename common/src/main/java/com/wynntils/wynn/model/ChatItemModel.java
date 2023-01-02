@@ -15,6 +15,7 @@ import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -276,7 +277,7 @@ public final class ChatItemModel extends Model {
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
 
-        ItemStack itemStack = gearItem.getItemProfile().getItemInfo().asItemStack();
+        ItemStack itemStack = new ChatItemStack(gearItem);
         ((AnnotatedItemStack) itemStack).setAnnotation(gearItem);
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
         ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
@@ -286,15 +287,18 @@ public final class ChatItemModel extends Model {
     }
 
     public class ChatItemStack extends ItemStack {
-        public ChatItemStack(ItemStack stack) {
-            super(stack.getItem(), stack.getCount());
-            if (stack.getTag() != null) setTag(stack.getTag());
+        private final GearItem gearItem;
+
+        public ChatItemStack(GearItem gearItem) {
+            super(gearItem.getItemProfile().getItemInfo().asItemStack().getItem(), 1);
+            //            if (stack.getTag() != null) setTag(stack.getTag());
+            this.gearItem = gearItem;
         }
 
         @Override
         public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-            // FIXME: use tooltip builder!
-            return super.getTooltipLines(player, isAdvanced);
+            GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
+            return tooltipBuilder.getTooltipLines();
         }
     }
 
