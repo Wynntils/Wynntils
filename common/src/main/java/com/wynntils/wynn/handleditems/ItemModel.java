@@ -88,7 +88,7 @@ public class ItemModel extends Model {
 
     public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
-        public ItemAnnotation getAnnotation(ItemStack itemStack) {
+        public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
             return new WynnItem();
         }
     }
