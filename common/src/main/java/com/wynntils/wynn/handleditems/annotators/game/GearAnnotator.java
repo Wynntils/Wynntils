@@ -102,6 +102,7 @@ public final class GearAnnotator implements ItemAnnotator {
                 // This is partially overlapping with GearIdentification, sort this out later
                 ItemIdentificationContainer idContainer =
                         Managers.ItemProfiles.identificationFromLore(loreLine, itemProfile);
+                if (idContainer == null) continue;
                 idContainers.add(idContainer);
             }
         }
