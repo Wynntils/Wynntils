@@ -79,7 +79,7 @@ public final class GearItemManager extends Manager {
      * modified without also changing the encoding in legacy.
      *
      */
-    public String encodeItem(GearItem gearItem) {
+    public String encodeToString(GearItem gearItem) {
         String itemName = gearItem.getItemProfile().getDisplayName();
 
         // get identification data - ordered for consistency
@@ -141,7 +141,7 @@ public final class GearItemManager extends Manager {
         return encoded.toString();
     }
 
-    private GearItem decodeItem(String encoded) {
+    private GearItem fromEncodedString(String encoded) {
         Matcher m = ENCODED_PATTERN.matcher(encoded);
         if (!m.matches()) return null;
 
@@ -224,7 +224,7 @@ public final class GearItemManager extends Manager {
         return ENCODED_PATTERN.matcher(text);
     }
 
-    public Component insertItemComponents(Component message) {
+    public Component replaceComponentWithItemHover(Component message) {
         // no item tooltips to insert
         if (!ENCODED_PATTERN.matcher(ComponentUtils.getCoded(message)).find()) return message;
 
@@ -246,7 +246,7 @@ public final class GearItemManager extends Manager {
                 String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
-                GearItem item = decodeItem(m.group());
+                GearItem item = fromEncodedString(m.group());
                 if (item == null) { // couldn't decode, skip
                     comp = comp.copy();
                     continue;

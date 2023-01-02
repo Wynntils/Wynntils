@@ -60,6 +60,6 @@ public class ChatItemFeature extends UserFeature {
 
         Component message = e.getMessage();
 
-        e.setMessage(Managers.GearItem.insertItemComponents(message));
+        e.setMessage(Managers.GearItem.replaceComponentWithItemHover(message));
     }
 }
