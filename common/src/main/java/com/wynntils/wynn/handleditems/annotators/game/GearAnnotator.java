@@ -42,11 +42,6 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String name = itemStack.getHoverName().getString();
-
-        // FIXME: Temporary workaround awaiting full merge
-        if (!(itemStack instanceof GearItemStack gearItemStack)) return null;
-        name = gearItemStack.getOriginalHoverName().getString();
-
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
         itemProfile = Managers.ItemProfiles.getItemsProfile(strippedName);
         if (itemProfile == null) return null;

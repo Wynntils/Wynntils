@@ -73,8 +73,6 @@ public final class ItemProfilesManager extends Manager {
         // This is slightly hacky, awaiting the full refactoring
         WynntilsMod.registerEventListener(Models.Item);
         Models.Item.init();
-        WynntilsMod.registerEventListener(Models.GearItemStack);
-        Models.GearItemStack.init();
     }
 
     public boolean isInverted(String id) {
