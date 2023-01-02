@@ -27,6 +27,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class ChatItemModel extends Model {
@@ -274,6 +277,19 @@ public final class ChatItemModel extends Model {
         itemComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent)));
 
         return itemComponent;
+    }
+
+    public class ChatItemStack extends ItemStack {
+        public ChatItemStack(ItemStack stack) {
+            super(stack.getItem(), stack.getCount());
+            if (stack.getTag() != null) setTag(stack.getTag());
+        }
+
+        @Override
+        public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
+        // FIXME: use tooltip builder!
+            return super.getTooltipLines(player, isAdvanced);
+        }
     }
 
     private String encodeString(String text) {
