@@ -5,6 +5,7 @@
 package com.wynntils.features.user.tooltips;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -19,6 +20,7 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import java.awt.Color;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -30,6 +32,11 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     public static ItemStatInfoFeature INSTANCE;
+    @Override
+    public List<Model> getModelDependencies() {
+        // FIXME: temporary hack
+        return List.of(Models.GearItemStack);
+    }
 
     @Config
     public boolean showStars = true;
