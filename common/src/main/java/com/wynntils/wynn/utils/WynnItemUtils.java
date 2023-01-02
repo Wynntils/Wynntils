@@ -4,26 +4,17 @@
  */
 package com.wynntils.wynn.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
-import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -94,78 +85,6 @@ public final class WynnItemUtils {
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         return Managers.ItemProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
-    }
-
-    public static GearItem getGearItemFromJsonLore(ItemStack itemStack) {
-        String itemName = getTranslatedName(itemStack);
-
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
-
-        if (itemProfile == null) {
-            return null;
-        }
-
-        // attempt to parse item itemData
-        JsonObject itemData;
-        String rawLore =
-                org.apache.commons.lang3.StringUtils.substringBeforeLast(ItemUtils.getStringLore(itemStack), "}")
-                        + "}"; // remove extra unnecessary info
-        try {
-            itemData = JsonParser.parseString(rawLore).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            itemData = new JsonObject(); // invalid or empty itemData on item
-        }
-
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
-        List<GearIdentification> identifications = new ArrayList<>();
-
-        if (itemData.has("identifications")) {
-            JsonArray ids = itemData.getAsJsonArray("identifications");
-            for (int i = 0; i < ids.size(); i++) {
-                JsonObject idInfo = ids.get(i).getAsJsonObject();
-                String id = idInfo.get("type").getAsString();
-                float percent = idInfo.get("percent").getAsInt() / 100f;
-
-                // get wynntils name from internal wynncraft name
-                String translatedId = Managers.ItemProfiles.getInternalIdentification(id);
-                if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
-
-                // calculate value
-                IdentificationProfile idContainer = itemProfile.getStatuses().get(translatedId);
-                int value = idContainer.isFixed()
-                        ? idContainer.getBaseValue()
-                        : Math.round(idContainer.getBaseValue() * percent);
-
-                // account for mistaken rounding
-                if (value == 0) {
-                    value = 1;
-                }
-
-                idContainers.add(Managers.ItemProfiles.identificationFromValue(
-                        null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
-                // FIXME: Get proper short name!
-                identifications.add(new GearIdentification(translatedId, value, 0));
-            }
-        }
-
-        List<Powder> powders = new ArrayList<>();
-
-        if (itemData.has("powders")) {
-            JsonArray powderData = itemData.getAsJsonArray("powders");
-            for (int i = 0; i < powderData.size(); i++) {
-                String type = powderData.get(i).getAsJsonObject().get("type").getAsString();
-                Powder powder = Powder.valueOf(type.toUpperCase(Locale.ROOT));
-
-                powders.add(powder);
-            }
-        }
-
-        int rerolls = 0;
-        if (itemData.has("identification_rolls")) {
-            rerolls = itemData.get("identification_rolls").getAsInt();
-        }
-
-        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
     }
 
     public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {

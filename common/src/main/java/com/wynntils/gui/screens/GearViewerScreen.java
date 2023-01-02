@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.model.GearItemManager;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearItem gearItem = WynnItemUtils.getGearItemFromJsonLore(itemStack);
+        GearItem gearItem = GearItemManager.fromJsonLore(itemStack);
         if (gearItem == null) {
             return itemStack;
         }
