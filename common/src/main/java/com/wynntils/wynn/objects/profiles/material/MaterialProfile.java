@@ -124,7 +124,7 @@ public final class MaterialProfile {
         WOOD(MaterialType.LOG),
         PAPER(MaterialType.LOG),
         STRING(MaterialType.CROP),
-        GRAIN(MaterialType.CROP),
+        GRAINS(MaterialType.CROP),
         OIL(MaterialType.FISH),
         MEAT(MaterialType.FISH);
 
