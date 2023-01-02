@@ -1,9 +1,21 @@
+## [0.0.2-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.50...v0.0.2-alpha.51) (2023-01-02)
+
+
+### Bug Fixes
+
+* Search overlay now works for all users ([#959](https://github.com/Wynntils/Artemis/issues/959)) ([78a77e5](https://github.com/Wynntils/Artemis/commit/78a77e57fdbf2fa74d2fa9af38efdffad275f491))
+
 ## [0.0.2-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.49...v0.0.2-alpha.50) (2023-01-02)
 
 
 ### Bug Fixes
 
 * make WorldWaypointDistanceFeature also tint the displayed icon if the poi have one ([#947](https://github.com/Wynntils/Artemis/issues/947)) ([0b9ee4b](https://github.com/Wynntils/Artemis/commit/0b9ee4bedd25084e9394859cde00968651659b83))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.50 [skip ci] ([87fe325](https://github.com/Wynntils/Artemis/commit/87fe325cb497310863aead38a5df2189bf3a4bdf))
 
 ## [0.0.2-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.48...v0.0.2-alpha.49) (2023-01-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.47 [skip ci] ([b93fc8b](https://github.com/Wynntils/Artemis/commit/b93fc8b36ed32df599f8efe3fb981d1b69912c67))
-
-## [0.0.2-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.45...v0.0.2-alpha.46) (2023-01-01)
-
-
-### New Features
-
-* Add ItemHandler, Annotators and WynnItem models ([#952](https://github.com/Wynntils/Artemis/issues/952)) ([a5dc4d9](https://github.com/Wynntils/Artemis/commit/a5dc4d94721a4cc4a91ae62f8fff5a70abe47c4f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.46 [skip ci] ([0fcf3b2](https://github.com/Wynntils/Artemis/commit/0fcf3b2145c70c8fe08586b98995a93a0a01c48d))
 
