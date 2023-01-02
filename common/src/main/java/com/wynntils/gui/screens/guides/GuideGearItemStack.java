@@ -33,7 +33,8 @@ public class GuideGearItemStack extends GuideItemStack {
         name = Component.literal(itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
 
-        this.generatedTooltip = GearTooltipBuilder.fromItemProfile(itemProfile).getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations());
+        this.generatedTooltip = GearTooltipBuilder.fromItemProfile(itemProfile)
+                .getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
     }
 
     @Override

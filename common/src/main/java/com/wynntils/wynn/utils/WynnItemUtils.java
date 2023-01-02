@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Managers;
+import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.KeyboardUtils;
@@ -167,13 +168,19 @@ public final class WynnItemUtils {
         return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
     }
 
-    public static GearTooltipBuilder.IdentificationDecorations getCurrentIdentificationDecorations() {
+    public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {
+        GearTooltipBuilder.IdentificationDecorations decorations;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            return GearTooltipBuilder.IdentificationDecorations.RANGE;
+            decorations = GearTooltipBuilder.IdentificationDecorations.RANGE;
         } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            return GearTooltipBuilder.IdentificationDecorations.REROLL_CHANCE;
+            decorations = GearTooltipBuilder.IdentificationDecorations.REROLL_CHANCE;
         } else {
-            return GearTooltipBuilder.IdentificationDecorations.PERCENT;
+            decorations = GearTooltipBuilder.IdentificationDecorations.PERCENT;
         }
+
+        return new GearTooltipBuilder.IdentificationPresentationStyle(
+                decorations,
+                ItemStatInfoFeature.INSTANCE.reorderIdentifications,
+                ItemStatInfoFeature.INSTANCE.groupIdentifications);
     }
 }

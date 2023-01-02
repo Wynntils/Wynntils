@@ -5,7 +5,6 @@
 package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -16,6 +15,7 @@ import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,9 +38,7 @@ public final class GearTooltipBuilder {
     private List<Component> topTooltip;
     private List<Component> bottomTooltip;
 
-    private List<Component> percentTooltip;
-    private List<Component> rangeTooltip;
-    private List<Component> rerollTooltip;
+    private Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
     private GearTooltipBuilder(ItemProfile itemProfile, GearItem gearItem) {
         this.itemProfile = itemProfile;
@@ -48,8 +46,6 @@ public final class GearTooltipBuilder {
 
         topTooltip = buildTopTooltip();
         bottomTooltip = buildBottomTooltip();
-
-        constructMiddleTooltips();
     }
 
     private GearTooltipBuilder(
@@ -59,8 +55,6 @@ public final class GearTooltipBuilder {
 
         this.topTooltip = topTooltip;
         this.bottomTooltip = bottomTooltip;
-
-        constructMiddleTooltips();
     }
 
     public static GearTooltipBuilder fromItemProfile(ItemProfile itemProfile) {
@@ -81,7 +75,7 @@ public final class GearTooltipBuilder {
         return new GearTooltipBuilder(itemProfile, gearItem, splittedLore.a(), splittedLore.b());
     }
 
-    public List<Component> getTooltipLines(IdentificationDecorations decorations) {
+    public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
 
@@ -90,7 +84,7 @@ public final class GearTooltipBuilder {
 
         // In the middle we have the list of identifications, which is different
         // depending on which decorations are requested
-        tooltip.addAll(getMiddlePart(decorations));
+        tooltip.addAll(getMiddleTooltip(style));
 
         tooltip.addAll(bottomTooltip);
 
@@ -281,54 +275,47 @@ public final class GearTooltipBuilder {
         return baseTooltip;
     }
 
-    private void constructMiddleTooltips() {
-        List<ItemIdentificationContainer> identifications = gearItem.getIdContainers();
-
-        if (identifications.isEmpty()) {
-            percentTooltip = List.of();
-            rangeTooltip = List.of();
-            rerollTooltip = List.of();
-            return;
-        }
-
-        Map<String, Component> percentMap = identifications.stream()
-                .collect(Collectors.toMap(
-                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::percentLoreLine));
-        Map<String, Component> rangeMap = identifications.stream()
-                .collect(Collectors.toMap(
-                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rangeLoreLine));
-        Map<String, Component> rerollMap = identifications.stream()
-                .collect(Collectors.toMap(
-                        ItemIdentificationContainer::shortIdName, ItemIdentificationContainer::rerollLoreLine));
-
-        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
-            percentTooltip = Managers.ItemProfiles.orderComponents(
-                    percentMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-            rangeTooltip =
-                    Managers.ItemProfiles.orderComponents(rangeMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-            rerollTooltip =
-                    Managers.ItemProfiles.orderComponents(rerollMap, ItemStatInfoFeature.INSTANCE.groupIdentifications);
-        } else {
-            percentTooltip = new ArrayList<>(percentMap.values());
-            rangeTooltip = new ArrayList<>(rangeMap.values());
-            rerollTooltip = new ArrayList<>(rerollMap.values());
-        }
-    }
-
     private Component getHoverName() {
         return Component.literal(gearItem.getItemProfile().getDisplayName())
                 .withStyle(gearItem.getGearTier().getChatFormatting());
     }
 
-    private List<Component> getMiddlePart(IdentificationDecorations decorations) {
-        if (gearItem == null) {
-            return rangeTooltip;
+    private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
+        List<Component> tooltips = middleTooltipCache.get(style);
+        if (tooltips != null) return tooltips;
+
+        tooltips = buildMiddleTooltip(style);
+        middleTooltipCache.put(style, tooltips);
+        return tooltips;
+    }
+
+    private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
+        List<ItemIdentificationContainer> identifications = gearItem.getIdContainers();
+
+        if (identifications.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, Component> map =
+                switch (style.decorations()) {
+                    case PERCENT -> identifications.stream()
+                            .collect(Collectors.toMap(
+                                    ItemIdentificationContainer::shortIdName,
+                                    ItemIdentificationContainer::percentLoreLine));
+                    case RANGE -> identifications.stream()
+                            .collect(Collectors.toMap(
+                                    ItemIdentificationContainer::shortIdName,
+                                    ItemIdentificationContainer::rangeLoreLine));
+                    case REROLL_CHANCE -> identifications.stream()
+                            .collect(Collectors.toMap(
+                                    ItemIdentificationContainer::shortIdName,
+                                    ItemIdentificationContainer::rerollLoreLine));
+                };
+
+        if (style.reorder()) {
+            return Managers.ItemProfiles.orderComponents(map, style.group());
         } else {
-            return switch (decorations) {
-                case PERCENT -> percentTooltip;
-                case RANGE -> rangeTooltip;
-                case REROLL_CHANCE -> rerollTooltip;
-            };
+            return new ArrayList<>(map.values());
         }
     }
 
@@ -337,4 +324,7 @@ public final class GearTooltipBuilder {
         RANGE,
         REROLL_CHANCE
     }
+
+    public record IdentificationPresentationStyle(
+            IdentificationDecorations decorations, boolean reorder, boolean group) {}
 }

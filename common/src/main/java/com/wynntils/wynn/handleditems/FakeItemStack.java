@@ -29,7 +29,7 @@ public class FakeItemStack extends ItemStack {
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         GearTooltipBuilder tooltipBuilder = GearTooltipBuilder.fromGearItem(gearItem);
-        List<Component> tooltip = tooltipBuilder.getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations());
+        List<Component> tooltip = tooltipBuilder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
         tooltip.add(
                 1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         return tooltip;

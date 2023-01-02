@@ -93,7 +93,8 @@ public class ItemStatInfoFeature extends UserFeature {
                                 event.getItemStack(), gearItem.getItemProfile(), gearItem));
         if (builder == null) return;
 
-        LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationDecorations()));
+        LinkedList<Component> tooltips =
+                new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle()));
 
         if (gearItem.hasVariableIds()) {
             if (perfect && gearItem.isPerfect()) {
