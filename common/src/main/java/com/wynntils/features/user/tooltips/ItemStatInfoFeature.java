@@ -94,18 +94,20 @@ public class ItemStatInfoFeature extends UserFeature {
 
         LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines());
 
-        if (perfect && gearItem.isPerfect()) {
-            tooltips.removeFirst();
-            tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
-        } else if (defective && gearItem.isDefective()) {
-            tooltips.removeFirst();
-            tooltips.addFirst(getDefectiveName(gearItem.getItemProfile().getDisplayName()));
-        } else if (overallPercentageInName) {
-            MutableComponent name = Component.literal(tooltips.getFirst().getString())
-                    .withStyle(tooltips.getFirst().getStyle());
-            name.append(getPercentageTextComponent(gearItem.getOverallPercentage()));
-            tooltips.removeFirst();
-            tooltips.addFirst(name);
+        if (gearItem.hasVariableIds()) {
+            if (perfect && gearItem.isPerfect()) {
+                tooltips.removeFirst();
+                tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
+            } else if (defective && gearItem.isDefective()) {
+                tooltips.removeFirst();
+                tooltips.addFirst(getDefectiveName(gearItem.getItemProfile().getDisplayName()));
+            } else if (overallPercentageInName) {
+                MutableComponent name = Component.literal(tooltips.getFirst().getString())
+                        .withStyle(tooltips.getFirst().getStyle());
+                name.append(getPercentageTextComponent(gearItem.getOverallPercentage()));
+                tooltips.removeFirst();
+                tooltips.addFirst(name);
+            }
         }
 
         event.setTooltips(tooltips);
