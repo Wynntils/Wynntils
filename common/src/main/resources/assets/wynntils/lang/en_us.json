@@ -341,6 +341,7 @@
   "feature.wynntils.itemScreenshot.chatItemMessage": "Click here to copy the item for chat!",
   "feature.wynntils.itemScreenshot.chatItemTooltip": "Paste this text in chat to display your item to other Wynntils users",
   "feature.wynntils.itemScreenshot.error": "Error while taking screenshot: %s",
+  "feature.wynntils.itemScreenshot.mac": "Item screenshot does not work on macOS",
   "feature.wynntils.itemScreenshot.message": "Copied %s to clipboard!",
   "feature.wynntils.itemScreenshot.name": "Item Screenshot",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Should the colored percentage for item ID vary smoothly instead of between fixed levels?",

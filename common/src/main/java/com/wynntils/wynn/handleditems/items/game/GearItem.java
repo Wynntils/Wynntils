@@ -25,6 +25,7 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     private final boolean isPerfect;
     private final boolean isDefective;
     private final float overallPercentage;
+    private final boolean hasVariableIds;
 
     public GearItem(
             ItemProfile itemProfile,
@@ -46,10 +47,16 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 .summaryStatistics();
         overallPercentage = (float) percents.getAverage();
 
-        // FIXME: only check if we actually have variable identifications!
-        // check for perfect/0% items
-        isPerfect = overallPercentage >= 100f;
-        isDefective = overallPercentage == 0f;
+        if (percents.getCount() > 0) {
+            // Only claim it is perfect/defective if we do have some non-fixed identifications
+            isPerfect = overallPercentage >= 100f;
+            isDefective = overallPercentage <= 0f;
+            hasVariableIds = true;
+        } else {
+            isPerfect = false;
+            isDefective = false;
+            hasVariableIds = false;
+        }
     }
 
     public ItemProfile getItemProfile() {
@@ -89,6 +96,10 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 + powders + ", rerolls="
                 + rerolls + ", setBonus="
                 + setBonus + '}';
+    }
+
+    public boolean hasVariableIds() {
+        return hasVariableIds;
     }
 
     public float getOverallPercentage() {
