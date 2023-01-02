@@ -287,7 +287,7 @@ public final class ChatItemModel extends Model {
 
         @Override
         public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-        // FIXME: use tooltip builder!
+            // FIXME: use tooltip builder!
             return super.getTooltipLines(player, isAdvanced);
         }
     }
