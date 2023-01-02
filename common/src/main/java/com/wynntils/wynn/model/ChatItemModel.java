@@ -278,28 +278,11 @@ public final class ChatItemModel extends Model {
                 .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
 
         ItemStack itemStack = new ChatItemStack(gearItem);
-        ((AnnotatedItemStack) itemStack).setAnnotation(gearItem);
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
         ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         itemComponent.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent)));
 
         return itemComponent;
-    }
-
-    public class ChatItemStack extends ItemStack {
-        private final GearItem gearItem;
-
-        public ChatItemStack(GearItem gearItem) {
-            super(gearItem.getItemProfile().getItemInfo().asItemStack().getItem(), 1);
-            //            if (stack.getTag() != null) setTag(stack.getTag());
-            this.gearItem = gearItem;
-        }
-
-        @Override
-        public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-            GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
-            return tooltipBuilder.getTooltipLines();
-        }
     }
 
     private String encodeString(String text) {
@@ -330,5 +313,25 @@ public final class ChatItemModel extends Model {
             decoded[i / 2] = text.codePointAt(i) - OFFSET;
         }
         return decoded;
+    }
+
+    private static class ChatItemStack extends ItemStack {
+        private final GearItem gearItem;
+
+        private ChatItemStack(GearItem gearItem) {
+            super(gearItem.getItemProfile().getItemInfo().asItemStack().getItem(), 1);
+            ((AnnotatedItemStack) this).setAnnotation(gearItem);
+            this.gearItem = gearItem;
+        }
+
+        @Override
+        public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
+            GearTooltipBuilder tooltipBuilder = new GearTooltipBuilder(gearItem);
+            List<Component> tooltip = tooltipBuilder.getTooltipLines();
+            tooltip.add(1, Component.literal("From chat")
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .withStyle(ChatFormatting.ITALIC));
+            return tooltip;
+        }
     }
 }
