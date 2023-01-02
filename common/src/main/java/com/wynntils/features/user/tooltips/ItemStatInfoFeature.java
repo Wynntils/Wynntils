@@ -32,11 +32,6 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     public static ItemStatInfoFeature INSTANCE;
-    @Override
-    public List<Model> getModelDependencies() {
-        // FIXME: temporary hack
-        return List.of(Models.GearItemStack);
-    }
 
     @Config
     public boolean showStars = true;
