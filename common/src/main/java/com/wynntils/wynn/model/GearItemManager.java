@@ -26,7 +26,6 @@ import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -83,22 +82,12 @@ public final class GearItemManager extends Manager {
         super(List.of());
     }
 
-    public GearItem fromItemStack(ItemStack itemStack) {
-        ItemProfile itemProfile;
+    public GearItem fromItemStack(ItemStack itemStack, ItemProfile itemProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
         List<Component> setBonus = new ArrayList<>();
-
-        // Lookup Gear Profile
-        String name = itemStack.getHoverName().getString();
-        String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-        itemProfile = Managers.ItemProfiles.getItemsProfile(strippedName);
-        if (itemProfile == null) return null;
-
-        // Verify that rarity matches
-        if (!name.startsWith(itemProfile.getTier().getChatFormatting().toString())) return null;
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
@@ -353,15 +342,7 @@ public final class GearItemManager extends Manager {
                 .withStyle(ChatFormatting.DARK_GREEN);
     }
 
-    public GearItem fromJsonLore(ItemStack itemStack) {
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
-
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
-
-        if (itemProfile == null) {
-            return null;
-        }
-
+    public GearItem fromJsonLore(ItemStack itemStack, ItemProfile itemProfile) {
         // attempt to parse item itemData
         JsonObject itemData;
         String rawLore =
