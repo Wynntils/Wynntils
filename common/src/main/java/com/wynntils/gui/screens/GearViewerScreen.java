@@ -5,6 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -12,10 +13,15 @@ import com.wynntils.gui.widgets.GearItemButton;
 import com.wynntils.gui.widgets.ViewPlayerStatsButton;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.handleditems.FakeItemStack;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,6 +29,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class GearViewerScreen extends WynntilsScreen {
     private static final List<Component> VIEW_STATS_TOOLTIP =
@@ -35,11 +42,11 @@ public final class GearViewerScreen extends WynntilsScreen {
     private GearViewerScreen(Player player) {
         super(Component.empty());
         this.player = player;
-        this.heldItem = WynnItemUtils.getParsedItemStack(player.getMainHandItem());
+        this.heldItem = createDecoratedItemStack(player.getMainHandItem(), player.getName());
 
         this.armorItems = new ArrayList<>();
         for (ItemStack armorSlot : player.getArmorSlots()) {
-            armorItems.add(WynnItemUtils.getParsedItemStack(armorSlot));
+            armorItems.add(createDecoratedItemStack(armorSlot, player.getName()));
         }
 
         Collections.reverse(armorItems);
@@ -47,6 +54,38 @@ public final class GearViewerScreen extends WynntilsScreen {
 
     public static Screen create(Player player) {
         return new GearViewerScreen(player);
+    }
+
+    public ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
+        if (itemStack.getItem() == Items.AIR) {
+            return itemStack;
+        }
+
+        String itemName = WynnItemUtils.getTranslatedName(itemStack);
+
+        // can't create lore on crafted items
+        if (itemName.startsWith("Crafted")) {
+            itemStack.setHoverName(Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA));
+            return itemStack;
+        }
+
+        // disable viewing unidentified items
+        if (itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6) {
+            itemStack.setHoverName(Component.literal("Unidentified Item")
+                    .withStyle(
+                            ItemTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
+            return itemStack;
+        }
+
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
+        if (itemProfile == null) {
+            return itemStack;
+        }
+
+        GearItem gearItem = Managers.GearItem.fromJsonLore(itemStack, itemProfile);
+        return new FakeItemStack(gearItem, "From " + playerName.getString());
     }
 
     @Override
