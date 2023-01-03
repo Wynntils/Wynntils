@@ -1,9 +1,21 @@
+## [0.0.2-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.55...v0.0.2-alpha.56) (2023-01-03)
+
+
+### Bug Fixes
+
+* Replaces References To Deprecated "Reload" Command ([#967](https://github.com/Wynntils/Artemis/issues/967)) ([0b3db11](https://github.com/Wynntils/Artemis/commit/0b3db11b69e204f0d473a98331e71925d58c298d))
+
 ## [0.0.2-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.54...v0.0.2-alpha.55) (2023-01-03)
 
 
 ### New Features
 
 * Start using the new item model for most features ([#958](https://github.com/Wynntils/Artemis/issues/958)) ([e23981c](https://github.com/Wynntils/Artemis/commit/e23981c6ceb0043e9c6ffb401509a4481b2efeed))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.55 [skip ci] ([715da01](https://github.com/Wynntils/Artemis/commit/715da01410c8a0474fd0605a93181415ebd3597a))
 
 ## [0.0.2-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.53...v0.0.2-alpha.54) (2023-01-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.52 [skip ci] ([20b6333](https://github.com/Wynntils/Artemis/commit/20b63331a6649a1d851ef8b2d04675f69add313b))
-
-## [0.0.2-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.50...v0.0.2-alpha.51) (2023-01-02)
-
-
-### Bug Fixes
-
-* Search overlay now works for all users ([#959](https://github.com/Wynntils/Artemis/issues/959)) ([78a77e5](https://github.com/Wynntils/Artemis/commit/78a77e57fdbf2fa74d2fa9af38efdffad275f491))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.51 [skip ci] ([7e93d8f](https://github.com/Wynntils/Artemis/commit/7e93d8f63fc34cfe5b8693dbe954f1597b4b4a18))
 
