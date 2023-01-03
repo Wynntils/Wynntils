@@ -7,18 +7,17 @@ package com.wynntils.wynn.handleditems.annotators.gui;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.wynn.handleditems.items.gui.ServerItem;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class ServerAnnotator implements ItemAnnotator {
-    @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        Matcher matcher = WynnItemMatchers.serverItemMatcher(itemStack.getHoverName());
+    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
 
-        if (!matcher.matches()) {
-            return null;
-        }
+    @Override
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher matcher = SERVER_ITEM_PATTERN.matcher(name);
+        if (!matcher.matches()) return null;
 
         int serverId = Integer.parseInt(matcher.group(1));
 

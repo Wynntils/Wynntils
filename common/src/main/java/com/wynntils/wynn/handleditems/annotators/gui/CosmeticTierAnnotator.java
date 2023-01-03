@@ -19,11 +19,10 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         if (!isCosmetic(itemStack)) return null;
 
-        ChatFormatting chatColor =
-                ChatFormatting.getByCode(itemStack.getHoverName().getString().charAt(1));
+        ChatFormatting chatColor = ChatFormatting.getByCode(name.charAt(1));
         if (chatColor == null) chatColor = ChatFormatting.WHITE;
 
         CustomColor highlightColor = CustomColor.fromChatFormatting(chatColor);

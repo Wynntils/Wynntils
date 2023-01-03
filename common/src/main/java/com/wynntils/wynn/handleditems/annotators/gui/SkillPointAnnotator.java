@@ -6,7 +6,6 @@ package com.wynntils.wynn.handleditems.annotators.gui;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.gui.SkillPointItem;
 import com.wynntils.wynn.objects.Skill;
@@ -20,9 +19,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
     private static final Pattern POINT_PATTERN = Pattern.compile("^§7[ À]+(\\d+) points?[ À]+§r§6\\d+ points$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
-
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = SKILL_POINT_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
