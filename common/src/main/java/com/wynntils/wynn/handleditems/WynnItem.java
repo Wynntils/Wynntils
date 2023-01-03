@@ -5,26 +5,11 @@
 package com.wynntils.wynn.handleditems;
 
 import com.wynntils.handlers.item.ItemAnnotation;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WynnItem implements ItemAnnotation {
-    private Map<Class<?>, Object> cache = new HashMap<>();
-    private boolean searched = false;
+    private WynnItemCache cache = new WynnItemCache();
 
-    public <T> T getCached(Class<T> clazz) {
-        return (T) cache.get(clazz);
-    }
-
-    public <T> void storeInCache(T obj) {
-        cache.put(obj.getClass(), obj);
-    }
-
-    public void setSearched(boolean searched) {
-        this.searched = searched;
-    }
-
-    public boolean isSearched() {
-        return searched;
+    public WynnItemCache getCache() {
+        return cache;
     }
 }

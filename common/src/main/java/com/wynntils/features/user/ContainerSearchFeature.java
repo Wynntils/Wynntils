@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -21,12 +20,12 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.properties.ItemProperty;
+import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.objects.SearchableContainerType;
 import com.wynntils.wynn.utils.ContainerUtils;
-import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
@@ -52,11 +51,6 @@ public class ContainerSearchFeature extends UserFeature {
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.SearchOverlayProperty);
-    }
-
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
@@ -80,10 +74,11 @@ public class ContainerSearchFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack item = e.getSlot().getItem();
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        if (wynnItemOpt.isEmpty()) return;
 
-        if (!(item instanceof WynnItemStack wynnItemStack)) return;
-
-        if (!wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).isSearched()) return;
+        Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
+        if (result == null || !result.booleanValue()) return;
 
         RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
@@ -181,15 +176,14 @@ public class ContainerSearchFeature extends UserFeature {
 
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack item : screen.getMenu().getItems()) {
-            if (!(item instanceof WynnItemStack wynnItemStack)) continue;
+            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+            if (wynnItemOpt.isEmpty()) return;
             if (playerItems.contains(item)) continue;
 
             String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
-
-            wynnItemStack.getProperty(ItemProperty.SEARCH_OVERLAY).setSearched(filtered);
-
+            wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;
             }
