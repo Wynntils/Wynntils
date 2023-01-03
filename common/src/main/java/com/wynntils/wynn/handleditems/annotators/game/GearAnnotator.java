@@ -7,6 +7,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,7 +15,7 @@ public final class GearAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         // Lookup Gear Profile
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(name);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(ComponentUtils.stripFormatting(name));
         if (itemProfile == null) return null;
 
         // Verify that rarity matches
