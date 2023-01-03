@@ -6,7 +6,6 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.CraftedConsumableItem;
 import java.util.regex.Matcher;
@@ -14,11 +13,10 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class CraftedConsumableAnnotator implements ItemAnnotator {
-    private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]À$");
+    private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = CRAFTED_CONSUMABLE_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

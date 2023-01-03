@@ -8,21 +8,21 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GearBoxAnnotator implements ItemAnnotator {
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        if (!WynnItemMatchers.isUnidentified(itemStack)) return null;
-
-        String name = itemStack.getHoverName().getString();
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        if (!(itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6)) return null;
 
         ItemType itemType = getItemType(name);
         ItemTier itemTier = ItemTier.fromString(name);

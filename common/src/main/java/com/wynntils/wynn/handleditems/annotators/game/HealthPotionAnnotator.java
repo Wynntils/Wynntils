@@ -6,7 +6,6 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.HealthPotionItem;
 import java.util.regex.Matcher;
@@ -18,8 +17,7 @@ public final class HealthPotionAnnotator implements ItemAnnotator {
             Pattern.compile("^§c\\[\\+(\\d+) ❤\\] §dPotions of Healing §4\\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = HEALTH_POTION_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
