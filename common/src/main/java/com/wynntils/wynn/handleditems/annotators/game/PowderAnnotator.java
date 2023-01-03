@@ -10,16 +10,18 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.PowderItem;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.PowderProfile;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.Locale;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class PowderAnnotator implements ItemAnnotator {
-    @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        Matcher matcher = WynnItemMatchers.powderNameMatcher(itemStack.getHoverName());
+    private static final Pattern POWDER_PATTERN =
+            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
 
+    @Override
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher matcher = POWDER_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));

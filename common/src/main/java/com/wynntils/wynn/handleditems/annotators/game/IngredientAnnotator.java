@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import java.util.Map;
@@ -27,8 +26,7 @@ public final class IngredientAnnotator implements ItemAnnotator {
             ChatFormatting.AQUA, 3);
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = INGREDIENT_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

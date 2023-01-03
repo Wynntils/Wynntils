@@ -31,7 +31,7 @@ public final class GearAnnotator implements ItemAnnotator {
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         ItemProfile itemProfile;
         List<GearIdentification> identifications = new ArrayList<>();
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
@@ -40,7 +40,6 @@ public final class GearAnnotator implements ItemAnnotator {
         List<Component> setBonus = new ArrayList<>();
 
         // Lookup Gear Profile
-        String name = itemStack.getHoverName().getString();
 
         String strippedName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
         itemProfile = Managers.ItemProfiles.getItemsProfile(strippedName);

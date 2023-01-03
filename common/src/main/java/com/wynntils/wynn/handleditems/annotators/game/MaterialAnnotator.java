@@ -7,7 +7,6 @@ package com.wynntils.wynn.handleditems.annotators.game;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.handleditems.items.game.MaterialItem;
 import com.wynntils.wynn.objects.profiles.material.MaterialProfile;
 import java.util.regex.Matcher;
@@ -18,9 +17,7 @@ public final class MaterialAnnotator implements ItemAnnotator {
     private static final Pattern MATERIAL_PATTERN = Pattern.compile("§f(.*) ([^ ]+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
-
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = MATERIAL_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

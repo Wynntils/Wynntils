@@ -8,18 +8,20 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class EmeraldPouchAnnotator implements ItemAnnotator {
+    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
+
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
         if (itemStack.getItem() != Items.DIAMOND_AXE && itemStack.getItem() != Items.GOLDEN_SHOVEL) return null;
 
-        Matcher matcher = WynnItemMatchers.emeraldPouchTierMatcher(itemStack.getHoverName());
+        Matcher matcher = EMERALD_POUCH_TIER_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(matcher.group(1));

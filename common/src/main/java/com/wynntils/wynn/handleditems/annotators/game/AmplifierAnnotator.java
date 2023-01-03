@@ -8,22 +8,16 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.AmplifierItem;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class AmplifierAnnotator implements ItemAnnotator {
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
 
-    public static Matcher amplifierNameMatcher(Component text) {
-        return AMPLIFIER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        Matcher ampMatcher = amplifierNameMatcher(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher ampMatcher = AMPLIFIER_PATTERN.matcher(name);
         if (!ampMatcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(ampMatcher.group(1));
