@@ -22,14 +22,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class CraftedGearAnnotator implements ItemAnnotator {
-    private static final Pattern CRAFTED_GEAR_PATTERN = Pattern.compile("^§3(.*)§b \\[100%\\]À$");
+    private static final Pattern CRAFTED_GEAR_PATTERN = Pattern.compile("^§3(.*)§b \\[100%\\]$");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = CRAFTED_GEAR_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

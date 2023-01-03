@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearAnnotator implements ItemAnnotator {
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         return Managers.GearItem.fromItemStack(itemStack);
     }
 }

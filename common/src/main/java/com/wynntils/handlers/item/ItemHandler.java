@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,9 +49,11 @@ public class ItemHandler extends Handler {
         if (annotation != null) return;
 
         List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
+        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
+
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(item);
+                annotation = annotator.getAnnotation(item, name);
                 if (annotation != null) {
                     break;
                 }
