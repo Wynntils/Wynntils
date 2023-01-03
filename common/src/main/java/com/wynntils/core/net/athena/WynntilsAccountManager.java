@@ -63,7 +63,7 @@ public final class WynntilsAccountManager extends Manager {
             failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
 
             McUtils.sendMessageToClient(failed);
         }
