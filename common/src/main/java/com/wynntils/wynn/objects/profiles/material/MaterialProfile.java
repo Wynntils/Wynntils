@@ -49,11 +49,11 @@ public final class MaterialProfile {
                     new SourceMaterial("Hops", 40),
                     new SourceMaterial("Rye", 50),
                     new SourceMaterial("Millet", 60),
-                    new SourceMaterial("Decay Roots", 70),
+                    new SourceMaterial("Decay", 70),
                     new SourceMaterial("Rice", 80),
                     new SourceMaterial("Sorghum", 90),
                     new SourceMaterial("Hemp", 100),
-                    new SourceMaterial("Dernic Seed", 110)),
+                    new SourceMaterial("Dernic", 110)),
             MaterialType.FISH,
             List.of(
                     new SourceMaterial("Gudgeon", 1),
@@ -63,11 +63,11 @@ public final class MaterialProfile {
                     new SourceMaterial("Icefish", 40),
                     new SourceMaterial("Piranha", 50),
                     new SourceMaterial("Koi", 60),
-                    new SourceMaterial("Gylia Fish", 70),
+                    new SourceMaterial("Gylia", 70),
                     new SourceMaterial("Bass", 80),
-                    new SourceMaterial("Molten Eel", 90),
+                    new SourceMaterial("Molten", 90),
                     new SourceMaterial("Starfish", 100),
-                    new SourceMaterial("Dernic Fish", 110)));
+                    new SourceMaterial("Dernic", 110)));
 
     private final ResourceType resourceType;
     private final SourceMaterial sourceMaterial;
@@ -124,7 +124,7 @@ public final class MaterialProfile {
         WOOD(MaterialType.LOG),
         PAPER(MaterialType.LOG),
         STRING(MaterialType.CROP),
-        GRAIN(MaterialType.CROP),
+        GRAINS(MaterialType.CROP),
         OIL(MaterialType.FISH),
         MEAT(MaterialType.FISH);
 
