@@ -5,8 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.components.Manager;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.items.game.HorseItem;
 import java.util.List;
@@ -42,11 +41,10 @@ public class HorseManager extends Manager {
     }
 
     public HorseItem getHorseItem(ItemStack itemStack) {
-        Optional<ItemAnnotation> horseOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        Optional<HorseItem> horseOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
         if (horseOpt.isEmpty()) return null;
-        if (!(horseOpt.get() instanceof HorseItem horseItem)) return null;
 
-        return horseItem;
+        return horseOpt.get();
     }
 
     public AbstractHorse searchForHorseNearby(int searchRadius) {

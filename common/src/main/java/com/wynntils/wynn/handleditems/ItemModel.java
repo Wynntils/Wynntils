@@ -78,7 +78,7 @@ public class ItemModel extends Model {
     }
 
     public <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
-        var annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
         if (wynnItem.getClass() != clazz) return Optional.empty();

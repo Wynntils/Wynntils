@@ -4,9 +4,12 @@
  */
 package com.wynntils.wynn.utils;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.wynn.handleditems.items.game.GearItem;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
@@ -39,6 +42,13 @@ public final class InventoryUtils {
             if (itemStack.isEmpty()) slots++;
         }
         return slots;
+    }
+
+    public static boolean isWeapon(ItemStack itemStack) {
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return false;
+
+        return gearItemOpt.get().getItemProfile().getItemInfo().getType().isWeapon();
     }
 
     public enum MouseClickType {
