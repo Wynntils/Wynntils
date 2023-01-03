@@ -6,7 +6,6 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.ManaPotionItem;
 import java.util.regex.Matcher;
@@ -17,8 +16,7 @@ public final class ManaPotionAnnotator implements ItemAnnotator {
     private static final Pattern MANA_POTION_PATTERN = Pattern.compile("^§bPotion of Mana§3 \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = MANA_POTION_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

@@ -5,8 +5,6 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.wynn.handleditems.items.game.HorseItem;
 import java.util.List;
@@ -19,11 +17,6 @@ public class HorseFunctions {
             HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
             return horse.getLevel().getCurrent();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -41,11 +34,6 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.HorseProperty);
-        }
-
-        @Override
         public List<String> getAliases() {
             return List.of("h_mlvl");
         }
@@ -57,11 +45,6 @@ public class HorseFunctions {
             HorseItem horse = Managers.Horse.getHorse();
             if (horse == null) return null;
             return horse.getXp();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.HorseProperty);
         }
 
         @Override
@@ -79,11 +62,6 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.HorseProperty);
-        }
-
-        @Override
         public List<String> getAliases() {
             return List.of("h_tier");
         }
@@ -96,11 +74,6 @@ public class HorseFunctions {
             if (horse == null) return null;
             String name = horse.getName();
             return (name.isEmpty()) ? null : name;
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.HorseProperty);
         }
 
         @Override

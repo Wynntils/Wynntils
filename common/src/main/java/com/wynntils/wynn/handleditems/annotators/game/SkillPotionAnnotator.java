@@ -6,7 +6,6 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.SkillPotionItem;
 import com.wynntils.wynn.objects.Skill;
@@ -19,8 +18,7 @@ public final class SkillPotionAnnotator implements ItemAnnotator {
             Pattern.compile("^§aPotion of §[2ebcf][✤✦❉✹❋] (.*)§a \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        String name = ComponentUtils.getCoded(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher matcher = SKILL_POTION_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 

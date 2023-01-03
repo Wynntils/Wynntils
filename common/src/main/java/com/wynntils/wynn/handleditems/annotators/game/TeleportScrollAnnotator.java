@@ -22,29 +22,21 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile(".*§b(.*) Teleport Scroll");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("- Teleports to: (.*)");
 
-    public static Matcher teleportScrollNameMatcher(Component text) {
-        return TELEPORT_SCROLL_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getCoded(text)));
-    }
-
-    public static Matcher teleportScrollLocationMatcher(Component text) {
-        return TELEPORT_LOCATION_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher nameMatcher = TELEPORT_SCROLL_PATTERN.matcher(name);
+        if (!nameMatcher.matches()) return null;
+
         boolean dungeon = false;
         String destination = "";
-
-        Component itemName = itemStack.getHoverName();
-        Matcher nameMatcher = teleportScrollNameMatcher(itemName);
-        if (!nameMatcher.matches()) return null;
 
         String scrollName = ComponentUtils.stripFormatting(nameMatcher.group(1));
 
         if (scrollName.equals("Dungeon")) {
             dungeon = true;
             for (Component line : itemStack.getTooltipLines(null, TooltipFlag.NORMAL)) {
-                Matcher locationMatcher = teleportScrollLocationMatcher(line);
+                Matcher locationMatcher =
+                        TELEPORT_LOCATION_PATTERN.matcher(WynnUtils.normalizeBadString(line.getString()));
                 if (!locationMatcher.matches()) continue;
 
                 // remove "the" to properly represent forgery scrolls

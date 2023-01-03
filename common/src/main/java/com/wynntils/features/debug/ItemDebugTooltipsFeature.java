@@ -6,6 +6,7 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
@@ -20,6 +21,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+@StartDisabled
 public class ItemDebugTooltipsFeature extends DebugFeature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

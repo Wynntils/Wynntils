@@ -5,7 +5,6 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -15,8 +14,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.wynn.item.UnidentifiedItemStack;
-import java.util.List;
+import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
+import com.wynntils.wynn.objects.profiles.item.ItemType;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -24,11 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class UnidentifiedItemIconFeature extends UserFeature {
     @Config
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.UnidentifiedItemStack);
-    }
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.Post e) {
@@ -41,8 +36,10 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     }
 
     private void drawIcon(ItemStack item, int slotX, int slotY) {
-        if (!(item instanceof UnidentifiedItemStack unidentifiedItem)) return;
-        if (unidentifiedItem.getItemType().isEmpty()) return;
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(item, GearBoxItem.class);
+        if (gearBoxItemOpt.isEmpty()) return;
+
+        ItemType itemType = gearBoxItemOpt.get().getItemType();
 
         RenderUtils.drawTexturedRect(
                 new PoseStack(),
@@ -52,8 +49,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 400,
                 12,
                 12,
-                unidentifiedItem.getItemType().get().getIconTextureX(),
-                unidentifiedItem.getItemType().get().getIconTextureY() + texture.getTextureYOffset(),
+                itemType.getIconTextureX(),
+                itemType.getIconTextureY() + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),
