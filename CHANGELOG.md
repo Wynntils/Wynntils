@@ -1,9 +1,21 @@
+## [0.0.2-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.53...v0.0.2-alpha.54) (2023-01-03)
+
+
+### New Features
+
+* Wynntils item functionality will now work in Trade Market ([#964](https://github.com/Wynntils/Artemis/issues/964)) ([b19b37d](https://github.com/Wynntils/Artemis/commit/b19b37d031699a4f2f0523eb0b85ddc5b46f2235))
+
 ## [0.0.2-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.52...v0.0.2-alpha.53) (2023-01-02)
 
 
 ### Bug Fixes
 
 * Material names parsing failed ([#963](https://github.com/Wynntils/Artemis/issues/963)) ([847f37a](https://github.com/Wynntils/Artemis/commit/847f37a5e679070a9f1f3b51179fa6234b839aee))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.53 [skip ci] ([e5d8293](https://github.com/Wynntils/Artemis/commit/e5d8293887e3c5216f4b1bc53b4b3820e310c3b2))
 
 ## [0.0.2-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.51...v0.0.2-alpha.52) (2023-01-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.50 [skip ci] ([87fe325](https://github.com/Wynntils/Artemis/commit/87fe325cb497310863aead38a5df2189bf3a4bdf))
-
-## [0.0.2-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.48...v0.0.2-alpha.49) (2023-01-01)
-
-
-### Code Refactoring
-
-* Create special "fake" itemstacks for the guides ([#954](https://github.com/Wynntils/Artemis/issues/954)) ([f3c9fb8](https://github.com/Wynntils/Artemis/commit/f3c9fb834626eb02437db3af301b0f2c58a1448f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.49 [skip ci] ([b47466d](https://github.com/Wynntils/Artemis/commit/b47466df605eaf43b9d2b50f0f4dd732a91c419d))
 
