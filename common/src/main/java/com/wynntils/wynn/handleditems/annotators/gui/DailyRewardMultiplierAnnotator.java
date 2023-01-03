@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        if (!itemStack.getHoverName().getString().contains("Daily Reward")) return null;
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        if (!name.contains("Daily Reward")) return null;
 
         try {
             // Multiplier line is always on index 3

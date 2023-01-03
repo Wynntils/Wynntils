@@ -18,7 +18,7 @@ public final class SoulPointAnnotator implements ItemAnnotator {
     }
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         if (!isSoulPoint(itemStack)) return null;
 
         return new SoulPointItem();
