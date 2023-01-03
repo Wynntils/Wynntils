@@ -8,7 +8,6 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.game.DungeonKeyItem;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,24 +18,20 @@ import net.minecraft.world.item.ItemStack;
 public final class DungeonKeyAnnotator implements ItemAnnotator {
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
 
-    public static Matcher dungeonKeyNameMatcher(Component text) {
-        return DUNGEON_KEY_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack) {
-        Matcher keyMatcher = dungeonKeyNameMatcher(itemStack.getHoverName());
+    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher keyMatcher = DUNGEON_KEY_PATTERN.matcher(name);
         if (!keyMatcher.matches()) return null;
 
         if (!verifyDungeonKey(itemStack)) return null;
 
-        String name = keyMatcher.group();
+        String dungeonName = keyMatcher.group();
 
         String dungeon = Arrays.stream(keyMatcher.group(1).split(" ", 2))
                 .map(s -> s.substring(0, 1))
                 .collect(Collectors.joining());
 
-        boolean corrupted = name.contains("Corrupted") || name.contains("Broken");
+        boolean corrupted = dungeonName.contains("Corrupted") || dungeonName.contains("Broken");
 
         return new DungeonKeyItem(dungeon, corrupted);
     }

@@ -8,5 +8,5 @@ import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemAnnotator {
-    ItemAnnotation getAnnotation(ItemStack itemStack);
+    ItemAnnotation getAnnotation(ItemStack itemStack, String name);
 }
