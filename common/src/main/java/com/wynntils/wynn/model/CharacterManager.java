@@ -16,9 +16,7 @@ import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.ProfessionInfo;
-import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
-import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +66,6 @@ public final class CharacterManager extends Manager {
     private int id;
 
     private ProfessionInfo professionInfo;
-    private Map<Skill, Integer> skills = new HashMap<>();
 
     public CharacterManager() {
         super(List.of());
@@ -317,17 +314,5 @@ public final class CharacterManager extends Manager {
         this.level = level;
         this.professionInfo = professionInfo;
         this.id = id;
-    }
-
-    public boolean isRequirementSatisfied(RequirementType type, String value) {
-        return switch (type) {
-            case LEVEL -> getXpLevel() > Integer.parseInt(value);
-            case CLASSTYPE -> getClassType().toString().equals(value);
-            default -> getSkillLevel(type.getSkill()) >= Integer.parseInt(value);
-        };
-    }
-
-    public int getSkillLevel(Skill skill) {
-        return skills.getOrDefault(skill, 1);
     }
 }
