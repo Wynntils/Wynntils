@@ -18,7 +18,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;

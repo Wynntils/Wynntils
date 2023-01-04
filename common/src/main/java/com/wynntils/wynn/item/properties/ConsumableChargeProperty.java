@@ -7,7 +7,7 @@ package com.wynntils.wynn.item.properties;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
 
 public class ConsumableChargeProperty extends CustomStackCountProperty {
