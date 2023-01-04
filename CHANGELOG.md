@@ -1,9 +1,21 @@
+## [0.0.2-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.59...v0.0.2-alpha.60) (2023-01-04)
+
+
+### New Features
+
+* Use new item model for gear tooltips ([#961](https://github.com/Wynntils/Artemis/issues/961)) ([cda2c5a](https://github.com/Wynntils/Artemis/commit/cda2c5a7e177375eb30edcbefd1d4a6555ebf47f))
+
 ## [0.0.2-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.58...v0.0.2-alpha.59) (2023-01-04)
 
 
 ### New Features
 
 * Add timeout per individual NPC chat ([#965](https://github.com/Wynntils/Artemis/issues/965)) ([f9d05c5](https://github.com/Wynntils/Artemis/commit/f9d05c503a93c64345fd5dff22eddaaccb01c217))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.59 [skip ci] ([4eeac00](https://github.com/Wynntils/Artemis/commit/4eeac0027f9ba04f2187dd44c4361d7c250a74a5))
 
 ## [0.0.2-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.57...v0.0.2-alpha.58) (2023-01-04)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.56 [skip ci] ([f1e8dbc](https://github.com/Wynntils/Artemis/commit/f1e8dbc5e04172c45bc311dd21a0de4947657b2a))
-
-## [0.0.2-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.54...v0.0.2-alpha.55) (2023-01-03)
-
-
-### New Features
-
-* Start using the new item model for most features ([#958](https://github.com/Wynntils/Artemis/issues/958)) ([e23981c](https://github.com/Wynntils/Artemis/commit/e23981c6ceb0043e9c6ffb401509a4481b2efeed))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.55 [skip ci] ([715da01](https://github.com/Wynntils/Artemis/commit/715da01410c8a0474fd0605a93181415ebd3597a))
 
