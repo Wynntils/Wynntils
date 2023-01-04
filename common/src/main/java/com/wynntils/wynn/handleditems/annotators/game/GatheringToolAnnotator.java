@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GatheringToolAnnotator implements ItemAnnotator {
     private static final Pattern GATHERING_TOOL_PATTERN =
-            Pattern.compile("[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)");
+            Pattern.compile("^§f[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {

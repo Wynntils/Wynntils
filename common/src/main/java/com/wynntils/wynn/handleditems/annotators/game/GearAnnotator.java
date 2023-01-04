@@ -25,6 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GearAnnotator implements ItemAnnotator {
+    private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](.+)$");
+
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     public static final Pattern ITEM_IDENTIFICATION_PATTERN =
@@ -33,6 +35,9 @@ public final class GearAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        Matcher matcher = GEAR_PATTERN.matcher(name);
+        if (!matcher.matches()) return null;
+
         ItemProfile itemProfile;
         List<GearIdentification> identifications = new ArrayList<>();
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
@@ -43,6 +48,8 @@ public final class GearAnnotator implements ItemAnnotator {
         // Lookup Gear Profile
 
         // FIXME: Temporary workaround awaiting full merge
+        // Not used yet
+        // String itemName = matcher.group(1);
         if (!(itemStack instanceof GearItemStack gearItemStack)) return null;
         name = gearItemStack.getOriginalHoverName().getString();
 
