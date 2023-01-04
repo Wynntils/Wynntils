@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.item.parsers;
+package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -15,7 +15,6 @@ import com.wynntils.wynn.item.PowderItemStack;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -106,7 +105,7 @@ public final class WynnItemMatchers {
         return consumableNameMatcher(itemStack.getHoverName()).matches();
     }
 
-    public static boolean isUnidentified(ItemStack itemStack) {
+    public static boolean isGearBox(ItemStack itemStack) {
         return (itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6);
@@ -169,7 +168,7 @@ public final class WynnItemMatchers {
 
     public static boolean isMythic(ItemStack itemStack) {
         // only gear, identified or not, could be a mythic
-        if (!(isUnidentified(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
+        if (!(isGearBox(itemStack) || isGear(itemStack) || isMythicBox(itemStack))) return false;
 
         return itemStack.getHoverName().getString().contains(ChatFormatting.DARK_PURPLE.toString());
     }
@@ -192,7 +191,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item is within the Wynncraft tier system (mythic, legendary, etc.)
      */
     public static boolean isTieredItem(ItemStack itemStack) {
-        return isGear(itemStack) || isCraftedGear(itemStack) || isUnidentified(itemStack);
+        return isGear(itemStack) || isCraftedGear(itemStack) || isGearBox(itemStack);
     }
 
     public static boolean isCosmetic(ItemStack itemStack) {
