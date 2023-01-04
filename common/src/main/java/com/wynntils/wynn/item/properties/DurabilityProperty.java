@@ -5,7 +5,7 @@
 package com.wynntils.wynn.item.properties;
 
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.network.chat.Component;
