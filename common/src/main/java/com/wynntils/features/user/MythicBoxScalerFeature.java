@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MythicBoxScalerFeature extends UserFeature {

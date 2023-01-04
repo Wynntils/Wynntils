@@ -9,9 +9,9 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.item.properties.type.TextOverlayProperty;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
 
 public class AmplifierTierProperty extends ItemProperty implements TextOverlayProperty {
