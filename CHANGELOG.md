@@ -1,9 +1,21 @@
+## [0.0.2-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.56...v0.0.2-alpha.57) (2023-01-04)
+
+
+### Code Refactoring
+
+* Move WynnItemMatchers to utils ([#966](https://github.com/Wynntils/Artemis/issues/966)) ([22a4637](https://github.com/Wynntils/Artemis/commit/22a4637ae330f59455d8ed269af251f0a819eb78))
+
 ## [0.0.2-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.55...v0.0.2-alpha.56) (2023-01-03)
 
 
 ### Bug Fixes
 
 * Replaces References To Deprecated "Reload" Command ([#967](https://github.com/Wynntils/Artemis/issues/967)) ([0b3db11](https://github.com/Wynntils/Artemis/commit/0b3db11b69e204f0d473a98331e71925d58c298d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.56 [skip ci] ([f1e8dbc](https://github.com/Wynntils/Artemis/commit/f1e8dbc5e04172c45bc311dd21a0de4947657b2a))
 
 ## [0.0.2-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.54...v0.0.2-alpha.55) (2023-01-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.53 [skip ci] ([e5d8293](https://github.com/Wynntils/Artemis/commit/e5d8293887e3c5216f4b1bc53b4b3820e310c3b2))
-
-## [0.0.2-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.51...v0.0.2-alpha.52) (2023-01-02)
-
-
-### Bug Fixes
-
-* Better handling of item screenshot on macOS ([#960](https://github.com/Wynntils/Artemis/issues/960)) ([b884d95](https://github.com/Wynntils/Artemis/commit/b884d95145d6b8c131410385d4a8d623cbb8f45f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.52 [skip ci] ([20b6333](https://github.com/Wynntils/Artemis/commit/20b63331a6649a1d851ef8b2d04675f69add313b))
 
