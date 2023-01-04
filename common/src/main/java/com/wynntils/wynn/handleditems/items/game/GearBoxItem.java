@@ -43,6 +43,8 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
         if (rarityMap == null) return List.of();
 
         List<String> itemPossibilities = rarityMap.get(itemTier);
+        if (itemPossibilities == null) return List.of();
+
         return itemPossibilities;
     }
 
