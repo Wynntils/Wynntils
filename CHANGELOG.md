@@ -1,9 +1,17 @@
+## [0.0.2-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.58...v0.0.2-alpha.59) (2023-01-04)
+
+
+### New Features
+
+* Add timeout per individual NPC chat ([#965](https://github.com/Wynntils/Artemis/issues/965)) ([f9d05c5](https://github.com/Wynntils/Artemis/commit/f9d05c503a93c64345fd5dff22eddaaccb01c217))
+
 ## [0.0.2-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.57...v0.0.2-alpha.58) (2023-01-04)
 
 
 ### Miscellaneous Chores
 
 * fix typo ([c67b571](https://github.com/Wynntils/Artemis/commit/c67b5714f87d391d95342a05200ca4a6d0656018))
+* **release:** v0.0.2-alpha.58 [skip ci] ([0be94cc](https://github.com/Wynntils/Artemis/commit/0be94cc944f6cf6382ece36df4dd1ae14d1ae01e))
 
 ## [0.0.2-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.56...v0.0.2-alpha.57) (2023-01-04)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.55 [skip ci] ([715da01](https://github.com/Wynntils/Artemis/commit/715da01410c8a0474fd0605a93181415ebd3597a))
-
-## [0.0.2-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.53...v0.0.2-alpha.54) (2023-01-03)
-
-
-### New Features
-
-* Wynntils item functionality will now work in Trade Market ([#964](https://github.com/Wynntils/Artemis/issues/964)) ([b19b37d](https://github.com/Wynntils/Artemis/commit/b19b37d031699a4f2f0523eb0b85ddc5b46f2235))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.54 [skip ci] ([257bba6](https://github.com/Wynntils/Artemis/commit/257bba684cf3910510941129074c10877f3f4796))
 
