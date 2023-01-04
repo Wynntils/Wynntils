@@ -1,9 +1,21 @@
+## [0.0.2-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.57...v0.0.2-alpha.58) (2023-01-04)
+
+
+### Miscellaneous Chores
+
+* fix typo ([c67b571](https://github.com/Wynntils/Artemis/commit/c67b5714f87d391d95342a05200ca4a6d0656018))
+
 ## [0.0.2-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.56...v0.0.2-alpha.57) (2023-01-04)
 
 
 ### Code Refactoring
 
 * Move WynnItemMatchers to utils ([#966](https://github.com/Wynntils/Artemis/issues/966)) ([22a4637](https://github.com/Wynntils/Artemis/commit/22a4637ae330f59455d8ed269af251f0a819eb78))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.57 [skip ci] ([ef21273](https://github.com/Wynntils/Artemis/commit/ef21273b9d0dad4adf77f4b7673e5ff5f9e4195d))
 
 ## [0.0.2-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.55...v0.0.2-alpha.56) (2023-01-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.54 [skip ci] ([257bba6](https://github.com/Wynntils/Artemis/commit/257bba684cf3910510941129074c10877f3f4796))
-
-## [0.0.2-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.52...v0.0.2-alpha.53) (2023-01-02)
-
-
-### Bug Fixes
-
-* Material names parsing failed ([#963](https://github.com/Wynntils/Artemis/issues/963)) ([847f37a](https://github.com/Wynntils/Artemis/commit/847f37a5e679070a9f1f3b51179fa6234b839aee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.53 [skip ci] ([e5d8293](https://github.com/Wynntils/Artemis/commit/e5d8293887e3c5216f4b1bc53b4b3820e310c3b2))
 
