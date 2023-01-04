@@ -10,7 +10,9 @@ import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearItem extends GameItem implements GearTierItemProperty {
@@ -20,6 +22,10 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
+    private final boolean isPerfect;
+    private final boolean isDefective;
+    private final float overallPercentage;
+    private final boolean hasVariableIds;
 
     public GearItem(
             ItemProfile itemProfile,
@@ -34,6 +40,23 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         this.powders = powders;
         this.rerolls = rerolls;
         this.setBonus = setBonus;
+
+        DoubleSummaryStatistics percents = idContainers.stream()
+                .filter(Predicate.not(ItemIdentificationContainer::isFixed))
+                .mapToDouble(ItemIdentificationContainer::percent)
+                .summaryStatistics();
+        overallPercentage = (float) percents.getAverage();
+
+        if (percents.getCount() > 0) {
+            // Only claim it is perfect/defective if we do have some non-fixed identifications
+            isPerfect = overallPercentage >= 100f;
+            isDefective = overallPercentage <= 0f;
+            hasVariableIds = true;
+        } else {
+            isPerfect = false;
+            isDefective = false;
+            hasVariableIds = false;
+        }
     }
 
     public ItemProfile getItemProfile() {
@@ -73,5 +96,21 @@ public class GearItem extends GameItem implements GearTierItemProperty {
                 + powders + ", rerolls="
                 + rerolls + ", setBonus="
                 + setBonus + '}';
+    }
+
+    public boolean hasVariableIds() {
+        return hasVariableIds;
+    }
+
+    public float getOverallPercentage() {
+        return overallPercentage;
+    }
+
+    public boolean isPerfect() {
+        return isPerfect;
+    }
+
+    public boolean isDefective() {
+        return isDefective;
     }
 }
