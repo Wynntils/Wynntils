@@ -9,15 +9,12 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
-
-    private int emeralds = 0;
     private int openSlots = 0;
 
     @Override
@@ -57,17 +54,11 @@ public final class PlayerInventoryModel extends Model {
 
     private void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
-        emeralds = ContainerUtils.getEmeraldCountInContainer(inventory);
         openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
     private void resetCache() {
-        emeralds = 0;
         openSlots = 0;
-    }
-
-    public int getCurrentEmeraldCount() {
-        return emeralds;
     }
 
     public int getOpenInvSlots() {

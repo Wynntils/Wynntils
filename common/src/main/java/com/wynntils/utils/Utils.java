@@ -22,4 +22,8 @@ public final class Utils {
     public static Random getRandom() {
         return random;
     }
+
+    public static boolean isMac() {
+        return System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac");
+    }
 }

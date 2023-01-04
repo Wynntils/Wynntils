@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.item.properties;
 
-import com.wynntils.features.user.inventory.ItemTextOverlayFeature;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.regex.Matcher;
 
 public class ConsumableChargeProperty extends CustomStackCountProperty {
@@ -21,11 +21,11 @@ public class ConsumableChargeProperty extends CustomStackCountProperty {
             charges = consumableMatcher.group(2);
         }
 
-        this.setCustomStackCount(charges, CommonColors.WHITE, ItemTextOverlayFeature.INSTANCE.consumableChargeShadow);
+        this.setCustomStackCount(charges, CommonColors.WHITE, FontRenderer.TextShadow.NORMAL);
     }
 
     @Override
     public boolean isTextOverlayEnabled() {
-        return ItemTextOverlayFeature.INSTANCE.consumableChargeEnabled;
+        return false;
     }
 }

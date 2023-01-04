@@ -27,6 +27,7 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
+import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -56,7 +57,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
-    private List<String> currentDialogue = List.of();
+    private List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+    private List<String> currentDialogue;
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
@@ -85,22 +87,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public void onNpcDialogue(NpcDialogEvent e) {
         List<String> msg =
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
-        if (e.getType() == NpcDialogueType.CONFIRMATIONLESS && !currentDialogue.isEmpty()) {
-            // Now we have two concurrent dialogues, so combine the two into one instead of
-            // just replacing the old.
-            ArrayList<String> combinedDialogue = new ArrayList<>(currentDialogue);
-            combinedDialogue.add("");
-            combinedDialogue.addAll(msg);
-            currentDialogue = combinedDialogue;
-        } else {
-            currentDialogue = msg;
-            dialogueType = e.getType();
-            isProtected = e.isProtected();
+        if (e.getType() == NpcDialogueType.CONFIRMATIONLESS) {
+            ConfirmationlessDialogue dialogue =
+                    new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
+            confirmationlessDialogues.add(dialogue);
+            return;
         }
-        if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
-            // If we already had a confirmationless dialogue ongoing, reset its removal time
-            removeTime = System.currentTimeMillis() + calculateMessageReadTime(msg);
-        }
+
+        currentDialogue = msg;
+        dialogueType = e.getType();
+        isProtected = e.isProtected();
 
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
@@ -135,6 +131,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
     }
 
+    @SubscribeEvent
+    public void onTick(ClientTickEvent.Start event) {
+        confirmationlessDialogues.removeIf(dialogue -> System.currentTimeMillis() >= dialogue.removeTime);
+    }
+
     private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
         long delay = calculateMessageReadTime(msg);
 
@@ -154,6 +155,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = List.of();
+        confirmationlessDialogues.clear();
         cancelAutoProgress();
     }
 
@@ -208,6 +210,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             } else {
                 Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
                 currentDialogue = List.of();
+                confirmationlessDialogues.clear();
             }
         }
 
@@ -302,18 +305,19 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         @Override
         public void render(PoseStack poseStack, float partialTicks, Window window) {
-            if (NpcDialogueOverlayFeature.this.currentDialogue.isEmpty()) return;
-            if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) {
-                if (System.currentTimeMillis() >= removeTime) {
-                    NpcDialogueOverlayFeature.this.currentDialogue = List.of();
-                    return;
-                }
-            }
+            if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
-            renderDialogue(
-                    poseStack,
-                    NpcDialogueOverlayFeature.this.currentDialogue,
-                    NpcDialogueOverlayFeature.this.dialogueType);
+            LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
+            confirmationlessDialogues.forEach(d -> {
+                allDialogues.add("");
+                allDialogues.addAll(d.text());
+            });
+
+            if (currentDialogue.isEmpty()) {
+                // Remove the initial blank line in that case
+                allDialogues.removeFirst();
+            }
+            renderDialogue(poseStack, allDialogues, dialogueType);
         }
 
         @Override
@@ -326,4 +330,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             renderDialogue(poseStack, fakeDialogue, NpcDialogueType.NORMAL);
         }
     }
+
+    public record ConfirmationlessDialogue(List<String> text, long removeTime) {}
 }

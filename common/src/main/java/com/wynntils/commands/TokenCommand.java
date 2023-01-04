@@ -30,10 +30,10 @@ public class TokenCommand extends CommandBase {
             MutableComponent failed = Component.literal(
                             "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reload")
+            failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reload"))));
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
             context.getSource().sendFailure(failed);
             return 1;
         }
