@@ -7,8 +7,6 @@ package com.wynntils.wynn.utils;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,14 +148,5 @@ public final class WynnItemMatchers {
         }
 
         return CappedValue.EMPTY;
-    }
-
-    public static String getShortIdentificationName(String fullIdName, boolean isRaw) {
-        SpellType spell = SpellType.fromName(fullIdName);
-        if (spell != null) {
-            return spell.getShortIdName(isRaw);
-        }
-
-        return IdentificationProfile.getAsShortName(fullIdName, isRaw);
     }
 }

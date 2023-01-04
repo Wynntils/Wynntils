@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.regex.Pattern;
 
 public enum SpellType {
@@ -157,9 +156,5 @@ public enum SpellType {
 
     public String getGenericAndSpecificName() {
         return getGenericName() + " (" + getName() + ")";
-    }
-
-    public String getShortIdName(boolean isRaw) {
-        return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
     }
 }

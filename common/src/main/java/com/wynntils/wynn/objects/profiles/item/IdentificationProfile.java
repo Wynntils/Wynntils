@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -191,17 +190,5 @@ public class IdentificationProfile {
         return StringUtils.capitalizeFirst(nameBuilder.toString())
                 .replaceAll("\\bXp\\b", "XP")
                 .replaceAll("\\bX P\\b", "XP");
-    }
-
-    public static String getAsShortName(String longIdName, boolean raw) {
-        String[] splitName = longIdName.split(" ");
-        StringBuilder result = new StringBuilder(raw ? "raw" : "");
-        for (String r : splitName) {
-            result.append(Character.toUpperCase(r.charAt(0)))
-                    .append(r.substring(1).toLowerCase(Locale.ROOT));
-        }
-
-        return StringUtils.uncapitalizeFirst(
-                StringUtils.capitalizeFirst(result.toString()).replaceAll("\\bXP\\b", "Xp"));
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.handleditems.annotators.game;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -59,7 +60,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
             // FIXME: This pattern is likely to fail, needs fixing
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
+                String idName = Managers.GearItem.getShortIdentificationName(
                         identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
                 int stars = identificationMatcher.group("Stars").length();

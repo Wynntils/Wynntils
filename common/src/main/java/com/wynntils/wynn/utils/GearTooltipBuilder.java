@@ -10,7 +10,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
@@ -157,13 +156,7 @@ public final class GearTooltipBuilder {
         String idName = identificationMatcher.group("ID");
         boolean isRaw = identificationMatcher.group("Suffix") == null;
 
-        String shortIdName;
-        SpellType spell = SpellType.fromName(idName);
-        if (spell != null) {
-            shortIdName = spell.getShortIdName(isRaw);
-        } else {
-            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
-        }
+        String shortIdName = Managers.GearItem.getShortIdentificationName(idName, isRaw);
 
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         if (idProfile != null) {

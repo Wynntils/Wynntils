@@ -15,6 +15,7 @@ import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -25,7 +26,6 @@ import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -82,6 +82,27 @@ public final class GearItemManager extends Manager {
         super(List.of());
     }
 
+    public String getShortIdentificationName(String fullIdName, boolean isRaw) {
+        SpellType spell = SpellType.fromName(fullIdName);
+
+        String name;
+        if (spell != null) {
+            name = spell.getGenericName() + " Cost";
+        } else {
+            name = fullIdName;
+        }
+
+        String[] splitName = name.split(" ");
+        StringBuilder result = new StringBuilder(isRaw ? "raw" : "");
+        for (String r : splitName) {
+            result.append(Character.toUpperCase(r.charAt(0)))
+                    .append(r.substring(1).toLowerCase(Locale.ROOT));
+        }
+
+        return StringUtils.uncapitalizeFirst(
+                StringUtils.capitalizeFirst(result.toString()).replaceAll("\\bXP\\b", "Xp"));
+    }
+
     public GearItem fromItemStack(ItemStack itemStack, ItemProfile itemProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
@@ -128,7 +149,7 @@ public final class GearItemManager extends Manager {
             // Look for identifications
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
+                String idName = getShortIdentificationName(
                         identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
                 int stars = identificationMatcher.group("Stars").length();
@@ -162,13 +183,7 @@ public final class GearItemManager extends Manager {
         int starCount = identificationMatcher.group("Stars").length();
         int value = Integer.parseInt(identificationMatcher.group("Value"));
 
-        String shortIdName;
-        SpellType spell = SpellType.fromName(idName);
-        if (spell != null) {
-            shortIdName = spell.getShortIdName(isRaw);
-        } else {
-            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
-        }
+        String shortIdName = getShortIdentificationName(idName, isRaw);
 
         return identificationFromValue(lore, item, idName, shortIdName, value, starCount);
     }
