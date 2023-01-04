@@ -11,7 +11,6 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
@@ -299,8 +298,8 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        return Component.literal(gearItem.getItemProfile().getDisplayName())
-                .withStyle(gearItem.getGearTier().getChatFormatting());
+        return Component.literal(itemProfile.getDisplayName())
+                .withStyle(itemProfile.getTier().getChatFormatting());
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
@@ -313,8 +312,12 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
-        List<ItemIdentificationContainer> idContainers = gearItem.getIdContainers();
-        List<GearIdentification> identifications = gearItem.getIdentifications();
+        List<ItemIdentificationContainer> idContainers;
+        if (gearItem == null) {
+            idContainers = WynnItemUtils.identificationsFromProfile(itemProfile);
+        } else {
+            idContainers = gearItem.getIdContainers();
+        }
 
         if (idContainers.isEmpty()) {
             return List.of();
