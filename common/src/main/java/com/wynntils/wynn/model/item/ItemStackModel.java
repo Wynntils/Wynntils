@@ -15,8 +15,8 @@ import com.wynntils.wynn.item.ServerItemStack;
 import com.wynntils.wynn.item.SoulPointItemStack;
 import com.wynntils.wynn.item.UnidentifiedItemStack;
 import com.wynntils.wynn.item.WynnItemStack;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.model.item.ItemStackTransformManager.ItemStackTransformer;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
@@ -83,7 +83,7 @@ public abstract class ItemStackModel extends Model {
 
     public static final class UnidentifiedItemStackModel extends ItemStackModel {
         public UnidentifiedItemStackModel() {
-            super(WynnItemMatchers::isUnidentified, UnidentifiedItemStack::new);
+            super(WynnItemMatchers::isGearBox, UnidentifiedItemStack::new);
         }
     }
 }

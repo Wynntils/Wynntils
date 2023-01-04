@@ -5,8 +5,8 @@
 package com.wynntils.wynn.item;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.wynn.item.parsers.WynnItemMatchers;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
+import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
