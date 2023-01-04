@@ -6,7 +6,6 @@ package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -173,22 +172,5 @@ public class IdentificationProfile {
      */
     public boolean isInvalidValue(int currentValue) {
         return isInverted ? (currentValue > min || currentValue < max) : (currentValue > max || currentValue < min);
-    }
-
-    public static String getAsLongName(String shortName) {
-        if (shortName.startsWith("raw")) {
-            shortName = shortName.substring(3);
-            shortName = Character.toLowerCase(shortName.charAt(0)) + shortName.substring(1);
-        }
-
-        StringBuilder nameBuilder = new StringBuilder();
-        for (char c : shortName.toCharArray()) {
-            if (Character.isUpperCase(c)) nameBuilder.append(" ").append(c);
-            else nameBuilder.append(c);
-        }
-
-        return StringUtils.capitalizeFirst(nameBuilder.toString())
-                .replaceAll("\\bXp\\b", "XP")
-                .replaceAll("\\bX P\\b", "XP");
     }
 }

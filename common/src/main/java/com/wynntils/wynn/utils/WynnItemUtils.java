@@ -8,17 +8,9 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
-import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 

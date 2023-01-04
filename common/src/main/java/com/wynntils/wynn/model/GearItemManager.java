@@ -82,6 +82,25 @@ public final class GearItemManager extends Manager {
         super(List.of());
     }
 
+    // Converts to "display name" from shortId
+    public String getAsLongName(String shortName) {
+        if (shortName.startsWith("raw")) {
+            shortName = shortName.substring(3);
+            shortName = Character.toLowerCase(shortName.charAt(0)) + shortName.substring(1);
+        }
+
+        StringBuilder nameBuilder = new StringBuilder();
+        for (char c : shortName.toCharArray()) {
+            if (Character.isUpperCase(c)) nameBuilder.append(" ").append(c);
+            else nameBuilder.append(c);
+        }
+
+        return StringUtils.capitalizeFirst(nameBuilder.toString())
+                .replaceAll("\\bXp\\b", "XP")
+                .replaceAll("\\bX P\\b", "XP");
+    }
+
+    // Converts from "display name" to shortId
     public String getShortIdentificationName(String fullIdName, boolean isRaw) {
         SpellType spell = SpellType.fromName(fullIdName);
 
@@ -200,7 +219,7 @@ public final class GearItemManager extends Manager {
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    public ItemIdentificationContainer identificationFromValue(
+    private ItemIdentificationContainer identificationFromValue(
             Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
@@ -395,7 +414,7 @@ public final class GearItemManager extends Manager {
                 }
 
                 idContainers.add(identificationFromValue(
-                        null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
+                        null, itemProfile, getAsLongName(translatedId), translatedId, value, 0));
                 // FIXME: Get proper short name!
                 identifications.add(new GearIdentification(translatedId, value, 0));
             }
@@ -472,7 +491,7 @@ public final class GearItemManager extends Manager {
             }
 
             // name
-            String longIdName = IdentificationProfile.getAsLongName(shortIdName);
+            String longIdName = getAsLongName(shortIdName);
 
             // create ID and append to list
             ItemIdentificationContainer idContainer =

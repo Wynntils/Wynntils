@@ -4,12 +4,12 @@
  */
 package com.wynntils.gui.screens.guides;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientItemModifiers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientModifiers;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +67,13 @@ public class GuideIngredientItemStack extends GuideItemStack {
                     itemLore.add(Component.literal("+" + identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.GREEN)
-                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + Managers.GearItem.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
                     itemLore.add(Component.literal(identificationContainer.getMin()
                                     + identificationContainer.getType().getInGame(status))
                             .withStyle(ChatFormatting.RED)
-                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + Managers.GearItem.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             } else {
@@ -84,7 +84,7 @@ public class GuideIngredientItemStack extends GuideItemStack {
                             .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.GREEN))
-                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + Managers.GearItem.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 } else {
                     itemLore.add(Component.literal(String.valueOf(identificationContainer.getMin()))
@@ -93,7 +93,7 @@ public class GuideIngredientItemStack extends GuideItemStack {
                             .append(Component.literal(identificationContainer.getMax()
                                             + identificationContainer.getType().getInGame(status))
                                     .withStyle(ChatFormatting.RED))
-                            .append(Component.literal(" " + IdentificationProfile.getAsLongName(status))
+                            .append(Component.literal(" " + Managers.GearItem.getAsLongName(status))
                                     .withStyle(ChatFormatting.GRAY)));
                 }
             }
