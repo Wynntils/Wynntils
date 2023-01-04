@@ -1,0 +1,72 @@
+### Long->Short: 1st Spell Cost[false]--1stSpellCost
+### Long->Short: 1st Spell Cost[true]--raw1stSpellCost
+### Long->Short: 2nd Spell Cost[false]--2ndSpellCost
+### Long->Short: 2nd Spell Cost[true]--raw2ndSpellCost
+### Long->Short: 3rd Spell Cost[false]--3rdSpellCost
+### Long->Short: 3rd Spell Cost[true]--raw3rdSpellCost
+### Long->Short: 4th Spell Cost[false]--4thSpellCost
+### Long->Short: 4th Spell Cost[true]--raw4thSpellCost
+### Long->Short: Agility[true]--rawAgility
+### Long->Short: Air Damage[false]--airDamage
+### Long->Short: Air Defence[false]--airDefence
+### Long->Short: Air Main Attack Damage[true]--rawAirMainAttackDamage
+### Long->Short: Arrow Shield Cost[false]--4thSpellCost
+### Long->Short: Attack Speed[false]--attackSpeed
+### Long->Short: Aura Cost[false]--3rdSpellCost
+### Long->Short: Aura Cost[true]--raw3rdSpellCost
+### Long->Short: Charge Cost[false]--2ndSpellCost
+### Long->Short: Charge Cost[true]--raw2ndSpellCost
+### Long->Short: Dash Cost[true]--raw2ndSpellCost
+### Long->Short: Defence[true]--rawDefence
+### Long->Short: Dexterity[true]--rawDexterity
+### Long->Short: Earth Damage[false]--earthDamage
+### Long->Short: Earth Defence[false]--earthDefence
+### Long->Short: Elemental Damage[false]--elementalDamage
+### Long->Short: Exploding[false]--exploding
+### Long->Short: Fire Damage[false]--fireDamage
+### Long->Short: Fire Defence[false]--fireDefence
+### Long->Short: Haul Cost[false]--2ndSpellCost
+### Long->Short: Haul Cost[true]--raw2ndSpellCost
+### Long->Short: Heal Cost[false]--1stSpellCost
+### Long->Short: Heal Cost[true]--raw1stSpellCost
+### Long->Short: Health Regen[false]--healthRegen
+### Long->Short: Health Regen[true]--rawHealthRegen
+### Long->Short: Health[true]--rawHealth
+### Long->Short: Ice Snake Cost[false]--4thSpellCost
+### Long->Short: Intelligence[true]--rawIntelligence
+### Long->Short: Jump Height[true]--rawJumpHeight
+### Long->Short: Life Steal[false]--lifeSteal
+### Long->Short: Loot Bonus[false]--lootBonus
+### Long->Short: Main Attack Damage[false]--mainAttackDamage
+### Long->Short: Main Attack Damage[true]--rawMainAttackDamage
+### Long->Short: Mana Regen[false]--manaRegen
+### Long->Short: Mana Steal[false]--manaSteal
+### Long->Short: Multi Hit Cost[true]--raw3rdSpellCost
+### Long->Short: Poison[false]--poison
+### Long->Short: Reflection[false]--reflection
+### Long->Short: Smoke Bomb Cost[true]--raw4thSpellCost
+### Long->Short: Soul Point Regen[false]--soulPointRegen
+### Long->Short: Spell Damage[false]--spellDamage
+### Long->Short: Spell Damage[true]--rawSpellDamage
+### Long->Short: Sprint Regen[false]--sprintRegen
+### Long->Short: Sprint[false]--sprint
+### Long->Short: Stealing[false]--stealing
+### Long->Short: Strength[true]--rawStrength
+### Long->Short: Teleport Cost[false]--2ndSpellCost
+### Long->Short: Teleport Cost[true]--raw2ndSpellCost
+### Long->Short: Thorns[false]--thorns
+### Long->Short: Thunder Damage[false]--thunderDamage
+### Long->Short: Thunder Defence[false]--thunderDefence
+### Long->Short: Totem Cost[false]--1stSpellCost
+### Long->Short: Totem Cost[true]--raw1stSpellCost
+### Long->Short: Uppercut Cost[false]--3rdSpellCost
+### Long->Short: Uppercut Cost[true]--raw3rdSpellCost
+### Long->Short: Uproot Cost[false]--4thSpellCost
+### Long->Short: Uproot Cost[true]--raw4thSpellCost
+### Long->Short: Walk Speed[false]--walkSpeed
+### Long->Short: Water Damage[false]--waterDamage
+### Long->Short: Water Defence[false]--waterDefence
+### Long->Short: XP Bonus[false]--xpBonus
+### Long->Short: enemies without taking[true]--rawEnemiesWithoutTaking
+### Long->Short: on impact[false]--onImpact
+### Long->Short: tier[true]--rawTier
