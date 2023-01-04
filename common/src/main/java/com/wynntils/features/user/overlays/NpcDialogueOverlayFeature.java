@@ -307,12 +307,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         public void render(PoseStack poseStack, float partialTicks, Window window) {
             if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
-            List<String> allDialogues = new ArrayList<>(currentDialogue);
+            LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
             confirmationlessDialogues.forEach(d -> {
                 allDialogues.add("");
                 allDialogues.addAll(d.text());
             });
 
+            if (currentDialogue.isEmpty()) {
+                // Remove the initial blank line in that case
+                allDialogues.removeFirst();
+            }
             renderDialogue(poseStack, allDialogues, dialogueType);
         }
 
