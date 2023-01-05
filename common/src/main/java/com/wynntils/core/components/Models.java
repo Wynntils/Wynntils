@@ -10,7 +10,6 @@ import com.wynntils.core.net.hades.model.HadesUserModel;
 import com.wynntils.core.services.TranslationModel;
 import com.wynntils.wynn.handleditems.ItemModel;
 import com.wynntils.wynn.model.BombBellModel;
-import com.wynntils.wynn.model.ChatItemModel;
 import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.LootChestModel;
 import com.wynntils.wynn.model.LootrunModel;
@@ -57,7 +56,6 @@ public final class Models {
     public static final AmplifierTierPropertyModel AmplifierTierProperty = new AmplifierTierPropertyModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
-    public static final ChatItemModel ChatItem = new ChatItemModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ConsumableChargePropertyModel ConsumableChargeProperty = new ConsumableChargePropertyModel();
