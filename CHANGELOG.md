@@ -1,9 +1,22 @@
+## [0.0.2-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.60...v0.0.2-alpha.61) (2023-01-05)
+
+
+### Bug Fixes
+
+* do not crash if gear box level map is null ([#971](https://github.com/Wynntils/Artemis/issues/971)) ([b7d6550](https://github.com/Wynntils/Artemis/commit/b7d6550b01126e18ec520bf27c2eabb502e5af4e))
+* Gear item guide crash ([#970](https://github.com/Wynntils/Artemis/issues/970)) ([b14d3be](https://github.com/Wynntils/Artemis/commit/b14d3be5bc513f786ccb3b0ae61876e0608251ba))
+
 ## [0.0.2-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.59...v0.0.2-alpha.60) (2023-01-04)
 
 
 ### New Features
 
 * Use new item model for gear tooltips ([#961](https://github.com/Wynntils/Artemis/issues/961)) ([cda2c5a](https://github.com/Wynntils/Artemis/commit/cda2c5a7e177375eb30edcbefd1d4a6555ebf47f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.60 [skip ci] ([9d660e9](https://github.com/Wynntils/Artemis/commit/9d660e9deaaf3ee4953af748a7d4611a2868c40c))
 
 ## [0.0.2-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.58...v0.0.2-alpha.59) (2023-01-04)
 
@@ -36,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.57 [skip ci] ([ef21273](https://github.com/Wynntils/Artemis/commit/ef21273b9d0dad4adf77f4b7673e5ff5f9e4195d))
-
-## [0.0.2-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.55...v0.0.2-alpha.56) (2023-01-03)
-
-
-### Bug Fixes
-
-* Replaces References To Deprecated "Reload" Command ([#967](https://github.com/Wynntils/Artemis/issues/967)) ([0b3db11](https://github.com/Wynntils/Artemis/commit/0b3db11b69e204f0d473a98331e71925d58c298d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.56 [skip ci] ([f1e8dbc](https://github.com/Wynntils/Artemis/commit/f1e8dbc5e04172c45bc311dd21a0de4947657b2a))
 
