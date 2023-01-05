@@ -20,8 +20,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class SoulPointTimerFeature extends UserFeature {
-    public static SoulPointTimerFeature INSTANCE;
-
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
