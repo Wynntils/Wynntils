@@ -1,3 +1,10 @@
+## [0.0.2-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.61...v0.0.2-alpha.62) (2023-01-05)
+
+
+### Bug Fixes
+
+* Strip duplicate blank lines in tooltip ([#973](https://github.com/Wynntils/Artemis/issues/973)) ([2f80820](https://github.com/Wynntils/Artemis/commit/2f80820f78dc9fbc9d9bea4215159ab4bd353759))
+
 ## [0.0.2-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.60...v0.0.2-alpha.61) (2023-01-05)
 
 
@@ -5,6 +12,11 @@
 
 * do not crash if gear box level map is null ([#971](https://github.com/Wynntils/Artemis/issues/971)) ([b7d6550](https://github.com/Wynntils/Artemis/commit/b7d6550b01126e18ec520bf27c2eabb502e5af4e))
 * Gear item guide crash ([#970](https://github.com/Wynntils/Artemis/issues/970)) ([b14d3be](https://github.com/Wynntils/Artemis/commit/b14d3be5bc513f786ccb3b0ae61876e0608251ba))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.61 [skip ci] ([e863eb8](https://github.com/Wynntils/Artemis/commit/e863eb853060564b6c1f45140c2f247ce64bc136))
 
 ## [0.0.2-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.59...v0.0.2-alpha.60) (2023-01-04)
 
@@ -37,16 +49,4 @@
 
 * fix typo ([c67b571](https://github.com/Wynntils/Artemis/commit/c67b5714f87d391d95342a05200ca4a6d0656018))
 * **release:** v0.0.2-alpha.58 [skip ci] ([0be94cc](https://github.com/Wynntils/Artemis/commit/0be94cc944f6cf6382ece36df4dd1ae14d1ae01e))
-
-## [0.0.2-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.56...v0.0.2-alpha.57) (2023-01-04)
-
-
-### Code Refactoring
-
-* Move WynnItemMatchers to utils ([#966](https://github.com/Wynntils/Artemis/issues/966)) ([22a4637](https://github.com/Wynntils/Artemis/commit/22a4637ae330f59455d8ed269af251f0a819eb78))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.57 [skip ci] ([ef21273](https://github.com/Wynntils/Artemis/commit/ef21273b9d0dad4adf77f4b7673e5ff5f9e4195d))
 
