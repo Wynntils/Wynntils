@@ -69,6 +69,9 @@ public final class GearItemManager extends Manager {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
+    private static final Pattern ID_NEW_PATTERN =
+            Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? §r§7(.*)$");
+
     public static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
 
     static {
@@ -126,6 +129,26 @@ public final class GearItemManager extends Manager {
             }
 
             // Look for identifications
+            String formatId = ComponentUtils.getCoded(loreLine);
+            Matcher id2Matcher = ID_NEW_PATTERN.matcher(formatId);
+            if (id2Matcher.matches()) {
+                boolean isNegative = id2Matcher.group(1).charAt(0) == 'c';
+                int value = Integer.parseInt(id2Matcher.group(2));
+                String idName = id2Matcher.group(5);
+                String unit = id2Matcher.group(3);
+                String starsString = id2Matcher.group(4);
+                int stars = starsString == null ? 0 : starsString.length();
+
+                if (value < 0 && !isNegative) {
+                    // This is afaict only for spell costs
+                    System.out.println("Got CONTRARY:" + idName);
+                }
+                if (value > 0 && isNegative) {
+                    // This is afaict only for spell costs
+                    System.out.println("Got CONTRARY2:" + idName);
+                }
+                System.out.println("Got:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ") + (isNegative ? "negative" : "positive") + ", stars: " +stars);
+            }
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
                 String idName = WynnItemMatchers.getShortIdentificationName(
