@@ -18,6 +18,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -25,9 +26,13 @@ import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -67,12 +72,6 @@ public class ItemScreenshotFeature extends UserFeature {
     }
 
     private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
-        if (Utils.isMac()) {
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.mac")
-                    .withStyle(ChatFormatting.GRAY));
-            return;
-        }
-
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
@@ -115,16 +114,45 @@ public class ItemScreenshotFeature extends UserFeature {
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
         BufferedImage bi = RenderUtils.createScreenshot(fb);
+
+        // First try to save it to disk
+        String itemName = stack.getHoverName().getString();
+        File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
+        String filename = Util.getFilenameFormattedDateTime() + "-" + ComponentUtils.stripFormatting(itemName) + ".png";
+        try {
+            File outputfile = new File(screenshotDir, filename);
+            ImageIO.write(bi, "png", outputfile);
+
+            McUtils.sendMessageToClient(Component.translatable(
+                            "feature.wynntils.itemScreenshot.save.message",
+                            itemName,
+                            Component.literal(outputfile.getName())
+                                    .withStyle(ChatFormatting.UNDERLINE)
+                                    .withStyle(style -> style.withClickEvent(
+                                            new ClickEvent(ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
+                    .withStyle(ChatFormatting.GREEN));
+        } catch (IOException e) {
+            WynntilsMod.error("Failed to save image to disk", e);
+            McUtils.sendMessageToClient(
+                    Component.translatable("feature.wynntils.itemScreenshot.save.error", itemName, filename)
+                            .withStyle(ChatFormatting.RED));
+        }
+
+        // Then try to send a copy to the clipboard
+        if (Utils.isMac()) {
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
+                    .withStyle(ChatFormatting.GRAY));
+            return;
+        }
+
         try {
             RenderUtils.copyImageToClipboard(bi);
-            McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.itemScreenshot.message", stack.getHoverName())
-                            .withStyle(ChatFormatting.GREEN));
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
+                    .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
-            McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.itemScreenshot.error", stack.getHoverName())
-                            .withStyle(ChatFormatting.RED));
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.error")
+                    .withStyle(ChatFormatting.RED));
         }
     }
 
