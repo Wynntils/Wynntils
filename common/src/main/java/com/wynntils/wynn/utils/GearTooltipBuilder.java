@@ -5,6 +5,7 @@
 package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -93,7 +94,7 @@ public final class GearTooltipBuilder {
 
         tooltip.addAll(bottomTooltip);
 
-        return tooltip;
+        return ComponentUtils.stripDuplicateBlank(tooltip);
     }
 
     private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, ItemProfile gearProfile) {
