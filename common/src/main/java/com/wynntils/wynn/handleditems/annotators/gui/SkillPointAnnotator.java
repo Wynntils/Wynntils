@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements ItemAnnotator {
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    private static final Pattern LORE_PATTERN = Pattern.compile("^§7 +(-?\\d+) points? +§r§6-?\\d+ points?$");
+    private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§r§6-?\\d+ points?$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -26,8 +26,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
         String skillName = matcher.group(1);
         Skill skill = Skill.fromString(skillName);
 
-        String loreLine = WynnUtils.normalizeBadString(ItemUtils.getLoreLine(itemStack, 3));
-        Matcher m = LORE_PATTERN.matcher(loreLine);
+        Matcher m = ItemUtils.matchLoreLine(itemStack, 3, LORE_PATTERN);
         if (!m.matches()) return null;
 
         int skillPoints = Integer.parseInt(m.group(1));
