@@ -51,6 +51,8 @@ import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class GearItemManager extends Manager {
+    public static final String UNIDENTIFIED_PREFIX = "Unidentified ";
+
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
     private static final String END = new String(Character.toChars(0xF5FF1));
@@ -340,6 +342,20 @@ public final class GearItemManager extends Manager {
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")
                 .withStyle(ChatFormatting.DARK_GREEN);
+    }
+
+    public GearItem fromUnidentified(ItemProfile itemProfile) {
+        return new GearItem(itemProfile, null);
+    }
+
+    public boolean isUnidentified(String itemName) {
+        return itemName.startsWith(UNIDENTIFIED_PREFIX);
+    }
+
+    public String getLookupName(String itemName) {
+        String realName =
+                itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
+        return realName;
     }
 
     public GearItem fromJsonLore(ItemStack itemStack, ItemProfile itemProfile) {
