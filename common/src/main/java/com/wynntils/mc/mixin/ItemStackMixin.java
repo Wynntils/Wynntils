@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.ItemTooltipFlags;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -14,10 +15,8 @@ import net.minecraft.world.item.TooltipFlag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements AnnotatedItemStack {
@@ -37,10 +36,15 @@ public abstract class ItemStackMixin implements AnnotatedItemStack {
         return event.getHoveredName();
     }
 
-    @Inject(method = "getHideFlags", at = @At("RETURN"), cancellable = true)
-    private int onGetHideFlags(CallbackInfoReturnable cir) {
-        cir.setReturnValue(127);
-        return 127;
+    @Redirect(
+            method =
+                    "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getHideFlags()I"))
+    private int redirectGetHideFlags(ItemStack instance) {
+        ItemStack itemStack = (ItemStack) (Object) this;
+        ItemTooltipFlags.Mask event = EventFactory.onTooltipFlagsMask(itemStack, instance.getHideFlags());
+
+        return event.getMask();
     }
 
     @ModifyVariable(
@@ -50,7 +54,9 @@ public abstract class ItemStackMixin implements AnnotatedItemStack {
             ordinal = 0,
             argsOnly = true)
     private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
-        return TooltipFlag.NORMAL;
+        ItemStack itemStack = (ItemStack) (Object) this;
+        ItemTooltipFlags.Advanced event = EventFactory.onTooltipFlagsAdvanced(itemStack, flags);
+        return event.getFlags();
     }
 
     @Override

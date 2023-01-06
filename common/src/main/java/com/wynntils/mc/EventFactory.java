@@ -35,6 +35,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemTooltipFlags;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -129,6 +130,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
@@ -363,6 +365,14 @@ public final class EventFactory {
 
     public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
         return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+    }
+
+    public static ItemTooltipFlags.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
+        return post(new ItemTooltipFlags.Advanced(itemStack, flags));
+    }
+
+    public static ItemTooltipFlags.Mask onTooltipFlagsMask(ItemStack itemStack, int mask) {
+        return post(new ItemTooltipFlags.Mask(itemStack, mask));
     }
 
     // endregion
