@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class AmplifierAnnotator implements ItemAnnotator {
-    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("§bCorkian Amplifier (I{1,3})");
+    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("^§bCorkian Amplifier (I{1,3})$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
