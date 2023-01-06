@@ -333,8 +333,6 @@
   "feature.wynntils.itemLock.name": "物品锁",
   "feature.wynntils.itemScreenshot.chatItemMessage": "点击在此为了複製物品在聊天室使用！",
   "feature.wynntils.itemScreenshot.chatItemTooltip": "粘贴这文本在聊天室里给别的 Wynntils 用者显示",
-  "feature.wynntils.itemScreenshot.error": "在截图时 Wynntils见到了一个故障： %s",
-  "feature.wynntils.itemScreenshot.message": "複製了 %s 到剪贴板！",
   "feature.wynntils.itemScreenshot.name": "物品截屏",
   "feature.wynntils.itemStatInfo.colorLerp.description": "要是否物品加的百分比颜色顺利变而不在固定百分比跳颜色吗？",
   "feature.wynntils.itemStatInfo.colorLerp.name": "颜色线性插值",
