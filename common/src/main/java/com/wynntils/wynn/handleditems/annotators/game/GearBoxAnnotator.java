@@ -6,51 +6,44 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import com.wynntils.wynn.objects.profiles.item.ItemType;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Optional;
-import net.minecraft.network.chat.Component;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class GearBoxAnnotator implements ItemAnnotator {
+    private static final Pattern GEAR_BOX_PATTERN = Pattern.compile("^§[5abcdef]Unidentified (.*)$");
+    private static final Pattern LEVEL_RANGE_PATTERN =
+            Pattern.compile("^§a- (?:§r)?§7Lv\\. Range: (?:§r)?§f(\\d+)-(\\d+)$");
+
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
+        Matcher matcher = GEAR_BOX_PATTERN.matcher(name);
+        if (!matcher.matches()) return null;
 
-        ItemType itemType = getItemType(name);
+        Optional<ItemType> itemTypeOpt = ItemType.fromString(matcher.group(1));
+        if (itemTypeOpt.isEmpty()) return null;
+
+        ItemType itemType = itemTypeOpt.get();
         ItemTier itemTier = ItemTier.fromString(name);
         String levelRange = getLevelRange(itemStack);
 
-        if (itemType == null || itemTier == null || levelRange == null) return null;
+        if (itemTier == null || levelRange == null) return null;
 
         return new GearBoxItem(itemType, itemTier, levelRange);
     }
 
-    private static ItemType getItemType(String name) {
-        String itemName = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(name));
-
-        // FIXME: This is dangerous and can crash! Should use regex instead.
-        String itemTypeStr = itemName.split(" ", 2)[1];
-        if (itemTypeStr == null) return null;
-
-        Optional<ItemType> itemType = ItemType.fromString(itemTypeStr);
-        return itemType.orElse(null);
-    }
-
     private static String getLevelRange(ItemStack itemStack) {
-        for (Component tooltipLine : itemStack.getTooltipLines(null, TooltipFlag.NORMAL)) {
-            String line = WynnUtils.normalizeBadString(tooltipLine.getString());
-            if (line.contains("Lv. Range")) {
-                return line.replace("- Lv. Range: ", "");
-            }
-        }
-        return null;
+        Matcher matcher = ItemUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
+        if (!matcher.matches()) return null;
+        return matcher.group(1) + "-" + matcher.group(2);
     }
 }

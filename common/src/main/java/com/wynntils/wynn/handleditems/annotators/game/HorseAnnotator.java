@@ -15,16 +15,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class HorseAnnotator implements ItemAnnotator {
-    private static final Pattern HORSE_PATTERN = Pattern.compile(
+    private static final Pattern HORSE_PATTERN = Pattern.compile("^§f(.*) Horse$");
+    private static final Pattern HORSE_LORE_PATTERN = Pattern.compile(
             "§7Tier (\\d)§6Speed: (\\d+)/(\\d+)§6Jump: \\d+/\\d+§5Armour: None§bXp: (\\d+)/100(?:§cUntradable Item)?(:?§7Name: (.+))?");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         if (itemStack.getItem() != Items.SADDLE) return null;
-        if (!name.contains("Horse")) return null;
+        Matcher matcher = HORSE_PATTERN.matcher(name);
+        if (!matcher.matches()) return null;
 
         String lore = ItemUtils.getStringLore(itemStack);
-        Matcher m = HORSE_PATTERN.matcher(lore);
+        Matcher m = HORSE_LORE_PATTERN.matcher(lore);
 
         if (!m.matches()) return null;
 
