@@ -31,7 +31,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
 
             String trinketName = matcher.group(1);
             ItemTier itemTier = ItemTier.fromString(name);
-            if (matcher.groupCount() >= 4) {
+            if (matcher.group(3) != null) {
                 CappedValue uses =
                         new CappedValue(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
                 return new TrinketItem(trinketName, itemTier, uses);
