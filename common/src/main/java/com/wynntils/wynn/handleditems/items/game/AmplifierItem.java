@@ -4,9 +4,11 @@
  */
 package com.wynntils.wynn.handleditems.items.game;
 
+import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.handleditems.properties.NumberedTierItemProperty;
+import com.wynntils.wynn.objects.profiles.item.ItemTier;
 
-public class AmplifierItem extends GameItem implements NumberedTierItemProperty {
+public class AmplifierItem extends GameItem implements NumberedTierItemProperty, GearTierItemProperty {
     private final int tier;
 
     public AmplifierItem(int tier) {
@@ -15,6 +17,10 @@ public class AmplifierItem extends GameItem implements NumberedTierItemProperty 
 
     public int getTier() {
         return tier;
+    }
+
+    public ItemTier getGearTier() {
+        return ItemTier.LEGENDARY;
     }
 
     @Override
