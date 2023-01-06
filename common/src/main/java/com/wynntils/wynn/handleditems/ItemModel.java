@@ -25,6 +25,7 @@ import com.wynntils.wynn.handleditems.annotators.game.MaterialAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.PowderAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.SkillPotionAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.TeleportScrollAnnotator;
+import com.wynntils.wynn.handleditems.annotators.game.TrinketAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.XpPotionAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.DailyRewardMultiplierAnnotator;
@@ -56,6 +57,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new PowderAnnotator());
         Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
+        Handlers.Item.registerAnnotator(new TrinketAnnotator());
         Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // GUI handlers

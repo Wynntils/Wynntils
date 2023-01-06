@@ -49,6 +49,7 @@ public class ExtendedItemCountFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof CountedItemProperty countedItem)) return;
 
+        if (!countedItem.hasCount()) return;
         int count = countedItem.getCount();
         // This is a bit ugly; would rather we hid the drawing but that was tricky to do
         // with mixins...
