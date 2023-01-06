@@ -32,6 +32,6 @@ public class TooltipVanillaHideFeature extends UserFeature {
     public void onTooltipFlagsMask(ItemTooltipFlags.Mask event) {
         if (!hideAdditionalnfo) return;
 
-        event.setMask(0);
+        event.setMask(-1);
     }
 }
