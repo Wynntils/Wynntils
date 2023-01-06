@@ -38,7 +38,7 @@ public final class ComponentUtils {
 
     public static String getCoded(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return null;
+        if (component == null) return "";
 
         return getCoded(component);
     }
