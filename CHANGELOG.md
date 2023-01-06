@@ -1,9 +1,21 @@
+## [0.0.2-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.69...v0.0.2-alpha.70) (2023-01-06)
+
+
+### Bug Fixes
+
+* Correctly annotate skillpoints with negative values ([#979](https://github.com/Wynntils/Artemis/issues/979)) ([abd4c40](https://github.com/Wynntils/Artemis/commit/abd4c401daef360df44479cc0835e77b340d1b71))
+
 ## [0.0.2-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.68...v0.0.2-alpha.69) (2023-01-06)
 
 
 ### Bug Fixes
 
 * restore highlights and tooltips for unidentified gear ([#981](https://github.com/Wynntils/Artemis/issues/981)) ([bce1f64](https://github.com/Wynntils/Artemis/commit/bce1f64079ccc75f2723f7ce6ab992813af27cb6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.69 [skip ci] ([3ab3989](https://github.com/Wynntils/Artemis/commit/3ab39892fd84918747c3d61edef4093858f0ac74))
 
 ## [0.0.2-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.67...v0.0.2-alpha.68) (2023-01-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.66 [skip ci] ([04961a1](https://github.com/Wynntils/Artemis/commit/04961a134ba3eea49058ae0ee3068a04695b5a91))
-
-## [0.0.2-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.64...v0.0.2-alpha.65) (2023-01-06)
-
-
-### Bug Fixes
-
-* Make all annotators more robust and correct ([#969](https://github.com/Wynntils/Artemis/issues/969)) ([bf30254](https://github.com/Wynntils/Artemis/commit/bf30254fbdf06ffa09f953b3a4f2f5234457eb00))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.65 [skip ci] ([4706d19](https://github.com/Wynntils/Artemis/commit/4706d19fbc1db0dbc931998e3fe1a3790bcdd988))
 
