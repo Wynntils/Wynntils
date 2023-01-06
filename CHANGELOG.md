@@ -1,9 +1,21 @@
+## [0.0.2-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.62...v0.0.2-alpha.63) (2023-01-06)
+
+
+### Bug Fixes
+
+* Restore highlight of trinkets ([#968](https://github.com/Wynntils/Artemis/issues/968)) ([110e6c7](https://github.com/Wynntils/Artemis/commit/110e6c7285c52cb8bcd0e8c4e360731dcb58ecde))
+
 ## [0.0.2-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.61...v0.0.2-alpha.62) (2023-01-05)
 
 
 ### Bug Fixes
 
 * Strip duplicate blank lines in tooltip ([#973](https://github.com/Wynntils/Artemis/issues/973)) ([2f80820](https://github.com/Wynntils/Artemis/commit/2f80820f78dc9fbc9d9bea4215159ab4bd353759))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.62 [skip ci] ([4c03b38](https://github.com/Wynntils/Artemis/commit/4c03b38d1500f862ad0249867bb92ccd3b687ed0))
 
 ## [0.0.2-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.60...v0.0.2-alpha.61) (2023-01-05)
 
@@ -41,12 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.59 [skip ci] ([4eeac00](https://github.com/Wynntils/Artemis/commit/4eeac0027f9ba04f2187dd44c4361d7c250a74a5))
-
-## [0.0.2-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.57...v0.0.2-alpha.58) (2023-01-04)
-
-
-### Miscellaneous Chores
-
-* fix typo ([c67b571](https://github.com/Wynntils/Artemis/commit/c67b5714f87d391d95342a05200ca4a6d0656018))
-* **release:** v0.0.2-alpha.58 [skip ci] ([0be94cc](https://github.com/Wynntils/Artemis/commit/0be94cc944f6cf6382ece36df4dd1ae14d1ae01e))
 
