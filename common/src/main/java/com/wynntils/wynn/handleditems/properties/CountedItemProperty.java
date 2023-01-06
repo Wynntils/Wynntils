@@ -6,4 +6,8 @@ package com.wynntils.wynn.handleditems.properties;
 
 public interface CountedItemProperty {
     int getCount();
+
+    default boolean hasCount() {
+        return true;
+    }
 }
