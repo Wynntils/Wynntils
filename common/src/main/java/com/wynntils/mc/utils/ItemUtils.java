@@ -40,6 +40,17 @@ public final class ItemUtils {
     }
 
     /**
+     * Returns the lore for the given line, or the empty string if there is no
+     * such line.
+     */
+    public static String getLoreLine(ItemStack item, int line) {
+        ListTag loreTag = getLoreTag(item);
+        if (loreTag == null) return "";
+
+        return ComponentUtils.getCoded(loreTag.getString(line));
+    }
+
+    /**
      * Get the lore from an item, combined into one string.
      * Relies on {@link #getLore(ItemStack)}. See the aforementioned
      * for a list format

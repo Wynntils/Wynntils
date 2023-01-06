@@ -10,6 +10,13 @@ public interface UsesItemPropery extends CountedItemProperty {
     CappedValue getUses();
 
     default int getCount() {
-        return getUses().getCurrent();
+        CappedValue value = getUses();
+        if (value == null) return 0;
+        return value.getCurrent();
+    }
+
+    @Override
+    default boolean hasCount() {
+        return getUses() != null;
     }
 }
