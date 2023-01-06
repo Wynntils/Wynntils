@@ -1,9 +1,21 @@
+## [0.0.2-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.64...v0.0.2-alpha.65) (2023-01-06)
+
+
+### Bug Fixes
+
+* Make all annotators more robust and correct ([#969](https://github.com/Wynntils/Artemis/issues/969)) ([bf30254](https://github.com/Wynntils/Artemis/commit/bf30254fbdf06ffa09f953b3a4f2f5234457eb00))
+
 ## [0.0.2-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.63...v0.0.2-alpha.64) (2023-01-06)
 
 
 ### New Features
 
 * Save screenshots to disk ([#974](https://github.com/Wynntils/Artemis/issues/974)) ([e889a15](https://github.com/Wynntils/Artemis/commit/e889a15cb9d7d88382fa5e7e018cdd552fbebfd4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.64 [skip ci] ([20dd286](https://github.com/Wynntils/Artemis/commit/20dd286e22215aade414909719fe3472ba06ac1c))
 
 ## [0.0.2-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.62...v0.0.2-alpha.63) (2023-01-06)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.61 [skip ci] ([e863eb8](https://github.com/Wynntils/Artemis/commit/e863eb853060564b6c1f45140c2f247ce64bc136))
-
-## [0.0.2-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.59...v0.0.2-alpha.60) (2023-01-04)
-
-
-### New Features
-
-* Use new item model for gear tooltips ([#961](https://github.com/Wynntils/Artemis/issues/961)) ([cda2c5a](https://github.com/Wynntils/Artemis/commit/cda2c5a7e177375eb30edcbefd1d4a6555ebf47f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.60 [skip ci] ([9d660e9](https://github.com/Wynntils/Artemis/commit/9d660e9deaaf3ee4953af748a7d4611a2868c40c))
 
