@@ -116,16 +116,18 @@ public class ItemScreenshotFeature extends UserFeature {
         BufferedImage bi = RenderUtils.createScreenshot(fb);
 
         // First try to save it to disk
-        String itemName = stack.getHoverName().getString();
+        String itemNameForFile = WynnUtils.normalizeBadString(
+                        ComponentUtils.stripFormatting(stack.getHoverName().getString()))
+                .replaceAll("[/ ]", "_");
         File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
-        String filename = Util.getFilenameFormattedDateTime() + "-" + ComponentUtils.stripFormatting(itemName) + ".png";
+        String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
         try {
             File outputfile = new File(screenshotDir, filename);
             ImageIO.write(bi, "png", outputfile);
 
             McUtils.sendMessageToClient(Component.translatable(
                             "feature.wynntils.itemScreenshot.save.message",
-                            itemName,
+                            stack.getHoverName(),
                             Component.literal(outputfile.getName())
                                     .withStyle(ChatFormatting.UNDERLINE)
                                     .withStyle(style -> style.withClickEvent(
@@ -134,7 +136,7 @@ public class ItemScreenshotFeature extends UserFeature {
         } catch (IOException e) {
             WynntilsMod.error("Failed to save image to disk", e);
             McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.itemScreenshot.save.error", itemName, filename)
+                    Component.translatable("feature.wynntils.itemScreenshot.save.error", stack.getHoverName(), filename)
                             .withStyle(ChatFormatting.RED));
         }
 
