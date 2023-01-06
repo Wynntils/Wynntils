@@ -9,7 +9,6 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.gui.SkillPointItem;
 import com.wynntils.wynn.objects.Skill;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
