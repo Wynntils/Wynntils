@@ -28,6 +28,7 @@ import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.imageio.ImageIO;
@@ -41,7 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -57,7 +58,8 @@ public class ItemScreenshotFeature extends UserFeature {
         screenshotSlot = hoveredSlot;
     }
 
-    @SubscribeEvent
+    // All other features must be able to update the tooltip first
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void render(ItemTooltipRenderEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
@@ -66,14 +68,14 @@ public class ItemScreenshotFeature extends UserFeature {
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
 
         // has to be called during a render period
-        takeScreenshot(screen, screenshotSlot);
+        takeScreenshot(screen, screenshotSlot, e.getTooltips());
         makeChatPrompt(screenshotSlot);
         screenshotSlot = null;
     }
 
-    private static void takeScreenshot(Screen screen, Slot hoveredSlot) {
+    private static void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
         ItemStack stack = hoveredSlot.getItem();
-        List<Component> tooltip = stack.getTooltipLines(null, TooltipFlag.NORMAL);
+        List<Component> tooltip = new ArrayList<>(itemTooltip);
         WynnItemUtils.removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();
