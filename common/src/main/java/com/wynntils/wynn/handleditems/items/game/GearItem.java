@@ -1,31 +1,22 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.wynn.handleditems.items.game;
 
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
+import com.wynntils.wynn.objects.GearInstance;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearItem extends GameItem implements GearTierItemProperty {
     private final ItemProfile itemProfile;
-    private final List<GearIdentification> identifications;
-    private final List<ItemIdentificationContainer> idContainers;
-    private final List<Powder> powders;
-    private final int rerolls;
-    private final List<Component> setBonus;
-    private final boolean isPerfect;
-    private final boolean isDefective;
-    private final float overallPercentage;
-    private final boolean hasVariableIds;
+    private final GearInstance gearInstance;
 
     public GearItem(
             ItemProfile itemProfile,
@@ -35,52 +26,42 @@ public class GearItem extends GameItem implements GearTierItemProperty {
             int rerolls,
             List<Component> setBonus) {
         this.itemProfile = itemProfile;
-        this.identifications = identifications;
-        this.idContainers = idContainers;
-        this.powders = powders;
-        this.rerolls = rerolls;
-        this.setBonus = setBonus;
+        this.gearInstance = new GearInstance(identifications, idContainers, powders, rerolls, setBonus);
+    }
 
-        DoubleSummaryStatistics percents = idContainers.stream()
-                .filter(Predicate.not(ItemIdentificationContainer::isFixed))
-                .mapToDouble(ItemIdentificationContainer::percent)
-                .summaryStatistics();
-        overallPercentage = (float) percents.getAverage();
-
-        if (percents.getCount() > 0) {
-            // Only claim it is perfect/defective if we do have some non-fixed identifications
-            isPerfect = overallPercentage >= 100f;
-            isDefective = overallPercentage <= 0f;
-            hasVariableIds = true;
-        } else {
-            isPerfect = false;
-            isDefective = false;
-            hasVariableIds = false;
-        }
+    public GearItem(ItemProfile itemProfile, GearInstance gearInstance) {
+        this.itemProfile = itemProfile;
+        this.gearInstance = gearInstance;
     }
 
     public ItemProfile getItemProfile() {
         return itemProfile;
     }
 
-    public List<GearIdentification> getIdentifications() {
-        return identifications;
+    public GearInstance getGearInstance() {
+        return gearInstance;
+    }
+
+    public boolean isUnidentified() {
+        return gearInstance == null;
     }
 
     public List<ItemIdentificationContainer> getIdContainers() {
-        return idContainers;
+        if (gearInstance == null) return List.of();
+
+        return gearInstance.getIdContainers();
     }
 
     public List<Powder> getPowders() {
-        return powders;
+        if (gearInstance == null) return List.of();
+
+        return gearInstance.getPowders();
     }
 
     public int getRerolls() {
-        return rerolls;
-    }
+        if (gearInstance == null) return 0;
 
-    public List<Component> getSetBonus() {
-        return setBonus;
+        return gearInstance.getRerolls();
     }
 
     @Override
@@ -90,27 +71,30 @@ public class GearItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public String toString() {
-        return "GearItem{" + "itemProfile="
-                + itemProfile + ", identifications="
-                + identifications + ", powders="
-                + powders + ", rerolls="
-                + rerolls + ", setBonus="
-                + setBonus + '}';
+        return "GearItem{" + "itemProfile=" + itemProfile + ", gearInstance=" + gearInstance + '}';
     }
 
     public boolean hasVariableIds() {
-        return hasVariableIds;
+        if (gearInstance == null) return false;
+
+        return gearInstance.hasVariableIds();
     }
 
     public float getOverallPercentage() {
-        return overallPercentage;
+        if (gearInstance == null) return 0;
+
+        return gearInstance.getOverallPercentage();
     }
 
     public boolean isPerfect() {
-        return isPerfect;
+        if (gearInstance == null) return false;
+
+        return gearInstance.isPerfect();
     }
 
     public boolean isDefective() {
-        return isDefective;
+        if (gearInstance == null) return false;
+
+        return gearInstance.isDefective();
     }
 }
