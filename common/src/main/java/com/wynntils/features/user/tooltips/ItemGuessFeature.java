@@ -29,8 +29,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
-    public static ItemGuessFeature INSTANCE;
-
     @Config
     public boolean showGuessesPrice = true;
 
