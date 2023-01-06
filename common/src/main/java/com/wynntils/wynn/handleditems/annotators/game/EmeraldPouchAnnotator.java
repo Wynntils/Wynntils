@@ -14,7 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class EmeraldPouchAnnotator implements ItemAnnotator {
-    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
+    private static final Pattern EMERALD_POUCH_TIER_PATTERN =
+            Pattern.compile("^§aEmerald Pouch§2 \\[Tier ([IVX]{1,4})\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {

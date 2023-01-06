@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class MaterialAnnotator implements ItemAnnotator {
-    private static final Pattern MATERIAL_PATTERN = Pattern.compile("§f(.*) ([^ ]+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
+    private static final Pattern MATERIAL_PATTERN = Pattern.compile("^§f(.*) ([^ ]+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {

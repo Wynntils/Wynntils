@@ -26,8 +26,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
 
         try {
             // Verify by first line of the lore
-            String loreLine = ItemUtils.getLoreLine(itemStack, 0);
-            Matcher loreMatcher = TRINKET_LORE_PATTERN.matcher(loreLine);
+            Matcher loreMatcher = ItemUtils.matchLoreLine(itemStack, 0, TRINKET_LORE_PATTERN);
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);

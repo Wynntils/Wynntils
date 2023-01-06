@@ -10,6 +10,8 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -48,6 +50,23 @@ public final class ItemUtils {
         if (loreTag == null) return "";
 
         return ComponentUtils.getCoded(loreTag.getString(line));
+    }
+
+    /**
+     * Check if the lore matches the given pattern, starting at the given line
+     * and checking 5 more lines. (The reason for this is that the Trade Market
+     * inserts additional lines at the top of the lore.)
+     */
+    public static Matcher matchLoreLine(ItemStack item, int startLineNum, Pattern pattern) {
+        Matcher matcher = null;
+        for (int i = startLineNum; i <= startLineNum + 5; i++) {
+            String line = getLoreLine(item, i);
+            matcher = pattern.matcher(line);
+            if (matcher.matches()) return matcher;
+        }
+
+        // Return the last non-matching matcher
+        return matcher;
     }
 
     /**
