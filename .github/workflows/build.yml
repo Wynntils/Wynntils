@@ -15,7 +15,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Add git origin
-        run: git remote add origin https://github.com/Wynntils/Artemis.git
+        run: git fetch origin
 
       - name: Set up JDK
         uses: actions/setup-java@v3
