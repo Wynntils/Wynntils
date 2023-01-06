@@ -1,9 +1,21 @@
+## [0.0.2-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.68...v0.0.2-alpha.69) (2023-01-06)
+
+
+### Bug Fixes
+
+* restore highlights and tooltips for unidentified gear ([#981](https://github.com/Wynntils/Artemis/issues/981)) ([bce1f64](https://github.com/Wynntils/Artemis/commit/bce1f64079ccc75f2723f7ce6ab992813af27cb6))
+
 ## [0.0.2-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.67...v0.0.2-alpha.68) (2023-01-06)
 
 
 ### Bug Fixes
 
 * Trinket Annotator crash on non-consumable trinkets ([#976](https://github.com/Wynntils/Artemis/issues/976)) ([688e08b](https://github.com/Wynntils/Artemis/commit/688e08b49a3ebd55728e24f158956ca1575e0da5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.68 [skip ci] ([e033d4e](https://github.com/Wynntils/Artemis/commit/e033d4e6cba7abb883227b59c9ed3db47ee85409))
 
 ## [0.0.2-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.66...v0.0.2-alpha.67) (2023-01-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.65 [skip ci] ([4706d19](https://github.com/Wynntils/Artemis/commit/4706d19fbc1db0dbc931998e3fe1a3790bcdd988))
-
-## [0.0.2-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.63...v0.0.2-alpha.64) (2023-01-06)
-
-
-### New Features
-
-* Save screenshots to disk ([#974](https://github.com/Wynntils/Artemis/issues/974)) ([e889a15](https://github.com/Wynntils/Artemis/commit/e889a15cb9d7d88382fa5e7e018cdd552fbebfd4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.64 [skip ci] ([20dd286](https://github.com/Wynntils/Artemis/commit/20dd286e22215aade414909719fe3472ba06ac1c))
 
