@@ -4,105 +4,34 @@
  */
 package com.wynntils.wynn.objects.profiles.item;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.features.user.inventory.ItemHighlightFeature;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum ItemTier {
-    NORMAL(
-            ChatFormatting.WHITE,
-            () -> ItemHighlightFeature.INSTANCE.normalHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.normalHighlightEnabled,
-            -1,
-            0),
-    UNIQUE(
-            ChatFormatting.YELLOW,
-            () -> ItemHighlightFeature.INSTANCE.uniqueHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.uniqueHighlightEnabled,
-            3,
-            0.5f),
-    RARE(
-            ChatFormatting.LIGHT_PURPLE,
-            () -> ItemHighlightFeature.INSTANCE.rareHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.rareHighlightEnabled,
-            8,
-            1.2f),
-    SET(
-            ChatFormatting.GREEN,
-            () -> ItemHighlightFeature.INSTANCE.setHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.setHighlightEnabled,
-            8,
-            1.2f),
-    FABLED(
-            ChatFormatting.RED,
-            () -> ItemHighlightFeature.INSTANCE.fabledHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.fabledHighlightEnabled,
-            12,
-            4.5f),
-    LEGENDARY(
-            ChatFormatting.AQUA,
-            () -> ItemHighlightFeature.INSTANCE.legendaryHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.legendaryHighlightEnabled,
-            16,
-            8.0f),
-    MYTHIC(
-            ChatFormatting.DARK_PURPLE,
-            () -> ItemHighlightFeature.INSTANCE.mythicHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.mythicHighlightEnabled,
-            90,
-            18.0f),
-    CRAFTED(
-            ChatFormatting.DARK_AQUA,
-            () -> ItemHighlightFeature.INSTANCE.craftedHighlightColor,
-            () -> ItemHighlightFeature.INSTANCE.craftedHighlightEnabled,
-            -1,
-            0);
+    NORMAL(ChatFormatting.WHITE, -1, 0),
+    UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
+    RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
+    SET(ChatFormatting.GREEN, 8, 1.2f),
+    FABLED(ChatFormatting.RED, 12, 4.5f),
+    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
+    MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
+    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
 
     private final ChatFormatting chatFormatting;
-    private final Callable<CustomColor> highlightColor;
-    private final Callable<Boolean> highlightEnabled;
     private final int baseCost;
     private final float costMultiplier;
 
-    ItemTier(
-            ChatFormatting chatFormatting,
-            Callable<CustomColor> highlightColor,
-            Callable<Boolean> highlightEnabled,
-            int baseCost,
-            float costMultiplier) {
+    ItemTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
         this.chatFormatting = chatFormatting;
-        this.highlightColor = highlightColor;
-        this.highlightEnabled = highlightEnabled;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
     }
 
     public ChatFormatting getChatFormatting() {
         return chatFormatting;
-    }
-
-    public boolean isHighlightEnabled() {
-        try {
-            return highlightEnabled.call();
-        } catch (Exception e) {
-            WynntilsMod.error(e.getMessage());
-            return false;
-        }
-    }
-
-    public CustomColor getHighlightColor() {
-        try {
-            return highlightColor.call();
-        } catch (Exception e) {
-            WynntilsMod.error(e.getMessage());
-            return CustomColor.NONE;
-        }
     }
 
     public static ItemTier fromString(String name) {
