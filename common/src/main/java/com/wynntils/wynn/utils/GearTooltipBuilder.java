@@ -306,7 +306,9 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        return Component.literal(itemProfile.getDisplayName())
+        String prefix = gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
+
+        return Component.literal(prefix + itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
     }
 
@@ -321,7 +323,7 @@ public final class GearTooltipBuilder {
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
         List<ItemIdentificationContainer> idContainers;
-        if (gearItem == null) {
+        if (gearItem == null || gearItem.isUnidentified()) {
             idContainers = WynnItemUtils.identificationsFromProfile(itemProfile);
         } else {
             idContainers = gearItem.getIdContainers();
