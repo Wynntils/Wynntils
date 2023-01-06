@@ -217,13 +217,13 @@ public final class StringUtils {
             while (ebMatcher.find()) {
                 emeralds += (long) (Double.parseDouble(ebMatcher.group(1)) * stackSize);
             }
-            
+            // k
             Matcher kMatcher = K_PATTERN.matcher(input);
             while (kMatcher.find()) {
                 emeralds += (long) (Double.parseDouble(kMatcher.group(1)) * 1000);
             }
 
-            // eb
+            // m
             Matcher mMatcher = M_PATTERN.matcher(input);
             while (mMatcher.find()) {
                 emeralds += (long) (Double.parseDouble(mMatcher.group(1)) * 1000000);
