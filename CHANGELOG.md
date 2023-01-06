@@ -1,9 +1,21 @@
+## [0.0.2-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.63...v0.0.2-alpha.64) (2023-01-06)
+
+
+### New Features
+
+* Save screenshots to disk ([#974](https://github.com/Wynntils/Artemis/issues/974)) ([e889a15](https://github.com/Wynntils/Artemis/commit/e889a15cb9d7d88382fa5e7e018cdd552fbebfd4))
+
 ## [0.0.2-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.62...v0.0.2-alpha.63) (2023-01-06)
 
 
 ### Bug Fixes
 
 * Restore highlight of trinkets ([#968](https://github.com/Wynntils/Artemis/issues/968)) ([110e6c7](https://github.com/Wynntils/Artemis/commit/110e6c7285c52cb8bcd0e8c4e360731dcb58ecde))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.63 [skip ci] ([7e8e135](https://github.com/Wynntils/Artemis/commit/7e8e135033b2b00be37f1e07e5865f0cfc75159c))
 
 ## [0.0.2-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.61...v0.0.2-alpha.62) (2023-01-05)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.60 [skip ci] ([9d660e9](https://github.com/Wynntils/Artemis/commit/9d660e9deaaf3ee4953af748a7d4611a2868c40c))
-
-## [0.0.2-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.58...v0.0.2-alpha.59) (2023-01-04)
-
-
-### New Features
-
-* Add timeout per individual NPC chat ([#965](https://github.com/Wynntils/Artemis/issues/965)) ([f9d05c5](https://github.com/Wynntils/Artemis/commit/f9d05c503a93c64345fd5dff22eddaaccb01c217))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.59 [skip ci] ([4eeac00](https://github.com/Wynntils/Artemis/commit/4eeac0027f9ba04f2187dd44c4361d7c250a74a5))
 
