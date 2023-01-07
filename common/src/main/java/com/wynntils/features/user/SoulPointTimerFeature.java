@@ -26,7 +26,8 @@ public class SoulPointTimerFeature extends UserFeature {
         Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
         if (soulPointItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon());
+        List<Component> tooltips =
+                ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon());
         event.setTooltips(tooltips);
     }
 

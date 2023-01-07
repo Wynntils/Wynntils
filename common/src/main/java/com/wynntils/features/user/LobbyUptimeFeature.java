@@ -29,7 +29,8 @@ public class LobbyUptimeFeature extends UserFeature {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);
         if (serverItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon(serverItemOpt.get()));
+        List<Component> tooltips = ItemUtils.appendTooltip(
+                event.getItemStack(), event.getTooltips(), getTooltipAddon(serverItemOpt.get()));
         event.setTooltips(tooltips);
     }
 
