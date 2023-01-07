@@ -30,7 +30,7 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
         if (wynnItemOpt.isEmpty()) return;
         WynnItem wynnItem = wynnItemOpt.get();
 
-        List<Component> tooltips = ItemUtils.appendTooltip(event.getTooltips(), getTooltipAddon(wynnItem));
+        List<Component> tooltips = ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon(wynnItem));
         event.setTooltips(tooltips);
     }
 
