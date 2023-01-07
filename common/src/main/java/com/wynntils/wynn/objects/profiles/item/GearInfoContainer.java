@@ -88,4 +88,15 @@ public class GearInfoContainer {
 
         return itemStack;
     }
+
+    @Override
+    public String toString() {
+        return "ItemInfoContainer{" + "type="
+                + type + ", set='"
+                + set + '\'' + ", dropType="
+                + dropType + ", armorColor='"
+                + armorColor + '\'' + ", materialName='"
+                + materialName + '\'' + ", metadata='"
+                + metadata + '\'' + '}';
+    }
 }

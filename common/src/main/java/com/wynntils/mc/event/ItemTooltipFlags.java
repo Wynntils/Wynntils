@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class ItemTooltipFlags extends Event {
     private final ItemStack itemStack;
 
-    public ItemTooltipFlags(ItemStack itemStack) {
+    protected ItemTooltipFlags(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 

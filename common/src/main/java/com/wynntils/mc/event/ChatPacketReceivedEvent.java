@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class ChatPacketReceivedEvent extends Event {
     private Component message;
 
-    public ChatPacketReceivedEvent(Component message) {
+    protected ChatPacketReceivedEvent(Component message) {
         this.message = message;
     }
 
