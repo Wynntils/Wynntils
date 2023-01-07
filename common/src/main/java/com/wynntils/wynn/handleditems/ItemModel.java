@@ -25,6 +25,7 @@ import com.wynntils.wynn.handleditems.annotators.game.MaterialAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.PowderAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.SkillPotionAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.TeleportScrollAnnotator;
+import com.wynntils.wynn.handleditems.annotators.game.TomeAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.TrinketAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.XpPotionAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.CosmeticTierAnnotator;
@@ -41,6 +42,7 @@ public class ItemModel extends Model {
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());
+        Handlers.Item.registerAnnotator(new TomeAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
 
