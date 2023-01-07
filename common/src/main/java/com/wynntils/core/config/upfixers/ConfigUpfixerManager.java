@@ -27,7 +27,7 @@ public class ConfigUpfixerManager extends Manager {
         registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
     }
 
-    public void registerUpfixer(ConfigUpfixer upfixer) {
+    private void registerUpfixer(ConfigUpfixer upfixer) {
         configUpfixers.add(upfixer);
     }
 

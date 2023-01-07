@@ -66,7 +66,7 @@ public final class HadesModel extends Model {
         Managers.WynntilsAccount.removeOnLogin(this::onLogin);
     }
 
-    public void onLogin() {
+    private void onLogin() {
         // Try to log in to Hades, if we're not already connected
         if (!isConnected()) {
             tryCreateConnection();

@@ -21,7 +21,7 @@ public final class BossBarModel extends Model {
 
     public static final TrackedBar corruptedBar = new CorruptedBar();
 
-    public static final List<TrackedBar> ALL_BARS =
+    private static final List<TrackedBar> ALL_BARS =
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
 
     @Override

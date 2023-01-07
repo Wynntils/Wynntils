@@ -195,7 +195,7 @@ public class ItemProfile {
         return (!parsedRequirements.isEmpty());
     }
 
-    public ClassType getClassNeeded() {
+    private ClassType getClassNeeded() {
         return itemInfo.getType().getClassReq();
     }
 

@@ -41,10 +41,10 @@ public final class GearTooltipBuilder {
     private final ItemProfile itemProfile;
     private final GearItem gearItem;
 
-    private List<Component> topTooltip;
-    private List<Component> bottomTooltip;
+    private final List<Component> topTooltip;
+    private final List<Component> bottomTooltip;
 
-    private Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
+    private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
     private GearTooltipBuilder(ItemProfile itemProfile, GearItem gearItem) {
         this.itemProfile = itemProfile;
@@ -147,7 +147,7 @@ public final class GearTooltipBuilder {
         return Pair.of(topTooltip, bottomTooltip);
     }
 
-    public static boolean isIdLine(Component lore, ItemProfile item) {
+    private static boolean isIdLine(Component lore, ItemProfile item) {
         // This looks quite messy, but is in effect what we did before
         // FIXME: Clean up?
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());

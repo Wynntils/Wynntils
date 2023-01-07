@@ -56,7 +56,7 @@ public final class GearViewerScreen extends WynntilsScreen {
         return new GearViewerScreen(player);
     }
 
-    public ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
+    private ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
         if (itemStack.getItem() == Items.AIR) {
             return itemStack;
         }

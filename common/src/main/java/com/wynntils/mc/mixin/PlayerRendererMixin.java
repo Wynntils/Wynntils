@@ -32,7 +32,7 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
                     "renderNameTag(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void onNameTagRenderPre(
+    private void onNameTagRenderPre(
             AbstractClientPlayer entity,
             Component displayName,
             PoseStack matrixStack,

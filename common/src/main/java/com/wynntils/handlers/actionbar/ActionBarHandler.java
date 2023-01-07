@@ -21,16 +21,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ActionBarHandler extends Handler {
     // example: "§c❤ 218/218§0    §7502§f S§7 -1580    §b✺ 1/119"
     private static final Pattern ACTIONBAR_PATTERN = Pattern.compile("(?<LEFT>§[^§]+)(?<CENTER>.*)(?<RIGHT>§[^§]+)");
-    public static final String CENTER_PADDING = "§0               ";
+    private static final String CENTER_PADDING = "§0               ";
 
-    private Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
+    private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
             ActionBarPosition.LEFT,
             new ArrayList<>(),
             ActionBarPosition.CENTER,
             new ArrayList<>(),
             ActionBarPosition.RIGHT,
             new ArrayList<>());
-    private Map<ActionBarPosition, ActionBarSegment> lastSegments = new HashMap<>();
+    private final Map<ActionBarPosition, ActionBarSegment> lastSegments = new HashMap<>();
     private String previousRawContent = null;
     private String previousProcessedContent;
 

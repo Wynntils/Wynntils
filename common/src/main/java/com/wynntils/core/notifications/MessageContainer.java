@@ -9,8 +9,8 @@ import com.wynntils.gui.render.TextRenderTask;
 import java.util.Objects;
 
 public class MessageContainer {
-    protected String message;
-    protected TextRenderTask renderTask;
+    private String message;
+    private TextRenderTask renderTask;
     private int messageCount;
 
     public MessageContainer(String message) {
