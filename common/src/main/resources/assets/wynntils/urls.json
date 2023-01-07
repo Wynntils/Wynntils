@@ -1,5 +1,8 @@
 [
   {
+    "version": 1
+  },
+  {
     "id": "apiAthenaAuthPublicKey",
     "url": "https://athena.wynntils.com/auth/getPublicKey"
   },

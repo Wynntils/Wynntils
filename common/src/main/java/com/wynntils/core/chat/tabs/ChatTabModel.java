@@ -45,7 +45,9 @@ public final class ChatTabModel extends Model {
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent event) {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
-        if (focusedTab == null || focusedTab.getAutoCommand() == null) return;
+        if (focusedTab == null
+                || focusedTab.getAutoCommand() == null
+                || focusedTab.getAutoCommand().isEmpty()) return;
 
         replaceChatText(chatScreen, focusedTab.getAutoCommand());
     }
