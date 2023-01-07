@@ -37,7 +37,7 @@ public class ItemGuessFeature extends UserFeature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = new ArrayList<>(event.getBaseTooltips());
+        List<Component> tooltips = new ArrayList<>(event.getTooltips());
         tooltips.addAll(getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
     }
