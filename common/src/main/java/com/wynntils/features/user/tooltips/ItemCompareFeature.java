@@ -124,8 +124,8 @@ public class ItemCompareFeature extends UserFeature {
         Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearOpt.isEmpty()) return false;
 
-        return gearOpt.get().getGearProfile().getItemInfo().getType()
-                == gearItemReference.getGearProfile().getItemInfo().getType();
+        return gearOpt.get().getGearProfile().getGearInfo().getType()
+                == gearItemReference.getGearProfile().getGearInfo().getType();
     }
 
     @SubscribeEvent

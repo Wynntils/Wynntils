@@ -9,7 +9,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
@@ -322,7 +322,7 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
-        List<ItemIdentificationContainer> idContainers;
+        List<GearIdentificationContainer> idContainers;
         if (gearItem == null || gearItem.isUnidentified()) {
             idContainers = WynnItemUtils.identificationsFromProfile(gearProfile);
         } else {
@@ -337,16 +337,16 @@ public final class GearTooltipBuilder {
                 switch (style.decorations()) {
                     case PERCENT -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::percentLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::percentLoreLine));
                     case RANGE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::rangeLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::rangeLoreLine));
                     case REROLL_CHANCE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::rerollLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::rerollLoreLine));
                 };
 
         if (style.reorder()) {

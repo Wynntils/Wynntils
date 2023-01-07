@@ -9,7 +9,7 @@ import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import net.minecraft.network.chat.Component;
 
-public record ItemIdentificationContainer(
+public record GearIdentificationContainer(
         GearProfile item,
         IdentificationProfile identification,
         IdentificationModifier modifier,

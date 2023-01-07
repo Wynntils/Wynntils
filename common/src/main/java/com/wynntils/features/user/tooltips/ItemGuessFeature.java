@@ -16,7 +16,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class ItemGuessFeature extends UserFeature {
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
         List<Component> addon = new ArrayList<>();
         List<String> itemPossibilities = gearBoxItem.getItemPossibilities();
-        ItemTier itemTier = gearBoxItem.getItemTier();
+        GearTier gearTier = gearBoxItem.getItemTier();
 
         addon.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
 
@@ -56,7 +56,7 @@ public class ItemGuessFeature extends UserFeature {
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = Component.literal(item).withStyle(itemTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(item).withStyle(gearTier.getChatFormatting());
 
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(item)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
@@ -76,7 +76,7 @@ public class ItemGuessFeature extends UserFeature {
             if (showGuessesPrice && level != -1) {
                 guesses.append(Component.literal(" [")
                         .append(Component.literal(
-                                        (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
+                                        (gearTier.getGearIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(Component.literal("]"))
                         .withStyle(ChatFormatting.GRAY));

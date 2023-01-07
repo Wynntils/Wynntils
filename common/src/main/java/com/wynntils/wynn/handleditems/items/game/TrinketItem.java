@@ -7,22 +7,22 @@ package com.wynntils.wynn.handleditems.items.game;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.handleditems.properties.UsesItemPropery;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 
 public class TrinketItem extends GameItem implements GearTierItemProperty, UsesItemPropery {
     private final String trinketName;
-    private final ItemTier itemTier;
+    private final GearTier gearTier;
     private final CappedValue uses;
 
-    public TrinketItem(String trinketName, ItemTier itemTier, CappedValue uses) {
+    public TrinketItem(String trinketName, GearTier gearTier, CappedValue uses) {
         this.trinketName = trinketName;
-        this.itemTier = itemTier;
+        this.gearTier = gearTier;
         this.uses = uses;
     }
 
-    public TrinketItem(String trinketName, ItemTier itemTier) {
+    public TrinketItem(String trinketName, GearTier gearTier) {
         this.trinketName = trinketName;
-        this.itemTier = itemTier;
+        this.gearTier = gearTier;
         this.uses = null;
     }
 
@@ -30,8 +30,8 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
         return trinketName;
     }
 
-    public ItemTier getItemTier() {
-        return itemTier;
+    public GearTier getItemTier() {
+        return gearTier;
     }
 
     public CappedValue getUses() {
@@ -39,15 +39,15 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
     }
 
     @Override
-    public ItemTier getGearTier() {
-        return itemTier;
+    public GearTier getGearTier() {
+        return gearTier;
     }
 
     @Override
     public String toString() {
         return "TrinketItem{" + "trinketName='"
                 + trinketName + '\'' + ", itemTier="
-                + itemTier + ", uses="
+                + gearTier + ", uses="
                 + uses + '}';
     }
 }

@@ -15,7 +15,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.model.GearItemManager;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import java.lang.reflect.Type;
@@ -36,7 +36,7 @@ public final class GearProfilesManager extends Manager {
     private Map<String, String> translatedReferences = Map.of();
     private Map<String, String> internalIdentifications = Map.of();
     private Map<String, MajorIdentification> majorIdsMap = Map.of();
-    private Map<ItemType, String[]> materialTypes = Map.of();
+    private Map<GearType, String[]> materialTypes = Map.of();
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
 
@@ -63,7 +63,7 @@ public final class GearProfilesManager extends Manager {
         return identificationOrderer.orderComponents(holder, groups);
     }
 
-    public List<ItemIdentificationContainer> orderIdentifications(List<ItemIdentificationContainer> ids) {
+    public List<GearIdentificationContainer> orderIdentifications(List<GearIdentificationContainer> ids) {
         return identificationOrderer.orderIdentifications(ids);
     }
 
@@ -107,7 +107,7 @@ public final class GearProfilesManager extends Manager {
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIdsMap = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
 
-            Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
+            Type materialTypesType = new TypeToken<HashMap<GearType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             identificationOrderer =

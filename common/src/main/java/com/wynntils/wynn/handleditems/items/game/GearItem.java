@@ -5,12 +5,12 @@
 package com.wynntils.wynn.handleditems.items.game;
 
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.GearInstance;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
@@ -21,7 +21,7 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     public GearItem(
             GearProfile gearProfile,
             List<GearIdentification> identifications,
-            List<ItemIdentificationContainer> idContainers,
+            List<GearIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,
             List<Component> setBonus) {
@@ -46,7 +46,7 @@ public class GearItem extends GameItem implements GearTierItemProperty {
         return gearInstance == null;
     }
 
-    public List<ItemIdentificationContainer> getIdContainers() {
+    public List<GearIdentificationContainer> getIdContainers() {
         if (gearInstance == null) return List.of();
 
         return gearInstance.getIdContainers();
@@ -65,7 +65,7 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     }
 
     @Override
-    public ItemTier getGearTier() {
+    public GearTier getGearTier() {
         return gearProfile.getTier();
     }
 

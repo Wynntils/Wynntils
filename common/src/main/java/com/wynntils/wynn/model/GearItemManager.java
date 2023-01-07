@@ -18,7 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
@@ -86,7 +86,7 @@ public final class GearItemManager extends Manager {
 
     public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
         List<Component> setBonus = new ArrayList<>();
@@ -137,7 +137,7 @@ public final class GearItemManager extends Manager {
                 identifications.add(new GearIdentification(idName, value, stars));
 
                 // This is partially overlapping with GearIdentification, sort this out later
-                ItemIdentificationContainer idContainer = identificationFromLore(loreLine, gearProfile);
+                GearIdentificationContainer idContainer = identificationFromLore(loreLine, gearProfile);
                 if (idContainer == null) continue;
                 idContainers.add(idContainer);
             }
@@ -154,7 +154,7 @@ public final class GearItemManager extends Manager {
      * @param item the GearProfile of the given item
      * @return the parsed ItemIdentificationContainer, or null if invalid lore line
      */
-    public ItemIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
+    public GearIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return null; // not a valid id line
@@ -187,7 +187,7 @@ public final class GearItemManager extends Manager {
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    public ItemIdentificationContainer identificationFromValue(
+    public GearIdentificationContainer identificationFromValue(
             Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
@@ -241,7 +241,7 @@ public final class GearItemManager extends Manager {
         }
 
         // create container
-        return new ItemIdentificationContainer(
+        return new GearIdentificationContainer(
                 item,
                 idProfile,
                 type,
@@ -370,7 +370,7 @@ public final class GearItemManager extends Manager {
             itemData = new JsonObject(); // invalid or empty itemData on item
         }
 
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();
 
         if (itemData.has("identifications")) {
@@ -435,7 +435,7 @@ public final class GearItemManager extends Manager {
         if (item == null) return null;
 
         // ids
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
@@ -476,7 +476,7 @@ public final class GearItemManager extends Manager {
             String longIdName = IdentificationProfile.getAsLongName(shortIdName);
 
             // create ID and append to list
-            ItemIdentificationContainer idContainer =
+            GearIdentificationContainer idContainer =
                     identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
             identifications.add(new GearIdentification(shortIdName, value, stars));
@@ -535,7 +535,7 @@ public final class GearItemManager extends Manager {
         String itemName = gearItem.getGearProfile().getDisplayName();
 
         // get identification data - ordered for consistency
-        List<ItemIdentificationContainer> sortedIds =
+        List<GearIdentificationContainer> sortedIds =
                 Managers.GearProfiles.orderIdentifications(gearItem.getIdContainers());
 
         // name
@@ -544,7 +544,7 @@ public final class GearItemManager extends Manager {
         encoded.append(SEPARATOR);
 
         // ids
-        for (ItemIdentificationContainer id : sortedIds) {
+        for (GearIdentificationContainer id : sortedIds) {
             if (id.identification().isFixed()) continue; // don't care about these
 
             int idValue = id.value();

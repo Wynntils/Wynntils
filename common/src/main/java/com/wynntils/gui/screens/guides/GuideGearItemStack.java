@@ -21,13 +21,13 @@ public class GuideGearItemStack extends GuideItemStack {
     private final GearProfile gearProfile;
 
     public GuideGearItemStack(GearProfile gearProfile) {
-        super(gearProfile.getItemInfo().asItemStack());
+        super(gearProfile.getGearInfo().asItemStack());
         this.gearProfile = gearProfile;
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
-        if (gearProfile.getItemInfo().isArmorColorValid())
-            tag.putInt("color", gearProfile.getItemInfo().getArmorColorAsInt());
+        if (gearProfile.getGearInfo().isArmorColorValid())
+            tag.putInt("color", gearProfile.getGearInfo().getArmorColorAsInt());
         this.setTag(tag);
 
         name = Component.literal(gearProfile.getDisplayName())
