@@ -34,6 +34,7 @@ public final class TomeAnnotator implements ItemAnnotator {
         String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
         String tier = tomeType.isTiered() ? matcher.group("Tier") : null;
 
+        // TODO: replace with API lookup
         TomeProfile tomeProfile = new TomeProfile(matcher.group(1), itemTier, variant, tomeType, tier);
 
         return Managers.GearItem.fromTomeItemStack(itemStack, tomeProfile);

@@ -17,11 +17,13 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
+import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
+import com.wynntils.wynn.objects.profiles.item.CharmProfile;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
@@ -167,6 +169,31 @@ public final class GearItemManager extends Manager {
         }
 
         return new TomeItem(tomeProfile, identifications, rerolls);
+    }
+
+    public CharmItem fromCharmItemStack(ItemStack itemStack, CharmProfile charmProfile) {
+        List<GearIdentification> identifications = new ArrayList<>();
+        int rerolls = 0;
+
+        // Parse lore for identifications and rerolls
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        lore.remove(0); // remove item name
+
+        for (Component loreLine : lore) {
+            // Look for rerolls
+            Optional<Integer> rerollOpt = rerollsFromLore(loreLine);
+            if (rerollOpt.isPresent()) {
+                rerolls = rerollOpt.get();
+                continue;
+            }
+
+            // Look for identifications
+            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            if (gearIdOpt.isEmpty()) continue;
+            identifications.add(gearIdOpt.get());
+        }
+
+        return new CharmItem(charmProfile, identifications, rerolls);
     }
 
     public Optional<Integer> rerollsFromLore(Component lore) {

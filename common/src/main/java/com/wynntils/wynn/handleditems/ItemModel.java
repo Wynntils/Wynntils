@@ -10,6 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.wynn.handleditems.annotators.game.AmplifierAnnotator;
+import com.wynntils.wynn.handleditems.annotators.game.CharmAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.CraftedConsumableAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.CraftedGearAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.DungeonKeyAnnotator;
@@ -43,6 +44,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());
         Handlers.Item.registerAnnotator(new TomeAnnotator());
+        Handlers.Item.registerAnnotator(new CharmAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
 
