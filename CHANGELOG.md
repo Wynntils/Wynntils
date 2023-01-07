@@ -1,9 +1,21 @@
+## [0.0.2-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.75...v0.0.2-alpha.76) (2023-01-07)
+
+
+### Code Refactoring
+
+* Fix object hierarchy issues pointed out by IntelliJ ([#992](https://github.com/Wynntils/Artemis/issues/992)) ([2913fd8](https://github.com/Wynntils/Artemis/commit/2913fd824d688c097cb9cdfff54ebcd9b7ea76f7))
+
 ## [0.0.2-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.74...v0.0.2-alpha.75) (2023-01-07)
 
 
 ### New Features
 
 * Introduce versioned urls.json ([#989](https://github.com/Wynntils/Artemis/issues/989)) ([627ff15](https://github.com/Wynntils/Artemis/commit/627ff15c19d2da0b7684abd921dc874d0d42f4d5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.75 [skip ci] ([86aeb26](https://github.com/Wynntils/Artemis/commit/86aeb26dac6f28b42f3714d9bed37bebcde1df1e))
 
 ## [0.0.2-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.73...v0.0.2-alpha.74) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.72 [skip ci] ([6440728](https://github.com/Wynntils/Artemis/commit/64407284891564e8064da08c36291f4047b4728e))
-
-## [0.0.2-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.70...v0.0.2-alpha.71) (2023-01-07)
-
-
-### Bug Fixes
-
-* add back highlights for crafted items, amplifiers, and emerald pouches ([#983](https://github.com/Wynntils/Artemis/issues/983)) ([db8ee28](https://github.com/Wynntils/Artemis/commit/db8ee2808ac41f127f63a996988e0611b287c720))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.71 [skip ci] ([33700a9](https://github.com/Wynntils/Artemis/commit/33700a90a2ec512da774968070c380c7874b9f82))
 
