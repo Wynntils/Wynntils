@@ -107,10 +107,11 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         // hacky override of custom color
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public CustomColor textColor = CustomColor.NONE;
+        public CustomColor textColor;
 
-        protected BaseBarOverlay(OverlayPosition position, OverlaySize size) {
+        protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
+            this.textColor = textColor;
         }
 
         protected float textureHeight() {
@@ -200,8 +201,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         protected HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
-            super(overlayPosition, guiScaledOverlaySize);
-            textColor = CommonColors.RED;
+            super(overlayPosition, guiScaledOverlaySize, CommonColors.RED);
         }
 
         @Override
@@ -334,8 +334,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         protected ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
-            super(overlayPosition, guiScaledOverlaySize);
-            textColor = CommonColors.LIGHT_BLUE;
+            super(overlayPosition, guiScaledOverlaySize, CommonColors.LIGHT_BLUE);
         }
 
         @Override
@@ -462,8 +461,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
-            textColor = CommonColors.WHITE;
+                    new GuiScaledOverlaySize(81, 21),
+                    CommonColors.WHITE);
         }
 
         @Override
@@ -491,8 +490,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
-            textColor = CommonColors.YELLOW;
+                    new GuiScaledOverlaySize(81, 21),
+                    CommonColors.YELLOW);
         }
 
         @Override
@@ -521,8 +520,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
-            textColor = CommonColors.PURPLE;
+                    new GuiScaledOverlaySize(81, 21),
+                    CommonColors.PURPLE);
         }
 
         @Override
