@@ -22,7 +22,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class CraftedGearAnnotator implements ItemAnnotator {
-    private static final Pattern CRAFTED_GEAR_PATTERN = Pattern.compile("^§3(.*)§b \\[100%\\]$");
+    private static final Pattern CRAFTED_GEAR_PATTERN = Pattern.compile("^§3(.*)§b \\[\\d{1,3}%\\]$");
+    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
+            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
+                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -54,7 +57,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
             // Look for identifications
             // FIXME: This pattern is likely to fail, needs fixing
-            Matcher identificationMatcher = GearAnnotator.ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
+            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
                 String idName = WynnItemMatchers.getShortIdentificationName(
                         identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);

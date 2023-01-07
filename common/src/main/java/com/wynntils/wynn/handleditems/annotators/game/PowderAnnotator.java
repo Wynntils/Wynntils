@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class PowderAnnotator implements ItemAnnotator {
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
+            Pattern.compile("^§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
