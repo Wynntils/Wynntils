@@ -13,7 +13,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatShowRealNameFeature extends UserFeature {
-    // credits to avomod for part of the code
+    // credits to avomod for the nickname detection method
     private static Component eventOriginalMessage;
     private static String eventOriginalColorMessage;
 
@@ -21,18 +21,11 @@ public class ChatShowRealNameFeature extends UserFeature {
     public void onChatMessage(ChatMessageReceivedEvent event) {
         eventOriginalMessage = event.getOriginalMessage();
         eventOriginalColorMessage = event.getOriginalCodedMessage();
-        System.out.println("Original Coloured message: " + event.getOriginalCodedMessage());
-        if (event.getOriginalCodedMessage().contains("§3[")) {
-            for (Component siblingMessage : event.getOriginalMessage().getSiblings()) {
-                System.out.println("Sibling message: " + siblingMessage);
-                System.out.println("Siblings: " + siblingMessage.getSiblings());
-            }
-        }
         addRealNameToMessage(event.getOriginalMessage(), event.getOriginalMessage());
     }
 
     private static void addRealNameToMessage(Component message, Component parentMessage) {
-        if (message.getSiblings().size() > 0) {
+        if (!message.getSiblings().isEmpty()) {
             for (Component siblingMessage : message.getSiblings()) {
                 addRealNameToMessage(siblingMessage, message);
             }
@@ -45,7 +38,6 @@ public class ChatShowRealNameFeature extends UserFeature {
                         hoverText.getString().split(" ")[hoverText.getString().split(" ").length - 1];
                 List<Component> siblings = parentMessage.getSiblings();
                 // Champion: §e, Hero: §5, VIP+: §b, VIP: §2, None: §7
-                System.out.println("Parent message: " + parentMessage + " | Siblings: " + parentMessage.getSiblings());
                 String colourCode = getColourCodeByRank(eventOriginalColorMessage);
                 Component fullMessage = Component.literal("§r§" + colourCode + realName)
                         .withStyle()
@@ -53,18 +45,12 @@ public class ChatShowRealNameFeature extends UserFeature {
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("§r§f" + realName + "§r§7" + "'s nickname is " + "§r§f"
                                         + ChatFormatting.stripFormatting(message.getString())))));
-                System.out.println("Message in siblings: " + siblings.contains(message));
-                System.out.println("Message: " + message.getString());
 
                 if (siblings.contains(message)) {
                     parentMessage.getSiblings().set(siblings.indexOf(message), fullMessage);
                 } else if (eventOriginalMessage.getSiblings().contains(message)) {
                     eventOriginalMessage.getSiblings().set(siblings.indexOf(message), fullMessage);
-                } else {
-                    System.out.println("Message not found in siblings");
                 }
-
-                System.out.println(parentMessage.getSiblings());
             }
         }
     }
