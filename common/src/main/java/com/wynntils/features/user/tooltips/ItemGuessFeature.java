@@ -15,7 +15,7 @@ import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class ItemGuessFeature extends UserFeature {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = Managers.ItemProfiles.getItemsProfile(item);
+            GearProfile profile = Managers.GearProfiles.getItemsProfile(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 

@@ -36,7 +36,7 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
     }
 
     public List<String> getItemPossibilities() {
-        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuess(levelRange);
+        ItemGuessProfile guessProfile = Managers.GearProfiles.getItemGuess(levelRange);
         if (guessProfile == null) return List.of();
 
         Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);

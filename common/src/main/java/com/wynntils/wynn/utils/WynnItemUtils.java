@@ -9,9 +9,9 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +24,12 @@ import org.lwjgl.glfw.GLFW;
 
 public final class WynnItemUtils {
     /**
-     * Create a list of ItemIdentificationContainer corresponding to the given ItemProfile, formatted for item guide items
+     * Create a list of ItemIdentificationContainer corresponding to the given GearProfile, formatted for item guide items
      *
      * @param item the profile of the item
      * @return a list of appropriately formatted ItemIdentificationContainer
      */
-    public static List<ItemIdentificationContainer> identificationsFromProfile(ItemProfile item) {
+    public static List<ItemIdentificationContainer> identificationsFromProfile(GearProfile item) {
         List<ItemIdentificationContainer> ids = new ArrayList<>();
 
         for (Map.Entry<String, IdentificationProfile> entry : item.getStatuses().entrySet()) {
@@ -83,7 +83,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Managers.ItemProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
+        return Managers.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
     }
 
     public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {

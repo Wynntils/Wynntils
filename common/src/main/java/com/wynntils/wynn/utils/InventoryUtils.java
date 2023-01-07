@@ -48,7 +48,7 @@ public final class InventoryUtils {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return false;
 
-        return gearItemOpt.get().getItemProfile().getItemInfo().getType().isWeapon();
+        return gearItemOpt.get().getGearProfile().getItemInfo().getType().isWeapon();
     }
 
     public enum MouseClickType {

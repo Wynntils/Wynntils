@@ -22,9 +22,9 @@ import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
@@ -84,7 +84,7 @@ public final class GearItemManager extends Manager {
         super(List.of());
     }
 
-    public GearItem fromItemStack(ItemStack itemStack, ItemProfile itemProfile) {
+    public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
         List<ItemIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
@@ -137,13 +137,13 @@ public final class GearItemManager extends Manager {
                 identifications.add(new GearIdentification(idName, value, stars));
 
                 // This is partially overlapping with GearIdentification, sort this out later
-                ItemIdentificationContainer idContainer = identificationFromLore(loreLine, itemProfile);
+                ItemIdentificationContainer idContainer = identificationFromLore(loreLine, gearProfile);
                 if (idContainer == null) continue;
                 idContainers.add(idContainer);
             }
         }
 
-        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, setBonus);
+        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
     }
 
     /**
@@ -151,10 +151,10 @@ public final class GearItemManager extends Manager {
      * Returns null if the given lore line is not a valid ID
      *
      * @param lore the ID lore line component
-     * @param item the ItemProfile of the given item
+     * @param item the GearProfile of the given item
      * @return the parsed ItemIdentificationContainer, or null if invalid lore line
      */
-    public ItemIdentificationContainer identificationFromLore(Component lore, ItemProfile item) {
+    public ItemIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return null; // not a valid id line
@@ -180,7 +180,7 @@ public final class GearItemManager extends Manager {
      * Returns null if the given ID is not valid
      *
      * @param lore the ID lore line component - can be null if ID isn't being created from lore
-     * @param item the ItemProfile of the given item
+     * @param item the GearProfile of the given item
      * @param idName the in-game name of the given ID
      * @param shortIdName the internal wynntils name of the given ID
      * @param value the raw value of the given ID
@@ -188,12 +188,12 @@ public final class GearItemManager extends Manager {
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
     public ItemIdentificationContainer identificationFromValue(
-            Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
+            Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
         boolean isInverted = idProfile != null
                 ? idProfile.isInverted()
-                : Managers.ItemProfiles.getIdentificationOrderer().isInverted(shortIdName);
+                : Managers.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
         IdentificationModifier type =
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
@@ -344,8 +344,8 @@ public final class GearItemManager extends Manager {
                 .withStyle(ChatFormatting.DARK_GREEN);
     }
 
-    public GearItem fromUnidentified(ItemProfile itemProfile) {
-        return new GearItem(itemProfile, null);
+    public GearItem fromUnidentified(GearProfile gearProfile) {
+        return new GearItem(gearProfile, null);
     }
 
     public boolean isUnidentified(String itemName) {
@@ -358,7 +358,7 @@ public final class GearItemManager extends Manager {
         return realName;
     }
 
-    public GearItem fromJsonLore(ItemStack itemStack, ItemProfile itemProfile) {
+    public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {
         // attempt to parse item itemData
         JsonObject itemData;
         String rawLore =
@@ -381,11 +381,11 @@ public final class GearItemManager extends Manager {
                 float percent = idInfo.get("percent").getAsInt() / 100f;
 
                 // get wynntils name from internal wynncraft name
-                String translatedId = Managers.ItemProfiles.getInternalIdentification(id);
-                if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
+                String translatedId = Managers.GearProfiles.getInternalIdentification(id);
+                if (translatedId == null || !gearProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value
-                IdentificationProfile idContainer = itemProfile.getStatuses().get(translatedId);
+                IdentificationProfile idContainer = gearProfile.getStatuses().get(translatedId);
                 int value = idContainer.isFixed()
                         ? idContainer.getBaseValue()
                         : Math.round(idContainer.getBaseValue() * percent);
@@ -396,7 +396,7 @@ public final class GearItemManager extends Manager {
                 }
 
                 idContainers.add(identificationFromValue(
-                        null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
+                        null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
                 // FIXME: Get proper short name!
                 identifications.add(new GearIdentification(translatedId, value, 0));
             }
@@ -419,7 +419,7 @@ public final class GearItemManager extends Manager {
             rerolls = itemData.get("identification_rolls").getAsInt();
         }
 
-        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
+        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, List.of());
     }
 
     private GearItem fromEncodedString(String encoded) {
@@ -431,7 +431,7 @@ public final class GearItemManager extends Manager {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
+        GearProfile item = Managers.GearProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids
@@ -439,7 +439,7 @@ public final class GearItemManager extends Manager {
         List<GearIdentification> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles::getOrder));
+        sortedIds.sort(Comparator.comparingInt(Managers.GearProfiles::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {
@@ -532,11 +532,11 @@ public final class GearItemManager extends Manager {
      *
      */
     public String toEncodedString(GearItem gearItem) {
-        String itemName = gearItem.getItemProfile().getDisplayName();
+        String itemName = gearItem.getGearProfile().getDisplayName();
 
         // get identification data - ordered for consistency
         List<ItemIdentificationContainer> sortedIds =
-                Managers.ItemProfiles.orderIdentifications(gearItem.getIdContainers());
+                Managers.GearProfiles.orderIdentifications(gearItem.getIdContainers());
 
         // name
         StringBuilder encoded = new StringBuilder(START);
@@ -647,9 +647,9 @@ public final class GearItemManager extends Manager {
 
     private Component createItemComponent(GearItem gearItem) {
         MutableComponent itemComponent = Component.literal(
-                        gearItem.getItemProfile().getDisplayName())
+                        gearItem.getGearProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
+                .withStyle(gearItem.getGearProfile().getTier().getChatFormatting());
 
         ItemStack itemStack = new FakeItemStack(gearItem, "From chat");
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);

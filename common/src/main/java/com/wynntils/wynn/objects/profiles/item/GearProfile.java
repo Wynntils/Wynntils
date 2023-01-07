@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ItemProfile {
+public class GearProfile {
     private final String displayName;
     private final ItemTier tier;
     private final boolean identified;
@@ -42,7 +42,7 @@ public class ItemProfile {
 
     private transient boolean replacedLore = false;
 
-    public ItemProfile(
+    public GearProfile(
             String displayName,
             ItemTier tier,
             boolean identified,
@@ -226,7 +226,7 @@ public class ItemProfile {
 
     @Override
     public String toString() {
-        return "ItemProfile{" + "displayName='"
+        return "GearProfile{" + "displayName='"
                 + displayName + '\'' + ", tier="
                 + tier + ", powderAmount="
                 + powderAmount + ", attackSpeed="

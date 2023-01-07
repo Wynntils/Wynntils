@@ -9,33 +9,33 @@ import com.wynntils.wynn.objects.GearInstance;
 import com.wynntils.wynn.objects.ItemIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.ItemTier;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public class GearItem extends GameItem implements GearTierItemProperty {
-    private final ItemProfile itemProfile;
+    private final GearProfile gearProfile;
     private final GearInstance gearInstance;
 
     public GearItem(
-            ItemProfile itemProfile,
+            GearProfile gearProfile,
             List<GearIdentification> identifications,
             List<ItemIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,
             List<Component> setBonus) {
-        this.itemProfile = itemProfile;
+        this.gearProfile = gearProfile;
         this.gearInstance = new GearInstance(identifications, idContainers, powders, rerolls, setBonus);
     }
 
-    public GearItem(ItemProfile itemProfile, GearInstance gearInstance) {
-        this.itemProfile = itemProfile;
+    public GearItem(GearProfile gearProfile, GearInstance gearInstance) {
+        this.gearProfile = gearProfile;
         this.gearInstance = gearInstance;
     }
 
-    public ItemProfile getItemProfile() {
-        return itemProfile;
+    public GearProfile getGearProfile() {
+        return gearProfile;
     }
 
     public GearInstance getGearInstance() {
@@ -66,12 +66,12 @@ public class GearItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public ItemTier getGearTier() {
-        return itemProfile.getTier();
+        return gearProfile.getTier();
     }
 
     @Override
     public String toString() {
-        return "GearItem{" + "itemProfile=" + itemProfile + ", gearInstance=" + gearInstance + '}';
+        return "GearItem{" + "gearProfile=" + gearProfile + ", gearInstance=" + gearInstance + '}';
     }
 
     public boolean hasVariableIds() {

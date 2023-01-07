@@ -20,7 +20,7 @@ public class FakeItemStack extends ItemStack {
     private final String source;
 
     public FakeItemStack(GearItem gearItem, String source) {
-        super(gearItem.getItemProfile().getItemInfo().asItemStack().getItem(), 1);
+        super(gearItem.getGearProfile().getItemInfo().asItemStack().getItem(), 1);
         this.source = source;
         ((AnnotatedItemStack) this).setAnnotation(gearItem);
         this.gearItem = gearItem;
