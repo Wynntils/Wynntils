@@ -57,7 +57,6 @@
   "feature.wynntils.chatRedirect.notEnoughMana.description": "Hogyan jelenjenek meg az üzenetek ha nincs elég mana a varázsláshoz?",
   "feature.wynntils.chatRedirect.notEnoughMana.name": "Mana Üzenet Szűrése",
   "feature.wynntils.chatRedirect.potion.description": "Hogyan jelenjenek meg az élet elixír halmozása üzenetek?",
-  "feature.wynntils.chatRedirect.potion.name": "Elixír Halom Üzenet Szürése",
   "feature.wynntils.chatRedirect.scrollTeleport.description": "Hogyan jelenjenek meg a sikertelen teleportálás (tekercssel) üzenetek?",
   "feature.wynntils.chatRedirect.scrollTeleport.name": "Tekercs Teleportálás Üzenet Szűrése",
   "feature.wynntils.chatRedirect.shaman.description": "Hogyan jelenjenek meg a sámánhoz kötődő üzenetek?",
