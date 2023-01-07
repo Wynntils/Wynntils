@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -64,6 +65,10 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
         public List<Component> getTooltips() {
             return tooltips;
+        }
+
+        public List<Component> getBaseTooltips() {
+            return this.getItemStack().getTooltipLines(null, TooltipFlag.NORMAL);
         }
 
         public void setTooltips(List<Component> tooltips) {

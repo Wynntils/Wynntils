@@ -37,7 +37,7 @@ public class ItemGuessFeature extends UserFeature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = new ArrayList<>(event.getTooltips());
+        List<Component> tooltips = new ArrayList<>(event.getBaseTooltips());
         tooltips.addAll(getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
     }
@@ -46,6 +46,8 @@ public class ItemGuessFeature extends UserFeature {
         List<Component> addon = new ArrayList<>();
         List<String> itemPossibilities = gearBoxItem.getItemPossibilities();
         ItemTier itemTier = gearBoxItem.getItemTier();
+
+        if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
 
         addon.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
 
