@@ -95,6 +95,10 @@ public final class UrlManager extends Manager {
         // We need to do the urlInfo lookup ourself, since we might have
         // a embryonic netManager which can't do much.
         UrlManager.UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+        if (urlInfo == null) {
+            WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
+            throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
+        }
         URI uri = URI.create(urlInfo.url());
         String localFileName = UrlId.DATA_STATIC_URLS.getId();
 
@@ -163,9 +167,13 @@ public final class UrlManager extends Manager {
         }
 
         // Sanity check that we got all ids
-        if (newMap.size() != UrlId.values().length) {
-            throw new IOException("Not all urlIds present in urls.json");
+        for (UrlId urlId : UrlId.values()) {
+            if (!newMap.containsKey(urlId)) {
+                WynntilsMod.warn("Missing URL in urls.json: " + urlId);
+                return Pair.of(-1, List.of());
+            }
         }
+
         return Pair.of(version, newMap);
     }
 
