@@ -1,9 +1,21 @@
+## [0.0.2-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.70...v0.0.2-alpha.71) (2023-01-07)
+
+
+### Bug Fixes
+
+* add back highlights for crafted items, amplifiers, and emerald pouches ([#983](https://github.com/Wynntils/Artemis/issues/983)) ([db8ee28](https://github.com/Wynntils/Artemis/commit/db8ee2808ac41f127f63a996988e0611b287c720))
+
 ## [0.0.2-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.69...v0.0.2-alpha.70) (2023-01-06)
 
 
 ### Bug Fixes
 
 * Correctly annotate skillpoints with negative values ([#979](https://github.com/Wynntils/Artemis/issues/979)) ([abd4c40](https://github.com/Wynntils/Artemis/commit/abd4c401daef360df44479cc0835e77b340d1b71))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.70 [skip ci] ([21c9f17](https://github.com/Wynntils/Artemis/commit/21c9f175173057f25b250bc1abb1494b7d97bd93))
 
 ## [0.0.2-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.68...v0.0.2-alpha.69) (2023-01-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.67 [skip ci] ([f9b81a1](https://github.com/Wynntils/Artemis/commit/f9b81a1c4b23bb6532e38fc6771c4f135826bb17))
-
-## [0.0.2-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.65...v0.0.2-alpha.66) (2023-01-06)
-
-
-### Bug Fixes
-
-* Item screenshot now again include all Wynntils additions to tooltip ([#975](https://github.com/Wynntils/Artemis/issues/975)) ([fbe4cb3](https://github.com/Wynntils/Artemis/commit/fbe4cb34bade35fba0424959874b347af799816c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.66 [skip ci] ([04961a1](https://github.com/Wynntils/Artemis/commit/04961a134ba3eea49058ae0ee3068a04695b5a91))
 
