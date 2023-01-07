@@ -12,4 +12,9 @@ public class WynnItem implements ItemAnnotation {
     public WynnItemCache getCache() {
         return cache;
     }
+
+    @Override
+    public String toString() {
+        return "WynnItem{}";
+    }
 }

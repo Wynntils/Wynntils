@@ -174,7 +174,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         boolean isTextOverlayEnabled();
     }
 
-    private class AmplifierOverlay implements TextOverlayInfo {
+    private final class AmplifierOverlay implements TextOverlayInfo {
         private static final CustomColor HIGHLIGHT_COLOR = new CustomColor(0, 255, 255);
 
         private final AmplifierItem item;
@@ -198,7 +198,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class DungeonKeyOverlay implements TextOverlayInfo {
+    private final class DungeonKeyOverlay implements TextOverlayInfo {
         private static final CustomColor STANDARD_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
         private static final CustomColor CORRUPTED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_RED);
 
@@ -225,7 +225,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class EmeraldPouchOverlay implements TextOverlayInfo {
+    private final class EmeraldPouchOverlay implements TextOverlayInfo {
         private static final CustomColor HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
         private final EmeraldPouchItem item;
@@ -249,7 +249,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class GatheringToolOverlay implements TextOverlayInfo {
+    private final class GatheringToolOverlay implements TextOverlayInfo {
         private final GatheringToolItem item;
 
         private GatheringToolOverlay(GatheringToolItem item) {
@@ -272,7 +272,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class PowderOverlay implements TextOverlayInfo {
+    private final class PowderOverlay implements TextOverlayInfo {
         private final PowderItem item;
 
         private PowderOverlay(PowderItem item) {
@@ -296,7 +296,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class SkillPointOverlay implements TextOverlayInfo {
+    private final class SkillPointOverlay implements TextOverlayInfo {
         private final SkillPointItem item;
 
         private SkillPointOverlay(SkillPointItem item) {
@@ -321,7 +321,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class SkillPotionOverlay implements TextOverlayInfo {
+    private final class SkillPotionOverlay implements TextOverlayInfo {
         private final SkillPotionItem item;
 
         private SkillPotionOverlay(SkillPotionItem item) {
@@ -346,7 +346,7 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
     }
 
-    private class TeleportScrollOverlay implements TextOverlayInfo {
+    private final class TeleportScrollOverlay implements TextOverlayInfo {
         private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
         private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
 
