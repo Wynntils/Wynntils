@@ -55,8 +55,11 @@ public class ExtendedItemCountFeature extends UserFeature {
         // with mixins...
         item.setCount(1);
 
-        TextRenderTask task = new TextRenderTask(
-                Integer.toString(count), TextRenderSetting.DEFAULT.withHorizontalAlignment(HorizontalAlignment.Right));
+        TextRenderSetting style = TextRenderSetting.DEFAULT
+                .withCustomColor(countedItem.getCountColor())
+                .withHorizontalAlignment(HorizontalAlignment.Right);
+
+        TextRenderTask task = new TextRenderTask(Integer.toString(count), style);
 
         PoseStack poseStack = new PoseStack();
         poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well

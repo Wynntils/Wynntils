@@ -22,12 +22,16 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String itemName = matcher.group(1);
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
+        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(Managers.GearItem.getLookupName(itemName));
         if (itemProfile == null) return null;
 
         // Verify that rarity matches
         if (!name.startsWith(itemProfile.getTier().getChatFormatting().toString())) return null;
 
-        return Managers.GearItem.fromItemStack(itemStack, itemProfile);
+        if (Managers.GearItem.isUnidentified(itemName)) {
+            return Managers.GearItem.fromUnidentified(itemProfile);
+        } else {
+            return Managers.GearItem.fromItemStack(itemStack, itemProfile);
+        }
     }
 }
