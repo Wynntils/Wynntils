@@ -12,7 +12,7 @@ public abstract class MobEffectEvent extends Event {
     private final Entity entity;
     private final MobEffect effect;
 
-    public MobEffectEvent(Entity entity, MobEffect effect) {
+    protected MobEffectEvent(Entity entity, MobEffect effect) {
         this.entity = entity;
         this.effect = effect;
     }

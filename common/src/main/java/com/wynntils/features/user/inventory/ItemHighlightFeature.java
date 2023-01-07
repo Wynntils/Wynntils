@@ -214,7 +214,7 @@ public class ItemHighlightFeature extends UserFeature {
         boolean isHighlightEnabled();
     }
 
-    private class CosmeticHighlight implements HighlightInfo {
+    private final class CosmeticHighlight implements HighlightInfo {
         private final CosmeticItem item;
 
         private CosmeticHighlight(CosmeticItem item) {
@@ -232,7 +232,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    private class GearHighlight implements HighlightInfo {
+    private final class GearHighlight implements HighlightInfo {
         private final GearTierItemProperty item;
 
         private GearHighlight(GearTierItemProperty item) {
@@ -250,7 +250,6 @@ public class ItemHighlightFeature extends UserFeature {
                 case FABLED -> fabledHighlightEnabled;
                 case MYTHIC -> mythicHighlightEnabled;
                 case CRAFTED -> craftedHighlightEnabled;
-                default -> false;
             };
         }
 
@@ -265,12 +264,11 @@ public class ItemHighlightFeature extends UserFeature {
                 case FABLED -> fabledHighlightColor;
                 case MYTHIC -> mythicHighlightColor;
                 case CRAFTED -> craftedHighlightColor;
-                default -> CustomColor.NONE;
             };
         }
     }
 
-    private class IngredientHighlight implements HighlightInfo {
+    private final class IngredientHighlight implements HighlightInfo {
         private final IngredientItem item;
 
         private IngredientHighlight(IngredientItem item) {
@@ -300,7 +298,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    private class MaterialHighlight implements HighlightInfo {
+    private final class MaterialHighlight implements HighlightInfo {
         private final MaterialItem item;
 
         private MaterialHighlight(MaterialItem item) {
@@ -328,7 +326,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    private class PowderHighlight implements HighlightInfo {
+    private final class PowderHighlight implements HighlightInfo {
         private final PowderItem item;
 
         private PowderHighlight(PowderItem item) {
@@ -346,7 +344,7 @@ public class ItemHighlightFeature extends UserFeature {
         }
     }
 
-    private class EmeraldPouchHighlight implements HighlightInfo {
+    private final class EmeraldPouchHighlight implements HighlightInfo {
         private final EmeraldPouchItem item;
 
         private EmeraldPouchHighlight(EmeraldPouchItem item) {

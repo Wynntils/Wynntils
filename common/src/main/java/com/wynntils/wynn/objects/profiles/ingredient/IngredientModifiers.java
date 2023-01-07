@@ -79,4 +79,15 @@ public class IngredientModifiers {
 
         return itemLore.stream().map(Component::literal).toList();
     }
+
+    @Override
+    public String toString() {
+        return "IngredientModifiers{" + "left="
+                + left + ", right="
+                + right + ", above="
+                + above + ", under="
+                + under + ", touching="
+                + touching + ", notTouching="
+                + notTouching + '}';
+    }
 }
