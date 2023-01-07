@@ -1,9 +1,21 @@
+## [0.0.2-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.71...v0.0.2-alpha.72) (2023-01-07)
+
+
+### New Features
+
+* add color to skill point counts ([#984](https://github.com/Wynntils/Artemis/issues/984)) ([1702651](https://github.com/Wynntils/Artemis/commit/170265196fb724cc21c709ee1c5bdc2caf5adc4b))
+
 ## [0.0.2-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.70...v0.0.2-alpha.71) (2023-01-07)
 
 
 ### Bug Fixes
 
 * add back highlights for crafted items, amplifiers, and emerald pouches ([#983](https://github.com/Wynntils/Artemis/issues/983)) ([db8ee28](https://github.com/Wynntils/Artemis/commit/db8ee2808ac41f127f63a996988e0611b287c720))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.71 [skip ci] ([33700a9](https://github.com/Wynntils/Artemis/commit/33700a90a2ec512da774968070c380c7874b9f82))
 
 ## [0.0.2-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.69...v0.0.2-alpha.70) (2023-01-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.68 [skip ci] ([e033d4e](https://github.com/Wynntils/Artemis/commit/e033d4e6cba7abb883227b59c9ed3db47ee85409))
-
-## [0.0.2-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.66...v0.0.2-alpha.67) (2023-01-06)
-
-
-### Code Refactoring
-
-* delete old item model ([#972](https://github.com/Wynntils/Artemis/issues/972)) ([86d062a](https://github.com/Wynntils/Artemis/commit/86d062a57e0722a5738b4b14110881fe7180df43))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.67 [skip ci] ([f9b81a1](https://github.com/Wynntils/Artemis/commit/f9b81a1c4b23bb6532e38fc6771c4f135826bb17))
 
