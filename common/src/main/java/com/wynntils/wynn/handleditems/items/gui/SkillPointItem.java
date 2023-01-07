@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.handleditems.items.gui;
 
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.handleditems.properties.CountedItemProperty;
 import com.wynntils.wynn.objects.Skill;
 
@@ -27,6 +28,11 @@ public class SkillPointItem extends GuiItem implements CountedItemProperty {
     @Override
     public int getCount() {
         return skillPoints;
+    }
+
+    @Override
+    public CustomColor getCountColor() {
+        return CustomColor.fromChatFormatting(skill.getColor());
     }
 
     @Override

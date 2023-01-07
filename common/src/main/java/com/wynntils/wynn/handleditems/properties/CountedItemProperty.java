@@ -4,10 +4,17 @@
  */
 package com.wynntils.wynn.handleditems.properties;
 
+import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.mc.objects.CustomColor;
+
 public interface CountedItemProperty {
     int getCount();
 
     default boolean hasCount() {
         return true;
+    }
+
+    default CustomColor getCountColor() {
+        return CommonColors.WHITE;
     }
 }
