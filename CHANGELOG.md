@@ -1,9 +1,21 @@
+## [0.0.2-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.72...v0.0.2-alpha.73) (2023-01-07)
+
+
+### New Features
+
+* Hide irrelevant Vanilla stuff in tooltips ([#977](https://github.com/Wynntils/Artemis/issues/977)) ([2971eac](https://github.com/Wynntils/Artemis/commit/2971eac1e708b92de1ad6a49f66aa0bf0ee454b2))
+
 ## [0.0.2-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.71...v0.0.2-alpha.72) (2023-01-07)
 
 
 ### New Features
 
 * add color to skill point counts ([#984](https://github.com/Wynntils/Artemis/issues/984)) ([1702651](https://github.com/Wynntils/Artemis/commit/170265196fb724cc21c709ee1c5bdc2caf5adc4b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.72 [skip ci] ([6440728](https://github.com/Wynntils/Artemis/commit/64407284891564e8064da08c36291f4047b4728e))
 
 ## [0.0.2-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.70...v0.0.2-alpha.71) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.69 [skip ci] ([3ab3989](https://github.com/Wynntils/Artemis/commit/3ab39892fd84918747c3d61edef4093858f0ac74))
-
-## [0.0.2-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.67...v0.0.2-alpha.68) (2023-01-06)
-
-
-### Bug Fixes
-
-* Trinket Annotator crash on non-consumable trinkets ([#976](https://github.com/Wynntils/Artemis/issues/976)) ([688e08b](https://github.com/Wynntils/Artemis/commit/688e08b49a3ebd55728e24f158956ca1575e0da5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.68 [skip ci] ([e033d4e](https://github.com/Wynntils/Artemis/commit/e033d4e6cba7abb883227b59c9ed3db47ee85409))
 
