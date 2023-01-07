@@ -7,6 +7,7 @@ package com.wynntils.mc.utils;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -193,5 +194,16 @@ public final class ItemUtils {
     public static List<Component> getTooltipLines(ItemStack stack) {
         TooltipFlag flag = McUtils.options().advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
         return stack.getTooltipLines(McUtils.player(), flag);
+    }
+
+    public static List<Component> appendTooltip(List<Component> baseTooltip, List<Component> tooltipAddon) {
+        if (McUtils.options().advancedItemTooltips) {
+            // FIXME: Need to inject in the right spot
+        }
+
+        // Otherwise we can just add it to the end
+        List<Component> newTooltip = new ArrayList<>(baseTooltip);
+        newTooltip.addAll(tooltipAddon);
+        return newTooltip;
     }
 }
