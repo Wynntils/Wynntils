@@ -85,18 +85,18 @@ public final class WynntilsMod {
             return;
         }
 
+        // TODO: Look into the benefits of crashing non-user features
         if (!(featureOptional.get() instanceof UserFeature feature)) {
             WynntilsMod.error("Exception in event listener in non-user feature: " + crashingFeatureName, t);
             return;
         }
 
-        feature.setUserEnabled(false);
-        feature.tryUserToggle();
+        feature.crash();
 
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");
 
-        // TODO: This is a temporary fix for a crash that occurs when an error happens in a client-side message
+        // FIXME: This is a temporary fix for a crash that occurs when an error happens in a client-side message
         //       event, and we send a new message about disabling X feature,
         //       causing a new exception in client-side message event.
         if (!(event instanceof ClientsideMessageEvent)) {
