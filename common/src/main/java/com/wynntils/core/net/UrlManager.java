@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,7 @@ import java.util.function.Function;
 
 public final class UrlManager extends Manager {
     private Map<UrlId, UrlInfo> urlMap = Map.of();
+    private int version = -1;
 
     public UrlManager() {
         super(List.of());
@@ -77,13 +79,16 @@ public final class UrlManager extends Manager {
 
     private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially
-        try (InputStream inputStream = getLocalInputStream(netManager)) {
-            readUrls(inputStream);
-        } catch (IOException e) {
-            // We can't load the url list from local disk. This is a catastrophic failure.
-            // Nothing will work after this, so just abort.
-            WynntilsMod.error("ERROR: Cannot load URLs from local disk. Try deleting Wynntils cache.");
-            throw new RuntimeException(e);
+        for (InputStream tryStream : getLocalInputStreams(netManager)) {
+            try (InputStream inputStream = tryStream) {
+                Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
+                tryUpdateUrlMap(tryMap);
+            } catch (IOException e) {
+                // We can't load the url list from local disk. This is a catastrophic failure.
+                // Nothing will work after this, so just abort.
+                WynntilsMod.error("ERROR: Cannot load URLs from local disk. Try deleting Wynntils cache.");
+                throw new RuntimeException(e);
+            }
         }
 
         // Then trigger a (re-)download from the net to the cache
@@ -96,32 +101,42 @@ public final class UrlManager extends Manager {
         Download dl = netManager.download(uri, localFileName);
         dl.handleInputStream(inputStream -> {
             try {
-                readUrls(inputStream);
+                Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
+                tryUpdateUrlMap(tryMap);
             } catch (IOException e) {
                 WynntilsMod.warn("Problem updating URL list from online source", e);
             }
         });
     }
 
-    private InputStream getLocalInputStream(NetManager netManager) {
+    private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap) {
+        if (tryMap.a() > version) {
+            urlMap = tryMap.b();
+            version = tryMap.a();
+        }
+    }
+
+    private List<InputStream> getLocalInputStreams(NetManager netManager) {
+        InputStream bundledStream = WynntilsMod.getModResourceAsStream("urls.json");
+
         // First check if there is a copy in the local cache
         File cacheFile = netManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {
-                return new FileInputStream(cacheFile);
+                return List.of(new FileInputStream(cacheFile), bundledStream);
             } catch (FileNotFoundException e) {
-                // This should not happens since we just checked, but use fallback if so
-                return WynntilsMod.getModResourceAsStream("urls.json");
+                // This should not happens since we just checked, but fall through
+                // to bundled case if so
             }
-        } else {
-            // No cache. Start by reading the URLs from the resource embedded in the mod,
-            // so we have something to rely on
-            return WynntilsMod.getModResourceAsStream("urls.json");
         }
+
+        // No usable cache. Start by reading the URLs from the resource embedded in the mod,
+        // so we have something to rely on
+        return List.of(bundledStream);
     }
 
-    private void readUrls(InputStream inputStream) throws IOException {
+    private Pair<Integer, Map<UrlId, UrlInfo>> readUrls(InputStream inputStream) throws IOException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();
@@ -129,7 +144,13 @@ public final class UrlManager extends Manager {
 
         Map<UrlId, UrlInfo> newMap = new HashMap<>();
 
+        int version = 0;
         for (UrlProfile urlProfile : urlProfiles) {
+            if (urlProfile.version != 0) {
+                // This is the special version record
+                version = urlProfile.version;
+                continue;
+            }
             List<String> arguments = urlProfile.arguments == null ? List.of() : urlProfile.arguments;
             newMap.put(
                     UrlId.from(urlProfile.id),
@@ -145,7 +166,7 @@ public final class UrlManager extends Manager {
         if (newMap.size() != UrlId.values().length) {
             throw new IOException("Not all urlIds present in urls.json");
         }
-        urlMap = newMap;
+        return Pair.of(version, newMap);
     }
 
     public enum Method {
@@ -182,6 +203,7 @@ public final class UrlManager extends Manager {
     public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {}
 
     private static final class UrlProfile {
+        int version;
         String id;
         String url;
         String method;
