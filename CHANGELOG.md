@@ -1,9 +1,21 @@
+## [0.0.2-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.76...v0.0.2-alpha.77) (2023-01-07)
+
+
+### Code Refactoring
+
+* Code changes as suggested by IntelliJ "Artemis mini" ([#991](https://github.com/Wynntils/Artemis/issues/991)) ([38323f4](https://github.com/Wynntils/Artemis/commit/38323f4772691e37b4951cec0326dee5b6bb0f3d))
+
 ## [0.0.2-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.75...v0.0.2-alpha.76) (2023-01-07)
 
 
 ### Code Refactoring
 
 * Fix object hierarchy issues pointed out by IntelliJ ([#992](https://github.com/Wynntils/Artemis/issues/992)) ([2913fd8](https://github.com/Wynntils/Artemis/commit/2913fd824d688c097cb9cdfff54ebcd9b7ea76f7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.76 [skip ci] ([46bbd92](https://github.com/Wynntils/Artemis/commit/46bbd92c1a904a5947e02b933c8cdf4be245a833))
 
 ## [0.0.2-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.74...v0.0.2-alpha.75) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.73 [skip ci] ([5a79fa6](https://github.com/Wynntils/Artemis/commit/5a79fa6c630cc36a252c94dfe7a3e30cdbb9aa55))
-
-## [0.0.2-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.71...v0.0.2-alpha.72) (2023-01-07)
-
-
-### New Features
-
-* add color to skill point counts ([#984](https://github.com/Wynntils/Artemis/issues/984)) ([1702651](https://github.com/Wynntils/Artemis/commit/170265196fb724cc21c709ee1c5bdc2caf5adc4b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.72 [skip ci] ([6440728](https://github.com/Wynntils/Artemis/commit/64407284891564e8064da08c36291f4047b4728e))
 
