@@ -17,12 +17,14 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.WynnItemCache;
+import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.handleditems.items.game.MaterialItem;
 import com.wynntils.wynn.handleditems.items.game.PowderItem;
 import com.wynntils.wynn.handleditems.items.gui.CosmeticItem;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -199,6 +201,9 @@ public class ItemHighlightFeature extends UserFeature {
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderHighlight(powderItem);
         }
+        if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
+            return new EmeraldPouchHighlight(emeraldPouchItem);
+        }
 
         return null;
     }
@@ -244,6 +249,7 @@ public class ItemHighlightFeature extends UserFeature {
                 case LEGENDARY -> legendaryHighlightEnabled;
                 case FABLED -> fabledHighlightEnabled;
                 case MYTHIC -> mythicHighlightEnabled;
+                case CRAFTED -> craftedHighlightEnabled;
                 default -> false;
             };
         }
@@ -258,6 +264,7 @@ public class ItemHighlightFeature extends UserFeature {
                 case LEGENDARY -> legendaryHighlightColor;
                 case FABLED -> fabledHighlightColor;
                 case MYTHIC -> mythicHighlightColor;
+                case CRAFTED -> craftedHighlightColor;
                 default -> CustomColor.NONE;
             };
         }
@@ -336,6 +343,24 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return item.getPowderProfile().element().getColor();
+        }
+    }
+
+    private class EmeraldPouchHighlight implements HighlightInfo {
+        private final EmeraldPouchItem item;
+
+        private EmeraldPouchHighlight(EmeraldPouchItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isHighlightEnabled() {
+            return emeraldPouchHighlightEnabled;
+        }
+
+        @Override
+        public CustomColor getHighlightColor() {
+            return CustomColor.fromChatFormatting(ChatFormatting.GREEN);
         }
     }
 }
