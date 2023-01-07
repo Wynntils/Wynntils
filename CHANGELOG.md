@@ -1,9 +1,21 @@
+## [0.0.2-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.73...v0.0.2-alpha.74) (2023-01-07)
+
+
+### Bug Fixes
+
+* Do not remove "/" when using "/" key to open chat screen ([#985](https://github.com/Wynntils/Artemis/issues/985)) ([a951977](https://github.com/Wynntils/Artemis/commit/a951977b80102f2f6a1abd1ae270a2de72e8667c))
+
 ## [0.0.2-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.72...v0.0.2-alpha.73) (2023-01-07)
 
 
 ### New Features
 
 * Hide irrelevant Vanilla stuff in tooltips ([#977](https://github.com/Wynntils/Artemis/issues/977)) ([2971eac](https://github.com/Wynntils/Artemis/commit/2971eac1e708b92de1ad6a49f66aa0bf0ee454b2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.73 [skip ci] ([5a79fa6](https://github.com/Wynntils/Artemis/commit/5a79fa6c630cc36a252c94dfe7a3e30cdbb9aa55))
 
 ## [0.0.2-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.71...v0.0.2-alpha.72) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.70 [skip ci] ([21c9f17](https://github.com/Wynntils/Artemis/commit/21c9f175173057f25b250bc1abb1494b7d97bd93))
-
-## [0.0.2-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.68...v0.0.2-alpha.69) (2023-01-06)
-
-
-### Bug Fixes
-
-* restore highlights and tooltips for unidentified gear ([#981](https://github.com/Wynntils/Artemis/issues/981)) ([bce1f64](https://github.com/Wynntils/Artemis/commit/bce1f64079ccc75f2723f7ce6ab992813af27cb6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.69 [skip ci] ([3ab3989](https://github.com/Wynntils/Artemis/commit/3ab39892fd84918747c3d61edef4093858f0ac74))
 
