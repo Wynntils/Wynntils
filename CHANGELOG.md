@@ -1,9 +1,21 @@
+## [0.0.2-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.74...v0.0.2-alpha.75) (2023-01-07)
+
+
+### New Features
+
+* Introduce versioned urls.json ([#989](https://github.com/Wynntils/Artemis/issues/989)) ([627ff15](https://github.com/Wynntils/Artemis/commit/627ff15c19d2da0b7684abd921dc874d0d42f4d5))
+
 ## [0.0.2-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.73...v0.0.2-alpha.74) (2023-01-07)
 
 
 ### Bug Fixes
 
 * Do not remove "/" when using "/" key to open chat screen ([#985](https://github.com/Wynntils/Artemis/issues/985)) ([a951977](https://github.com/Wynntils/Artemis/commit/a951977b80102f2f6a1abd1ae270a2de72e8667c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.74 [skip ci] ([d4d09c8](https://github.com/Wynntils/Artemis/commit/d4d09c8a76170ba38d2a648a2f3c04e4bf821675))
 
 ## [0.0.2-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.72...v0.0.2-alpha.73) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.71 [skip ci] ([33700a9](https://github.com/Wynntils/Artemis/commit/33700a90a2ec512da774968070c380c7874b9f82))
-
-## [0.0.2-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.69...v0.0.2-alpha.70) (2023-01-06)
-
-
-### Bug Fixes
-
-* Correctly annotate skillpoints with negative values ([#979](https://github.com/Wynntils/Artemis/issues/979)) ([abd4c40](https://github.com/Wynntils/Artemis/commit/abd4c401daef360df44479cc0835e77b340d1b71))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.70 [skip ci] ([21c9f17](https://github.com/Wynntils/Artemis/commit/21c9f175173057f25b250bc1abb1494b7d97bd93))
 
