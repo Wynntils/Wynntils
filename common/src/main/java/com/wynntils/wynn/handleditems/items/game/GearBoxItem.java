@@ -27,10 +27,6 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
         return gearType;
     }
 
-    public GearTier getItemTier() {
-        return gearTier;
-    }
-
     public String getLevelRange() {
         return levelRange;
     }

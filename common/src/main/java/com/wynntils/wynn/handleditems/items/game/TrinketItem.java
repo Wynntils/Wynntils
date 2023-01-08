@@ -30,10 +30,6 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
         return trinketName;
     }
 
-    public GearTier getItemTier() {
-        return gearTier;
-    }
-
     public CappedValue getUses() {
         return uses;
     }
@@ -46,7 +42,7 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
     @Override
     public String toString() {
         return "TrinketItem{" + "trinketName='"
-                + trinketName + '\'' + ", itemTier="
+                + trinketName + '\'' + ", gearTier="
                 + gearTier + ", uses="
                 + uses + '}';
     }

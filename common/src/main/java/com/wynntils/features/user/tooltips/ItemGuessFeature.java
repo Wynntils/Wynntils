@@ -45,7 +45,7 @@ public class ItemGuessFeature extends UserFeature {
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
         List<Component> addon = new ArrayList<>();
         List<String> itemPossibilities = gearBoxItem.getItemPossibilities();
-        GearTier gearTier = gearBoxItem.getItemTier();
+        GearTier gearTier = gearBoxItem.getGearTier();
 
         if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
 
