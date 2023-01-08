@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerProfile {
 
     private long firstSeen;
-    private Set<String> players;
+    private final Set<String> players;
 
     public ServerProfile(long firstSeem, Set<String> players) {
         this.firstSeen = firstSeem;

@@ -84,11 +84,11 @@ public class TimedSet<T> implements Iterable<T> {
             return expiration;
         }
 
-        public T getEntry() {
+        private T getEntry() {
             return entry;
         }
 
-        public boolean shouldRelease() {
+        private boolean shouldRelease() {
             return System.currentTimeMillis() >= expiration;
         }
     }

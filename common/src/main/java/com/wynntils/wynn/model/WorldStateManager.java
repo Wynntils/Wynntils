@@ -77,20 +77,20 @@ public final class WorldStateManager extends Manager {
         WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
     }
 
-    private void setState(State newState, String newWorldName) {
-        setState(newState, newWorldName, false);
+    private void setState(State newState) {
+        setState(newState, "", false);
     }
 
     @SubscribeEvent
     public void screenOpened(ScreenOpenedEvent e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
-            setState(State.NOT_CONNECTED, "");
+            setState(State.NOT_CONNECTED);
         }
     }
 
     @SubscribeEvent
     public void disconnected(DisconnectedEvent e) {
-        setState(State.NOT_CONNECTED, "");
+        setState(State.NOT_CONNECTED);
     }
 
     @SubscribeEvent
@@ -105,7 +105,7 @@ public final class WorldStateManager extends Manager {
         Matcher m = WYNNCRAFT_SERVER_PATTERN.matcher(host);
         if (m.matches()) {
             onBetaServer = m.group(1).equals(WYNNCRAFT_BETA_NAME);
-            setState(State.CONNECTING, "");
+            setState(State.CONNECTING);
             currentTabListFooter = "";
         }
     }
@@ -113,7 +113,7 @@ public final class WorldStateManager extends Manager {
     @SubscribeEvent
     public void remove(PlayerLogOutEvent e) {
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
-            setState(State.INTERIM, "");
+            setState(State.INTERIM);
         }
     }
 
@@ -124,7 +124,7 @@ public final class WorldStateManager extends Manager {
             if (getCurrentState() != State.CHARACTER_SELECTION) {
                 // Sometimes the TP comes after the character selection menu, instead of before
                 // Don't lose the CHARACTER_SELECTION state if that is the case
-                setState(State.INTERIM, "");
+                setState(State.INTERIM);
             }
         }
     }
@@ -133,7 +133,7 @@ public final class WorldStateManager extends Manager {
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
-            setState(State.CHARACTER_SELECTION, "");
+            setState(State.CHARACTER_SELECTION);
         }
     }
 
@@ -146,7 +146,7 @@ public final class WorldStateManager extends Manager {
 
         if (!footer.isEmpty()) {
             if (HUB_NAME.matcher(footer).find()) {
-                setState(State.HUB, "");
+                setState(State.HUB);
             }
         }
     }

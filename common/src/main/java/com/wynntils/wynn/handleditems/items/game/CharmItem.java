@@ -35,7 +35,7 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public GearTier getGearTier() {
-        return charmProfile.getTier();
+        return charmProfile.tier();
     }
 
     @Override
