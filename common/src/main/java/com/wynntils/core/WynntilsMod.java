@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.slf4j.Logger;
@@ -100,9 +102,16 @@ public final class WynntilsMod {
         //       event, and we send a new message about disabling X feature,
         //       causing a new exception in client-side message event.
         if (!(event instanceof ClientsideMessageEvent)) {
+            MutableComponent enableMessage = Component.literal("Click here to enable it again.")
+                    .withStyle(ChatFormatting.UNDERLINE)
+                    .withStyle(ChatFormatting.RED)
+                    .withStyle(style -> style.withClickEvent(new ClickEvent(
+                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+
             McUtils.sendMessageToClient(Component.literal("Wynntils error: Feature '" + feature.getTranslatedName()
-                            + "' has crashed and will be disabled")
-                    .withStyle(ChatFormatting.RED));
+                            + "' has crashed and will be disabled.")
+                    .withStyle(ChatFormatting.RED)
+                    .append(enableMessage));
         }
     }
 
