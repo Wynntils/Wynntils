@@ -1,3 +1,10 @@
+## [0.0.2-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.80...v0.0.2-alpha.81) (2023-01-08)
+
+
+### Code Refactoring
+
+* Rename "item" to "gear", if it relates to gear ([#988](https://github.com/Wynntils/Artemis/issues/988)) ([ef3780e](https://github.com/Wynntils/Artemis/commit/ef3780e01334dbdcce96b5b83cee942a189c2504))
+
 ## [0.0.2-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.79...v0.0.2-alpha.80) (2023-01-08)
 
 
@@ -9,6 +16,11 @@
 ### Code Refactoring
 
 * Even more IntelliJ suggestions; this time mostly access scope reductions ([#993](https://github.com/Wynntils/Artemis/issues/993)) ([816770a](https://github.com/Wynntils/Artemis/commit/816770a8d144ba711abb46fc31caad2c98e7c9ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.80 [skip ci] ([4146e69](https://github.com/Wynntils/Artemis/commit/4146e6919a49639dc665afe43bd2b133b5a49bd7))
 
 ## [0.0.2-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.78...v0.0.2-alpha.79) (2023-01-08)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.77 [skip ci] ([4cfb2d1](https://github.com/Wynntils/Artemis/commit/4cfb2d1a3294d9d53a6fd8e4d93e860a8da0eebe))
-
-## [0.0.2-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.75...v0.0.2-alpha.76) (2023-01-07)
-
-
-### Code Refactoring
-
-* Fix object hierarchy issues pointed out by IntelliJ ([#992](https://github.com/Wynntils/Artemis/issues/992)) ([2913fd8](https://github.com/Wynntils/Artemis/commit/2913fd824d688c097cb9cdfff54ebcd9b7ea76f7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.76 [skip ci] ([46bbd92](https://github.com/Wynntils/Artemis/commit/46bbd92c1a904a5947e02b933c8cdf4be245a833))
 
