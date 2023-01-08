@@ -91,6 +91,7 @@ public class ItemScreenshotFeature extends UserFeature {
         width += 8;
 
         // height calculation
+
         int height = 16;
         if (tooltip.size() > 1) {
             height += 2 + (tooltip.size() - 1) * 10;

@@ -22,7 +22,9 @@ public enum GearType {
     HELMET(null, 16 * 0, 16 * 0, Items.LEATHER_HELMET, 0),
     CHESTPLATE(null, 16 * 1, 16 * 0, Items.LEATHER_CHESTPLATE, 0),
     LEGGINGS(null, 16 * 2, 16 * 0, Items.LEATHER_LEGGINGS, 0),
-    BOOTS(null, 16 * 3, 16 * 0, Items.LEATHER_BOOTS, 0);
+    BOOTS(null, 16 * 3, 16 * 0, Items.LEATHER_BOOTS, 0),
+    MASTERY_TOME(null, 16 * 0, 16 * 3, Items.ENCHANTED_BOOK, 0),
+    CHARM(null, 16 * 1, 16 * 3, Items.CLAY_BALL, 0);
 
     private final ClassType classReq;
     private final int iconTextureX;
@@ -60,7 +62,7 @@ public enum GearType {
 
     public static Optional<GearType> fromString(String typeStr) {
         try {
-            return Optional.of(GearType.valueOf(typeStr.toUpperCase(Locale.ROOT)));
+            return Optional.of(GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_")));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

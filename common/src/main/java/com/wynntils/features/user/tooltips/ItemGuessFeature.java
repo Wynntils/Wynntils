@@ -47,6 +47,8 @@ public class ItemGuessFeature extends UserFeature {
         List<String> itemPossibilities = gearBoxItem.getItemPossibilities();
         GearTier gearTier = gearBoxItem.getItemTier();
 
+        if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
+
         addon.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
