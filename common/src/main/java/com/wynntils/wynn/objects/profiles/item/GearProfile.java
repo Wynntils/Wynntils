@@ -19,7 +19,7 @@ public class GearProfile {
 
     private final GearAttackSpeed attackSpeed;
 
-    private final GearInfoContainer gearInfo;
+    private final GearInfoContainer itemInfo; // this needs to be named "itemInfo" to match json format
     private final Map<String, String> requirements;
 
     private final Map<String, String> damageTypes;
@@ -59,7 +59,7 @@ public class GearProfile {
         this.tier = tier;
         this.identified = identified;
         this.attackSpeed = attackSpeed;
-        this.gearInfo = gearInfo;
+        this.itemInfo = gearInfo;
         this.requirements = requirements;
         this.damageTypes = damageTypes;
         this.defenseTypes = defenseTypes;
@@ -94,7 +94,7 @@ public class GearProfile {
     }
 
     public GearInfoContainer getGearInfo() {
-        return gearInfo;
+        return itemInfo;
     }
 
     private void parseRequirements() {
@@ -196,7 +196,7 @@ public class GearProfile {
     }
 
     private ClassType getClassNeeded() {
-        return gearInfo.getType().getClassReq();
+        return itemInfo.getType().getClassReq();
     }
 
     public int getLevelRequirement() {
@@ -231,7 +231,7 @@ public class GearProfile {
                 + tier + ", powderAmount="
                 + powderAmount + ", attackSpeed="
                 + attackSpeed + ", gearInfo="
-                + gearInfo + ", requirements="
+                + itemInfo + ", requirements="
                 + requirements + ", damageTypes="
                 + damageTypes + ", defenseTypes="
                 + defenseTypes + ", statuses="
