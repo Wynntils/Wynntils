@@ -261,8 +261,8 @@ public final class GearItemManager extends Manager {
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    private ItemIdentificationContainer identificationFromValue(
-            Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
+    private GearIdentificationContainer identificationFromValue(
+            Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
         boolean isInverted = idProfile != null
