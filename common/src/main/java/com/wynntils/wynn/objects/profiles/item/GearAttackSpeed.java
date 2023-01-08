@@ -6,7 +6,7 @@ package com.wynntils.wynn.objects.profiles.item;
 
 import net.minecraft.ChatFormatting;
 
-public enum ItemAttackSpeed {
+public enum GearAttackSpeed {
     SUPER_FAST("Super Fast Attack Speed", 3),
     VERY_FAST("Very Fast Attack Speed", 2),
     FAST("Fast Attack Speed", 1),
@@ -18,7 +18,7 @@ public enum ItemAttackSpeed {
     private final String name;
     private final int offset;
 
-    ItemAttackSpeed(String name, int offset) {
+    GearAttackSpeed(String name, int offset) {
         this.name = name;
         this.offset = offset;
     }

@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.handleditems.properties;
 
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 
 public interface GearTierItemProperty {
-    ItemTier getGearTier();
+    GearTier getGearTier();
 }

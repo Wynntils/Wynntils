@@ -7,7 +7,7 @@ package com.wynntils.wynn.handleditems.items.game;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
 
 public class CharmItem extends GameItem implements GearTierItemProperty {
@@ -34,7 +34,7 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
     }
 
     @Override
-    public ItemTier getGearTier() {
+    public GearTier getGearTier() {
         return charmProfile.getTier();
     }
 

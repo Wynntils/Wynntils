@@ -32,7 +32,7 @@ public class IdentificationProfile {
     }
 
     public void calculateMinMax(String shortId) {
-        isInverted = Managers.ItemProfiles.isInverted(shortId);
+        isInverted = Managers.GearProfiles.isInverted(shortId);
 
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;

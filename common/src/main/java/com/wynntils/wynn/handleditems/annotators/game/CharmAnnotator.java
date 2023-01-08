@@ -8,7 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public final class CharmAnnotator implements ItemAnnotator {
         Matcher matcher = CHARM_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        ItemTier tier = ItemTier.fromString(name);
+        GearTier tier = GearTier.fromString(name);
         String type = matcher.group("Type");
 
         // TODO: replace with API lookup
