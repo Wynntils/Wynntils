@@ -98,7 +98,7 @@ public final class GearItemManager extends Manager {
         List<Component> setBonus = new ArrayList<>();
 
         // Parse lore for identifications, powders and rerolls
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
         lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
