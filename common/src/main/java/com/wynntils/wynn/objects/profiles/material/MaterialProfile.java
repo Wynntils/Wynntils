@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class MaterialProfile {
-    public static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
+    private static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
             MaterialType.ORE,
             List.of(
                     new SourceMaterial("Copper", 1),

@@ -60,7 +60,7 @@ public class DiscoveryProgressButton extends WynntilsButton implements TooltipPr
     @Override
     public void onPress() {}
 
-    public boolean isSecretDiscoveryButton() {
+    private boolean isSecretDiscoveryButton() {
         return isSecretDiscoveryButton;
     }
 

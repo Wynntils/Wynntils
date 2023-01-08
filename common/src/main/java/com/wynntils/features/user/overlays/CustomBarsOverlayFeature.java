@@ -185,7 +185,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class HealthBarOverlay extends BaseBarOverlay {
+    protected static class HealthBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
         public HealthTexture healthTexture = HealthTexture.a;
 
@@ -318,7 +318,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class ManaBarOverlay extends BaseBarOverlay {
+    protected static class ManaBarOverlay extends BaseBarOverlay {
         @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
         public ManaTexture manaTexture = ManaTexture.a;
 
@@ -451,8 +451,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class AwakenedProgressBarOverlay extends BaseBarOverlay {
-
+    protected static class AwakenedProgressBarOverlay extends BaseBarOverlay {
         protected AwakenedProgressBarOverlay() {
             super(
                     new OverlayPosition(
@@ -481,7 +480,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class FocusBarOverlay extends BaseBarOverlay {
+    protected static class FocusBarOverlay extends BaseBarOverlay {
         protected FocusBarOverlay() {
             super(
                     new OverlayPosition(
@@ -510,8 +509,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
     }
 
-    public static class CorruptedBarOverlay extends BaseBarOverlay {
-
+    protected static class CorruptedBarOverlay extends BaseBarOverlay {
         protected CorruptedBarOverlay() {
             super(
                     new OverlayPosition(

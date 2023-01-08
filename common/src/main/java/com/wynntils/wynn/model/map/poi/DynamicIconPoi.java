@@ -7,7 +7,7 @@ package com.wynntils.wynn.model.map.poi;
 import java.util.function.Supplier;
 
 public abstract class DynamicIconPoi extends IconPoi {
-    Supplier<PoiLocation> locationSupplier;
+    private final Supplier<PoiLocation> locationSupplier;
 
     protected DynamicIconPoi(Supplier<PoiLocation> locationSupplier) {
         this.locationSupplier = locationSupplier;

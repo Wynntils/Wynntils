@@ -12,7 +12,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 
 public class LabelPoi implements Poi {
-    PoiLocation location;
+    private final PoiLocation location;
 
     private final Label label;
 
