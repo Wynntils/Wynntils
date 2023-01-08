@@ -306,7 +306,7 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        String prefix = gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
+        String prefix = gearItem != null && gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
 
         return Component.literal(prefix + itemProfile.getDisplayName())
                 .withStyle(itemProfile.getTier().getChatFormatting());
