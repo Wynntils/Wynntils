@@ -10,6 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class SoulPointTimerFeature extends UserFeature {
         Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
         if (soulPointItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = new ArrayList<>(event.getTooltips());
-        tooltips.addAll(getTooltipAddon());
+        List<Component> tooltips =
+                ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon());
         event.setTooltips(tooltips);
     }
 

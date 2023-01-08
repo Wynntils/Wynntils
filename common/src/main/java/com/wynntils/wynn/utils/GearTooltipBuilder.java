@@ -6,6 +6,7 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -29,7 +30,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
@@ -72,7 +72,7 @@ public final class GearTooltipBuilder {
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, ItemProfile itemProfile, GearItem gearItem) {
-        List<Component> tooltips = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
+        List<Component> tooltips = ItemUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore =
