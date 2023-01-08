@@ -1,9 +1,21 @@
+## [0.0.2-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.81...v0.0.2-alpha.82) (2023-01-08)
+
+
+### Bug Fixes
+
+* Regression introduced by item->gear rename ([#996](https://github.com/Wynntils/Artemis/issues/996)) ([841fec3](https://github.com/Wynntils/Artemis/commit/841fec3de7125c7c594aad3c248f216d300b28c8))
+
 ## [0.0.2-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.80...v0.0.2-alpha.81) (2023-01-08)
 
 
 ### Code Refactoring
 
 * Rename "item" to "gear", if it relates to gear ([#988](https://github.com/Wynntils/Artemis/issues/988)) ([ef3780e](https://github.com/Wynntils/Artemis/commit/ef3780e01334dbdcce96b5b83cee942a189c2504))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.81 [skip ci] ([2ab29db](https://github.com/Wynntils/Artemis/commit/2ab29db600585c053e891703a36a22d9ab533a82))
 
 ## [0.0.2-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.79...v0.0.2-alpha.80) (2023-01-08)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.78 [skip ci] ([403642f](https://github.com/Wynntils/Artemis/commit/403642f01b20e4fb041f5ab594ee1b4261da3c85))
-
-## [0.0.2-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.76...v0.0.2-alpha.77) (2023-01-07)
-
-
-### Code Refactoring
-
-* Code changes as suggested by IntelliJ "Artemis mini" ([#991](https://github.com/Wynntils/Artemis/issues/991)) ([38323f4](https://github.com/Wynntils/Artemis/commit/38323f4772691e37b4951cec0326dee5b6bb0f3d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.77 [skip ci] ([4cfb2d1](https://github.com/Wynntils/Artemis/commit/4cfb2d1a3294d9d53a6fd8e4d93e860a8da0eebe))
 
