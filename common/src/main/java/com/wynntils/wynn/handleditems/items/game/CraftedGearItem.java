@@ -9,7 +9,7 @@ import com.wynntils.wynn.handleditems.properties.DurableItemProperty;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
 
 public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {
@@ -54,8 +54,8 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
     }
 
     @Override
-    public ItemTier getGearTier() {
-        return ItemTier.CRAFTED;
+    public GearTier getGearTier() {
+        return GearTier.CRAFTED;
     }
 
     @Override

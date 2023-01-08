@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.items.game;
 
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.TomeProfile;
 import java.util.List;
 
@@ -34,8 +34,8 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
     }
 
     @Override
-    public ItemTier getGearTier() {
-        return tomeProfile.getItemTier();
+    public GearTier getGearTier() {
+        return tomeProfile.getGearTier();
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.Optional;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-public enum ItemType {
+public enum GearType {
     SPEAR(ClassType.Warrior, 16 * 1, 16 * 1, Items.IRON_SHOVEL, 0),
     WAND(ClassType.Mage, 16 * 0, 16 * 1, Items.STICK, 0),
     DAGGER(ClassType.Assassin, 16 * 2, 16 * 1, Items.SHEARS, 0),
@@ -32,7 +32,7 @@ public enum ItemType {
     private final Item defaultItem;
     private final int defaultDamage;
 
-    ItemType(ClassType classReq, int iconTextureX, int iconTextureY, Item defaultItem, int defaultDamage) {
+    GearType(ClassType classReq, int iconTextureX, int iconTextureY, Item defaultItem, int defaultDamage) {
         this.classReq = classReq;
         this.iconTextureX = iconTextureX;
         this.iconTextureY = iconTextureY;
@@ -60,9 +60,9 @@ public enum ItemType {
         return defaultItem;
     }
 
-    public static Optional<ItemType> fromString(String typeStr) {
+    public static Optional<GearType> fromString(String typeStr) {
         try {
-            return Optional.of(ItemType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_")));
+            return Optional.of(GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_")));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import com.wynntils.wynn.objects.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
+import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.lang.reflect.Type;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class ItemGuessProfile {
     private final String range;
-    private final Map<ItemType, Map<ItemTier, List<String>>> items = new EnumMap<>(ItemType.class);
+    private final Map<GearType, Map<GearTier, List<String>>> items = new EnumMap<>(GearType.class);
 
     public ItemGuessProfile(String range) {
         this.range = range;
@@ -31,7 +31,7 @@ public class ItemGuessProfile {
         return range;
     }
 
-    public Map<ItemType, Map<ItemTier, List<String>>> getItems() {
+    public Map<GearType, Map<GearTier, List<String>>> getItems() {
         return items;
     }
 
@@ -46,17 +46,17 @@ public class ItemGuessProfile {
 
                 for (Map.Entry<String, JsonElement> weaponType :
                         itemGuesses.getValue().getAsJsonObject().entrySet()) {
-                    Map<ItemTier, List<String>> raritiesMap = new EnumMap<>(ItemTier.class);
+                    Map<GearTier, List<String>> raritiesMap = new EnumMap<>(GearTier.class);
                     for (Map.Entry<String, JsonElement> rarity :
                             weaponType.getValue().getAsJsonObject().entrySet()) {
 
                         raritiesMap.put(
-                                ItemTier.valueOf(rarity.getKey().toUpperCase(Locale.ROOT)),
+                                GearTier.valueOf(rarity.getKey().toUpperCase(Locale.ROOT)),
                                 StringUtils.parseStringToList(rarity.getValue().getAsString()));
                     }
 
                     itemGuessProfile.items.put(
-                            ItemType.valueOf(weaponType.getKey().toUpperCase(Locale.ROOT)), raritiesMap);
+                            GearType.valueOf(weaponType.getKey().toUpperCase(Locale.ROOT)), raritiesMap);
                 }
 
                 hashMap.put(itemGuesses.getKey(), itemGuessProfile);

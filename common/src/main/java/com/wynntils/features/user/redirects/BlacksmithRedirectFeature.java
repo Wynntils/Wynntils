@@ -11,7 +11,7 @@ import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.objects.EmeraldSymbols;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +32,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
-        EnumMap<ItemTier, Integer> totalItems = new EnumMap<>(ItemTier.class);
+        EnumMap<GearTier, Integer> totalItems = new EnumMap<>(GearTier.class);
 
         // How many emeralds/scrap we got from the transaction.
         String paymentString = messageMatcher.group(3);
@@ -72,7 +72,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
                 ChatFormatting itemColor = ChatFormatting.getByCode(
                         itemColorCode); // find the color code to find ChatFormatting and ascertain the tier.
-                ItemTier tierToIncrease = ItemTier.fromChatFormatting(itemColor);
+                GearTier tierToIncrease = GearTier.fromChatFormatting(itemColor);
 
                 if (tierToIncrease == null) continue;
 
@@ -83,7 +83,7 @@ public class BlacksmithRedirectFeature extends UserFeature {
 
             // Build up the string that outlines how many items were sold in what tier (0/0/0/0/0/0/0/0).
             StringBuilder countByTier = new StringBuilder();
-            for (ItemTier tier : ItemTier.values()) {
+            for (GearTier tier : GearTier.values()) {
                 countByTier.append('/');
                 countByTier.append(tier.getChatFormatting().toString());
                 countByTier.append(totalItems.getOrDefault(tier, 0));

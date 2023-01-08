@@ -6,11 +6,11 @@ package com.wynntils.wynn.objects.profiles.item;
 
 public class CharmProfile {
     private final String displayName;
-    private final ItemTier tier;
+    private final GearTier tier;
 
     private final String type;
 
-    public CharmProfile(String displayName, ItemTier tier, String type) {
+    public CharmProfile(String displayName, GearTier tier, String type) {
         this.displayName = displayName;
         this.tier = tier;
         this.type = type;
@@ -20,7 +20,7 @@ public class CharmProfile {
         return displayName;
     }
 
-    public ItemTier getTier() {
+    public GearTier getTier() {
         return tier;
     }
 
