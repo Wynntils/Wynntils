@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
     protected TextInputBoxWidget textInputBoxWidget;
-    protected boolean lastParseSuccessful = false;
+    private boolean lastParseSuccessful = false;
 
     protected final float renderHeight;
 
