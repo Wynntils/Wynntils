@@ -44,10 +44,7 @@ public class GuideGearItemStack extends GuideItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
-        List<Component> tooltip = new ArrayList<>();
-        tooltip.addAll(generatedTooltip);
-
-        return tooltip;
+        return new ArrayList<>(generatedTooltip);
     }
 
     public ItemProfile getItemProfile() {

@@ -109,4 +109,17 @@ public class IngredientItemModifiers {
 
         return itemLore.stream().map(Component::literal).toList();
     }
+
+    @Override
+    public String toString() {
+        return "IngredientItemModifiers{" + "durability="
+                + durability + ", duration="
+                + duration + ", charges="
+                + charges + ", strength="
+                + strength + ", dexterity="
+                + dexterity + ", intelligence="
+                + intelligence + ", defense="
+                + defense + ", agility="
+                + agility + '}';
+    }
 }
