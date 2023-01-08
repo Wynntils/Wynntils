@@ -4,13 +4,13 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import net.minecraft.network.chat.Component;
 
-public record ItemIdentificationContainer(
-        ItemProfile item,
+public record GearIdentificationContainer(
+        GearProfile item,
         IdentificationProfile identification,
         IdentificationModifier modifier,
         String shortIdName,

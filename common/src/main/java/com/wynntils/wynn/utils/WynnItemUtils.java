@@ -8,10 +8,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +24,13 @@ import org.lwjgl.glfw.GLFW;
 
 public final class WynnItemUtils {
     /**
-     * Create a list of ItemIdentificationContainer corresponding to the given ItemProfile, formatted for item guide items
+     * Create a list of ItemIdentificationContainer corresponding to the given GearProfile, formatted for item guide items
      *
      * @param item the profile of the item
      * @return a list of appropriately formatted ItemIdentificationContainer
      */
-    public static List<ItemIdentificationContainer> identificationsFromProfile(ItemProfile item) {
-        List<ItemIdentificationContainer> ids = new ArrayList<>();
+    public static List<GearIdentificationContainer> identificationsFromProfile(GearProfile item) {
+        List<GearIdentificationContainer> ids = new ArrayList<>();
 
         for (Map.Entry<String, IdentificationProfile> entry : item.getStatuses().entrySet()) {
             IdentificationProfile idProfile = entry.getValue();
@@ -58,8 +58,8 @@ public final class WynnItemUtils {
             line.append(Component.literal(" " + IdentificationProfile.getAsLongName(idName))
                     .withStyle(ChatFormatting.GRAY));
 
-            ItemIdentificationContainer id =
-                    new ItemIdentificationContainer(item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
+            GearIdentificationContainer id =
+                    new GearIdentificationContainer(item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
             ids.add(id);
         }
 
@@ -83,7 +83,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Managers.ItemProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
+        return Managers.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
     }
 
     public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {

@@ -90,7 +90,7 @@ public class ItemStatInfoFeature extends UserFeature {
                 .getOrCalculate(
                         WynnItemCache.TOOLTIP_KEY,
                         () -> GearTooltipBuilder.fromItemStack(
-                                event.getItemStack(), gearItem.getItemProfile(), gearItem));
+                                event.getItemStack(), gearItem.getGearProfile(), gearItem));
         if (builder == null) return;
 
         LinkedList<Component> tooltips =
@@ -99,10 +99,10 @@ public class ItemStatInfoFeature extends UserFeature {
         if (gearItem.hasVariableIds()) {
             if (perfect && gearItem.isPerfect()) {
                 tooltips.removeFirst();
-                tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
+                tooltips.addFirst(getPerfectName(gearItem.getGearProfile().getDisplayName()));
             } else if (defective && gearItem.isDefective()) {
                 tooltips.removeFirst();
-                tooltips.addFirst(getDefectiveName(gearItem.getItemProfile().getDisplayName()));
+                tooltips.addFirst(getDefectiveName(gearItem.getGearProfile().getDisplayName()));
             } else if (overallPercentageInName) {
                 MutableComponent name = Component.literal(tooltips.getFirst().getString())
                         .withStyle(tooltips.getFirst().getStyle());

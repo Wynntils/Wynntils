@@ -6,15 +6,15 @@ package com.wynntils.wynn.objects.profiles.item;
 
 public class TomeProfile {
     private final String displayName;
-    private final ItemTier itemTier;
+    private final GearTier gearTier;
 
     private final String variant;
     private final TomeType type;
     private final String tomeTier;
 
-    public TomeProfile(String displayName, ItemTier itemTier, String variant, TomeType type, String tomeTier) {
+    public TomeProfile(String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {
         this.displayName = displayName;
-        this.itemTier = itemTier;
+        this.gearTier = gearTier;
         this.variant = variant;
         this.type = type;
         this.tomeTier = tomeTier;
@@ -24,8 +24,8 @@ public class TomeProfile {
         return displayName;
     }
 
-    public ItemTier getItemTier() {
-        return itemTier;
+    public GearTier getGearTier() {
+        return gearTier;
     }
 
     public String getVariant() {
@@ -43,8 +43,8 @@ public class TomeProfile {
     @Override
     public String toString() {
         return "TomeProfile{" + "displayName='"
-                + displayName + "', itemTier="
-                + itemTier + ", variant="
+                + displayName + "', gearTier="
+                + gearTier + ", variant="
                 + variant + ", type="
                 + type + ", tomeTier="
                 + tomeTier + '}';

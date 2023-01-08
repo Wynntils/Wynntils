@@ -10,12 +10,12 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
 import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public final class GearTooltipBuilder {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private final ItemProfile itemProfile;
+    private final GearProfile gearProfile;
     private final GearItem gearItem;
 
     private final List<Component> topTooltip;
@@ -46,8 +46,8 @@ public final class GearTooltipBuilder {
 
     private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
-    private GearTooltipBuilder(ItemProfile itemProfile, GearItem gearItem) {
-        this.itemProfile = itemProfile;
+    private GearTooltipBuilder(GearProfile gearProfile, GearItem gearItem) {
+        this.gearProfile = gearProfile;
         this.gearItem = gearItem;
 
         topTooltip = buildTopTooltip();
@@ -55,30 +55,30 @@ public final class GearTooltipBuilder {
     }
 
     private GearTooltipBuilder(
-            ItemProfile itemProfile, GearItem gearItem, List<Component> topTooltip, List<Component> bottomTooltip) {
-        this.itemProfile = itemProfile;
+            GearProfile gearProfile, GearItem gearItem, List<Component> topTooltip, List<Component> bottomTooltip) {
+        this.gearProfile = gearProfile;
         this.gearItem = gearItem;
 
         this.topTooltip = topTooltip;
         this.bottomTooltip = bottomTooltip;
     }
 
-    public static GearTooltipBuilder fromItemProfile(ItemProfile itemProfile) {
-        return new GearTooltipBuilder(itemProfile, null);
+    public static GearTooltipBuilder fromGearProfile(GearProfile gearProfile) {
+        return new GearTooltipBuilder(gearProfile, null);
     }
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
-        return new GearTooltipBuilder(gearItem.getItemProfile(), gearItem);
+        return new GearTooltipBuilder(gearItem.getGearProfile(), gearItem);
     }
 
-    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, ItemProfile itemProfile, GearItem gearItem) {
+    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
         List<Component> tooltips = ItemUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore =
-                splitLore(tooltips.subList(1, tooltips.size()), itemProfile);
+                splitLore(tooltips.subList(1, tooltips.size()), gearProfile);
 
-        return new GearTooltipBuilder(itemProfile, gearItem, splittedLore.a(), splittedLore.b());
+        return new GearTooltipBuilder(gearProfile, gearItem, splittedLore.a(), splittedLore.b());
     }
 
     public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
@@ -97,7 +97,7 @@ public final class GearTooltipBuilder {
         return ComponentUtils.stripDuplicateBlank(tooltip);
     }
 
-    private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, ItemProfile gearProfile) {
+    private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, GearProfile gearProfile) {
         List<Component> topTooltip = new ArrayList<>();
         List<Component> bottomTooltip = new ArrayList<>();
 
@@ -147,7 +147,7 @@ public final class GearTooltipBuilder {
         return Pair.of(topTooltip, bottomTooltip);
     }
 
-    private static boolean isIdLine(Component lore, ItemProfile item) {
+    private static boolean isIdLine(Component lore, GearProfile item) {
         // This looks quite messy, but is in effect what we did before
         // FIXME: Clean up?
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
@@ -177,14 +177,14 @@ public final class GearTooltipBuilder {
         List<Component> baseTooltip = new ArrayList<>();
 
         // attack speed
-        if (itemProfile.getAttackSpeed() != null)
-            baseTooltip.add(Component.literal(itemProfile.getAttackSpeed().asLore()));
+        if (gearProfile.getAttackSpeed() != null)
+            baseTooltip.add(Component.literal(gearProfile.getAttackSpeed().asLore()));
 
         baseTooltip.add(Component.literal(""));
 
         // elemental damages
-        if (!itemProfile.getDamageTypes().isEmpty()) {
-            Map<DamageType, String> damages = itemProfile.getDamages();
+        if (!gearProfile.getDamageTypes().isEmpty()) {
+            Map<DamageType, String> damages = gearProfile.getDamages();
             for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
                 DamageType type = entry.getKey();
                 MutableComponent damage =
@@ -201,15 +201,15 @@ public final class GearTooltipBuilder {
         }
 
         // elemental defenses
-        if (!itemProfile.getDefenseTypes().isEmpty()) {
-            int health = itemProfile.getHealth();
+        if (!gearProfile.getDefenseTypes().isEmpty()) {
+            int health = gearProfile.getHealth();
             if (health != 0) {
                 MutableComponent healthComp = Component.literal("❤ Health: " + StringUtils.toSignedString(health))
                         .withStyle(ChatFormatting.DARK_RED);
                 baseTooltip.add(healthComp);
             }
 
-            Map<DamageType, Integer> defenses = itemProfile.getElementalDefenses();
+            Map<DamageType, Integer> defenses = gearProfile.getElementalDefenses();
             for (Map.Entry<DamageType, Integer> entry : defenses.entrySet()) {
                 DamageType type = entry.getKey();
                 MutableComponent defense =
@@ -223,8 +223,8 @@ public final class GearTooltipBuilder {
         }
 
         // requirements
-        if (itemProfile.hasRequirements()) {
-            Map<RequirementType, String> requirements = itemProfile.getRequirements();
+        if (gearProfile.hasRequirements()) {
+            Map<RequirementType, String> requirements = gearProfile.getRequirements();
             // fire, water, air, thunder, earth
             for (Map.Entry<RequirementType, String> entry : requirements.entrySet()) {
                 RequirementType type = entry.getKey();
@@ -240,7 +240,7 @@ public final class GearTooltipBuilder {
         }
 
         // ids
-        if (!itemProfile.getStatuses().isEmpty()) {
+        if (!gearProfile.getStatuses().isEmpty()) {
             baseTooltip.add(Component.literal(""));
         }
 
@@ -251,8 +251,8 @@ public final class GearTooltipBuilder {
         List<Component> baseTooltip = new ArrayList<>();
 
         // major ids
-        if (itemProfile.getMajorIds() != null && !itemProfile.getMajorIds().isEmpty()) {
-            for (MajorIdentification majorId : itemProfile.getMajorIds()) {
+        if (gearProfile.getMajorIds() != null && !gearProfile.getMajorIds().isEmpty()) {
+            for (MajorIdentification majorId : gearProfile.getMajorIds()) {
                 Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
                         .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
@@ -260,13 +260,13 @@ public final class GearTooltipBuilder {
         }
 
         // powder slots
-        if (itemProfile.getPowderAmount() > 0) {
+        if (gearProfile.getPowderAmount() > 0) {
             if (gearItem == null) {
-                baseTooltip.add(Component.literal("[" + itemProfile.getPowderAmount() + " Powder Slots]")
+                baseTooltip.add(Component.literal("[" + gearProfile.getPowderAmount() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 MutableComponent powderLine = Component.literal(
-                                "[" + gearItem.getPowders().size() + "/" + itemProfile.getPowderAmount()
+                                "[" + gearItem.getPowders().size() + "/" + gearProfile.getPowderAmount()
                                         + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
                 if (!gearItem.getPowders().isEmpty()) {
@@ -284,19 +284,19 @@ public final class GearTooltipBuilder {
         }
 
         // tier & rerolls
-        MutableComponent tier = itemProfile.getTier().asLore().copy();
+        MutableComponent tier = gearProfile.getTier().asLore().copy();
         if (gearItem != null && gearItem.getRerolls() > 1) {
             tier.append(" [" + gearItem.getRerolls() + "]");
         }
         baseTooltip.add(tier);
 
         // untradable
-        if (itemProfile.getRestriction() != null) {
-            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(itemProfile.getRestriction() + " Item"))
+        if (gearProfile.getRestriction() != null) {
+            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(gearProfile.getRestriction() + " Item"))
                     .withStyle(ChatFormatting.RED));
         }
 
-        String lore = itemProfile.getLore();
+        String lore = gearProfile.getLore();
         if (lore != null) {
             Stream.of(StringUtils.wrapTextBySize(lore, 150))
                     .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
@@ -308,8 +308,8 @@ public final class GearTooltipBuilder {
     private Component getHoverName() {
         String prefix = gearItem != null && gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
 
-        return Component.literal(prefix + itemProfile.getDisplayName())
-                .withStyle(itemProfile.getTier().getChatFormatting());
+        return Component.literal(prefix + gearProfile.getDisplayName())
+                .withStyle(gearProfile.getTier().getChatFormatting());
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
@@ -322,9 +322,9 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
-        List<ItemIdentificationContainer> idContainers;
+        List<GearIdentificationContainer> idContainers;
         if (gearItem == null || gearItem.isUnidentified()) {
-            idContainers = WynnItemUtils.identificationsFromProfile(itemProfile);
+            idContainers = WynnItemUtils.identificationsFromProfile(gearProfile);
         } else {
             idContainers = gearItem.getIdContainers();
         }
@@ -337,20 +337,20 @@ public final class GearTooltipBuilder {
                 switch (style.decorations()) {
                     case PERCENT -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::percentLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::percentLoreLine));
                     case RANGE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::rangeLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::rangeLoreLine));
                     case REROLL_CHANCE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    ItemIdentificationContainer::shortIdName,
-                                    ItemIdentificationContainer::rerollLoreLine));
+                                    GearIdentificationContainer::shortIdName,
+                                    GearIdentificationContainer::rerollLoreLine));
                 };
 
         if (style.reorder()) {
-            return Managers.ItemProfiles.orderComponents(map, style.group());
+            return Managers.GearProfiles.orderComponents(map, style.group());
         } else {
             return new ArrayList<>(map.values());
         }

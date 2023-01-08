@@ -7,7 +7,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.TomeProfile;
 import com.wynntils.wynn.objects.profiles.item.TomeType;
 import java.util.Optional;
@@ -30,12 +30,12 @@ public final class TomeAnnotator implements ItemAnnotator {
         if (tomeTypeOpt.isEmpty()) return null;
 
         TomeType tomeType = tomeTypeOpt.get();
-        ItemTier itemTier = ItemTier.fromString(name);
+        GearTier gearTier = GearTier.fromString(name);
         String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
         String tier = tomeType.isTiered() ? matcher.group("Tier") : null;
 
         // TODO: replace with API lookup
-        TomeProfile tomeProfile = new TomeProfile(matcher.group(1), itemTier, variant, tomeType, tier);
+        TomeProfile tomeProfile = new TomeProfile(matcher.group(1), gearTier, variant, tomeType, tier);
 
         return Managers.GearItem.fromTomeItemStack(itemStack, tomeProfile);
     }

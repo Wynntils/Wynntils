@@ -15,8 +15,8 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,16 +75,16 @@ public final class GearViewerScreen extends WynntilsScreen {
                 && itemStack.getDamageValue() <= 6) {
             itemStack.setHoverName(Component.literal("Unidentified Item")
                     .withStyle(
-                            ItemTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
+                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
             return itemStack;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
-        if (itemProfile == null) {
+        GearProfile gearProfile = Managers.GearProfiles.getItemsProfile(itemName);
+        if (gearProfile == null) {
             return itemStack;
         }
 
-        GearItem gearItem = Managers.GearItem.fromJsonLore(itemStack, itemProfile);
+        GearItem gearItem = Managers.GearItem.fromJsonLore(itemStack, gearProfile);
         return new FakeItemStack(gearItem, "From " + playerName.getString());
     }
 
