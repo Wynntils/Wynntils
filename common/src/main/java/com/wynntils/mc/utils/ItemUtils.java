@@ -209,7 +209,8 @@ public final class ItemUtils {
                     .withStyle(ChatFormatting.DARK_GRAY);
 
             int advancedStartLine = -1;
-            for (int i = baseTooltip.size() - 1; i >= 0; i--) {
+            // If we have advanced tooltip lines, they are at the bottom 3 lines
+            for (int i = baseTooltip.size() - 1; i >= Math.max(0, baseTooltip.size() - 4); i--) {
                 Component line = baseTooltip.get(i);
                 if (line.equals(typeLine)) {
                     advancedStartLine = i;
