@@ -1,9 +1,21 @@
+## [0.0.2-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.77...v0.0.2-alpha.78) (2023-01-08)
+
+
+### New Features
+
+* add handling for tome and charm items ([#987](https://github.com/Wynntils/Artemis/issues/987)) ([b22257b](https://github.com/Wynntils/Artemis/commit/b22257ba622ec984e4c96ced0c8b3c3d31e21590))
+
 ## [0.0.2-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.76...v0.0.2-alpha.77) (2023-01-07)
 
 
 ### Code Refactoring
 
 * Code changes as suggested by IntelliJ "Artemis mini" ([#991](https://github.com/Wynntils/Artemis/issues/991)) ([38323f4](https://github.com/Wynntils/Artemis/commit/38323f4772691e37b4951cec0326dee5b6bb0f3d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.77 [skip ci] ([4cfb2d1](https://github.com/Wynntils/Artemis/commit/4cfb2d1a3294d9d53a6fd8e4d93e860a8da0eebe))
 
 ## [0.0.2-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.75...v0.0.2-alpha.76) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.74 [skip ci] ([d4d09c8](https://github.com/Wynntils/Artemis/commit/d4d09c8a76170ba38d2a648a2f3c04e4bf821675))
-
-## [0.0.2-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.72...v0.0.2-alpha.73) (2023-01-07)
-
-
-### New Features
-
-* Hide irrelevant Vanilla stuff in tooltips ([#977](https://github.com/Wynntils/Artemis/issues/977)) ([2971eac](https://github.com/Wynntils/Artemis/commit/2971eac1e708b92de1ad6a49f66aa0bf0ee454b2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.73 [skip ci] ([5a79fa6](https://github.com/Wynntils/Artemis/commit/5a79fa6c630cc36a252c94dfe7a3e30cdbb9aa55))
 
