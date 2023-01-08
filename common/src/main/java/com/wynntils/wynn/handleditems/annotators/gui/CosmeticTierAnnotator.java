@@ -29,7 +29,7 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
         return new CosmeticItem(highlightColor);
     }
 
-    public static boolean isCosmetic(ItemStack itemStack) {
+    private static boolean isCosmetic(ItemStack itemStack) {
         for (Component c : ItemUtils.getTooltipLines(itemStack)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
         }

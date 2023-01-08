@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerProfile {
 
-    long firstSeen;
-    Set<String> players;
+    private long firstSeen;
+    private Set<String> players;
 
     public ServerProfile(long firstSeem, Set<String> players) {
         this.firstSeen = firstSeem;

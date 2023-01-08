@@ -195,7 +195,7 @@ public class GearProfile {
         return (!parsedRequirements.isEmpty());
     }
 
-    public ClassType getClassNeeded() {
+    private ClassType getClassNeeded() {
         return gearInfo.getType().getClassReq();
     }
 

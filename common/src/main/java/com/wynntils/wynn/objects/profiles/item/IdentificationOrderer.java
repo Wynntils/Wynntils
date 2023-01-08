@@ -36,7 +36,7 @@ public class IdentificationOrderer {
      * @param id the identification "short" name. Ex: rawMainAttackNeutralDamage
      * @return the group id, if not present returns -1
      */
-    public int getGroup(String id) {
+    private int getGroup(String id) {
         if (organizedGroups == null) organizeGroups();
 
         return organizedGroups.getOrDefault(getOrder(id), -1);

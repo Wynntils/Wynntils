@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
@@ -29,8 +30,8 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
         if (wynnItemOpt.isEmpty()) return;
         WynnItem wynnItem = wynnItemOpt.get();
 
-        List<Component> tooltips = new ArrayList<>(event.getTooltips());
-        tooltips.addAll(getTooltipAddon(wynnItem));
+        List<Component> tooltips =
+                ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon(wynnItem));
         event.setTooltips(tooltips);
     }
 

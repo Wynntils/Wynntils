@@ -6,6 +6,7 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -29,7 +30,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
@@ -41,10 +41,10 @@ public final class GearTooltipBuilder {
     private final GearProfile gearProfile;
     private final GearItem gearItem;
 
-    private List<Component> topTooltip;
-    private List<Component> bottomTooltip;
+    private final List<Component> topTooltip;
+    private final List<Component> bottomTooltip;
 
-    private Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
+    private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
     private GearTooltipBuilder(GearProfile gearProfile, GearItem gearItem) {
         this.gearProfile = gearProfile;
@@ -72,7 +72,7 @@ public final class GearTooltipBuilder {
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
-        List<Component> tooltips = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
+        List<Component> tooltips = ItemUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore =
@@ -147,7 +147,7 @@ public final class GearTooltipBuilder {
         return Pair.of(topTooltip, bottomTooltip);
     }
 
-    public static boolean isIdLine(Component lore, GearProfile item) {
+    private static boolean isIdLine(Component lore, GearProfile item) {
         // This looks quite messy, but is in effect what we did before
         // FIXME: Clean up?
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
@@ -306,7 +306,7 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        String prefix = gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
+        String prefix = gearItem != null && gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
 
         return Component.literal(prefix + gearProfile.getDisplayName())
                 .withStyle(gearProfile.getTier().getChatFormatting());

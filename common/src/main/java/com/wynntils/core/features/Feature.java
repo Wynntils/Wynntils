@@ -36,7 +36,7 @@ public abstract class Feature extends AbstractConfigurable
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
-    protected FeatureState state = FeatureState.UNINITALIZED;
+    private FeatureState state = FeatureState.UNINITALIZED;
 
     private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
@@ -185,7 +185,7 @@ public abstract class Feature extends AbstractConfigurable
     }
 
     /** Whether a feature can be enabled */
-    public boolean canEnable() {
+    private boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }

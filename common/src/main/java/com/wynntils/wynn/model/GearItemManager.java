@@ -77,7 +77,7 @@ public final class GearItemManager extends Manager {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    public static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
+    private static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
 
     static {
         COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
@@ -98,7 +98,7 @@ public final class GearItemManager extends Manager {
         List<Component> setBonus = new ArrayList<>();
 
         // Parse lore for identifications, powders and rerolls
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
         lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
@@ -228,7 +228,7 @@ public final class GearItemManager extends Manager {
      * @param item the GearProfile of the given item
      * @return the parsed ItemIdentificationContainer, or null if invalid lore line
      */
-    public GearIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
+    private GearIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return null; // not a valid id line
@@ -261,8 +261,8 @@ public final class GearItemManager extends Manager {
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    public GearIdentificationContainer identificationFromValue(
-            Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
+    private ItemIdentificationContainer identificationFromValue(
+            Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
         boolean isInverted = idProfile != null
@@ -335,7 +335,7 @@ public final class GearItemManager extends Manager {
      * @param percentage the percent roll of the ID
      * @return the styled percentage text component
      */
-    public MutableComponent getPercentageTextComponent(float percentage) {
+    private MutableComponent getPercentageTextComponent(float percentage) {
         Style color = Style.EMPTY
                 .withColor(
                         ItemStatInfoFeature.INSTANCE.colorLerp
@@ -395,7 +395,7 @@ public final class GearItemManager extends Manager {
      * @param decrease the chance of a decreased roll
      * @return the styled reroll chance text component
      */
-    public MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
+    private MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
         return Component.literal(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
@@ -411,7 +411,7 @@ public final class GearItemManager extends Manager {
      * @param max the maximum stat roll
      * @return the styled ID range text component
      */
-    public MutableComponent getRangeTextComponent(int min, int max) {
+    private MutableComponent getRangeTextComponent(int min, int max) {
         return Component.literal(" [")
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")
@@ -427,9 +427,7 @@ public final class GearItemManager extends Manager {
     }
 
     public String getLookupName(String itemName) {
-        String realName =
-                itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
-        return realName;
+        return itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
     }
 
     public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {

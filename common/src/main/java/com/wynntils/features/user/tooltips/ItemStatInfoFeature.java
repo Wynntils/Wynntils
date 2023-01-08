@@ -115,7 +115,7 @@ public class ItemStatInfoFeature extends UserFeature {
         event.setTooltips(tooltips);
     }
 
-    public MutableComponent getPercentageTextComponent(float percentage) {
+    private MutableComponent getPercentageTextComponent(float percentage) {
         Style color = Style.EMPTY
                 .withColor(colorLerp ? getPercentageColor(percentage) : getFlatPercentageColor(percentage))
                 .withItalic(false);
