@@ -1,9 +1,21 @@
+## [0.0.2-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.82...v0.0.2-alpha.83) (2023-01-08)
+
+
+### Bug Fixes
+
+* Item screenshot scaling issue ([#997](https://github.com/Wynntils/Artemis/issues/997)) ([1ddfafd](https://github.com/Wynntils/Artemis/commit/1ddfafd924fd33c8fbe6684d0500dff528e9105a))
+
 ## [0.0.2-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.81...v0.0.2-alpha.82) (2023-01-08)
 
 
 ### Bug Fixes
 
 * Regression introduced by item->gear rename ([#996](https://github.com/Wynntils/Artemis/issues/996)) ([841fec3](https://github.com/Wynntils/Artemis/commit/841fec3de7125c7c594aad3c248f216d300b28c8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.82 [skip ci] ([b4a2aec](https://github.com/Wynntils/Artemis/commit/b4a2aec5b7bbf52b64895f8a97a00fd501e2ae15))
 
 ## [0.0.2-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.80...v0.0.2-alpha.81) (2023-01-08)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.79 [skip ci] ([886cf64](https://github.com/Wynntils/Artemis/commit/886cf64d4dc17c1824a3852d7ae5846d2207c83f))
-
-## [0.0.2-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.77...v0.0.2-alpha.78) (2023-01-08)
-
-
-### New Features
-
-* add handling for tome and charm items ([#987](https://github.com/Wynntils/Artemis/issues/987)) ([b22257b](https://github.com/Wynntils/Artemis/commit/b22257ba622ec984e4c96ced0c8b3c3d31e21590))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.78 [skip ci] ([403642f](https://github.com/Wynntils/Artemis/commit/403642f01b20e4fb041f5ab594ee1b4261da3c85))
 
