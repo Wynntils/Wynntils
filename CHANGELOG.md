@@ -1,9 +1,21 @@
+## [0.0.2-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.78...v0.0.2-alpha.79) (2023-01-08)
+
+
+### Bug Fixes
+
+* Crash in gear item guide ([#994](https://github.com/Wynntils/Artemis/issues/994)) ([0624401](https://github.com/Wynntils/Artemis/commit/0624401450a8fd88dfa5cfedf8dfad6319ec103e))
+
 ## [0.0.2-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.77...v0.0.2-alpha.78) (2023-01-08)
 
 
 ### New Features
 
 * add handling for tome and charm items ([#987](https://github.com/Wynntils/Artemis/issues/987)) ([b22257b](https://github.com/Wynntils/Artemis/commit/b22257ba622ec984e4c96ced0c8b3c3d31e21590))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.78 [skip ci] ([403642f](https://github.com/Wynntils/Artemis/commit/403642f01b20e4fb041f5ab594ee1b4261da3c85))
 
 ## [0.0.2-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.76...v0.0.2-alpha.77) (2023-01-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.75 [skip ci] ([86aeb26](https://github.com/Wynntils/Artemis/commit/86aeb26dac6f28b42f3714d9bed37bebcde1df1e))
-
-## [0.0.2-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.73...v0.0.2-alpha.74) (2023-01-07)
-
-
-### Bug Fixes
-
-* Do not remove "/" when using "/" key to open chat screen ([#985](https://github.com/Wynntils/Artemis/issues/985)) ([a951977](https://github.com/Wynntils/Artemis/commit/a951977b80102f2f6a1abd1ae270a2de72e8667c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.74 [skip ci] ([d4d09c8](https://github.com/Wynntils/Artemis/commit/d4d09c8a76170ba38d2a648a2f3c04e4bf821675))
 
