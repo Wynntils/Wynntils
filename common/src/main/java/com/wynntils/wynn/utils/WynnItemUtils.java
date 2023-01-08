@@ -67,18 +67,19 @@ public final class WynnItemUtils {
     }
 
     public static void removeLoreTooltipLines(List<Component> tooltip) {
-        List<Component> toRemove = new ArrayList<>();
-        boolean lore = false;
-        for (Component c : tooltip) {
+        int loreStart = -1;
+        for (int i = 0; i < tooltip.size(); i++) {
             // only remove text after the item type indicator
-            if (!lore && WynnItemMatchers.rarityLineMatcher(c).find()) {
-                lore = true;
-                continue;
+            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
+                loreStart = i + 1;
+                break;
             }
-
-            if (lore) toRemove.add(c);
         }
-        tooltip.removeAll(toRemove);
+
+        // type indicator was found
+        if (loreStart != -1) {
+            tooltip.subList(loreStart, tooltip.size()).clear();
+        }
     }
 
     public static String getTranslatedName(ItemStack itemStack) {
