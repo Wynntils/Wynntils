@@ -7,9 +7,14 @@ package com.wynntils.wynn.handleditems;
 import com.wynntils.handlers.item.ItemAnnotation;
 
 public class WynnItem implements ItemAnnotation {
-    private WynnItemCache cache = new WynnItemCache();
+    private final WynnItemCache cache = new WynnItemCache();
 
     public WynnItemCache getCache() {
         return cache;
+    }
+
+    @Override
+    public String toString() {
+        return "WynnItem{}";
     }
 }

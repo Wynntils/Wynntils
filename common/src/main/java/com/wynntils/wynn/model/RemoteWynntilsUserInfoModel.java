@@ -24,7 +24,7 @@ public final class RemoteWynntilsUserInfoModel extends Model {
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
 
-    public void loadUser(UUID uuid) {
+    private void loadUser(UUID uuid) {
         if (fetching.contains(uuid)) return;
 
         fetching.add(uuid); // temporary, avoid extra loads

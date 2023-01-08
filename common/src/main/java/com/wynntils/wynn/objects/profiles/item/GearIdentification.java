@@ -26,4 +26,9 @@ public class GearIdentification {
     public int getStars() {
         return stars;
     }
+
+    @Override
+    public String toString() {
+        return "GearIdentification{" + "idName='" + idName + "', value=" + value + ", stars=" + stars + '}';
+    }
 }

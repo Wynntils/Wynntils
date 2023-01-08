@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandAliasesFeature extends UserFeature {
     @Config(visible = false)
-    public List<CommandAlias> aliases = new ArrayList<>(List.of(
+    private List<CommandAlias> aliases = new ArrayList<>(List.of(
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr"))));
@@ -63,20 +63,20 @@ public class CommandAliasesFeature extends UserFeature {
         }
     }
 
-    public static class CommandAlias {
+    protected static class CommandAlias {
         private final String originalCommand;
         private final List<String> aliases;
 
-        public CommandAlias(String originalCommand, List<String> aliases) {
+        protected CommandAlias(String originalCommand, List<String> aliases) {
             this.originalCommand = originalCommand;
             this.aliases = aliases;
         }
 
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return aliases;
         }
 
-        public String getOriginalCommand() {
+        protected String getOriginalCommand() {
             return originalCommand;
         }
 

@@ -38,4 +38,9 @@ public final class IngredientInfo {
 
         return itemStack;
     }
+
+    @Override
+    public String toString() {
+        return "IngredientInfo{" + "materialName='" + materialName + '\'' + ", metadata='" + metadata + '\'' + '}';
+    }
 }

@@ -14,7 +14,7 @@ public class WynnItemCache {
     public static final String TOOLTIP_KEY = "tooltip";
     public static final String SEARCHED_KEY = "searched";
 
-    private Map<String, Object> cache = new HashMap<>();
+    private final Map<String, Object> cache = new HashMap<>();
 
     public <T> T get(String key) {
         return (T) cache.get(key);
