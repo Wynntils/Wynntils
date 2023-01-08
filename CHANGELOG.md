@@ -1,9 +1,26 @@
+## [0.0.2-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.79...v0.0.2-alpha.80) (2023-01-08)
+
+
+### New Features
+
+* Make sure advanced tooltip lines are always at the bottom ([#990](https://github.com/Wynntils/Artemis/issues/990)) ([d623818](https://github.com/Wynntils/Artemis/commit/d623818abe53ca60dc60a5e623194c5a15da6f7c))
+
+
+### Code Refactoring
+
+* Even more IntelliJ suggestions; this time mostly access scope reductions ([#993](https://github.com/Wynntils/Artemis/issues/993)) ([816770a](https://github.com/Wynntils/Artemis/commit/816770a8d144ba711abb46fc31caad2c98e7c9ae))
+
 ## [0.0.2-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.78...v0.0.2-alpha.79) (2023-01-08)
 
 
 ### Bug Fixes
 
 * Crash in gear item guide ([#994](https://github.com/Wynntils/Artemis/issues/994)) ([0624401](https://github.com/Wynntils/Artemis/commit/0624401450a8fd88dfa5cfedf8dfad6319ec103e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.79 [skip ci] ([886cf64](https://github.com/Wynntils/Artemis/commit/886cf64d4dc17c1824a3852d7ae5846d2207c83f))
 
 ## [0.0.2-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.77...v0.0.2-alpha.78) (2023-01-08)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.76 [skip ci] ([46bbd92](https://github.com/Wynntils/Artemis/commit/46bbd92c1a904a5947e02b933c8cdf4be245a833))
-
-## [0.0.2-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.74...v0.0.2-alpha.75) (2023-01-07)
-
-
-### New Features
-
-* Introduce versioned urls.json ([#989](https://github.com/Wynntils/Artemis/issues/989)) ([627ff15](https://github.com/Wynntils/Artemis/commit/627ff15c19d2da0b7684abd921dc874d0d42f4d5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.75 [skip ci] ([86aeb26](https://github.com/Wynntils/Artemis/commit/86aeb26dac6f28b42f3714d9bed37bebcde1df1e))
 
