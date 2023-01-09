@@ -14,17 +14,21 @@ import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
     protected TextInputBoxWidget textInputBoxWidget;
-    protected boolean lastParseSuccessful = false;
+    private boolean lastParseSuccessful = false;
 
     protected final float renderHeight;
 
-    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen, int renderWidth) {
         super(configHolder);
 
         this.renderHeight = FontRenderer.getInstance().getFont().lineHeight + 8;
         this.textInputBoxWidget =
-                new TextInputBoxWidget(0, 0, 100, (int) this.renderHeight, this::onTextInputUpdate, screen);
+                new TextInputBoxWidget(0, 0, renderWidth, (int) this.renderHeight, this::onTextInputUpdate, screen);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
+    }
+
+    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+        this(configHolder, screen, 100);
     }
 
     @Override

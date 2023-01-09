@@ -166,7 +166,7 @@ public class DiscoveryContainerQueries {
         }
     }
 
-    public static String getDiscoveryPageTitle(int pageNum) {
+    private static String getDiscoveryPageTitle(int pageNum) {
         // FIXME: We ignore pageNum, as we do not have a valid way of only querying dynamic amounts of pages
         return "^§0\\[Pg. \\d+\\] §8.*§0 Discoveries$";
     }

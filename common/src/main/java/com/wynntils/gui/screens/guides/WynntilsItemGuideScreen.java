@@ -152,10 +152,10 @@ public final class WynntilsItemGuideScreen
                 .toList());
     }
 
-    public List<GuideGearItemStack> getAllGearItems() {
+    private List<GuideGearItemStack> getAllGearItems() {
         if (allGearItems.isEmpty()) {
             // Populate list
-            allGearItems = Managers.ItemProfiles.getItemsCollection().stream()
+            allGearItems = Managers.GearProfiles.getItemsCollection().stream()
                     .map(GuideGearItemStack::new)
                     .toList();
         }

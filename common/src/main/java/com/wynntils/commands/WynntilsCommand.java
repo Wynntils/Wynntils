@@ -118,7 +118,7 @@ public class WynntilsCommand extends CommandBase {
                         false);
 
         Managers.Url.reloadUrls();
-        Managers.ItemProfiles.reloadData();
+        Managers.GearProfiles.reloadData();
         Managers.Discovery.reloadData();
         Models.Map.reloadData();
 

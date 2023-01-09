@@ -39,7 +39,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
+    private final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -50,8 +50,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
     public void onGameNotification(NotificationEvent.Queue event) {
         messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
 
-        if (GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.overrideNewMessages
-                && messageQueue.size() > GameNotificationOverlayFeature.INSTANCE.gameNotificationOverlay.messageLimit) {
+        if (gameNotificationOverlay.overrideNewMessages && messageQueue.size() > gameNotificationOverlay.messageLimit) {
             messageQueue.remove(0);
         }
     }

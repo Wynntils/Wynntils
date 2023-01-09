@@ -15,7 +15,7 @@ import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.objects.account.AccountType;
 import com.wynntils.wynn.objects.account.WynntilsUser;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnPlayerUtils;
@@ -89,8 +89,8 @@ public class CustomNametagRendererFeature extends UserFeature {
             return;
         }
 
-        ItemProfile itemProfile = Managers.ItemProfiles.getItemsProfile(itemName);
-        if (itemProfile == null) return;
+        GearProfile gearProfile = Managers.GearProfiles.getItemsProfile(itemName);
+        if (gearProfile == null) return;
 
         // this solves an unidentified item showcase exploit
         // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
@@ -98,12 +98,12 @@ public class CustomNametagRendererFeature extends UserFeature {
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6) {
             event.addInjectedLine(Component.literal("Unidentified Item")
-                    .withStyle(itemProfile.getTier().getChatFormatting()));
+                    .withStyle(gearProfile.getTier().getChatFormatting()));
             return;
         }
 
-        event.addInjectedLine(Component.literal(itemProfile.getDisplayName())
-                .withStyle(itemProfile.getTier().getChatFormatting()));
+        event.addInjectedLine(Component.literal(gearProfile.getDisplayName())
+                .withStyle(gearProfile.getTier().getChatFormatting()));
     }
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {

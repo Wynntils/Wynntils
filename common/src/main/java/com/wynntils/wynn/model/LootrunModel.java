@@ -305,7 +305,7 @@ public final class LootrunModel extends Model {
         return recompileLootrun(true);
     }
 
-    public LootrunUncompiled getActiveLootrun() {
+    private LootrunUncompiled getActiveLootrun() {
         LootrunUncompiled instance = null;
         if (recording != null) instance = recording;
         else if (uncompiled != null) instance = uncompiled;

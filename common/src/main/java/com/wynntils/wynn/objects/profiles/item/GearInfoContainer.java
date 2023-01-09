@@ -14,12 +14,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class ItemInfoContainer {
+public class GearInfoContainer {
     private static final Pattern COLOR_PATTERN = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
-    private final ItemType type;
+    private final GearType type;
     private final String set;
-    private final ItemDropType dropType;
+    private final GearDropType dropType;
     private final String armorColor;
 
     @SerializedName("name")
@@ -28,8 +28,8 @@ public class ItemInfoContainer {
     @SerializedName("damage")
     private final String metadata;
 
-    public ItemInfoContainer(
-            ItemType type, String set, ItemDropType dropType, String armorColor, String materialName, String metadata) {
+    public GearInfoContainer(
+            GearType type, String set, GearDropType dropType, String armorColor, String materialName, String metadata) {
         this.type = type;
         this.set = set;
         this.dropType = dropType;
@@ -38,11 +38,11 @@ public class ItemInfoContainer {
         this.metadata = metadata;
     }
 
-    public ItemDropType getDropType() {
+    public GearDropType getDropType() {
         return dropType;
     }
 
-    public ItemType getType() {
+    public GearType getType() {
         return type;
     }
 
@@ -87,5 +87,16 @@ public class ItemInfoContainer {
         }
 
         return itemStack;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemInfoContainer{" + "type="
+                + type + ", set='"
+                + set + '\'' + ", dropType="
+                + dropType + ", armorColor='"
+                + armorColor + '\'' + ", materialName='"
+                + materialName + '\'' + ", metadata='"
+                + metadata + '\'' + '}';
     }
 }

@@ -7,28 +7,24 @@ package com.wynntils.wynn.handleditems.items.game;
 import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import com.wynntils.wynn.objects.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
+import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.util.List;
 import java.util.Map;
 
 public class GearBoxItem extends GameItem implements GearTierItemProperty {
-    private final ItemType itemType;
-    private final ItemTier itemTier;
+    private final GearType gearType;
+    private final GearTier gearTier;
     private final String levelRange;
 
-    public GearBoxItem(ItemType itemType, ItemTier itemTier, String levelRange) {
-        this.itemType = itemType;
-        this.itemTier = itemTier;
+    public GearBoxItem(GearType gearType, GearTier gearTier, String levelRange) {
+        this.gearType = gearType;
+        this.gearTier = gearTier;
         this.levelRange = levelRange;
     }
 
-    public ItemType getItemType() {
-        return itemType;
-    }
-
-    public ItemTier getItemTier() {
-        return itemTier;
+    public GearType getGearType() {
+        return gearType;
     }
 
     public String getLevelRange() {
@@ -36,28 +32,28 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
     }
 
     public List<String> getItemPossibilities() {
-        ItemGuessProfile guessProfile = Managers.ItemProfiles.getItemGuess(levelRange);
+        ItemGuessProfile guessProfile = Managers.GearProfiles.getItemGuess(levelRange);
         if (guessProfile == null) return List.of();
 
-        Map<ItemTier, List<String>> rarityMap = guessProfile.getItems().get(itemType);
+        Map<GearTier, List<String>> rarityMap = guessProfile.getItems().get(gearType);
         if (rarityMap == null) return List.of();
 
-        List<String> itemPossibilities = rarityMap.get(itemTier);
+        List<String> itemPossibilities = rarityMap.get(gearTier);
         if (itemPossibilities == null) return List.of();
 
         return itemPossibilities;
     }
 
     @Override
-    public ItemTier getGearTier() {
-        return itemTier;
+    public GearTier getGearTier() {
+        return gearTier;
     }
 
     @Override
     public String toString() {
-        return "GearBoxItem{" + "itemType="
-                + itemType + ", itemTier="
-                + itemTier + ", levelRange='"
+        return "GearBoxItem{" + "gearType="
+                + gearType + ", gearTier="
+                + gearTier + ", levelRange='"
                 + levelRange + '\'' + '}';
     }
 }

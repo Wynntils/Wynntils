@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ItemProfile {
+public class GearProfile {
     private final String displayName;
-    private final ItemTier tier;
+    private final GearTier tier;
     private final boolean identified;
     private int powderAmount;
 
-    private final ItemAttackSpeed attackSpeed;
+    private final GearAttackSpeed attackSpeed;
 
-    private final ItemInfoContainer itemInfo;
+    private final GearInfoContainer itemInfo; // this needs to be named "itemInfo" to match json format
     private final Map<String, String> requirements;
 
     private final Map<String, String> damageTypes;
@@ -42,12 +42,12 @@ public class ItemProfile {
 
     private transient boolean replacedLore = false;
 
-    public ItemProfile(
+    public GearProfile(
             String displayName,
-            ItemTier tier,
+            GearTier tier,
             boolean identified,
-            ItemAttackSpeed attackSpeed,
-            ItemInfoContainer itemInfo,
+            GearAttackSpeed attackSpeed,
+            GearInfoContainer gearInfo,
             Map<String, String> requirements,
             Map<String, String> damageTypes,
             Map<String, Integer> defenseTypes,
@@ -59,7 +59,7 @@ public class ItemProfile {
         this.tier = tier;
         this.identified = identified;
         this.attackSpeed = attackSpeed;
-        this.itemInfo = itemInfo;
+        this.itemInfo = gearInfo;
         this.requirements = requirements;
         this.damageTypes = damageTypes;
         this.defenseTypes = defenseTypes;
@@ -77,7 +77,7 @@ public class ItemProfile {
         return displayName;
     }
 
-    public ItemTier getTier() {
+    public GearTier getTier() {
         return tier;
     }
 
@@ -89,11 +89,11 @@ public class ItemProfile {
         return powderAmount;
     }
 
-    public ItemAttackSpeed getAttackSpeed() {
+    public GearAttackSpeed getAttackSpeed() {
         return attackSpeed;
     }
 
-    public ItemInfoContainer getItemInfo() {
+    public GearInfoContainer getGearInfo() {
         return itemInfo;
     }
 
@@ -195,7 +195,7 @@ public class ItemProfile {
         return (!parsedRequirements.isEmpty());
     }
 
-    public ClassType getClassNeeded() {
+    private ClassType getClassNeeded() {
         return itemInfo.getType().getClassReq();
     }
 
@@ -226,11 +226,11 @@ public class ItemProfile {
 
     @Override
     public String toString() {
-        return "ItemProfile{" + "displayName='"
+        return "GearProfile{" + "displayName='"
                 + displayName + '\'' + ", tier="
                 + tier + ", powderAmount="
                 + powderAmount + ", attackSpeed="
-                + attackSpeed + ", itemInfo="
+                + attackSpeed + ", gearInfo="
                 + itemInfo + ", requirements="
                 + requirements + ", damageTypes="
                 + damageTypes + ", defenseTypes="

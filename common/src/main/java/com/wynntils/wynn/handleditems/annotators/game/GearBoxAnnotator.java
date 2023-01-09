@@ -8,8 +8,8 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
-import com.wynntils.wynn.objects.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
+import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,16 +29,16 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         Matcher matcher = GEAR_BOX_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        Optional<ItemType> itemTypeOpt = ItemType.fromString(matcher.group(1));
-        if (itemTypeOpt.isEmpty()) return null;
+        Optional<GearType> gearTypeOpt = GearType.fromString(matcher.group(1));
+        if (gearTypeOpt.isEmpty()) return null;
 
-        ItemType itemType = itemTypeOpt.get();
-        ItemTier itemTier = ItemTier.fromString(name);
+        GearType gearType = gearTypeOpt.get();
+        GearTier gearTier = GearTier.fromString(name);
         String levelRange = getLevelRange(itemStack);
 
-        if (itemTier == null || levelRange == null) return null;
+        if (gearTier == null || levelRange == null) return null;
 
-        return new GearBoxItem(itemType, itemTier, levelRange);
+        return new GearBoxItem(gearType, gearTier, levelRange);
     }
 
     private static String getLevelRange(ItemStack itemStack) {

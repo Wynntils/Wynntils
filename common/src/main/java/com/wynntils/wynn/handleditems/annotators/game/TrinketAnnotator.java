@@ -9,7 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.TrinketItem;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,13 +30,13 @@ public final class TrinketAnnotator implements ItemAnnotator {
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);
-            ItemTier itemTier = ItemTier.fromString(name);
+            GearTier gearTier = GearTier.fromString(name);
             if (matcher.group(3) != null) {
                 CappedValue uses =
                         new CappedValue(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
-                return new TrinketItem(trinketName, itemTier, uses);
+                return new TrinketItem(trinketName, gearTier, uses);
             } else {
-                return new TrinketItem(trinketName, itemTier);
+                return new TrinketItem(trinketName, gearTier);
             }
         } catch (NoSuchElementException ignored) {
             return null;

@@ -50,7 +50,7 @@ public enum ClassType {
         return name;
     }
 
-    public String getReskinnedName() {
+    private String getReskinnedName() {
         return reskinnedName;
     }
 

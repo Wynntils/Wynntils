@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 
 public class GearInstance {
     private final List<GearIdentification> identifications;
-    private final List<ItemIdentificationContainer> idContainers;
+    private final List<GearIdentificationContainer> idContainers;
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
@@ -23,7 +23,7 @@ public class GearInstance {
 
     public GearInstance(
             List<GearIdentification> identifications,
-            List<ItemIdentificationContainer> idContainers,
+            List<GearIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,
             List<Component> setBonus) {
@@ -34,8 +34,8 @@ public class GearInstance {
         this.setBonus = setBonus;
 
         DoubleSummaryStatistics percents = idContainers.stream()
-                .filter(Predicate.not(ItemIdentificationContainer::isFixed))
-                .mapToDouble(ItemIdentificationContainer::percent)
+                .filter(Predicate.not(GearIdentificationContainer::isFixed))
+                .mapToDouble(GearIdentificationContainer::percent)
                 .summaryStatistics();
         overallPercentage = (float) percents.getAverage();
 
@@ -55,7 +55,7 @@ public class GearInstance {
         return identifications;
     }
 
-    public List<ItemIdentificationContainer> getIdContainers() {
+    public List<GearIdentificationContainer> getIdContainers() {
         return idContainers;
     }
 

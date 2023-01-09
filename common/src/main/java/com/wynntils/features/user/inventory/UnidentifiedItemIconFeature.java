@@ -15,7 +15,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.objects.profiles.item.ItemType;
+import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,7 +39,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(item, GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
-        ItemType itemType = gearBoxItemOpt.get().getItemType();
+        GearType gearType = gearBoxItemOpt.get().getGearType();
 
         RenderUtils.drawTexturedRect(
                 new PoseStack(),
@@ -49,8 +49,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 400,
                 12,
                 12,
-                itemType.getIconTextureX(),
-                itemType.getIconTextureY() + texture.getTextureYOffset(),
+                gearType.getIconTextureX(),
+                gearType.getIconTextureY() + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),

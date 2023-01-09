@@ -161,8 +161,8 @@ public class MapFeature extends UserFeature {
                 tier.getWaypointTexture(),
                 CustomPoi.Visibility.DEFAULT);
 
-        if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
-            MapFeature.INSTANCE.customPois.add(newPoi);
+        if (customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
+            customPois.add(newPoi);
 
             // TODO: Replace this notification with a popup
             NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
@@ -186,15 +186,15 @@ public class MapFeature extends UserFeature {
             this.waypointName = waypointName;
         }
 
-        public Texture getWaypointTexture() {
+        protected Texture getWaypointTexture() {
             return waypointTexture;
         }
 
-        public String getWaypointName() {
+        protected String getWaypointName() {
             return waypointName;
         }
 
-        public static ChestTier fromString(String s) {
+        protected static ChestTier fromString(String s) {
             return values()[MathUtils.integerFromRoman(s) - 1];
         }
     }

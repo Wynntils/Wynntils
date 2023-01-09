@@ -124,7 +124,7 @@ public abstract class ClientPacketListenerMixin {
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
-            this.commands = new CommandDispatcher(event.getRoot());
+            this.commands = new CommandDispatcher<>(event.getRoot());
         }
     }
 

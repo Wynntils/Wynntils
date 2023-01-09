@@ -36,7 +36,7 @@ public final class EmeraldManager extends Manager {
             Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
-    public int emeralds = 0;
+    private int emeralds = 0;
 
     public EmeraldManager() {
         super(List.of());

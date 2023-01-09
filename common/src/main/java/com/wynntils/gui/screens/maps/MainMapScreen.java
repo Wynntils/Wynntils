@@ -113,9 +113,18 @@ public final class MainMapScreen extends AbstractMapScreen {
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_AQUA)
                                 .append(Component.translatable("screens.wynntils.map.share.name")),
-                        Component.translatable("screens.wynntils.map.share.description1"),
-                        Component.translatable("screens.wynntils.map.share.description2"),
-                        Component.translatable("screens.wynntils.map.share.description3"))));
+                        Component.translatable("screens.wynntils.map.share.description1_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description1_2")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        Component.translatable("screens.wynntils.map.share.description2_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description2_2")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        Component.translatable("screens.wynntils.map.share.description3_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description3_2")
+                                        .withStyle(ChatFormatting.GRAY)))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,

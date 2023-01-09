@@ -14,9 +14,9 @@ public class HadesUser {
     private final UUID uuid;
     private final String name;
 
-    boolean isPartyMember;
-    boolean isMutualFriend;
-    boolean isGuildMember;
+    private boolean isPartyMember;
+    private boolean isMutualFriend;
+    private boolean isGuildMember;
     private float x, y, z;
     private PoiLocation poiLocation;
     private int health, maxHealth;
