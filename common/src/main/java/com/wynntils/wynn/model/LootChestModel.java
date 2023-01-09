@@ -11,7 +11,7 @@ import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,9 +40,9 @@ public final class LootChestModel extends Model {
 
         if (!WynnItemMatchers.isGearBox(itemStack)) return;
 
-        ItemTier itemTier = ItemTier.fromComponent(itemStack.getHoverName());
+        GearTier gearTier = GearTier.fromComponent(itemStack.getHoverName());
 
-        if (itemTier == ItemTier.MYTHIC) {
+        if (gearTier == GearTier.MYTHIC) {
             DataStorageFeature.INSTANCE.dryBoxes = 0;
             DataStorageFeature.INSTANCE.dryCount = 0;
         } else {

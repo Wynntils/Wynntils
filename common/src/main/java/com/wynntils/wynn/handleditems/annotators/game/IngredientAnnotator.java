@@ -34,7 +34,7 @@ public final class IngredientAnnotator implements ItemAnnotator {
         String tierColor = matcher.group(2);
         int tier = getTierFromColorCode(tierColor);
 
-        IngredientProfile ingredientProfile = Managers.ItemProfiles.getIngredient(ingredientName);
+        IngredientProfile ingredientProfile = Managers.GearProfiles.getIngredient(ingredientName);
         if (ingredientProfile == null) return null;
         if (ingredientProfile.getTier().getTierInt() != tier) {
             WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);

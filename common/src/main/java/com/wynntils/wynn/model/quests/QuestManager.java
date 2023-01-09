@@ -29,7 +29,7 @@ public final class QuestManager extends Manager {
     public static final ScoreboardListener SCOREBOARD_LISTENER = new QuestScoreboardListener();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
-    public static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
+    private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();

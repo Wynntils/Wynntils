@@ -5,10 +5,10 @@
 package com.wynntils.utils;
 
 public class BoundingBox {
-    public final float x1;
-    public final float z1;
-    public final float x2;
-    public final float z2;
+    private final float x1;
+    private final float z1;
+    private final float x2;
+    private final float z2;
 
     public static BoundingBox centered(float centerX, float centerZ, float widthX, float widthZ) {
         return new BoundingBox(

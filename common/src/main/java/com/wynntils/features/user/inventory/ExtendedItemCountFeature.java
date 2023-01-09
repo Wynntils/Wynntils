@@ -49,13 +49,17 @@ public class ExtendedItemCountFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof CountedItemProperty countedItem)) return;
 
+        if (!countedItem.hasCount()) return;
         int count = countedItem.getCount();
         // This is a bit ugly; would rather we hid the drawing but that was tricky to do
         // with mixins...
         item.setCount(1);
 
-        TextRenderTask task = new TextRenderTask(
-                Integer.toString(count), TextRenderSetting.DEFAULT.withHorizontalAlignment(HorizontalAlignment.Right));
+        TextRenderSetting style = TextRenderSetting.DEFAULT
+                .withCustomColor(countedItem.getCountColor())
+                .withHorizontalAlignment(HorizontalAlignment.Right);
+
+        TextRenderTask task = new TextRenderTask(Integer.toString(count), style);
 
         PoseStack poseStack = new PoseStack();
         poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well

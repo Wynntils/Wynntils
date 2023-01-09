@@ -57,7 +57,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
-    private List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+    private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
     private List<String> currentDialogue;
     private NpcDialogueType dialogueType;
     private boolean isProtected;

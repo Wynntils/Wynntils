@@ -27,10 +27,9 @@ import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.discoveries.DiscoveryManager;
 import com.wynntils.wynn.model.emeralds.EmeraldManager;
 import com.wynntils.wynn.model.guild.territory.TerritoryManager;
-import com.wynntils.wynn.model.item.ItemStackTransformManager;
 import com.wynntils.wynn.model.objectives.ObjectivesManager;
 import com.wynntils.wynn.model.quests.QuestManager;
-import com.wynntils.wynn.objects.profiles.item.ItemProfilesManager;
+import com.wynntils.wynn.objects.profiles.item.GearProfilesManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
@@ -47,7 +46,6 @@ public final class Managers {
     public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final GearItemManager GearItem = new GearItemManager();
-    public static final ItemStackTransformManager ItemStackTransform = new ItemStackTransformManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
@@ -57,7 +55,7 @@ public final class Managers {
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
-    public static final ItemProfilesManager ItemProfiles = new ItemProfilesManager(Net, GearItem);
+    public static final GearProfilesManager GearProfiles = new GearProfilesManager(Net, GearItem);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);

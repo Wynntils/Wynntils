@@ -8,7 +8,7 @@ import com.wynntils.core.components.Model;
 import java.util.List;
 
 public abstract class ActiveFunction<T> extends DependantFunction<T> {
-    protected long lastUpdated;
+    private long lastUpdated;
 
     protected ActiveFunction() {
         markUpdated();

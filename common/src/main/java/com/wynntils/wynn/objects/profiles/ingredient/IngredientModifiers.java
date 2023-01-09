@@ -47,7 +47,7 @@ public class IngredientModifiers {
         return left != 0 || right != 0 || under != 0 || above != 0 || touching != 0 || notTouching != 0;
     }
 
-    public static String[] getLoreLines(String modifierName, int modifierValue) {
+    private static String[] getLoreLines(String modifierName, int modifierValue) {
         return new String[] {
             (modifierValue > 0 ? ChatFormatting.GREEN + "+" : ChatFormatting.RED.toString()) + modifierValue + "%"
                     + ChatFormatting.GRAY + " Ingredient Effectiveness",
@@ -78,5 +78,16 @@ public class IngredientModifiers {
         }
 
         return itemLore.stream().map(Component::literal).toList();
+    }
+
+    @Override
+    public String toString() {
+        return "IngredientModifiers{" + "left="
+                + left + ", right="
+                + right + ", above="
+                + above + ", under="
+                + under + ", touching="
+                + touching + ", notTouching="
+                + notTouching + '}';
     }
 }

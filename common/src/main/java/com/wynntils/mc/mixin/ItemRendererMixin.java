@@ -26,7 +26,7 @@ public abstract class ItemRendererMixin {
                             target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
                             shift = At.Shift.BEFORE,
                             value = "INVOKE"))
-    public void onRenderItem(
+    private void onRenderItem(
             ItemStack itemStack,
             ItemTransforms.TransformType transformType,
             boolean leftHand,

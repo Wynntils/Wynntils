@@ -36,7 +36,7 @@ public abstract class Feature extends AbstractConfigurable
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
 
-    protected FeatureState state = FeatureState.UNINITALIZED;
+    private FeatureState state = FeatureState.UNINITALIZED;
 
     private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
 
@@ -133,7 +133,7 @@ public abstract class Feature extends AbstractConfigurable
 
     /** Called to activate a feature */
     public final void enable() {
-        if (state != FeatureState.DISABLED) return;
+        if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
 
         if (!canEnable()) return;
 
@@ -179,13 +179,19 @@ public abstract class Feature extends AbstractConfigurable
         }
     }
 
+    public final void crash() {
+        state = FeatureState.CRASHED;
+
+        disable();
+    }
+
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
         return state == FeatureState.ENABLED;
     }
 
     /** Whether a feature can be enabled */
-    public boolean canEnable() {
+    private boolean canEnable() {
         for (Condition condition : conditions) {
             if (!condition.isSatisfied()) return false;
         }
@@ -234,6 +240,7 @@ public abstract class Feature extends AbstractConfigurable
     public enum FeatureState {
         UNINITALIZED,
         DISABLED,
-        ENABLED
+        ENABLED,
+        CRASHED
     }
 }

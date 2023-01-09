@@ -5,7 +5,7 @@
 package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class IdentificationOrderer {
      * @param id the identification "short" name. Ex: rawMainAttackNeutralDamage
      * @return the group id, if not present returns -1
      */
-    public int getGroup(String id) {
+    private int getGroup(String id) {
         if (organizedGroups == null) organizeGroups();
 
         return organizedGroups.getOrDefault(getOrder(id), -1);
@@ -121,7 +121,7 @@ public class IdentificationOrderer {
         return result;
     }
 
-    public List<ItemIdentificationContainer> orderIdentifications(List<ItemIdentificationContainer> ids) {
+    public List<GearIdentificationContainer> orderIdentifications(List<GearIdentificationContainer> ids) {
         return ids.stream()
                 .sorted(Comparator.comparingInt(id -> getOrder(id.shortIdName())))
                 .toList();

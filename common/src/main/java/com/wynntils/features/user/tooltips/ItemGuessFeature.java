@@ -13,10 +13,11 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
-    public static ItemGuessFeature INSTANCE;
-
     @Config
     public boolean showGuessesPrice = true;
 
@@ -39,26 +38,31 @@ public class ItemGuessFeature extends UserFeature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = new ArrayList<>(event.getTooltips());
-        tooltips.addAll(getTooltipAddon(gearBoxItemOpt.get()));
+        List<Component> tooltips = ItemUtils.appendTooltip(
+                event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
     }
 
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
         List<Component> addon = new ArrayList<>();
         List<String> itemPossibilities = gearBoxItem.getItemPossibilities();
-        ItemTier itemTier = gearBoxItem.getItemTier();
+        GearTier gearTier = gearBoxItem.getGearTier();
 
-        addon.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
+        if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
+
+        addon.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.translatable("feature.wynntils.itemGuess.possibilities")
+                        .withStyle(ChatFormatting.GRAY)));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String item : itemPossibilities) {
-            ItemProfile profile = Managers.ItemProfiles.getItemsProfile(item);
+            GearProfile profile = Managers.GearProfiles.getItemsProfile(item);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = Component.literal(item).withStyle(itemTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(item).withStyle(gearTier.getChatFormatting());
 
             if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(item)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
@@ -73,12 +77,15 @@ public class ItemGuessFeature extends UserFeature {
 
             MutableComponent guesses = Component.literal("    ");
 
-            guesses.append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
+            guesses.append(Component.literal("- ")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
+                            .withStyle(ChatFormatting.GRAY)));
 
             if (showGuessesPrice && level != -1) {
                 guesses.append(Component.literal(" [")
                         .append(Component.literal(
-                                        (itemTier.getItemIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
+                                        (gearTier.getGearIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(Component.literal("]"))
                         .withStyle(ChatFormatting.GRAY));

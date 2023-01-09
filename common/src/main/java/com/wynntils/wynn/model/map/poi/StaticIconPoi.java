@@ -5,7 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 public abstract class StaticIconPoi extends IconPoi {
-    PoiLocation location;
+    protected final PoiLocation location;
 
     protected StaticIconPoi(PoiLocation location) {
         this.location = location;
