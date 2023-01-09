@@ -1,9 +1,21 @@
+## [0.0.2-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.85...v0.0.2-alpha.86) (2023-01-09)
+
+
+### New Features
+
+* Add K and M to convertEmeraldPrice ([#982](https://github.com/Wynntils/Artemis/issues/982)) ([a8f4aee](https://github.com/Wynntils/Artemis/commit/a8f4aee8809b4f36d0a650f41f1edbe05e7338a2))
+
 ## [0.0.2-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.84...v0.0.2-alpha.85) (2023-01-09)
 
 
 ### Bug Fixes
 
 * Do not save "enabled" state of crashed user features ([#986](https://github.com/Wynntils/Artemis/issues/986)) ([6a6f4cd](https://github.com/Wynntils/Artemis/commit/6a6f4cd893e13bd511816476bc26f788d42c7ee6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.85 [skip ci] ([e748b54](https://github.com/Wynntils/Artemis/commit/e748b545df7d53f50355f51e8f5d30c6bd7da660))
 
 ## [0.0.2-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.83...v0.0.2-alpha.84) (2023-01-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.82 [skip ci] ([b4a2aec](https://github.com/Wynntils/Artemis/commit/b4a2aec5b7bbf52b64895f8a97a00fd501e2ae15))
-
-## [0.0.2-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.80...v0.0.2-alpha.81) (2023-01-08)
-
-
-### Code Refactoring
-
-* Rename "item" to "gear", if it relates to gear ([#988](https://github.com/Wynntils/Artemis/issues/988)) ([ef3780e](https://github.com/Wynntils/Artemis/commit/ef3780e01334dbdcce96b5b83cee942a189c2504))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.81 [skip ci] ([2ab29db](https://github.com/Wynntils/Artemis/commit/2ab29db600585c053e891703a36a22d9ab533a82))
 
