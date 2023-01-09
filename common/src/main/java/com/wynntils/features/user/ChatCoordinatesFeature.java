@@ -50,7 +50,7 @@ public class ChatCoordinatesFeature extends UserFeature {
         e.setMessage(insertCoordinateComponents(message));
     }
 
-    public static Component insertCoordinateComponents(Component message) {
+    private static Component insertCoordinateComponents(Component message) {
         // no coordinate clickables to insert
         if (!LocationUtils.strictCoordinateMatcher(ComponentUtils.getCoded(message))
                 .find()) return message;

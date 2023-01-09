@@ -57,13 +57,13 @@ public final class Delay {
         return false;
     }
 
-    public void start() {
+    private void start() {
         isRunning = false;
         function.run();
         end();
     }
 
-    public void end() {
+    private void end() {
         isRunning = false;
         WynntilsMod.unregisterEventListener(this);
     }

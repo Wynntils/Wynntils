@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.objects.profiles.item;
 
-public enum ItemDropType {
+public enum GearDropType {
     NEVER, // quests or merchants
     LOOTCHEST, // lootchests
     NORMAL // mobs

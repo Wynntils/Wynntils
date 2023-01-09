@@ -7,7 +7,7 @@ package com.wynntils.wynn.handleditems.items.game;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.handleditems.properties.UsesItemPropery;
-import com.wynntils.wynn.objects.profiles.item.ItemTier;
+import com.wynntils.wynn.objects.profiles.item.GearTier;
 
 public class CraftedConsumableItem extends GameItem implements UsesItemPropery, GearTierItemProperty {
     private final String name;
@@ -26,8 +26,8 @@ public class CraftedConsumableItem extends GameItem implements UsesItemPropery, 
         return uses;
     }
 
-    public ItemTier getGearTier() {
-        return ItemTier.CRAFTED;
+    public GearTier getGearTier() {
+        return GearTier.CRAFTED;
     }
 
     @Override

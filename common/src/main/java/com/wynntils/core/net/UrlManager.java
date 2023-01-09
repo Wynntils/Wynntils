@@ -170,7 +170,7 @@ public final class UrlManager extends Manager {
         for (UrlId urlId : UrlId.values()) {
             if (!newMap.containsKey(urlId)) {
                 WynntilsMod.warn("Missing URL in urls.json: " + urlId);
-                return Pair.of(-1, List.of());
+                return Pair.of(-1, Map.of());
             }
         }
 

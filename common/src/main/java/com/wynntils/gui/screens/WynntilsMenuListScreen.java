@@ -24,14 +24,14 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extends WynntilsMenuPagedScreenBase
         implements TextboxScreen {
-    protected double currentScroll = 0;
+    private double currentScroll = 0;
 
     protected int currentPage = 0;
     protected int maxPage = 0;
     protected List<E> elements = new ArrayList<>();
 
-    protected final List<B> elementButtons = new ArrayList<>();
-    protected final QuestBookSearchWidget searchWidget;
+    private final List<B> elementButtons = new ArrayList<>();
+    private final QuestBookSearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
@@ -164,7 +164,7 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
         return maxPage;
     }
 
-    protected void reloadElements(String searchTerm) {
+    private void reloadElements(String searchTerm) {
         elements.clear();
         reloadElementsList(searchTerm);
 

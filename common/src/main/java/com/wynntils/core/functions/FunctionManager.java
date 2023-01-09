@@ -143,7 +143,7 @@ public final class FunctionManager extends Manager {
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    public String getRawValueString(Function<?> function, String argument) {
+    private String getRawValueString(Function<?> function, String argument) {
         Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
             return "??";
