@@ -1,9 +1,21 @@
+## [0.0.2-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.84...v0.0.2-alpha.85) (2023-01-09)
+
+
+### Bug Fixes
+
+* Do not save "enabled" state of crashed user features ([#986](https://github.com/Wynntils/Artemis/issues/986)) ([6a6f4cd](https://github.com/Wynntils/Artemis/commit/6a6f4cd893e13bd511816476bc26f788d42c7ee6))
+
 ## [0.0.2-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.83...v0.0.2-alpha.84) (2023-01-09)
 
 
 ### Bug Fixes
 
 * i18n file should never have color codes ([#999](https://github.com/Wynntils/Artemis/issues/999)) ([f71c640](https://github.com/Wynntils/Artemis/commit/f71c64025788b38ca521e87099aab8cafcb2738f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.84 [skip ci] ([a9ad524](https://github.com/Wynntils/Artemis/commit/a9ad5248ac97225f49626f40b6fc8432b43af93a))
 
 ## [0.0.2-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.82...v0.0.2-alpha.83) (2023-01-08)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.81 [skip ci] ([2ab29db](https://github.com/Wynntils/Artemis/commit/2ab29db600585c053e891703a36a22d9ab533a82))
-
-## [0.0.2-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.79...v0.0.2-alpha.80) (2023-01-08)
-
-
-### New Features
-
-* Make sure advanced tooltip lines are always at the bottom ([#990](https://github.com/Wynntils/Artemis/issues/990)) ([d623818](https://github.com/Wynntils/Artemis/commit/d623818abe53ca60dc60a5e623194c5a15da6f7c))
-
-
-### Code Refactoring
-
-* Even more IntelliJ suggestions; this time mostly access scope reductions ([#993](https://github.com/Wynntils/Artemis/issues/993)) ([816770a](https://github.com/Wynntils/Artemis/commit/816770a8d144ba711abb46fc31caad2c98e7c9ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.80 [skip ci] ([4146e69](https://github.com/Wynntils/Artemis/commit/4146e6919a49639dc665afe43bd2b133b5a49bd7))
 
