@@ -50,7 +50,10 @@ public class ItemGuessFeature extends UserFeature {
 
         if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
 
-        addon.add(Component.translatable("feature.wynntils.itemGuess.possibilities"));
+        addon.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.translatable("feature.wynntils.itemGuess.possibilities")
+                        .withStyle(ChatFormatting.GRAY)));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
@@ -74,7 +77,10 @@ public class ItemGuessFeature extends UserFeature {
 
             MutableComponent guesses = Component.literal("    ");
 
-            guesses.append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level));
+            guesses.append(Component.literal("- ")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
+                            .withStyle(ChatFormatting.GRAY)));
 
             if (showGuessesPrice && level != -1) {
                 guesses.append(Component.literal(" [")
