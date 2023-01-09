@@ -133,7 +133,7 @@ public abstract class Feature extends AbstractConfigurable
 
     /** Called to activate a feature */
     public final void enable() {
-        if (state != FeatureState.DISABLED) return;
+        if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
 
         if (!canEnable()) return;
 
@@ -177,6 +177,12 @@ public abstract class Feature extends AbstractConfigurable
         for (KeyBind keyBind : keyBinds) {
             Managers.KeyBind.unregisterKeybind(keyBind);
         }
+    }
+
+    public final void crash() {
+        state = FeatureState.CRASHED;
+
+        disable();
     }
 
     /** Whether a feature is enabled */
@@ -234,6 +240,7 @@ public abstract class Feature extends AbstractConfigurable
     public enum FeatureState {
         UNINITALIZED,
         DISABLED,
-        ENABLED
+        ENABLED,
+        CRASHED
     }
 }
