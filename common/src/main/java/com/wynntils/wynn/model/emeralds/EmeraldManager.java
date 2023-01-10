@@ -124,16 +124,16 @@ public final class EmeraldManager extends Manager {
         return emeralds;
     }
 
-    public List<EmeraldPouch> getEmeraldPouches(Container inventory) {
-        List<EmeraldPouch> emeraldPouches = new ArrayList<>();
+    public List<EmeraldPouchSlot> getEmeraldPouchSlots(Container inventory) {
+        List<EmeraldPouchSlot> emeraldPouchSlots = new ArrayList<>();
 
         for (int slotNumber = 0; slotNumber < inventory.getContainerSize(); slotNumber++) {
             ItemStack stack = inventory.getItem(slotNumber);
             if (!stack.isEmpty() && isEmeraldPouch(stack)) {
-                emeraldPouches.add(new EmeraldPouch(slotNumber, stack));
+                emeraldPouchSlots.add(new EmeraldPouchSlot(slotNumber, stack));
             }
         }
-        return emeraldPouches;
+        return emeraldPouchSlots;
     }
 
     @SubscribeEvent

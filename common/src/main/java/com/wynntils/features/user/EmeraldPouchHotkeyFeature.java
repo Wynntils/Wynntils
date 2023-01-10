@@ -14,7 +14,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.emeralds.EmeraldPouch;
+import com.wynntils.wynn.model.emeralds.EmeraldPouchSlot;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
@@ -33,24 +33,24 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         Player player = McUtils.player();
-        List<EmeraldPouch> emeraldPouches = Managers.Emerald.getEmeraldPouches(player.getInventory());
+        List<EmeraldPouchSlot> emeraldPouchSlots = Managers.Emerald.getEmeraldPouchSlots(player.getInventory());
 
-        if (emeraldPouches.isEmpty()) {
+        if (emeraldPouchSlots.isEmpty()) {
             Managers.Notification.queueMessage(new TextRenderTask(
                     ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.noPouch"),
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
-            EmeraldPouch emeraldPouch = findSelectableEmeraldPouch(emeraldPouches);
-            if (emeraldPouch != null) {
+            EmeraldPouchSlot emeraldPouchSlot = findSelectableEmeraldPouch(emeraldPouchSlots);
+            if (emeraldPouchSlot != null) {
                 // We found exactly one usable emerald pouch
-                int slotNumber = emeraldPouch.getSlotNumber();
+                int slotNumber = emeraldPouchSlot.getSlotNumber();
 
                 if (slotNumber < 9) {
                     slotNumber += 36; // Raw slot numbers, remap if in hotbar
                 }
 
                 InventoryUtils.sendInventorySlotMouseClick(
-                        slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
+                        slotNumber, emeraldPouchSlot.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
                 Managers.Notification.queueMessage(new TextRenderTask(
@@ -60,11 +60,11 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         }
     }
 
-    private EmeraldPouch findSelectableEmeraldPouch(List<EmeraldPouch> emeraldPouches) {
-        EmeraldPouch largestEmpty = null;
-        EmeraldPouch foundNonEmpty = null;
+    private EmeraldPouchSlot findSelectableEmeraldPouch(List<EmeraldPouchSlot> emeraldPouchSlots) {
+        EmeraldPouchSlot largestEmpty = null;
+        EmeraldPouchSlot foundNonEmpty = null;
 
-        for (EmeraldPouch pouch : emeraldPouches) {
+        for (EmeraldPouchSlot pouch : emeraldPouchSlots) {
             if (Managers.Emerald.getUsage(pouch.getStack()) == 0) {
                 if (largestEmpty == null || Managers.Emerald.getCapacity(pouch.getStack()) > Managers.Emerald.getCapacity(largestEmpty.getStack())) {
                     largestEmpty = pouch;

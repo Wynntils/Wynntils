@@ -6,11 +6,11 @@ package com.wynntils.wynn.model.emeralds;
 
 import net.minecraft.world.item.ItemStack;
 
-public final class EmeraldPouch {
+public final class EmeraldPouchSlot {
     private final int slotNumber;
     private final ItemStack stack;
 
-    EmeraldPouch(int slotNumber, ItemStack stack) {
+    EmeraldPouchSlot(int slotNumber, ItemStack stack) {
         this.slotNumber = slotNumber;
         this.stack = stack;
     }
