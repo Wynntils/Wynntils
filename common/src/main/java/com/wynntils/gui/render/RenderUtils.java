@@ -15,6 +15,7 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -327,6 +328,41 @@ public final class RenderUtils {
             int textureHeight) {
         drawTexturedRect(
                 poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+    }
+
+    public static void drawScalingTexturedRectWithBuffer(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            //            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height
+            //            int textureWidth,
+            //            int textureHeight
+            ) {
+        // FIXME: Hardcoded texture here and CustomRenderType
+        int textureWidth = Texture.CHEST_T1.width();
+        int textureHeight = Texture.CHEST_T1.height();
+
+        // TODO inline?
+        final int u = textureWidth;
+        final int v = textureHeight;
+
+        float uScale = 1f / textureWidth;
+        float vScale = 1f / textureHeight;
+
+        Matrix4f matrix = poseStack.last().pose();
+
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POI_TYPE);
+
+        buffer.vertex(matrix, x, y + height, z).uv(0, v * vScale).endVertex();
+        buffer.vertex(matrix, x + width, y + height, z)
+                .uv(u * uScale, v * vScale)
+                .endVertex();
+        buffer.vertex(matrix, x + width, y, z).uv(u * uScale, 0).endVertex();
+        buffer.vertex(matrix, x, y, z).uv(0, 0).endVertex();
     }
 
     public static void drawTexturedRectWithColor(

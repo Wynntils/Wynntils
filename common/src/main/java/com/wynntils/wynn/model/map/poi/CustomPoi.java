@@ -10,6 +10,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.objects.CustomColor;
 import java.util.Objects;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public class CustomPoi extends StaticIconPoi {
     private final String name;
@@ -66,11 +67,17 @@ public class CustomPoi extends StaticIconPoi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderZ,
+            boolean hovered,
+            float scale,
+            float mapZoom) {
         float[] color = this.color.asFloatArray();
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
-        super.renderAt(poseStack, renderX, renderZ, hovered, scale, mapZoom);
+        super.renderAt(poseStack, bufferSource, renderX, renderZ, hovered, scale, mapZoom);
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }

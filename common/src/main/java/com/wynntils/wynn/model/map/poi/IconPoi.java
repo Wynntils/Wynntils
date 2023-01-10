@@ -15,6 +15,7 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.utils.MathUtils;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class IconPoi implements Poi {
     @Override
@@ -42,14 +43,22 @@ public abstract class IconPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderZ,
+            boolean hovered,
+            float scale,
+            float mapZoom) {
         float modifier = scale;
 
         if (hovered) {
             modifier *= 1.05;
         }
 
-        Texture icon = getIcon();
+        // FIXME: Hardcoded :)
+        //        Texture icon = getIcon();
+        Texture icon = Texture.CHEST_T1;
 
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
@@ -59,16 +68,18 @@ public abstract class IconPoi implements Poi {
         float[] colors = RenderSystem.getShaderColor();
         RenderSystem.setShaderColor(colors[0], colors[1], colors[2], getIconAlpha(mapZoom));
 
-        RenderUtils.drawScalingTexturedRect(
+        RenderUtils.drawScalingTexturedRectWithBuffer(
                 poseStack,
-                icon.resource(),
+                bufferSource,
+                // icon.resource(),
                 renderX - width / 2,
                 renderZ - height / 2,
                 0,
                 width,
-                height,
-                icon.width(),
-                icon.height());
+                height
+                //                icon.width(),
+                //                icon.height()
+                );
 
         if (hovered) {
             // Render name if hovered

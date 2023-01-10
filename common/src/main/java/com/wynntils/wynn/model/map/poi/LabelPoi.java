@@ -10,6 +10,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
     private final PoiLocation location;
@@ -83,7 +84,13 @@ public class LabelPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderZ,
+            boolean hovered,
+            float scale,
+            float mapZoom) {
         // TODO hovered behavior?
         // TODO reimplement minscaleforlabel through fading instead
 

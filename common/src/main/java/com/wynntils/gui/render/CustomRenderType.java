@@ -31,6 +31,20 @@ public class CustomRenderType extends RenderType {
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
 
+    public static final RenderType POI_TYPE = RenderType.create(
+            "eyes",
+            DefaultVertexFormat.POSITION_TEX,
+            VertexFormat.Mode.QUADS,
+            256,
+            false,
+            true,
+            CompositeState.builder()
+                    .setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                    .setTextureState(new RenderStateShard.TextureStateShard(Texture.CHEST_T1.resource(), false, false))
+                    //                    .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                    //                    .setWriteMaskState(COLOR_WRITE)
+                    .createCompositeState(false));
+
     public CustomRenderType(
             String pName,
             VertexFormat pFormat,
