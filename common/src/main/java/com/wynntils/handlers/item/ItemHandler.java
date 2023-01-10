@@ -73,9 +73,7 @@ public class ItemHandler extends Handler {
     }
 
     private void annotate(ItemStack item) {
-        ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
-        // Don't redo if we already have an annotation
-        if (annotation != null) return;
+        ItemAnnotation annotation = null;
 
         List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
         String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
