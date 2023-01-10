@@ -26,10 +26,10 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
     @RegisterKeyBind
-    private final KeyBind emeraldPouchKeyBind = new KeyBind(
-            "Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, EmeraldPouchHotkeyFeature::onOpenPouchKeyPress);
+    private final KeyBind emeraldPouchKeyBind =
+            new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
 
-    private static void onOpenPouchKeyPress() {
+    private void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
 
         Player player = McUtils.player();

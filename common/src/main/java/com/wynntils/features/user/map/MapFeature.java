@@ -113,7 +113,9 @@ public class MapFeature extends UserFeature {
     private BlockPos lastChestPos;
 
     @RegisterKeyBind
-    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, () -> {
+    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, this::openMainMap);
+
+    private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
@@ -122,7 +124,7 @@ public class MapFeature extends UserFeature {
         }
 
         McUtils.mc().setScreen(MainMapScreen.create());
-    });
+    }
 
     @Override
     public List<Model> getModelDependencies() {
