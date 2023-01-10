@@ -19,11 +19,17 @@ public class FakeItemStack extends ItemStack {
     private final GearItem gearItem;
     private final String source;
 
-    public FakeItemStack(GearItem gearItem, String source) {
-        super(gearItem.getGearProfile().getGearInfo().asItemStack().getItem(), 1);
-        this.source = source;
+    private FakeItemStack(GearItem gearItem, ItemStack itemStack, String source) {
+        super(itemStack.getItem(), 1);
+        this.setTag(itemStack.getTag());
         ((AnnotatedItemStack) this).setAnnotation(gearItem);
+
         this.gearItem = gearItem;
+        this.source = source;
+    }
+
+    public FakeItemStack(GearItem gearItem, String source) {
+        this(gearItem, gearItem.getGearProfile().getGearInfo().asItemStack(), source);
     }
 
     @Override
