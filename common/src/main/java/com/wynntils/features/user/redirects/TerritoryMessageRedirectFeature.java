@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user.redirects;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
@@ -49,7 +49,7 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         String territoryName = StringUtils.capitalize(rawTerritoryName);
 
         String enteringMessage = String.format("§7%s %s", directionalArrow, territoryName);
-        NotificationManager.queueMessage(enteringMessage);
+        Managers.Notification.queueMessage(enteringMessage);
     }
 
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle

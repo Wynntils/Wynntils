@@ -14,6 +14,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.objects.WorldState;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -72,7 +73,7 @@ public final class PlayerRelationsModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD) {
+        if (event.getNewState() == WorldState.WORLD) {
             requestFriendListUpdate();
             requestPartyListUpdate();
         } else {

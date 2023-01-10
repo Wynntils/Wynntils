@@ -6,8 +6,8 @@ package com.wynntils.gui.screens.guides;
 
 import net.minecraft.world.item.ItemStack;
 
-public class GuideItemStack extends ItemStack {
-    public GuideItemStack(ItemStack stack) {
+public abstract class GuideItemStack extends ItemStack {
+    protected GuideItemStack(ItemStack stack) {
         super(stack.getItem(), stack.getCount());
         if (stack.getTag() != null) setTag(stack.getTag());
     }

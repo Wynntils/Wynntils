@@ -52,16 +52,8 @@ public class DiscoveryInfo {
         String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()));
         int minLevel = Integer.parseInt(lore.get(0).replace("§a✔§r§7 Combat Lv. Min: §r§f", ""));
 
-        DiscoveryType type;
-        if (name.charAt(1) == DiscoveryType.WORLD.getColor().getChar()) {
-            type = DiscoveryType.WORLD;
-        } else if (name.charAt(1) == DiscoveryType.TERRITORY.getColor().getChar()) {
-            type = DiscoveryType.TERRITORY;
-        } else if (name.charAt(1) == DiscoveryType.SECRET.getColor().getChar()) {
-            type = DiscoveryType.SECRET;
-        } else {
-            return null;
-        }
+        DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
+        if (type == null) return null;
 
         StringBuilder descriptionBuilder = new StringBuilder();
         for (int i = 2; i < lore.size(); i++) {
