@@ -1,3 +1,10 @@
+## [0.0.2-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.89...v0.0.2-alpha.90) (2023-01-10)
+
+
+### New Features
+
+* Add /wynntils status to check if Wynntils services are up ([#1000](https://github.com/Wynntils/Artemis/issues/1000)) ([8bf2f77](https://github.com/Wynntils/Artemis/commit/8bf2f7710a96ac0ffa6e3015e7889fe5e59ff6d6))
+
 ## [0.0.2-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.88...v0.0.2-alpha.89) (2023-01-10)
 
 
@@ -5,6 +12,11 @@
 
 * Make NotificationManager a real Manager ([#1007](https://github.com/Wynntils/Artemis/issues/1007)) ([4837aca](https://github.com/Wynntils/Artemis/commit/4837aca65420168ef9d454a2a75714b4c13c38f5))
 * Various cleanups ([#998](https://github.com/Wynntils/Artemis/issues/998)) ([cac5d35](https://github.com/Wynntils/Artemis/commit/cac5d3562c7a5173354c938a34b576fafd285d60))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.89 [skip ci] ([edf1747](https://github.com/Wynntils/Artemis/commit/edf174752120ffbef87461f26dcf6f26ed95b1b0))
 
 ## [0.0.2-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.87...v0.0.2-alpha.88) (2023-01-10)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.86 [skip ci] ([03530d3](https://github.com/Wynntils/Artemis/commit/03530d343c6cdd75872593b7902a86f19ddc5231))
-
-## [0.0.2-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.84...v0.0.2-alpha.85) (2023-01-09)
-
-
-### Bug Fixes
-
-* Do not save "enabled" state of crashed user features ([#986](https://github.com/Wynntils/Artemis/issues/986)) ([6a6f4cd](https://github.com/Wynntils/Artemis/commit/6a6f4cd893e13bd511816476bc26f788d42c7ee6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.85 [skip ci] ([e748b54](https://github.com/Wynntils/Artemis/commit/e748b545df7d53f50355f51e8f5d30c6bd7da660))
 
