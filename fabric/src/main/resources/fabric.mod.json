@@ -9,6 +9,9 @@
   "depends": {
     "minecraft": "1.19.3"
   },
+  "breaks": {
+    "creativecore": ">=2.6.5"
+  },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
     "client": [
