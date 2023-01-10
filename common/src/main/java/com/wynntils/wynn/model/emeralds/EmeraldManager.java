@@ -55,7 +55,7 @@ public final class EmeraldManager extends Manager {
         return inventoryEmeralds;
     }
 
-    public int getPouchUsage(ItemStack stack) {
+    public int getUsage(ItemStack stack) {
         LinkedList<String> lore = ItemUtils.getLore(stack);
         if (lore.isEmpty()) return 0;
 
@@ -65,7 +65,7 @@ public final class EmeraldManager extends Manager {
         return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
     }
 
-    public int getPouchCapacity(ItemStack stack) {
+    public int getCapacity(ItemStack stack) {
         String lore = ItemUtils.getStringLore(stack);
         Matcher capacityMatcher = POUCH_CAPACITY_PATTERN.matcher(lore);
         if (!capacityMatcher.find()) {
@@ -102,7 +102,7 @@ public final class EmeraldManager extends Manager {
             if (itemStack.isEmpty()) continue;
 
             if (isEmeraldPouch(itemStack)) {
-                emeralds += getPouchUsage(itemStack);
+                emeralds += getUsage(itemStack);
                 continue;
             }
 

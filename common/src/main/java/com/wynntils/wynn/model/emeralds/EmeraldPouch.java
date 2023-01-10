@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.model.emeralds;
 
-import com.wynntils.core.components.Managers;
 import net.minecraft.world.item.ItemStack;
 
 public final class EmeraldPouch {
@@ -22,17 +21,5 @@ public final class EmeraldPouch {
 
     public ItemStack getStack() {
         return stack;
-    }
-
-    public int getUsage() {
-        return Managers.Emerald.getPouchUsage(stack);
-    }
-
-    public boolean isEmpty() {
-        return getUsage() == 0;
-    }
-
-    public int getCapacity() {
-        return Managers.Emerald.getPouchCapacity(stack);
     }
 }

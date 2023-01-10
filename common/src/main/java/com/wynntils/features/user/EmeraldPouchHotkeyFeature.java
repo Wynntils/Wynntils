@@ -65,8 +65,8 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         EmeraldPouch foundNonEmpty = null;
 
         for (EmeraldPouch pouch : emeraldPouches) {
-            if (pouch.isEmpty()) {
-                if (largestEmpty == null || pouch.getCapacity() > largestEmpty.getCapacity()) {
+            if (Managers.Emerald.getUsage(pouch.getStack()) == 0) {
+                if (largestEmpty == null || Managers.Emerald.getCapacity(pouch.getStack()) > Managers.Emerald.getCapacity(largestEmpty.getStack())) {
                     largestEmpty = pouch;
                 }
             } else {
