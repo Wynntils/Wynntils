@@ -9,12 +9,15 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.utils.Delay;
 import com.wynntils.utils.FileUtils;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -47,6 +50,10 @@ public class WynntilsCommand extends CommandBase {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("wynntils")
+                .then(Commands.literal("debug")
+                        .then(Commands.literal("profile")
+                                .then(Commands.literal("reset").executes(this::profileReset))
+                                .then(Commands.literal("show").executes(this::profileShow))))
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
@@ -57,6 +64,54 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
+    }
+
+    private int profileReset(CommandContext<CommandSourceStack> context) {
+        Handlers.Item.resetProfiling();
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.debug.profile.cleared")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
+    private int profileShow(CommandContext<CommandSourceStack> context) {
+        Map<Class<? extends ItemAnnotation>, Integer> profilingTimes = Handlers.Item.getProfilingTimes();
+        Map<Class<? extends ItemAnnotation>, Integer> profilingCounts = Handlers.Item.getProfilingCounts();
+
+        StringBuilder resList = new StringBuilder();
+        profilingTimes.entrySet().stream()
+                .sorted(Map.Entry.<Class<? extends ItemAnnotation>, Integer>comparingByValue()
+                        .reversed())
+                .limit(10)
+                .forEach(entry -> {
+                    int time = entry.getValue();
+                    int count = profilingCounts.get(entry.getKey());
+                    double average = (double) time / count;
+                    resList.append("%7d ms, %7d i, avg: %7.2f ms/i  %s\n"
+                            .formatted(time, count, average, entry.getKey().getSimpleName()));
+                });
+
+        context.getSource().sendSuccess(Component.literal(resList.toString()).withStyle(ChatFormatting.AQUA), false);
+
+        int totalCount = profilingCounts.values().stream().reduce(0, Integer::sum);
+        int totalTime = profilingTimes.values().stream().reduce(0, Integer::sum);
+        double average = (double) totalTime / totalCount;
+
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.debug.profile.total", totalTime, totalCount)
+                                .withStyle(ChatFormatting.AQUA),
+                        false);
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.debug.profile.avg", average)
+                                .withStyle(ChatFormatting.AQUA),
+                        false);
+
+        return 1;
     }
 
     private int reauth(CommandContext<CommandSourceStack> context) {

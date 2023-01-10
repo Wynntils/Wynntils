@@ -12,8 +12,10 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -23,6 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
     private final List<ItemAnnotator> annotators = new ArrayList<>();
+    private Map<Class<? extends ItemAnnotation>, Integer> profilingTimes = new HashMap<>();
+    private Map<Class<? extends ItemAnnotation>, Integer> profilingCounts = new HashMap<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
         ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
@@ -48,6 +52,7 @@ public class ItemHandler extends Handler {
         // Don't redo if we already have an annotation
         if (annotation != null) return;
 
+        long startTime = System.currentTimeMillis();
         List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
         String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
 
@@ -79,6 +84,32 @@ public class ItemHandler extends Handler {
 
         if (annotation == null) return;
 
+        // Measure performance
+        logProfilingData(startTime, annotation);
+
         ((AnnotatedItemStack) item).setAnnotation(annotation);
+    }
+
+    private void logProfilingData(long startTime, ItemAnnotation annotation) {
+        long endTime = System.currentTimeMillis();
+        int timeSpent = (int) (endTime - startTime);
+        Integer allTime = profilingTimes.getOrDefault(annotation.getClass(), Integer.valueOf(0));
+        profilingTimes.put(annotation.getClass(), allTime + timeSpent);
+
+        Integer allCount = profilingCounts.getOrDefault(annotation.getClass(), Integer.valueOf(0));
+        profilingCounts.put(annotation.getClass(), allCount + 1);
+    }
+
+    public Map<Class<? extends ItemAnnotation>, Integer> getProfilingTimes() {
+        return profilingTimes;
+    }
+
+    public Map<Class<? extends ItemAnnotation>, Integer> getProfilingCounts() {
+        return profilingCounts;
+    }
+
+    public void resetProfiling() {
+        profilingTimes.clear();
+        profilingCounts.clear();
     }
 }
