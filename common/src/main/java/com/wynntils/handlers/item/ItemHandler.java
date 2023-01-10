@@ -25,8 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
     private final List<ItemAnnotator> annotators = new ArrayList<>();
-    private Map<Class<? extends ItemAnnotation>, Integer> profilingTimes = new HashMap<>();
-    private Map<Class<? extends ItemAnnotation>, Integer> profilingCounts = new HashMap<>();
+    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
         ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
@@ -93,18 +93,18 @@ public class ItemHandler extends Handler {
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
         long endTime = System.currentTimeMillis();
         int timeSpent = (int) (endTime - startTime);
-        Integer allTime = profilingTimes.getOrDefault(annotation.getClass(), Integer.valueOf(0));
+        int allTime = profilingTimes.getOrDefault(annotation.getClass(), 0);
         profilingTimes.put(annotation.getClass(), allTime + timeSpent);
 
-        Integer allCount = profilingCounts.getOrDefault(annotation.getClass(), Integer.valueOf(0));
+        int allCount = profilingCounts.getOrDefault(annotation.getClass(), 0);
         profilingCounts.put(annotation.getClass(), allCount + 1);
     }
 
-    public Map<Class<? extends ItemAnnotation>, Integer> getProfilingTimes() {
+    public Map<Class<?>, Integer> getProfilingTimes() {
         return profilingTimes;
     }
 
-    public Map<Class<? extends ItemAnnotation>, Integer> getProfilingCounts() {
+    public Map<Class<?>, Integer> getProfilingCounts() {
         return profilingCounts;
     }
 

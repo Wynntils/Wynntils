@@ -13,7 +13,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.utils.Delay;
 import com.wynntils.utils.FileUtils;
 import java.util.List;
@@ -53,7 +52,8 @@ public class WynntilsCommand extends CommandBase {
                 .then(Commands.literal("debug")
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
-                                .then(Commands.literal("show").executes(this::profileShow))))
+                                .then(Commands.literal("showAnnotations").executes(this::profileShowAnnotations))
+                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays))))
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
@@ -68,6 +68,7 @@ public class WynntilsCommand extends CommandBase {
 
     private int profileReset(CommandContext<CommandSourceStack> context) {
         Handlers.Item.resetProfiling();
+        Managers.Overlay.resetProfiling();
         context.getSource()
                 .sendSuccess(
                         Component.translatable("commands.wynntils.debug.profile.cleared")
@@ -77,20 +78,37 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
-    private int profileShow(CommandContext<CommandSourceStack> context) {
-        Map<Class<? extends ItemAnnotation>, Integer> profilingTimes = Handlers.Item.getProfilingTimes();
-        Map<Class<? extends ItemAnnotation>, Integer> profilingCounts = Handlers.Item.getProfilingCounts();
+    private int profileShowAnnotations(CommandContext<CommandSourceStack> context) {
+        Map<Class<?>, Integer> profilingTimes = Handlers.Item.getProfilingTimes();
+        Map<Class<?>, Integer> profilingCounts = Handlers.Item.getProfilingCounts();
 
+        showProfilingData(context, profilingTimes, profilingCounts);
+
+        return 1;
+    }
+
+    private int profileShowOverlays(CommandContext<CommandSourceStack> context) {
+        Map<Class<?>, Integer> profilingTimes = Managers.Overlay.getProfilingTimes();
+        Map<Class<?>, Integer> profilingCounts = Managers.Overlay.getProfilingCounts();
+
+        showProfilingData(context, profilingTimes, profilingCounts);
+
+        return 1;
+    }
+
+    private void showProfilingData(
+            CommandContext<CommandSourceStack> context,
+            Map<Class<?>, Integer> profilingTimes,
+            Map<Class<?>, Integer> profilingCounts) {
         StringBuilder resList = new StringBuilder();
         profilingTimes.entrySet().stream()
-                .sorted(Map.Entry.<Class<? extends ItemAnnotation>, Integer>comparingByValue()
-                        .reversed())
+                .sorted(Map.Entry.<Class<?>, Integer>comparingByValue().reversed())
                 .limit(10)
                 .forEach(entry -> {
                     int time = entry.getValue();
                     int count = profilingCounts.get(entry.getKey());
                     double average = (double) time / count;
-                    resList.append("%7d ms, %7d i, avg: %7.2f ms/i  %s\n"
+                    resList.append("%7d ms, %7d c, avg: %7.2f ms/c  %s\n"
                             .formatted(time, count, average, entry.getKey().getSimpleName()));
                 });
 
@@ -110,8 +128,6 @@ public class WynntilsCommand extends CommandBase {
                         Component.translatable("commands.wynntils.debug.profile.avg", average)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
-
-        return 1;
     }
 
     private int reauth(CommandContext<CommandSourceStack> context) {
