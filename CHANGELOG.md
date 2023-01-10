@@ -1,9 +1,21 @@
+## [0.0.2-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.91...v0.0.2-alpha.92) (2023-01-10)
+
+
+### Bug Fixes
+
+* Use ceil instead of floor for flat color percentage ([#1013](https://github.com/Wynntils/Artemis/issues/1013)) ([4b5097b](https://github.com/Wynntils/Artemis/commit/4b5097b2d8bfa16135b195833a1463d3bb5aef41))
+
 ## [0.0.2-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.90...v0.0.2-alpha.91) (2023-01-10)
 
 
 ### New Features
 
 * Declare in Fabric that we cannot co-exist with Creative Core ([#1011](https://github.com/Wynntils/Artemis/issues/1011)) ([bef8227](https://github.com/Wynntils/Artemis/commit/bef8227216638816d50270f0d4a76ce82decfa39))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.91 [skip ci] ([95c0c54](https://github.com/Wynntils/Artemis/commit/95c0c545a5e5b88dec3201486565c13475dab5e7))
 
 ## [0.0.2-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.89...v0.0.2-alpha.90) (2023-01-10)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.88 [skip ci] ([63c4403](https://github.com/Wynntils/Artemis/commit/63c44030ba1628b98f3cb5828dba42d9dbebc0c8))
-
-## [0.0.2-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.86...v0.0.2-alpha.87) (2023-01-10)
-
-
-### Bug Fixes
-
-* Keybinds should only have effect on Wynncraft servers ([#1009](https://github.com/Wynntils/Artemis/issues/1009)) ([36f08b7](https://github.com/Wynntils/Artemis/commit/36f08b74e13f5c3d56f910845b3e0c06ad461d9c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.87 [skip ci] ([615f57c](https://github.com/Wynntils/Artemis/commit/615f57c532329b4cf174e14376615e32ee5ea60a))
 
