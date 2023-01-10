@@ -4,27 +4,27 @@
  */
 package com.wynntils.wynn.event;
 
-import com.wynntils.wynn.model.WorldStateManager.State;
+import com.wynntils.wynn.objects.WorldState;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WorldStateEvent extends Event {
-    private final State newState;
-    private final State oldState;
+    private final WorldState newState;
+    private final WorldState oldState;
     private final String worldName;
     private final boolean isFirstJoinWorld;
 
-    public WorldStateEvent(State newState, State oldState, String worldName, boolean isFirstJoinWorld) {
+    public WorldStateEvent(WorldState newState, WorldState oldState, String worldName, boolean isFirstJoinWorld) {
         this.newState = newState;
         this.oldState = oldState;
         this.worldName = worldName;
         this.isFirstJoinWorld = isFirstJoinWorld;
     }
 
-    public State getNewState() {
+    public WorldState getNewState() {
         return newState;
     }
 
-    public State getOldState() {
+    public WorldState getOldState() {
         return oldState;
     }
 

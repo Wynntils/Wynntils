@@ -16,6 +16,7 @@ import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.ProfessionInfo;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.HashMap;
@@ -175,18 +176,18 @@ public final class CharacterManager extends Manager {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
-        if (e.getOldState() == WorldStateManager.State.WORLD) {
+        if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
             // This should not be needed, but have it as a safeguard
             inCharacterSelection = false;
         }
 
-        if (e.getNewState() == WorldStateManager.State.CHARACTER_SELECTION) {
+        if (e.getNewState() == WorldState.CHARACTER_SELECTION) {
             inCharacterSelection = true;
         }
 
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
-            if (e.getOldState() != WorldStateManager.State.CHARACTER_SELECTION) {
+        if (e.getNewState() == WorldState.WORLD) {
+            if (e.getOldState() != WorldState.CHARACTER_SELECTION) {
                 // We went directly to a world without coming from the character selection
                 // menu. This means the player has "autojoin" enabled, and that we did not
                 // get a chance to read the character info from the character selection menu.
