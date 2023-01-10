@@ -16,21 +16,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class IngredientProfile {
-    String name;
+    private final String name;
 
     @SerializedName("tier")
-    IngredientTier ingredientTier;
+    private final IngredientTier ingredientTier;
 
-    boolean untradeable;
-    int level;
-    String material;
-    List<ProfessionType> professions;
-    Map<String, IngredientIdentificationContainer> statuses;
-    IngredientItemModifiers itemModifiers;
-    IngredientModifiers ingredientModifiers;
+    private final boolean untradeable;
+    private final int level;
+    private final String material;
+    private final List<ProfessionType> professions;
+    private final Map<String, IngredientIdentificationContainer> statuses;
+    private final IngredientItemModifiers itemModifiers;
+    private final IngredientModifiers ingredientModifiers;
 
     @SerializedName("itemInfo")
-    IngredientInfo ingredientInfo;
+    private IngredientInfo ingredientInfo;
 
     public IngredientProfile(
             String name,

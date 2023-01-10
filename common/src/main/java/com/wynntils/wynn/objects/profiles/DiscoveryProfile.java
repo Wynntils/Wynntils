@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscoveryProfile {
-    int level;
-    String type;
-    String name;
-    List<String> requirements = new ArrayList<>();
+    private int level;
+    private String type;
+    private String name;
+    private final List<String> requirements = new ArrayList<>();
 
     public int getLevel() {
         return level;

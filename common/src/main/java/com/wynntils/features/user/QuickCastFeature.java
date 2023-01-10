@@ -4,18 +4,18 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.actionbar.SpellSegment;
+import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
@@ -78,7 +78,7 @@ public class QuickCastFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void updateSpellFromActionBar(SpellSegment.SpellSegmentUpdateEvent event) {
+    public void updateSpellFromActionBar(SpellSegmentUpdateEvent event) {
         SpellDirection[] spell = getSpellFromMatcher(event.getMatcher());
         updateSpell(spell);
     }
@@ -200,7 +200,7 @@ public class QuickCastFeature extends UserFeature {
     }
 
     private static void sendCancelReason(MutableComponent reason) {
-        NotificationManager.queueMessage(reason.withStyle(ChatFormatting.RED));
+        Managers.Notification.queueMessage(reason.withStyle(ChatFormatting.RED));
     }
 
     public enum SpellUnit {
@@ -208,7 +208,7 @@ public class QuickCastFeature extends UserFeature {
         SECONDARY
     }
 
-    public enum SpellDirection {
+    private enum SpellDirection {
         RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
         LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
 
@@ -218,7 +218,7 @@ public class QuickCastFeature extends UserFeature {
             this.sendPacketRunnable = sendPacketRunnable;
         }
 
-        public Runnable getSendPacketRunnable() {
+        private Runnable getSendPacketRunnable() {
             return sendPacketRunnable;
         }
     }

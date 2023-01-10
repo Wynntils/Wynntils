@@ -12,7 +12,7 @@ public abstract class PlayerPoiBase implements Poi {
     private static final float ADDITIONAL_HEIGHT = 17;
 
     protected final HadesUser user;
-    protected float playerHeadRenderSize;
+    protected final float playerHeadRenderSize;
 
     protected PlayerPoiBase(HadesUser user, float playerHeadScale) {
         this.user = user;
