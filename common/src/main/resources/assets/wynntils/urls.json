@@ -1,6 +1,6 @@
 [
   {
-    "version": 1
+    "version": 2
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -143,5 +143,9 @@
     "arguments": [
       "token"
     ]
+  },
+  {
+    "id": "linkWynntilsStatus",
+    "url": "https://status.wynntils.com/"
   }
 ]
