@@ -55,6 +55,7 @@ import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
+import com.wynntils.features.user.ShamanTotemTrackingFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
 import com.wynntils.features.user.TerritoryDefenseMessageFeature;
@@ -194,6 +195,7 @@ public final class FeatureRegistry {
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ShamanMasksOverlayFeature());
+        registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
