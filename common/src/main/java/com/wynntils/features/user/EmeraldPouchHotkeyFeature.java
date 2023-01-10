@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -14,17 +15,21 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.emeralds.EmeraldPouchSlot;
+import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)
 public class EmeraldPouchHotkeyFeature extends UserFeature {
+    private static final int NO_POUCHES = -1;
+    private static final int MULTIPLE_POUCHES = -2;
+
     @RegisterKeyBind
     private final KeyBind emeraldPouchKeyBind =
             new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
@@ -32,64 +37,69 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
     private void onOpenPouchKeyPress() {
         if (!WynnUtils.onWorld()) return;
 
-        Player player = McUtils.player();
-        List<EmeraldPouchSlot> emeraldPouchSlots = Managers.Emerald.getEmeraldPouchSlots(player.getInventory());
+        int slotNumber = getEmeraldPouchSlot();
 
-        if (emeraldPouchSlots.isEmpty()) {
+        if (slotNumber == NO_POUCHES) {
+            // We found no emerald pouches at all
             Managers.Notification.queueMessage(new TextRenderTask(
                     ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.noPouch"),
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
-        } else {
-            EmeraldPouchSlot emeraldPouchSlot = findSelectableEmeraldPouch(emeraldPouchSlots);
-            if (emeraldPouchSlot != null) {
-                // We found exactly one usable emerald pouch
-                int slotNumber = emeraldPouchSlot.getSlotNumber();
-
-                if (slotNumber < 9) {
-                    slotNumber += 36; // Raw slot numbers, remap if in hotbar
-                }
-
-                InventoryUtils.sendInventorySlotMouseClick(
-                        slotNumber, emeraldPouchSlot.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
-            } else {
-                // We found more than one filled pouch, cannot choose between them
-                Managers.Notification.queueMessage(new TextRenderTask(
-                        ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.multipleFilled"),
-                        TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
-            }
+            return;
         }
+        if (slotNumber == -2) {
+            // We found more than one filled pouch, cannot choose between them
+            Managers.Notification.queueMessage(new TextRenderTask(
+                    ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.multipleFilled"),
+                    TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
+            return;
+        }
+
+        // We found exactly one usable emerald pouch
+
+        if (slotNumber < 9) {
+            // Raw slot numbers, remap if in hotbar
+            slotNumber += 36;
+        }
+
+        InventoryUtils.sendInventorySlotMouseClick(slotNumber, InventoryUtils.MouseClickType.RIGHT_CLICK);
     }
 
-    private EmeraldPouchSlot findSelectableEmeraldPouch(List<EmeraldPouchSlot> emeraldPouchSlots) {
-        EmeraldPouchSlot largestEmpty = null;
-        EmeraldPouchSlot foundNonEmpty = null;
+    private int getEmeraldPouchSlot() {
+        int bestEmptyTier = -1;
+        int bestEmptySlot = -1;
+        int foundNonEmptySlot = -1;
 
-        for (EmeraldPouchSlot pouch : emeraldPouchSlots) {
-            if (Managers.Emerald.getUsage(pouch.getStack()) == 0) {
-                if (largestEmpty == null
-                        || Managers.Emerald.getCapacity(pouch.getStack())
-                                > Managers.Emerald.getCapacity(largestEmpty.getStack())) {
-                    largestEmpty = pouch;
+        // Look through the entire inventory after any pouches
+        Container inventory = McUtils.inventory();
+        for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+            ItemStack itemStack = inventory.getItem(slot);
+            Optional<EmeraldPouchItem> optPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+            if (optPouchItem.isEmpty()) continue;
+
+            EmeraldPouchItem pouchItem = optPouchItem.get();
+            if (pouchItem.getValue() == 0) {
+                // It's empty
+                int tier = pouchItem.getTier();
+                if (tier > bestEmptyTier) {
+                    bestEmptySlot = slot;
+                    bestEmptyTier = tier;
                 }
+            } else if (foundNonEmptySlot != -1) {
+                // We've already found one non-empty pouch; can't choose between them
+                return MULTIPLE_POUCHES;
             } else {
-                if (foundNonEmpty != null) {
-                    // Multiple filled pouches found, we can't choose between them
-                    return null;
-                } else {
-                    foundNonEmpty = pouch;
-                }
+                foundNonEmptySlot = slot;
             }
         }
 
-        if (foundNonEmpty != null) {
+        if (foundNonEmptySlot == -1 && bestEmptySlot == -1) return NO_POUCHES;
+
+        if (foundNonEmptySlot != -1) {
             // We found just a single, non-empty pouch, so use that
-            return foundNonEmpty;
+            return foundNonEmptySlot;
         } else {
-            // As long as emeraldPouches was non-empty, we should have either at least
-            // one non-empty pouch, or at least one empty pouch. Return the empty pouch
-            // with the largest capacity.
-            assert (largestEmpty != null);
-            return largestEmpty;
+            // Return the empty pouch with the largest capacity.
+            return bestEmptySlot;
         }
     }
 }

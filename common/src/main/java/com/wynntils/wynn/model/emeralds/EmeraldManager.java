@@ -4,28 +4,20 @@
  */
 package com.wynntils.wynn.model.emeralds;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
-import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.WorldState;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
@@ -33,12 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-/** Tools for retrieving information about emerald pouches */
 public final class EmeraldManager extends Manager {
-    private static final Pattern POUCH_USAGE_PATTERN =
-            Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
-    private static final Pattern POUCH_CAPACITY_PATTERN =
-            Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
 
@@ -48,35 +35,19 @@ public final class EmeraldManager extends Manager {
 
     public boolean isEmeraldPouch(ItemStack itemStack) {
         Optional<EmeraldPouchItem> itemOpt = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
-        return !itemOpt.isEmpty();
+        return itemOpt.isPresent();
     }
 
     public int getCurrentEmeraldCount() {
         return inventoryEmeralds;
     }
 
-    public int getUsage(ItemStack stack) {
-        LinkedList<String> lore = ItemUtils.getLore(stack);
-        if (lore.isEmpty()) return 0;
+    private int getPouchValue(ItemStack stack) {
+        Optional<EmeraldPouchItem> optPouchItem = Models.Item.asWynnItem(stack, EmeraldPouchItem.class);
+        if (optPouchItem.isEmpty()) return 0;
 
-        Matcher usageMatcher = POUCH_USAGE_PATTERN.matcher(lore.get(0));
-        if (!usageMatcher.matches()) return 0;
-
-        return Integer.parseInt(usageMatcher.group(1).replaceAll("\\s", ""));
-    }
-
-    public int getCapacity(ItemStack stack) {
-        String lore = ItemUtils.getStringLore(stack);
-        Matcher capacityMatcher = POUCH_CAPACITY_PATTERN.matcher(lore);
-        if (!capacityMatcher.find()) {
-            WynntilsMod.error(
-                    "EmeraldPouchParser#getPouchCapacity was called on an ItemStack that wasn't an emerald pouch");
-            return -1;
-        }
-        int capacity = Integer.parseInt(capacityMatcher.group(1)) * 64;
-        if (capacityMatcher.group(2).equals(EmeraldSymbols.LE)) capacity *= 64;
-        if (capacityMatcher.group(2).equals("stx")) capacity *= 4096;
-        return capacity;
+        EmeraldPouchItem pouchItem = optPouchItem.get();
+        return pouchItem.getValue();
     }
 
     public int getEmeraldCountInCurrentContainer() {
@@ -102,7 +73,7 @@ public final class EmeraldManager extends Manager {
             if (itemStack.isEmpty()) continue;
 
             if (isEmeraldPouch(itemStack)) {
-                emeralds += getUsage(itemStack);
+                emeralds += getPouchValue(itemStack);
                 continue;
             }
 
@@ -122,18 +93,6 @@ public final class EmeraldManager extends Manager {
         }
 
         return emeralds;
-    }
-
-    public List<EmeraldPouchSlot> getEmeraldPouchSlots(Container inventory) {
-        List<EmeraldPouchSlot> emeraldPouchSlots = new ArrayList<>();
-
-        for (int slotNumber = 0; slotNumber < inventory.getContainerSize(); slotNumber++) {
-            ItemStack stack = inventory.getItem(slotNumber);
-            if (!stack.isEmpty() && isEmeraldPouch(stack)) {
-                emeraldPouchSlots.add(new EmeraldPouchSlot(slotNumber, stack));
-            }
-        }
-        return emeraldPouchSlots;
     }
 
     @SubscribeEvent
