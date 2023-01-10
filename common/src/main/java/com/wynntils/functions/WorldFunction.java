@@ -6,7 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.objects.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WorldFunction extends ActiveFunction<String> {
@@ -21,7 +21,7 @@ public class WorldFunction extends ActiveFunction<String> {
 
     @SubscribeEvent
     public void onWorldStateUpdate(WorldStateEvent e) {
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
+        if (e.getNewState() == WorldState.WORLD) {
             currentWorldName = e.getWorldName();
             markUpdated();
         } else {
