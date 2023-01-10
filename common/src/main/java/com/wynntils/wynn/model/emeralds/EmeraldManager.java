@@ -6,19 +6,22 @@ package com.wynntils.wynn.model.emeralds;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
 import com.wynntils.wynn.objects.WorldState;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -36,14 +39,20 @@ public final class EmeraldManager extends Manager {
             Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
     private static final Pattern POUCH_CAPACITY_PATTERN =
             Pattern.compile("\\((\\d+)(" + EmeraldSymbols.EB + "|" + EmeraldSymbols.LE + "|stx) Total\\)");
-    private int emeralds = 0;
+    private int inventoryEmeralds = 0;
+    private int containerEmeralds = 0;
 
     public EmeraldManager() {
         super(List.of());
     }
 
+    public boolean isEmeraldPouch(ItemStack itemStack) {
+        Optional<EmeraldPouchItem> itemOpt = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+        return !itemOpt.isEmpty();
+    }
+
     public int getCurrentEmeraldCount() {
-        return emeralds;
+        return inventoryEmeralds;
     }
 
     public int getPouchUsage(ItemStack stack) {
@@ -70,7 +79,21 @@ public final class EmeraldManager extends Manager {
         return capacity;
     }
 
-    public int getEmeraldCountInContainer(AbstractContainerMenu containerMenu) {
+    public int getEmeraldCountInCurrentContainer() {
+        int emerals = getEmeraldCountInContainer(McUtils.containerMenu());
+        if (McUtils.player().containerMenu.containerId != 0) {
+            // Subtract emeralds from inventory to get amount that is only in the container
+            inventoryEmeralds -= Managers.Emerald.getCurrentEmeraldCount();
+        }
+
+        return emerals;
+    }
+
+    private void updateContainerEmeraldCount() {
+        containerEmeralds = getEmeraldCountInContainer(McUtils.containerMenu());
+    }
+
+    private int getEmeraldCountInContainer(AbstractContainerMenu containerMenu) {
         if (containerMenu == null) return 0;
 
         int emeralds = 0;
@@ -78,7 +101,7 @@ public final class EmeraldManager extends Manager {
         for (ItemStack itemStack : containerMenu.getItems()) {
             if (itemStack.isEmpty()) continue;
 
-            if (WynnItemMatchers.isEmeraldPouch(itemStack)) {
+            if (isEmeraldPouch(itemStack)) {
                 emeralds += getPouchUsage(itemStack);
                 continue;
             }
@@ -106,7 +129,7 @@ public final class EmeraldManager extends Manager {
 
         for (int slotNumber = 0; slotNumber < inventory.getContainerSize(); slotNumber++) {
             ItemStack stack = inventory.getItem(slotNumber);
-            if (!stack.isEmpty() && WynnItemMatchers.isEmeraldPouch(stack)) {
+            if (!stack.isEmpty() && isEmeraldPouch(stack)) {
                 emeraldPouches.add(new EmeraldPouch(slotNumber, stack));
             }
         }
@@ -127,6 +150,8 @@ public final class EmeraldManager extends Manager {
         // Only update if the container is the player inventory
         if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
             updateCache();
+        } else {
+            updateContainerEmeraldCount();
         }
     }
 
@@ -135,15 +160,17 @@ public final class EmeraldManager extends Manager {
         // Only update if the container is the player inventory
         if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
             updateCache();
+        } else {
+            updateContainerEmeraldCount();
         }
     }
 
     private void updateCache() {
         InventoryMenu inventory = McUtils.inventoryMenu();
-        emeralds = getEmeraldCountInContainer(inventory);
+        inventoryEmeralds = getEmeraldCountInContainer(inventory);
     }
 
     private void resetCache() {
-        emeralds = 0;
+        inventoryEmeralds = 0;
     }
 }

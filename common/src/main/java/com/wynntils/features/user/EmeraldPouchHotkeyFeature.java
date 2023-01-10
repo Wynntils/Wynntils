@@ -60,7 +60,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         }
     }
 
-    private static EmeraldPouch findSelectableEmeraldPouch(List<EmeraldPouch> emeraldPouches) {
+    private EmeraldPouch findSelectableEmeraldPouch(List<EmeraldPouch> emeraldPouches) {
         EmeraldPouch largestEmpty = null;
         EmeraldPouch foundNonEmpty = null;
 

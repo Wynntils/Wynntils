@@ -53,11 +53,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        int emeralds = Managers.Emerald.getEmeraldCountInContainer(McUtils.containerMenu());
-
-        if (!(event.getScreen() instanceof InventoryScreen)) {
-            emeralds -= Managers.Emerald.getCurrentEmeraldCount();
-        }
+        int emeralds = Managers.Emerald.getEmeraldCountInCurrentContainer();
 
         if (emeralds == 0) return;
 
