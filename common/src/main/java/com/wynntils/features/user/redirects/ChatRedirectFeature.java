@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user.redirects;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -130,7 +130,7 @@ public class ChatRedirectFeature extends UserFeature {
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (String notification : redirector.getNotifications(matcher)) {
-                    NotificationManager.queueMessage(notification);
+                    Managers.Notification.queueMessage(notification);
                 }
             }
         }

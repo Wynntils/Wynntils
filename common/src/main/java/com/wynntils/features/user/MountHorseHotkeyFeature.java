@@ -10,7 +10,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
 import com.wynntils.wynn.utils.InventoryUtils;
@@ -98,7 +97,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
 
     private static void postHorseErrorMessage(MountHorseStatus status) {
 
-        NotificationManager.queueMessage(
+        Managers.Notification.queueMessage(
                 Component.translatable(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
     }
 

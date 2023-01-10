@@ -5,6 +5,7 @@
 package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -14,12 +15,17 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.TimedSet;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class NotificationManager {
+public final class NotificationManager extends Manager {
     private static final TimedSet<MessageContainer> cachedMessageSet = new TimedSet<>(10, TimeUnit.SECONDS, true);
+
+    public NotificationManager() {
+        super(List.of());
+    }
 
     // Clear cached messages on world change
     @SubscribeEvent
@@ -27,15 +33,15 @@ public final class NotificationManager {
         cachedMessageSet.clear();
     }
 
-    public static MessageContainer queueMessage(String message) {
+    public MessageContainer queueMessage(String message) {
         return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
     }
 
-    public static MessageContainer queueMessage(Component message) {
+    public MessageContainer queueMessage(Component message) {
         return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
     }
 
-    public static MessageContainer queueMessage(TextRenderTask message) {
+    public MessageContainer queueMessage(TextRenderTask message) {
         if (!WynnUtils.onWorld()) return null;
 
         WynntilsMod.info("Message Queued: " + message);
@@ -71,7 +77,7 @@ public final class NotificationManager {
      * @param newMessage The new message
      * @return The message container that was edited. This may be the new message container.
      */
-    public static MessageContainer editMessage(MessageContainer msgContainer, String newMessage) {
+    public MessageContainer editMessage(MessageContainer msgContainer, String newMessage) {
         WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage);
 
         // If we have multiple repeated messages, we want to only edit the last one.
@@ -95,14 +101,14 @@ public final class NotificationManager {
         }
     }
 
-    private static void sendToChatIfNeeded(MessageContainer container) {
+    private void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
         if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
             sendOrEditNotification(container);
         }
     }
 
-    private static void sendOrEditNotification(MessageContainer msgContainer) {
+    private void sendOrEditNotification(MessageContainer msgContainer) {
         McUtils.mc()
                 .gui
                 .getChat()

@@ -10,7 +10,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CommonColors;
@@ -37,7 +36,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
         List<EmeraldPouch> emeraldPouches = Managers.Emerald.getEmeraldPouches(player.getInventory());
 
         if (emeraldPouches.isEmpty()) {
-            NotificationManager.queueMessage(new TextRenderTask(
+            Managers.Notification.queueMessage(new TextRenderTask(
                     ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.noPouch"),
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
         } else {
@@ -54,7 +53,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                         slotNumber, emeraldPouch.getStack(), InventoryUtils.MouseClickType.RIGHT_CLICK);
             } else {
                 // We found more than one filled pouch, cannot choose between them
-                NotificationManager.queueMessage(new TextRenderTask(
+                Managers.Notification.queueMessage(new TextRenderTask(
                         ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.multipleFilled"),
                         TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             }
