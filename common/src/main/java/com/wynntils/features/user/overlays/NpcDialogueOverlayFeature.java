@@ -75,8 +75,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
-    private long removeTime;
-
     private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
 

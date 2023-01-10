@@ -15,7 +15,7 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.actionbar.SpellSegment;
+import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
@@ -78,7 +78,7 @@ public class QuickCastFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void updateSpellFromActionBar(SpellSegment.SpellSegmentUpdateEvent event) {
+    public void updateSpellFromActionBar(SpellSegmentUpdateEvent event) {
         SpellDirection[] spell = getSpellFromMatcher(event.getMatcher());
         updateSpell(spell);
     }
@@ -208,7 +208,7 @@ public class QuickCastFeature extends UserFeature {
         SECONDARY
     }
 
-    public enum SpellDirection {
+    private enum SpellDirection {
         RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
         LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
 
@@ -218,7 +218,7 @@ public class QuickCastFeature extends UserFeature {
             this.sendPacketRunnable = sendPacketRunnable;
         }
 
-        public Runnable getSendPacketRunnable() {
+        private Runnable getSendPacketRunnable() {
             return sendPacketRunnable;
         }
     }

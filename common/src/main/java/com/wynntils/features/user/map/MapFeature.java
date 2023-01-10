@@ -187,15 +187,15 @@ public class MapFeature extends UserFeature {
             this.waypointName = waypointName;
         }
 
-        protected Texture getWaypointTexture() {
+        private Texture getWaypointTexture() {
             return waypointTexture;
         }
 
-        protected String getWaypointName() {
+        private String getWaypointName() {
             return waypointName;
         }
 
-        protected static ChestTier fromString(String s) {
+        private static ChestTier fromString(String s) {
             return values()[MathUtils.integerFromRoman(s) - 1];
         }
     }

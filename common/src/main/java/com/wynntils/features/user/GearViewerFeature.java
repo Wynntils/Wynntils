@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
 public class GearViewerFeature extends UserFeature {
-    private static final float RAYCAST_RANGE = 5f;
-
     @RegisterKeyBind
     private final KeyBind gearViewerKeybind = new KeyBind(
             "View player's gear",
