@@ -34,6 +34,8 @@ public final class OverlayManager extends Manager {
     private final Set<Overlay> enabledOverlays = new HashSet<>();
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
+    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
 
     public OverlayManager(CrashReportManager crashReportManager) {
         super(List.of(crashReportManager));
@@ -108,7 +110,9 @@ public final class OverlayManager extends Manager {
                     overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
                 } else {
                     if (shouldRender) {
+                        long startTime = System.currentTimeMillis();
                         overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                        logProfilingData(startTime, overlay);
                     }
                 }
             } catch (Throwable t) {
@@ -126,6 +130,29 @@ public final class OverlayManager extends Manager {
         for (Overlay overlay : crashedOverlays) {
             overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
+    }
+
+    private void logProfilingData(long startTime, Overlay overlay) {
+        long endTime = System.currentTimeMillis();
+        int timeSpent = (int) (endTime - startTime);
+        int allTime = profilingTimes.getOrDefault(overlay.getClass(), 0);
+        profilingTimes.put(overlay.getClass(), allTime + timeSpent);
+
+        int allCount = profilingCounts.getOrDefault(overlay.getClass(), 0);
+        profilingCounts.put(overlay.getClass(), allCount + 1);
+    }
+
+    public Map<Class<?>, Integer> getProfilingTimes() {
+        return profilingTimes;
+    }
+
+    public Map<Class<?>, Integer> getProfilingCounts() {
+        return profilingCounts;
+    }
+
+    public void resetProfiling() {
+        profilingTimes.clear();
+        profilingCounts.clear();
     }
 
     private void addCrashCallbacks() {
