@@ -35,16 +35,16 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends Screen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
-    protected static final float BORDER_OFFSET = 6;
+    private static final float BORDER_OFFSET = 6;
 
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    protected static final float MIN_ZOOM = 0.1f;
-    protected static final float MAX_ZOOM = 3f;
-    protected static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
+    private static final float MIN_ZOOM = 0.1f;
+    private static final float MAX_ZOOM = 3f;
+    private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
 
-    protected float renderWidth;
+    private float renderWidth;
     protected float renderHeight;
     protected float renderX;
     protected float renderY;
@@ -62,9 +62,9 @@ public abstract class AbstractMapScreen extends Screen {
 
     protected float currentZoom = 1f;
 
-    protected boolean dragging = false;
-    protected double lastMouseX = 0;
-    protected double lastMouseY = 0;
+    private boolean dragging = false;
+    private double lastMouseX = 0;
+    private double lastMouseY = 0;
 
     protected Poi hovered = null;
 
@@ -350,7 +350,7 @@ public abstract class AbstractMapScreen extends Screen {
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
 
-    protected void setZoom(float zoomTargetDelta) {
+    private void setZoom(float zoomTargetDelta) {
         this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
     }
 

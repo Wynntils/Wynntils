@@ -35,7 +35,7 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public GearTier getGearTier() {
-        return tomeProfile.getGearTier();
+        return tomeProfile.gearTier();
     }
 
     @Override

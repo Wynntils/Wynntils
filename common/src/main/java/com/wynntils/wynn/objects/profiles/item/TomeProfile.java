@@ -4,41 +4,7 @@
  */
 package com.wynntils.wynn.objects.profiles.item;
 
-public class TomeProfile {
-    private final String displayName;
-    private final GearTier gearTier;
-
-    private final String variant;
-    private final TomeType type;
-    private final String tomeTier;
-
-    public TomeProfile(String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {
-        this.displayName = displayName;
-        this.gearTier = gearTier;
-        this.variant = variant;
-        this.type = type;
-        this.tomeTier = tomeTier;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public GearTier getGearTier() {
-        return gearTier;
-    }
-
-    public String getVariant() {
-        return variant;
-    }
-
-    public TomeType getType() {
-        return type;
-    }
-
-    public String getTomeTier() {
-        return tomeTier;
-    }
+public record TomeProfile(String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {
 
     @Override
     public String toString() {

@@ -39,7 +39,8 @@ public enum UrlId {
     LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),
     LINK_WYNNTILS_DISCORD_INVITE("linkWynntilsDiscordInvite"),
     LINK_WYNNTILS_PATREON("linkWynntilsPatreon"),
-    LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount");
+    LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount"),
+    LINK_WYNNTILS_STATUS("linkWynntilsStatus");
 
     private final String id;
 
