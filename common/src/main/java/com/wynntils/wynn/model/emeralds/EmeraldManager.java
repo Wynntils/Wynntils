@@ -5,29 +5,26 @@
 package com.wynntils.wynn.model.emeralds;
 
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
-import com.wynntils.wynn.objects.WorldState;
+import com.wynntils.wynn.handleditems.properties.EmeraldValuedItemProperty;
+import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class EmeraldManager extends Manager {
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
+    private int ignoreContainerId = -1;
 
     public EmeraldManager() {
         super(List.of());
@@ -38,98 +35,77 @@ public final class EmeraldManager extends Manager {
         return itemOpt.isPresent();
     }
 
-    public int getCurrentEmeraldCount() {
+    public int getAmountInInventory() {
         return inventoryEmeralds;
     }
 
-    private int getPouchValue(ItemStack stack) {
-        Optional<EmeraldPouchItem> optPouchItem = Models.Item.asWynnItem(stack, EmeraldPouchItem.class);
-        if (optPouchItem.isEmpty()) return 0;
-
-        EmeraldPouchItem pouchItem = optPouchItem.get();
-        return pouchItem.getValue();
-    }
-
-    public int getEmeraldCountInCurrentContainer() {
-        int emerals = getEmeraldCountInContainer(McUtils.containerMenu());
-        if (McUtils.player().containerMenu.containerId != 0) {
-            // Subtract emeralds from inventory to get amount that is only in the container
-            inventoryEmeralds -= Managers.Emerald.getCurrentEmeraldCount();
-        }
-
-        return emerals;
-    }
-
-    private void updateContainerEmeraldCount() {
-        containerEmeralds = getEmeraldCountInContainer(McUtils.containerMenu());
-    }
-
-    private int getEmeraldCountInContainer(AbstractContainerMenu containerMenu) {
-        if (containerMenu == null) return 0;
-
-        int emeralds = 0;
-
-        for (ItemStack itemStack : containerMenu.getItems()) {
-            if (itemStack.isEmpty()) continue;
-
-            if (isEmeraldPouch(itemStack)) {
-                emeralds += getPouchValue(itemStack);
-                continue;
-            }
-
-            Item item = itemStack.getItem();
-            if (item != Items.EMERALD && item != Items.EMERALD_BLOCK && item != Items.EXPERIENCE_BOTTLE) {
-                continue;
-            }
-
-            String displayName = ComponentUtils.getCoded(itemStack.getHoverName());
-            if (item == Items.EMERALD && displayName.equals(ChatFormatting.GREEN + "Emerald")) {
-                emeralds += itemStack.getCount();
-            } else if (item == Items.EMERALD_BLOCK && displayName.equals(ChatFormatting.GREEN + "Emerald Block")) {
-                emeralds += itemStack.getCount() * 64;
-            } else if (item == Items.EXPERIENCE_BOTTLE && displayName.equals(ChatFormatting.GREEN + "Liquid Emerald")) {
-                emeralds += itemStack.getCount() * (64 * 64);
-            }
-        }
-
-        return emeralds;
+    public int getAmountInContainer() {
+        return containerEmeralds;
     }
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() == WorldState.WORLD) {
-            updateCache();
-        } else {
-            resetCache();
-        }
-    }
-
-    @SubscribeEvent
-    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
-        // Only update if the container is the player inventory
-        if (e.getContainerId() == McUtils.player().inventoryMenu.containerId) {
-            updateCache();
-        } else {
-            updateContainerEmeraldCount();
-        }
-    }
-
-    @SubscribeEvent
-    public void onSlotSetEvent(SetSlotEvent.Post e) {
-        // Only update if the container is the player inventory
-        if (Objects.equals(e.getContainer(), McUtils.player().getInventory())) {
-            updateCache();
-        } else {
-            updateContainerEmeraldCount();
-        }
-    }
-
-    private void updateCache() {
-        InventoryMenu inventory = McUtils.inventoryMenu();
-        inventoryEmeralds = getEmeraldCountInContainer(inventory);
-    }
-
-    private void resetCache() {
         inventoryEmeralds = 0;
+        containerEmeralds = 0;
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onSetSlot(SetSlotEvent.Pre event) {
+        boolean isInventory = (event.getContainer() == McUtils.player().getInventory());
+
+        // Subtract the outgoing object from our balance
+        adjustBalance(event.getContainer().getItem(event.getSlot()), -1, isInventory);
+        // And add the incoming value
+        adjustBalance(event.getItem(), 1, isInventory);
+    }
+
+    @SubscribeEvent
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+        String title = WynnUtils.normalizeBadString(e.getTitle().getString());
+        if (title.equals("Emerald Pouch")) {
+            ignoreContainerId = e.getContainerId();
+        } else {
+            ignoreContainerId = -1;
+        }
+    }
+
+    @SubscribeEvent
+    public void onMenuClosed(MenuEvent.MenuClosedEvent e) {
+        containerEmeralds = 0;
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        boolean isInventory;
+        // If this is an open emerald pouch, just ignore it
+        if (event.getContainerId() == ignoreContainerId) return;
+
+        if (event.getContainerId() == 0) {
+            inventoryEmeralds = 0;
+            isInventory = true;
+        } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
+            containerEmeralds = 0;
+            isInventory = false;
+        } else {
+            return;
+        }
+
+        List<ItemStack> items = event.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            adjustBalance(items.get(i), 1, isInventory);
+        }
+    }
+
+    private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return;
+        if (!(wynnItemOpt.get() instanceof EmeraldValuedItemProperty valuedItem)) return;
+
+        int adjustValue = valuedItem.getEmeraldValue() * multiplier;
+        if (isInventory) {
+            inventoryEmeralds += adjustValue;
+        } else {
+            containerEmeralds += adjustValue;
+        }
     }
 }
