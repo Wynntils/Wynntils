@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class EmeraldManager extends Manager {
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
-    private int ignoreContainerId = -1;
+    private int pouchContainerId = -1;
 
     public EmeraldManager() {
         super(List.of());
@@ -63,9 +63,9 @@ public final class EmeraldManager extends Manager {
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         String title = WynnUtils.normalizeBadString(e.getTitle().getString());
         if (title.equals("Emerald Pouch")) {
-            ignoreContainerId = e.getContainerId();
+            pouchContainerId = e.getContainerId();
         } else {
-            ignoreContainerId = -1;
+            pouchContainerId = -1;
         }
     }
 
@@ -76,24 +76,33 @@ public final class EmeraldManager extends Manager {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        boolean isInventory;
-        // If this is an open emerald pouch, just ignore it
-        if (event.getContainerId() == ignoreContainerId) return;
+        int containerStop;
 
+        inventoryEmeralds = 0;
+        containerEmeralds = 0;
+
+        List<ItemStack> items = event.getItems();
         if (event.getContainerId() == 0) {
-            inventoryEmeralds = 0;
-            isInventory = true;
+            containerStop = 0;
         } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
-            containerEmeralds = 0;
-            isInventory = false;
+            containerStop = items.size() - 36;
+            // FIXME: need to account for hand as well!
         } else {
             return;
         }
 
-        List<ItemStack> items = event.getItems();
-        for (int i = 0; i < items.size(); i++) {
-            adjustBalance(items.get(i), 1, isInventory);
+        for (int i = 0; i < containerStop; i++) {
+            adjustBalance(items.get(i), 1, false);
         }
+        for (int i = containerStop; i < items.size(); i++) {
+            adjustBalance(items.get(i), 1, true);
+        }
+        if (event.getContainerId() == pouchContainerId) {
+            // Don't count the emeralds in the pouch container twice, it's actually still
+            // just the inventory
+            containerEmeralds = 0;
+        }
+
     }
 
     private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
