@@ -1,9 +1,21 @@
+## [0.0.2-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.87...v0.0.2-alpha.88) (2023-01-10)
+
+
+### Code Refactoring
+
+* Make WorldState a stand-alone enum ([#1008](https://github.com/Wynntils/Artemis/issues/1008)) ([e4177f9](https://github.com/Wynntils/Artemis/commit/e4177f939ea42cee4683562ed99f8f99d8c04d32))
+
 ## [0.0.2-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.86...v0.0.2-alpha.87) (2023-01-10)
 
 
 ### Bug Fixes
 
 * Keybinds should only have effect on Wynncraft servers ([#1009](https://github.com/Wynntils/Artemis/issues/1009)) ([36f08b7](https://github.com/Wynntils/Artemis/commit/36f08b74e13f5c3d56f910845b3e0c06ad461d9c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.87 [skip ci] ([615f57c](https://github.com/Wynntils/Artemis/commit/615f57c532329b4cf174e14376615e32ee5ea60a))
 
 ## [0.0.2-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.85...v0.0.2-alpha.86) (2023-01-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.84 [skip ci] ([a9ad524](https://github.com/Wynntils/Artemis/commit/a9ad5248ac97225f49626f40b6fc8432b43af93a))
-
-## [0.0.2-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.82...v0.0.2-alpha.83) (2023-01-08)
-
-
-### Bug Fixes
-
-* Item screenshot scaling issue ([#997](https://github.com/Wynntils/Artemis/issues/997)) ([1ddfafd](https://github.com/Wynntils/Artemis/commit/1ddfafd924fd33c8fbe6684d0500dff528e9105a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.83 [skip ci] ([9c331f5](https://github.com/Wynntils/Artemis/commit/9c331f506f9a71da9254177fa199c26d02fbf003))
 
