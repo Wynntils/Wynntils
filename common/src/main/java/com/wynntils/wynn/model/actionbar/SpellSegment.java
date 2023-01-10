@@ -7,9 +7,9 @@ package com.wynntils.wynn.model.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarPosition;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.Event;
 
 public class SpellSegment implements ActionBarSegment {
     private static final Pattern SPELL_PATTERN =
@@ -42,17 +42,5 @@ public class SpellSegment implements ActionBarSegment {
     @Override
     public boolean isHidden() {
         return false;
-    }
-
-    public static class SpellSegmentUpdateEvent extends Event {
-        private final Matcher matcher;
-
-        public SpellSegmentUpdateEvent(Matcher matcher) {
-            this.matcher = matcher;
-        }
-
-        public Matcher getMatcher() {
-            return matcher;
-        }
     }
 }

@@ -12,12 +12,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class IngredientModifiers {
-    int left = 0;
-    int right = 0;
-    int above = 0;
-    int under = 0;
-    int touching = 0;
-    int notTouching = 0;
+    private final int left = 0;
+    private final int right = 0;
+    private final int above = 0;
+    private final int under = 0;
+    private final int touching = 0;
+    private final int notTouching = 0;
 
     public int getLeft() {
         return left;

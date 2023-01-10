@@ -6,8 +6,6 @@ package com.wynntils.core.services;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
-import com.wynntils.features.user.TranslationFeature;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public final class TranslationModel extends Model {
      * @param service An enum describing which translation service is requested.
      * @return An instance of the selected translation service, or null on failure
      */
-    public TranslationService getService(TranslationServices service) {
+    private TranslationService getService(TranslationServices service) {
         try {
             Constructor<? extends TranslationService> ctor = service.serviceClass.getConstructor();
             return ctor.newInstance();
@@ -39,11 +37,10 @@ public final class TranslationModel extends Model {
      *
      * @return An instance of the selected translation service, or null on failure
      */
-    public TranslationService getTranslator() {
+    public TranslationService getTranslator(TranslationModel.TranslationServices translationService) {
         // These might not have been created yet, or reset by config changing
-        if (Models.Translation.translator == null) {
-            Models.Translation.translator =
-                    Models.Translation.getService(TranslationFeature.INSTANCE.translationService);
+        if (translator == null) {
+            translator = getService(translationService);
         }
         return translator;
     }

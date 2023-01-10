@@ -109,10 +109,6 @@ public final class WynnItemMatchers {
         return itemStack.is(Items.STONE_SHOVEL) && itemStack.getDamageValue() == 6;
     }
 
-    public static Matcher serverItemMatcher(Component text) {
-        return SERVER_ITEM_PATTERN.matcher(text.getString());
-    }
-
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -121,21 +117,8 @@ public final class WynnItemMatchers {
         return DURABILITY_PATTERN.matcher(text.getString());
     }
 
-    public static Matcher powderNameMatcher(Component text) {
-        return POWDER_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
-    public static Matcher emeraldPouchTierMatcher(Component text) {
-        return EMERALD_POUCH_TIER_PATTERN.matcher(WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
-    }
-
     private static Matcher consumableNameMatcher(Component text) {
         return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
-    public static Matcher ingredientOrMaterialMatcher(Component text) {
-        return INGREDIENT_OR_MATERIAL_PATTERN.matcher(
-                WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(text)));
     }
 
     public static CappedValue getDurability(ItemStack itemStack) {

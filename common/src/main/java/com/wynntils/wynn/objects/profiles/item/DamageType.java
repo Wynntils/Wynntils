@@ -6,7 +6,6 @@ package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.utils.StringUtils;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {
@@ -38,16 +37,6 @@ public enum DamageType {
             if (type.symbol.equals(symbol)) return type;
         }
         return null;
-    }
-
-    public static Pattern compileDamagePattern() {
-        StringBuilder damageTypes = new StringBuilder();
-
-        for (DamageType type : values()) {
-            damageTypes.append(type.getSymbol());
-        }
-
-        return Pattern.compile("-(.*?) ([" + damageTypes + "])");
     }
 
     @Override
