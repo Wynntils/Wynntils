@@ -270,6 +270,8 @@ public class MinimapFeature extends UserFeature {
                 }
             }
 
+            bufferSource.endBatch();
+
             // Compass icon
             Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
 
