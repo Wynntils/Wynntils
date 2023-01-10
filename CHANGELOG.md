@@ -1,9 +1,21 @@
+## [0.0.2-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.90...v0.0.2-alpha.91) (2023-01-10)
+
+
+### New Features
+
+* Declare in Fabric that we cannot co-exist with Creative Core ([#1011](https://github.com/Wynntils/Artemis/issues/1011)) ([bef8227](https://github.com/Wynntils/Artemis/commit/bef8227216638816d50270f0d4a76ce82decfa39))
+
 ## [0.0.2-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.89...v0.0.2-alpha.90) (2023-01-10)
 
 
 ### New Features
 
 * Add /wynntils status to check if Wynntils services are up ([#1000](https://github.com/Wynntils/Artemis/issues/1000)) ([8bf2f77](https://github.com/Wynntils/Artemis/commit/8bf2f7710a96ac0ffa6e3015e7889fe5e59ff6d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.90 [skip ci] ([52dd819](https://github.com/Wynntils/Artemis/commit/52dd819cd39703bf22f6a5e1d01b440deaa13771))
 
 ## [0.0.2-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.88...v0.0.2-alpha.89) (2023-01-10)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.87 [skip ci] ([615f57c](https://github.com/Wynntils/Artemis/commit/615f57c532329b4cf174e14376615e32ee5ea60a))
-
-## [0.0.2-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.85...v0.0.2-alpha.86) (2023-01-09)
-
-
-### New Features
-
-* Add K and M to convertEmeraldPrice ([#982](https://github.com/Wynntils/Artemis/issues/982)) ([a8f4aee](https://github.com/Wynntils/Artemis/commit/a8f4aee8809b4f36d0a650f41f1edbe05e7338a2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.86 [skip ci] ([03530d3](https://github.com/Wynntils/Artemis/commit/03530d343c6cdd75872593b7902a86f19ddc5231))
 
