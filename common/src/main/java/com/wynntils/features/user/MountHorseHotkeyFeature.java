@@ -36,9 +36,9 @@ public class MountHorseHotkeyFeature extends UserFeature {
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind =
-            new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, MountHorseHotkeyFeature::onMountHorseKeyPress);
+            new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::onMountHorseKeyPress);
 
-    private static void onMountHorseKeyPress() {
+    private void onMountHorseKeyPress() {
         if (!WynnUtils.onWorld()) return;
 
         if (McUtils.player().getVehicle() != null) {
@@ -60,7 +60,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
     }
 
     /** Horse should be nearby when this is called */
-    private static void mountHorse(Entity horse) {
+    private void mountHorse(Entity horse) {
         // swap to soul points to avoid right click problems
         int prevItem = McUtils.inventory().selected;
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(InventoryUtils.SOUL_POINTS_SLOT_NUM));
@@ -68,7 +68,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
     }
 
-    private static void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
+    private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
@@ -96,8 +96,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
                 SUMMON_DELAY_TICKS);
     }
 
-    private static void postHorseErrorMessage(MountHorseStatus status) {
-
+    private void postHorseErrorMessage(MountHorseStatus status) {
         NotificationManager.queueMessage(
                 Component.translatable(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
     }
