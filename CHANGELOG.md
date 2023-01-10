@@ -1,9 +1,21 @@
+## [0.0.2-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.86...v0.0.2-alpha.87) (2023-01-10)
+
+
+### Bug Fixes
+
+* Keybinds should only have effect on Wynncraft servers ([#1009](https://github.com/Wynntils/Artemis/issues/1009)) ([36f08b7](https://github.com/Wynntils/Artemis/commit/36f08b74e13f5c3d56f910845b3e0c06ad461d9c))
+
 ## [0.0.2-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.85...v0.0.2-alpha.86) (2023-01-09)
 
 
 ### New Features
 
 * Add K and M to convertEmeraldPrice ([#982](https://github.com/Wynntils/Artemis/issues/982)) ([a8f4aee](https://github.com/Wynntils/Artemis/commit/a8f4aee8809b4f36d0a650f41f1edbe05e7338a2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.86 [skip ci] ([03530d3](https://github.com/Wynntils/Artemis/commit/03530d343c6cdd75872593b7902a86f19ddc5231))
 
 ## [0.0.2-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.84...v0.0.2-alpha.85) (2023-01-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.83 [skip ci] ([9c331f5](https://github.com/Wynntils/Artemis/commit/9c331f506f9a71da9254177fa199c26d02fbf003))
-
-## [0.0.2-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.81...v0.0.2-alpha.82) (2023-01-08)
-
-
-### Bug Fixes
-
-* Regression introduced by item->gear rename ([#996](https://github.com/Wynntils/Artemis/issues/996)) ([841fec3](https://github.com/Wynntils/Artemis/commit/841fec3de7125c7c594aad3c248f216d300b28c8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.82 [skip ci] ([b4a2aec](https://github.com/Wynntils/Artemis/commit/b4a2aec5b7bbf52b64895f8a97a00fd501e2ae15))
 
