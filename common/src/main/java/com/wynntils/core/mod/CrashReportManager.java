@@ -22,6 +22,7 @@ public final class CrashReportManager extends Manager {
         CRASH_HANDLERS.put(name, handler);
     }
 
+    //  Note: this is called directly from a mixin!
     public static CrashReportCategory generateDetails() {
         CrashReportCategory wynntilsCategory = new CrashReportCategory("Wynntils");
 
