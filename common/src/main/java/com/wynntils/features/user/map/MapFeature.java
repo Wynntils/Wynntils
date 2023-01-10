@@ -15,7 +15,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -167,7 +166,7 @@ public class MapFeature extends UserFeature {
             customPois.add(newPoi);
 
             // TODO: Replace this notification with a popup
-            NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
+            Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
             Managers.Config.saveConfig();

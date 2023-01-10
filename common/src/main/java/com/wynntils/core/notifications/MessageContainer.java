@@ -41,7 +41,7 @@ public class MessageContainer {
         updateRenderTask();
     }
 
-    // Do NOT call this to edit the container. Use NotificationManager methods instead.
+    // Do NOT call this to edit the container. Use Managers.Notification methods instead.
     void editMessage(String newMessage) {
         this.message = newMessage;
 

@@ -16,6 +16,7 @@ import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
+import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
@@ -40,6 +41,7 @@ public final class Managers {
     public static final CharacterManager Character = new CharacterManager();
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
+    public static final NotificationManager Notification = new NotificationManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
