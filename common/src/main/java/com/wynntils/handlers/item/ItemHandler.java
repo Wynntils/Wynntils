@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -39,18 +41,43 @@ public class ItemHandler extends Handler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        annotate(event.getItem());
+        updateAnnotation(event.getContainer().getItem(event.getSlot()), event.getItem());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        event.getItems().forEach(this::annotate);
+        NonNullList<ItemStack> existingItems;
+        if (event.getContainerId() == 0) {
+            // Set all for inventory
+            existingItems = McUtils.player().getInventory().items;
+        } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
+            // Set all for the currently open container. Vanilla has copied inventory in the last
+            // slots
+            existingItems = McUtils.player().containerMenu.getItems();
+        } else {
+            // No matching container, just ignore this
+            return;
+        }
+
+        List<ItemStack> newItems = event.getItems();
+        for (int i = 0; i < newItems.size(); i++) {
+            updateAnnotation(existingItems.get(i), newItems.get(i));
+        }
+    }
+
+    private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
+        ItemAnnotation annotation = ((AnnotatedItemStack) existingItem).getAnnotation();
+        if (annotation != null && ItemUtils.isEquals(existingItem, newItem)) {
+            // Copy existing annotation
+            ((AnnotatedItemStack) newItem).setAnnotation(annotation);
+        } else {
+            // Calculate a new annotation
+            annotate(newItem);
+        }
     }
 
     private void annotate(ItemStack item) {
-        ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
-        // Don't redo if we already have an annotation
-        if (annotation != null) return;
+        ItemAnnotation annotation = null;
 
         long startTime = System.currentTimeMillis();
         List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
