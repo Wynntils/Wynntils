@@ -6,8 +6,10 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
+import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +18,8 @@ import net.minecraft.world.item.Items;
 public final class EmeraldPouchAnnotator implements ItemAnnotator {
     private static final Pattern EMERALD_POUCH_TIER_PATTERN =
             Pattern.compile("^§aEmerald Pouch§2 \\[Tier ([IVX]{1,4})\\]$");
+    private static final Pattern POUCH_USAGE_PATTERN =
+            Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -26,6 +30,12 @@ public final class EmeraldPouchAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(matcher.group(1));
-        return new EmeraldPouchItem(tier);
+
+        Matcher amountMatcher = ItemUtils.matchLoreLine(itemStack, 0, POUCH_USAGE_PATTERN);
+        if (!amountMatcher.matches()) return null;
+
+        int amount = Integer.parseInt(amountMatcher.group(1).replaceAll("\\s", ""));
+
+        return new EmeraldPouchItem(tier, amount);
     }
 }
