@@ -29,7 +29,10 @@ public class GuildMapFeature extends UserFeature {
     public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
     @RegisterKeyBind
-    public final KeyBind openGuildMapKeybind = new KeyBind("Open Guild Map", GLFW.GLFW_KEY_J, false, () -> {
+    public final KeyBind openGuildMapKeybind =
+            new KeyBind("Open Guild Map", GLFW.GLFW_KEY_J, false, this::openGuildMap);
+
+    private void openGuildMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.mc().screen instanceof GuildMapScreen guildMapScreen) {
@@ -38,5 +41,5 @@ public class GuildMapFeature extends UserFeature {
         }
 
         McUtils.mc().setScreen(GuildMapScreen.create());
-    });
+    }
 }
