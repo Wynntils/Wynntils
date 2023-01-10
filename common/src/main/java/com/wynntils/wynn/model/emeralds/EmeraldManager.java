@@ -12,8 +12,8 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -115,7 +115,7 @@ public final class EmeraldManager extends Manager {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
+        if (e.getNewState() == WorldState.WORLD) {
             updateCache();
         } else {
             resetCache();

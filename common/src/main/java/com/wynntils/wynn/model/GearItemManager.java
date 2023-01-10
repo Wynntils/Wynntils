@@ -14,6 +14,7 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
@@ -37,11 +38,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -50,7 +47,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
@@ -76,15 +72,6 @@ public final class GearItemManager extends Manager {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
-
-    private static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
-
-    static {
-        COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-        COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-        COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-        COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-    }
 
     public GearItemManager() {
         super(List.of());
@@ -196,7 +183,7 @@ public final class GearItemManager extends Manager {
         return new CharmItem(charmProfile, identifications, rerolls);
     }
 
-    public Optional<Integer> rerollsFromLore(Component lore) {
+    private Optional<Integer> rerollsFromLore(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
         Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
@@ -207,7 +194,7 @@ public final class GearItemManager extends Manager {
         return Optional.of(rerolls);
     }
 
-    public Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
+    private Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
@@ -329,62 +316,9 @@ public final class GearItemManager extends Manager {
                 rerollLine);
     }
 
-    /**
-     * Create the colored percentage component for an item ID
-     *
-     * @param percentage the percent roll of the ID
-     * @return the styled percentage text component
-     */
     private MutableComponent getPercentageTextComponent(float percentage) {
-        Style color = Style.EMPTY
-                .withColor(
-                        ItemStatInfoFeature.INSTANCE.colorLerp
-                                ? getPercentageColor(percentage)
-                                : getFlatPercentageColor(percentage))
-                .withItalic(false);
-        String percentString = new BigDecimal(percentage)
-                .setScale(ItemStatInfoFeature.INSTANCE.decimalPlaces, RoundingMode.DOWN)
-                .toPlainString();
-        return Component.literal(" [" + percentString + "%]").withStyle(color);
-    }
-
-    private TextColor getPercentageColor(float percentage) {
-        Map.Entry<Float, TextColor> lowerEntry = COLOR_MAP.floorEntry(percentage);
-        Map.Entry<Float, TextColor> higherEntry = COLOR_MAP.ceilingEntry(percentage);
-
-        // Boundary conditions
-        if (lowerEntry == null) {
-            return higherEntry.getValue();
-        } else if (higherEntry == null) {
-            return lowerEntry.getValue();
-        }
-
-        if (Objects.equals(lowerEntry.getKey(), higherEntry.getKey())) {
-            return lowerEntry.getValue();
-        }
-
-        float t = MathUtils.inverseLerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
-
-        int lowerColor = lowerEntry.getValue().getValue();
-        int higherColor = higherEntry.getValue().getValue();
-
-        int r = (int) MathUtils.lerp((lowerColor >> 16) & 0xff, (higherColor >> 16) & 0xff, t);
-        int g = (int) MathUtils.lerp((lowerColor >> 8) & 0xff, (higherColor >> 8) & 0xff, t);
-        int b = (int) MathUtils.lerp(lowerColor & 0xff, higherColor & 0xff, t);
-
-        return TextColor.fromRgb((r << 16) | (g << 8) | b);
-    }
-
-    private TextColor getFlatPercentageColor(float percentage) {
-        if (percentage < 30f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.RED);
-        } else if (percentage < 80f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
-        } else if (percentage < 96f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.GREEN);
-        } else {
-            return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
-        }
+        return ColorUtils.getPercentageTextComponent(
+                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
     }
 
     /**

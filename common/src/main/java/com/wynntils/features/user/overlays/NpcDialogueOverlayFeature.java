@@ -7,6 +7,7 @@ package com.wynntils.features.user.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -18,7 +19,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -75,8 +75,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
-    private long removeTime;
-
     private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
 
@@ -101,7 +99,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            NotificationManager.queueMessage(msg.get(0));
+            Managers.Notification.queueMessage(msg.get(0));
         }
 
         if (e.getType() == NpcDialogueType.SELECTION && e.isProtected()) {

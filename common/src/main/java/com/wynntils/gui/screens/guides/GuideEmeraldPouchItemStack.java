@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideEmeraldPouchItemStack extends GuideItemStack {
+public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final int tier;
 
     private final List<Component> generatedTooltip;

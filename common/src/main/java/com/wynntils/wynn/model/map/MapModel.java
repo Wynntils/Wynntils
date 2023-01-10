@@ -132,7 +132,7 @@ public final class MapModel extends Model {
             for (var combatList : combatProfileLists) {
                 CombatKind kind = CombatKind.fromString(combatList.type);
                 if (kind != null) {
-                    for (CombatProfileList.CombatProfile profile : combatList.locations) {
+                    for (CombatProfile profile : combatList.locations) {
                         combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
                     }
                 } else {
@@ -151,14 +151,14 @@ public final class MapModel extends Model {
         List<PoiLocation> locations;
     }
 
+    private static class CombatProfile {
+        String name;
+        PoiLocation coordinates;
+    }
+
     private static class CombatProfileList {
         String type;
         List<CombatProfile> locations;
-
-        private static class CombatProfile {
-            String name;
-            PoiLocation coordinates;
-        }
     }
 
     private static final class MapPartProfile {

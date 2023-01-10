@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.utils.McUtils;
@@ -29,7 +29,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
         Component response = getBlockResponse();
         if (response != null) {
             event.setCanceled(true);
-            NotificationManager.queueMessage(response);
+            Managers.Notification.queueMessage(response);
         }
     }
 
@@ -38,7 +38,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
         Component response = getBlockResponse();
         if (response != null) {
             event.setCanceled(true);
-            NotificationManager.queueMessage(response);
+            Managers.Notification.queueMessage(response);
         }
     }
 

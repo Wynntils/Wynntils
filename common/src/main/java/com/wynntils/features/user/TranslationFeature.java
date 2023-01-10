@@ -24,8 +24,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 public class TranslationFeature extends UserFeature {
-    public static TranslationFeature INSTANCE;
-
     @Config
     public String languageName = "";
 
@@ -59,19 +57,20 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        Models.Translation.getTranslator().translate(List.of(wrapped), languageName, translatedMsgList -> {
-            String messageToSend;
-            if (!translatedMsgList.isEmpty()) {
-                String result = translatedMsgList.get(0);
-                messageToSend = unwrapCoding(result);
-            } else {
-                if (keepOriginal) return;
+        Models.Translation.getTranslator(translationService)
+                .translate(List.of(wrapped), languageName, translatedMsgList -> {
+                    String messageToSend;
+                    if (!translatedMsgList.isEmpty()) {
+                        String result = translatedMsgList.get(0);
+                        messageToSend = unwrapCoding(result);
+                    } else {
+                        if (keepOriginal) return;
 
-                // We failed to get a translation; send the original message so it's not lost
-                messageToSend = origCoded;
-            }
-            McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(Component.literal(messageToSend)));
-        });
+                        // We failed to get a translation; send the original message so it's not lost
+                        messageToSend = origCoded;
+                    }
+                    McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(Component.literal(messageToSend)));
+                });
         if (!keepOriginal) {
             e.setCanceled(true);
         }
@@ -86,7 +85,7 @@ public class TranslationFeature extends UserFeature {
             List<String> wrapped = e.getChatMessage().stream()
                     .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
                     .toList();
-            Models.Translation.getTranslator().translate(wrapped, languageName, translatedMsgList -> {
+            Models.Translation.getTranslator(translationService).translate(wrapped, languageName, translatedMsgList -> {
                 List<String> unwrapped =
                         translatedMsgList.stream().map(this::unwrapCoding).toList();
                 // FIXME: We need a ComponentUtils.componentFromCoded()...

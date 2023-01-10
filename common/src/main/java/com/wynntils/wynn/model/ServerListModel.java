@@ -12,6 +12,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.objects.profiles.ServerProfile;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -77,8 +78,7 @@ public final class ServerListModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldStateManager.State.HUB
-                && event.getNewState() != WorldStateManager.State.CONNECTING) return;
+        if (event.getNewState() != WorldState.HUB && event.getNewState() != WorldState.CONNECTING) return;
 
         updateServerList();
     }
