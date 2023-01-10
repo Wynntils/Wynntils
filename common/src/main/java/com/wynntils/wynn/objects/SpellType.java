@@ -6,9 +6,6 @@ package com.wynntils.wynn.objects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.utils.WynnPlayerUtils;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
