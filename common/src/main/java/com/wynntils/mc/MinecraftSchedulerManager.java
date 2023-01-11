@@ -5,9 +5,11 @@
 package com.wynntils.mc;
 
 import com.wynntils.core.components.Manager;
+import com.wynntils.mc.event.TickEvent;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Use this manager to schedule runnables to run on next tick
 public final class MinecraftSchedulerManager extends Manager {
@@ -21,7 +23,8 @@ public final class MinecraftSchedulerManager extends Manager {
         queue.add(runnable);
     }
 
-    public void onTick() {
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
         while (!queue.isEmpty()) {
             queue.remove().run();
         }

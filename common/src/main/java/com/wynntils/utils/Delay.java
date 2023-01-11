@@ -5,7 +5,7 @@
 package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class Delay {
@@ -26,7 +26,7 @@ public final class Delay {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.End e) {
+    public void onTick(TickEvent e) {
         if (!onPause && isRunning) {
             if (delay < 0) {
                 start();
