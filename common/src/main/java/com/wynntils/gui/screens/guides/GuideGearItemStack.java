@@ -15,7 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideGearItemStack extends GuideItemStack {
+public final class GuideGearItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
     private final MutableComponent name;
     private final GearProfile gearProfile;

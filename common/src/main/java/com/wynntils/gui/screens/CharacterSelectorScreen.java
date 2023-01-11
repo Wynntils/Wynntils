@@ -400,8 +400,4 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     public int getFirstNewCharacterSlot() {
         return firstNewCharacterSlot;
     }
-
-    public float getCurrentTextureScale() {
-        return currentTextureScale;
-    }
 }

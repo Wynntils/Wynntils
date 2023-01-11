@@ -94,7 +94,7 @@ public final class UrlManager extends Manager {
         // Then trigger a (re-)download from the net to the cache
         // We need to do the urlInfo lookup ourself, since we might have
         // a embryonic netManager which can't do much.
-        UrlManager.UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+        UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
         if (urlInfo == null) {
             WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
             throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");

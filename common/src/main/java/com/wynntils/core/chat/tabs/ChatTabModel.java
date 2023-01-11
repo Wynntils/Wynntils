@@ -10,7 +10,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.objects.WorldState;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +35,7 @@ public final class ChatTabModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.NOT_CONNECTED) {
+        if (event.getNewState() == WorldState.NOT_CONNECTED) {
             chatTabData.clear();
             unreadMessages.clear();
             setFocusedTab(null);
