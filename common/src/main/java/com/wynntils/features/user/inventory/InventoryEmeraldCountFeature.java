@@ -45,6 +45,9 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     @Config
     public boolean showContainerEmeraldCount = true;
 
+    @Config
+    public boolean combineInventoryAndContainer = false;
+
     @Override
     public List<Model> getModelDependencies() {
         return List.of(Models.PlayerInventory);
@@ -52,24 +55,47 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
+        Screen screen = McUtils.mc().screen;
+        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
+
+        // Always draw top part, which is all there is if it is inventory,
+        // and all there is if we combine them, otherwise it is just the
+        // container
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
-        int emeralds = isInventory
-                ? Managers.Emerald.getAmountInInventory()
-                : Managers.Emerald.getAmountInContainer() + Managers.Emerald.getAmountInInventory();
+        int topEmeralds;
+        if (isInventory) {
+            if (!showInventoryEmeraldCount) return;
+            topEmeralds = Managers.Emerald.getAmountInInventory();
+        } else {
+            topEmeralds = 0;
+            if (showContainerEmeraldCount) topEmeralds += Managers.Emerald.getAmountInContainer();
+            if (combineInventoryAndContainer && showInventoryEmeraldCount) {
+                topEmeralds += Managers.Emerald.getAmountInInventory();
+            }
+        }
 
-        if (emeralds == 0) return;
+        int x = containerScreen.leftPos;
+        if (topEmeralds != 0) {
+            int y = containerScreen.topPos;
+            switch (emeraldCountType) {
+                case Text -> renderTextCount(event.getPoseStack(), x, y, topEmeralds);
+                case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds);
+            }
+        }
 
-        switch (emeraldCountType) {
-            case Text -> renderTextCount(event.getPoseStack(), emeralds);
-            case Texture -> renderTexturedCount(event.getPoseStack(), emeralds);
+        if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
+            int bottomEmeralds = Managers.Emerald.getAmountInInventory();
+            if (bottomEmeralds != 0) {
+                int y = containerScreen.topPos + containerScreen.imageHeight - 28*3 - 2;
+                switch (emeraldCountType) {
+                    case Text -> renderTextCount(event.getPoseStack(), x, y, bottomEmeralds);
+                    case Texture -> renderTexturedCount(event.getPoseStack(), x, y, bottomEmeralds);
+                }
+            }
         }
     }
 
-    private void renderTextCount(PoseStack poseStack, int emeralds) {
-        Screen screen = McUtils.mc().screen;
-
-        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
-
+    private void renderTextCount(PoseStack poseStack, int x, int y, int emeralds) {
         poseStack.pushPose();
         poseStack.translate(0, 0, 200);
 
@@ -95,8 +121,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
                 .renderText(
                         poseStack,
                         emeraldText,
-                        containerScreen.leftPos + 1,
-                        containerScreen.topPos - 10,
+                        x + 1,
+                        y - 10,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
@@ -106,13 +132,9 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         poseStack.popPose();
     }
 
-    private void renderTexturedCount(PoseStack poseStack, int emeralds) {
-        Screen screen = McUtils.mc().screen;
-
-        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
-
+    private void renderTexturedCount(PoseStack poseStack, int x, int y, int emeralds) {
         poseStack.pushPose();
-        poseStack.translate(containerScreen.leftPos, containerScreen.topPos, 0);
+        poseStack.translate(x, y, 0);
 
         String[] emeraldAmounts = new String[3];
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -150,10 +172,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
             McUtils.mc()
                     .getItemRenderer()
-                    .renderGuiItem(
-                            EmeraldUnits.values()[i].getItemStack(),
-                            containerScreen.leftPos + renderX + 6,
-                            containerScreen.topPos + renderY + 6);
+                    .renderGuiItem(EmeraldUnits.values()[i].getItemStack(), x + renderX + 6, y + renderY + 6);
 
             poseStack.pushPose();
             poseStack.translate(0, 0, 200);
