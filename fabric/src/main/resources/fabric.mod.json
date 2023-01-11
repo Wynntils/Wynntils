@@ -2,6 +2,9 @@
   "authors": [
     "Team Wynntils"
   ],
+  "breaks": {
+    "creativecore": ">=2.6.5"
+  },
   "contact": {
     "homepage": "https://wynntils.com",
     "sources": "https://github.com/Wynntils/Artemis"

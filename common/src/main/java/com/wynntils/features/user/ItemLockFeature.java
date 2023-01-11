@@ -18,7 +18,6 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,7 +88,7 @@ public class ItemLockFeature extends UserFeature {
         // We want to allow opening emerald pouch even if locked
         if (allowClickOnEmeraldPouchInBlockingMode
                 && event.getClickType() == ClickType.PICKUP
-                && WynnItemMatchers.isEmeraldPouch(slotOptional.get().getItem())) {
+                && Managers.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 
