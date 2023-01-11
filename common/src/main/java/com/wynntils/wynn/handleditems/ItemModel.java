@@ -14,6 +14,7 @@ import com.wynntils.wynn.handleditems.annotators.game.CharmAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.CraftedConsumableAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.CraftedGearAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.DungeonKeyAnnotator;
+import com.wynntils.wynn.handleditems.annotators.game.EmeraldAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.EmeraldPouchAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.GatheringToolAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.GearAnnotator;
@@ -53,6 +54,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CraftedConsumableAnnotator());
         Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
+        Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HealthPotionAnnotator());

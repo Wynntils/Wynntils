@@ -74,12 +74,6 @@ public final class WynnItemMatchers {
                 && itemStack.getDamageValue() <= 6);
     }
 
-    public static boolean isEmeraldPouch(ItemStack itemStack) {
-        // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
-        return (itemStack.getItem() == Items.DIAMOND_AXE || itemStack.getItem() == Items.GOLDEN_SHOVEL)
-                && itemStack.getHoverName().getString().startsWith("§aEmerald Pouch§2 [Tier");
-    }
-
     /**
      * Returns true if the passed item has an attack speed
      */
