@@ -6,9 +6,9 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.gui.render.BufferedRenderUtils;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
@@ -71,7 +71,7 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
-        RenderUtils.drawScalingTexturedRectWithBuffer(
+        BufferedRenderUtils.drawTexturedRect(
                 poseStack,
                 bufferSource,
                 icon.resource(),
