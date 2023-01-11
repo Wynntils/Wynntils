@@ -14,9 +14,11 @@ import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.handleditems.properties.EmeraldValuedItemProperty;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,13 +47,22 @@ public final class EmeraldManager extends Manager {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
+        if (e.getNewState() != WorldState.WORLD) return;
+
         inventoryEmeralds = 0;
         containerEmeralds = 0;
+
+        // Rescan inventory at login
+        Inventory inventory = McUtils.player().getInventory();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            adjustBalance(inventory.getItem(i), 1, true);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onSetSlot(SetSlotEvent.Pre event) {
         boolean isInventory = (event.getContainer() == McUtils.player().getInventory());
+        if (pouchContainerId != -1 && !isInventory) return;
 
         // Subtract the outgoing object from our balance
         adjustBalance(event.getContainer().getItem(event.getSlot()), -1, isInventory);
@@ -72,6 +83,7 @@ public final class EmeraldManager extends Manager {
     @SubscribeEvent
     public void onMenuClosed(MenuEvent.MenuClosedEvent e) {
         containerEmeralds = 0;
+        pouchContainerId = -1;
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -86,7 +98,6 @@ public final class EmeraldManager extends Manager {
             containerStop = 0;
         } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
             containerStop = items.size() - 36;
-            // FIXME: need to account for hand as well!
         } else {
             return;
         }
@@ -102,7 +113,6 @@ public final class EmeraldManager extends Manager {
             // just the inventory
             containerEmeralds = 0;
         }
-
     }
 
     private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
