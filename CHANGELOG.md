@@ -1,9 +1,21 @@
+## [0.0.2-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.93...v0.0.2-alpha.94) (2023-01-11)
+
+
+### Code Refactoring
+
+* We should only have a single tick event ([#1016](https://github.com/Wynntils/Artemis/issues/1016)) ([428d0ab](https://github.com/Wynntils/Artemis/commit/428d0ab25961337d611ebc829221842117cfa6a3))
+
 ## [0.0.2-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.92...v0.0.2-alpha.93) (2023-01-11)
 
 
 ### New Features
 
 * Remake emerald count and emerald manager ([#1015](https://github.com/Wynntils/Artemis/issues/1015)) ([705a27c](https://github.com/Wynntils/Artemis/commit/705a27c8caa44dfcc8c16504b337b6c01380511f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.93 [skip ci] ([1f16f8b](https://github.com/Wynntils/Artemis/commit/1f16f8b75261f652d871a0ce525027a920b467a1))
 
 ## [0.0.2-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.91...v0.0.2-alpha.92) (2023-01-10)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.90 [skip ci] ([52dd819](https://github.com/Wynntils/Artemis/commit/52dd819cd39703bf22f6a5e1d01b440deaa13771))
-
-## [0.0.2-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.88...v0.0.2-alpha.89) (2023-01-10)
-
-
-### Code Refactoring
-
-* Make NotificationManager a real Manager ([#1007](https://github.com/Wynntils/Artemis/issues/1007)) ([4837aca](https://github.com/Wynntils/Artemis/commit/4837aca65420168ef9d454a2a75714b4c13c38f5))
-* Various cleanups ([#998](https://github.com/Wynntils/Artemis/issues/998)) ([cac5d35](https://github.com/Wynntils/Artemis/commit/cac5d3562c7a5173354c938a34b576fafd285d60))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.89 [skip ci] ([edf1747](https://github.com/Wynntils/Artemis/commit/edf174752120ffbef87461f26dcf6f26ed95b1b0))
 
