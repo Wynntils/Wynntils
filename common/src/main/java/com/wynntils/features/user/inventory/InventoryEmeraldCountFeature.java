@@ -86,7 +86,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
             int bottomEmeralds = Managers.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
-                int y = containerScreen.topPos + containerScreen.imageHeight - 28*3 - 2;
+                int y = containerScreen.topPos + containerScreen.imageHeight - 28 * 3 - 2;
                 switch (emeraldCountType) {
                     case Text -> renderTextCount(event.getPoseStack(), x, y, bottomEmeralds);
                     case Texture -> renderTexturedCount(event.getPoseStack(), x, y, bottomEmeralds);
