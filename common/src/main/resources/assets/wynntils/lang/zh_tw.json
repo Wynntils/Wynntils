@@ -230,7 +230,6 @@
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.description": "綠寶石數量要如何顯示？",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.name": "綠寶石數量顯示樣？",
   "feature.wynntils.inventoryEmeraldCount.name": "顯示綠寶石數量",
-  "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.description": "在別箱子的綠寶石數量也顯示嗎？如果您的物品欄和箱子都有石，只會顯示箱子的石數量",
   "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.name": "箱子欄裡綠寶石數量",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.description": "在您的物品欄綠寶石數量也顯示嗎？",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.name": "物品欄欄裡綠寶石數量",
