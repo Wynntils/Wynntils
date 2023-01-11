@@ -1,9 +1,21 @@
+## [0.0.2-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.92...v0.0.2-alpha.93) (2023-01-11)
+
+
+### New Features
+
+* Remake emerald count and emerald manager ([#1015](https://github.com/Wynntils/Artemis/issues/1015)) ([705a27c](https://github.com/Wynntils/Artemis/commit/705a27c8caa44dfcc8c16504b337b6c01380511f))
+
 ## [0.0.2-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.91...v0.0.2-alpha.92) (2023-01-10)
 
 
 ### Bug Fixes
 
 * Use ceil instead of floor for flat color percentage ([#1013](https://github.com/Wynntils/Artemis/issues/1013)) ([4b5097b](https://github.com/Wynntils/Artemis/commit/4b5097b2d8bfa16135b195833a1463d3bb5aef41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.92 [skip ci] ([439ea38](https://github.com/Wynntils/Artemis/commit/439ea389cd55984bd1c0786930118b267341566a))
 
 ## [0.0.2-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.90...v0.0.2-alpha.91) (2023-01-10)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.89 [skip ci] ([edf1747](https://github.com/Wynntils/Artemis/commit/edf174752120ffbef87461f26dcf6f26ed95b1b0))
-
-## [0.0.2-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.87...v0.0.2-alpha.88) (2023-01-10)
-
-
-### Code Refactoring
-
-* Make WorldState a stand-alone enum ([#1008](https://github.com/Wynntils/Artemis/issues/1008)) ([e4177f9](https://github.com/Wynntils/Artemis/commit/e4177f939ea42cee4683562ed99f8f99d8c04d32))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.88 [skip ci] ([63c4403](https://github.com/Wynntils/Artemis/commit/63c44030ba1628b98f3cb5828dba42d9dbebc0c8))
 
