@@ -46,7 +46,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
                     TextRenderSetting.DEFAULT.withCustomColor(CommonColors.RED)));
             return;
         }
-        if (slotNumber == -2) {
+        if (slotNumber == MULTIPLE_POUCHES) {
             // We found more than one filled pouch, cannot choose between them
             Managers.Notification.queueMessage(new TextRenderTask(
                     ChatFormatting.RED + I18n.get("feature.wynntils.emeraldPouchHotkey.multipleFilled"),
