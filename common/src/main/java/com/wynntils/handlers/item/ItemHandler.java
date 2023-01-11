@@ -62,6 +62,15 @@ public class ItemHandler extends Handler {
         }
 
         List<ItemStack> newItems = event.getItems();
+
+        if (newItems.size() != existingItems.size()) {
+            // This is not a proper update, just annotate everyting
+            for (ItemStack newItem : newItems) {
+                annotate(newItem);
+            }
+            return;
+        }
+
         for (int i = 0; i < newItems.size(); i++) {
             updateAnnotation(existingItems.get(i), newItems.get(i));
         }
