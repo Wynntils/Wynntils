@@ -21,7 +21,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketPing;
 import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
-import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.RelationsUpdateEvent;
@@ -158,7 +158,7 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.End event) {
+    public void onTick(TickEvent event) {
         if (!isConnected()) return;
         if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty

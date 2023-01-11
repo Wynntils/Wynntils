@@ -21,9 +21,10 @@ public final class InventoryUtils {
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
-    public static void sendInventorySlotMouseClick(int slotNumber, ItemStack stack, MouseClickType mouseButton) {
+    public static void sendInventorySlotMouseClick(int slotNumber, MouseClickType mouseButton) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(slotNumber, stack);
+        ItemStack itemStack = McUtils.inventory().getItem(slotNumber);
+        changedSlots.put(slotNumber, itemStack);
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 McUtils.inventoryMenu().containerId,
