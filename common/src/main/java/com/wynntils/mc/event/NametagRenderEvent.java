@@ -21,7 +21,9 @@ public class NametagRenderEvent extends Event {
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
     private final int packedLight;
+
     private final List<MutableComponent> injectedLines;
+    private float injectedLinesScale;
 
     public NametagRenderEvent(
             AbstractClientPlayer entity,
@@ -35,6 +37,7 @@ public class NametagRenderEvent extends Event {
         this.buffer = buffer;
         this.packedLight = packedLight;
         this.injectedLines = new ArrayList<>();
+        this.injectedLinesScale = 1f;
     }
 
     public AbstractClientPlayer getEntity() {
@@ -61,7 +64,15 @@ public class NametagRenderEvent extends Event {
         return injectedLines;
     }
 
+    public float getInjectedLinesScale() {
+        return injectedLinesScale;
+    }
+
     public void addInjectedLine(MutableComponent component) {
         injectedLines.add(component);
+    }
+
+    public void setInjectedLinesScale(float scale) {
+        injectedLinesScale = scale;
     }
 }
