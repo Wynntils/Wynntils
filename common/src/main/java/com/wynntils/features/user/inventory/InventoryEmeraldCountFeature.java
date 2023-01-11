@@ -78,7 +78,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
             switch (emeraldCountType) {
-                case Text -> renderTextCount(event.getPoseStack(), x, y, topEmeralds);
+                case Text -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
                 case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds);
             }
         }
@@ -86,10 +86,10 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
             int bottomEmeralds = Managers.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
-                int y = containerScreen.topPos + containerScreen.imageHeight - 28 * 3 - 2;
+                int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType) {
-                    case Text -> renderTextCount(event.getPoseStack(), x, y, bottomEmeralds);
-                    case Texture -> renderTexturedCount(event.getPoseStack(), x, y, bottomEmeralds);
+                    case Text -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
+                    case Texture -> renderTexturedCount(event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds);
                 }
             }
         }
