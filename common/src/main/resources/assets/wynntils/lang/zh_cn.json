@@ -230,7 +230,6 @@
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.description": "绿宝石数量要如何显示？",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.name": "绿宝石数量显示样？",
   "feature.wynntils.inventoryEmeraldCount.name": "显示绿宝石数量",
-  "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.description": "在别箱子的绿宝石数量也显示吗？如果您的物品栏和箱子都有石，只会显示箱子的石数量",
   "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.name": "箱子栏里绿宝石数量",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.description": "在您的物品栏绿宝石数量也显示吗？",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.name": "物品栏栏里绿宝石数量",
