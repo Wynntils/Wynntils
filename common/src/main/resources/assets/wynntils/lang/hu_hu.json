@@ -228,7 +228,6 @@
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.description": "Hogyan jelenjen meg a smaragd számláló?",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.name": "Smaragdszámláló megjelenítő típusa",
   "feature.wynntils.inventoryEmeraldCount.name": "Eszköztár Smaragdszámláló",
-  "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.description": "Jelenítse meg a smaragd számot a távoli tárolókban? Ha az eszköztárban és a tárolóban is smaragd található, csak a tárolók smaragd száma jelenik meg.",
   "feature.wynntils.inventoryEmeraldCount.showContainerEmeraldCount.name": "Tárolókban Lévő Smaragdszámláló Megjelenítése",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.description": "Jelenjen meg a smaragd számlálód az eszköztáradban?",
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.name": "Eszköztárban Lévő Smaragd Számláló Megjelenítése",
