@@ -4,39 +4,27 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.WynntilsMod;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.mc.event.PacketEvent;
-import com.wynntils.mc.objects.Location;
+import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextRenderSetting;
+import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Delay;
-import com.wynntils.wynn.event.CharacterUpdateEvent;
-import com.wynntils.wynn.event.SpellCastedEvent;
-import com.wynntils.wynn.event.TotemActivatedEvent;
 import com.wynntils.wynn.event.TotemRemovedEvent;
-import com.wynntils.wynn.objects.ShamanTotem;
-import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.utils.WynnUtils;
-import java.util.ArrayList;
+import com.wynntils.wynn.event.TotemSummonedEvent;
 import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,299 +32,135 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ShamanTotemTrackingFeature extends UserFeature {
 
     @Config
-    public boolean trackTotem = true;
-
-    @Config
     public boolean highlightShamanTotems = true;
 
     @Config
-    public ChatFormatting totem1Color = ChatFormatting.WHITE;
+    public static ChatFormatting totem1Color = ChatFormatting.WHITE;
 
     @Config
-    public ChatFormatting totem2Color = ChatFormatting.AQUA;
+    public static ChatFormatting totem2Color = ChatFormatting.AQUA;
 
     @Config
-    public ChatFormatting totem3Color = ChatFormatting.RED;
-
-    private ShamanTotem totem1 = null;
-    private Integer pendingTotem1Id = null;
-
-    private ShamanTotem totem2 = null;
-    private Integer pendingTotem2Id = null;
-
-    private ShamanTotem totem3 = null;
-    private Integer pendingTotem3Id = null;
-
-    private long totemCastTimestamp = 0;
-    private int nextTotemSlot = 1;
-    private int summonWeaponSlot = -1;
+    public static ChatFormatting totem3Color = ChatFormatting.RED;
 
     private static final String TOTEM_HIGHLIGHT_TEAM_BASE = "wynntilsTH";
-    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
 
     @SubscribeEvent
-    public void onTotemSpellCast(SpellCastedEvent e) {
-        if (e.getSpell() != SpellType.TOTEM) return;
+    public void onTotemSummoned(TotemSummonedEvent e) {
+        if (!highlightShamanTotems) return;
 
-        totemCastTimestamp = System.currentTimeMillis();
-        summonWeaponSlot = McUtils.inventory().selected;
-    }
+        int totemNumber = e.getTotemNumber();
+        ArmorStand totemAS = e.getTotemEntity();
 
-    @SubscribeEvent
-    public void onTotemSpawn(PacketEvent<ClientboundAddEntityPacket> e) {
-        Delay.create(
-                () -> {
-                    if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > 450) return;
-                    Entity entity = getBufferedEntity(e.getPacket().getId());
-                    if (!(entity instanceof ArmorStand totemAS)) return;
+        ChatFormatting color =
+                switch (totemNumber) {
+                    case 1 -> totem1Color;
+                    case 2 -> totem2Color;
+                    case 3 -> totem3Color;
+                    default -> throw new IllegalArgumentException(
+                            "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
+                };
 
-                    // Checks to verify this is a totem
-                    if (Math.abs(totemAS.getMyRidingOffset() - 0.10000000149011612f) > 0.00000000000012f) return;
-                    if (Math.abs(totemAS.getHealth() - 1.0f) > 0.0001f) return;
-                    if (Math.abs(totemAS.getEyeHeight() - 1.7775f) > 0.00001f) return;
-                    List<ItemStack> inv = new ArrayList<>();
-                    totemAS.getArmorSlots().forEach(inv::add);
-                    if (inv.size() < 4 || inv.get(3).getItem() != Items.STONE_SHOVEL) return;
-
-                    int totemNumber = nextTotemSlot;
-                    nextTotemSlot = getNextTotemSlot();
-                    ChatFormatting color =
-                            switch (totemNumber) {
-                                case 1 -> totem1Color;
-                                case 2 -> totem2Color;
-                                case 3 -> totem3Color;
-                                default -> throw new IllegalArgumentException(
-                                        "totemNumber should be 1, 2, or 3! (color switch in #onTotemSpawn in ShamanTotemTrackingFeature");
-                            };
-
-                    // Make or get scoreboard to set highlight colors
-                    Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
-                    if (!scoreboard.getTeamNames().contains(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber)) {
-                        scoreboard.addPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
-                    }
-                    PlayerTeam team = scoreboard.getPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
-                    team.setColor(color);
-
-                    scoreboard.addPlayerToTeam(totemAS.getStringUUID(), team);
-                    totemAS.setSharedFlag(6, true); // Makes the totem glow
-                    ShamanTotem newTotem = new ShamanTotem(
-                            -1,
-                            -1,
-                            ShamanTotem.TotemState.SUMMONED,
-                            new Location(totemAS.position().x, totemAS.position().y, totemAS.position().z));
-                    switch (totemNumber) {
-                        case 1 -> {
-                            totem1 = newTotem;
-                            pendingTotem1Id = totemAS.getId();
-                        }
-                        case 2 -> {
-                            totem2 = newTotem;
-                            pendingTotem2Id = totemAS.getId();
-                        }
-                        case 3 -> {
-                            totem3 = newTotem;
-                            pendingTotem3Id = totemAS.getId();
-                        }
-                        default -> throw new IllegalArgumentException(
-                                "totemNumber should be 1, 2, or 3! (totem variable switch in #onTotemSpawn in ShamanTotemTrackingFeature");
-                    }
-                },
-                1);
-    }
-
-    @SubscribeEvent
-    public void onTotemRename(PacketEvent<ClientboundSetEntityDataPacket> e) {
-        if (!WynnUtils.onWorld()) return;
-
-        int entityId = e.getPacket().id();
-        Entity entity = getBufferedEntity(entityId);
-        if (!(entity instanceof ArmorStand)) return;
-
-        String name = getNameFromMetadata(e.getPacket().packedItems());
-        if (name == null || name.isEmpty()) return;
-
-        /*
-        Logic flow for the following bits:
-        - First, the given entity is checked to see if it is a totem timer
-        - If the given timerId (int entityId) is not already a totem, assign it to the lowest # totem slot
-          - Additionally, assign location, state, and time
-        - If the given timerId is already a totem, update the time and location instead
-          - Location is updated because there are now totems that can move
-         */
-        Matcher m = SHAMAN_TOTEM_TIMER.matcher(name);
-        if (!m.find()) return;
-
-        int parsedTime = Integer.parseInt(m.group(1));
-        Location parsedLocation = new Location(entity.position().x, entity.position().y, entity.position().z);
-
-        if (getBoundTotem(entityId) == null && Math.abs(totemCastTimestamp - System.currentTimeMillis()) < 15000) {
-            // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
-            // First check if this is actually one casted by us
-            List<ArmorStand> toCheck = McUtils.mc()
-                    .level
-                    .getEntitiesOfClass(
-                            ArmorStand.class,
-                            new AABB(
-                                    entity.position().x - 0.5,
-                                    entity.position().y - 0.1,
-                                    entity.position().z - 0.5,
-                                    entity.position().x + 0.5,
-                                    entity.position().y + 0.1,
-                                    entity.position().z + 0.5));
-
-            for (ArmorStand as : toCheck) {
-                if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
-                    totem1 = new ShamanTotem(entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(1, parsedTime, parsedLocation));
-                    pendingTotem1Id = null;
-                } else if (pendingTotem2Id != null && as.getId() == pendingTotem2Id) {
-                    totem2 = new ShamanTotem(entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(2, parsedTime, parsedLocation));
-                    pendingTotem2Id = null;
-                } else if (pendingTotem3Id != null && as.getId() == pendingTotem3Id) {
-                    totem3 = new ShamanTotem(entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(3, parsedTime, parsedLocation));
-                    pendingTotem3Id = null;
-                } else {
-                    // No totem slots available?
-                    WynntilsMod.getLogger().warn("Received a new totem {}, but no totem slots are available", entityId);
-                }
-            }
-        } else if (totem1 != null && getBoundTotem(entityId) == totem1) {
-            totem1.setTime(parsedTime);
-            totem1.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(1, parsedTime, parsedLocation));
-        } else if (totem2 != null && getBoundTotem(entityId) == totem2) {
-            totem2.setTime(parsedTime);
-            totem2.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(2, parsedTime, parsedLocation));
-        } else if (totem3 != null && getBoundTotem(entityId) == totem3) {
-            totem3.setTime(parsedTime);
-            totem3.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(3, parsedTime, parsedLocation));
+        // Make or get scoreboard to set highlight colors
+        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
+        if (!scoreboard.getTeamNames().contains(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber)) {
+            scoreboard.addPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
         }
-    }
+        PlayerTeam team = scoreboard.getPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
+        team.setColor(color);
 
-    @SubscribeEvent
-    public void onTotemDestroy(PacketEvent<ClientboundRemoveEntitiesPacket> e) {
-        if (!WynnUtils.onWorld()) return;
-
-        List<Integer> destroyedEntities = e.getPacket().getEntityIds();
-
-        if (totem1 != null && destroyedEntities.contains(totem1.getTimerId())) {
-            removeTotem(1);
-        }
-        if (totem2 != null && destroyedEntities.contains(totem2.getTimerId())) {
-            removeTotem(2);
-        }
-        if (totem3 != null && destroyedEntities.contains(totem3.getTimerId())) {
-            removeTotem(3);
-        }
+        scoreboard.addPlayerToTeam(totemAS.getStringUUID(), team);
+        totemAS.setSharedFlag(6, true); // Makes the totem glow
     }
 
     @SubscribeEvent
     public void onTotemDestroy(TotemRemovedEvent e) {
         if (!highlightShamanTotems) return;
 
+        // Teams should be destroyed and recreated every cast to allow the user to change totem highlight colors without
+        // having to reload the feature
         Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
         if (scoreboard.getTeamNames().contains(TOTEM_HIGHLIGHT_TEAM_BASE + e.getTotemNumber())) {
             scoreboard.removePlayerTeam(scoreboard.getPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + e.getTotemNumber()));
         }
     }
 
-    @SubscribeEvent
-    public void onClassChange(CharacterUpdateEvent e) {
-        removeAllTotems();
-    }
-
-    @SubscribeEvent
-    public void onHeldItemChange(PacketEvent<ServerboundSetCarriedItemPacket> e) {
-        if (e.getPacket().getSlot() != summonWeaponSlot) {
-            removeAllTotems();
-        }
-    }
-
-    private String getNameFromMetadata(List<SynchedEntityData.DataValue<?>> data) {
-        // The rename stuff we're looking for is eventually something like
-        // Optional[literal{§c26s}[style={}]]
-        for (SynchedEntityData.DataValue<?> packedItem : data) {
-            if (!(packedItem.value() instanceof Optional<?> packetData)
-                    || packetData.isEmpty()
-                    || (!(packetData.get() instanceof MutableComponent content))) continue;
-            return content.toString();
-        }
-        return null;
-    }
-
-    private Entity getBufferedEntity(int entityId) {
-        Entity entity = McUtils.mc().level.getEntity(entityId);
-        if (entity != null) return entity;
-
-        if (entityId == -1) {
-            return new ArmorStand(McUtils.mc().level, 0, 0, 0);
-        }
-
-        return null;
-    }
-
-    /**
-     * Removes the given totem from the list of totems.
-     * @param totem The totem to remove. Must be 1 or 2.
-     */
-    private void removeTotem(int totem) {
-        switch (totem) {
-            case 1 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(1, totem1));
-                totem1 = null;
-                pendingTotem1Id = null;
-                return;
-            }
-            case 2 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(2, totem2));
-                totem2 = null;
-                pendingTotem2Id = null;
-                return;
-            }
-            case 3 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(3, totem3));
-                totem3 = null;
-                pendingTotem3Id = null;
-                return;
-            }
-            default -> throw new IllegalArgumentException("Totem must be 1, 2, or 3");
-        }
-    }
-
-    /**
-     * Resets all three totem variables.
-     */
-    private void removeAllTotems() {
-        summonWeaponSlot = -1;
-        removeTotem(1);
-        removeTotem(2);
-        removeTotem(3);
-        nextTotemSlot = 1;
-    }
-
-    private int getNextTotemSlot() {
-        if (nextTotemSlot == 3) return 1;
-        return nextTotemSlot += 1;
-    }
-
-    /**
-     * Gets the totem bound to the given timerId.
-     * @param timerId The timerId that is checked against the totems
-     * @return The totem bound to the given timerId, or null if no totem is bound
-     */
-    private ShamanTotem getBoundTotem(int timerId) {
-        if (totem1 != null && totem1.getTimerId() == timerId) return totem1;
-        if (totem2 != null && totem2.getTimerId() == timerId) return totem2;
-        if (totem3 != null && totem3.getTimerId() == timerId) return totem3;
-        return null;
-    }
-
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Spell);
+        return List.of(Models.Spell, Models.ShamanMask);
+    }
+
+    public static class ShamanTotemTimerOverlay extends Overlay {
+        @Config
+        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+
+        private TextRenderSetting textRenderSetting;
+
+        protected ShamanTotemTimerOverlay() {
+            super(
+                    new OverlayPosition(
+                            200,
+                            -5,
+                            VerticalAlignment.Top,
+                            HorizontalAlignment.Right,
+                            OverlayPosition.AnchorSection.TopRight),
+                    new GuiScaledOverlaySize(100, 35));
+
+            updateTextRenderSetting();
+        }
+
+        @Override
+        public void render(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextsWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            Models.ShamanTotem.getActiveTotems().stream()
+                                    .sorted()
+                                    .map(shamanTotem -> {
+                                        String prefix =
+                                                switch (shamanTotem.getTotemNumber()) {
+                                                    case 1 -> totem1Color + "Totem 1";
+                                                    case 2 -> totem2Color + "Totem 2";
+                                                    case 3 -> totem3Color + "Totem 3";
+                                                    default -> throw new IllegalArgumentException(
+                                                            "totemNumber should be 1, 2, or 3! (color switch in #render in ShamanTotemTrackingFeature");
+                                                };
+                                        return new TextRenderTask(
+                                                prefix + " (00:" + shamanTotem.getTime() + ")", textRenderSetting);
+                                    })
+                                    .toList(),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+            FontRenderer.getInstance()
+                    .renderTextWithAlignment(
+                            poseStack,
+                            this.getRenderX(),
+                            this.getRenderY(),
+                            new TextRenderTask(ChatFormatting.WHITE + "Totem 1" + " (00:28)", textRenderSetting),
+                            this.getWidth(),
+                            this.getHeight(),
+                            this.getRenderHorizontalAlignment(),
+                            this.getRenderVerticalAlignment());
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            updateTextRenderSetting();
+        }
+
+        private void updateTextRenderSetting() {
+            textRenderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth())
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                    .withTextShadow(textShadow);
+        }
     }
 }

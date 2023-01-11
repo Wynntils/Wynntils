@@ -7,16 +7,22 @@ package com.wynntils.wynn.objects;
 import com.wynntils.mc.objects.Location;
 
 public class ShamanTotem {
+    private final int totemNumber;
     private int timerId;
     private int time;
     private TotemState state;
     private Location location;
 
-    public ShamanTotem(int timerId, int time, TotemState totemState, Location location) {
+    public ShamanTotem(int totemNumber, int timerId, int time, TotemState totemState, Location location) {
+        this.totemNumber = totemNumber;
         this.timerId = timerId;
         this.time = time;
         this.state = totemState;
         this.location = location;
+    }
+
+    public int getTotemNumber() {
+        return totemNumber;
     }
 
     public int getTimerId() {
