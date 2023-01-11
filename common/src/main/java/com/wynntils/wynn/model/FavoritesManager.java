@@ -17,6 +17,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class FavoritesManager extends Manager {
+    private int revision = 1;
+
     public FavoritesManager() {
         super(List.of());
     }
@@ -57,10 +59,12 @@ public final class FavoritesManager extends Manager {
 
     public void addFavorite(String unformattedName) {
         getFavoriteItems().add(unformattedName);
+        revision++;
     }
 
     public void removeFavorite(String unformattedName) {
         getFavoriteItems().remove(unformattedName);
+        revision++;
     }
 
     public void toggleFavorite(String unformattedName) {
@@ -69,6 +73,11 @@ public final class FavoritesManager extends Manager {
         } else {
             addFavorite(unformattedName);
         }
+    }
+
+    // Used to track changes in the set of favorites
+    public int getRevision() {
+        return revision;
     }
 
     private Set<String> getFavoriteItems() {

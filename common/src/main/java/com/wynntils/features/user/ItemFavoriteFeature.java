@@ -72,10 +72,17 @@ public class ItemFavoriteFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return false;
 
         WynnItem wynnItem = wynnItemOpt.get();
-        Boolean result = wynnItem.getCache()
-                .getOrCalculate(
-                        WynnItemCache.FAVORITE_KEY, () -> Managers.Favorites.calculateFavorite(itemStack, wynnItem));
-        return result;
+        int currentRevision = Managers.Favorites.getRevision();
+        Integer revision = wynnItem.getCache().get(WynnItemCache.FAVORITE_KEY);
+        if (revision != null && (revision == currentRevision || revision == -currentRevision)) {
+            // The cache is up to date; positive value means it is a favorite
+            return revision > 0;
+        }
+
+        // Cache is missing or outdated
+        boolean isFavorite = Managers.Favorites.calculateFavorite(itemStack, wynnItem);
+        wynnItem.getCache().store(WynnItemCache.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
+        return isFavorite;
     }
 
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {
