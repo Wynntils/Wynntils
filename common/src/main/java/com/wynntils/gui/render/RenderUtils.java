@@ -31,11 +31,13 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -48,6 +50,9 @@ public final class RenderUtils {
     private static final CustomColor BACKGROUND = CustomColor.fromInt(0xFF100010);
     private static final CustomColor BORDER_START = CustomColor.fromInt(0xFF25005B);
     private static final CustomColor BORDER_END = CustomColor.fromInt(0xFF180033);
+
+    // used to render player nametags as semi-transparent
+    private static final int NAMETAG_COLOR = 0x20FFFFFF;
 
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
@@ -1078,6 +1083,48 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
+    }
+
+    public static void renderCustomNametag(
+            PoseStack matrixStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            int backgroundColor,
+            EntityRenderDispatcher dispatcher,
+            Entity entity,
+            Component nametag,
+            Font font,
+            float nametagScale,
+            float customOffset) {
+        double d = dispatcher.distanceToSqr(entity);
+        if (!(d > 4096.0)) {
+            float yOffset = entity.getBbHeight() + 0.25F + customOffset;
+            float xOffset = (-1) * (font.width(nametag) / 2f);
+            boolean notSneaking = !entity.isDiscrete();
+
+            matrixStack.pushPose();
+            matrixStack.translate(0.0F, yOffset, 0.0F);
+            matrixStack.mulPose(dispatcher.cameraOrientation());
+            matrixStack.scale(-0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
+            Matrix4f matrix4f = matrixStack.last().pose();
+
+            font.drawInBatch(
+                    nametag,
+                    xOffset,
+                    0f,
+                    NAMETAG_COLOR,
+                    false,
+                    matrix4f,
+                    buffer,
+                    notSneaking,
+                    backgroundColor,
+                    packedLight);
+            if (notSneaking) {
+                font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
+            }
+
+            matrixStack.popPose();
+        }
     }
 
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
