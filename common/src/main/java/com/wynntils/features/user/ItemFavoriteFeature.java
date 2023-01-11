@@ -15,12 +15,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.WynnItemCache;
-import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
@@ -36,6 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ItemFavoriteFeature extends UserFeature {
     public static ItemFavoriteFeature INSTANCE;
 
+    // This should really move to FavoritesModel, but for now, models cannot have configs
     @Config(visible = false)
     public Set<String> favoriteItems = new HashSet<>();
 
@@ -74,36 +72,10 @@ public class ItemFavoriteFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return false;
 
         WynnItem wynnItem = wynnItemOpt.get();
-        Boolean result = wynnItem.getCache().getOrCalculate(WynnItemCache.FAVORITE_KEY,
-                () -> calculateFavorite(itemStack, wynnItem));
+        Boolean result = wynnItem.getCache()
+                .getOrCalculate(
+                        WynnItemCache.FAVORITE_KEY, () -> Managers.Favorites.calculateFavorite(itemStack, wynnItem));
         return result;
-    }
-
-    private boolean calculateFavorite(ItemStack itemStack, WynnItem wynnItem) {
-        String unformattedName = getUnformattedItemName(itemStack);
-
-        if (favoriteItems.contains(unformattedName)) {
-            return true;
-        }
-
-        if (wynnItem instanceof IngredientItem ingredientItem) {
-            return favoriteItems.contains(ingredientItem.getIngredientProfile().getDisplayName());
-        }
-
-        if (wynnItem instanceof GearBoxItem gearBoxItem) {
-            for (String possibleItem : gearBoxItem.getItemPossibilities()) {
-                if (favoriteItems.contains(possibleItem)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private static String getUnformattedItemName(ItemStack itemStack) {
-        return WynnUtils.normalizeBadString(
-                ComponentUtils.stripFormatting(itemStack.getHoverName().getString()));
     }
 
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {

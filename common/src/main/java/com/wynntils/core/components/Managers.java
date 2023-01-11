@@ -21,6 +21,7 @@ import com.wynntils.mc.MinecraftSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
+import com.wynntils.wynn.model.FavoritesManager;
 import com.wynntils.wynn.model.GearItemManager;
 import com.wynntils.wynn.model.HorseManager;
 import com.wynntils.wynn.model.SplashManager;
@@ -46,6 +47,7 @@ public final class Managers {
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final EmeraldManager Emerald = new EmeraldManager();
+    public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final GearItemManager GearItem = new GearItemManager();
     public static final HorseManager Horse = new HorseManager();
