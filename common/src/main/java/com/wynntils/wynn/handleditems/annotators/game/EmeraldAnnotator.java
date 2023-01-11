@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class EmeraldAnnotator implements ItemAnnotator {
-    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("^§a(Liquid )?Emerald( Block)?$");
+    private static final Pattern EMERALD_PATTERN = Pattern.compile("^§a(Liquid )?Emerald( Block)?$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -21,7 +21,7 @@ public final class EmeraldAnnotator implements ItemAnnotator {
         if (unit == null) return null;
 
         // Verify that name is correct
-        Matcher matcher = EMERALD_POUCH_TIER_PATTERN.matcher(name);
+        Matcher matcher = EMERALD_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
         return new EmeraldItem(itemStack.getCount(), unit);
