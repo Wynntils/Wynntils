@@ -23,7 +23,6 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
@@ -225,7 +224,7 @@ public final class GearItemManager extends Manager {
         int starCount = identificationMatcher.group("Stars").length();
         int value = Integer.parseInt(identificationMatcher.group("Value"));
 
-        String shortIdName =  WynnItemMatchers.getShortIdentificationName(idName, isRaw);
+        String shortIdName = WynnItemMatchers.getShortIdentificationName(idName, isRaw);
 
         return identificationFromValue(lore, item, idName, shortIdName, value, starCount);
     }

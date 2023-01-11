@@ -5,7 +5,6 @@
 package com.wynntils.wynn.objects;
 
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import java.util.regex.Pattern;
 
 public enum SpellType {
     ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", 6, 0),
