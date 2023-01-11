@@ -9,7 +9,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import org.lwjgl.glfw.GLFW;
@@ -24,8 +23,6 @@ public class IngredientPouchHotkeyFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         InventoryUtils.sendInventorySlotMouseClick(
-                InventoryUtils.INGREDIENT_POUCH_SLOT_NUM,
-                McUtils.inventory().getItem(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM),
-                InventoryUtils.MouseClickType.LEFT_CLICK);
+                InventoryUtils.INGREDIENT_POUCH_SLOT_NUM, InventoryUtils.MouseClickType.LEFT_CLICK);
     }
 }

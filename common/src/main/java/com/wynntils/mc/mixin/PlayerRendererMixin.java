@@ -39,7 +39,6 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        matrixStack.pushPose();
 
         NametagRenderEvent event = EventFactory.onNameTagRender(entity, displayName, matrixStack, buffer, packedLight);
         if (event.isCanceled()) {
@@ -48,6 +47,16 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
         }
 
         List<MutableComponent> injected = event.getInjectedLines();
+        if (injected.isEmpty()) return; // don't need to interfere with vanilla rendering
+
+        // pose is always translated by ((entityHeight + 0.5) * scale) in super.renderNameTag
+        // final offset is (entityHeight + (scale*0.25) + 0.25), so that nametag always starts 0.25 units above player
+        float scale = event.getInjectedLinesScale();
+        float scaleOffset = (entity.getBbHeight()) * (1 - scale) - (0.25f) * (scale) + 0.25f;
+
+        matrixStack.pushPose();
+        matrixStack.translate(0f, scaleOffset, 0f);
+        matrixStack.scale(scale, scale, scale);
 
         for (MutableComponent component : injected) {
             // Note that the super qualifier is really needed, since this code is actually executing
@@ -56,8 +65,12 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
             matrixStack.translate(0.0, 0.25875f, 0.0);
         }
 
-        super.renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
+        // reset scale and undo the translation we added to account for the modified scale
+        matrixStack.scale(1f / scale, 1f / scale, 1f / scale);
+        matrixStack.translate(0f, -1 * scaleOffset, 0f);
 
+        // finally, draw vanilla nametag on top
+        super.renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
         matrixStack.popPose();
 
         // Cancel the original method, we already rendered the name (this acts as a non-intrusive redirect)
