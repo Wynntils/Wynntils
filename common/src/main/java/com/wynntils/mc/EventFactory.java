@@ -17,7 +17,6 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
@@ -75,6 +74,7 @@ import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -578,12 +578,8 @@ public final class EventFactory {
     // endregion
 
     // region Game Events
-    public static void onTickStart() {
-        post(new ClientTickEvent.Start());
-    }
-
-    public static void onTickEnd() {
-        post(new ClientTickEvent.End());
+    public static void onTick() {
+        post(new TickEvent());
     }
 
     public static void onResizeDisplayPost() {
