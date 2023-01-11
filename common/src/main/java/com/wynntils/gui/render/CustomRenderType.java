@@ -34,23 +34,23 @@ public class CustomRenderType extends RenderType {
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
 
-    private static final Function<ResourceLocation, RenderType> POSITION_TEXTURE =
+    private static final Function<ResourceLocation, RenderType> POSITION_COLOR_TEXTURE =
             Util.memoize(resource -> RenderType.create(
-                    "wynntils_position_texture",
+                    "wynntils_position_color_texture",
                     DefaultVertexFormat.POSITION_COLOR_TEX,
                     Mode.QUADS,
                     256,
                     false,
-                    true,
+                    false,
                     CompositeState.builder()
-                            .setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                            .setShaderState(POSITION_COLOR_TEX_SHADER)
                             .setTextureState(new TextureStateShard(resource, false, false))
-                            //                                        .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
-    public static RenderType getPositionTexture(ResourceLocation resource) {
-        return POSITION_TEXTURE.apply(resource);
+    public static RenderType getPositionColorTexture(ResourceLocation resource) {
+        return POSITION_COLOR_TEXTURE.apply(resource);
     }
 
     public CustomRenderType(

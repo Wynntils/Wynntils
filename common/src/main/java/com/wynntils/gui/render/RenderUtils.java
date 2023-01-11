@@ -334,30 +334,36 @@ public final class RenderUtils {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             ResourceLocation tex,
+            CustomColor color,
+            float alpha,
             float x,
             float y,
             float z,
             float width,
-            float height,
-            int textureWidth,
-            int textureHeight) {
-        // TODO inline?
-        final int u = textureWidth;
-        final int v = textureHeight;
-
-        float uScale = 1f / textureWidth;
-        float vScale = 1f / textureHeight;
+            float height) {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTexture(tex));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTexture(tex));
 
-        buffer.vertex(matrix, x, y + height, z).uv(0, v * vScale).endVertex();
-        buffer.vertex(matrix, x + width, y + height, z)
-                .uv(u * uScale, v * vScale)
+        float[] colorArray = color.asFloatArray();
+
+        buffer.vertex(matrix, x, y + height, z)
+                .color(colorArray[0], colorArray[1], colorArray[2], alpha)
+                .uv(0, 1)
                 .endVertex();
-        buffer.vertex(matrix, x + width, y, z).uv(u * uScale, 0).endVertex();
-        buffer.vertex(matrix, x, y, z).uv(0, 0).endVertex();
+        buffer.vertex(matrix, x + width, y + height, z)
+                .color(colorArray[0], colorArray[1], colorArray[2], alpha)
+                .uv(1, 1)
+                .endVertex();
+        buffer.vertex(matrix, x + width, y, z)
+                .color(colorArray[0], colorArray[1], colorArray[2], alpha)
+                .uv(1, 0)
+                .endVertex();
+        buffer.vertex(matrix, x, y, z)
+                .color(colorArray[0], colorArray[1], colorArray[2], alpha)
+                .uv(0, 0)
+                .endVertex();
     }
 
     public static void drawTexturedRectWithColor(
