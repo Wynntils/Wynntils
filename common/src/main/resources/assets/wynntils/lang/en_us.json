@@ -140,6 +140,8 @@
   "feature.wynntils.customCommandKeybinds.keybindCommand6.description": "What command should be executed when pressing the sixth custom command keybind?",
   "feature.wynntils.customCommandKeybinds.keybindCommand6.name": "Sixth Custom Command Keybind",
   "feature.wynntils.customCommandKeybinds.name": "Custom Command Keybinds",
+  "feature.wynntils.customNametagRenderer.customNametagScale.description": "How large should the extra nametag lines be?",
+  "feature.wynntils.customNametagRenderer.customNametagScale.name": "Custom Nametag Scale",
   "feature.wynntils.customNametagRenderer.hideAllNametags.description": "Should all player nametags be hidden?",
   "feature.wynntils.customNametagRenderer.hideAllNametags.name": "Hide All Player Nametags",
   "feature.wynntils.customNametagRenderer.name": "Nametag Rendering",
