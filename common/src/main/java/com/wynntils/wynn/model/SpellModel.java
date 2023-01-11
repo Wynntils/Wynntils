@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.wynn.event.SpellCastedEvent;
-import com.wynntils.wynn.model.actionbar.SpellSegment;
+import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +21,7 @@ public class SpellModel extends Model {
     private static final Pattern LOW_LEVEL_SPELL_PATTERN = Pattern.compile("§a([LR?])§7-§a([LR?])§7-§r§a([LR?])§r");
 
     @SubscribeEvent
-    public void onSpellSegmentUpdate(SpellSegment.SpellSegmentUpdateEvent e) {
+    public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
         Matcher matcher = e.getMatcher();
         if (!matcher.matches()) return;
 

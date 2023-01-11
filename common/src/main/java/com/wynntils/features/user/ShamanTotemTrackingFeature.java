@@ -118,7 +118,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                     team.setColor(color);
 
                     scoreboard.addPlayerToTeam(totemAS.getStringUUID(), team);
-                    // TODO: set glowing here to totemAS
+                    totemAS.setSharedFlag(6, true); // Makes the totem glow
                     ShamanTotem newTotem = new ShamanTotem(
                             -1,
                             -1,
