@@ -18,6 +18,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
 import com.wynntils.wynn.utils.ContainerUtils;
@@ -69,20 +70,27 @@ public class ItemFavoriteFeature extends UserFeature {
     }
 
     private boolean isFavorited(ItemStack itemStack) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return false;
+
+        WynnItem wynnItem = wynnItemOpt.get();
+        Boolean result = wynnItem.getCache().getOrCalculate(WynnItemCache.FAVORITE_KEY,
+                () -> calculateFavorite(itemStack, wynnItem));
+        return result;
+    }
+
+    private boolean calculateFavorite(ItemStack itemStack, WynnItem wynnItem) {
         String unformattedName = getUnformattedItemName(itemStack);
 
         if (favoriteItems.contains(unformattedName)) {
             return true;
         }
 
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return false;
-
-        if (wynnItemOpt.get() instanceof IngredientItem ingredientItem) {
+        if (wynnItem instanceof IngredientItem ingredientItem) {
             return favoriteItems.contains(ingredientItem.getIngredientProfile().getDisplayName());
         }
 
-        if (wynnItemOpt.get() instanceof GearBoxItem gearBoxItem) {
+        if (wynnItem instanceof GearBoxItem gearBoxItem) {
             for (String possibleItem : gearBoxItem.getItemPossibilities()) {
                 if (favoriteItems.contains(possibleItem)) {
                     return true;
