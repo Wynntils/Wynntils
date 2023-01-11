@@ -235,6 +235,8 @@
   "feature.wynntils.infoMessageFilter.hideWelcome.name": "隱藏歡迎訊息",
   "feature.wynntils.infoMessageFilter.name": "資訊訊息過濾",
   "feature.wynntils.ingredientPouchHotkey.name": "素材布袋按鍵綁定",
+  "feature.wynntils.inventoryEmeraldCount.combineInventoryAndContainer.description": "應該把你的物品欄和容器中的綠寶石合併計算，而不是分開計算嗎?",
+  "feature.wynntils.inventoryEmeraldCount.combineInventoryAndContainer.name": "合併容器和物品欄中的綠寶石數量",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.description": "綠寶石數量應該如何顯示?",
   "feature.wynntils.inventoryEmeraldCount.emeraldCountType.name": "綠寶石數量渲染類型",
   "feature.wynntils.inventoryEmeraldCount.name": "物品欄綠寶石統計",
