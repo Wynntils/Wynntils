@@ -56,9 +56,7 @@ public abstract class IconPoi implements Poi {
             modifier *= 1.05;
         }
 
-        // FIXME: Hardcoded :)
-        //        Texture icon = getIcon();
-        Texture icon = Texture.CHEST_T1;
+        Texture icon = getIcon();
 
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
@@ -66,20 +64,19 @@ public abstract class IconPoi implements Poi {
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         float[] colors = RenderSystem.getShaderColor();
-        RenderSystem.setShaderColor(colors[0], colors[1], colors[2], getIconAlpha(mapZoom));
+        // RenderSystem.setShaderColor(colors[0], colors[1], colors[2], getIconAlpha(mapZoom));
 
         RenderUtils.drawScalingTexturedRectWithBuffer(
                 poseStack,
                 bufferSource,
-                // icon.resource(),
+                icon.resource(),
                 renderX - width / 2,
                 renderZ - height / 2,
                 0,
                 width,
-                height
-                //                icon.width(),
-                //                icon.height()
-                );
+                height,
+                icon.width(),
+                icon.height());
 
         if (hovered) {
             // Render name if hovered

@@ -333,19 +333,14 @@ public final class RenderUtils {
     public static void drawScalingTexturedRectWithBuffer(
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
-            //            ResourceLocation tex,
+            ResourceLocation tex,
             float x,
             float y,
             float z,
             float width,
-            float height
-            //            int textureWidth,
-            //            int textureHeight
-            ) {
-        // FIXME: Hardcoded texture here and CustomRenderType
-        int textureWidth = Texture.CHEST_T1.width();
-        int textureHeight = Texture.CHEST_T1.height();
-
+            float height,
+            int textureWidth,
+            int textureHeight) {
         // TODO inline?
         final int u = textureWidth;
         final int v = textureHeight;
@@ -355,7 +350,7 @@ public final class RenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POI_TYPE);
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTexture(tex));
 
         buffer.vertex(matrix, x, y + height, z).uv(0, v * vScale).endVertex();
         buffer.vertex(matrix, x + width, y + height, z)
