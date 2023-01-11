@@ -157,13 +157,7 @@ public final class GearTooltipBuilder {
         String idName = identificationMatcher.group("ID");
         boolean isRaw = identificationMatcher.group("Suffix") == null;
 
-        String shortIdName;
-        SpellType spell = SpellType.fromName(idName);
-        if (spell != null) {
-            shortIdName = spell.getShortIdName(isRaw);
-        } else {
-            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
-        }
+        String shortIdName =  WynnItemMatchers.getShortIdentificationName(idName, isRaw);;
 
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         if (idProfile != null) {

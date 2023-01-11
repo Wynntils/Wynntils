@@ -57,7 +57,6 @@ public enum SpellType {
     private final String name;
     private final int startManaCost;
     private final int gradeManaChange;
-    private final Pattern spellPattern;
 
     public ClassType getClassType() {
         return classType;
@@ -125,13 +124,11 @@ public enum SpellType {
         this.name = name;
         this.startManaCost = startManaCost;
         this.gradeManaChange = gradeManaChange;
-
-        this.spellPattern = Pattern.compile("^" + name + "\\b.*");
     }
 
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
-            if (spellType.spellPattern.matcher(name).matches()) {
+            if (name.startsWith(spellType.name)) {
                 return spellType;
             }
         }

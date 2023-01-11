@@ -225,13 +225,7 @@ public final class GearItemManager extends Manager {
         int starCount = identificationMatcher.group("Stars").length();
         int value = Integer.parseInt(identificationMatcher.group("Value"));
 
-        String shortIdName;
-        SpellType spell = SpellType.fromName(idName);
-        if (spell != null) {
-            shortIdName = spell.getShortIdName(isRaw);
-        } else {
-            shortIdName = IdentificationProfile.getAsShortName(idName, isRaw);
-        }
+        String shortIdName =  WynnItemMatchers.getShortIdentificationName(idName, isRaw);
 
         return identificationFromValue(lore, item, idName, shortIdName, value, starCount);
     }
