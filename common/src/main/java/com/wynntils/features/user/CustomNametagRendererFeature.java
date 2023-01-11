@@ -116,8 +116,7 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {
-        WynntilsUser user =
-                Models.Player.getUser(event.getEntity().getUUID());
+        WynntilsUser user = Models.Player.getUser(event.getEntity().getUUID());
         if (user == null) return;
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
