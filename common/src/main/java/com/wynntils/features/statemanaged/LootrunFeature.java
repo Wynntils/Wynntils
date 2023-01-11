@@ -11,10 +11,10 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.FileUtils;
@@ -51,7 +51,7 @@ public class LootrunFeature extends StateManagedFeature {
     }
 
     @SubscribeEvent
-    public void recordMovement(ClientTickEvent.Start event) {
+    public void recordMovement(TickEvent event) {
         Models.Lootrun.recordMovementIfRecording();
     }
 
