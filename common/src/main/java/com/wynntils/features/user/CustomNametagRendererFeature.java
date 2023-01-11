@@ -18,7 +18,6 @@ import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
-import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -40,6 +39,11 @@ public class CustomNametagRendererFeature extends UserFeature {
     public float customNametagScale = 0.5f;
 
     private Player hitPlayerCache = null;
+
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Player);
+    }
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
@@ -74,7 +78,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         if (hitPlayerCache != event.getEntity()) return;
 
-        if (!WynnPlayerUtils.isLocalPlayer(player)) return;
+        if (!Models.Player.isLocalPlayer(player)) return;
 
         ItemStack heldItem = hitPlayerCache.getMainHandItem();
         if (heldItem != null) {
@@ -113,16 +117,11 @@ public class CustomNametagRendererFeature extends UserFeature {
 
     private static void addAccountTypeNametag(NametagRenderEvent event) {
         WynntilsUser user =
-                Models.RemoteWynntilsUserInfo.getUser(event.getEntity().getUUID());
+                Models.Player.getUser(event.getEntity().getUUID());
         if (user == null) return;
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
 
         event.addInjectedLine(accountType.getComponent());
-    }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.RemoteWynntilsUserInfo);
     }
 }

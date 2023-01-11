@@ -57,7 +57,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
@@ -502,8 +502,12 @@ public final class EventFactory {
         return post(new SetEntityPassengersEvent(packet.getVehicle()));
     }
 
-    public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
-        return post(new RemovePlayerFromTeamEvent(username, playerTeam));
+    public static PlayerTeamEvent.Removed onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        return post(new PlayerTeamEvent.Removed(username, playerTeam));
+    }
+
+    public static PlayerTeamEvent.Added onAddPlayerToTeam(String username, PlayerTeam playerTeam) {
+        return post(new PlayerTeamEvent.Added(username, playerTeam));
     }
 
     public static BossHealthUpdateEvent onBossHealthUpdate(

@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Scoreboard.class)
 public abstract class ScoreboardMixin {
@@ -36,5 +37,12 @@ public abstract class ScoreboardMixin {
         if (EventFactory.onRemovePlayerFromTeam(username, playerTeam).isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method = "addPlayerToTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)Z",
+            at = @At("RETURN"))
+    private void addPlayerToTeamPost(String username, PlayerTeam playerTeam, CallbackInfoReturnable cir) {
+        EventFactory.onAddPlayerToTeam(username, playerTeam);
     }
 }

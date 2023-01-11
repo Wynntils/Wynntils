@@ -9,11 +9,11 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class RemovePlayerFromTeamEvent extends Event {
+public abstract class PlayerTeamEvent extends Event {
     private final String username;
     private final PlayerTeam playerTeam;
 
-    public RemovePlayerFromTeamEvent(String username, PlayerTeam playerTeam) {
+    protected PlayerTeamEvent(String username, PlayerTeam playerTeam) {
         this.username = username;
         this.playerTeam = playerTeam;
     }
@@ -24,5 +24,17 @@ public class RemovePlayerFromTeamEvent extends Event {
 
     public PlayerTeam getPlayerTeam() {
         return playerTeam;
+    }
+
+    public static final class Added extends PlayerTeamEvent {
+        public Added(String username, PlayerTeam playerTeam) {
+            super(username, playerTeam);
+        }
+    }
+
+    public static final class Removed extends PlayerTeamEvent {
+        public Removed(String username, PlayerTeam playerTeam) {
+            super(username, playerTeam);
+        }
     }
 }
