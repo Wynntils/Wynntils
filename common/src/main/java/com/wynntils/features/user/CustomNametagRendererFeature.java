@@ -36,6 +36,9 @@ public class CustomNametagRendererFeature extends UserFeature {
     @Config
     public boolean showGearOnHover = true;
 
+    @Config
+    public float customNametagScale = 0.5f;
+
     private Player hitPlayerCache = null;
 
     @SubscribeEvent
@@ -56,6 +59,8 @@ public class CustomNametagRendererFeature extends UserFeature {
         }
 
         addAccountTypeNametag(event);
+
+        event.setInjectedLinesScale(customNametagScale);
     }
 
     @SubscribeEvent
