@@ -404,7 +404,7 @@
   "feature.wynntils.itemTextOverlay.powderTierRomanNumerals.name": "粉塵品階羅馬數字",
   "feature.wynntils.itemTextOverlay.powderTierShadow.description": "粉塵品階的覆疊層是否應該繪製陰影?",
   "feature.wynntils.itemTextOverlay.powderTierShadow.name": "粉塵品階文字陰影",
-  "feature.wynntils.itemTextOverlay.skillIconEnabled.description": "新增技能圖示到具有元素的物品。",
+  "feature.wynntils.itemTextOverlay.skillIconEnabled.description": "新增技能圖示到帶有元素的物品。",
   "feature.wynntils.itemTextOverlay.skillIconEnabled.name": "技能圖示",
   "feature.wynntils.itemTextOverlay.skillIconShadow.description": "技能圖示覆疊層文字的樣式。",
   "feature.wynntils.itemTextOverlay.skillIconShadow.name": "技能圖示陰影",
