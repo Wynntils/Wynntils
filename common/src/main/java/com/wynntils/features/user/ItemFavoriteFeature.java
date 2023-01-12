@@ -15,11 +15,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.handleditems.WynnItem;
-import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.handleditems.items.game.IngredientItem;
+import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.utils.ContainerUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.lang.reflect.Type;
@@ -35,6 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ItemFavoriteFeature extends UserFeature {
     public static ItemFavoriteFeature INSTANCE;
 
+    // This should really move to FavoritesModel, but for now, models cannot have configs
     @Config(visible = false)
     public Set<String> favoriteItems = new HashSet<>();
 
@@ -69,33 +68,21 @@ public class ItemFavoriteFeature extends UserFeature {
     }
 
     private boolean isFavorited(ItemStack itemStack) {
-        String unformattedName = getUnformattedItemName(itemStack);
-
-        if (favoriteItems.contains(unformattedName)) {
-            return true;
-        }
-
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
 
-        if (wynnItemOpt.get() instanceof IngredientItem ingredientItem) {
-            return favoriteItems.contains(ingredientItem.getIngredientProfile().getDisplayName());
+        WynnItem wynnItem = wynnItemOpt.get();
+        int currentRevision = Managers.Favorites.getRevision();
+        Integer revision = wynnItem.getCache().get(WynnItemCache.FAVORITE_KEY);
+        if (revision != null && (revision == currentRevision || revision == -currentRevision)) {
+            // The cache is up to date; positive value means it is a favorite
+            return revision > 0;
         }
 
-        if (wynnItemOpt.get() instanceof GearBoxItem gearBoxItem) {
-            for (String possibleItem : gearBoxItem.getItemPossibilities()) {
-                if (favoriteItems.contains(possibleItem)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private static String getUnformattedItemName(ItemStack itemStack) {
-        return WynnUtils.normalizeBadString(
-                ComponentUtils.stripFormatting(itemStack.getHoverName().getString()));
+        // Cache is missing or outdated
+        boolean isFavorite = Managers.Favorites.calculateFavorite(itemStack, wynnItem);
+        wynnItem.getCache().store(WynnItemCache.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
+        return isFavorite;
     }
 
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {
