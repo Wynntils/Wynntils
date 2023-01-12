@@ -4,8 +4,6 @@
  */
 package com.wynntils.wynn.model.map.poi;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.objects.CustomColor;
@@ -60,19 +58,13 @@ public class CustomPoi extends StaticIconPoi {
     }
 
     @Override
-    public DisplayPriority getDisplayPriority() {
-        return DisplayPriority.LOW;
+    public CustomColor getIconColor() {
+        return this.getColor();
     }
 
     @Override
-    public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
-        float[] color = this.color.asFloatArray();
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
-
-        super.renderAt(poseStack, renderX, renderZ, hovered, scale, mapZoom);
-
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+    public DisplayPriority getDisplayPriority() {
+        return DisplayPriority.LOW;
     }
 
     @Override

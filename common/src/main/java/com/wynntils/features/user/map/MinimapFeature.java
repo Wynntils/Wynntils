@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
@@ -243,9 +244,10 @@ public class MinimapFeature extends UserFeature {
 
             poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
 
+            MultiBufferSource.BufferSource bufferSource =
+                    McUtils.mc().renderBuffers().bufferSource();
+
             // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-            poisToRender = poisToRender.sorted(
-                    Comparator.comparing(Poi::getDisplayPriority).reversed());
             poisToRender.forEach((poi) -> {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
@@ -267,9 +269,11 @@ public class MinimapFeature extends UserFeature {
                         poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
+                    poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
                 }
             });
+
+            bufferSource.endBatch();
 
             // Compass icon
             Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
@@ -326,11 +330,13 @@ public class MinimapFeature extends UserFeature {
                 poseStack.pushPose();
                 RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
                 compass.getPointerPoi()
-                        .renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
+                        .renderAt(poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
                 poseStack.popPose();
             } else {
-                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, currentZoom);
+                compass.renderAt(poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale, currentZoom);
             }
+
+            bufferSource.endBatch();
 
             poseStack.pushPose();
             poseStack.translate(centerX, centerZ, 0);

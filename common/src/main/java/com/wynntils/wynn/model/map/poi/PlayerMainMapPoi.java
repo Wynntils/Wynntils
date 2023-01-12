@@ -15,6 +15,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.utils.PlayerInfoUtils;
 import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
 public class PlayerMainMapPoi extends PlayerPoiBase {
@@ -24,7 +25,13 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderZ,
+            boolean hovered,
+            float scale,
+            float mapZoom) {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 

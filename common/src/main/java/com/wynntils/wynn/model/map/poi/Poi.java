@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface Poi {
 
@@ -18,7 +19,14 @@ public interface Poi {
 
     boolean hasStaticLocation();
 
-    void renderAt(PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom);
+    void renderAt(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderZ,
+            boolean hovered,
+            float scale,
+            float mapZoom);
 
     int getWidth(float mapZoom, float scale);
 

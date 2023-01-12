@@ -8,14 +8,17 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import java.util.OptionalDouble;
+import java.util.function.Function;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 public class CustomRenderType extends RenderType {
     // Copied from RenderType.LINE_STRIP and changed the line width from the default
     // to 3
     public static final RenderType LOOTRUN_LINE = RenderType.create(
-            "lootrun",
+            "wynntils_lootrun_line",
             DefaultVertexFormat.POSITION_COLOR_NORMAL,
             Mode.LINE_STRIP,
             256,
@@ -30,6 +33,25 @@ public class CustomRenderType extends RenderType {
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
+
+    private static final Function<ResourceLocation, RenderType> POSITION_COLOR_TEXTURE =
+            Util.memoize(resource -> RenderType.create(
+                    "wynntils_position_color_texture",
+                    DefaultVertexFormat.POSITION_COLOR_TEX,
+                    Mode.QUADS,
+                    256,
+                    false,
+                    false,
+                    CompositeState.builder()
+                            .setShaderState(POSITION_COLOR_TEX_SHADER)
+                            .setTextureState(new TextureStateShard(resource, false, false))
+                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                            .setWriteMaskState(COLOR_WRITE)
+                            .createCompositeState(false)));
+
+    public static RenderType getPositionColorTexture(ResourceLocation resource) {
+        return POSITION_COLOR_TEXTURE.apply(resource);
+    }
 
     public CustomRenderType(
             String pName,
