@@ -1,9 +1,21 @@
+## [0.0.2-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.95...v0.0.2-alpha.96) (2023-01-12)
+
+
+### Code Refactoring
+
+* Create a FavoritesManager ([#1021](https://github.com/Wynntils/Artemis/issues/1021)) ([888e832](https://github.com/Wynntils/Artemis/commit/888e832718af9d38ec5ca01334ba5f9fe8cab4ed))
+
 ## [0.0.2-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.94...v0.0.2-alpha.95) (2023-01-12)
 
 
 ### Code Refactoring
 
 * Create PlayerModel based on RemoteWynntilsUserInfoModel ([#1020](https://github.com/Wynntils/Artemis/issues/1020)) ([47917f3](https://github.com/Wynntils/Artemis/commit/47917f3d116b3b7852995606757b974730a66c31))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.95 [skip ci] ([d0ac5d3](https://github.com/Wynntils/Artemis/commit/d0ac5d38344b52ff7bb57ef4f4a2f4e06b97e7b0))
 
 ## [0.0.2-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.93...v0.0.2-alpha.94) (2023-01-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.92 [skip ci] ([439ea38](https://github.com/Wynntils/Artemis/commit/439ea389cd55984bd1c0786930118b267341566a))
-
-## [0.0.2-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.90...v0.0.2-alpha.91) (2023-01-10)
-
-
-### New Features
-
-* Declare in Fabric that we cannot co-exist with Creative Core ([#1011](https://github.com/Wynntils/Artemis/issues/1011)) ([bef8227](https://github.com/Wynntils/Artemis/commit/bef8227216638816d50270f0d4a76ce82decfa39))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.91 [skip ci] ([95c0c54](https://github.com/Wynntils/Artemis/commit/95c0c545a5e5b88dec3201486565c13475dab5e7))
 
