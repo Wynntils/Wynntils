@@ -116,8 +116,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
 
         private String getFormattedTotemText(String prefix, String suffix, String coords) {
-            String maxFitting = StringUtils.getMaxFittingText(prefix + suffix + coords, this.getWidth(), FontRenderer.getInstance().getFont());
-            if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Coordinate line did not appear to fit, force break
+            String maxFitting = StringUtils.getMaxFittingText(
+                    prefix + suffix + coords,
+                    this.getWidth(),
+                    FontRenderer.getInstance().getFont());
+            if (maxFitting.contains("[")
+                    && !maxFitting.contains("]")) { // Coordinate line did not appear to fit, force break
                 return prefix + suffix + "\n" + coords;
             } else { // Fits fine, give normal lines
                 return prefix + suffix + coords;
@@ -142,13 +146,15 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                                 };
                                         String suffix = " (00:" + shamanTotem.getTime() + ")";
-                                        String coords = " " + shamanTotem.getLocation().toString();
+                                        String coords =
+                                                " " + shamanTotem.getLocation().toString();
                                         // Check if we should be saying "Summoned"
                                         if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
                                             suffix = " Summoned";
                                             coords = "";
                                         }
-                                        return new TextRenderTask(getFormattedTotemText(prefix, suffix, coords), textRenderSetting);
+                                        return new TextRenderTask(
+                                                getFormattedTotemText(prefix, suffix, coords), textRenderSetting);
                                     })
                                     .toList(),
                             this.getWidth(),
@@ -165,9 +171,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             List.of(
-                                    new TextRenderTask(getFormattedTotemText(totem1Color + "Totem 1", " Summoned", ""), textRenderSetting),
-                                    new TextRenderTask(getFormattedTotemText(totem2Color + "Totem 2", " (00:01)", " [-1434, 104, -5823]"), textRenderSetting),
-                                    new TextRenderTask(getFormattedTotemText(totem3Color + "Totem 3", " (00:14)", " [1, 8, -41]"), textRenderSetting)),
+                                    new TextRenderTask(
+                                            getFormattedTotemText(totem1Color + "Totem 1", " Summoned", ""),
+                                            textRenderSetting),
+                                    new TextRenderTask(
+                                            getFormattedTotemText(
+                                                    totem2Color + "Totem 2", " (00:01)", " [-1434, 104, -5823]"),
+                                            textRenderSetting),
+                                    new TextRenderTask(
+                                            getFormattedTotemText(totem3Color + "Totem 3", " (00:14)", " [1, 8, -41]"),
+                                            textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
