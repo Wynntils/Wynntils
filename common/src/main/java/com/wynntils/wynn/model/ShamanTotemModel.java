@@ -7,7 +7,7 @@ package com.wynntils.wynn.model;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.AddEntityEvent;
-import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.objects.Location;
@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -206,10 +205,8 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onHeldItemChange(PacketEvent<ServerboundSetCarriedItemPacket> e) {
-        if (e.getPacket().getSlot() != summonWeaponSlot) {
-            removeAllTotems();
-        }
+    public void onHeldItemChange(ChangeCarriedItemEvent e) {
+        removeAllTotems();
     }
 
     private String getNameFromMetadata(List<SynchedEntityData.DataValue<?>> data) {

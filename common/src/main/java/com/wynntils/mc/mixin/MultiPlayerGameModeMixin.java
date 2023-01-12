@@ -90,4 +90,15 @@ public abstract class MultiPlayerGameModeMixin {
             ci.cancel();
         }
     }
+
+    @Inject(
+            method = "ensureHasSentCarriedItem",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void ensureHasSentCarriedItem(CallbackInfo ci) {
+        EventFactory.onChangeCarriedItemEvent();
+    }
 }

@@ -14,6 +14,7 @@ import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -435,6 +436,10 @@ public final class EventFactory {
 
     public static ArmSwingEvent onArmSwing(ArmSwingEvent.ArmSwingContext actionContext, InteractionHand hand) {
         return post(new ArmSwingEvent(actionContext, hand));
+    }
+
+    public static ChangeCarriedItemEvent onChangeCarriedItemEvent() {
+        return post(new ChangeCarriedItemEvent());
     }
     // endregion
 
