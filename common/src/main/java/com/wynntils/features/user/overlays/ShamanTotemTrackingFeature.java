@@ -161,7 +161,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                     new TextRenderTask(
                                             totem2Color + "Totem 2 (00:01) [-1434, 104, 4314]", textRenderSetting),
                                     new TextRenderTask(
-                                            totem3Color + "Totem 3 (00:14) [19, 8, -41]", textRenderSetting)),
+                                            totem3Color + "Totem 3 (00:14) [1, 8, -41]", textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
