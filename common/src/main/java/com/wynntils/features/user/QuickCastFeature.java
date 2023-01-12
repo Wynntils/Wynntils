@@ -9,8 +9,8 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
@@ -173,7 +173,7 @@ public class QuickCastFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.End e) {
+    public void onTick(TickEvent e) {
         if (!WynnUtils.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period

@@ -5,8 +5,8 @@
 package com.wynntils.features.statemanaged;
 
 import com.wynntils.core.features.StateManagedFeature;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.GuiAccessor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.regex.Matcher;
@@ -36,7 +36,7 @@ public class FixSpellOverwriteFeature extends StateManagedFeature {
     }
 
     @SubscribeEvent
-    public void onTickEnd(ClientTickEvent.End event) {
+    public void onTickEnd(TickEvent event) {
         if (overwriteHighlightTimer <= 0 || overwriteHighlightItem.isEmpty()) return;
 
         Gui gui = McUtils.mc().gui;

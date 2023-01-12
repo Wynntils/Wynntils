@@ -10,8 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import java.util.List;
@@ -51,7 +51,7 @@ public class LowHealthVignetteFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.Start event) {
+    public void onTick(TickEvent event) {
         float healthPercent = (float) Models.ActionBar.getCurrentHealth() / Models.ActionBar.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;

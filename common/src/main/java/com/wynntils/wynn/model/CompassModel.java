@@ -6,8 +6,8 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
@@ -25,7 +25,7 @@ public final class CompassModel extends Model {
     private CustomColor targetColor = null;
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.Start e) {
+    public void onTick(TickEvent e) {
         if (locationSupplier == null) return;
 
         Location newLocation = locationSupplier.get();
