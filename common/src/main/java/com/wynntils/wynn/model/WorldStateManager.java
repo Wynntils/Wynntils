@@ -16,6 +16,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.objects.WorldState;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -41,18 +42,18 @@ public final class WorldStateManager extends Manager {
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
 
-    private State currentState = State.NOT_CONNECTED;
+    private WorldState currentState = WorldState.NOT_CONNECTED;
 
     public WorldStateManager() {
         super(List.of());
     }
 
     public boolean onServer() {
-        return currentState != State.NOT_CONNECTED;
+        return currentState != WorldState.NOT_CONNECTED;
     }
 
     public boolean onWorld() {
-        return currentState == State.WORLD;
+        return currentState == WorldState.WORLD;
     }
 
     public boolean isInStream() {
@@ -63,41 +64,41 @@ public final class WorldStateManager extends Manager {
         return onBetaServer;
     }
 
-    public State getCurrentState() {
+    public WorldState getCurrentState() {
         return currentState;
     }
 
-    private void setState(State newState, String newWorldName, boolean isFirstJoinWorld) {
+    private void setState(WorldState newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
-        State oldState = currentState;
+        WorldState oldState = currentState;
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
         WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
     }
 
-    private void setState(State newState, String newWorldName) {
-        setState(newState, newWorldName, false);
+    private void setState(WorldState newState) {
+        setState(newState, "", false);
     }
 
     @SubscribeEvent
     public void screenOpened(ScreenOpenedEvent e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
-            setState(State.NOT_CONNECTED, "");
+            setState(WorldState.NOT_CONNECTED);
         }
     }
 
     @SubscribeEvent
     public void disconnected(DisconnectedEvent e) {
-        setState(State.NOT_CONNECTED, "");
+        setState(WorldState.NOT_CONNECTED);
     }
 
     @SubscribeEvent
     public void connecting(ConnectedEvent e) {
         if (onServer()) {
             WynntilsMod.error("Got connected event while already connected to server: " + e);
-            currentState = State.NOT_CONNECTED;
+            currentState = WorldState.NOT_CONNECTED;
             currentWorldName = "";
         }
 
@@ -105,7 +106,7 @@ public final class WorldStateManager extends Manager {
         Matcher m = WYNNCRAFT_SERVER_PATTERN.matcher(host);
         if (m.matches()) {
             onBetaServer = m.group(1).equals(WYNNCRAFT_BETA_NAME);
-            setState(State.CONNECTING, "");
+            setState(WorldState.CONNECTING);
             currentTabListFooter = "";
         }
     }
@@ -113,7 +114,7 @@ public final class WorldStateManager extends Manager {
     @SubscribeEvent
     public void remove(PlayerLogOutEvent e) {
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
-            setState(State.INTERIM, "");
+            setState(WorldState.INTERIM);
         }
     }
 
@@ -121,10 +122,10 @@ public final class WorldStateManager extends Manager {
     public void onTeleport(PlayerTeleportEvent e) {
         if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
             // We get here even if the character selection menu will not show up because of autojoin
-            if (getCurrentState() != State.CHARACTER_SELECTION) {
+            if (getCurrentState() != WorldState.CHARACTER_SELECTION) {
                 // Sometimes the TP comes after the character selection menu, instead of before
                 // Don't lose the CHARACTER_SELECTION state if that is the case
-                setState(State.INTERIM, "");
+                setState(WorldState.INTERIM);
             }
         }
     }
@@ -133,7 +134,7 @@ public final class WorldStateManager extends Manager {
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
-            setState(State.CHARACTER_SELECTION, "");
+            setState(WorldState.CHARACTER_SELECTION);
         }
     }
 
@@ -146,7 +147,7 @@ public final class WorldStateManager extends Manager {
 
         if (!footer.isEmpty()) {
             if (HUB_NAME.matcher(footer).find()) {
-                setState(State.HUB, "");
+                setState(WorldState.HUB);
             }
         }
     }
@@ -160,21 +161,12 @@ public final class WorldStateManager extends Manager {
         Matcher m = WORLD_NAME.matcher(name);
         if (m.find()) {
             String worldName = m.group(1);
-            setState(State.WORLD, worldName, !hasJoinedAnyWorld);
+            setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);
             hasJoinedAnyWorld = true;
         }
     }
 
     public String getCurrentWorldName() {
         return currentWorldName;
-    }
-
-    public enum State {
-        NOT_CONNECTED,
-        CONNECTING,
-        INTERIM,
-        HUB,
-        CHARACTER_SELECTION,
-        WORLD
     }
 }

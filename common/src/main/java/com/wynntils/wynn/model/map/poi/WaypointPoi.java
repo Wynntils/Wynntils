@@ -8,7 +8,6 @@ import com.wynntils.gui.render.Texture;
 import java.util.function.Supplier;
 
 public class WaypointPoi extends DynamicIconPoi {
-
     private final PointerPoi pointer;
 
     public WaypointPoi(Supplier<PoiLocation> locationSupplier) {
@@ -38,32 +37,5 @@ public class WaypointPoi extends DynamicIconPoi {
     @Override
     public DisplayPriority getDisplayPriority() {
         return DisplayPriority.NORMAL;
-    }
-
-    public static class PointerPoi extends DynamicIconPoi {
-
-        public PointerPoi(Supplier<PoiLocation> locationSupplier) {
-            super(locationSupplier);
-        }
-
-        @Override
-        public Texture getIcon() {
-            return Texture.POINTER;
-        }
-
-        @Override
-        public float getMinZoomForRender() {
-            return -1f;
-        }
-
-        @Override
-        public String getName() {
-            return "Waypoint";
-        }
-
-        @Override
-        public DisplayPriority getDisplayPriority() {
-            return DisplayPriority.NORMAL;
-        }
     }
 }

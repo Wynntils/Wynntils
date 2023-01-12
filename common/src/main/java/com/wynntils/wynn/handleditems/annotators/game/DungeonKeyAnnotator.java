@@ -12,18 +12,20 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class DungeonKeyAnnotator implements ItemAnnotator {
-    private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile("(?:§.)*(?:Broken )?(?:Corrupted )?(.+) Key");
+    private static final Pattern DUNGEON_KEY_PATTERN =
+            Pattern.compile("^(?:§[46])*(?:Broken )?(?:Corrupted )?(.+) Key$");
+
+    private static final Pattern LORE_PATTERN = Pattern.compile("§7(Grants access to the|Use this item at the)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         Matcher keyMatcher = DUNGEON_KEY_PATTERN.matcher(name);
         if (!keyMatcher.matches()) return null;
 
-        if (!verifyDungeonKey(itemStack)) return null;
+        if (!verifyDungeonKey(itemStack, name)) return null;
 
         String dungeonName = keyMatcher.group();
 
@@ -36,12 +38,10 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
         return new DungeonKeyItem(dungeon, corrupted);
     }
 
-    private boolean verifyDungeonKey(ItemStack itemStack) {
-        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
-            // check lore to avoid matching misc. key items
-            if (line.getString().contains("Dungeon Info")) return true;
-            if (line.getString().contains("Corrupted Dungeon Key")) return true;
-        }
-        return false;
+    private boolean verifyDungeonKey(ItemStack itemStack, String name) {
+        if (name.startsWith("Broken")) return true;
+
+        Matcher matcher = ItemUtils.matchLoreLine(itemStack, 0, LORE_PATTERN);
+        return matcher.matches();
     }
 }

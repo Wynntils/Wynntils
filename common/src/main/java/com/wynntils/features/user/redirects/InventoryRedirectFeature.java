@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user.redirects;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -54,7 +54,7 @@ public class InventoryRedirectFeature extends UserFeature {
         if (redirectIngredientPouch) {
             if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString).matches()) {
                 event.setCanceled(true);
-                NotificationManager.queueMessage(codedString);
+                Managers.Notification.queueMessage(codedString);
                 return;
             }
         }
@@ -69,9 +69,9 @@ public class InventoryRedirectFeature extends UserFeature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    emeraldPouchMessage = NotificationManager.editMessage(emeraldPouchMessage, codedString);
+                    emeraldPouchMessage = Managers.Notification.editMessage(emeraldPouchMessage, codedString);
                 } else {
-                    emeraldPouchMessage = NotificationManager.queueMessage(codedString);
+                    emeraldPouchMessage = Managers.Notification.queueMessage(codedString);
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
@@ -86,7 +86,7 @@ public class InventoryRedirectFeature extends UserFeature {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
                 String potionMessage = String.format("§a+%s Potion Charges", potionCount);
-                NotificationManager.queueMessage(potionMessage);
+                Managers.Notification.queueMessage(potionMessage);
 
                 return;
             }

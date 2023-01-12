@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 public record PowderProfile(
         Powder element, int tier, int min, int max, int convertedFromNeutral, int addedDefence, int removedDefence) {
-    public static final Map<Powder, List<PowderProfile>> powderProfileMap = new HashMap<>();
+    private static final Map<Powder, List<PowderProfile>> POWDER_PROFILE_MAP = new HashMap<>();
 
     static {
-        PowderProfile.powderProfileMap.put(
+        PowderProfile.POWDER_PROFILE_MAP.put(
                 Powder.WATER,
                 Arrays.asList(
                         new PowderProfile(Powder.WATER, 1, 3, 4, 13, 3, 1),
@@ -26,7 +26,7 @@ public record PowderProfile(
                         new PowderProfile(Powder.WATER, 4, 6, 8, 21, 18, 4),
                         new PowderProfile(Powder.WATER, 5, 7, 10, 26, 28, 7),
                         new PowderProfile(Powder.WATER, 6, 9, 11, 32, 40, 10)));
-        PowderProfile.powderProfileMap.put(
+        PowderProfile.POWDER_PROFILE_MAP.put(
                 Powder.FIRE,
                 Arrays.asList(
                         new PowderProfile(Powder.FIRE, 1, 2, 5, 14, 3, 1),
@@ -35,7 +35,7 @@ public record PowderProfile(
                         new PowderProfile(Powder.FIRE, 4, 6, 9, 24, 16, 5),
                         new PowderProfile(Powder.FIRE, 5, 8, 10, 30, 25, 9),
                         new PowderProfile(Powder.FIRE, 6, 10, 12, 37, 36, 13)));
-        PowderProfile.powderProfileMap.put(
+        PowderProfile.POWDER_PROFILE_MAP.put(
                 Powder.AIR,
                 Arrays.asList(
                         new PowderProfile(Powder.AIR, 1, 2, 6, 11, 3, 1),
@@ -44,7 +44,7 @@ public record PowderProfile(
                         new PowderProfile(Powder.AIR, 4, 5, 11, 22, 16, 5),
                         new PowderProfile(Powder.AIR, 5, 7, 12, 28, 24, 9),
                         new PowderProfile(Powder.AIR, 6, 8, 14, 35, 34, 13)));
-        PowderProfile.powderProfileMap.put(
+        PowderProfile.POWDER_PROFILE_MAP.put(
                 Powder.EARTH,
                 Arrays.asList(
                         new PowderProfile(Powder.EARTH, 1, 3, 6, 17, 2, 1),
@@ -53,7 +53,7 @@ public record PowderProfile(
                         new PowderProfile(Powder.EARTH, 4, 7, 10, 31, 14, 5),
                         new PowderProfile(Powder.EARTH, 5, 9, 11, 38, 22, 9),
                         new PowderProfile(Powder.EARTH, 6, 11, 13, 46, 30, 13)));
-        PowderProfile.powderProfileMap.put(
+        PowderProfile.POWDER_PROFILE_MAP.put(
                 Powder.THUNDER,
                 Arrays.asList(
                         new PowderProfile(Powder.THUNDER, 1, 1, 8, 9, 3, 1),
@@ -65,11 +65,11 @@ public record PowderProfile(
     }
 
     public static List<PowderProfile> getAllPowderProfiles() {
-        return powderProfileMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        return POWDER_PROFILE_MAP.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public static PowderProfile getPowderProfile(Powder element, int tier) {
-        return powderProfileMap.get(element).get(tier - 1);
+        return POWDER_PROFILE_MAP.get(element).get(tier - 1);
     }
 
     @Override

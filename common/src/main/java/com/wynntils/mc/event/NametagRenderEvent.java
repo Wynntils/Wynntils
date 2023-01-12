@@ -5,12 +5,11 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -21,20 +20,24 @@ public class NametagRenderEvent extends Event {
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
     private final int packedLight;
-    private final List<MutableComponent> injectedLines;
+    private final EntityRenderDispatcher entityRenderDispatcher;
+    private final Font font;
 
     public NametagRenderEvent(
             AbstractClientPlayer entity,
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
-            int packedLight) {
+            int packedLight,
+            EntityRenderDispatcher entityRenderDispatcher,
+            Font font) {
         this.entity = entity;
         this.displayName = displayName;
         this.poseStack = poseStack;
         this.buffer = buffer;
         this.packedLight = packedLight;
-        this.injectedLines = new ArrayList<>();
+        this.entityRenderDispatcher = entityRenderDispatcher;
+        this.font = font;
     }
 
     public AbstractClientPlayer getEntity() {
@@ -57,11 +60,11 @@ public class NametagRenderEvent extends Event {
         return poseStack;
     }
 
-    public List<MutableComponent> getInjectedLines() {
-        return injectedLines;
+    public EntityRenderDispatcher getEntityRenderDispatcher() {
+        return entityRenderDispatcher;
     }
 
-    public void addInjectedLine(MutableComponent component) {
-        injectedLines.add(component);
+    public Font getFont() {
+        return font;
     }
 }

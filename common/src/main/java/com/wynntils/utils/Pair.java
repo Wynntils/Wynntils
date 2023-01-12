@@ -27,7 +27,7 @@ public record Pair<T, J>(T a, J b) {
         return Objects.deepEquals(a, other.a) && Objects.deepEquals(b, other.b);
     }
 
-    public static <T, J> Pair of(T a, J b) {
-        return new Pair(a, b);
+    public static <T, J> Pair<T, J> of(T a, J b) {
+        return new Pair<>(a, b);
     }
 }

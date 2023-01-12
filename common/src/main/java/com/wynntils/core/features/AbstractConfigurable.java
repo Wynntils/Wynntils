@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractConfigurable implements Configurable {
-    protected final List<ConfigHolder> configOptions = new ArrayList<>();
+    private final List<ConfigHolder> configOptions = new ArrayList<>();
 
     @Override
     public void addConfigOptions(List<ConfigHolder> options) {

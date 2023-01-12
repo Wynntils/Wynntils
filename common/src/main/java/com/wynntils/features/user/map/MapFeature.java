@@ -15,7 +15,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -114,7 +113,9 @@ public class MapFeature extends UserFeature {
     private BlockPos lastChestPos;
 
     @RegisterKeyBind
-    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, () -> {
+    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, this::openMainMap);
+
+    private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
@@ -123,7 +124,7 @@ public class MapFeature extends UserFeature {
         }
 
         McUtils.mc().setScreen(MainMapScreen.create());
-    });
+    }
 
     @Override
     public List<Model> getModelDependencies() {
@@ -161,11 +162,11 @@ public class MapFeature extends UserFeature {
                 tier.getWaypointTexture(),
                 CustomPoi.Visibility.DEFAULT);
 
-        if (MapFeature.INSTANCE.customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
-            MapFeature.INSTANCE.customPois.add(newPoi);
+        if (customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
+            customPois.add(newPoi);
 
             // TODO: Replace this notification with a popup
-            NotificationManager.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
+            Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
             Managers.Config.saveConfig();
@@ -186,15 +187,15 @@ public class MapFeature extends UserFeature {
             this.waypointName = waypointName;
         }
 
-        public Texture getWaypointTexture() {
+        private Texture getWaypointTexture() {
             return waypointTexture;
         }
 
-        public String getWaypointName() {
+        private String getWaypointName() {
             return waypointName;
         }
 
-        public static ChestTier fromString(String s) {
+        private static ChestTier fromString(String s) {
             return values()[MathUtils.integerFromRoman(s) - 1];
         }
     }

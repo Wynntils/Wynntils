@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
@@ -35,7 +36,8 @@ public class TooltipFittingFeature extends UserFeature {
     private int oldWidth = -1;
     private int oldHeight = -1;
 
-    @SubscribeEvent
+    // scaling should only happen after every other feature has updated tooltip
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
@@ -80,7 +82,8 @@ public class TooltipFittingFeature extends UserFeature {
         scaledLast = true;
     }
 
-    @SubscribeEvent
+    // highest priority to reset pose before other features start rendering
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
         if (!scaledLast) return;
 

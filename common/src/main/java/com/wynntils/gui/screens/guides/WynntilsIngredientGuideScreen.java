@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -126,7 +125,7 @@ public final class WynntilsIngredientGuideScreen
             tooltipLines.add(Component.empty());
 
             String unformattedName = itemStack.getIngredientProfile().getDisplayName();
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
+            if (Managers.Favorites.isFavorite(unformattedName)) {
                 tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
@@ -178,7 +177,7 @@ public final class WynntilsIngredientGuideScreen
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {
         if (allIngredientItems.isEmpty()) {
-            allIngredientItems = Managers.ItemProfiles.getIngredientsCollection().stream()
+            allIngredientItems = Managers.GearProfiles.getIngredientsCollection().stream()
                     .map(GuideIngredientItemStack::new)
                     .toList();
         }

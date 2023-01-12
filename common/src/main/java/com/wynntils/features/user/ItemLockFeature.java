@@ -18,7 +18,6 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.utils.WynnItemMatchers;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,11 +34,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ItemLockFeature extends UserFeature {
-    public static ItemLockFeature INSTANCE;
-
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind =
-            new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, ItemLockFeature::tryChangeLockStateOnHoveredSlot);
+            new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
     private final Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
@@ -91,7 +88,7 @@ public class ItemLockFeature extends UserFeature {
         // We want to allow opening emerald pouch even if locked
         if (allowClickOnEmeraldPouchInBlockingMode
                 && event.getClickType() == ClickType.PICKUP
-                && WynnItemMatchers.isEmeraldPouch(slotOptional.get().getItem())) {
+                && Managers.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 
@@ -130,12 +127,12 @@ public class ItemLockFeature extends UserFeature {
                 Texture.ITEM_LOCK.height() / 2);
     }
 
-    private static void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
+    private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        ItemLockFeature.INSTANCE.classSlotLockMap.putIfAbsent(Managers.Character.getId(), new HashSet<>());
+        classSlotLockMap.putIfAbsent(Managers.Character.getId(), new HashSet<>());
 
-        Set<Integer> classSet = ItemLockFeature.INSTANCE.classSlotLockMap.get(Managers.Character.getId());
+        Set<Integer> classSet = classSlotLockMap.get(Managers.Character.getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

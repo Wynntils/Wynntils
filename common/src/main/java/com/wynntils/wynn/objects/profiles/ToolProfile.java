@@ -7,28 +7,13 @@ package com.wynntils.wynn.objects.profiles;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
 import java.util.Locale;
 
-public class ToolProfile {
-    private final ToolType toolType;
-    private final int tier;
-
-    public ToolProfile(ToolType toolType, int tier) {
-        this.toolType = toolType;
-        this.tier = tier;
-    }
+public record ToolProfile(com.wynntils.wynn.objects.profiles.ToolProfile.ToolType toolType, int tier) {
 
     public static ToolProfile fromString(String toolTypeName, int tier) {
         ToolType toolType = ToolType.fromString(toolTypeName);
         if (toolType == null) return null;
 
         return new ToolProfile(toolType, tier);
-    }
-
-    public ToolType getToolType() {
-        return toolType;
-    }
-
-    public int getTier() {
-        return tier;
     }
 
     public enum ToolType {

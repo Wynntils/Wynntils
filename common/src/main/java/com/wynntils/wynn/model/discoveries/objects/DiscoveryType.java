@@ -19,6 +19,15 @@ public enum DiscoveryType {
         this.color = color;
     }
 
+    public static DiscoveryType getDiscoveryTypeFromString(String name) {
+        for (DiscoveryType type : values()) {
+            if (name.charAt(1) == type.getColor().getChar()) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public int getOrder() {
         return order;
     }

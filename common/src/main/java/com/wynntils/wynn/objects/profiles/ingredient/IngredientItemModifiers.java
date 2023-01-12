@@ -12,14 +12,14 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class IngredientItemModifiers {
 
-    int durability = 0;
-    int duration = 0;
-    int charges = 0;
-    int strength = 0;
-    int dexterity = 0;
-    int intelligence = 0;
-    int defense = 0;
-    int agility = 0;
+    private final int durability = 0;
+    private final int duration = 0;
+    private final int charges = 0;
+    private final int strength = 0;
+    private final int dexterity = 0;
+    private final int intelligence = 0;
+    private final int defense = 0;
+    private final int agility = 0;
 
     public int getAgility() {
         return agility;
@@ -108,5 +108,18 @@ public class IngredientItemModifiers {
         }
 
         return itemLore.stream().map(Component::literal).toList();
+    }
+
+    @Override
+    public String toString() {
+        return "IngredientItemModifiers{" + "durability="
+                + durability + ", duration="
+                + duration + ", charges="
+                + charges + ", strength="
+                + strength + ", dexterity="
+                + dexterity + ", intelligence="
+                + intelligence + ", defense="
+                + defense + ", agility="
+                + agility + '}';
     }
 }

@@ -31,7 +31,7 @@ public abstract class IconPoi implements Poi {
 
     // Returns the minimum zoom where the poi should be rendered with full alpha
     // Return -1 to always render without fading
-    public abstract float getMinZoomForRender();
+    protected abstract float getMinZoomForRender();
 
     public float getIconAlpha(float zoom) {
         if (getMinZoomForRender() <= -1) return 1f;

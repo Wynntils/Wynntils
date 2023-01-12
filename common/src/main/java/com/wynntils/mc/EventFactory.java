@@ -17,7 +17,6 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
@@ -35,6 +34,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemTooltipFlags;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -55,8 +55,8 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
+import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
@@ -74,6 +74,7 @@ import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -85,6 +86,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.Camera;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -95,6 +97,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -129,6 +132,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.phys.BlockHitResult;
@@ -169,8 +173,11 @@ public final class EventFactory {
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
-            int packedLight) {
-        return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
+            int packedLight,
+            EntityRenderDispatcher entityRenderDispatcher,
+            Font font) {
+        return post(new NametagRenderEvent(
+                entity, displayName, poseStack, buffer, packedLight, entityRenderDispatcher, font));
     }
 
     public static void onRenderLevelPost(
@@ -365,6 +372,14 @@ public final class EventFactory {
         return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
     }
 
+    public static ItemTooltipFlags.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
+        return post(new ItemTooltipFlags.Advanced(itemStack, flags));
+    }
+
+    public static ItemTooltipFlags.Mask onTooltipFlagsMask(ItemStack itemStack, int mask) {
+        return post(new ItemTooltipFlags.Mask(itemStack, mask));
+    }
+
     // endregion
 
     // region Player Input Events
@@ -492,8 +507,12 @@ public final class EventFactory {
         return post(new SetEntityPassengersEvent(packet.getVehicle()));
     }
 
-    public static RemovePlayerFromTeamEvent onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
-        return post(new RemovePlayerFromTeamEvent(username, playerTeam));
+    public static PlayerTeamEvent.Removed onRemovePlayerFromTeam(String username, PlayerTeam playerTeam) {
+        return post(new PlayerTeamEvent.Removed(username, playerTeam));
+    }
+
+    public static PlayerTeamEvent.Added onAddPlayerToTeam(String username, PlayerTeam playerTeam) {
+        return post(new PlayerTeamEvent.Added(username, playerTeam));
     }
 
     public static BossHealthUpdateEvent onBossHealthUpdate(
@@ -568,12 +587,8 @@ public final class EventFactory {
     // endregion
 
     // region Game Events
-    public static void onTickStart() {
-        post(new ClientTickEvent.Start());
-    }
-
-    public static void onTickEnd() {
-        post(new ClientTickEvent.End());
+    public static void onTick() {
+        post(new TickEvent());
     }
 
     public static void onResizeDisplayPost() {

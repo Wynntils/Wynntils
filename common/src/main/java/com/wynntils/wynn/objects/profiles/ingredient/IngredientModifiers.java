@@ -12,12 +12,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class IngredientModifiers {
-    int left = 0;
-    int right = 0;
-    int above = 0;
-    int under = 0;
-    int touching = 0;
-    int notTouching = 0;
+    private final int left = 0;
+    private final int right = 0;
+    private final int above = 0;
+    private final int under = 0;
+    private final int touching = 0;
+    private final int notTouching = 0;
 
     public int getLeft() {
         return left;
@@ -47,7 +47,7 @@ public class IngredientModifiers {
         return left != 0 || right != 0 || under != 0 || above != 0 || touching != 0 || notTouching != 0;
     }
 
-    public static String[] getLoreLines(String modifierName, int modifierValue) {
+    private static String[] getLoreLines(String modifierName, int modifierValue) {
         return new String[] {
             (modifierValue > 0 ? ChatFormatting.GREEN + "+" : ChatFormatting.RED.toString()) + modifierValue + "%"
                     + ChatFormatting.GRAY + " Ingredient Effectiveness",
@@ -78,5 +78,16 @@ public class IngredientModifiers {
         }
 
         return itemLore.stream().map(Component::literal).toList();
+    }
+
+    @Override
+    public String toString() {
+        return "IngredientModifiers{" + "left="
+                + left + ", right="
+                + right + ", above="
+                + above + ", under="
+                + under + ", touching="
+                + touching + ", notTouching="
+                + notTouching + '}';
     }
 }

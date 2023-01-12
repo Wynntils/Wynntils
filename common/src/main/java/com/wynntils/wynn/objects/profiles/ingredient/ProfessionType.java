@@ -22,8 +22,8 @@ public enum ProfessionType {
     WEAPONSMITHING("Weaponsmithing", "Ⓖ"),
     WOODWORKING("Woodworking", "Ⓘ");
 
-    final String professionName;
-    final String professionIconChar;
+    private final String professionName;
+    private final String professionIconChar;
 
     ProfessionType(String professionName, String professionIconChar) {
         this.professionName = professionName;

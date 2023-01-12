@@ -9,8 +9,8 @@ import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 public class IngredientIdentificationContainer {
     private final int minimum;
     private final int maximum;
-    IdentificationModifier type;
-    boolean isFixed;
+    private final IdentificationModifier type;
+    private final boolean isFixed;
 
     public IngredientIdentificationContainer(IdentificationModifier type, int minimum, int maximum) {
         this.type = type;

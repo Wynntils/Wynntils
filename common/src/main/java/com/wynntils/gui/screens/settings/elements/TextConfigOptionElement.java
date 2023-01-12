@@ -13,18 +13,22 @@ import com.wynntils.mc.objects.CommonColors;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
-    protected TextInputBoxWidget textInputBoxWidget;
-    protected boolean lastParseSuccessful = false;
+    protected final TextInputBoxWidget textInputBoxWidget;
+    private boolean lastParseSuccessful = false;
 
     protected final float renderHeight;
 
-    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+    protected TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen, int renderWidth) {
         super(configHolder);
 
         this.renderHeight = FontRenderer.getInstance().getFont().lineHeight + 8;
         this.textInputBoxWidget =
-                new TextInputBoxWidget(0, 0, 100, (int) this.renderHeight, this::onTextInputUpdate, screen);
+                new TextInputBoxWidget(0, 0, renderWidth, (int) this.renderHeight, this::onTextInputUpdate, screen);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
+    }
+
+    public TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
+        this(configHolder, screen, 100);
     }
 
     @Override
@@ -43,7 +47,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
         return textInputBoxWidget.mouseClicked(mouseX, mouseY, button);
     }
 
-    protected void onTextInputUpdate(String textInput) {
+    private void onTextInputUpdate(String textInput) {
         Object parsedValue = configHolder.tryParseStringValue(textInput);
 
         if (parsedValue != null) {
