@@ -17,7 +17,7 @@ import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.mc.MinecraftSchedulerManager;
+import com.wynntils.mc.TickSchedulerManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
@@ -52,7 +52,7 @@ public final class Managers {
     public static final GearItemManager GearItem = new GearItemManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
-    public static final MinecraftSchedulerManager MinecraftScheduler = new MinecraftSchedulerManager();
+    public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
     public static final ObjectivesManager Objectives = new ObjectivesManager();
     public static final WorldStateManager WorldState = new WorldStateManager();
 
@@ -66,7 +66,7 @@ public final class Managers {
     public static final TerritoryManager Territory = new TerritoryManager(Net);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
-    public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, MinecraftScheduler);
+    public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, TickScheduler);
 
     public static void init() {
         // Register all manager singletons as event listeners
