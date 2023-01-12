@@ -89,6 +89,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.Camera;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -99,6 +100,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -177,8 +179,11 @@ public final class EventFactory {
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
-            int packedLight) {
-        return post(new NametagRenderEvent(entity, displayName, poseStack, buffer, packedLight));
+            int packedLight,
+            EntityRenderDispatcher entityRenderDispatcher,
+            Font font) {
+        return post(new NametagRenderEvent(
+                entity, displayName, poseStack, buffer, packedLight, entityRenderDispatcher, font));
     }
 
     public static void onRenderLevelPost(
