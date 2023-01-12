@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -12,7 +13,6 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Delay;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.SpellCastedEvent;
 import com.wynntils.wynn.event.TotemActivatedEvent;
@@ -60,7 +60,7 @@ public class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
-        Delay.create(
+        Managers.TickScheduler.scheduleLater(
                 () -> {
                     if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > 450) return;
                     Entity entity = getBufferedEntity(e.getId());
@@ -104,7 +104,7 @@ public class ShamanTotemModel extends Model {
                                 "totemNumber should be 1, 2, or 3! (totem variable switch in #onTotemSpawn in ShamanTotemTrackingFeature");
                     }
                 },
-                1);
+                2);
     }
 
     @SubscribeEvent
