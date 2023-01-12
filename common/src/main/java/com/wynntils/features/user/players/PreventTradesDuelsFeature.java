@@ -4,13 +4,15 @@
  */
 package com.wynntils.features.user.players;
 
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.wynn.utils.WynnItemMatchers;
-import com.wynntils.wynn.utils.WynnPlayerUtils;
+import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +20,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.PLAYERS)
 public class PreventTradesDuelsFeature extends UserFeature {
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Player);
+    }
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
@@ -39,6 +45,6 @@ public class PreventTradesDuelsFeature extends UserFeature {
         return player.isShiftKeyDown()
                 && WynnItemMatchers.isWeapon(item)
                 && target instanceof Player p
-                && WynnPlayerUtils.isLocalPlayer(p);
+                && Models.Player.isLocalPlayer(p);
     }
 }
