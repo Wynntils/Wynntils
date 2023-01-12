@@ -24,6 +24,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.TotemRemovedEvent;
 import com.wynntils.wynn.event.TotemSummonedEvent;
+import com.wynntils.wynn.objects.ShamanTotem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -121,7 +122,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             Models.ShamanTotem.getActiveTotems().stream()
-                                    .sorted()
                                     .map(shamanTotem -> {
                                         String prefix =
                                                 switch (shamanTotem.getTotemNumber()) {
@@ -131,8 +131,15 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                                     default -> throw new IllegalArgumentException(
                                                             "totemNumber should be 1, 2, or 3! (color switch in #render in ShamanTotemTrackingFeature");
                                                 };
-                                        return new TextRenderTask(
-                                                prefix + " (00:" + shamanTotem.getTime() + ")", textRenderSetting);
+                                        String suffix;
+                                        // Check if we should be saying "Summoned" or have the time and location
+                                        if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
+                                            suffix = " Summoned";
+                                        } else { // ShamanTotem.TotemState.ACTIVE
+                                            suffix = " (00:" + shamanTotem.getTime() + ") "
+                                                    + shamanTotem.getLocation().toString();
+                                        }
+                                        return new TextRenderTask(prefix + suffix, textRenderSetting);
                                     })
                                     .toList(),
                             this.getWidth(),
@@ -149,9 +156,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             List.of(
-                                    new TextRenderTask(totem1Color + "Totem 1" + " (00:28)", textRenderSetting),
-                                    new TextRenderTask(totem2Color + "Totem 2" + " (00:01)", textRenderSetting),
-                                    new TextRenderTask(totem3Color + "Totem 3" + " (00:14)", textRenderSetting)),
+                                    new TextRenderTask(
+                                            totem1Color + "Totem 1 (00:28) [591, 38, 1945]", textRenderSetting),
+                                    new TextRenderTask(
+                                            totem2Color + "Totem 2 (00:01) [-1434, 77, 4314]", textRenderSetting),
+                                    new TextRenderTask(
+                                            totem3Color + "Totem 3 (00:14) [19, 8, -41]", textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
