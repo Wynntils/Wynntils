@@ -23,12 +23,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public final class GearProfilesManager extends Manager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
+    private static final Map<ChatFormatting, Integer> LEVEL_COLORS = Map.of(
+            ChatFormatting.DARK_GRAY, 0,
+            ChatFormatting.YELLOW, 1,
+            ChatFormatting.LIGHT_PURPLE, 2,
+            ChatFormatting.AQUA, 3);
 
     private IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
     private Map<String, GearProfile> items = Map.of();
@@ -49,6 +55,10 @@ public final class GearProfilesManager extends Manager {
         // This is slightly hacky, awaiting the full refactoring
         WynntilsMod.registerEventListener(Models.Item);
         Models.Item.init();
+    }
+
+    public int getTierFromColorCode(String tierColor) {
+        return LEVEL_COLORS.getOrDefault(ChatFormatting.getByCode(tierColor.charAt(0)), 0);
     }
 
     public IdentificationOrderer getIdentificationOrderer() {
