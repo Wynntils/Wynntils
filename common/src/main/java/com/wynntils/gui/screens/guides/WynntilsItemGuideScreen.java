@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -101,8 +100,7 @@ public final class WynntilsItemGuideScreen
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()))) {
+            if (Managers.Favorites.isFavorite(itemStack)) {
                 tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {

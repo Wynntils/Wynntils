@@ -11,7 +11,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
-import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
@@ -57,14 +56,14 @@ public class ItemGuessFeature extends UserFeature {
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
-        for (String item : itemPossibilities) {
-            GearProfile profile = Managers.GearProfiles.getItemsProfile(item);
+        for (String itemName : itemPossibilities) {
+            GearProfile profile = Managers.GearProfiles.getItemsProfile(itemName);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
-            MutableComponent itemDesc = Component.literal(item).withStyle(gearTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(itemName).withStyle(gearTier.getChatFormatting());
 
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(item)) {
+            if (Managers.Favorites.isFavorite(itemName)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
             }
 

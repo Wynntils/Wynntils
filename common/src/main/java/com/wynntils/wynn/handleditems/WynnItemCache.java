@@ -13,6 +13,7 @@ public class WynnItemCache {
     public static final String OVERLAY_KEY = "overlay";
     public static final String TOOLTIP_KEY = "tooltip";
     public static final String SEARCHED_KEY = "searched";
+    public static final String FAVORITE_KEY = "favorite";
 
     private final Map<String, Object> cache = new HashMap<>();
 
