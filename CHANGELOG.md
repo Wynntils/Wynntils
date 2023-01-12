@@ -1,9 +1,21 @@
+## [0.0.2-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.98...v0.0.2-alpha.99) (2023-01-12)
+
+
+### New Features
+
+* Set favorite star on ingredient pouch if it contains a favorite ingredient ([#1023](https://github.com/Wynntils/Artemis/issues/1023)) ([b83b8d3](https://github.com/Wynntils/Artemis/commit/b83b8d3a0e6228eafdca7d43471aa96527e97ecc))
+
 ## [0.0.2-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.97...v0.0.2-alpha.98) (2023-01-12)
 
 
 ### Bug Fixes
 
 * Do not crash the mod, if there is a newer URL list than expected ([#1024](https://github.com/Wynntils/Artemis/issues/1024)) ([51a662c](https://github.com/Wynntils/Artemis/commit/51a662c91679f7cdc51ef49030d97a4ac61f45ea))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.98 [skip ci] ([738d767](https://github.com/Wynntils/Artemis/commit/738d767d05173846f81900d3e153a1ea904ab6de))
 
 ## [0.0.2-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.96...v0.0.2-alpha.97) (2023-01-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.95 [skip ci] ([d0ac5d3](https://github.com/Wynntils/Artemis/commit/d0ac5d38344b52ff7bb57ef4f4a2f4e06b97e7b0))
-
-## [0.0.2-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.93...v0.0.2-alpha.94) (2023-01-11)
-
-
-### Code Refactoring
-
-* We should only have a single tick event ([#1016](https://github.com/Wynntils/Artemis/issues/1016)) ([428d0ab](https://github.com/Wynntils/Artemis/commit/428d0ab25961337d611ebc829221842117cfa6a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.94 [skip ci] ([be96bcc](https://github.com/Wynntils/Artemis/commit/be96bcc28a3446c0738240a35c1f29de580d4eda))
 
