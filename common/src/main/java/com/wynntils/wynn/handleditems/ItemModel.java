@@ -32,6 +32,7 @@ import com.wynntils.wynn.handleditems.annotators.game.TrinketAnnotator;
 import com.wynntils.wynn.handleditems.annotators.game.XpPotionAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.DailyRewardMultiplierAnnotator;
+import com.wynntils.wynn.handleditems.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.ServerAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.SkillPointAnnotator;
 import com.wynntils.wynn.handleditems.annotators.gui.SoulPointAnnotator;
@@ -69,6 +70,7 @@ public class ItemModel extends Model {
         // GUI handlers
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
+        Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
