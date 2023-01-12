@@ -634,6 +634,8 @@
   "feature.wynntils.shamanTotemTracking.highlightShamanTotems.name": "Highlight Shaman Totems",
   "feature.wynntils.shamanTotemTracking.name": "Shaman Totem Tracking",
   "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.name": "Shaman Totem Timer",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.description": "What should the text shadow look like?",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.name": "Text Shadow",
   "feature.wynntils.shamanTotemTracking.totem1Color.description": "What color should the totem 1 highlight and tracking text be?",
   "feature.wynntils.shamanTotemTracking.totem1Color.name": "Shaman Totem 1 Color",
   "feature.wynntils.shamanTotemTracking.totem2Color.description": "What color should the totem 2 highlight and tracking text be?",

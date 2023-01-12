@@ -103,7 +103,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         protected ShamanTotemTimerOverlay() {
             super(
                     new OverlayPosition(
-                            200,
+                            275,
                             -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
@@ -144,11 +144,14 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         @Override
         public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
             FontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask(ChatFormatting.WHITE + "Totem 1" + " (00:28)", textRenderSetting),
+                            List.of(
+                                    new TextRenderTask(totem1Color + "Totem 1" + " (00:28)", textRenderSetting),
+                                    new TextRenderTask(totem2Color + "Totem 2" + " (00:01)", textRenderSetting),
+                                    new TextRenderTask(totem3Color + "Totem 3" + " (00:14)", textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
