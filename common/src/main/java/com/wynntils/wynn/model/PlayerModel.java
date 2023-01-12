@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -73,11 +74,12 @@ public final class PlayerModel extends Model {
 
     @SubscribeEvent
     public void onAddPlayerToTeam(PlayerTeamEvent.Added event) {
-        UUID uuid = McUtils.mc()
-                .getConnection()
-                .getPlayerInfo(event.getUsername())
-                .getProfile()
-                .getId();
+        PlayerInfo playerInfo = McUtils.mc().getConnection().getPlayerInfo(event.getUsername());
+        if (playerInfo == null) return;
+
+        UUID uuid = playerInfo.getProfile().getId();
+        if (uuid == null) return;
+
         PlayerTeam playerTeam = event.getPlayerTeam();
 
         Matcher matcher = GHOST_WORLD_PATTERN.matcher(playerTeam.getName());
