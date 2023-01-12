@@ -1,9 +1,21 @@
+## [0.0.2-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.94...v0.0.2-alpha.95) (2023-01-12)
+
+
+### Code Refactoring
+
+* Create PlayerModel based on RemoteWynntilsUserInfoModel ([#1020](https://github.com/Wynntils/Artemis/issues/1020)) ([47917f3](https://github.com/Wynntils/Artemis/commit/47917f3d116b3b7852995606757b974730a66c31))
+
 ## [0.0.2-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.93...v0.0.2-alpha.94) (2023-01-11)
 
 
 ### Code Refactoring
 
 * We should only have a single tick event ([#1016](https://github.com/Wynntils/Artemis/issues/1016)) ([428d0ab](https://github.com/Wynntils/Artemis/commit/428d0ab25961337d611ebc829221842117cfa6a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.94 [skip ci] ([be96bcc](https://github.com/Wynntils/Artemis/commit/be96bcc28a3446c0738240a35c1f29de580d4eda))
 
 ## [0.0.2-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.92...v0.0.2-alpha.93) (2023-01-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.91 [skip ci] ([95c0c54](https://github.com/Wynntils/Artemis/commit/95c0c545a5e5b88dec3201486565c13475dab5e7))
-
-## [0.0.2-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.89...v0.0.2-alpha.90) (2023-01-10)
-
-
-### New Features
-
-* Add /wynntils status to check if Wynntils services are up ([#1000](https://github.com/Wynntils/Artemis/issues/1000)) ([8bf2f77](https://github.com/Wynntils/Artemis/commit/8bf2f7710a96ac0ffa6e3015e7889fe5e59ff6d6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.90 [skip ci] ([52dd819](https://github.com/Wynntils/Artemis/commit/52dd819cd39703bf22f6a5e1d01b440deaa13771))
 
