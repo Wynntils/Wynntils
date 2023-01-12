@@ -14,7 +14,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.MinecraftSchedulerManager;
+import com.wynntils.mc.TickSchedulerManager;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
@@ -45,10 +45,8 @@ public final class DiscoveryManager extends Manager {
     private List<Component> secretDiscoveriesTooltip = List.of();
 
     public DiscoveryManager(
-            NetManager netManager,
-            TerritoryManager territoryManager,
-            MinecraftSchedulerManager minecraftSchedulerManager) {
-        super(List.of(netManager, territoryManager, minecraftSchedulerManager));
+            NetManager netManager, TerritoryManager territoryManager, TickSchedulerManager tickSchedulerManager) {
+        super(List.of(netManager, territoryManager, tickSchedulerManager));
     }
 
     public void reloadData() {
@@ -177,7 +175,7 @@ public final class DiscoveryManager extends Manager {
 
             switch (action) {
                     // We can't run this is on request thread
-                case MAP -> Managers.MinecraftScheduler.queueRunnable(
+                case MAP -> Managers.TickScheduler.scheduleNextTick(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
                 case COMPASS -> Models.Compass.setCompassLocation(new Location(x, 0, z));
             }
