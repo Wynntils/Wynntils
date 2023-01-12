@@ -14,8 +14,8 @@ import com.wynntils.wynn.model.CompassModel;
 import com.wynntils.wynn.model.LootChestModel;
 import com.wynntils.wynn.model.LootrunModel;
 import com.wynntils.wynn.model.PlayerInventoryModel;
+import com.wynntils.wynn.model.PlayerModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
-import com.wynntils.wynn.model.RemoteWynntilsUserInfoModel;
 import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.model.ShamanMaskModel;
 import com.wynntils.wynn.model.ShamanTotemModel;
@@ -42,7 +42,7 @@ public final class Models {
     public static final MapModel Map = new MapModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
-    public static final RemoteWynntilsUserInfoModel RemoteWynntilsUserInfo = new RemoteWynntilsUserInfoModel();
+    public static final PlayerModel Player = new PlayerModel();
     public static final ScoreboardModel Scoreboard = new ScoreboardModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();

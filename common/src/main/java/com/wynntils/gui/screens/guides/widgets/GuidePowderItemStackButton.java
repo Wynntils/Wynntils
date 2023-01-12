@@ -6,7 +6,6 @@ package com.wynntils.gui.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -67,8 +66,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                         FontRenderer.TextShadow.OUTLINE);
         poseStack.popPose();
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
+        if (Managers.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
@@ -90,12 +88,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (ItemFavoriteFeature.INSTANCE.favoriteItems.contains(unformattedName)) {
-                ItemFavoriteFeature.INSTANCE.favoriteItems.remove(unformattedName);
-            } else {
-                ItemFavoriteFeature.INSTANCE.favoriteItems.add(unformattedName);
-            }
-
+            Managers.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();
         }
 
