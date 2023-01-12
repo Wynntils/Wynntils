@@ -1097,7 +1097,7 @@ public final class RenderUtils {
             float nametagScale,
             float customOffset) {
         double d = dispatcher.distanceToSqr(entity);
-        if (!(d > 4096.0)) {
+        if (d <= 4096.0) {
             float yOffset = entity.getBbHeight() + 0.25F + customOffset;
             float xOffset = (-1) * (font.width(nametag) / 2f);
             boolean notSneaking = !entity.isDiscrete();
