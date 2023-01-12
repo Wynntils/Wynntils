@@ -38,7 +38,6 @@ import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
