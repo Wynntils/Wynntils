@@ -6,7 +6,10 @@ package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Delay;
@@ -24,9 +27,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
@@ -62,11 +62,11 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemSpawn(PacketEvent<ClientboundAddEntityPacket> e) {
+    public void onTotemSpawn(AddEntityEvent e) {
         Delay.create(
                 () -> {
                     if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > 450) return;
-                    Entity entity = getBufferedEntity(e.getPacket().getId());
+                    Entity entity = getBufferedEntity(e.getId());
                     if (!(entity instanceof net.minecraft.world.entity.decoration.ArmorStand totemAS)) return;
 
                     // Checks to verify this is a totem
@@ -111,14 +111,14 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemRename(PacketEvent<ClientboundSetEntityDataPacket> e) {
+    public void onTotemRename(SetEntityDataEvent e) {
         if (!WynnUtils.onWorld()) return;
 
-        int entityId = e.getPacket().id();
+        int entityId = e.getId();
         Entity entity = getBufferedEntity(entityId);
         if (!(entity instanceof net.minecraft.world.entity.decoration.ArmorStand)) return;
 
-        String name = getNameFromMetadata(e.getPacket().packedItems());
+        String name = getNameFromMetadata(e.getPackedItems());
         if (name == null || name.isEmpty()) return;
 
         /*
@@ -184,10 +184,10 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemDestroy(PacketEvent<ClientboundRemoveEntitiesPacket> e) {
+    public void onTotemDestroy(RemoveEntitiesEvent e) {
         if (!WynnUtils.onWorld()) return;
 
-        List<Integer> destroyedEntities = e.getPacket().getEntityIds();
+        List<Integer> destroyedEntities = e.getEntityIds();
 
         if (totem1 != null && destroyedEntities.contains(totem1.getTimerId())) {
             removeTotem(1);
