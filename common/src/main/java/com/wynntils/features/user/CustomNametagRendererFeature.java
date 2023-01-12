@@ -19,7 +19,6 @@ import com.wynntils.wynn.objects.account.WynntilsUser;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.utils.RaycastUtils;
 import com.wynntils.wynn.utils.WynnItemUtils;
-import com.wynntils.wynn.utils.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
