@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
@@ -25,9 +24,10 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -213,33 +213,33 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = new ArrayList<>();
+        Stream<? extends Poi> pois = Models.Map.getServicePois().stream();
 
-        pois.addAll(Models.Map.getServicePois());
-        pois.addAll(Models.Map.getCombatPois());
-        pois.addAll(Models.Map.getLabelPois());
-
-        pois.addAll(MapFeature.INSTANCE.customPois);
-
-        List<HadesUser> renderedPlayers = Models.HadesUser.getHadesUserMap().values().stream()
-                .filter(
-                        hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                                || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
-                        /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
-                .toList();
+        pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
+        pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
+        pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
 
         // Make sure compass and player pois are on top
-        pois.addAll(renderedPlayers.stream().map(PlayerMainMapPoi::new).toList());
-        Models.Compass.getCompassWaypoint().ifPresent(pois::add);
+        pois = Stream.concat(
+                pois,
+                Models.HadesUser.getHadesUserMap().values().stream()
+                        .filter(
+                                hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
+                                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                                /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
+                        .map(PlayerMainMapPoi::new));
+
+        pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
+
         if (KeyboardUtils.isControlDown()) {
-            pois.addAll(Managers.Territory.getTerritoryPois());
+            pois = Stream.concat(pois, Managers.Territory.getTerritoryPois().stream());
         }
 
         // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-        pois.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
+        pois = pois.sorted(Comparator.comparing(Poi::getDisplayPriority).reversed());
 
         renderPois(
-                pois,
+                pois.collect(Collectors.toList()),
                 poseStack,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
                 MapFeature.INSTANCE.poiScale,

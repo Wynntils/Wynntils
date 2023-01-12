@@ -38,10 +38,10 @@ import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 
@@ -219,33 +219,36 @@ public class MinimapFeature extends UserFeature {
                 double playerZ,
                 BoundingBox textureBoundingBox) {
 
-            float sinRotationRadians = 0f;
-            float cosRotationRadians = 0f;
+            float sinRotationRadians;
+            float cosRotationRadians;
 
             if (followPlayerRotation) {
                 double rotationRadians = Math.toRadians(McUtils.player().getYRot());
                 sinRotationRadians = (float) StrictMath.sin(rotationRadians);
                 cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+            } else {
+                sinRotationRadians = 0f;
+                cosRotationRadians = 0f;
             }
 
             float currentZoom = 1f / scale;
 
-            List<Poi> poisToRender = new ArrayList<>(Models.Map.getServicePois());
-            poisToRender.addAll(MapFeature.INSTANCE.customPois);
-            List<PlayerMiniMapPoi> playerPois = Models.HadesUser.getHadesUserMap().values().stream()
-                    .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
-                            || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .map(PlayerMiniMapPoi::new)
-                    .toList();
-            poisToRender.addAll(playerPois);
+            Stream<? extends Poi> poisToRender = Models.Map.getServicePois().stream();
 
-            poisToRender.addAll(Models.Map.getCombatPois());
+            poisToRender = Stream.concat(
+                    poisToRender,
+                    Models.HadesUser.getHadesUserMap().values().stream()
+                            .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
+                                    || (user.isMutualFriend() && renderRemoteFriendPlayers))
+                            .map(PlayerMiniMapPoi::new));
 
-            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-            poisToRender.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
+            poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
+
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
-            for (Poi poi : poisToRender) {
+
+            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
+            poisToRender.forEach((poi) -> {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
 
@@ -268,7 +271,7 @@ public class MinimapFeature extends UserFeature {
                 if (box.intersects(textureBoundingBox)) {
                     poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
                 }
-            }
+            });
 
             bufferSource.endBatch();
 
