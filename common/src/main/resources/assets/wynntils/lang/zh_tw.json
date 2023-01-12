@@ -277,7 +277,7 @@
   "feature.wynntils.itemHighlight.hotbarHighlightEnabled.description": "啟用快捷欄中物品的醒目提示",
   "feature.wynntils.itemHighlight.hotbarHighlightEnabled.name": "快捷欄物品醒目提示",
   "feature.wynntils.itemHighlight.hotbarOpacity.description": "快捷欄中醒目提示的物品應該使用什麼層級的不透明度?",
-  "feature.wynntils.itemHighlight.hotbarOpacity.name": "快捷欄醒目提示透明度",
+  "feature.wynntils.itemHighlight.hotbarOpacity.name": "快捷欄醒目提示不透明度",
   "feature.wynntils.itemHighlight.inventoryHighlightEnabled.description": "啟用物品欄中物品的醒目提示",
   "feature.wynntils.itemHighlight.inventoryHighlightEnabled.name": "物品欄物品醒目提示",
   "feature.wynntils.itemHighlight.inventoryOpacity.description": "物品欄中醒目提示的物品應該使用什麼層級的不透明度?",
