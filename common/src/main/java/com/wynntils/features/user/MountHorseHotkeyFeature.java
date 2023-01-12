@@ -11,7 +11,6 @@ import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Delay;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import net.minecraft.ChatFormatting;
@@ -28,7 +27,7 @@ import org.lwjgl.glfw.GLFW;
 public class MountHorseHotkeyFeature extends UserFeature {
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
-    private static final int SUMMON_DELAY_TICKS = 5;
+    private static final int SUMMON_DELAY_TICKS = 6;
 
     private static int prevItem = -1;
     private static boolean alreadySetPrevItem = false;
@@ -78,7 +77,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             alreadySetPrevItem = true;
         }
 
-        Delay.create(
+        Managers.TickScheduler.scheduleLater(
                 () -> {
                     AbstractHorse horse = Managers.Horse.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
