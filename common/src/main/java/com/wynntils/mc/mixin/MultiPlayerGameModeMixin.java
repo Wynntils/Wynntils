@@ -91,6 +91,8 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
+    // As of 1.19.3, this seems to be the only method which sends carried item update packets to the server.
+    // Please look into this and confirm this is still the case, in future versions.
     @Inject(
             method = "ensureHasSentCarriedItem",
             at =

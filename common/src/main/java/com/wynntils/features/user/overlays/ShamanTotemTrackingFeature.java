@@ -15,6 +15,8 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
@@ -33,6 +35,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class ShamanTotemTrackingFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
@@ -41,15 +44,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     public boolean highlightShamanTotems = true;
 
     @Config
-    public static ChatFormatting totem1Color = ChatFormatting.WHITE;
+    public static ChatFormatting firstTotemColor = ChatFormatting.WHITE;
 
     @Config
-    public static ChatFormatting totem2Color = ChatFormatting.AQUA;
+    public static ChatFormatting secondTotemColor = ChatFormatting.AQUA;
 
     @Config
-    public static ChatFormatting totem3Color = ChatFormatting.RED;
+    public static ChatFormatting thirdTotemColor = ChatFormatting.RED;
 
     private static final String TOTEM_HIGHLIGHT_TEAM_BASE = "wynntilsTH";
+    private static final int ENTITY_GLOWING_FLAG = 6;
 
     @SubscribeEvent
     public void onTotemSummoned(TotemSummonedEvent e) {
@@ -60,9 +64,9 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
         ChatFormatting color =
                 switch (totemNumber) {
-                    case 1 -> totem1Color;
-                    case 2 -> totem2Color;
-                    case 3 -> totem3Color;
+                    case 1 -> firstTotemColor;
+                    case 2 -> secondTotemColor;
+                    case 3 -> thirdTotemColor;
                     default -> throw new IllegalArgumentException(
                             "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
@@ -76,7 +80,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         team.setColor(color);
 
         scoreboard.addPlayerToTeam(totemAS.getStringUUID(), team);
-        totemAS.setSharedFlag(6, true); // Makes the totem glow
+        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true); // Makes the totem glow
     }
 
     @SubscribeEvent
@@ -139,19 +143,22 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                     .map(shamanTotem -> {
                                         String prefix =
                                                 switch (shamanTotem.getTotemNumber()) {
-                                                    case 1 -> totem1Color + "Totem 1";
-                                                    case 2 -> totem2Color + "Totem 2";
-                                                    case 3 -> totem3Color + "Totem 3";
+                                                    case 1 -> firstTotemColor + "Totem 1";
+                                                    case 2 -> secondTotemColor + "Totem 2";
+                                                    case 3 -> thirdTotemColor + "Totem 3";
                                                     default -> throw new IllegalArgumentException(
                                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                                 };
-                                        String suffix = " (00:" + shamanTotem.getTime() + ")";
-                                        String coords =
-                                                " " + shamanTotem.getLocation().toString();
+
+                                        String suffix, coords;
                                         // Check if we should be saying "Summoned"
                                         if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
                                             suffix = " Summoned";
                                             coords = "";
+                                        } else {
+                                            suffix = " (" + shamanTotem.getTime() + "s)";
+                                            coords = " "
+                                                    + shamanTotem.getLocation().toString();
                                         }
                                         return new TextRenderTask(
                                                 getFormattedTotemText(prefix, suffix, coords), textRenderSetting);
@@ -172,14 +179,15 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderY(),
                             List.of(
                                     new TextRenderTask(
-                                            getFormattedTotemText(totem1Color + "Totem 1", " Summoned", ""),
+                                            getFormattedTotemText(firstTotemColor + "Totem 1", " Summoned", ""),
                                             textRenderSetting),
                                     new TextRenderTask(
                                             getFormattedTotemText(
-                                                    totem2Color + "Totem 2", " (00:01)", " [-1434, 104, -5823]"),
+                                                    secondTotemColor + "Totem 2", " (01s)", " [-1434, 104, -5823]"),
                                             textRenderSetting),
                                     new TextRenderTask(
-                                            getFormattedTotemText(totem3Color + "Totem 3", " (00:14)", " [1, 8, -41]"),
+                                            getFormattedTotemText(
+                                                    thirdTotemColor + "Totem 3", " (14s)", " [1, 8, -41]"),
                                             textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),

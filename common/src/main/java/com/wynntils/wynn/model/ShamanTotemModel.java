@@ -48,7 +48,6 @@ public class ShamanTotemModel extends Model {
 
     private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;
-    private int summonWeaponSlot = -1;
 
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
 
@@ -57,7 +56,6 @@ public class ShamanTotemModel extends Model {
         if (e.getSpell() != SpellType.TOTEM) return;
 
         totemCastTimestamp = System.currentTimeMillis();
-        summonWeaponSlot = McUtils.inventory().selected;
     }
 
     @SubscribeEvent
@@ -264,7 +262,6 @@ public class ShamanTotemModel extends Model {
      * Resets all three totem variables.
      */
     private void removeAllTotems() {
-        summonWeaponSlot = -1;
         removeTotem(1);
         removeTotem(2);
         removeTotem(3);
