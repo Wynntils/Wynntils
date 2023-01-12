@@ -164,11 +164,6 @@ public class CustomNametagRendererFeature extends UserFeature {
         }
     }
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.RemoteWynntilsUserInfo);
-    }
-
     private static class CustomNametag {
         private final Component nametagComponent;
         private final float nametagScale;
