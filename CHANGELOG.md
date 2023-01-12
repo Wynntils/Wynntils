@@ -1,9 +1,21 @@
+## [0.0.2-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.99...v0.0.2-alpha.100) (2023-01-12)
+
+
+### New Features
+
+* Proper tick scheduler ([#1025](https://github.com/Wynntils/Artemis/issues/1025)) ([d40646c](https://github.com/Wynntils/Artemis/commit/d40646c16a5cd2aea54f3255e7e200e12222453e))
+
 ## [0.0.2-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.98...v0.0.2-alpha.99) (2023-01-12)
 
 
 ### New Features
 
 * Set favorite star on ingredient pouch if it contains a favorite ingredient ([#1023](https://github.com/Wynntils/Artemis/issues/1023)) ([b83b8d3](https://github.com/Wynntils/Artemis/commit/b83b8d3a0e6228eafdca7d43471aa96527e97ecc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.99 [skip ci] ([bde980a](https://github.com/Wynntils/Artemis/commit/bde980a4b4ccbeb64fd594bea3519fbe0759b9d3))
 
 ## [0.0.2-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.97...v0.0.2-alpha.98) (2023-01-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.96 [skip ci] ([1c8ec41](https://github.com/Wynntils/Artemis/commit/1c8ec418c1773553cc5e8ce3e8220a0a4e66161e))
-
-## [0.0.2-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.94...v0.0.2-alpha.95) (2023-01-12)
-
-
-### Code Refactoring
-
-* Create PlayerModel based on RemoteWynntilsUserInfoModel ([#1020](https://github.com/Wynntils/Artemis/issues/1020)) ([47917f3](https://github.com/Wynntils/Artemis/commit/47917f3d116b3b7852995606757b974730a66c31))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.95 [skip ci] ([d0ac5d3](https://github.com/Wynntils/Artemis/commit/d0ac5d38344b52ff7bb57ef4f4a2f4e06b97e7b0))
 
