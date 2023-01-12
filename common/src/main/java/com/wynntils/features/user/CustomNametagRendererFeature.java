@@ -49,6 +49,11 @@ public class CustomNametagRendererFeature extends UserFeature {
 
     private Player hitPlayerCache = null;
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Player);
+    }
+
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
         if (hideAllNametags) {
@@ -88,7 +93,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         if (hitPlayerCache != event.getEntity()) return;
 
-        if (!WynnPlayerUtils.isLocalPlayer(player)) return;
+        if (!Models.Player.isLocalPlayer(player)) return;
 
         ItemStack heldItem = hitPlayerCache.getMainHandItem();
         MutableComponent handComp = getItemComponent(heldItem);
@@ -126,8 +131,7 @@ public class CustomNametagRendererFeature extends UserFeature {
     }
 
     private void addAccountTypeNametag(NametagRenderEvent event, List<CustomNametag> nametags) {
-        WynntilsUser user =
-                Models.RemoteWynntilsUserInfo.getUser(event.getEntity().getUUID());
+        WynntilsUser user = Models.Player.getUser(event.getEntity().getUUID());
         if (user == null) return;
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
