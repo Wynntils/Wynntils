@@ -610,15 +610,15 @@ public final class EventFactory {
     // endregion
 
     // region Entity Events
-    public static Event onAddEntity(ClientboundAddEntityPacket packet) {
+    public static AddEntityEvent onAddEntity(ClientboundAddEntityPacket packet) {
         return post(new AddEntityEvent(packet));
     }
 
-    public static Event onSetEntityData(ClientboundSetEntityDataPacket packet) {
+    public static SetEntityDataEvent onSetEntityData(ClientboundSetEntityDataPacket packet) {
         return post(new SetEntityDataEvent(packet));
     }
 
-    public static Event onRemoveEntities(ClientboundRemoveEntitiesPacket packet) {
+    public static RemoveEntitiesEvent onRemoveEntities(ClientboundRemoveEntitiesPacket packet) {
         return post(new RemoveEntitiesEvent(packet));
     }
 
