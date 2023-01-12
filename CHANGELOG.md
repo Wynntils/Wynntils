@@ -1,9 +1,21 @@
+## [0.0.2-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.96...v0.0.2-alpha.97) (2023-01-12)
+
+
+### New Features
+
+* individual nametag line scaling ([#1022](https://github.com/Wynntils/Artemis/issues/1022)) ([44ab67d](https://github.com/Wynntils/Artemis/commit/44ab67d7789a2abaa44745d4c0a481df957dd2fb))
+
 ## [0.0.2-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.95...v0.0.2-alpha.96) (2023-01-12)
 
 
 ### Code Refactoring
 
 * Create a FavoritesManager ([#1021](https://github.com/Wynntils/Artemis/issues/1021)) ([888e832](https://github.com/Wynntils/Artemis/commit/888e832718af9d38ec5ca01334ba5f9fe8cab4ed))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.96 [skip ci] ([1c8ec41](https://github.com/Wynntils/Artemis/commit/1c8ec418c1773553cc5e8ce3e8220a0a4e66161e))
 
 ## [0.0.2-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.94...v0.0.2-alpha.95) (2023-01-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.93 [skip ci] ([1f16f8b](https://github.com/Wynntils/Artemis/commit/1f16f8b75261f652d871a0ce525027a920b467a1))
-
-## [0.0.2-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.91...v0.0.2-alpha.92) (2023-01-10)
-
-
-### Bug Fixes
-
-* Use ceil instead of floor for flat color percentage ([#1013](https://github.com/Wynntils/Artemis/issues/1013)) ([4b5097b](https://github.com/Wynntils/Artemis/commit/4b5097b2d8bfa16135b195833a1463d3bb5aef41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.92 [skip ci] ([439ea38](https://github.com/Wynntils/Artemis/commit/439ea389cd55984bd1c0786930118b267341566a))
 
