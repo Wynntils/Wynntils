@@ -1,9 +1,21 @@
+## [0.0.2-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.97...v0.0.2-alpha.98) (2023-01-12)
+
+
+### Bug Fixes
+
+* Do not crash the mod, if there is a newer URL list than expected ([#1024](https://github.com/Wynntils/Artemis/issues/1024)) ([51a662c](https://github.com/Wynntils/Artemis/commit/51a662c91679f7cdc51ef49030d97a4ac61f45ea))
+
 ## [0.0.2-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.96...v0.0.2-alpha.97) (2023-01-12)
 
 
 ### New Features
 
 * individual nametag line scaling ([#1022](https://github.com/Wynntils/Artemis/issues/1022)) ([44ab67d](https://github.com/Wynntils/Artemis/commit/44ab67d7789a2abaa44745d4c0a481df957dd2fb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.97 [skip ci] ([d097b8b](https://github.com/Wynntils/Artemis/commit/d097b8b6527a607436c159cef288e91bc86ff1e2))
 
 ## [0.0.2-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.95...v0.0.2-alpha.96) (2023-01-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.94 [skip ci] ([be96bcc](https://github.com/Wynntils/Artemis/commit/be96bcc28a3446c0738240a35c1f29de580d4eda))
-
-## [0.0.2-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.92...v0.0.2-alpha.93) (2023-01-11)
-
-
-### New Features
-
-* Remake emerald count and emerald manager ([#1015](https://github.com/Wynntils/Artemis/issues/1015)) ([705a27c](https://github.com/Wynntils/Artemis/commit/705a27c8caa44dfcc8c16504b337b6c01380511f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.93 [skip ci] ([1f16f8b](https://github.com/Wynntils/Artemis/commit/1f16f8b75261f652d871a0ce525027a920b467a1))
 
