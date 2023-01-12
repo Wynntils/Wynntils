@@ -7,7 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.mc.event.RemovePlayerFromTeamEvent;
+import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
@@ -51,7 +51,7 @@ public class FixPacketBugsFeature extends UserFeature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRemovePlayerFromTeam(RemovePlayerFromTeamEvent event) {
+    public void onRemovePlayerFromTeam(PlayerTeamEvent.Removed event) {
         if (McUtils.mc().level == null) return;
 
         // Work around bug in Wynncraft that causes NPEs in Vanilla
