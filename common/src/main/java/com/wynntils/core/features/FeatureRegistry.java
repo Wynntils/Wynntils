@@ -55,7 +55,7 @@ import com.wynntils.features.user.MountHorseHotkeyFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
-import com.wynntils.features.user.ShamanTotemTrackingFeature;
+import com.wynntils.features.user.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.StatusOverlayFeature;
 import com.wynntils.features.user.TerritoryDefenseMessageFeature;
