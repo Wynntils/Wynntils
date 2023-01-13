@@ -1,9 +1,21 @@
+## [0.0.2-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.100...v0.0.2-alpha.101) (2023-01-13)
+
+
+### Miscellaneous Chores
+
+* Move TextShadow to its own class ([#1028](https://github.com/Wynntils/Artemis/issues/1028)) ([fa5c1ce](https://github.com/Wynntils/Artemis/commit/fa5c1ce129b5908cec7bab02346b0e0114734a62))
+
 ## [0.0.2-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.99...v0.0.2-alpha.100) (2023-01-12)
 
 
 ### New Features
 
 * Proper tick scheduler ([#1025](https://github.com/Wynntils/Artemis/issues/1025)) ([d40646c](https://github.com/Wynntils/Artemis/commit/d40646c16a5cd2aea54f3255e7e200e12222453e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.100 [skip ci] ([b6049e4](https://github.com/Wynntils/Artemis/commit/b6049e49a8b7a031b0c8fb799a59ceb19d5dc999))
 
 ## [0.0.2-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.98...v0.0.2-alpha.99) (2023-01-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.97 [skip ci] ([d097b8b](https://github.com/Wynntils/Artemis/commit/d097b8b6527a607436c159cef288e91bc86ff1e2))
-
-## [0.0.2-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.95...v0.0.2-alpha.96) (2023-01-12)
-
-
-### Code Refactoring
-
-* Create a FavoritesManager ([#1021](https://github.com/Wynntils/Artemis/issues/1021)) ([888e832](https://github.com/Wynntils/Artemis/commit/888e832718af9d38ec5ca01334ba5f9fe8cab4ed))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.96 [skip ci] ([1c8ec41](https://github.com/Wynntils/Artemis/commit/1c8ec418c1773553cc5e8ce3e8220a0a4e66161e))
 
