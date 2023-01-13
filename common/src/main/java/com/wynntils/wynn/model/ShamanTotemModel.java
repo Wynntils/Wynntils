@@ -232,7 +232,7 @@ public class ShamanTotemModel extends Model {
 
     /**
      * Removes the given totem from the list of totems.
-     * @param totem The totem to remove. Must be 1 or 2.
+     * @param totem The totem to remove. Must be 1, 2, or 3
      */
     private void removeTotem(int totem) {
         switch (totem) {
