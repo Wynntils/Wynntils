@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
 import com.wynntils.mc.objects.CommonColors;
@@ -36,7 +37,7 @@ public class ChatTabAddButton extends WynntilsButton {
                         CommonColors.ORANGE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
     }
 
     @Override
