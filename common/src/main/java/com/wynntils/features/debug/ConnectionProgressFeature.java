@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager.State;
+import com.wynntils.wynn.objects.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {
@@ -19,9 +19,9 @@ public class ConnectionProgressFeature extends DebugFeature {
 
     @SubscribeEvent
     public void onStateChange(WorldStateEvent e) {
-        if (e.getNewState() == State.WORLD) {
+        if (e.getNewState() == WorldState.WORLD) {
             WynntilsMod.info("Entering world " + e.getWorldName());
-        } else if (e.getOldState() == State.WORLD) {
+        } else if (e.getOldState() == WorldState.WORLD) {
             WynntilsMod.info("Leaving world");
         }
         String msg =

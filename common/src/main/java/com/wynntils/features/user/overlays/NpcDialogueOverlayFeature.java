@@ -7,6 +7,7 @@ package com.wynntils.features.user.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -18,7 +19,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
@@ -27,8 +27,8 @@ import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
@@ -57,7 +57,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
-    private List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+    private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
     private List<String> currentDialogue;
     private NpcDialogueType dialogueType;
     private boolean isProtected;
@@ -74,8 +74,6 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
-
-    private long removeTime;
 
     private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
@@ -101,7 +99,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            NotificationManager.queueMessage(msg.get(0));
+            Managers.Notification.queueMessage(msg.get(0));
         }
 
         if (e.getType() == NpcDialogueType.SELECTION && e.isProtected()) {
@@ -132,7 +130,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.Start event) {
+    public void onTick(TickEvent event) {
         confirmationlessDialogues.removeIf(dialogue -> System.currentTimeMillis() >= dialogue.removeTime);
     }
 

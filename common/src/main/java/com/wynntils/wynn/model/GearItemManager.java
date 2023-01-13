@@ -14,17 +14,22 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.handleditems.FakeItemStack;
+import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.handleditems.items.game.TomeItem;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
+import com.wynntils.wynn.objects.profiles.item.CharmProfile;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.TomeProfile;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
@@ -33,10 +38,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -45,7 +47,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
@@ -64,35 +65,27 @@ public final class GearItemManager extends Manager {
     private static final Pattern ENCODED_PATTERN = Pattern.compile(START + "(?<Name>.+?)" + SEPARATOR + "(?<Ids>"
             + RANGE + "*)(?:" + SEPARATOR + "(?<Powders>" + RANGE + "+))?(?<Rerolls>" + RANGE + ")" + END);
     private static final Pattern ITEM_TIER =
-            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
+            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) "
+                    + "(Raid Reward|Item)(?: \\[(?<Rolls>\\d+)])?");
     private static final boolean ENCODE_NAME = false;
 
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    public static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
-
-    static {
-        COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-        COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-        COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-        COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-    }
-
     public GearItemManager() {
         super(List.of());
     }
 
-    public GearItem fromItemStack(ItemStack itemStack, ItemProfile itemProfile) {
+    public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
         List<Component> setBonus = new ArrayList<>();
 
         // Parse lore for identifications, powders and rerolls
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
         lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
@@ -120,30 +113,98 @@ public final class GearItemManager extends Manager {
             }
 
             // Look for Rerolls
-            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
-            if (rerollMatcher.find()) {
-                if (rerollMatcher.group("Rolls") == null) continue;
-                rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
+            Optional<Integer> rerollOpt = rerollsFromLore(loreLine);
+            if (rerollOpt.isPresent()) {
+                rerolls = rerollOpt.get();
                 continue;
             }
 
             // Look for identifications
-            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-            if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
-                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
-                int value = Integer.parseInt(identificationMatcher.group("Value"));
-                int stars = identificationMatcher.group("Stars").length();
-                identifications.add(new GearIdentification(idName, value, stars));
+            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            if (gearIdOpt.isEmpty()) continue;
+            identifications.add(gearIdOpt.get());
 
-                // This is partially overlapping with GearIdentification, sort this out later
-                ItemIdentificationContainer idContainer = identificationFromLore(loreLine, itemProfile);
-                if (idContainer == null) continue;
-                idContainers.add(idContainer);
-            }
+            // This is partially overlapping with GearIdentification, sort this out later
+            GearIdentificationContainer idContainer = identificationFromLore(loreLine, gearProfile);
+            if (idContainer == null) continue;
+            idContainers.add(idContainer);
         }
 
-        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, setBonus);
+        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
+    }
+
+    public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
+        List<GearIdentification> identifications = new ArrayList<>();
+        int rerolls = 0;
+
+        // Parse lore for identifications and rerolls
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        lore.remove(0); // remove item name
+
+        for (Component loreLine : lore) {
+            // Look for rerolls
+            Optional<Integer> rerollOpt = rerollsFromLore(loreLine);
+            if (rerollOpt.isPresent()) {
+                rerolls = rerollOpt.get();
+                continue;
+            }
+
+            // Look for identifications
+            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            if (gearIdOpt.isEmpty()) continue;
+            identifications.add(gearIdOpt.get());
+        }
+
+        return new TomeItem(tomeProfile, identifications, rerolls);
+    }
+
+    public CharmItem fromCharmItemStack(ItemStack itemStack, CharmProfile charmProfile) {
+        List<GearIdentification> identifications = new ArrayList<>();
+        int rerolls = 0;
+
+        // Parse lore for identifications and rerolls
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(itemStack.getTooltipLines(null, TooltipFlag.NORMAL));
+        lore.remove(0); // remove item name
+
+        for (Component loreLine : lore) {
+            // Look for rerolls
+            Optional<Integer> rerollOpt = rerollsFromLore(loreLine);
+            if (rerollOpt.isPresent()) {
+                rerolls = rerollOpt.get();
+                continue;
+            }
+
+            // Look for identifications
+            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            if (gearIdOpt.isEmpty()) continue;
+            identifications.add(gearIdOpt.get());
+        }
+
+        return new CharmItem(charmProfile, identifications, rerolls);
+    }
+
+    private Optional<Integer> rerollsFromLore(Component lore) {
+        String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
+
+        Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
+        if (!rerollMatcher.find()) return Optional.empty();
+
+        int rerolls = 0;
+        if (rerollMatcher.group("Rolls") != null) rerolls = Integer.parseInt(rerollMatcher.group("Rolls"));
+        return Optional.of(rerolls);
+    }
+
+    private Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
+        String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
+
+        Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
+        if (!identificationMatcher.find()) return Optional.empty();
+
+        String idName = WynnItemMatchers.getShortIdentificationName(
+                identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
+        int value = Integer.parseInt(identificationMatcher.group("Value"));
+        int stars = identificationMatcher.group("Stars").length();
+        return Optional.of(new GearIdentification(idName, value, stars));
     }
 
     /**
@@ -151,10 +212,10 @@ public final class GearItemManager extends Manager {
      * Returns null if the given lore line is not a valid ID
      *
      * @param lore the ID lore line component
-     * @param item the ItemProfile of the given item
+     * @param item the GearProfile of the given item
      * @return the parsed ItemIdentificationContainer, or null if invalid lore line
      */
-    public ItemIdentificationContainer identificationFromLore(Component lore, ItemProfile item) {
+    private GearIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return null; // not a valid id line
@@ -180,20 +241,20 @@ public final class GearItemManager extends Manager {
      * Returns null if the given ID is not valid
      *
      * @param lore the ID lore line component - can be null if ID isn't being created from lore
-     * @param item the ItemProfile of the given item
+     * @param item the GearProfile of the given item
      * @param idName the in-game name of the given ID
      * @param shortIdName the internal wynntils name of the given ID
      * @param value the raw value of the given ID
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
-    public ItemIdentificationContainer identificationFromValue(
-            Component lore, ItemProfile item, String idName, String shortIdName, int value, int starCount) {
+    private GearIdentificationContainer identificationFromValue(
+            Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
         IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
         // FIXME: This is kind of an inverse dependency! Need to fix!
         boolean isInverted = idProfile != null
                 ? idProfile.isInverted()
-                : Managers.ItemProfiles.getIdentificationOrderer().isInverted(shortIdName);
+                : Managers.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
         IdentificationModifier type =
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
@@ -241,7 +302,7 @@ public final class GearItemManager extends Manager {
         }
 
         // create container
-        return new ItemIdentificationContainer(
+        return new GearIdentificationContainer(
                 item,
                 idProfile,
                 type,
@@ -255,62 +316,9 @@ public final class GearItemManager extends Manager {
                 rerollLine);
     }
 
-    /**
-     * Create the colored percentage component for an item ID
-     *
-     * @param percentage the percent roll of the ID
-     * @return the styled percentage text component
-     */
-    public MutableComponent getPercentageTextComponent(float percentage) {
-        Style color = Style.EMPTY
-                .withColor(
-                        ItemStatInfoFeature.INSTANCE.colorLerp
-                                ? getPercentageColor(percentage)
-                                : getFlatPercentageColor(percentage))
-                .withItalic(false);
-        String percentString = new BigDecimal(percentage)
-                .setScale(ItemStatInfoFeature.INSTANCE.decimalPlaces, RoundingMode.DOWN)
-                .toPlainString();
-        return Component.literal(" [" + percentString + "%]").withStyle(color);
-    }
-
-    private TextColor getPercentageColor(float percentage) {
-        Map.Entry<Float, TextColor> lowerEntry = COLOR_MAP.floorEntry(percentage);
-        Map.Entry<Float, TextColor> higherEntry = COLOR_MAP.ceilingEntry(percentage);
-
-        // Boundary conditions
-        if (lowerEntry == null) {
-            return higherEntry.getValue();
-        } else if (higherEntry == null) {
-            return lowerEntry.getValue();
-        }
-
-        if (Objects.equals(lowerEntry.getKey(), higherEntry.getKey())) {
-            return lowerEntry.getValue();
-        }
-
-        float t = MathUtils.inverseLerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
-
-        int lowerColor = lowerEntry.getValue().getValue();
-        int higherColor = higherEntry.getValue().getValue();
-
-        int r = (int) MathUtils.lerp((lowerColor >> 16) & 0xff, (higherColor >> 16) & 0xff, t);
-        int g = (int) MathUtils.lerp((lowerColor >> 8) & 0xff, (higherColor >> 8) & 0xff, t);
-        int b = (int) MathUtils.lerp(lowerColor & 0xff, higherColor & 0xff, t);
-
-        return TextColor.fromRgb((r << 16) | (g << 8) | b);
-    }
-
-    private TextColor getFlatPercentageColor(float percentage) {
-        if (percentage < 30f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.RED);
-        } else if (percentage < 80f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
-        } else if (percentage < 96f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.GREEN);
-        } else {
-            return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
-        }
+    private MutableComponent getPercentageTextComponent(float percentage) {
+        return ColorUtils.getPercentageTextComponent(
+                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
     }
 
     /**
@@ -321,7 +329,7 @@ public final class GearItemManager extends Manager {
      * @param decrease the chance of a decreased roll
      * @return the styled reroll chance text component
      */
-    public MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
+    private MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
         return Component.literal(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
@@ -337,15 +345,15 @@ public final class GearItemManager extends Manager {
      * @param max the maximum stat roll
      * @return the styled ID range text component
      */
-    public MutableComponent getRangeTextComponent(int min, int max) {
+    private MutableComponent getRangeTextComponent(int min, int max) {
         return Component.literal(" [")
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")
                 .withStyle(ChatFormatting.DARK_GREEN);
     }
 
-    public GearItem fromUnidentified(ItemProfile itemProfile) {
-        return new GearItem(itemProfile, null);
+    public GearItem fromUnidentified(GearProfile gearProfile) {
+        return new GearItem(gearProfile, null);
     }
 
     public boolean isUnidentified(String itemName) {
@@ -353,12 +361,10 @@ public final class GearItemManager extends Manager {
     }
 
     public String getLookupName(String itemName) {
-        String realName =
-                itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
-        return realName;
+        return itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
     }
 
-    public GearItem fromJsonLore(ItemStack itemStack, ItemProfile itemProfile) {
+    public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {
         // attempt to parse item itemData
         JsonObject itemData;
         String rawLore =
@@ -370,7 +376,7 @@ public final class GearItemManager extends Manager {
             itemData = new JsonObject(); // invalid or empty itemData on item
         }
 
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();
 
         if (itemData.has("identifications")) {
@@ -381,11 +387,11 @@ public final class GearItemManager extends Manager {
                 float percent = idInfo.get("percent").getAsInt() / 100f;
 
                 // get wynntils name from internal wynncraft name
-                String translatedId = Managers.ItemProfiles.getInternalIdentification(id);
-                if (translatedId == null || !itemProfile.getStatuses().containsKey(translatedId)) continue;
+                String translatedId = Managers.GearProfiles.getInternalIdentification(id);
+                if (translatedId == null || !gearProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value
-                IdentificationProfile idContainer = itemProfile.getStatuses().get(translatedId);
+                IdentificationProfile idContainer = gearProfile.getStatuses().get(translatedId);
                 int value = idContainer.isFixed()
                         ? idContainer.getBaseValue()
                         : Math.round(idContainer.getBaseValue() * percent);
@@ -396,7 +402,7 @@ public final class GearItemManager extends Manager {
                 }
 
                 idContainers.add(identificationFromValue(
-                        null, itemProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
+                        null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
                 // FIXME: Get proper short name!
                 identifications.add(new GearIdentification(translatedId, value, 0));
             }
@@ -419,7 +425,7 @@ public final class GearItemManager extends Manager {
             rerolls = itemData.get("identification_rolls").getAsInt();
         }
 
-        return new GearItem(itemProfile, identifications, idContainers, powders, rerolls, List.of());
+        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, List.of());
     }
 
     private GearItem fromEncodedString(String encoded) {
@@ -431,15 +437,15 @@ public final class GearItemManager extends Manager {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        ItemProfile item = Managers.ItemProfiles.getItemsProfile(name);
+        GearProfile item = Managers.GearProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids
-        List<ItemIdentificationContainer> idContainers = new ArrayList<>();
+        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(Managers.ItemProfiles::getOrder));
+        sortedIds.sort(Comparator.comparingInt(Managers.GearProfiles::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {
@@ -476,7 +482,7 @@ public final class GearItemManager extends Manager {
             String longIdName = IdentificationProfile.getAsLongName(shortIdName);
 
             // create ID and append to list
-            ItemIdentificationContainer idContainer =
+            GearIdentificationContainer idContainer =
                     identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
             identifications.add(new GearIdentification(shortIdName, value, stars));
@@ -532,11 +538,11 @@ public final class GearItemManager extends Manager {
      *
      */
     public String toEncodedString(GearItem gearItem) {
-        String itemName = gearItem.getItemProfile().getDisplayName();
+        String itemName = gearItem.getGearProfile().getDisplayName();
 
         // get identification data - ordered for consistency
-        List<ItemIdentificationContainer> sortedIds =
-                Managers.ItemProfiles.orderIdentifications(gearItem.getIdContainers());
+        List<GearIdentificationContainer> sortedIds =
+                Managers.GearProfiles.orderIdentifications(gearItem.getIdContainers());
 
         // name
         StringBuilder encoded = new StringBuilder(START);
@@ -544,7 +550,7 @@ public final class GearItemManager extends Manager {
         encoded.append(SEPARATOR);
 
         // ids
-        for (ItemIdentificationContainer id : sortedIds) {
+        for (GearIdentificationContainer id : sortedIds) {
             if (id.identification().isFixed()) continue; // don't care about these
 
             int idValue = id.value();
@@ -647,9 +653,9 @@ public final class GearItemManager extends Manager {
 
     private Component createItemComponent(GearItem gearItem) {
         MutableComponent itemComponent = Component.literal(
-                        gearItem.getItemProfile().getDisplayName())
+                        gearItem.getGearProfile().getDisplayName())
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(gearItem.getItemProfile().getTier().getChatFormatting());
+                .withStyle(gearItem.getGearProfile().getTier().getChatFormatting());
 
         ItemStack itemStack = new FakeItemStack(gearItem, "From chat");
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);

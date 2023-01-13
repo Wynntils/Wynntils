@@ -15,7 +15,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.wynn.model.GearItemManager;
-import com.wynntils.wynn.objects.ItemIdentificationContainer;
+import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.ItemGuessProfile;
 import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import java.lang.reflect.Type;
@@ -23,24 +23,30 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public final class ItemProfilesManager extends Manager {
+public final class GearProfilesManager extends Manager {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
+    private static final Map<ChatFormatting, Integer> LEVEL_COLORS = Map.of(
+            ChatFormatting.DARK_GRAY, 0,
+            ChatFormatting.YELLOW, 1,
+            ChatFormatting.LIGHT_PURPLE, 2,
+            ChatFormatting.AQUA, 3);
 
     private IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
-    private Map<String, ItemProfile> items = Map.of();
+    private Map<String, GearProfile> items = Map.of();
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = Map.of();
     private Map<String, String> internalIdentifications = Map.of();
     private Map<String, MajorIdentification> majorIdsMap = Map.of();
-    private Map<ItemType, String[]> materialTypes = Map.of();
+    private Map<GearType, String[]> materialTypes = Map.of();
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
 
-    public ItemProfilesManager(NetManager netManager, GearItemManager gearItemManager) {
+    public GearProfilesManager(NetManager netManager, GearItemManager gearItemManager) {
         super(List.of(netManager, gearItemManager));
         loadData();
 
@@ -49,6 +55,10 @@ public final class ItemProfilesManager extends Manager {
         // This is slightly hacky, awaiting the full refactoring
         WynntilsMod.registerEventListener(Models.Item);
         Models.Item.init();
+    }
+
+    public int getTierFromColorCode(String tierColor) {
+        return LEVEL_COLORS.getOrDefault(ChatFormatting.getByCode(tierColor.charAt(0)), 0);
     }
 
     public IdentificationOrderer getIdentificationOrderer() {
@@ -63,7 +73,7 @@ public final class ItemProfilesManager extends Manager {
         return identificationOrderer.orderComponents(holder, groups);
     }
 
-    public List<ItemIdentificationContainer> orderIdentifications(List<ItemIdentificationContainer> ids) {
+    public List<GearIdentificationContainer> orderIdentifications(List<GearIdentificationContainer> ids) {
         return identificationOrderer.orderIdentifications(ids);
     }
 
@@ -107,20 +117,20 @@ public final class ItemProfilesManager extends Manager {
             Type majorIdsType = new TypeToken<HashMap<String, MajorIdentification>>() {}.getType();
             majorIdsMap = WynntilsMod.GSON.fromJson(json.getAsJsonObject("majorIdentifications"), majorIdsType);
 
-            Type materialTypesType = new TypeToken<HashMap<ItemType, String[]>>() {}.getType();
+            Type materialTypesType = new TypeToken<HashMap<GearType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
 
             identificationOrderer =
                     WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
-            ItemProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), ItemProfile[].class);
-            Map<String, ItemProfile> newItems = new HashMap<>();
-            for (ItemProfile itemProfile : jsonItems) {
-                itemProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
-                itemProfile.updateMajorIdsFromStrings(majorIdsMap);
-                itemProfile.registerIdTypes();
+            GearProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), GearProfile[].class);
+            Map<String, GearProfile> newItems = new HashMap<>();
+            for (GearProfile gearProfile : jsonItems) {
+                gearProfile.getStatuses().forEach((shortId, idProfile) -> idProfile.calculateMinMax(shortId));
+                gearProfile.updateMajorIdsFromStrings(majorIdsMap);
+                gearProfile.registerIdTypes();
 
-                newItems.put(itemProfile.getDisplayName(), itemProfile);
+                newItems.put(gearProfile.getDisplayName(), gearProfile);
             }
 
             items = newItems;
@@ -154,7 +164,7 @@ public final class ItemProfilesManager extends Manager {
         return itemGuesses.get(levelRange);
     }
 
-    public ItemProfile getItemsProfile(String name) {
+    public GearProfile getItemsProfile(String name) {
         return items.get(name);
     }
 
@@ -174,7 +184,7 @@ public final class ItemProfilesManager extends Manager {
         return ingredientHeadTextures.get(ingredientName);
     }
 
-    public Collection<ItemProfile> getItemsCollection() {
+    public Collection<GearProfile> getItemsCollection() {
         return items.values();
     }
 

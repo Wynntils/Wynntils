@@ -7,7 +7,6 @@ package com.wynntils.features.user;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -99,6 +98,6 @@ public class CombatXpGainMessageFeature extends UserFeature {
 
         lastTickXp = newTickXp;
 
-        NotificationManager.queueMessage(message);
+        Managers.Notification.queueMessage(message);
     }
 }

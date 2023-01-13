@@ -8,9 +8,10 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.mc.event.ClientTickEvent;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.mc.utils.McUtils;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ public final class KeyBindManager extends Manager {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.End e) {
+    public void onTick(TickEvent e) {
         triggerKeybinds();
     }
 
@@ -114,6 +115,8 @@ public final class KeyBindManager extends Manager {
     }
 
     private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
+        if (!Managers.WorldState.onServer()) return;
+
         List<KeyBind> crashedKeyBinds = new LinkedList<>();
 
         for (KeyBind keyBind : keyBinds) {

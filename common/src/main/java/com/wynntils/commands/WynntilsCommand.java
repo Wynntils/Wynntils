@@ -12,7 +12,6 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.utils.Delay;
 import com.wynntils.utils.FileUtils;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +55,7 @@ public class WynntilsCommand extends CommandBase {
                         .executes(this::clearCaches))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("version").executes(this::version))
+                .then(Commands.literal("status").executes(this::status))
                 .executes(this::help);
     }
 
@@ -98,7 +98,7 @@ public class WynntilsCommand extends CommandBase {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        Delay.create(
+        Managers.TickScheduler.scheduleLater(
                 () -> {
                     FileUtils.deleteFolder(Managers.Net.getCacheDir());
                     FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
@@ -118,7 +118,7 @@ public class WynntilsCommand extends CommandBase {
                         false);
 
         Managers.Url.reloadUrls();
-        Managers.ItemProfiles.reloadData();
+        Managers.GearProfiles.reloadData();
         Managers.Discovery.reloadData();
         Models.Map.reloadData();
 
@@ -142,6 +142,23 @@ public class WynntilsCommand extends CommandBase {
         return 1;
     }
 
+    private int status(CommandContext<CommandSourceStack> context) {
+        MutableComponent c = Component.literal("You can check status of Wynntils services at: ")
+                .withStyle(ChatFormatting.AQUA);
+        MutableComponent url = Component.literal(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_STATUS))
+                .withStyle(Style.EMPTY
+                        .withColor(ChatFormatting.LIGHT_PURPLE)
+                        .withUnderlined(true)
+                        .withClickEvent(new ClickEvent(
+                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_STATUS)))
+                        .withHoverEvent(new HoverEvent(
+                                HoverEvent.Action.SHOW_TEXT,
+                                Component.literal("Click here to open in your browser."))));
+
+        context.getSource().sendSuccess(c.append(url), false);
+        return 1;
+    }
+
     private int donateLink(CommandContext<CommandSourceStack> context) {
         MutableComponent c =
                 Component.literal("You can donate to Wynntils at: ").withStyle(ChatFormatting.AQUA);
@@ -153,7 +170,7 @@ public class WynntilsCommand extends CommandBase {
                                 ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("Click here to open in your" + " browser."))));
+                                Component.literal("Click here to open in your browser."))));
 
         context.getSource().sendSuccess(c.append(url), false);
         return 1;

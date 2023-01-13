@@ -4,7 +4,7 @@
  */
 package com.wynntils.gui.screens.guides;
 
-import com.wynntils.wynn.objects.profiles.item.ItemProfile;
+import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;
@@ -15,25 +15,25 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuideGearItemStack extends GuideItemStack {
+public final class GuideGearItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
     private final MutableComponent name;
-    private final ItemProfile itemProfile;
+    private final GearProfile gearProfile;
 
-    public GuideGearItemStack(ItemProfile itemProfile) {
-        super(itemProfile.getItemInfo().asItemStack());
-        this.itemProfile = itemProfile;
+    public GuideGearItemStack(GearProfile gearProfile) {
+        super(gearProfile.getGearInfo().asItemStack());
+        this.gearProfile = gearProfile;
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
-        if (itemProfile.getItemInfo().isArmorColorValid())
-            tag.putInt("color", itemProfile.getItemInfo().getArmorColorAsInt());
+        if (gearProfile.getGearInfo().isArmorColorValid())
+            tag.putInt("color", gearProfile.getGearInfo().getArmorColorAsInt());
         this.setTag(tag);
 
-        name = Component.literal(itemProfile.getDisplayName())
-                .withStyle(itemProfile.getTier().getChatFormatting());
+        name = Component.literal(gearProfile.getDisplayName())
+                .withStyle(gearProfile.getTier().getChatFormatting());
 
-        this.generatedTooltip = GearTooltipBuilder.fromItemProfile(itemProfile)
+        this.generatedTooltip = GearTooltipBuilder.fromGearProfile(gearProfile)
                 .getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
     }
 
@@ -47,7 +47,7 @@ public class GuideGearItemStack extends GuideItemStack {
         return new ArrayList<>(generatedTooltip);
     }
 
-    public ItemProfile getItemProfile() {
-        return itemProfile;
+    public GearProfile getGearProfile() {
+        return gearProfile;
     }
 }

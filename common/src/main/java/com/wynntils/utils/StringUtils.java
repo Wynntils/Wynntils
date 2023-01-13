@@ -26,6 +26,8 @@ public final class StringUtils {
     private static final Pattern STX_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(s|stx|stacks)");
     private static final Pattern LE_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(l|le)");
     private static final Pattern EB_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(b|eb)");
+    private static final Pattern K_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(k|thousand)");
+    private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
     private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
 
@@ -214,6 +216,17 @@ public final class StringUtils {
             Matcher ebMatcher = EB_PATTERN.matcher(input);
             while (ebMatcher.find()) {
                 emeralds += (long) (Double.parseDouble(ebMatcher.group(1)) * stackSize);
+            }
+            // k
+            Matcher kMatcher = K_PATTERN.matcher(input);
+            while (kMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(kMatcher.group(1)) * 1000);
+            }
+
+            // m
+            Matcher mMatcher = M_PATTERN.matcher(input);
+            while (mMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(mMatcher.group(1)) * 1000000);
             }
 
             // standard numbers/emeralds

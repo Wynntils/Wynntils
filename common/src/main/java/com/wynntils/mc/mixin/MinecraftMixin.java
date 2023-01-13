@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.mc.EventFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,15 +24,8 @@ public abstract class MinecraftMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void tickPre(CallbackInfo ci) {
-        EventFactory.onTickStart();
-
-        Managers.MinecraftScheduler.onTick();
-    }
-
-    @Inject(method = "tick", at = @At("RETURN"))
     private void tickPost(CallbackInfo ci) {
-        EventFactory.onTickEnd();
+        EventFactory.onTick();
     }
 
     @Inject(method = "resizeDisplay", at = @At("RETURN"))

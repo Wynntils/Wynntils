@@ -10,7 +10,7 @@ import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public enum ItemTier {
+public enum GearTier {
     NORMAL(ChatFormatting.WHITE, -1, 0),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
@@ -24,7 +24,7 @@ public enum ItemTier {
     private final int baseCost;
     private final float costMultiplier;
 
-    ItemTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
+    GearTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
         this.chatFormatting = chatFormatting;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
@@ -34,7 +34,7 @@ public enum ItemTier {
         return chatFormatting;
     }
 
-    public static ItemTier fromString(String name) {
+    public static GearTier fromString(String name) {
         if (name.charAt(0) == '§') {
             return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
         }
@@ -42,7 +42,7 @@ public enum ItemTier {
         return null;
     }
 
-    public static ItemTier fromComponent(Component component) {
+    public static GearTier fromComponent(Component component) {
         String name = component.getString();
 
         if (name.charAt(0) == '§') {
@@ -52,19 +52,19 @@ public enum ItemTier {
         return null;
     }
 
-    public static ItemTier fromChatFormatting(ChatFormatting formatting) {
-        return Arrays.stream(ItemTier.values())
+    public static GearTier fromChatFormatting(ChatFormatting formatting) {
+        return Arrays.stream(GearTier.values())
                 .filter(t -> t.getChatFormatting() == formatting)
                 .findFirst()
                 .orElse(null);
     }
 
-    public static ItemTier fromBoxDamage(int damage) {
+    public static GearTier fromBoxDamage(int damage) {
         if (damage > 6) return NORMAL;
-        return ItemTier.values()[damage];
+        return GearTier.values()[damage];
     }
 
-    public int getItemIdentificationCost(int level) {
+    public int getGearIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
     }
 

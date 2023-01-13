@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GuidePowderItemStack extends GuideItemStack {
+public final class GuidePowderItemStack extends GuideItemStack {
     private final int tier;
     private final Powder element;
     private final PowderProfile powderProfile;

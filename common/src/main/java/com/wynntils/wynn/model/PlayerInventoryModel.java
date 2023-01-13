@@ -9,6 +9,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -29,7 +30,7 @@ public final class PlayerInventoryModel extends Model {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() == WorldStateManager.State.WORLD) {
+        if (e.getNewState() == WorldState.WORLD) {
             updateCache();
         } else {
             resetCache();

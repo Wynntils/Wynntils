@@ -31,7 +31,7 @@ public class UpdatesFeature extends UserFeature {
         if (!event.isFirstJoinWorld()) return;
 
         CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
-                .whenCompleteAsync((version, throwable) -> Managers.MinecraftScheduler.queueRunnable(() -> {
+                .whenCompleteAsync((version, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
                     if (version == null) {
                         WynntilsMod.info(
                                 "Couldn't fetch latest version, not attempting update reminder or auto-update.");

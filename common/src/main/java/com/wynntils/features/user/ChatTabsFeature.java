@@ -24,7 +24,7 @@ import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
+import com.wynntils.wynn.objects.WorldState;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +122,7 @@ public class ChatTabsFeature extends UserFeature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD
-                && !chatTabs.isEmpty()
-                && Models.ChatTab.getFocusedTab() == null) {
+        if (event.getNewState() == WorldState.WORLD && !chatTabs.isEmpty() && Models.ChatTab.getFocusedTab() == null) {
             // We joined wynn, time to override our focused tab.
             Models.ChatTab.setFocusedTab(chatTabs.get(0));
         }

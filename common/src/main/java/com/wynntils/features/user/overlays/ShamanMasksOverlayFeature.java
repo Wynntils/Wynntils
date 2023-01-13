@@ -26,8 +26,6 @@ import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanMasksOverlayFeature extends UserFeature {
-    public static ShamanMasksOverlayFeature INSTANCE;
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
@@ -41,8 +39,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (ShamanMasksOverlayFeature.INSTANCE.hideMaskTitles
-                && ShamanMasksOverlayFeature.INSTANCE.shamanMaskOverlay.isEnabled()) {
+        if (hideMaskTitles && shamanMaskOverlay.isEnabled()) {
             event.setCanceled(true);
         }
     }

@@ -9,8 +9,8 @@ import com.wynntils.gui.render.TextRenderTask;
 import java.util.Objects;
 
 public class MessageContainer {
-    protected String message;
-    protected TextRenderTask renderTask;
+    private String message;
+    private TextRenderTask renderTask;
     private int messageCount;
 
     public MessageContainer(String message) {
@@ -41,7 +41,7 @@ public class MessageContainer {
         updateRenderTask();
     }
 
-    // Do NOT call this to edit the container. Use NotificationManager methods instead.
+    // Do NOT call this to edit the container. Use Managers.Notification methods instead.
     void editMessage(String newMessage) {
         this.message = newMessage;
 

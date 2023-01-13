@@ -25,6 +25,7 @@ public abstract class KeyMappingMixin {
             method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V",
             at = @At("RETURN"))
     private void initPost(String name, InputConstants.Type type, int i, String category, CallbackInfo ci) {
+        // This needs to go directly to KeyBindManager and not through Managers
         KeyBindManager.initKeyMapping(category, CATEGORY_SORT_ORDER);
     }
 }

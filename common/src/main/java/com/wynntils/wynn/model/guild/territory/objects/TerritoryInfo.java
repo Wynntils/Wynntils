@@ -19,15 +19,15 @@ public class TerritoryInfo {
     private static final Pattern DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final Pattern TREASURY_PATTERN = Pattern.compile("✦ Treasury: (.+)");
 
-    HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
-    HashMap<GuildResource, Integer> generators = new HashMap<>();
-    List<String> tradingRoutes = new ArrayList<>();
+    private final HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
+    private final HashMap<GuildResource, Integer> generators = new HashMap<>();
+    private final List<String> tradingRoutes = new ArrayList<>();
 
-    GuildResourceValues treasury;
-    GuildResourceValues defences;
+    private GuildResourceValues treasury;
+    private GuildResourceValues defences;
 
-    boolean headquarters;
-    CustomColor color;
+    private final boolean headquarters;
+    private final CustomColor color;
 
     /**
      * Holds and generates data based on the Achievement values gave by Wynncraft

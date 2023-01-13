@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 public class TimedSet<T> implements Iterable<T> {
     private final Set<TimedEntry> entries = new HashSet<>();
 
-    long timeJump;
-    boolean autoClear;
+    private final long timeJump;
+    private final boolean autoClear;
 
     public TimedSet(long duration, TimeUnit unit, boolean autoClear) {
         timeJump = unit.toMillis(duration);
@@ -24,7 +24,7 @@ public class TimedSet<T> implements Iterable<T> {
         this(duration, unit, false);
     }
 
-    public void releaseEntries() {
+    private void releaseEntries() {
         Iterator<TimedEntry> it = entries.iterator();
         while (it.hasNext()) {
             TimedEntry entry = it.next();
@@ -72,8 +72,8 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     private final class TimedEntry {
-        T entry;
-        long expiration;
+        final T entry;
+        final long expiration;
 
         private TimedEntry(T entry, long expiration) {
             this.entry = entry;
@@ -84,11 +84,11 @@ public class TimedSet<T> implements Iterable<T> {
             return expiration;
         }
 
-        public T getEntry() {
+        private T getEntry() {
             return entry;
         }
 
-        public boolean shouldRelease() {
+        private boolean shouldRelease() {
             return System.currentTimeMillis() >= expiration;
         }
     }

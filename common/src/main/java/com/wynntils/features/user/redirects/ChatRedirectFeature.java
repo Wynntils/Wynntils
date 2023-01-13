@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user.redirects;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -130,7 +130,7 @@ public class ChatRedirectFeature extends UserFeature {
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (String notification : redirector.getNotifications(matcher)) {
-                    NotificationManager.queueMessage(notification);
+                    Managers.Notification.queueMessage(notification);
                 }
             }
         }
@@ -142,7 +142,7 @@ public class ChatRedirectFeature extends UserFeature {
         REDIRECT
     }
 
-    public interface Redirector {
+    protected interface Redirector {
         Pattern getPattern(MessageType messageType);
 
         ChatRedirectFeature.RedirectAction getAction();
@@ -463,9 +463,7 @@ public class ChatRedirectFeature extends UserFeature {
 
             String emeraldString = matcher.group(2);
 
-            String formattedOverlayString = String.format("§dSold §7%s §dfor §a%s§d.", ingredientString, emeraldString);
-
-            return formattedOverlayString;
+            return String.format("§dSold §7%s §dfor §a%s§d.", ingredientString, emeraldString);
         }
     }
 
@@ -753,8 +751,7 @@ public class ChatRedirectFeature extends UserFeature {
                 pluralizer = "s";
             }
 
-            String returnableString = String.format("§4-%s Soul Point%s", numberString, pluralizer);
-            return returnableString;
+            return String.format("§4-%s Soul Point%s", numberString, pluralizer);
         }
     }
 
@@ -819,7 +816,7 @@ public class ChatRedirectFeature extends UserFeature {
             return getUnusedAbilityPointsMessage(unusedAbilityPoints);
         }
 
-        public static String getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
+        protected static String getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
             return ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD + unusedAbilityPoints
                     + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points";
         }
@@ -875,7 +872,7 @@ public class ChatRedirectFeature extends UserFeature {
             return getUnusedSkillPointsMessage(unusedSkillPoints);
         }
 
-        public static String getUnusedSkillPointsMessage(String unusedSkillPoints) {
+        protected static String getUnusedSkillPointsMessage(String unusedSkillPoints) {
             return ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints
                     + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points";
         }

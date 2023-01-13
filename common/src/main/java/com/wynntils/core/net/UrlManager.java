@@ -94,7 +94,7 @@ public final class UrlManager extends Manager {
         // Then trigger a (re-)download from the net to the cache
         // We need to do the urlInfo lookup ourself, since we might have
         // a embryonic netManager which can't do much.
-        UrlManager.UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+        UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
         if (urlInfo == null) {
             WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
             throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
@@ -156,8 +156,16 @@ public final class UrlManager extends Manager {
                 continue;
             }
             List<String> arguments = urlProfile.arguments == null ? List.of() : urlProfile.arguments;
+            Optional<UrlId> urlId = UrlId.from(urlProfile.id);
+
+            if (urlId.isEmpty()) {
+                // This is a URL we don't know about. Ignore it.
+                WynntilsMod.warn("Unknown URL: " + urlProfile.id);
+                continue;
+            }
+
             newMap.put(
-                    UrlId.from(urlProfile.id),
+                    urlId.get(),
                     new UrlInfo(
                             urlProfile.url,
                             arguments,
@@ -170,7 +178,7 @@ public final class UrlManager extends Manager {
         for (UrlId urlId : UrlId.values()) {
             if (!newMap.containsKey(urlId)) {
                 WynntilsMod.warn("Missing URL in urls.json: " + urlId);
-                return Pair.of(-1, List.of());
+                return Pair.of(-1, Map.of());
             }
         }
 

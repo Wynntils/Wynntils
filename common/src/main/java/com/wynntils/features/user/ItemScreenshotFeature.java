@@ -58,8 +58,8 @@ public class ItemScreenshotFeature extends UserFeature {
         screenshotSlot = hoveredSlot;
     }
 
-    // All other features must be able to update the tooltip first
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    // All other features (besides scaling) must be able to update the tooltip first
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
@@ -91,6 +91,7 @@ public class ItemScreenshotFeature extends UserFeature {
         width += 8;
 
         // height calculation
+
         int height = 16;
         if (tooltip.size() > 1) {
             height += 2 + (tooltip.size() - 1) * 10;

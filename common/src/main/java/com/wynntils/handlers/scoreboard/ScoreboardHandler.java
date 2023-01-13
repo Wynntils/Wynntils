@@ -12,8 +12,8 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.WorldStateManager;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.wynn.objects.WorldState;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -318,7 +318,7 @@ public final class ScoreboardHandler extends Handler {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldStateManager.State.WORLD) {
+        if (event.getNewState() == WorldState.WORLD) {
             startThread();
             return;
         }

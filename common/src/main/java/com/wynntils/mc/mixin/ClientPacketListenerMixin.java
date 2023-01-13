@@ -51,7 +51,6 @@ import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
-import net.minecraft.world.flag.FeatureFlagSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -74,9 +73,6 @@ public abstract class ClientPacketListenerMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
-
-    @Shadow
-    public abstract FeatureFlagSet enabledFeatures();
 
     @Shadow
     private LayeredRegistryAccess<ClientRegistryLayer> registryAccess;
@@ -124,7 +120,7 @@ public abstract class ClientPacketListenerMixin {
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
-            this.commands = new CommandDispatcher(event.getRoot());
+            this.commands = new CommandDispatcher<>(event.getRoot());
         }
     }
 

@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.net;
 
+import java.util.Optional;
+
 /*
 URL ids are build up like <TYPE>_<PROVIDER>_<NAME>, where <TYPE> is one of:
 
@@ -39,7 +41,8 @@ public enum UrlId {
     LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),
     LINK_WYNNTILS_DISCORD_INVITE("linkWynntilsDiscordInvite"),
     LINK_WYNNTILS_PATREON("linkWynntilsPatreon"),
-    LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount");
+    LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount"),
+    LINK_WYNNTILS_STATUS("linkWynntilsStatus");
 
     private final String id;
 
@@ -51,12 +54,17 @@ public enum UrlId {
         return id;
     }
 
-    public static UrlId from(String str) {
+    public static Optional<UrlId> from(String str) {
         for (UrlId urlId : values()) {
             if (urlId.getId().equals(str)) {
-                return urlId;
+                return Optional.of(urlId);
             }
         }
-        throw new IllegalArgumentException("No known enum for UrlId: " + str);
+
+        // We have not found an enum for this key.
+        // Don't consider this fatal, the user may have an outdated, or rather, a "too new" version of urls.json for
+        // this version of the mod
+
+        return Optional.empty();
     }
 }

@@ -25,6 +25,8 @@ public class ItemHandler extends Handler {
     private final List<ItemAnnotator> annotators = new ArrayList<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
+        if (item == null) return Optional.empty();
+
         ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
         return Optional.ofNullable(annotation);
     }

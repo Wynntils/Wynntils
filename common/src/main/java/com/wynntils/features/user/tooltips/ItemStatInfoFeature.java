@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.WynnItemCache;
@@ -18,34 +19,18 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.awt.Color;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     public static ItemStatInfoFeature INSTANCE;
-
-    private static final NavigableMap<Float, TextColor> COLOR_MAP = new TreeMap<>();
-
-    static {
-        COLOR_MAP.put(0f, TextColor.fromLegacyFormat(ChatFormatting.RED));
-        COLOR_MAP.put(70f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-        COLOR_MAP.put(90f, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
-        COLOR_MAP.put(100f, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
-    }
 
     @Config
     public boolean showStars = true;
@@ -90,7 +75,7 @@ public class ItemStatInfoFeature extends UserFeature {
                 .getOrCalculate(
                         WynnItemCache.TOOLTIP_KEY,
                         () -> GearTooltipBuilder.fromItemStack(
-                                event.getItemStack(), gearItem.getItemProfile(), gearItem));
+                                event.getItemStack(), gearItem.getGearProfile(), gearItem));
         if (builder == null) return;
 
         LinkedList<Component> tooltips =
@@ -99,10 +84,10 @@ public class ItemStatInfoFeature extends UserFeature {
         if (gearItem.hasVariableIds()) {
             if (perfect && gearItem.isPerfect()) {
                 tooltips.removeFirst();
-                tooltips.addFirst(getPerfectName(gearItem.getItemProfile().getDisplayName()));
+                tooltips.addFirst(getPerfectName(gearItem.getGearProfile().getDisplayName()));
             } else if (defective && gearItem.isDefective()) {
                 tooltips.removeFirst();
-                tooltips.addFirst(getDefectiveName(gearItem.getItemProfile().getDisplayName()));
+                tooltips.addFirst(getDefectiveName(gearItem.getGearProfile().getDisplayName()));
             } else if (overallPercentageInName) {
                 MutableComponent name = Component.literal(tooltips.getFirst().getString())
                         .withStyle(tooltips.getFirst().getStyle());
@@ -115,53 +100,8 @@ public class ItemStatInfoFeature extends UserFeature {
         event.setTooltips(tooltips);
     }
 
-    public MutableComponent getPercentageTextComponent(float percentage) {
-        Style color = Style.EMPTY
-                .withColor(colorLerp ? getPercentageColor(percentage) : getFlatPercentageColor(percentage))
-                .withItalic(false);
-        String percentString = new BigDecimal(percentage)
-                .setScale(decimalPlaces, RoundingMode.DOWN)
-                .toPlainString();
-        return Component.literal(" [" + percentString + "%]").withStyle(color);
-    }
-
-    private TextColor getPercentageColor(float percentage) {
-        Map.Entry<Float, TextColor> lowerEntry = COLOR_MAP.floorEntry(percentage);
-        Map.Entry<Float, TextColor> higherEntry = COLOR_MAP.ceilingEntry(percentage);
-
-        // Boundary conditions
-        if (lowerEntry == null) {
-            return higherEntry.getValue();
-        } else if (higherEntry == null) {
-            return lowerEntry.getValue();
-        }
-
-        if (Objects.equals(lowerEntry.getKey(), higherEntry.getKey())) {
-            return lowerEntry.getValue();
-        }
-
-        float t = MathUtils.inverseLerp(lowerEntry.getKey(), higherEntry.getKey(), percentage);
-
-        int lowerColor = lowerEntry.getValue().getValue();
-        int higherColor = higherEntry.getValue().getValue();
-
-        int r = (int) MathUtils.lerp((lowerColor >> 16) & 0xff, (higherColor >> 16) & 0xff, t);
-        int g = (int) MathUtils.lerp((lowerColor >> 8) & 0xff, (higherColor >> 8) & 0xff, t);
-        int b = (int) MathUtils.lerp(lowerColor & 0xff, higherColor & 0xff, t);
-
-        return TextColor.fromRgb((r << 16) | (g << 8) | b);
-    }
-
-    private TextColor getFlatPercentageColor(float percentage) {
-        if (percentage < 30f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.RED);
-        } else if (percentage < 80f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
-        } else if (percentage < 96f) {
-            return TextColor.fromLegacyFormat(ChatFormatting.GREEN);
-        } else {
-            return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
-        }
+    private MutableComponent getPercentageTextComponent(float percentage) {
+        return ColorUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
     }
 
     private MutableComponent getPerfectName(String itemName) {

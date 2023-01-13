@@ -6,9 +6,9 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.mc.event.ClientTickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.LinkedList;
 import net.minecraft.client.gui.screens.Screen;
@@ -155,7 +155,7 @@ public final class ContainerQueryHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onTick(ClientTickEvent.Start event) {
+    public void onTick(TickEvent event) {
         if (currentStep == null) return;
 
         ticksRemaining--;

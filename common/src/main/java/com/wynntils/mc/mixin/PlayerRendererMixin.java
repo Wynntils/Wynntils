@@ -6,15 +6,12 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.NametagRenderEvent;
-import java.util.List;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,35 +29,24 @@ public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
                     "renderNameTag(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    public void onNameTagRenderPre(
+    private void onNameTagRenderPre(
             AbstractClientPlayer entity,
             Component displayName,
             PoseStack matrixStack,
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        matrixStack.pushPose();
 
-        NametagRenderEvent event = EventFactory.onNameTagRender(entity, displayName, matrixStack, buffer, packedLight);
-        if (event.isCanceled()) {
+        if (EventFactory.onNameTagRender(
+                        entity,
+                        displayName,
+                        matrixStack,
+                        buffer,
+                        packedLight,
+                        this.entityRenderDispatcher,
+                        this.getFont())
+                .isCanceled()) {
             ci.cancel();
-            return;
         }
-
-        List<MutableComponent> injected = event.getInjectedLines();
-
-        for (MutableComponent component : injected) {
-            // Note that the super qualifier is really needed, since this code is actually executing
-            // in this.renderNameTag
-            super.renderNameTag(entity, component, matrixStack, buffer, packedLight);
-            matrixStack.translate(0.0, 0.25875f, 0.0);
-        }
-
-        super.renderNameTag(entity, displayName, matrixStack, buffer, packedLight);
-
-        matrixStack.popPose();
-
-        // Cancel the original method, we already rendered the name (this acts as a non-intrusive redirect)
-        ci.cancel();
     }
 }

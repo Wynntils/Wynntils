@@ -12,10 +12,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.gui.screens.WynntilsLootrunsScreen;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Delay;
 import com.wynntils.wynn.model.LootrunModel;
 import java.io.File;
 import java.util.List;
@@ -403,7 +403,7 @@ public class LootrunCommand extends CommandBase {
 
     private int screenLootrun(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the lootrun screen
-        Delay.create(() -> McUtils.mc().setScreen(WynntilsLootrunsScreen.create()), 1);
+        Managers.TickScheduler.scheduleLater(() -> McUtils.mc().setScreen(WynntilsLootrunsScreen.create()), 2);
         return 1;
     }
 }
