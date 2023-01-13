@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.handlers.chat.RecipientType;
@@ -221,7 +222,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         // Auto Command
         FontRenderer.getInstance()
@@ -233,7 +234,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         // Order
         FontRenderer.getInstance()
@@ -245,7 +246,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         // Recipient Types
         FontRenderer.getInstance()
@@ -257,7 +258,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         // Filter Pattern
         FontRenderer.getInstance()
@@ -269,7 +270,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
     }
 
     @Override

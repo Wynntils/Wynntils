@@ -14,6 +14,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.objects.CustomColor;
@@ -43,7 +44,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean powderTierRomanNumerals = true;
 
     @Config
-    public FontRenderer.TextShadow powderTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow powderTierShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean emeraldPouchTierEnabled = true;
@@ -52,7 +53,7 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean emeraldPouchTierRomanNumerals = true;
 
     @Config
-    public FontRenderer.TextShadow emeraldPouchTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow emeraldPouchTierShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean gatheringToolTierEnabled = true;
@@ -61,19 +62,19 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean gatheringToolTierRomanNumerals = true;
 
     @Config
-    public FontRenderer.TextShadow gatheringToolTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow gatheringToolTierShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean teleportScrollEnabled = true;
 
     @Config
-    public FontRenderer.TextShadow teleportScrollShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow teleportScrollShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean dungeonKeyEnabled = true;
 
     @Config
-    public FontRenderer.TextShadow dungeonKeyShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow dungeonKeyShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean amplifierTierEnabled = true;
@@ -82,13 +83,13 @@ public class ItemTextOverlayFeature extends UserFeature {
     public boolean amplifierTierRomanNumerals = true;
 
     @Config
-    public FontRenderer.TextShadow amplifierTierShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow amplifierTierShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean skillIconEnabled = true;
 
     @Config
-    public FontRenderer.TextShadow skillIconShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow skillIconShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean inventoryTextOverlayEnabled = true;

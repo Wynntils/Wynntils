@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -47,7 +48,7 @@ public class GuidesButton extends WynntilsButton {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     @Override

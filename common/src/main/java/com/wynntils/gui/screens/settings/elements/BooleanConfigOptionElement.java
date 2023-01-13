@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import net.minecraft.client.resources.language.I18n;
@@ -66,7 +67,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
                         0,
                         value ? CommonColors.GREEN : CommonColors.RED,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
@@ -149,7 +150,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
         poseStack.popPose();
     }
 
