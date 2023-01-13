@@ -12,7 +12,6 @@ import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.utils.Delay;
 import com.wynntils.utils.FileUtils;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +98,7 @@ public class WynntilsCommand extends CommandBase {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        Delay.create(
+        Managers.TickScheduler.scheduleLater(
                 () -> {
                     FileUtils.deleteFolder(Managers.Net.getCacheDir());
                     FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
