@@ -73,7 +73,7 @@ public class ShamanTotemModel extends Model {
                     if (inv.size() < 4 || inv.get(3).getItem() != Items.STONE_SHOVEL) return;
 
                     int totemNumber = nextTotemSlot;
-                    nextTotemSlot = getNextTotemSlot();
+                    cycleNextTotemSlot();
 
                     // Chores complete, this is a valid totem
                     WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, (ArmorStand) entity));
@@ -266,9 +266,12 @@ public class ShamanTotemModel extends Model {
         nextTotemSlot = 1;
     }
 
-    private int getNextTotemSlot() {
-        if (nextTotemSlot == 3) return 1;
-        return nextTotemSlot += 1;
+    private void cycleNextTotemSlot() {
+        if (nextTotemSlot >= 3) {
+            nextTotemSlot = 1;
+        } else {
+            nextTotemSlot += 1;
+        }
     }
 
     /**
