@@ -364,10 +364,4 @@ public final class FontRenderer {
     public float calculateRenderHeight(String line, float maxWidth) {
         return font.wordWrapHeight(line, (int) maxWidth);
     }
-
-    public enum TextShadow {
-        NONE,
-        NORMAL,
-        OUTLINE
-    }
 }

@@ -12,6 +12,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
@@ -295,7 +296,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -306,7 +307,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -316,7 +317,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -326,7 +327,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -336,7 +337,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -347,7 +348,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         renderIcon(poseStack);
 
@@ -360,7 +361,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -371,7 +372,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -384,7 +385,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
     }
 
     private void renderIcon(PoseStack poseStack) {

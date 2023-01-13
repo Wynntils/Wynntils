@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
@@ -279,7 +280,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     private void renderDescription(PoseStack poseStack, String description, String filterHelper) {
@@ -293,7 +294,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -305,7 +306,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     @Override

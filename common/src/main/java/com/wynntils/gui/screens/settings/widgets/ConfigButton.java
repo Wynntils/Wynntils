@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.screens.settings.elements.BooleanConfigOptionElement;
@@ -72,7 +73,7 @@ public class ConfigButton extends WynntilsButton {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
         poseStack.popPose();
 
         RenderUtils.drawLine(
