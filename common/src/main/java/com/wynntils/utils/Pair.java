@@ -13,7 +13,7 @@ public record Pair<T, J>(T a, J b) {
 
     @Override
     public String toString() {
-        return a.toString() + ", " + b.toString();
+        return "<" + a.toString() + ", " + b.toString() + ">";
     }
 
     @Override
