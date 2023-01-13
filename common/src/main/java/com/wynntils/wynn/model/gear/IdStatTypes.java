@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.wynn.model.gear;
 
 public enum IdStatTypes {
@@ -58,28 +62,36 @@ public enum IdStatTypes {
     SOUL_POINT_REGEN("Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),
     XP_BONUS("XP Bonus", "%", "xpBonus", "XPBONUS", "xpBonus");
 
-
     /*
-"SPELLWATERDAMAGEBONUSRAW" -> "rawWaterSpellDamage"
-"SPELLFIREDAMAGEBONUSRAW" -> "rawFireSpellDamage"
-"SPELLTHUNDERDAMAGEBONUSRAW" -> "rawThunderSpellDamage"
-"SPELLAIRDAMAGEBONUSRAW" -> "rawAirSpellDamage"
-"SPELLEARTHDAMAGEBONUSRAW" -> "rawEarthSpellDamage"
+    "SPELLWATERDAMAGEBONUSRAW" -> "rawWaterSpellDamage"
+    "SPELLFIREDAMAGEBONUSRAW" -> "rawFireSpellDamage"
+    "SPELLTHUNDERDAMAGEBONUSRAW" -> "rawThunderSpellDamage"
+    "SPELLAIRDAMAGEBONUSRAW" -> "rawAirSpellDamage"
+    "SPELLEARTHDAMAGEBONUSRAW" -> "rawEarthSpellDamage"
 
-"SPELLELEMENTALDAMAGEBONUSRAW" -> "rawElementalSpellDamage"
+    "SPELLELEMENTALDAMAGEBONUSRAW" -> "rawElementalSpellDamage"
 
-"SPELL_COST_RAW_1" -> "raw1stSpellCost"
-"SPELL_COST_RAW_2" -> "raw2ndSpellCost"
-"SPELL_COST_RAW_3" -> "raw3rdSpellCost"
-"SPELL_COST_RAW_4" -> "raw4thSpellCost"
-"SPELL_COST_PCT_1" -> "1stSpellCost"
-"SPELL_COST_PCT_2" -> "2ndSpellCost"
-"SPELL_COST_PCT_3" -> "3rdSpellCost"
-"SPELL_COST_PCT_4" -> "4thSpellCost"
-
+    "SPELL_COST_RAW_1" -> "raw1stSpellCost"
+    "SPELL_COST_RAW_2" -> "raw2ndSpellCost"
+    "SPELL_COST_RAW_3" -> "raw3rdSpellCost"
+    "SPELL_COST_RAW_4" -> "raw4thSpellCost"
+    "SPELL_COST_PCT_1" -> "1stSpellCost"
+    "SPELL_COST_PCT_2" -> "2ndSpellCost"
+    "SPELL_COST_PCT_3" -> "3rdSpellCost"
+    "SPELL_COST_PCT_4" -> "4thSpellCost"
      */
 
-    IdStatTypes(String name, String unit, String athenaName, String loreName, String apiName) {
+    private final String name;
+    private final String unit;
+    private final String athenaName;
+    private final String loreName;
+    private final String apiName;
 
+    IdStatTypes(String name, String unit, String athenaName, String loreName, String apiName) {
+        this.name = name;
+        this.unit = unit;
+        this.athenaName = athenaName;
+        this.loreName = loreName;
+        this.apiName = apiName;
     }
 }
