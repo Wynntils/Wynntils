@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.model.gear;
 
-public enum IdStatTypes {
+public enum IdStatTypes implements IdType {
     SKILL_AGILITY("Agility", null, "rawAgility", "AGILITYPOINTS", "agilityPoints"),
     SKILL_DEFENCE("Defence", null, "rawDefence", "DEFENSEPOINTS", "defensePoints"),
     SKILL_DEXTERITY("Dexterity", null, "rawDexterity", "DEXTERITYPOINTS", "dexterityPoints"),
@@ -25,8 +25,38 @@ public enum IdStatTypes {
     DAMAGE_THUNDER("Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "bonusThunderDamage"),
     DAMAGE_WATER("Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "bonusWaterDamage"),
 
+    // FIXME: missing from Athena. Check lore name, e.g. Aleph null.
+    // This is variable. How do I know???
+    DAMAGE_ELEMANTAL("Elemental Damage", "%", "FIXME:MISSING", "FIXME:UNKNWON", "elementalDamageBonus"),
+
     // FIXME
-    DAMAGE_SPELL_ELEMENTAL("Elemental Spell Damage", "%", "elementalSpellDamage", "SPELLELEMENTALDAMAGEBONUS", "FIXME"),
+    DAMAGE_SPELL_ELEMENTAL_PERCENT("Elemental Spell Damage", "%", "elementalSpellDamage", "SPELLELEMENTALDAMAGEBONUS", "spellElementalDamageBonus"),
+    // FIXME, check with only available item: Forest Aconite, untradable
+    DAMAGE_SPELL_ELEMENTAL_RAW("Elemental Spell Damage", null, "rawElementalSpellDamage", "FIXME:UNKNOWN", "spellElementalDamageBonusRaw"),
+
+    // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
+    DAMAGE_SPELL_AIR_PERCENT("Air Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellAirDamageBonus"),
+    DAMAGE_SPELL_WATER_RAW("Water Spell Damage", null, "FIXME:MISSING", "FIXME:UNKNOWN", "spellWaterDamageBonusRaw"),
+
+    // Note: these are untested, but assumed...
+    DAMAGE_SPELL_EARTH_PERCENT("Earth Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
+    DAMAGE_SPELL_FIRE_PERCENT("Fire Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellFireDamageBonus"),
+    DAMAGE_SPELL_THUNDER_PERCENT("Thunder Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellThunderDamageBonus"),
+    DAMAGE_SPELL_WATER_PERCENT("Water Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellWaterDamageBonus"),
+
+    DAMAGE_SPELL_EARTH_RAW("Earth Spell Damage", null, "FIXME:MISSING", "FIXME:UNKNOWN", "spellEarthDamageBonusRaw"),
+    DAMAGE_SPELL_FIRE_RAW("Fire Spell Damage", null, "FIXME:MISSING", "FIXME:UNKNOWN", "spellFireDamageBonusRaw"),
+    DAMAGE_SPELL_THUNDER_RAW("Thunder Spell Damage", null, "FIXME:MISSING", "FIXME:UNKNOWN", "spellThunderDamageBonusRaw"),
+    DAMAGE_SPELL_AIR_RAW("Air Spell Damage", null, "FIXME:MISSING", "FIXME:UNKNOWN", "spellAirDamageBonusRaw"),
+
+    // FIXME: should perhaps be named _RAW? Do we have percent? And is the LORE name from old Athena really correct???
+    // Check lore with e.g. Spearmint
+    DAMAGE_MAIN_AIR("Air Main Attack Damage", null, "rawAirSpellDamage", "SPELLAIRDAMAGEBONUSRAW", "mainAttackAirDamageBonusRaw"),
+    DAMAGE_MAIN_EARTH("Earth Main Attack Damage", null, "rawEarthSpellDamage", "SPELLEARTHDAMAGEBONUSRAW", "mainAttackEarthDamageBonusRaw"),
+    DAMAGE_MAIN_FIRE("Fire Main Attack Damage", null, "rawFireSpellDamage", "SPELLFIREDAMAGEBONUSRAW", "mainAttackFireDamageBonusRaw"),
+    DAMAGE_MAIN_THUNDER("Thunder Main Attack Damage", null, "rawThunderSpellDamage", "SPELLTHUNDERDAMAGEBONUSRAW", "mainAttackThunderDamageBonusRaw"),
+    DAMAGE_MAIN_WATER("Water Main Attack Damage", null, "rawWaterSpellDamage", "SPELLWATERDAMAGEBONUSRAW", "mainAttackWaterDamageBonusRaw"),
+
     // FIXME
     DAMAGE_SPELL_NEUTRAL("Neutral Spell Damage", null, "rawNeutralSpellDamage", "SPELLNEUTRALDAMAGEBONUSRAW", "FIXME"),
     DAMAGE_MAIN_ATTACK_PERCENT("Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "damageBonus"),
@@ -81,17 +111,48 @@ public enum IdStatTypes {
     "SPELL_COST_PCT_4" -> "4thSpellCost"
      */
 
-    private final String name;
+    private final String displayName;
     private final String unit;
     private final String athenaName;
     private final String loreName;
     private final String apiName;
 
-    IdStatTypes(String name, String unit, String athenaName, String loreName, String apiName) {
-        this.name = name;
+    IdStatTypes(String displayName, String unit, String athenaName, String loreName, String apiName) {
+        this.displayName = displayName;
         this.unit = unit;
         this.athenaName = athenaName;
         this.loreName = loreName;
         this.apiName = apiName;
     }
+
+    @Override
+    public String getKey() {
+        return this.name();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public String getUnit() {
+        return unit;
+    }
+
+    @Override
+    public String getAthenaName() {
+        return athenaName;
+    }
+
+    @Override
+    public String getLoreName() {
+        return loreName;
+    }
+
+    @Override
+    public String getApiName() {
+        return apiName;
+    }
+
 }

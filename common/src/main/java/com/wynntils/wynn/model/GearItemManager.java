@@ -21,6 +21,9 @@ import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
+import com.wynntils.wynn.model.gear.IdSpellTypes;
+import com.wynntils.wynn.model.gear.IdStatTypes;
+import com.wynntils.wynn.model.gear.IdType;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
@@ -133,16 +136,13 @@ public final class GearItemManager extends Manager {
                 String starsString = id2Matcher.group(4);
                 int stars = starsString == null ? 0 : starsString.length();
 
-                if (value < 0 && !isNegative) {
-                    // This is afaict only for spell costs
-                    System.out.println("Got CONTRARY:" + idName);
+                IdType type = getIdType(idName, unit);
+                if (type == null) {
+                    System.out.println("MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
+                            + (isNegative ? "negative" : "positive") + ", stars: " + stars);
+                } else {
+                    System.out.println("Got " + type.getKey());
                 }
-                if (value > 0 && isNegative) {
-                    // This is afaict only for spell costs
-                    System.out.println("Got CONTRARY2:" + idName);
-                }
-                System.out.println("Got:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
-                        + (isNegative ? "negative" : "positive") + ", stars: " + stars);
             }
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
@@ -160,6 +160,24 @@ public final class GearItemManager extends Manager {
         }
 
         return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
+    }
+
+    private IdType getIdType(String idName, String unit) {
+        for (IdStatTypes statType : IdStatTypes.values()) {
+            if (statType.getDisplayName().equals(idName)) {
+                if (statType.getUnit() == null && unit == null) return statType;
+                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
+            }
+        }
+
+        for (IdSpellTypes spellType : IdSpellTypes.spellTypeIds) {
+            if (spellType.getDisplayName().equals(idName)) {
+                if (spellType.getUnit() == null && unit == null) return spellType;
+                if (spellType.getUnit() != null && spellType.getUnit().equals(unit)) return spellType;
+            }
+        }
+
+        return null;
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
