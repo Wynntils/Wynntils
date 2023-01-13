@@ -25,8 +25,7 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.TotemRemovedEvent;
-import com.wynntils.wynn.event.TotemSummonedEvent;
+import com.wynntils.wynn.event.TotemEvent;
 import com.wynntils.wynn.objects.ShamanTotem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -56,7 +55,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     private static final int ENTITY_GLOWING_FLAG = 6;
 
     @SubscribeEvent
-    public void onTotemSummoned(TotemSummonedEvent e) {
+    public void onTotemSummoned(TotemEvent.Summoned e) {
         if (!highlightShamanTotems) return;
 
         int totemNumber = e.getTotemNumber();
@@ -84,7 +83,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onTotemDestroy(TotemRemovedEvent e) {
+    public void onTotemDestroy(TotemEvent.Removed e) {
         if (!highlightShamanTotems) return;
 
         // Teams should be destroyed and recreated every cast to allow the user to change totem highlight colors without

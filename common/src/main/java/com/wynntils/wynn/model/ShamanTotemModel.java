@@ -15,9 +15,7 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
 import com.wynntils.wynn.event.SpellCastedEvent;
-import com.wynntils.wynn.event.TotemActivatedEvent;
-import com.wynntils.wynn.event.TotemRemovedEvent;
-import com.wynntils.wynn.event.TotemSummonedEvent;
+import com.wynntils.wynn.event.TotemEvent;
 import com.wynntils.wynn.objects.ShamanTotem;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -78,7 +76,7 @@ public class ShamanTotemModel extends Model {
                     nextTotemSlot = getNextTotemSlot();
 
                     // Chores complete, this is a valid totem
-                    WynntilsMod.postEvent(new TotemSummonedEvent(totemNumber, (ArmorStand) entity));
+                    WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, (ArmorStand) entity));
 
                     ShamanTotem newTotem = new ShamanTotem(
                             totemNumber,
@@ -150,15 +148,15 @@ public class ShamanTotemModel extends Model {
             for (net.minecraft.world.entity.decoration.ArmorStand as : toCheck) {
                 if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
                     totem1 = new ShamanTotem(1, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(1, parsedTime, parsedLocation));
+                    WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
                     pendingTotem1Id = null;
                 } else if (pendingTotem2Id != null && as.getId() == pendingTotem2Id) {
                     totem2 = new ShamanTotem(2, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(2, parsedTime, parsedLocation));
+                    WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedTime, parsedLocation));
                     pendingTotem2Id = null;
                 } else if (pendingTotem3Id != null && as.getId() == pendingTotem3Id) {
                     totem3 = new ShamanTotem(3, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
-                    WynntilsMod.postEvent(new TotemActivatedEvent(3, parsedTime, parsedLocation));
+                    WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedTime, parsedLocation));
                     pendingTotem3Id = null;
                 } else {
                     // No totem slots available?
@@ -168,15 +166,15 @@ public class ShamanTotemModel extends Model {
         } else if (totem1 != null && getBoundTotem(entityId) == totem1) {
             totem1.setTime(parsedTime);
             totem1.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(1, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
         } else if (totem2 != null && getBoundTotem(entityId) == totem2) {
             totem2.setTime(parsedTime);
             totem2.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(2, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedTime, parsedLocation));
         } else if (totem3 != null && getBoundTotem(entityId) == totem3) {
             totem3.setTime(parsedTime);
             totem3.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemActivatedEvent(3, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedTime, parsedLocation));
         }
     }
 
@@ -237,19 +235,19 @@ public class ShamanTotemModel extends Model {
     private void removeTotem(int totem) {
         switch (totem) {
             case 1 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(1, totem1));
+                WynntilsMod.postEvent(new TotemEvent.Removed(1, totem1));
                 totem1 = null;
                 pendingTotem1Id = null;
                 return;
             }
             case 2 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(2, totem2));
+                WynntilsMod.postEvent(new TotemEvent.Removed(2, totem2));
                 totem2 = null;
                 pendingTotem2Id = null;
                 return;
             }
             case 3 -> {
-                WynntilsMod.postEvent(new TotemRemovedEvent(3, totem3));
+                WynntilsMod.postEvent(new TotemEvent.Removed(3, totem3));
                 totem3 = null;
                 pendingTotem3Id = null;
                 return;
