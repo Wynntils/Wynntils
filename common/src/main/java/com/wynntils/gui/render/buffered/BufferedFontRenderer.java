@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.gui.render;
+package com.wynntils.gui.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
+import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -18,18 +19,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
-public final class FontRenderer {
-    private static final FontRenderer INSTANCE = new FontRenderer();
+public class BufferedFontRenderer {
+    private static final BufferedFontRenderer INSTANCE = new BufferedFontRenderer();
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
     private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
-    private FontRenderer() {
+    private BufferedFontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
     }
 
-    public static FontRenderer getInstance() {
+    public static BufferedFontRenderer getInstance() {
         return INSTANCE;
     }
 
@@ -39,6 +40,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -47,39 +49,126 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        float renderX;
+        float renderY;
 
-        BufferedFontRenderer.getInstance()
-                .renderText(
-                        poseStack,
+        if (text == null) return;
+
+        // TODO: Add rainbow color support
+
+        renderX = switch (horizontalAlignment) {
+            case Left -> x;
+            case Center -> x - (font.width(text) / 2f * textScale);
+            case Right -> x - font.width(text) * textScale;};
+
+        renderY = switch (verticalAlignment) {
+            case Top -> y;
+            case Middle -> y - (font.lineHeight / 2f * textScale);
+            case Bottom -> y - font.lineHeight * textScale;};
+
+        poseStack.pushPose();
+        poseStack.translate(renderX, renderY, 0);
+        poseStack.scale(textScale, textScale, 0);
+
+        switch (shadow) {
+            case NONE -> font.drawInBatch(
+                    text,
+                    0,
+                    0,
+                    customColor.asInt(),
+                    false,
+                    poseStack.last().pose(),
+                    bufferSource,
+                    true,
+                    0,
+                    0xF000F0,
+                    font.isBidirectional());
+            case NORMAL -> font.drawInBatch(
+                    text,
+                    0,
+                    0,
+                    customColor.asInt(),
+                    true,
+                    poseStack.last().pose(),
+                    bufferSource,
+                    true,
+                    0,
+                    0xF000F0,
+                    font.isBidirectional());
+            case OUTLINE -> {
+                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
+                String strippedText = ComponentUtils.stripColorFormatting(text);
+
+                font.drawInBatch(
+                        strippedText,
+                        -1,
+                        0,
+                        shadowColor,
+                        false,
+                        poseStack.last().pose(),
                         bufferSource,
+                        false,
+                        0,
+                        0xF000F0,
+                        font.isBidirectional());
+                font.drawInBatch(
+                        strippedText,
+                        1,
+                        0,
+                        shadowColor,
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        false,
+                        0,
+                        0xF000F0,
+                        font.isBidirectional());
+                font.drawInBatch(
+                        strippedText,
+                        0,
+                        -1,
+                        shadowColor,
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        false,
+                        0,
+                        0xF000F0,
+                        font.isBidirectional());
+                font.drawInBatch(
+                        strippedText,
+                        0,
+                        1,
+                        shadowColor,
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        false,
+                        0,
+                        0xF000F0,
+                        font.isBidirectional());
+
+                font.drawInBatch(
                         text,
-                        x,
-                        y,
-                        customColor,
-                        horizontalAlignment,
-                        verticalAlignment,
-                        shadow,
-                        textScale);
+                        0,
+                        0,
+                        customColor.asInt(),
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        true,
+                        0,
+                        0xF000F0,
+                        font.isBidirectional());
+            }
+        }
 
-        bufferSource.endBatch();
-    }
-
-    public void renderText(
-            PoseStack poseStack,
-            String text,
-            float x,
-            float y,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow shadow) {
-        renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
+        poseStack.popPose();
     }
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -108,6 +197,7 @@ public final class FontRenderer {
 
         renderText(
                 poseStack,
+                bufferSource,
                 text,
                 renderX,
                 renderY,
@@ -121,6 +211,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -133,6 +224,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
+                bufferSource,
                 text,
                 x1,
                 x2,
@@ -148,6 +240,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -158,6 +251,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
+                bufferSource,
                 text,
                 x1,
                 x2,
@@ -173,6 +267,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x,
             float y1,
@@ -183,6 +278,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
+                bufferSource,
                 text,
                 x,
                 x,
@@ -198,6 +294,21 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            String text,
+            float x,
+            float y,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
+        renderText(
+                poseStack, bufferSource, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -210,7 +321,17 @@ public final class FontRenderer {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text) < maxWidth) {
-            renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
+            renderText(
+                    poseStack,
+                    bufferSource,
+                    text,
+                    x,
+                    y,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    shadow,
+                    textScale);
             return;
         }
 
@@ -224,6 +345,7 @@ public final class FontRenderer {
             lastPart = part;
             renderText(
                     poseStack,
+                    bufferSource,
                     part,
                     x,
                     y + (i * font.lineHeight),
@@ -232,117 +354,5 @@ public final class FontRenderer {
                     verticalAlignment,
                     shadow);
         }
-    }
-
-    public void renderText(
-            PoseStack poseStack,
-            String text,
-            float x,
-            float y,
-            float maxWidth,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow shadow) {
-        renderText(poseStack, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
-    }
-
-    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
-        renderText(
-                poseStack,
-                line.getText(),
-                x,
-                y,
-                line.getSetting().maxWidth(),
-                line.getSetting().customColor(),
-                line.getSetting().horizontalAlignment(),
-                line.getSetting().verticalAlignment(),
-                line.getSetting().shadow());
-    }
-
-    public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
-        float currentY = y;
-        for (TextRenderTask line : lines) {
-            renderText(poseStack, x, currentY, line);
-            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
-            currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? " " : line.getText(),
-                    line.getSetting().maxWidth());
-        }
-    }
-
-    // TODO this is basically renderAlignedTextInBox but with tasks instead, make signatures the same and remove code
-    // dup
-    public void renderTextsWithAlignment(
-            PoseStack poseStack,
-            float x,
-            float y,
-            List<TextRenderTask> toRender,
-            float width,
-            float height,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment) {
-        float renderX =
-                switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
-                };
-
-        float renderY =
-                switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - calculateRenderHeight(toRender));
-                };
-
-        renderTexts(poseStack, renderX, renderY, toRender);
-    }
-
-    public void renderTextWithAlignment(
-            PoseStack poseStack,
-            float renderX,
-            float renderY,
-            TextRenderTask toRender,
-            float width,
-            float height,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment) {
-        renderTextsWithAlignment(
-                poseStack, renderX, renderY, List.of(toRender), width, height, horizontalAlignment, verticalAlignment);
-    }
-
-    public float calculateRenderHeight(List<TextRenderTask> toRender) {
-        if (toRender.isEmpty()) return 0f;
-
-        float height = 0;
-        int totalLineCount = 0;
-
-        for (TextRenderTask textRenderTask : toRender) {
-            if (textRenderTask.getSetting().maxWidth() == 0) {
-                height += font.lineHeight;
-            } else {
-                height += font.wordWrapHeight(textRenderTask.getText(), (int)
-                        textRenderTask.getSetting().maxWidth());
-            }
-            totalLineCount++;
-        }
-
-        // Add additional height for different render tasks, but not for same render task split into multiple lines
-        height += (totalLineCount - 1) * (NEWLINE_OFFSET - font.lineHeight);
-
-        return height;
-    }
-
-    public float calculateRenderHeight(List<String> lines, float maxWidth) {
-        int sum = 0;
-        for (String line : lines) {
-            sum += font.wordWrapHeight(line, (int) maxWidth);
-        }
-        return sum;
-    }
-
-    public float calculateRenderHeight(String line, float maxWidth) {
-        return font.wordWrapHeight(line, (int) maxWidth);
     }
 }

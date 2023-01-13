@@ -23,7 +23,7 @@ public interface Poi {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             float renderX,
-            float renderZ,
+            float renderY,
             boolean hovered,
             float scale,
             float mapZoom);

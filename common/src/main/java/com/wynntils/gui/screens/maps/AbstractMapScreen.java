@@ -13,6 +13,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
@@ -274,7 +275,7 @@ public abstract class AbstractMapScreen extends Screen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
     }
 
     protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {

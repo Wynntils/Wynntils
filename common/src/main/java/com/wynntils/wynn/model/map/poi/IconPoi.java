@@ -6,11 +6,12 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.map.MapFeature;
-import com.wynntils.gui.render.BufferedRenderUtils;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
@@ -56,7 +57,7 @@ public abstract class IconPoi implements Poi {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             float renderX,
-            float renderZ,
+            float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
@@ -71,15 +72,15 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
-        BufferedRenderUtils.drawTexturedRect(
+        BufferedRenderUtils.drawColoredTexturedRect(
                 poseStack,
                 bufferSource,
                 icon.resource(),
                 this.getIconColor(),
                 this.getIconAlpha(mapZoom),
                 renderX - width / 2,
-                renderZ - height / 2,
-                0,
+                renderY - height / 2,
+                getDisplayPriority().ordinal(), // z-index for rendering
                 width,
                 height);
 
@@ -93,11 +94,11 @@ public abstract class IconPoi implements Poi {
                             poseStack,
                             getName(),
                             renderX,
-                            20 + renderZ,
+                            20 + renderY,
                             CommonColors.GREEN,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Middle,
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
 
             poseStack.popPose();
         }

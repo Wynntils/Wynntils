@@ -7,7 +7,9 @@ package com.wynntils.wynn.model.map.poi;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -58,12 +60,12 @@ public class LabelPoi implements Poi {
         return MathUtils.clamp(alpha, 0f, 1f);
     }
 
-    private FontRenderer.TextShadow getTextShadow() {
+    private TextShadow getTextShadow() {
         if (label.getLayer() == Label.LabelLayer.PROVINCE) {
-            return FontRenderer.TextShadow.OUTLINE;
+            return TextShadow.OUTLINE;
         }
 
-        return FontRenderer.TextShadow.NORMAL;
+        return TextShadow.NORMAL;
     }
 
     private static final CustomColor GOLD = new CustomColor(1f, 0.6f, 0f);
@@ -87,7 +89,7 @@ public class LabelPoi implements Poi {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             float renderX,
-            float renderZ,
+            float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
@@ -107,20 +109,22 @@ public class LabelPoi implements Poi {
         }
 
         poseStack.pushPose();
-        poseStack.translate(renderX, renderZ, 0);
+        poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
         poseStack.scale(modifier, modifier, modifier);
 
-        FontRenderer.getInstance()
+        BufferedFontRenderer.getInstance()
                 .renderText(
                         poseStack,
+                        bufferSource,
                         label.getName(),
-                        0,
                         0,
                         0,
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        getTextShadow());
+                        getTextShadow(),
+                        1f);
+
         poseStack.popPose();
     }
 
