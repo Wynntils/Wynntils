@@ -10,6 +10,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.gui.screens.overlays.OverlaySelectionScreen;
@@ -220,7 +221,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -232,7 +233,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         0,
                         CommonColors.PURPLE,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
 
         String currentSplash = Managers.Splash.getCurrentSplash();
         currentSplash = currentSplash == null ? "" : currentSplash;
@@ -246,7 +247,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         0,
                         CommonColors.MAGENTA,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     @Override

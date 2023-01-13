@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
@@ -94,7 +95,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
                             CustomColor.fromChatFormatting(currentMaskType.getColor()),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
         }
     }
 }

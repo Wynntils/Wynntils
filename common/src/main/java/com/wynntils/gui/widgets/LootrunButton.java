@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsLootrunsScreen;
 import com.wynntils.gui.screens.maps.MainMapScreen;
@@ -60,7 +61,7 @@ public class LootrunButton extends WynntilsButton {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     private CustomColor getButtonBackgroundColor() {

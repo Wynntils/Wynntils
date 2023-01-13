@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.TextboxScreen;
 import com.wynntils.mc.objects.CommonColors;
@@ -92,7 +93,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         renderColor,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         poseStack.popPose();
     }
