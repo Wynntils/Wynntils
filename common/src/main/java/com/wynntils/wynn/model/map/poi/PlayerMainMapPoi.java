@@ -9,9 +9,10 @@ import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.mc.utils.PlayerInfoUtils;
 import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
@@ -28,7 +29,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             float renderX,
-            float renderZ,
+            float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
@@ -38,22 +39,49 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
 
         // head
-        RenderUtils.drawTexturedRect(
-                poseStack, skin, renderX, renderZ, 0, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
+        BufferedRenderUtils.drawTexturedRect(
+                poseStack,
+                bufferSource,
+                skin,
+                renderX,
+                renderY,
+                0,
+                playerHeadRenderSize,
+                playerHeadRenderSize,
+                8,
+                8,
+                8,
+                8,
+                64,
+                64);
 
         // hat
-        RenderUtils.drawTexturedRect(
-                poseStack, skin, renderX, renderZ, 1, playerHeadRenderSize, playerHeadRenderSize, 40, 8, 8, 8, 64, 64);
+        BufferedRenderUtils.drawTexturedRect(
+                poseStack,
+                bufferSource,
+                skin,
+                renderX,
+                renderY,
+                1,
+                playerHeadRenderSize,
+                playerHeadRenderSize,
+                40,
+                8,
+                8,
+                8,
+                64,
+                64);
 
         // health
         HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
-        RenderUtils.drawProgressBar(
+        BufferedRenderUtils.drawProgressBar(
                 poseStack,
+                bufferSource,
                 Texture.HEALTH_BAR,
                 renderX - 10,
-                renderZ + playerHeadRenderSize + 1,
+                renderY + playerHeadRenderSize + 1,
                 renderX + playerHeadRenderSize + 10,
-                renderZ + playerHeadRenderSize + 7,
+                renderY + playerHeadRenderSize + 7,
                 0,
                 healthTexture.getTextureY1(),
                 81,
@@ -63,16 +91,18 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         // name
         Font font = FontRenderer.getInstance().getFont();
         int width = font.width(user.getName());
-        FontRenderer.getInstance()
+        BufferedFontRenderer.getInstance()
                 .renderText(
                         poseStack,
+                        bufferSource,
                         user.getName(),
                         renderX - (width - playerHeadRenderSize) / 2f,
-                        renderZ + playerHeadRenderSize + 8,
+                        renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        MapFeature.INSTANCE.remotePlayerNameShadow);
+                        MapFeature.INSTANCE.remotePlayerNameShadow,
+                        1f);
 
         poseStack.popPose();
     }

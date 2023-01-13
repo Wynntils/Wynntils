@@ -24,7 +24,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.PoiLocation;
 import com.wynntils.wynn.model.map.poi.TerritoryPoi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -216,7 +215,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         Stream<? extends Poi> pois = Models.Map.getServicePois().stream();
 
         pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
-        pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
+        pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
         pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
 
         // Make sure compass and player pois are on top
@@ -234,9 +233,6 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (KeyboardUtils.isControlDown()) {
             pois = Stream.concat(pois, Managers.Territory.getTerritoryPois().stream());
         }
-
-        // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-        pois = pois.sorted(Comparator.comparing(Poi::getDisplayPriority).reversed());
 
         renderPois(
                 pois.collect(Collectors.toList()),

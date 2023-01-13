@@ -247,8 +247,8 @@ public class MinimapFeature extends UserFeature {
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
 
-            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-            poisToRender.forEach((poi) -> {
+            Poi[] pois = poisToRender.toArray(Poi[]::new);
+            for (Poi poi : pois) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
 
@@ -271,7 +271,7 @@ public class MinimapFeature extends UserFeature {
                 if (box.intersects(textureBoundingBox)) {
                     poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
                 }
-            });
+            }
 
             bufferSource.endBatch();
 

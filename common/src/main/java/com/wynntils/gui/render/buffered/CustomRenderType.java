@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.gui.render;
+package com.wynntils.gui.render.buffered;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -25,7 +25,7 @@ public class CustomRenderType extends RenderType {
             false,
             false,
             CompositeState.builder()
-                    .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
+                    .setShaderState(RENDERTYPE_LINES_SHADER)
                     .setLineState(new LineStateShard(OptionalDouble.of(3)))
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -34,9 +34,49 @@ public class CustomRenderType extends RenderType {
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
 
-    private static final Function<ResourceLocation, RenderType> POSITION_COLOR_TEXTURE =
+    public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
+            "wynntils_position_color_triangle_strip",
+            DefaultVertexFormat.POSITION_COLOR,
+            Mode.TRIANGLE_STRIP,
+            256,
+            false,
+            false,
+            CompositeState.builder()
+                    .setShaderState(POSITION_COLOR_SHADER)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                    .createCompositeState(false));
+
+    public static final RenderType POSITION_QUAD = RenderType.create(
+            "wynntils_position_texture_quad",
+            DefaultVertexFormat.POSITION_TEX,
+            Mode.QUADS,
+            256,
+            false,
+            false,
+            CompositeState.builder()
+                    .setShaderState(POSITION_COLOR_SHADER)
+                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                    .setWriteMaskState(COLOR_WRITE)
+                    .createCompositeState(false));
+
+    private static final Function<ResourceLocation, RenderType> POSITION_TEXTURE_QUAD =
             Util.memoize(resource -> RenderType.create(
-                    "wynntils_position_color_texture",
+                    "wynntils_position_texture_quad",
+                    DefaultVertexFormat.POSITION_TEX,
+                    Mode.QUADS,
+                    256,
+                    false,
+                    false,
+                    CompositeState.builder()
+                            .setShaderState(POSITION_TEX_SHADER)
+                            .setTextureState(new TextureStateShard(resource, false, false))
+                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                            .createCompositeState(false)));
+
+    private static final Function<ResourceLocation, RenderType> POSITION_COLOR_TEXTURE_QUAD =
+            Util.memoize(resource -> RenderType.create(
+                    "wynntils_position_color_texture_quad",
                     DefaultVertexFormat.POSITION_COLOR_TEX,
                     Mode.QUADS,
                     256,
@@ -49,8 +89,12 @@ public class CustomRenderType extends RenderType {
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
-    public static RenderType getPositionColorTexture(ResourceLocation resource) {
-        return POSITION_COLOR_TEXTURE.apply(resource);
+    public static RenderType getPositionColorTextureQuad(ResourceLocation resource) {
+        return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
+    }
+
+    public static RenderType getPositionTextureQuad(ResourceLocation resource) {
+        return POSITION_TEXTURE_QUAD.apply(resource);
     }
 
     public CustomRenderType(

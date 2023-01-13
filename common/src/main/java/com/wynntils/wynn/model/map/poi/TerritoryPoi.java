@@ -6,12 +6,12 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -47,7 +47,7 @@ public class TerritoryPoi implements Poi {
             PoseStack poseStack,
             MultiBufferSource.BufferSource bufferSource,
             float renderX,
-            float renderZ,
+            float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
@@ -58,7 +58,7 @@ public class TerritoryPoi implements Poi {
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
         final float actualRenderX = renderX - renderWidth / 2f;
-        final float actualRenderZ = renderZ - renderHeight / 2f;
+        final float actualRenderZ = renderY - renderHeight / 2f;
 
         CustomColor color;
         if (territoryInfo != null
@@ -69,10 +69,18 @@ public class TerritoryPoi implements Poi {
             color = territoryProfile.getGuildColor();
         }
 
-        RenderUtils.drawRect(
-                poseStack, color.withAlpha(65), actualRenderX, actualRenderZ, 0, renderWidth, renderHeight);
-        RenderUtils.drawRectBorders(
+        BufferedRenderUtils.drawRect(
                 poseStack,
+                bufferSource,
+                color.withAlpha(65),
+                actualRenderX,
+                actualRenderZ,
+                0,
+                renderWidth,
+                renderHeight);
+        BufferedRenderUtils.drawRectBorders(
+                poseStack,
+                bufferSource,
                 color,
                 actualRenderX,
                 actualRenderZ,
@@ -82,15 +90,17 @@ public class TerritoryPoi implements Poi {
                 1.5f);
 
         if (territoryInfo != null && territoryInfo.isHeadquarters()) {
-            RenderUtils.drawTexturedRect(
+            BufferedRenderUtils.drawTexturedRect(
                     poseStack,
+                    bufferSource,
                     Texture.GUILD_HEADQUARTERS_ICON,
                     actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS_ICON.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS_ICON.height() / 2f);
         } else {
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             territoryProfile.getGuildPrefix(),
                             actualRenderX,
                             actualRenderX + renderWidth,
@@ -107,9 +117,10 @@ public class TerritoryPoi implements Poi {
                 .ifPresent(attackTimer -> {
                     final String timeLeft = attackTimer.timerString();
 
-                    FontRenderer.getInstance()
+                    BufferedFontRenderer.getInstance()
                             .renderAlignedTextInBox(
                                     poseStack,
+                                    bufferSource,
                                     timeLeft,
                                     actualRenderX,
                                     actualRenderX + renderWidth,
@@ -123,9 +134,10 @@ public class TerritoryPoi implements Poi {
                 });
 
         if (hovered) {
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             territoryProfile.getFriendlyName(),
                             actualRenderX,
                             actualRenderX + renderWidth,
