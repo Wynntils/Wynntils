@@ -7,6 +7,7 @@ package com.wynntils.gui.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
@@ -100,7 +101,7 @@ public final class WynntilsGuidesListScreen extends WynntilsMenuListScreen<Scree
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     @Override

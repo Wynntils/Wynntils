@@ -24,6 +24,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -162,7 +163,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     public class NpcDialogueOverlay extends Overlay {
         @Config
-        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NORMAL;
+        public TextShadow textShadow = TextShadow.NORMAL;
 
         @Config
         public float backgroundOpacity = 0.2f;

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
@@ -93,7 +94,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
 
         poseStack.popPose();
 

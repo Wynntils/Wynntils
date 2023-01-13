@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
@@ -175,7 +176,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
             poseStack.popPose();
 
             FontRenderer.getInstance()
@@ -188,7 +189,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
 
             FontRenderer.getInstance()
                     .renderText(
@@ -200,7 +201,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
 
             Vec3 start = currentLootrun.path().points().get(0);
             FontRenderer.getInstance()
@@ -213,7 +214,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
 
             Vec3 end = currentLootrun
                     .path()
@@ -229,7 +230,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
 
             poseStack.popPose();
         } else {
@@ -243,7 +244,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -255,7 +256,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
-                            FontRenderer.TextShadow.NONE);
+                            TextShadow.NONE);
         }
     }
 

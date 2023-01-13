@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
 import net.minecraft.client.resources.language.I18n;
@@ -33,7 +34,7 @@ public class CategoryButton extends WynntilsButton {
                         0,
                         CommonColors.CYAN,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.NORMAL);
+                        TextShadow.NORMAL);
     }
 
     @Override

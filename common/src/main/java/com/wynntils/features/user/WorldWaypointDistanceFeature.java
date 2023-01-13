@@ -15,6 +15,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
@@ -46,7 +47,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
     public float backgroundOpacity = 0.2f;
 
     @Config
-    public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.NONE;
+    public TextShadow textShadow = TextShadow.NONE;
 
     @Config
     public float bottomBoundingDistance = 100f;

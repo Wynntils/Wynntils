@@ -9,6 +9,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.BufferedRenderUtils;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
@@ -97,7 +98,7 @@ public abstract class IconPoi implements Poi {
                             CommonColors.GREEN,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Middle,
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
 
             poseStack.popPose();
         }
