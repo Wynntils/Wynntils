@@ -7,11 +7,11 @@ package com.wynntils.wynn.event;
 import com.wynntils.wynn.objects.SpellType;
 import net.minecraftforge.eventbus.api.Event;
 
-public class SpellCastedEvent extends Event {
+public class SpellCastEvent extends Event {
 
     private final SpellType spell;
 
-    public SpellCastedEvent(SpellType spell) {
+    public SpellCastEvent(SpellType spell) {
         this.spell = spell;
     }
 

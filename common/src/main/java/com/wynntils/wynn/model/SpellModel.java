@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.wynn.event.SpellCastedEvent;
+import com.wynntils.wynn.event.SpellCastEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.regex.Matcher;
@@ -30,7 +30,7 @@ public class SpellModel extends Model {
             lastSpell[0] = matcher.group(1).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
             lastSpell[1] = matcher.group(2).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
             lastSpell[2] = matcher.group(3).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-            SpellCastedEvent spellCasted = new SpellCastedEvent(SpellType.fromBooleanArray(lastSpell));
+            SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(lastSpell));
             WynntilsMod.postEvent(spellCasted);
         }
     }
@@ -47,7 +47,7 @@ public class SpellModel extends Model {
         for (int i = 0; i < 3; i++) {
             spell[i] = m.group(i + 1).equals(right) ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
         }
-        SpellCastedEvent spellCasted = new SpellCastedEvent(SpellType.fromBooleanArray(spell));
+        SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(spell));
         WynntilsMod.postEvent(spellCasted);
     }
 }

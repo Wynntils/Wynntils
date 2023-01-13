@@ -14,7 +14,7 @@ import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.CharacterUpdateEvent;
-import com.wynntils.wynn.event.SpellCastedEvent;
+import com.wynntils.wynn.event.SpellCastEvent;
 import com.wynntils.wynn.event.TotemEvent;
 import com.wynntils.wynn.objects.ShamanTotem;
 import com.wynntils.wynn.objects.SpellType;
@@ -50,7 +50,7 @@ public class ShamanTotemModel extends Model {
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
 
     @SubscribeEvent
-    public void onTotemSpellCast(SpellCastedEvent e) {
+    public void onTotemSpellCast(SpellCastEvent e) {
         if (e.getSpell() != SpellType.TOTEM) return;
 
         totemCastTimestamp = System.currentTimeMillis();
