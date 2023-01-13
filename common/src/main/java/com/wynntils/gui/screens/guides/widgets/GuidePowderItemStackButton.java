@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.GuidePowderItemStack;
 import com.wynntils.gui.screens.guides.WynntilsPowderGuideScreen;
@@ -63,7 +64,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                         0,
                         color,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
         poseStack.popPose();
 
         if (Managers.Favorites.isFavorite(itemStack)) {

@@ -19,6 +19,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.StatusEffectsChangedEvent;
@@ -49,7 +50,7 @@ public class StatusOverlayFeature extends UserFeature {
 
     public class StatusOverlay extends Overlay {
         @Config
-        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+        public TextShadow textShadow = TextShadow.OUTLINE;
 
         private TextRenderSetting textRenderSetting;
 

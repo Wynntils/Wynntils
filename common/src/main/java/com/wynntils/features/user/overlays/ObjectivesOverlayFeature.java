@@ -22,6 +22,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
@@ -268,7 +269,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         public ObjectivesTextures objectivesTexture = ObjectivesTextures.a;
 
         @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
-        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+        public TextShadow textShadow = TextShadow.OUTLINE;
 
         protected ObjectiveOverlayBase(
                 OverlayPosition position,

@@ -24,6 +24,7 @@ import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
@@ -355,7 +356,7 @@ public class MinimapFeature extends UserFeature {
                     CommonColors.WHITE,
                     HorizontalAlignment.Center,
                     VerticalAlignment.Top,
-                    FontRenderer.TextShadow.NORMAL);
+                    TextShadow.NORMAL);
 
             poseStack.popPose();
         }

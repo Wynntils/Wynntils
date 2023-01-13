@@ -19,6 +19,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.functions.Function;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -60,7 +61,7 @@ public class InfoBoxFeature extends UserFeature {
 
     public static class InfoBoxOverlay extends Overlay {
         @Config
-        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+        public TextShadow textShadow = TextShadow.OUTLINE;
 
         @Config
         public String content = "";

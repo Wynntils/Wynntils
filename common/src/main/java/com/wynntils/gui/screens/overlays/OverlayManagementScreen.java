@@ -18,6 +18,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsScreen;
 import com.wynntils.mc.objects.CommonColors;
@@ -147,7 +148,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             CommonColors.WHITE,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NORMAL));
+                            TextShadow.NORMAL));
             FontRenderer.getInstance().renderText(poseStack, this.width / 2f, this.height - 160, renderTask);
         } else {
             if (selectionMode != SelectionMode.None) {
@@ -211,7 +212,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 color,
                                 overlay.getRenderHorizontalAlignment(),
                                 overlay.getRenderVerticalAlignment(),
-                                FontRenderer.TextShadow.OUTLINE);
+                                TextShadow.OUTLINE);
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {

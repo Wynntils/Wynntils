@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
@@ -92,7 +93,7 @@ public class TerritoryPoi implements Poi {
                             color,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Middle,
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
         }
 
         Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
@@ -111,7 +112,7 @@ public class TerritoryPoi implements Poi {
                                     CommonColors.WHITE,
                                     HorizontalAlignment.Center,
                                     VerticalAlignment.Bottom,
-                                    FontRenderer.TextShadow.OUTLINE);
+                                    TextShadow.OUTLINE);
                 });
 
         if (hovered) {
@@ -127,7 +128,7 @@ public class TerritoryPoi implements Poi {
                             CommonColors.WHITE,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
         }
 
         poseStack.popPose();
