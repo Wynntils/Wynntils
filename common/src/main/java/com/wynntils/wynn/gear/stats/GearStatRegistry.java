@@ -64,36 +64,37 @@ public final class GearStatRegistry {
     public static final class SpellStatBuilder extends StatBuilder {
         @Override
         public void processStats(Consumer<GearStat> callback) {
-            for (var spellType : SpellType.values()) {
+            for (SpellType spellType : SpellType.values()) {
                 int spellNumber = spellType.getSpellNumber();
                 String displayName = spellType.getName() + " Cost";
 
-                GearStat percentType = new GearStat(
-                        "SPELL_" + spellType.name() + "_COST_PERCENT",
-                        displayName,
-                        "spellCostPct" + spellNumber,
-                        "SPELL_COST_PCT_" + spellNumber,
-                        GearStatUnit.PERCENT);
+                GearStat percentType = buildSpellStat(spellType, spellNumber, displayName, GearStatUnit.PERCENT, "");
                 callback.accept(percentType);
 
-                GearStat rawType = new GearStat(
-                        "SPELL_" + spellType.name() + "_COST_RAW",
-                        displayName,
-                        "spellCostRaw" + spellNumber,
-                        "SPELL_COST_RAW_" + spellNumber,
-                        GearStatUnit.RAW);
+                GearStat rawType = buildSpellStat(spellType, spellNumber, displayName, GearStatUnit.RAW, "");
                 callback.accept(rawType);
+
                 if (spellType.getClassType() == ClassType.None) {
                     // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
-                    GearStat rawTypeAlias = new GearStat(
-                            spellType.name() + "_COST_RAW_ALIAS",
-                            "{sp" + spellNumber + "} Cost",
-                            "spellCostRaw" + spellNumber,
-                            "SPELL_COST_RAW_" + spellNumber,
-                            null);
+                    GearStat rawTypeAlias =
+                            buildSpellStat(spellType, spellNumber, displayName, GearStatUnit.RAW, "_ALIAS");
                     callback.accept(rawTypeAlias);
+                    // FIXME!!!! also for PERCENT????
                 }
             }
+        }
+
+        private GearStat buildSpellStat(
+                SpellType spellType, int spellNumber, String displayName, GearStatUnit unit, String addon) {
+            String apiUnit = unit == GearStatUnit.RAW ? "Raw" : "Pct";
+            String loreUnit = unit == GearStatUnit.RAW ? "RAW" : "PCT";
+
+            return new GearStat(
+                    "SPELL_" + spellType.name() + "_COST_" + unit.name() + addon,
+                    displayName,
+                    "spellCost" + apiUnit + spellNumber,
+                    "SPELL_COST_" + loreUnit + "_" + spellNumber,
+                    unit);
         }
     }
 
