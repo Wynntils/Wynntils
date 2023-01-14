@@ -5,11 +5,9 @@
 package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.gear.GearStatUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-public enum GearMiscStat implements GearStat {
+public enum GearMiscStatType {
     HEALTH("Health", GearStatUnit.RAW, "healthBonus"),
     HEALTH_REGEN_PERCENT("Health Regen", GearStatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", GearStatUnit.RAW, "healthRegenRaw"),
@@ -39,44 +37,29 @@ public enum GearMiscStat implements GearStat {
     private final String loreName;
     private final String apiName;
 
-    GearMiscStat(String displayName, GearStatUnit unit, String apiName, String loreName) {
+    GearMiscStatType(String displayName, GearStatUnit unit, String apiName, String loreName) {
         this.displayName = displayName;
         this.unit = unit;
-        this.loreName = loreName;
         this.apiName = apiName;
+        this.loreName = loreName;
     }
 
-    public static void addStats(List<GearStat> registry) {
-        for (GearMiscStat miscStat : GearMiscStat.values() ) {
-            registry.add(miscStat);
-        }
-    }
-
-    GearMiscStat(String displayName, GearStatUnit unit, String apiName) {
+    GearMiscStatType(String displayName, GearStatUnit unit, String apiName) {
         this(displayName, unit, apiName, apiName.toUpperCase(Locale.ROOT));
     }
 
-    @Override
-    public String getKey() {
-        return "MISC_"+ this.name();
-    }
-
-    @Override
     public String getDisplayName() {
         return displayName;
     }
 
-    @Override
     public GearStatUnit getUnit() {
         return unit;
     }
 
-    @Override
     public String getLoreName() {
         return loreName;
     }
 
-    @Override
     public String getApiName() {
         return apiName;
     }
