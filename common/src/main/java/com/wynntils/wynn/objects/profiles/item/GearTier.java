@@ -34,7 +34,15 @@ public enum GearTier {
         return chatFormatting;
     }
 
-    public static GearTier fromString(String name) {
+    public static GearTier fromString(String typeStr) {
+        try {
+            return GearTier.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    public static GearTier fromFormattedString(String name) {
         if (name.charAt(0) == '§') {
             return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
         }

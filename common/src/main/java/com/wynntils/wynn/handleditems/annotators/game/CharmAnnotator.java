@@ -21,7 +21,7 @@ public final class CharmAnnotator implements ItemAnnotator {
         Matcher matcher = CHARM_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        GearTier tier = GearTier.fromString(name);
+        GearTier tier = GearTier.fromFormattedString(name);
         String type = matcher.group("Type");
 
         // TODO: replace with API lookup

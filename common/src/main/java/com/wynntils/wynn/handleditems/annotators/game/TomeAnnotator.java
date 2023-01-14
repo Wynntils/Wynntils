@@ -30,7 +30,7 @@ public final class TomeAnnotator implements ItemAnnotator {
         if (tomeTypeOpt.isEmpty()) return null;
 
         TomeType tomeType = tomeTypeOpt.get();
-        GearTier gearTier = GearTier.fromString(name);
+        GearTier gearTier = GearTier.fromFormattedString(name);
         String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
         String tier = tomeType.isTiered() ? matcher.group("Tier") : null;
 

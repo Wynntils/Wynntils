@@ -31,7 +31,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         GearType gearType = GearType.fromString(matcher.group(1));
         if (gearType == null) return null;
 
-        GearTier gearTier = GearTier.fromString(name);
+        GearTier gearTier = GearTier.fromFormattedString(name);
         String levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;
