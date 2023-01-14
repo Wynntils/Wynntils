@@ -5,36 +5,32 @@
 package com.wynntils.wynn.model.gear;
 
 public enum IdElementalTypes implements IdType {
-    // FIXME: check discrepancy!
+    // FIXME: check discrepancy between lore and api
     DEFENCE_AIR(IsVariable.YES, "Air Defence", "%", "airDefence", "AIRDEFENSE", "bonusAirDefense"),
     DEFENCE_EARTH(IsVariable.YES, "Earth Defence", "%", "earthDefence", "EARTHDEFENSE", "bonusEarthDefense"),
     DEFENCE_FIRE(IsVariable.YES, "Fire Defence", "%", "fireDefence", "FIREDEFENSE", "bonusFireDefense"),
     DEFENCE_THUNDER(IsVariable.YES, "Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
     DEFENCE_WATER(IsVariable.YES, "Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense"),
 
-    // FIXME: check discrepancy!
+    // FIXME: check discrepancy between lore and api
     DAMAGE_AIR(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "bonusAirDamage"),
     DAMAGE_EARTH(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "bonusEarthDamage"),
     DAMAGE_FIRE(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "bonusFireDamage"),
     DAMAGE_THUNDER(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "bonusThunderDamage"),
     DAMAGE_WATER(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "bonusWaterDamage"),
 
-
     // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
     DAMAGE_SPELL_AIR_PERCENT(
-            IsVariable.YES, "Air Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellAirDamageBonus"),
-
-    // Note: these are untested, but assumed...
+            IsVariable.YES, "Air Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellAirDamageBonus"),
     DAMAGE_SPELL_EARTH_PERCENT(
-            IsVariable.YES, "Earth Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
+            IsVariable.YES, "Earth Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
     DAMAGE_SPELL_FIRE_PERCENT(
-            IsVariable.YES, "Fire Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellFireDamageBonus"),
+            IsVariable.YES, "Fire Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellFireDamageBonus"),
     DAMAGE_SPELL_THUNDER_PERCENT(
-            IsVariable.YES, "Thunder Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellThunderDamageBonus"),
+            IsVariable.YES, "Thunder Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellThunderDamageBonus"),
     DAMAGE_SPELL_WATER_PERCENT(
-            IsVariable.YES, "Water Spell Damage", "%", "FIXME:MISSING", "FIXME:UNKNOWN", "spellWaterDamageBonus"),
+            IsVariable.YES, "Water Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellWaterDamageBonus"),
 
-    // FIXME: this is e.g. on Soul Ink.
     DAMAGE_SPELL_WATER_RAW(
             IsVariable.YES,
             "Water Spell Damage",
@@ -71,18 +67,37 @@ public enum IdElementalTypes implements IdType {
             "SPELLAIRDAMAGEBONUSRAW",
             "spellAirDamageBonusRaw"),
 
-    // FIXME: And is the LORE name from old Athena really correct???
-    // Check lore with e.g. Spearmint
+    // Check lore with e.g. Spearmint. Missing from Athena
     DAMAGE_MAIN_AIR_RAW(
-            IsVariable.YES, "Air Main Attack Damage", null, "FIXME", "FIXME", "mainAttackAirDamageBonusRaw"),
+            IsVariable.YES, "Air Main Attack Damage", null, "MISSING", "FIXME:UNKNOWN", "mainAttackAirDamageBonusRaw"),
     DAMAGE_MAIN_EARTH_RAW(
-            IsVariable.YES, "Earth Main Attack Damage", null, "FIXME", "FIXME", "mainAttackEarthDamageBonusRaw"),
+            IsVariable.YES,
+            "Earth Main Attack Damage",
+            null,
+            "MISSING",
+            "FIXME:UNKNOWN",
+            "mainAttackEarthDamageBonusRaw"),
     DAMAGE_MAIN_FIRE_RAW(
-            IsVariable.YES, "Fire Main Attack Damage", null, "FIXME", "FIXME", "mainAttackFireDamageBonusRaw"),
+            IsVariable.YES,
+            "Fire Main Attack Damage",
+            null,
+            "MISSING",
+            "FIXME:UNKNOWN",
+            "mainAttackFireDamageBonusRaw"),
     DAMAGE_MAIN_THUNDER_RAW(
-            IsVariable.YES, "Thunder Main Attack Damage", null, "FIXME", "FIXME", "mainAttackThunderDamageBonusRaw"),
+            IsVariable.YES,
+            "Thunder Main Attack Damage",
+            null,
+            "MISSING",
+            "FIXME:UNKNOWN",
+            "mainAttackThunderDamageBonusRaw"),
     DAMAGE_MAIN_WATER_RAW(
-            IsVariable.YES, "Water Main Attack Damage", null, "FIXME", "FIXME", "mainAttackWaterDamageBonusRaw"),
+            IsVariable.YES,
+            "Water Main Attack Damage",
+            null,
+            "MISSING",
+            "FIXME:UNKNOWN",
+            "mainAttackWaterDamageBonusRaw"),
 
     DAMAGE_MAIN_AIR_PERCENT(
             IsVariable.YES, "Air Main Attack Damage", "%", "airDamage", "FIXME:UNKNOWN", "mainAttackAirDamageBonus"),
