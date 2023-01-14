@@ -169,9 +169,6 @@ public final class GearItemManager extends Manager {
                 }
                 if (name2.contains("Unidentified")) {
                     if (type.getIsVariable() == IdType.IsVariable.UNKNOWN) {
-                        if (type == IdMiscTypes.ATTACK_SPEED) {
-                            System.out.println("check me");
-                        }
                         boolean containsRange = unformattedLoreLine.contains(" to ");
                         System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
                                 + idContainer.identification().isFixed());
@@ -200,9 +197,6 @@ public final class GearItemManager extends Manager {
                 String name2 = ComponentUtils.getUnformatted(realName);
                 //                if (name2.contains("Unidentified")) {
                 if (type.getIsVariable() == IdType.IsVariable.UNKNOWN || type.getIsVariable() == IdType.IsVariable.NO) {
-                    if (type == IdMiscTypes.ATTACK_SPEED) {
-                        System.out.println("check me");
-                    }
                     boolean containsRange = unformattedLoreLine.contains(" to ");
                     System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
                             + idContainer.identification().isFixed());
