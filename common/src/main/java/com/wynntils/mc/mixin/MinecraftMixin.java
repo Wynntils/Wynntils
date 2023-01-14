@@ -23,7 +23,7 @@ public abstract class MinecraftMixin {
         }
     }
 
-    @Inject(method = "tick", at = @At("RETURN"))
+    @Inject(method = "tick", at = @At("HEAD"))
     private void tickPost(CallbackInfo ci) {
         EventFactory.onTick();
     }

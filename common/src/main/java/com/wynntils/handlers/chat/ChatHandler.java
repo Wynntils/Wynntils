@@ -272,7 +272,7 @@ public final class ChatHandler extends Handler {
         // Wait a tick for slowdown, and then send the event
         delayedDialogue = dialog;
         delayedType = type;
-        Managers.MinecraftScheduler.queueRunnable(() -> {
+        Managers.TickScheduler.scheduleNextTick(() -> {
             if (delayedDialogue != null) {
                 List<Component> dialogToSend = delayedDialogue;
                 delayedDialogue = null;

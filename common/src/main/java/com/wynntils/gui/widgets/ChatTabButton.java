@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
 import com.wynntils.mc.objects.CommonColors;
@@ -46,7 +47,7 @@ public class ChatTabButton extends WynntilsButton {
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
     }
 
     private CustomColor getTabColor() {

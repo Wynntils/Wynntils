@@ -15,7 +15,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.maps.MainMapScreen;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -108,7 +108,7 @@ public class MapFeature extends UserFeature {
     public HealthTexture remotePlayerHealthTexture = HealthTexture.a;
 
     @Config(subcategory = "Remote Players")
-    public FontRenderer.TextShadow remotePlayerNameShadow = FontRenderer.TextShadow.OUTLINE;
+    public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
 
     private BlockPos lastChestPos;
 

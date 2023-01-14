@@ -7,9 +7,12 @@ package com.wynntils.wynn.model;
 import com.wynntils.core.components.Manager;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.utils.Pair;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.handleditems.items.game.IngredientItem;
+import com.wynntils.wynn.handleditems.items.gui.IngredientPouchItem;
+import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +47,15 @@ public final class FavoritesManager extends Manager {
 
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return isFavorite(ingredientItem.getIngredientProfile().getDisplayName());
+        }
+
+        if (wynnItem instanceof IngredientPouchItem pouchItem) {
+            for (Pair<IngredientProfile, Integer> ingredientPair : pouchItem.getIngredients()) {
+                IngredientProfile ingredientProfile = ingredientPair.a();
+                if (isFavorite(ingredientProfile.getDisplayName())) {
+                    return true;
+                }
+            }
         }
 
         if (wynnItem instanceof GearBoxItem gearBoxItem) {

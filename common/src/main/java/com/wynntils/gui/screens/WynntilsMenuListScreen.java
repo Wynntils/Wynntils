@@ -7,6 +7,7 @@ package com.wynntils.gui.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.QuestBookSearchWidget;
@@ -84,7 +85,7 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     @Override

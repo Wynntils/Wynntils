@@ -90,7 +90,7 @@ public class ItemFavoriteFeature extends UserFeature {
                 new PoseStack(),
                 Texture.FAVORITE.resource(),
                 event.getSlot().x + 10,
-                event.getSlot().y + 8,
+                event.getSlot().y,
                 400,
                 9,
                 9,

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.WynntilsButton;
 import com.wynntils.mc.objects.CommonColors;
@@ -58,7 +59,7 @@ public class GeneralSettingsButton extends WynntilsButton {
                         isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
 
         if (isHovered) {
             RenderUtils.drawTooltipAt(

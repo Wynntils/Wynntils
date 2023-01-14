@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.objects.CommonColors;
@@ -53,7 +54,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
 
         Texture stateTexture = discoveryInfo.isDiscovered()
                 ? switch (discoveryInfo.getType()) {

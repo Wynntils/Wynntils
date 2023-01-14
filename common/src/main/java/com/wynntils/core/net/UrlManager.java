@@ -156,8 +156,16 @@ public final class UrlManager extends Manager {
                 continue;
             }
             List<String> arguments = urlProfile.arguments == null ? List.of() : urlProfile.arguments;
+            Optional<UrlId> urlId = UrlId.from(urlProfile.id);
+
+            if (urlId.isEmpty()) {
+                // This is a URL we don't know about. Ignore it.
+                WynntilsMod.warn("Unknown URL: " + urlProfile.id);
+                continue;
+            }
+
             newMap.put(
-                    UrlId.from(urlProfile.id),
+                    urlId.get(),
                     new UrlInfo(
                             urlProfile.url,
                             arguments,
