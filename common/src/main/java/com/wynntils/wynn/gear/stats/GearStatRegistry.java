@@ -13,55 +13,57 @@ import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class GearStatRegistry {
-    private static final List<StatBuilder> BUILDERS = List.of(
-            new GearMiscStatBuilder(),
-            new GearDefenceStatBuilder(),
-            new GearSpellStatBuilder(),
-            new GearDamageStatBuilder());
+public final class GearStatRegistry {
+    private static final List<StatBuilder> BUILDERS =
+            List.of(new MiscStatBuilder(), new DefenceStatBuilder(), new SpellStatBuilder(), new DamageStatBuilder());
     public static final List<GearStat> registry = new ArrayList<>();
 
     static {
         for (StatBuilder builder : BUILDERS) {
-            builder.addStats(registry);
+            builder.processStats(registry::add);
         }
     }
 
     public abstract static class StatBuilder {
-        public abstract void addStats(List<GearStat> registry);
+        public abstract void processStats(Consumer<GearStat> callback);
     }
 
-    public static final class GearMiscStatBuilder extends StatBuilder {
-        public void addStats(List<GearStat> registry) {
-            for (GearMiscStatType miscStat : GearMiscStatType.values()) {
-                GearStat holder = new GearStat(
-                        "MISC_" + miscStat.name(),
-                        miscStat.getDisplayName(),
-                        miscStat.getApiName(),
-                        miscStat.getLoreName(),
-                        miscStat.getUnit());
-                registry.add(holder);
+    public static final class MiscStatBuilder extends StatBuilder {
+        @Override
+        public void processStats(Consumer<GearStat> callback) {
+            for (GearMiscStatType statType : GearMiscStatType.values()) {
+                GearStat gearStat = new GearStat(
+                        "MISC_" + statType.name(),
+                        statType.getDisplayName(),
+                        statType.getApiName(),
+                        statType.getLoreName(),
+                        statType.getUnit());
+                callback.accept(gearStat);
             }
         }
     }
 
-    public static final class GearDefenceStatBuilder extends StatBuilder {
-        public void addStats(List<GearStat> registry) {
+    public static final class DefenceStatBuilder extends StatBuilder {
+        @Override
+        public void processStats(Consumer<GearStat> callback) {
             for (Element element : Element.values()) {
                 // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
                 String displayName = element.getDisplayName() + " Defence";
                 String apiName = "bonus" + element.getDisplayName() + "Defense";
                 String loreName = element.name() + "DEFENSE";
                 String key = "DEFENCE_" + element.name();
-                GearStat rawType = new GearStat(key, displayName, apiName, loreName, GearStatUnit.PERCENT);
-                registry.add(rawType);
+
+                GearStat gearStat = new GearStat(key, displayName, apiName, loreName, GearStatUnit.PERCENT);
+                callback.accept(gearStat);
             }
         }
     }
 
-    public static final class GearSpellStatBuilder extends StatBuilder {
-        public void addStats(List<GearStat> registry) {
+    public static final class SpellStatBuilder extends StatBuilder {
+        @Override
+        public void processStats(Consumer<GearStat> callback) {
             for (var spellType : SpellType.values()) {
                 int spellNumber = spellType.getSpellNumber();
                 String displayName = spellType.getName() + " Cost";
@@ -72,14 +74,15 @@ public class GearStatRegistry {
                         "spellCostPct" + spellNumber,
                         "SPELL_COST_PCT_" + spellNumber,
                         GearStatUnit.PERCENT);
-                registry.add(percentType);
+                callback.accept(percentType);
+
                 GearStat rawType = new GearStat(
                         "SPELL_" + spellType.name() + "_COST_RAW",
                         displayName,
                         "spellCostRaw" + spellNumber,
                         "SPELL_COST_RAW_" + spellNumber,
                         GearStatUnit.RAW);
-                registry.add(rawType);
+                callback.accept(rawType);
                 if (spellType.getClassType() == ClassType.None) {
                     // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
                     GearStat rawTypeAlias = new GearStat(
@@ -88,21 +91,22 @@ public class GearStatRegistry {
                             "spellCostRaw" + spellNumber,
                             "SPELL_COST_RAW_" + spellNumber,
                             null);
-                    registry.add(rawTypeAlias);
+                    callback.accept(rawTypeAlias);
                 }
             }
         }
     }
 
-    public static final class GearDamageStatBuilder extends StatBuilder {
-        public void addStats(List<GearStat> registry) {
+    public static final class DamageStatBuilder extends StatBuilder {
+        @Override
+        public void processStats(Consumer<GearStat> callback) {
             for (GearAttackType attackType : GearAttackType.values()) {
                 for (GearDamageType damageType : GearDamageType.values()) {
                     GearStat rawType = buildDamageStat(attackType, damageType, GearStatUnit.RAW);
-                    registry.add(rawType);
+                    callback.accept(rawType);
 
                     GearStat percentType = buildDamageStat(attackType, damageType, GearStatUnit.PERCENT);
-                    registry.add(percentType);
+                    callback.accept(percentType);
                 }
             }
         }

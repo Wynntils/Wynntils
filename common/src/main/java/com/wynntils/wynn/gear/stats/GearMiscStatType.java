@@ -59,8 +59,8 @@ public enum GearMiscStatType {
     public String getLoreName() {
         return loreName;
     }
+
     public GearStatUnit getUnit() {
         return unit;
     }
-
 }
