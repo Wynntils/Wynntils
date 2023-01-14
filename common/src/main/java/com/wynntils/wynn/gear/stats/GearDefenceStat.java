@@ -4,22 +4,24 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.wynn.gear.GearStatUnit;
+
 public enum GearDefenceStat implements GearStat {
     // Lore confirmed!
-    DEFENCE_AIR("Air Defence", "%", "AIRDEFENSE", "bonusAirDefense"),
-    DEFENCE_EARTH("Earth Defence", "%", "EARTHDEFENSE", "bonusEarthDefense"),
-    DEFENCE_FIRE("Fire Defence", "%", "FIREDEFENSE", "bonusFireDefense"),
-    DEFENCE_THUNDER("Thunder Defence", "%", "THUNDERDEFENSE", "bonusThunderDefense"),
-    DEFENCE_WATER("Water Defence", "%", "WATERDEFENSE", "bonusWaterDefense");
+    DEFENCE_AIR("Air Defence", "AIRDEFENSE", "bonusAirDefense"),
+    DEFENCE_EARTH("Earth Defence", "EARTHDEFENSE", "bonusEarthDefense"),
+    DEFENCE_FIRE("Fire Defence", "FIREDEFENSE", "bonusFireDefense"),
+    DEFENCE_THUNDER("Thunder Defence", "THUNDERDEFENSE", "bonusThunderDefense"),
+    DEFENCE_WATER("Water Defence", "WATERDEFENSE", "bonusWaterDefense");
 
     private final String displayName;
-    private final String unit;
+    private final GearStatUnit unit;
     private final String loreName;
     private final String apiName;
 
-    GearDefenceStat(String displayName, String unit, String loreName, String apiName) {
+    GearDefenceStat(String displayName, String loreName, String apiName) {
         this.displayName = displayName;
-        this.unit = unit;
+        this.unit = GearStatUnit.PERCENT;
         this.loreName = loreName;
         this.apiName = apiName;
     }
@@ -35,7 +37,7 @@ public enum GearDefenceStat implements GearStat {
     }
 
     @Override
-    public String getUnit() {
+    public GearStatUnit getUnit() {
         return unit;
     }
 

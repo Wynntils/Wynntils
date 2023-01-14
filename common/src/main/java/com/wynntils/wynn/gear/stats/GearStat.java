@@ -4,12 +4,14 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.wynn.gear.GearStatUnit;
+
 public interface GearStat {
     String getKey();
 
     String getDisplayName();
 
-    String getUnit();
+    GearStatUnit getUnit();
 
     String getLoreName();
 

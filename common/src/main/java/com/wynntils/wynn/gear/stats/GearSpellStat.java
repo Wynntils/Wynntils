@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.wynn.gear.GearStatUnit;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class GearSpellStat implements GearStat {
     private final SpellType spellType;
     private final String key;
     private final String displayName;
-    private final String unit;
+    private final GearStatUnit unit;
     private final String loreName;
     private final String apiName;
 
@@ -23,7 +24,7 @@ public class GearSpellStat implements GearStat {
         generate();
     }
 
-    GearSpellStat(SpellType spellType, String key, String displayName, String unit, String loreName, String apiName) {
+    GearSpellStat(SpellType spellType, String key, String displayName, GearStatUnit unit, String loreName, String apiName) {
         this.spellType = spellType;
         this.key = key;
         this.displayName = displayName;
@@ -49,7 +50,7 @@ public class GearSpellStat implements GearStat {
                     spellType,
                     spellType.name() + "_COST_PERCENT",
                     displayName,
-                    "%",
+                    GearStatUnit.PERCENT,
                     "SPELL_COST_PCT_" + spellNumber,
                     "spellCostPct" + spellNumber);
             spellTypeIds.add(percentType);
@@ -57,7 +58,7 @@ public class GearSpellStat implements GearStat {
                     spellType,
                     spellType.name() + "_COST_RAW",
                     displayName,
-                    null,
+                    GearStatUnit.RAW,
                     "SPELL_COST_RAW_" + spellNumber,
                     "spellCostRaw" + spellNumber);
             spellTypeIds.add(rawType);
@@ -86,7 +87,7 @@ public class GearSpellStat implements GearStat {
     }
 
     @Override
-    public String getUnit() {
+    public GearStatUnit getUnit() {
         return unit;
     }
 
