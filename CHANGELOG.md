@@ -1,9 +1,17 @@
+## [0.0.2-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.101...v0.0.2-alpha.102) (2023-01-14)
+
+
+### Bug Fixes
+
+* apply correct ID color value on exact thresholds ([#1029](https://github.com/Wynntils/Artemis/issues/1029)) ([1c4a152](https://github.com/Wynntils/Artemis/commit/1c4a152897b4eeae23d6118934a0aa95fe31544d))
+
 ## [0.0.2-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.100...v0.0.2-alpha.101) (2023-01-13)
 
 
 ### Miscellaneous Chores
 
 * Move TextShadow to its own class ([#1028](https://github.com/Wynntils/Artemis/issues/1028)) ([fa5c1ce](https://github.com/Wynntils/Artemis/commit/fa5c1ce129b5908cec7bab02346b0e0114734a62))
+* **release:** v0.0.2-alpha.101 [skip ci] ([27afca1](https://github.com/Wynntils/Artemis/commit/27afca10757547b93c20b6062ebf12c94c4fd9fe))
 
 ## [0.0.2-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.99...v0.0.2-alpha.100) (2023-01-12)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.98 [skip ci] ([738d767](https://github.com/Wynntils/Artemis/commit/738d767d05173846f81900d3e153a1ea904ab6de))
-
-## [0.0.2-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.96...v0.0.2-alpha.97) (2023-01-12)
-
-
-### New Features
-
-* individual nametag line scaling ([#1022](https://github.com/Wynntils/Artemis/issues/1022)) ([44ab67d](https://github.com/Wynntils/Artemis/commit/44ab67d7789a2abaa44745d4c0a481df957dd2fb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.97 [skip ci] ([d097b8b](https://github.com/Wynntils/Artemis/commit/d097b8b6527a607436c159cef288e91bc86ff1e2))
 
