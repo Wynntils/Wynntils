@@ -1,58 +1,56 @@
+BASIC:
 "accessoryType" - typ av gear
+"category" -- armor/weapon/accessories
+"displayName" -- replace name if item been renamed???
+"identified" -- if "true" then ID numbers are fixed, not baseline
+"name" -- the name unless overridden by displayName
+"sockets" -- fixed, number of powder slots, an integer
+"tier" -- rarity level
+"type" -- gear type, string, "Helmet" etc
+
+META:
 "addedLore" - lore text
-"agility" -- req skill points, number
-"agilityPoints" - ID, OK
-"airDamage" -- fixed, range, elemental damage for a weapon
-"airDamageBonus" -- ID, OK
-"airDefense" -- fixed, gives extra elemental defense
 "allowCraftsman" -- bryr vi oss?
 "armorColor" -- ska vara RGB. är ALLTID "160,101,64" om det finns? nonsens.
 "armorType" -- vilken typ av material, guld diamant etc
-"attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
-"attackSpeedBonus" -- ID, OK
-"bonusAirDamage" -- this is broken, is only 0 for one item, Inhibitor
-"bonusAirDefense" -- ID, OK
-"bonusEarthDamage" -- TRASIG, ignorera
-"bonusEarthDefense"-- ID, OK
-"bonusFireDamage" -- TRASIG, ignorera
-"bonusFireDefense"-- ID, OK
-"bonusThunderDamage" -- TRASIG, ignorera
-"bonusThunderDefense" -- ID, OK
-"bonusWaterDamage" -- TRASIG, ignorera
-"bonusWaterDefense" -- ID, OK
-"category" -- armor/weapon/accessories
-"classRequirement" -- req, e.g. "Archer", för icke-vapen
-"damage" -- neutral spell damage, range
-"defense" -- req skill points, number
-"defensePoints" -- fixed, gives extra defense skill points
-"dexterity" -- req skill points, number
-"dexterityPoints" -- ID, OK
-"displayName" -- replace name if item been renamed???
 "dropType" -- string "never", "NORMAL" or "lootchest"
-"earthDamage" -- fixed, range, elemental damage for a weapon
+"material" -- för allt utom armor, t.ex. "359:5"
+"restrictions" -- "req", can be "Untradable", "untradable" or "Quest Item"
+"skin" -- player head base64 data for some helmets
+
+REQUIREMENTS
+"agility" -- req skill points, number
+"classRequirement" -- req, e.g. "Archer", för icke-vapen
+"defense" -- req skill points, number
+"dexterity" -- req skill points, number
+"intelligence" -- req skill points, number
+"level" -- req, min combat level
+"quest" -- req, quest name as string
+"strength" -- req skill points, number
+
+ID, VARIABLE STATS
+"agilityPoints" - ID, OK
+"airDamageBonus" -- ID, OK
+"attackSpeedBonus" -- ID, OK
+"bonusAirDefense" -- ID, OK
+"bonusEarthDefense"-- ID, OK
+"bonusFireDefense"-- ID, OK
+"bonusThunderDefense" -- ID, OK
+"bonusWaterDefense" -- ID, OK
+"dexterityPoints" -- ID, OK
 "earthDamageBonus" -- ID, ok
-"earthDefense" -- fixed, gives extra elemental defense
 "elementalDamageBonus" -- ID, ok
 "elementalDamageBonusRaw" -- ID, ok
 "emeraldStealing" -- ID, ok
 "exploding" -- ID ok
-"fireDamage" -- fixed, range, elemental damage for a weapon
 "fireDamageBonus" -- ID ok
-"fireDefense" -- fixed, gives extra elemental defense
-"gatherSpeed" -- nonsens, alltid 0
-"gatherXpBonus"-- nonsens, alltid 0
-"health" -- fixed, gives additional health
 "healthBonus" -- ID, ok
 "healthRegen" -- ID ok
 "healthRegenRaw" -- ID ok
-"identified" -- if "true" then ID numbers are fixed, not baseline
-"intelligence" -- req skill points, number
 "intelligencePoints" -- ID, OK
 "jumpHeight" -- ID, ok
-"level" -- req, min combat level
 "lifeSteal" -- ID, ok
 "lootBonus" -- ID, ok
-"lootQuality" -- nonsens, alltid 0
 "mainAttackAirDamageBonus" -- ID, ok
 "mainAttackAirDamageBonusRaw" -- ID, ok
 "mainAttackDamageBonus" -- ID, ok
@@ -61,18 +59,10 @@
 "mainAttackFireDamageBonusRaw" -- ID ok
 "mainAttackThunderDamageBonus" -- ID ok
 "mainAttackThunderDamageBonusRaw" -- ID ok
-"majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
 "manaRegen" -- ID ok
 "manaSteal" -- ID ok
-"material" -- för allt utom armor, t.ex. "359:5"
-"name" -- the name unless overridden by displayName
 "poison" -- ID ok
-"quest" -- req, quest name as string
 "reflection" -- ID ok
-"restrictions" -- "req", can be "Untradable", "untradable" or "Quest Item"
-"set" -- nonsens, null for most sets (only given for "Leaf")
-"skin" -- player head base64 data for some helmets
-"sockets" -- fixed, number of powder slots, an integer
 "soulPoints" -- ID, ok
 "speed" -- ID, ok (walk speed)
 "spellAirDamageBonus" -- ID ok
@@ -98,17 +88,41 @@
 "spellWaterDamageBonusRaw" -- ID ok
 "sprint" -- ID ok
 "sprintRegen" -- ID ok
-"strength" -- req skill points, number
 "strengthPoints" -- ID, OK
 "thorns" -- ID ok
-"thunderDamage" -- fixed, range, elemental damage for a weapon
 "thunderDamageBonus" -- ID ok
 "thunderDamageBonusRaw" -- ID ok
-"thunderDefense" -- fixed, gives extra elemental defense
-"tier" -- rarity level
-"type" -- gear type, string, "Helmet" etc
-"waterDamage" -- fixed, range, elemental damage for a weapon
 "waterDamageBonus" -- ID ok
 "waterDamageBonusRaw" -- ID ok
-"waterDefense" -- fixed, gives extra elemental defense
 "xpBonus" -- ID ok
+
+FIXED STATS:
+"airDamage" -- fixed, range, elemental damage for a weapon
+"airDefense" -- fixed, gives extra elemental defense
+"attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
+"damage" -- neutral spell damage, range
+"defensePoints" -- fixed, gives extra defense skill points
+"earthDamage" -- fixed, range, elemental damage for a weapon
+"earthDefense" -- fixed, gives extra elemental defense
+"fireDamage" -- fixed, range, elemental damage for a weapon
+"fireDefense" -- fixed, gives extra elemental defense
+"health" -- fixed, gives additional health
+"majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
+"thunderDamage" -- fixed, range, elemental damage for a weapon
+"thunderDefense" -- fixed, gives extra elemental defense
+"waterDamage" -- fixed, range, elemental damage for a weapon
+"waterDefense" -- fixed, gives extra elemental defense
+
+IGNORE:
+"bonusAirDamage" -- this is broken, is only 0 for one item, Inhibitor
+"bonusEarthDamage" -- TRASIG, ignorera
+"bonusFireDamage" -- TRASIG, ignorera
+"bonusThunderDamage" -- TRASIG, ignorera
+"bonusWaterDamage" -- TRASIG, ignorera
+"gatherSpeed" -- nonsens, alltid 0
+"gatherXpBonus"-- nonsens, alltid 0
+"lootQuality" -- nonsens, alltid 0
+"set" -- nonsens, null for most sets (only given for "Leaf")
+
+
+
