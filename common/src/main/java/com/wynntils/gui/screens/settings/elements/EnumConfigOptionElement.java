@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
@@ -69,7 +70,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.Center,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
     }
 
     @Override

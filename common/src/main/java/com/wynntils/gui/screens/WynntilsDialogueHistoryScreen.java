@@ -12,6 +12,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BackButton;
@@ -156,7 +157,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
                             CommonColors.BLACK,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.NORMAL)));
+                            TextShadow.NORMAL)));
         }
 
         FontRenderer.getInstance()
@@ -251,7 +252,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
                         CommonColors.BLACK,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
     }
 
     private void setDialogues(List<List<String>> dialogues) {

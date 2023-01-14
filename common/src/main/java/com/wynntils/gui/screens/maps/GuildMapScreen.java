@@ -12,6 +12,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.MapRenderer;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.BasicTexturedButton;
@@ -257,7 +258,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         CommonColors.MAGENTA,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
 
         float renderYOffset = 20;
 
@@ -278,7 +279,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 CommonColors.WHITE,
                                 HorizontalAlignment.Left,
                                 VerticalAlignment.Top,
-                                FontRenderer.TextShadow.OUTLINE);
+                                TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
 
@@ -295,7 +296,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 CommonColors.WHITE,
                                 HorizontalAlignment.Left,
                                 VerticalAlignment.Top,
-                                FontRenderer.TextShadow.OUTLINE);
+                                TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
         }
@@ -316,7 +317,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
         renderYOffset += 10;
         FontRenderer.getInstance()
                 .renderText(
@@ -327,7 +328,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
 
         if (territoryInfo.isHeadquarters()) {
             renderYOffset += 20;
@@ -340,7 +341,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             CommonColors.RED,
                             HorizontalAlignment.Left,
                             VerticalAlignment.Top,
-                            FontRenderer.TextShadow.OUTLINE);
+                            TextShadow.OUTLINE);
         }
 
         // Territory name
@@ -356,7 +357,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
-                        FontRenderer.TextShadow.OUTLINE);
+                        TextShadow.OUTLINE);
 
         poseStack.popPose();
     }

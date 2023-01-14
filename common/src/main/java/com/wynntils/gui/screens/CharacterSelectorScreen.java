@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.ClassInfoButton;
@@ -270,7 +271,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
         poseStack.popPose();
 
         poseStack.translate(renderWidth * 0.27f, 0, 0);
@@ -297,7 +298,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        FontRenderer.TextShadow.NONE);
+                        TextShadow.NONE);
         poseStack.popPose();
 
         poseStack.translate(renderWidth * 0.32f, 0, 0);
