@@ -1,64 +1,64 @@
-"accessoryType"
-"addedLore"
-"agility"
-"agilityPoints"
-"airDamage"
-"airDamageBonus"
-"airDefense"
-"allowCraftsman"
-"armorColor"
-"armorType"
-"attackSpeed"
-"attackSpeedBonus"
-"bonusAirDamage"
-"bonusAirDefense"
-"bonusEarthDamage"
-"bonusEarthDefense"
-"bonusFireDamage"
-"bonusFireDefense"
-"bonusThunderDamage"
-"bonusThunderDefense"
-"bonusWaterDamage"
-"bonusWaterDefense"
-"category"
-"classRequirement"
-"damage"
-"defense"
-"defensePoints"
-"dexterity"
-"dexterityPoints"
-"displayName"
-"dropType"
-"earthDamage"
-"earthDamageBonus"
-"earthDefense"
-"elementalDamageBonus"
-"elementalDamageBonusRaw"
-"emeraldStealing"
-"exploding"
-"fireDamage"
-"fireDamageBonus"
-"fireDefense"
-"gatherSpeed"
-"gatherXpBonus"
-"health"
-"healthBonus"
-"healthRegen"
-"healthRegenRaw"
-"identified"
-"intelligence"
-"intelligencePoints"
-"jumpHeight"
-"level"
-"lifeSteal"
-"lootBonus"
-"lootQuality"
-"mainAttackAirDamageBonus"
-"mainAttackAirDamageBonusRaw"
-"mainAttackDamageBonus"
-"mainAttackDamageBonusRaw"
-"mainAttackElementalDamageBonusRaw"
-"mainAttackFireDamageBonusRaw"
+"accessoryType" - typ av gear
+"addedLore" - lore text
+"agility" -- req skill points, number
+"agilityPoints" - ID, OK
+"airDamage" -- fixed, range, elemental damage for a weapon
+"airDamageBonus" -- ID, OK
+"airDefense" -- fixed, gives extra elemental defense
+"allowCraftsman" -- bryr vi oss?
+"armorColor" -- ska vara RGB. är ALLTID "160,101,64" om det finns? nonsens.
+"armorType" -- vilken typ av material, guld diamant etc
+"attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
+"attackSpeedBonus" -- ID, OK
+"bonusAirDamage" -- this is broken, is only 0 for one item, Inhibitor
+"bonusAirDefense" -- ID, OK
+"bonusEarthDamage" -- TRASIG, ignorera
+"bonusEarthDefense"-- ID, OK
+"bonusFireDamage" -- TRASIG, ignorera
+"bonusFireDefense"-- ID, OK
+"bonusThunderDamage" -- TRASIG, ignorera
+"bonusThunderDefense" -- ID, OK
+"bonusWaterDamage" -- TRASIG, ignorera
+"bonusWaterDefense" -- ID, OK
+"category" -- armor/weapon/accessories
+"classRequirement" -- req, e.g. "Archer", för icke-vapen
+"damage" -- neutral spell damage, range
+"defense" -- req skill points, number
+"defensePoints" -- fixed, gives extra defense skill points
+"dexterity" -- req skill points, number
+"dexterityPoints" -- ID, OK
+"displayName" -- replace name if item been renamed???
+"dropType" -- string "never", "NORMAL" or "lootchest"
+"earthDamage" -- fixed, range, elemental damage for a weapon
+"earthDamageBonus" -- ID, ok
+"earthDefense" -- fixed, gives extra elemental defense
+"elementalDamageBonus" -- ID, ok
+"elementalDamageBonusRaw" -- ID, ok
+"emeraldStealing" -- ID, ok
+"exploding" -- ID ok
+"fireDamage" -- fixed, range, elemental damage for a weapon
+"fireDamageBonus" -- ID ok
+"fireDefense" -- fixed, gives extra elemental defense
+"gatherSpeed" -- nonsens, alltid 0
+"gatherXpBonus"-- nonsens, alltid 0
+"health" -- fixed, gives additional health
+"healthBonus" -- ID, ok
+"healthRegen" -- ID ok
+"healthRegenRaw" -- ID ok
+"identified" -- if "true" then ID numbers are fixed, not baseline
+"intelligence" -- req skill points, number
+"intelligencePoints" -- ID, OK
+"jumpHeight" -- ID, ok
+"level" -- req, min combat level
+"lifeSteal" -- ID, ok
+"lootBonus" -- ID, ok
+"lootQuality" -- nonsens, alltid 0
+"mainAttackAirDamageBonus" -- ID, ok
+"mainAttackAirDamageBonusRaw" -- ID, ok
+"mainAttackDamageBonus" -- ID, ok
+"mainAttackDamageBonusRaw" -- ID, ok
+"mainAttackElementalDamageBonusRaw" -- ID ok
+"mainAttackFireDamageBonusRaw" -- ID ok
 "mainAttackThunderDamageBonus"
 "mainAttackThunderDamageBonusRaw"
 "majorIds"
@@ -98,17 +98,17 @@
 "spellWaterDamageBonusRaw"
 "sprint"
 "sprintRegen"
-"strength"
-"strengthPoints"
+"strength" -- req skill points, number
+"strengthPoints" -- ID, OK
 "thorns"
-"thunderDamage"
-"thunderDamageBonus"
+"thunderDamage" -- fixed, range, elemental damage for a weapon
+"thunderDamageBonus" -- ID ok
 "thunderDamageBonusRaw"
-"thunderDefense"
+"thunderDefense" -- fixed, gives extra elemental defense
 "tier"
 "type"
-"waterDamage"
-"waterDamageBonus"
+"waterDamage" -- fixed, range, elemental damage for a weapon
+"waterDamageBonus" -- ID ok
 "waterDamageBonusRaw"
-"waterDefense"
+"waterDefense" -- fixed, gives extra elemental defense
 "xpBonus"

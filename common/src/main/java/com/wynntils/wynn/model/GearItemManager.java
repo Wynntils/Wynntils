@@ -216,6 +216,8 @@ public final class GearItemManager extends Manager {
     }
 
     private IdType getIdType(String idName, String unit) {
+        verify();
+
         for (IdMiscTypes statType : IdMiscTypes.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
@@ -234,13 +236,39 @@ public final class GearItemManager extends Manager {
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (IdSpellTypes spellType : IdSpellTypes.spellTypeIds) {
-            if (spellType.getDisplayName().equals(idName)) {
-                if (spellType.getUnit() == null && unit == null) return spellType;
-                if (spellType.getUnit() != null && spellType.getUnit().equals(unit)) return spellType;
+        for (IdSpellTypes statType : IdSpellTypes.spellTypeIds) {
+            if (statType.getDisplayName().equals(idName)) {
+                if (statType.getUnit() == null && unit == null) return statType;
+                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
 
+        return null;
+    }
+
+    private IdType verify() {
+        for (IdMiscTypes statType : IdMiscTypes.values()) {
+            if (!statType.getLoreName().equals(statType.getApiName().toUpperCase(Locale.ROOT))) {
+                System.out.println("DIFF: " + statType.getKey());
+            }
+        }
+        for (IdSkillTypes statType : IdSkillTypes.values()) {
+            if (!statType.getLoreName().equals(statType.getApiName().toUpperCase(Locale.ROOT))) {
+                System.out.println("DIFF: " + statType.getKey());
+            }
+        }
+        for (IdElementalTypes statType : IdElementalTypes.values()) {
+            if (!statType.getLoreName().equals(statType.getApiName().toUpperCase(Locale.ROOT))) {
+                System.out.println("DIFF: " + statType.getKey());
+            }
+        }
+        for (IdSpellTypes statType : IdSpellTypes.spellTypeIds) {
+            if (!statType.getLoreName().equals(statType.getApiName().toUpperCase(Locale.ROOT))) {
+                System.out.println("DIFF: " + statType.getKey());
+            }
+        }
+
+        System.exit(0);
         return null;
     }
 

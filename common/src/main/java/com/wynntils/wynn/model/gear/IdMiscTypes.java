@@ -5,6 +5,19 @@
 package com.wynntils.wynn.model.gear;
 
 public enum IdMiscTypes implements IdType {
+    /*
+    THESE HAVE SUSPICIOUS LORE:
+
+    ATTACK_SPEED
+    DAMAGE_ELEMANTAL
+    DAMAGE_ELEMENTAL
+    DAMAGE_MAIN_ATTACK_ELEMENTAL
+    JUMP_HEIGHT
+    SPRINT
+    SPRINT_REGEN
+     */
+
+
     // FIXME: missing from Athena. Check lore name, with e.g. Aleph null.
     DAMAGE_ELEMANTAL(IsVariable.YES, "Elemental Damage", "%", "MISSING", "FIXME:UNKNOWN", "elementalDamageBonus"),
     DAMAGE_SPELL_ELEMENTAL_PERCENT(
@@ -33,10 +46,11 @@ public enum IdMiscTypes implements IdType {
             "rawNeutralSpellDamage",
             "SPELLNEUTRALDAMAGEBONUSRAW",
             "spellNeutralDamageBonusRaw"),
+    // FIXME: lore??
     DAMAGE_MAIN_ATTACK_PERCENT(
-            IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "damageBonus"),
+            IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "mainAttackDamageBonus"),
     DAMAGE_MAIN_ATTACK_RAW(
-            IsVariable.YES, "Main Attack Damage", null, "rawMainAttackDamage", "DAMAGEBONUSRAW", "damageBonusRaw"),
+            IsVariable.YES, "Main Attack Damage", null, "rawMainAttackDamage", "DAMAGEBONUSRAW", "mainAttackDamageBonusRaw"),
     DAMAGE_SPELL_PERCENT(IsVariable.YES, "Spell Damage", "%", "spellDamage", "SPELLDAMAGE", "spellDamage"),
     DAMAGE_SPELL_RAW(IsVariable.YES, "Spell Damage", null, "rawSpellDamage", "SPELLDAMAGERAW", "spellDamageRaw"),
 
@@ -61,6 +75,7 @@ public enum IdMiscTypes implements IdType {
     STEALING(IsVariable.YES, "Stealing", "%", "stealing", "EMERALDSTEALING", "emeraldStealing"),
     // FIXME: is lore correct?
     ATTACK_SPEED(IsVariable.YES, "Attack Speed", " tier", "attackSpeed", "ATTACKSPEED", "attackSpeedBonus"),
+    // FIXME: is lore correct?
     JUMP_HEIGHT(IsVariable.YES, "Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "jumpHeight"),
     LOOT_BONUS(IsVariable.YES, "Loot Bonus", "%", "lootBonus", "LOOTBONUS", "lootBonus"),
     SOUL_POINT_REGEN(IsVariable.YES, "Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),

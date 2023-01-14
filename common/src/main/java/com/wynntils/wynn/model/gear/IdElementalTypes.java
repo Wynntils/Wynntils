@@ -12,12 +12,11 @@ public enum IdElementalTypes implements IdType {
     DEFENCE_THUNDER(IsVariable.YES, "Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
     DEFENCE_WATER(IsVariable.YES, "Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense"),
 
-    // FIXME: check discrepancy between lore and api
-    DAMAGE_AIR(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "bonusAirDamage"),
-    DAMAGE_EARTH(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "bonusEarthDamage"),
-    DAMAGE_FIRE(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "bonusFireDamage"),
-    DAMAGE_THUNDER(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "bonusThunderDamage"),
-    DAMAGE_WATER(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "bonusWaterDamage"),
+    DAMAGE_AIR(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "airDamageBonus"),
+    DAMAGE_EARTH(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "earthDamageBonus"),
+    DAMAGE_FIRE(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "fireDamageBonus"),
+    DAMAGE_THUNDER(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
+    DAMAGE_WATER(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "waterDamageBonus"),
 
     // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
     DAMAGE_SPELL_AIR_PERCENT(
@@ -67,7 +66,7 @@ public enum IdElementalTypes implements IdType {
             "SPELLAIRDAMAGEBONUSRAW",
             "spellAirDamageBonusRaw"),
 
-    // Check lore with e.g. Spearmint. Missing from Athena
+    // Check lore with e.g. Spearmint or Darting Blur. Missing from Athena
     DAMAGE_MAIN_AIR_RAW(
             IsVariable.YES, "Air Main Attack Damage", null, "MISSING", "FIXME:UNKNOWN", "mainAttackAirDamageBonusRaw"),
     DAMAGE_MAIN_EARTH_RAW(
@@ -99,6 +98,7 @@ public enum IdElementalTypes implements IdType {
             "FIXME:UNKNOWN",
             "mainAttackWaterDamageBonusRaw"),
 
+    // FIXME: check lore with Wind Spine
     DAMAGE_MAIN_AIR_PERCENT(
             IsVariable.YES, "Air Main Attack Damage", "%", "airDamage", "FIXME:UNKNOWN", "mainAttackAirDamageBonus"),
     DAMAGE_MAIN_EARTH_PERCENT(
