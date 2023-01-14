@@ -21,8 +21,10 @@ import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
+import com.wynntils.wynn.model.gear.IdElementalTypes;
+import com.wynntils.wynn.model.gear.IdMiscTypes;
+import com.wynntils.wynn.model.gear.IdSkillTypes;
 import com.wynntils.wynn.model.gear.IdSpellTypes;
-import com.wynntils.wynn.model.gear.IdStatTypes;
 import com.wynntils.wynn.model.gear.IdType;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
@@ -77,7 +79,10 @@ public final class GearItemManager extends Manager {
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
     private static final Pattern ID_NEW_PATTERN =
-            Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? §r§7(.*)$");
+            Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+
+    private static final Pattern RANGE_PATTERN =
+            Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
     public GearItemManager() {
         super(List.of());
@@ -92,7 +97,7 @@ public final class GearItemManager extends Manager {
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
-        lore.remove(0); // remove item name
+        Component realName = lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
         for (Component loreLine : lore) {
@@ -126,6 +131,22 @@ public final class GearItemManager extends Manager {
             }
 
             // Look for identifications
+
+            GearIdentificationContainer idContainer = null;
+            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
+            if (identificationMatcher.find()) {
+                String idName = WynnItemMatchers.getShortIdentificationName(
+                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
+                int value = Integer.parseInt(identificationMatcher.group("Value"));
+                int stars = identificationMatcher.group("Stars").length();
+                identifications.add(new GearIdentification(idName, value, stars));
+
+                // This is partially overlapping with GearIdentification, sort this out later
+                idContainer = identificationFromLore(loreLine, gearProfile);
+                if (idContainer == null) continue;
+                idContainers.add(idContainer);
+            }
+
             String formatId = ComponentUtils.getCoded(loreLine);
             Matcher id2Matcher = ID_NEW_PATTERN.matcher(formatId);
             if (id2Matcher.matches()) {
@@ -137,25 +158,63 @@ public final class GearItemManager extends Manager {
                 int stars = starsString == null ? 0 : starsString.length();
 
                 IdType type = getIdType(idName, unit);
+                String name2 = ComponentUtils.getUnformatted(realName);
                 if (type == null) {
-                    System.out.println("MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
-                            + (isNegative ? "negative" : "positive") + ", stars: " + stars);
+                    System.out.println(
+                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
+                                    + (isNegative ? "negative" : "positive") + ", stars: " + stars);
+                    continue;
                 } else {
-                    System.out.println("Got " + type.getKey());
+                    //       System.out.println("Got " + type.getKey());
+                }
+                if (name2.contains("Unidentified")) {
+                    if (type.getIsVariable() == IdType.IsVariable.UNKNOWN) {
+                        if (type == IdMiscTypes.ATTACK_SPEED) {
+                            System.out.println("check me");
+                        }
+                        boolean containsRange = unformattedLoreLine.contains(" to ");
+                        System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
+                                + idContainer.identification().isFixed());
+                    }
+                }
+                if (type == null) {
+                    System.out.println(
+                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
+                                    + (isNegative ? "negative" : "positive") + ", stars: " + stars);
+                } else {
+                    //       System.out.println("Got " + type.getKey());
                 }
             }
-            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-            if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
-                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
-                int value = Integer.parseInt(identificationMatcher.group("Value"));
-                int stars = identificationMatcher.group("Stars").length();
-                identifications.add(new GearIdentification(idName, value, stars));
 
-                // This is partially overlapping with GearIdentification, sort this out later
-                GearIdentificationContainer idContainer = identificationFromLore(loreLine, gearProfile);
-                if (idContainer == null) continue;
-                idContainers.add(idContainer);
+            Matcher id3Matcher = RANGE_PATTERN.matcher(formatId);
+            if (id3Matcher.matches()) {
+                boolean isNegative = id3Matcher.group(1).charAt(0) == 'c';
+                int value = Integer.parseInt(id3Matcher.group(2));
+                int valueMax = Integer.parseInt(id3Matcher.group(3));
+                String idName = id3Matcher.group(5);
+                String unit = id3Matcher.group(4);
+                //                String starsString = id3Matcher.group(4);
+                //              int stars = starsString == null ? 0 : starsString.length();
+
+                IdType type = getIdType(idName, unit);
+                String name2 = ComponentUtils.getUnformatted(realName);
+                //                if (name2.contains("Unidentified")) {
+                if (type.getIsVariable() == IdType.IsVariable.UNKNOWN || type.getIsVariable() == IdType.IsVariable.NO) {
+                    if (type == IdMiscTypes.ATTACK_SPEED) {
+                        System.out.println("check me");
+                    }
+                    boolean containsRange = unformattedLoreLine.contains(" to ");
+                    System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
+                            + idContainer.identification().isFixed());
+                }
+                //    }
+                if (type == null) {
+                    System.out.println(
+                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
+                                    + (isNegative ? "negative" : "positive"));
+                } else {
+                    //       System.out.println("Got " + type.getKey());
+                }
             }
         }
 
@@ -163,13 +222,24 @@ public final class GearItemManager extends Manager {
     }
 
     private IdType getIdType(String idName, String unit) {
-        for (IdStatTypes statType : IdStatTypes.values()) {
+        for (IdMiscTypes statType : IdMiscTypes.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-
+        for (IdSkillTypes statType : IdSkillTypes.values()) {
+            if (statType.getDisplayName().equals(idName)) {
+                if (statType.getUnit() == null && unit == null) return statType;
+                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
+            }
+        }
+        for (IdElementalTypes statType : IdElementalTypes.values()) {
+            if (statType.getDisplayName().equals(idName)) {
+                if (statType.getUnit() == null && unit == null) return statType;
+                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
+            }
+        }
         for (IdSpellTypes spellType : IdSpellTypes.spellTypeIds) {
             if (spellType.getDisplayName().equals(idName)) {
                 if (spellType.getUnit() == null && unit == null) return spellType;
