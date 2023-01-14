@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.model.gear;
 
+import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public class IdSpellTypes implements IdType {
     public static final List<IdSpellTypes> spellTypeIds = new ArrayList<>();
 
     private final SpellType spellType;
+    private final String key;
     private final String displayName;
     private final String unit;
     private final String athenaName;
@@ -23,8 +25,15 @@ public class IdSpellTypes implements IdType {
     }
 
     IdSpellTypes(
-            SpellType spellType, String displayName, String unit, String athenaName, String loreName, String apiName) {
+            SpellType spellType,
+            String key,
+            String displayName,
+            String unit,
+            String athenaName,
+            String loreName,
+            String apiName) {
         this.spellType = spellType;
+        this.key = key;
         this.displayName = displayName;
         this.unit = unit;
         this.athenaName = athenaName;
@@ -33,10 +42,10 @@ public class IdSpellTypes implements IdType {
     }
 
     private static void generate() {
-        // can also be "§a+1§r§7 {sp1} Cost"
         for (var spellType : SpellType.values()) {
+            int spellNumber = spellType.getSpellNumber();
             String ordinal =
-                    switch (spellType.getSpellNumber()) {
+                    switch (spellNumber) {
                         case 1 -> "1st";
                         case 2 -> "2nd";
                         case 3 -> "3rd";
@@ -45,41 +54,48 @@ public class IdSpellTypes implements IdType {
                     };
             String athenaName = ordinal + "SpellCost";
             String displayName = spellType.getName() + " Cost";
-            // FIXME: figure out lore and api name
 
-    /*
-
-    "SPELL_COST_RAW_1" -> "raw1stSpellCost"
-    "SPELL_COST_RAW_2" -> "raw2ndSpellCost"
-    "SPELL_COST_RAW_3" -> "raw3rdSpellCost"
-    "SPELL_COST_RAW_4" -> "raw4thSpellCost"
-    "SPELL_COST_PCT_1" -> "1stSpellCost"
-    "SPELL_COST_PCT_2" -> "2ndSpellCost"
-    "SPELL_COST_PCT_3" -> "3rdSpellCost"
-    "SPELL_COST_PCT_4" -> "4thSpellCost"
-     */
-
-
-            IdSpellTypes percentType = new IdSpellTypes(spellType, displayName, "%", athenaName, null, null);
+            IdSpellTypes percentType = new IdSpellTypes(
+                    spellType,
+                    spellType.name() + "_COST_PERCENT",
+                    displayName,
+                    "%",
+                    athenaName,
+                    "SPELL_COST_PCT_" + spellNumber,
+                    "spellCostPct" + spellNumber);
             spellTypeIds.add(percentType);
-            IdSpellTypes rawType = new IdSpellTypes(spellType, displayName, null, "raw" + athenaName, null, null);
+            IdSpellTypes rawType = new IdSpellTypes(
+                    spellType,
+                    spellType.name() + "_COST_RAW",
+                    displayName,
+                    null,
+                    "raw" + athenaName,
+                    "SPELL_COST_RAW_" + spellNumber,
+                    "spellCostRaw" + spellNumber);
             spellTypeIds.add(rawType);
+            if (spellType.getClassType() == ClassType.None) {
+                // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
+                IdSpellTypes rawTypeAlias = new IdSpellTypes(
+                        spellType,
+                        spellType.name() + "_COST_RAW_ALIAS",
+                        "{sp" + spellNumber + "} Cost",
+                        null,
+                        "raw" + athenaName,
+                        "SPELL_COST_RAW_" + spellNumber,
+                        "spellCostRaw" + spellNumber);
+                spellTypeIds.add(rawTypeAlias);
+            }
         }
     }
 
     @Override
     public String getKey() {
-        if (unit == null) {
-            return spellType.name() + "_COST_RAW";
-        } else {
-            return spellType.name() + "_COST_PERCENT";
-        }
+        return key;
     }
 
     @Override
     public IsVariable getIsVariable() {
-        // spellCostRaw4 == variable!
-        return IsVariable.UNKNOWN;
+        return IsVariable.YES;
     }
 
     @Override
