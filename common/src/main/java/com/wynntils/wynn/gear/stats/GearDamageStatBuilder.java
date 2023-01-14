@@ -10,52 +10,47 @@ import com.wynntils.wynn.gear.GearDamageType;
 import com.wynntils.wynn.gear.GearStatUnit;
 import java.util.List;
 
-public class GearDamageStatBuilder implements GearStat {
-    public GearDamageStatBuilder(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
-        this.attackType = attackType;
-        this.damageType = damageType;
-        this.unit = unit;
-
-        this.apiName = buildApiName(attackType, damageType, unit);
-        this.displayName = buildDisplayName(attackType, damageType);
-        this.key = buildKey(attackType, damageType, unit);
-    }
-
-
-    private String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
-        return CaseFormat.UPPER_CAMEL.to(
-                CaseFormat.LOWER_CAMEL,
-                attackType.getApiName() + damageType.getApiName() + (unit == GearStatUnit.RAW ? "Raw" : ""));
-    }
-
-    private String buildKey(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
-        return "DAMAGE_" + attackType.name() + "_" + damageType.name() + "_" + unit.name();
-    }
-
-    private String buildDisplayName(GearAttackType attackType, GearDamageType damageType) {
-        return damageType.getDisplayName() + attackType.getDisplayName() + "Damage";
-    }
-
+public class GearDamageStatBuilder {
     public static void addStats(List<GearStat> registry) {
         for (GearAttackType attackType : GearAttackType.values()) {
             for (GearDamageType damageType : GearDamageType.values()) {
-                GearDamageStatBuilder rawType = new GearDamageStatBuilder(attackType, damageType, GearStatUnit.RAW);
+                GearStatHolder rawType = buildDamageStat(attackType, damageType, GearStatUnit.RAW);
                 registry.add(rawType);
-                GearDamageStatBuilder percentType = new GearDamageStatBuilder(attackType, damageType, GearStatUnit.PERCENT);
+
+                GearStatHolder percentType = buildDamageStat(attackType, damageType, GearStatUnit.PERCENT);
                 registry.add(percentType);
             }
         }
     }
 
-    GearAttackType attackType;
-    GearDamageType damageType;
-    private final GearStatUnit unit;
+    private static GearStatHolder buildDamageStat(
+            GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        GearStatHolder rawType;
+        String apiName = buildApiName(attackType, damageType, unit);
+        rawType = new GearStatHolder(
+                buildKey(attackType, damageType, unit),
+                buildDisplayName(attackType, damageType),
+                apiName,
+                buildLoreName(apiName),
+                unit);
+        return rawType;
+    }
 
-    private final String displayName;
-    private final String apiName;
-    private final String key;
+    private static String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        return CaseFormat.UPPER_CAMEL.to(
+                CaseFormat.LOWER_CAMEL,
+                attackType.getApiName() + damageType.getApiName() + (unit == GearStatUnit.RAW ? "Raw" : ""));
+    }
 
-    private static String generateLoreName(String apiName) {
+    private static String buildKey(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        return "DAMAGE_" + attackType.name() + "_" + damageType.name() + "_" + unit.name();
+    }
+
+    private static String buildDisplayName(GearAttackType attackType, GearDamageType damageType) {
+        return damageType.getDisplayName() + attackType.getDisplayName() + "Damage";
+    }
+
+    private static String buildLoreName(String apiName) {
         return switch (apiName) {
                 // A few damage stats do not follow normal rules
             case "spellDamageBonus" -> "SPELLDAMAGE";
@@ -71,30 +66,5 @@ public class GearDamageStatBuilder implements GearStat {
 
             default -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, apiName);
         };
-    }
-
-    @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    @Override
-    public GearStatUnit getUnit() {
-        return unit;
-    }
-
-    @Override
-    public String getLoreName() {
-        return generateLoreName(apiName);
-    }
-
-    @Override
-    public String getApiName() {
-        return apiName;
     }
 }
