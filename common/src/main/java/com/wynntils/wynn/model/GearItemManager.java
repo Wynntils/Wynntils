@@ -200,9 +200,9 @@ public final class GearItemManager extends Manager {
 
     private GearStat getIdType(String idName, String unit) {
         for (GearStat statType : GearStatRegistry.registry) {
-            if (statType.getDisplayName().equals(idName)) {
-                if (statType.getUnit() == null && unit == null) return statType;
-                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
+            if (statType.displayName().equals(idName)) {
+                if (statType.unit() == null && unit == null) return statType;
+                if (statType.unit() != null && statType.unit().equals(unit)) return statType;
             }
         }
 

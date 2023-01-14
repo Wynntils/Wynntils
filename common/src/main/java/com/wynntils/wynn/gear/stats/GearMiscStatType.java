@@ -8,59 +8,59 @@ import com.wynntils.wynn.gear.GearStatUnit;
 import java.util.Locale;
 
 public enum GearMiscStatType {
-    HEALTH("Health", GearStatUnit.RAW, "healthBonus"),
-    HEALTH_REGEN_PERCENT("Health Regen", GearStatUnit.PERCENT, "healthRegen"),
-    HEALTH_REGEN_RAW("Health Regen", GearStatUnit.RAW, "healthRegenRaw"),
-    LIFE_STEAL("Life Steal", GearStatUnit.PER_3_S, "lifeSteal"),
+    HEALTH("Health", "healthBonus", GearStatUnit.RAW),
+    HEALTH_REGEN_PERCENT("Health Regen", "healthRegen", GearStatUnit.PERCENT),
+    HEALTH_REGEN_RAW("Health Regen", "healthRegenRaw", GearStatUnit.RAW),
+    LIFE_STEAL("Life Steal", "lifeSteal", GearStatUnit.PER_3_S),
 
-    MANA_REGEN("Mana Regen", GearStatUnit.PER_5_S, "manaRegen"),
-    MANA_STEAL("Mana Steal", GearStatUnit.PER_3_S, "manaSteal"),
+    MANA_REGEN("Mana Regen", "manaRegen", GearStatUnit.PER_5_S),
+    MANA_STEAL("Mana Steal", "manaSteal", GearStatUnit.PER_3_S),
 
-    WALK_SPEED("Walk Speed", GearStatUnit.PERCENT, "speed"),
-    SPRINT("Sprint", GearStatUnit.PERCENT, "sprint", "STAMINA"),
-    SPRINT_REGEN("Sprint Regen", GearStatUnit.PERCENT, "sprintRegen", "STAMINA_REGEN"),
+    WALK_SPEED("Walk Speed", "speed", GearStatUnit.PERCENT),
+    SPRINT("Sprint", "sprint", GearStatUnit.PERCENT, "STAMINA"),
+    SPRINT_REGEN("Sprint Regen", "sprintRegen", GearStatUnit.PERCENT, "STAMINA_REGEN"),
 
-    THORNS("Thorns", GearStatUnit.PERCENT, "thorns"),
-    EXPLODING("Exploding", GearStatUnit.PERCENT, "exploding"),
-    POISON("Poison", GearStatUnit.PER_3_S, "poison"),
-    REFLECTION("Reflection", GearStatUnit.PERCENT, "reflection"),
+    THORNS("Thorns", "thorns", GearStatUnit.PERCENT),
+    EXPLODING("Exploding", "exploding", GearStatUnit.PERCENT),
+    POISON("Poison", "poison", GearStatUnit.PER_3_S),
+    REFLECTION("Reflection", "reflection", GearStatUnit.PERCENT),
 
-    STEALING("Stealing", GearStatUnit.PERCENT, "emeraldStealing"),
-    ATTACK_SPEED("Attack Speed", GearStatUnit.TIER, "attackSpeedBonus", "ATTACKSPEED"),
-    JUMP_HEIGHT("Jump Height", GearStatUnit.RAW, "jumpHeight", "JUMP_HEIGHT"),
-    LOOT_BONUS("Loot Bonus", GearStatUnit.PERCENT, "lootBonus"),
-    SOUL_POINT_REGEN("Soul Point Regen", GearStatUnit.PERCENT, "soulPoints"),
-    XP_BONUS("XP Bonus", GearStatUnit.PERCENT, "xpBonus");
+    STEALING("Stealing", "emeraldStealing", GearStatUnit.PERCENT),
+    ATTACK_SPEED("Attack Speed", "attackSpeedBonus", GearStatUnit.TIER, "ATTACKSPEED"),
+    JUMP_HEIGHT("Jump Height", "jumpHeight", GearStatUnit.RAW, "JUMP_HEIGHT"),
+    LOOT_BONUS("Loot Bonus", "lootBonus", GearStatUnit.PERCENT),
+    SOUL_POINT_REGEN("Soul Point Regen", "soulPoints", GearStatUnit.PERCENT),
+    XP_BONUS("XP Bonus", "xpBonus", GearStatUnit.PERCENT);
 
     private final String displayName;
+    private final String apiName;
     private final GearStatUnit unit;
     private final String loreName;
-    private final String apiName;
 
-    GearMiscStatType(String displayName, GearStatUnit unit, String apiName, String loreName) {
+    GearMiscStatType(String displayName, String apiName, GearStatUnit unit, String loreName) {
         this.displayName = displayName;
-        this.unit = unit;
         this.apiName = apiName;
+        this.unit = unit;
         this.loreName = loreName;
     }
 
-    GearMiscStatType(String displayName, GearStatUnit unit, String apiName) {
-        this(displayName, unit, apiName, apiName.toUpperCase(Locale.ROOT));
+    GearMiscStatType(String displayName, String apiName, GearStatUnit unit) {
+        this(displayName, apiName, unit, apiName.toUpperCase(Locale.ROOT));
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public GearStatUnit getUnit() {
-        return unit;
+    public String getApiName() {
+        return apiName;
     }
 
     public String getLoreName() {
         return loreName;
     }
-
-    public String getApiName() {
-        return apiName;
+    public GearStatUnit getUnit() {
+        return unit;
     }
+
 }
