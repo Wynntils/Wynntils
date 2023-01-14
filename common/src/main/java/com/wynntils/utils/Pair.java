@@ -10,6 +10,14 @@ import java.util.Objects;
  * The Pair Type Holds 1 field of type T and 1 field of type J
  */
 public record Pair<T, J>(T a, J b) {
+    // Convenience aliases for typical usage
+    public T key() {
+        return a;
+    }
+
+    public J value() {
+        return b;
+    }
 
     @Override
     public String toString() {

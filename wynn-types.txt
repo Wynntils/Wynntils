@@ -8,7 +8,7 @@ BASIC:
 * "tier" -- rarity level
 * "sockets" -- fixed, number of powder slots, an integer
 
-"identified" -- if "true" then ID numbers are fixed, not baseline
+"identified" -- if "true" then we set all idstats to a N-N range
 
 META:
 "dropType" -- string "never", "NORMAL" or "lootchest"
@@ -41,7 +41,6 @@ REQUIREMENTS
 
 FIXED STATS:
 "health" -- fixed, gives additional health
-"damage" -- neutral spell damage, range
 "attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
 "majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
 
@@ -51,6 +50,7 @@ FIXED STATS:
 "intelligencePoints" -- fixed, gives extra skill points
 "strengthPoints" -- fixed, gives extra skill points
 
+"damage" -- neutral damage, range
 "airDamage" -- fixed, range, elemental damage for a weapon
 "earthDamage" -- fixed, range, elemental damage for a weapon
 "fireDamage" -- fixed, range, elemental damage for a weapon

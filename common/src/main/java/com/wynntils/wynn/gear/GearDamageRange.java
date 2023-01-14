@@ -4,4 +4,6 @@
  */
 package com.wynntils.wynn.gear;
 
-public class GearStatsIdentified {}
+public record GearDamageRange(int low, int high) {
+    public static final GearDamageRange NONE = new GearDamageRange(0, 0);
+}

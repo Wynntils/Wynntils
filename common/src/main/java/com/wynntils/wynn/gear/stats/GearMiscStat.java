@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.gear;
+package com.wynntils.wynn.gear.stats;
 
-public enum IdMiscTypes implements IdType {
+public enum GearMiscStat implements GearStat {
     /*
     THESE HAVE SUSPICIOUS LORE:
 
@@ -125,7 +125,7 @@ public enum IdMiscTypes implements IdType {
     private final String loreName;
     private final String apiName;
 
-    IdMiscTypes(
+    GearMiscStat(
             IsVariable isVariable,
             String displayName,
             String unit,

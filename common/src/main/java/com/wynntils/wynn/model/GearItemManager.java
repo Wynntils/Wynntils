@@ -17,15 +17,14 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
+import com.wynntils.wynn.gear.stats.GearElementalStat;
+import com.wynntils.wynn.gear.stats.GearMiscStat;
+import com.wynntils.wynn.gear.stats.GearSpellStat;
+import com.wynntils.wynn.gear.stats.GearStat;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
-import com.wynntils.wynn.model.gear.IdElementalTypes;
-import com.wynntils.wynn.model.gear.IdMiscTypes;
-import com.wynntils.wynn.model.gear.IdSkillTypes;
-import com.wynntils.wynn.model.gear.IdSpellTypes;
-import com.wynntils.wynn.model.gear.IdType;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.SpellType;
@@ -157,7 +156,7 @@ public final class GearItemManager extends Manager {
                 String starsString = id2Matcher.group(4);
                 int stars = starsString == null ? 0 : starsString.length();
 
-                IdType type = getIdType(idName, unit);
+                GearStat type = getIdType(idName, unit);
                 String name2 = ComponentUtils.getUnformatted(realName);
                 if (type == null) {
                     System.out.println(
@@ -168,7 +167,7 @@ public final class GearItemManager extends Manager {
                     //       System.out.println("Got " + type.getKey());
                 }
                 if (name2.contains("Unidentified")) {
-                    if (type.getIsVariable() == IdType.IsVariable.UNKNOWN) {
+                    if (type.getIsVariable() == GearStat.IsVariable.UNKNOWN) {
                         boolean containsRange = unformattedLoreLine.contains(" to ");
                         System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
                                 + idContainer.identification().isFixed());
@@ -193,10 +192,11 @@ public final class GearItemManager extends Manager {
                 //                String starsString = id3Matcher.group(4);
                 //              int stars = starsString == null ? 0 : starsString.length();
 
-                IdType type = getIdType(idName, unit);
+                GearStat type = getIdType(idName, unit);
                 String name2 = ComponentUtils.getUnformatted(realName);
                 //                if (name2.contains("Unidentified")) {
-                if (type.getIsVariable() == IdType.IsVariable.UNKNOWN || type.getIsVariable() == IdType.IsVariable.NO) {
+                if (type.getIsVariable() == GearStat.IsVariable.UNKNOWN
+                        || type.getIsVariable() == GearStat.IsVariable.NO) {
                     boolean containsRange = unformattedLoreLine.contains(" to ");
                     System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
                             + idContainer.identification().isFixed());
@@ -215,26 +215,26 @@ public final class GearItemManager extends Manager {
         return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
     }
 
-    private IdType getIdType(String idName, String unit) {
-        for (IdMiscTypes statType : IdMiscTypes.values()) {
+    private GearStat getIdType(String idName, String unit) {
+        for (GearMiscStat statType : GearMiscStat.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (IdSkillTypes statType : IdSkillTypes.values()) {
+        for (GearSkillStat statType : GearSkillStat.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (IdElementalTypes statType : IdElementalTypes.values()) {
+        for (GearElementalStat statType : GearElementalStat.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (IdSpellTypes statType : IdSpellTypes.spellTypeIds) {
+        for (GearSpellStat statType : GearSpellStat.spellTypeIds) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;

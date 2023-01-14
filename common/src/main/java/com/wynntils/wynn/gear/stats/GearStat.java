@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.gear;
+package com.wynntils.wynn.gear.stats;
 
-public interface IdType {
+public interface GearStat {
     String getKey();
 
     IsVariable getIsVariable();

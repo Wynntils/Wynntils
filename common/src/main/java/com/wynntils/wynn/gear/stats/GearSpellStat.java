@@ -2,15 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.gear;
+package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdSpellTypes implements IdType {
-    public static final List<IdSpellTypes> spellTypeIds = new ArrayList<>();
+public class GearSpellStat implements GearStat {
+    public static final List<GearSpellStat> spellTypeIds = new ArrayList<>();
 
     private final SpellType spellType;
     private final String key;
@@ -24,7 +24,7 @@ public class IdSpellTypes implements IdType {
         generate();
     }
 
-    IdSpellTypes(
+    GearSpellStat(
             SpellType spellType,
             String key,
             String displayName,
@@ -55,7 +55,7 @@ public class IdSpellTypes implements IdType {
             String athenaName = ordinal + "SpellCost";
             String displayName = spellType.getName() + " Cost";
 
-            IdSpellTypes percentType = new IdSpellTypes(
+            GearSpellStat percentType = new GearSpellStat(
                     spellType,
                     spellType.name() + "_COST_PERCENT",
                     displayName,
@@ -64,7 +64,7 @@ public class IdSpellTypes implements IdType {
                     "SPELL_COST_PCT_" + spellNumber,
                     "spellCostPct" + spellNumber);
             spellTypeIds.add(percentType);
-            IdSpellTypes rawType = new IdSpellTypes(
+            GearSpellStat rawType = new GearSpellStat(
                     spellType,
                     spellType.name() + "_COST_RAW",
                     displayName,
@@ -75,7 +75,7 @@ public class IdSpellTypes implements IdType {
             spellTypeIds.add(rawType);
             if (spellType.getClassType() == ClassType.None) {
                 // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
-                IdSpellTypes rawTypeAlias = new IdSpellTypes(
+                GearSpellStat rawTypeAlias = new GearSpellStat(
                         spellType,
                         spellType.name() + "_COST_RAW_ALIAS",
                         "{sp" + spellNumber + "} Cost",

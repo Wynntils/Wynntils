@@ -4,16 +4,18 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.utils.Pair;
+import com.wynntils.wynn.gear.stats.GearStat;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.GearType;
+import java.util.List;
 
 public record GearInfo(
         String name,
         GearType type,
         GearTier tier,
         int powderSlots,
-        boolean idsAreFixed,
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         GearStatsFixed statsFixed,
-        GearStatsIdentified statsIdentified) {}
+        List<Pair<GearStat, GearDamageRange>> statsIdentified) {}

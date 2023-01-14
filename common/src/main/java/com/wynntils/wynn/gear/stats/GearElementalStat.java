@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.gear;
+package com.wynntils.wynn.gear.stats;
 
-public enum IdElementalTypes implements IdType {
+public enum GearElementalStat implements GearStat {
     // FIXME: check discrepancy between lore and api
     DEFENCE_AIR(IsVariable.YES, "Air Defence", "%", "airDefence", "AIRDEFENSE", "bonusAirDefense"),
     DEFENCE_EARTH(IsVariable.YES, "Earth Defence", "%", "earthDefence", "EARTHDEFENSE", "bonusEarthDefense"),
@@ -143,7 +143,7 @@ public enum IdElementalTypes implements IdType {
     private final String loreName;
     private final String apiName;
 
-    IdElementalTypes(
+    GearElementalStat(
             IsVariable isVariable,
             String displayName,
             String unit,
