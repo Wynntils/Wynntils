@@ -50,7 +50,6 @@ public final class Managers {
     public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
-    public static final GearInfoManager GearInfo = new GearInfoManager();
     public static final GearItemManager GearItem = new GearItemManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
@@ -61,6 +60,7 @@ public final class Managers {
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
+    public static final GearInfoManager GearInfo = new GearInfoManager(Net);
     public static final GearProfilesManager GearProfiles = new GearProfilesManager(Net, GearItem);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final QuestManager Quest = new QuestManager(Net);

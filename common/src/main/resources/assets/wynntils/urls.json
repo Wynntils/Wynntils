@@ -1,6 +1,6 @@
 [
   {
-    "version": 2
+    "version": 3
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -85,7 +85,7 @@
   },
   {
     "id": "dataStaticMajorIds",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json"
   },
   {
     "id": "dataStaticMaps",
@@ -110,6 +110,10 @@
   {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
+  },
+  {
+    "id": "dataWynncraftGears",
+    "url": "https://api.wynncraft.com/public_api.php?action=itemDB&category=all"
   },
   {
     "id": "linkWikiLookup",
