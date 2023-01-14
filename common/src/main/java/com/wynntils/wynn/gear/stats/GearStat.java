@@ -11,8 +11,6 @@ public interface GearStat {
 
     String getUnit();
 
-    String getAthenaName();
-
     String getLoreName();
 
     String getApiName();

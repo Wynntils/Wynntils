@@ -6,22 +6,20 @@ package com.wynntils.wynn.gear.stats;
 
 public enum GearDefenceStat implements GearStat {
     // FIXME: check discrepancy between lore and api
-    DEFENCE_AIR("Air Defence", "%", "airDefence", "AIRDEFENSE", "bonusAirDefense"),
-    DEFENCE_EARTH("Earth Defence", "%", "earthDefence", "EARTHDEFENSE", "bonusEarthDefense"),
-    DEFENCE_FIRE("Fire Defence", "%", "fireDefence", "FIREDEFENSE", "bonusFireDefense"),
-    DEFENCE_THUNDER("Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
-    DEFENCE_WATER("Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense");
+    DEFENCE_AIR("Air Defence", "%", "AIRDEFENSE", "bonusAirDefense"),
+    DEFENCE_EARTH("Earth Defence", "%", "EARTHDEFENSE", "bonusEarthDefense"),
+    DEFENCE_FIRE("Fire Defence", "%", "FIREDEFENSE", "bonusFireDefense"),
+    DEFENCE_THUNDER("Thunder Defence", "%", "THUNDERDEFENSE", "bonusThunderDefense"),
+    DEFENCE_WATER("Water Defence", "%", "WATERDEFENSE", "bonusWaterDefense");
 
     private final String displayName;
     private final String unit;
-    private final String athenaName;
     private final String loreName;
     private final String apiName;
 
-    GearDefenceStat(String displayName, String unit, String athenaName, String loreName, String apiName) {
+    GearDefenceStat(String displayName, String unit, String loreName, String apiName) {
         this.displayName = displayName;
         this.unit = unit;
-        this.athenaName = athenaName;
         this.loreName = loreName;
         this.apiName = apiName;
     }
@@ -39,11 +37,6 @@ public enum GearDefenceStat implements GearStat {
     @Override
     public String getUnit() {
         return unit;
-    }
-
-    @Override
-    public String getAthenaName() {
-        return athenaName;
     }
 
     @Override

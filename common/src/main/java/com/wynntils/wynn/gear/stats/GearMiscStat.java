@@ -48,43 +48,41 @@ public enum GearMiscStat implements GearStat {
     DAMAGE_MAIN_WATER_PERCENT
      */
 
-    HEALTH("Health", null, "rawHealth", "HEALTHBONUS", "healthBonus"),
-    HEALTH_REGEN_PERCENT("Health Regen", "%", "healthRegen", "HEALTHREGEN", "healthRegen"),
-    HEALTH_REGEN_RAW("Health Regen", null, "rawHealthRegen", "HEALTHREGENRAW", "healthRegenRaw"),
-    LIFE_STEAL("Life Steal", "/3s", "lifeSteal", "LIFESTEAL", "lifeSteal"),
+    HEALTH("Health", null, "HEALTHBONUS", "healthBonus"),
+    HEALTH_REGEN_PERCENT("Health Regen", "%", "HEALTHREGEN", "healthRegen"),
+    HEALTH_REGEN_RAW("Health Regen", null, "HEALTHREGENRAW", "healthRegenRaw"),
+    LIFE_STEAL("Life Steal", "/3s", "LIFESTEAL", "lifeSteal"),
 
-    MANA_REGEN("Mana Regen", "/5s", "manaRegen", "MANAREGEN", "manaRegen"),
-    MANA_STEAL("Mana Steal", "/3s", "manaSteal", "MANASTEAL", "manaSteal"),
+    MANA_REGEN("Mana Regen", "/5s", "MANAREGEN", "manaRegen"),
+    MANA_STEAL("Mana Steal", "/3s", "MANASTEAL", "manaSteal"),
 
-    WALK_SPEED("Walk Speed", "%", "walkSpeed", "SPEED", "speed"),
+    WALK_SPEED("Walk Speed", "%", "SPEED", "speed"),
     // FIXME: is lore correct for these two?
-    SPRINT("Sprint", "%", "sprint", "STAMINA", "sprint"),
-    SPRINT_REGEN("Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN", "sprintRegen"),
+    SPRINT("Sprint", "%", "STAMINA", "sprint"),
+    SPRINT_REGEN("Sprint Regen", "%", "STAMINA_REGEN", "sprintRegen"),
 
-    THORNS("Thorns", "%", "thorns", "THORNS", "thorns"),
-    EXPLODING("Exploding", "%", "exploding", "EXPLODING", "exploding"),
-    POISON("Poison", "/3s", "poison", "POISON", "poison"),
-    REFLECTION("Reflection", "%", "reflection", "REFLECTION", "reflection"),
+    THORNS("Thorns", "%", "THORNS", "thorns"),
+    EXPLODING("Exploding", "%", "EXPLODING", "exploding"),
+    POISON("Poison", "/3s", "POISON", "poison"),
+    REFLECTION("Reflection", "%", "REFLECTION", "reflection"),
 
-    STEALING("Stealing", "%", "stealing", "EMERALDSTEALING", "emeraldStealing"),
+    STEALING("Stealing", "%", "EMERALDSTEALING", "emeraldStealing"),
     // FIXME: is lore correct?
-    ATTACK_SPEED("Attack Speed", " tier", "attackSpeed", "ATTACKSPEED", "attackSpeedBonus"),
+    ATTACK_SPEED("Attack Speed", " tier", "ATTACKSPEED", "attackSpeedBonus"),
     // FIXME: is lore correct?
-    JUMP_HEIGHT("Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "jumpHeight"),
-    LOOT_BONUS("Loot Bonus", "%", "lootBonus", "LOOTBONUS", "lootBonus"),
-    SOUL_POINT_REGEN("Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),
-    XP_BONUS("XP Bonus", "%", "xpBonus", "XPBONUS", "xpBonus");
+    JUMP_HEIGHT("Jump Height", null, "JUMP_HEIGHT", "jumpHeight"),
+    LOOT_BONUS("Loot Bonus", "%", "LOOTBONUS", "lootBonus"),
+    SOUL_POINT_REGEN("Soul Point Regen", "%", "SOULPOINTS", "soulPoints"),
+    XP_BONUS("XP Bonus", "%", "XPBONUS", "xpBonus");
 
     private final String displayName;
     private final String unit;
-    private final String athenaName;
     private final String loreName;
     private final String apiName;
 
-    GearMiscStat(String displayName, String unit, String athenaName, String loreName, String apiName) {
+    GearMiscStat(String displayName, String unit, String loreName, String apiName) {
         this.displayName = displayName;
         this.unit = unit;
-        this.athenaName = athenaName;
         this.loreName = loreName;
         this.apiName = apiName;
     }
@@ -102,11 +100,6 @@ public enum GearMiscStat implements GearStat {
     @Override
     public String getUnit() {
         return unit;
-    }
-
-    @Override
-    public String getAthenaName() {
-        return athenaName;
     }
 
     @Override

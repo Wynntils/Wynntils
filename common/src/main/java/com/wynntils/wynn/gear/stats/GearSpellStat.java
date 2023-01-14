@@ -16,7 +16,6 @@ public class GearSpellStat implements GearStat {
     private final String key;
     private final String displayName;
     private final String unit;
-    private final String athenaName;
     private final String loreName;
     private final String apiName;
 
@@ -24,19 +23,11 @@ public class GearSpellStat implements GearStat {
         generate();
     }
 
-    GearSpellStat(
-            SpellType spellType,
-            String key,
-            String displayName,
-            String unit,
-            String athenaName,
-            String loreName,
-            String apiName) {
+    GearSpellStat(SpellType spellType, String key, String displayName, String unit, String loreName, String apiName) {
         this.spellType = spellType;
         this.key = key;
         this.displayName = displayName;
         this.unit = unit;
-        this.athenaName = athenaName;
         this.loreName = loreName;
         this.apiName = apiName;
     }
@@ -52,7 +43,6 @@ public class GearSpellStat implements GearStat {
                         case 4 -> "4th";
                         default -> throw new IllegalStateException("Bad SpellType");
                     };
-            String athenaName = ordinal + "SpellCost";
             String displayName = spellType.getName() + " Cost";
 
             GearSpellStat percentType = new GearSpellStat(
@@ -60,7 +50,6 @@ public class GearSpellStat implements GearStat {
                     spellType.name() + "_COST_PERCENT",
                     displayName,
                     "%",
-                    athenaName,
                     "SPELL_COST_PCT_" + spellNumber,
                     "spellCostPct" + spellNumber);
             spellTypeIds.add(percentType);
@@ -69,7 +58,6 @@ public class GearSpellStat implements GearStat {
                     spellType.name() + "_COST_RAW",
                     displayName,
                     null,
-                    "raw" + athenaName,
                     "SPELL_COST_RAW_" + spellNumber,
                     "spellCostRaw" + spellNumber);
             spellTypeIds.add(rawType);
@@ -80,7 +68,6 @@ public class GearSpellStat implements GearStat {
                         spellType.name() + "_COST_RAW_ALIAS",
                         "{sp" + spellNumber + "} Cost",
                         null,
-                        "raw" + athenaName,
                         "SPELL_COST_RAW_" + spellNumber,
                         "spellCostRaw" + spellNumber);
                 spellTypeIds.add(rawTypeAlias);
@@ -101,11 +88,6 @@ public class GearSpellStat implements GearStat {
     @Override
     public String getUnit() {
         return unit;
-    }
-
-    @Override
-    public String getAthenaName() {
-        return athenaName;
     }
 
     @Override
