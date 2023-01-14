@@ -469,6 +469,7 @@ public final class GearItemManager extends Manager {
         List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();
 
+        // Lore lines is: type: "LORETYPE", percent: <number>, where 100 is baseline, so can be > 100 and < 100.
         if (itemData.has("identifications")) {
             JsonArray ids = itemData.getAsJsonArray("identifications");
             for (int i = 0; i < ids.size(); i++) {

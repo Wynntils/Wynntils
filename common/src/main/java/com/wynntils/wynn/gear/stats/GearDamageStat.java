@@ -6,6 +6,11 @@ package com.wynntils.wynn.gear.stats;
 
 public enum GearDamageStat implements GearStat {
 
+    // Generate lore name:
+    // MAIN_ATTACK_AIR_DAMAGE_BONUS_RAW
+    // take api, convert lowerCamelCase to UPPER_CASE_UNDERSCORE.
+    // sometimes. But also: SPELLDAMAGERAW
+
     // DISPLAY NAME:
     // <element> <type> Damage
     // <element> is:
@@ -23,11 +28,12 @@ public enum GearDamageStat implements GearStat {
     // <type> <element> DamageBonus[Raw]
 
     // ELEMENT UNSPECIFIED, ATTACK TYPE SPECIFIED
-    // FIXME: lore???
+    // Lore confirmed OK
     DAMAGE_SPELL_PERCENT("Spell Damage", "%", "SPELLDAMAGE", "spellDamageBonus"),
+    // Lore confirmed OK
     DAMAGE_SPELL_RAW("Spell Damage", null, "SPELLDAMAGERAW", "spellDamageBonusRaw"),
 
-    // FIXME: lore??
+    // Lore confirmed OK
     DAMAGE_MAIN_ATTACK_PERCENT("Main Attack Damage", "%", "DAMAGEBONUS", "mainAttackDamageBonus"),
     DAMAGE_MAIN_ATTACK_RAW("Main Attack Damage", null, "DAMAGEBONUSRAW", "mainAttackDamageBonusRaw"),
 
@@ -41,6 +47,7 @@ public enum GearDamageStat implements GearStat {
 
     // ELEMENTAL
 
+    // Lore confirmed!!!
     DAMAGE_AIR_PERCENT("Air Damage", "%", "AIRDAMAGEBONUS", "airDamageBonus"),
     DAMAGE_EARTH_PERCENT("Earth Damage", "%", "EARTHDAMAGEBONUS", "earthDamageBonus"),
     DAMAGE_FIRE_PERCENT("Fire Damage", "%", "FIREDAMAGEBONUS", "fireDamageBonus"),
@@ -74,9 +81,11 @@ public enum GearDamageStat implements GearStat {
 
     // OK to here =====
     // SPELL ATTACK / SPELL DAMAGE
+    // LORE is WRONG, should be with _!!! as usual.
     DAMAGE_SPELL_NEUTRAL("Neutral Spell Damage", null, "SPELLNEUTRALDAMAGEBONUSRAW", "spellNeutralDamageBonusRaw"),
 
     // rainbow
+    // LORE is WRONG, should be with _!!! as usual.
     DAMAGE_SPELL_ELEMENTAL_PERCENT(
             "Elemental Spell Damage", "%", "SPELLELEMENTALDAMAGEBONUS", "spellElementalDamageBonus"),
     DAMAGE_SPELL_ELEMENTAL_RAW(

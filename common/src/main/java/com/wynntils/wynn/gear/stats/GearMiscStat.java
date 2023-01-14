@@ -53,11 +53,12 @@ public enum GearMiscStat implements GearStat {
     HEALTH_REGEN_RAW("Health Regen", null, "HEALTHREGENRAW", "healthRegenRaw"),
     LIFE_STEAL("Life Steal", "/3s", "LIFESTEAL", "lifeSteal"),
 
+    // type -> {JsonPrimitive@23815} ""MANAREGEN"" confirmed
     MANA_REGEN("Mana Regen", "/5s", "MANAREGEN", "manaRegen"),
     MANA_STEAL("Mana Steal", "/3s", "MANASTEAL", "manaSteal"),
 
     WALK_SPEED("Walk Speed", "%", "SPEED", "speed"),
-    // FIXME: is lore correct for these two?
+    // Lore confirmed
     SPRINT("Sprint", "%", "STAMINA", "sprint"),
     SPRINT_REGEN("Sprint Regen", "%", "STAMINA_REGEN", "sprintRegen"),
 
@@ -69,7 +70,7 @@ public enum GearMiscStat implements GearStat {
     STEALING("Stealing", "%", "EMERALDSTEALING", "emeraldStealing"),
     // FIXME: is lore correct?
     ATTACK_SPEED("Attack Speed", " tier", "ATTACKSPEED", "attackSpeedBonus"),
-    // FIXME: is lore correct?
+    // Lore confirmed
     JUMP_HEIGHT("Jump Height", null, "JUMP_HEIGHT", "jumpHeight"),
     LOOT_BONUS("Loot Bonus", "%", "LOOTBONUS", "lootBonus"),
     SOUL_POINT_REGEN("Soul Point Regen", "%", "SOULPOINTS", "soulPoints"),
