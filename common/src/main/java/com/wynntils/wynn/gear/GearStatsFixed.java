@@ -5,8 +5,8 @@
 package com.wynntils.wynn.gear;
 
 import com.wynntils.utils.Pair;
+import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.Skill;
-import com.wynntils.wynn.objects.profiles.item.DamageType;
 import com.wynntils.wynn.objects.profiles.item.GearAttackSpeed;
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +17,5 @@ public record GearStatsFixed(
         List<Pair<Skill, Integer>> skillBuffs,
         Optional<GearAttackSpeed> attackSpeed,
         List<String> majorIds,
-        List<Pair<DamageType, GearDamageRange>> damages,
-        List<Pair<DamageType, Integer>> defences) {}
+        List<Pair<GearDamageType, GearDamageRange>> damages,
+        List<Pair<Element, Integer>> defences) {}

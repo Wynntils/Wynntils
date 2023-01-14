@@ -17,7 +17,7 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wynn.gear.stats.GearElementalStat;
+import com.wynntils.wynn.gear.stats.GearDamageStat;
 import com.wynntils.wynn.gear.stats.GearMiscStat;
 import com.wynntils.wynn.gear.stats.GearSpellStat;
 import com.wynntils.wynn.gear.stats.GearStat;
@@ -228,7 +228,7 @@ public final class GearItemManager extends Manager {
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (GearElementalStat statType : GearElementalStat.values()) {
+        for (GearDamageStat statType : GearDamageStat.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;

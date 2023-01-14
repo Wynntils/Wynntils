@@ -48,49 +48,6 @@ public enum GearMiscStat implements GearStat {
     DAMAGE_MAIN_WATER_PERCENT
      */
 
-    // FIXME: missing from Athena. Check lore name, with e.g. Aleph null.
-    DAMAGE_ELEMANTAL(IsVariable.YES, "Elemental Damage", "%", "MISSING", "FIXME:UNKNOWN", "elementalDamageBonus"),
-    DAMAGE_SPELL_ELEMENTAL_PERCENT(
-            IsVariable.YES,
-            "Elemental Spell Damage",
-            "%",
-            "elementalSpellDamage",
-            "SPELLELEMENTALDAMAGEBONUS",
-            "spellElementalDamageBonus"),
-    DAMAGE_SPELL_ELEMENTAL_RAW(
-            IsVariable.YES,
-            "Elemental Spell Damage",
-            null,
-            "rawElementalSpellDamage",
-            "SPELLELEMENTALDAMAGEBONUSRAW",
-            "spellElementalDamageBonusRaw"),
-
-    // FIXME: these two: check Axion. Missing in Athena.
-    DAMAGE_ELEMENTAL(IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "elementalDamageBonusRaw"),
-    DAMAGE_MAIN_ATTACK_ELEMENTAL(
-            IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "mainAttackElementalDamageBonusRaw"),
-
-    DAMAGE_SPELL_NEUTRAL(
-            IsVariable.YES,
-            "Neutral Spell Damage",
-            null,
-            "rawNeutralSpellDamage",
-            "SPELLNEUTRALDAMAGEBONUSRAW",
-            "spellNeutralDamageBonusRaw"),
-    // FIXME: lore??
-    DAMAGE_MAIN_ATTACK_PERCENT(
-            IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "mainAttackDamageBonus"),
-    DAMAGE_MAIN_ATTACK_RAW(
-            IsVariable.YES,
-            "Main Attack Damage",
-            null,
-            "rawMainAttackDamage",
-            "DAMAGEBONUSRAW",
-            "mainAttackDamageBonusRaw"),
-    // FIXME: lore???
-    DAMAGE_SPELL_PERCENT(IsVariable.YES, "Spell Damage", "%", "spellDamage", "SPELLDAMAGE", "spellDamageBonus"),
-    DAMAGE_SPELL_RAW(IsVariable.YES, "Spell Damage", null, "rawSpellDamage", "SPELLDAMAGERAW", "spellDamageBonusRaw"),
-
     HEALTH(IsVariable.YES, "Health", null, "rawHealth", "HEALTHBONUS", "healthBonus"),
     HEALTH_REGEN_PERCENT(IsVariable.YES, "Health Regen", "%", "healthRegen", "HEALTHREGEN", "healthRegen"),
     HEALTH_REGEN_RAW(IsVariable.YES, "Health Regen", null, "rawHealthRegen", "HEALTHREGENRAW", "healthRegenRaw"),
