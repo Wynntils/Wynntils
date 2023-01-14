@@ -5,16 +5,17 @@
 package com.wynntils.wynn.gear;
 
 public enum GearAttackType {
-    ANY("", ""),
-    MAIN_ATTACK("Main Attack ", "MainAttack"),
-    SPELL("Spell ", "Spell");
+    ANY(""),
+    MAIN_ATTACK("Main Attack"),
+    SPELL("Spell");
 
     private final String displayName;
     private final String apiName;
 
-    GearAttackType(String displayName, String apiName) {
-        this.displayName = displayName;
-        this.apiName = apiName;
+    GearAttackType(String name) {
+        // displayName needs padding if non-empty
+        this.displayName = name.isEmpty() ? "" : name + " ";
+        this.apiName = name.replace(" ", "");
     }
 
     public String getDisplayName() {

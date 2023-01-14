@@ -95,7 +95,7 @@ public final class GearItemManager extends Manager {
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
-        Component realName = lore.remove(0); // remove item name
+        lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
         for (Component loreLine : lore) {
@@ -155,13 +155,10 @@ public final class GearItemManager extends Manager {
                 String starsString = id2Matcher.group(4);
                 int stars = starsString == null ? 0 : starsString.length();
 
-                GearStat type = getIdType(idName, unit);
-                String name2 = ComponentUtils.getUnformatted(realName);
-                if (type == null) {
-                    // it can be a skill point buff
-                    if (isSkill(idName)) {
-                        // FIXME: handle... ?
-                    }
+                GearStat type = GearStatRegistry.getIdType(idName, unit);
+                if (type == null && isSkill(idName)) {
+                    // Skill point buff looks like stats when parsing
+                    // FIXME: Handle
                 }
             }
 
@@ -175,13 +172,10 @@ public final class GearItemManager extends Manager {
                 String unitMatch = id3Matcher.group(4);
                 String unit = unitMatch == null ? "" : unitMatch;
 
-                GearStat type = getIdType(idName, unit);
-                String name2 = ComponentUtils.getUnformatted(realName);
-                if (type == null) {
-                    // it can be a skill point buff
-                    if (isSkill(idName)) {
-                        // FIXME: Handle
-                    }
+                GearStat type = GearStatRegistry.getIdType(idName, unit);
+                if (type == null && isSkill(idName)) {
+                    // Skill point buff looks like stats when parsing
+                    // FIXME: Handle
                 }
             }
         }
@@ -196,17 +190,6 @@ public final class GearItemManager extends Manager {
             }
         }
         return false;
-    }
-
-    private GearStat getIdType(String idName, String unit) {
-        for (GearStat statType : GearStatRegistry.registry) {
-            if (statType.displayName().equals(idName)
-                    && statType.unit().getDisplayName().equals(unit)) {
-                return statType;
-            }
-        }
-
-        return null;
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {

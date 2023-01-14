@@ -5,29 +5,38 @@
 package com.wynntils.wynn.gear;
 
 import com.wynntils.wynn.objects.Element;
+import java.util.Optional;
 
 public enum GearDamageType {
-    ANY(null, "", ""),
-    NEUTRAL(null, "Neutral ", "Neutral"),
-    RAINBOW(null, "Elemental ", "Elemental"),
-    AIR(Element.AIR, "Air ", "Air"),
-    EARTH(Element.EARTH, "Earth ", "Earth"),
-    FIRE(Element.FIRE, "Fire ", "Fire"),
-    THUNDER(Element.THUNDER, "Thunder ", "Thunder"),
-    WATER(Element.WATER, "Water ", "Water");
+    ANY(""),
+    NEUTRAL("Neutral"),
+    RAINBOW("Elemental"),
+    AIR(Element.AIR),
+    EARTH(Element.EARTH),
+    FIRE(Element.FIRE),
+    THUNDER(Element.THUNDER),
+    WATER(Element.WATER);
 
     private final Element element;
     private final String displayName;
     private final String apiName;
 
-    GearDamageType(Element element, String displayName, String apiName) {
-        this.element = element;
-        this.displayName = displayName;
-        this.apiName = apiName;
+    GearDamageType(String name) {
+        this.element = null;
+        // displayName needs padding if non-empty
+        this.displayName = name.isEmpty() ? "" : name + " ";
+        this.apiName = name;
     }
 
-    public Element getElement() {
-        return element;
+    GearDamageType(Element element) {
+        this.element = element;
+        // displayName needs padding
+        this.displayName = element.getDisplayName() + " ";
+        this.apiName = element.getDisplayName();
+    }
+
+    public Optional<Element> getElement() {
+        return Optional.ofNullable(element);
     }
 
     public String getDisplayName() {

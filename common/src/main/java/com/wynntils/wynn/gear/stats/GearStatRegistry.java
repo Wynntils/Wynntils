@@ -13,6 +13,7 @@ import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class GearStatRegistry {
@@ -24,6 +25,18 @@ public final class GearStatRegistry {
         for (StatBuilder builder : BUILDERS) {
             builder.processStats(registry::add);
         }
+    }
+
+    public static GearStat getIdType(String idName, String unit) {
+        // FIXME: Faster lookup
+        for (GearStat statType : registry) {
+            if (statType.displayName().equals(idName)
+                    && statType.unit().getDisplayName().equals(unit)) {
+                return statType;
+            }
+        }
+
+        return null;
     }
 
     public abstract static class StatBuilder {
@@ -50,12 +63,12 @@ public final class GearStatRegistry {
         public void processStats(Consumer<GearStat> callback) {
             for (Element element : Element.values()) {
                 // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
-                String displayName = element.getDisplayName() + " Defence";
-                String apiName = "bonus" + element.getDisplayName() + "Defense";
-                String loreName = element.name() + "DEFENSE";
-                String key = "DEFENCE_" + element.name();
-
-                GearStat gearStat = new GearStat(key, displayName, apiName, loreName, GearStatUnit.PERCENT);
+                GearStat gearStat = new GearStat(
+                        "DEFENCE_" + element.name(),
+                        element.getDisplayName() + " Defence",
+                        "bonus" + element.getDisplayName() + "Defense",
+                        element.name() + "DEFENSE",
+                        GearStatUnit.PERCENT);
                 callback.accept(gearStat);
             }
         }
@@ -89,12 +102,12 @@ public final class GearStatRegistry {
         }
 
         private GearStat buildSpellStat(
-                SpellType spellType, int spellNumber, String displayName, GearStatUnit unit, String addon) {
-            String apiUnit = unit == GearStatUnit.RAW ? "Raw" : "Pct";
-            String loreUnit = unit == GearStatUnit.RAW ? "RAW" : "PCT";
+                SpellType spellType, int spellNumber, String displayName, GearStatUnit unit, String postfix) {
+            String apiUnit = (unit == GearStatUnit.RAW) ? "Raw" : "Pct";
+            String loreUnit = apiUnit.toUpperCase(Locale.ROOT);
 
             return new GearStat(
-                    "SPELL_" + spellType.name() + "_COST_" + unit.name() + addon,
+                    "SPELL_" + spellType.name() + "_COST_" + unit.name() + postfix,
                     displayName,
                     "spellCost" + apiUnit + spellNumber,
                     "SPELL_COST_" + loreUnit + "_" + spellNumber,
@@ -118,15 +131,13 @@ public final class GearStatRegistry {
 
         private static GearStat buildDamageStat(
                 GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
-            GearStat rawType;
             String apiName = buildApiName(attackType, damageType, unit);
-            rawType = new GearStat(
+            return new GearStat(
                     buildKey(attackType, damageType, unit),
                     buildDisplayName(attackType, damageType),
                     apiName,
                     buildLoreName(apiName),
                     unit);
-            return rawType;
         }
 
         private static String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {

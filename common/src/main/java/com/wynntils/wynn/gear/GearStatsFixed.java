@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.Skill;
@@ -17,5 +18,5 @@ public record GearStatsFixed(
         List<Pair<Skill, Integer>> skillBuffs,
         Optional<GearAttackSpeed> attackSpeed,
         List<String> majorIds,
-        List<Pair<GearDamageType, GearDamageRange>> damages,
+        List<Pair<GearDamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences) {}

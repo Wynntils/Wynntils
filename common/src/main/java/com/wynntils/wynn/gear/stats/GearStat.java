@@ -6,4 +6,6 @@ package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.gear.GearStatUnit;
 
+// The key is strictly not necessary, but is internally useful
+// The "loreName" is what is used in the json lore of other player's items
 public record GearStat(String key, String displayName, String apiName, String loreName, GearStatUnit unit) {}

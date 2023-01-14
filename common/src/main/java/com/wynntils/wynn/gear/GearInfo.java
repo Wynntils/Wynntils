@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.Pair;
 import com.wynntils.wynn.gear.stats.GearStat;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
@@ -18,4 +19,4 @@ public record GearInfo(
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         GearStatsFixed statsFixed,
-        List<Pair<GearStat, GearDamageRange>> statsIdentified) {}
+        List<Pair<GearStat, RangedValue>> statsIdentified) {}
