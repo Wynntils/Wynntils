@@ -207,7 +207,7 @@ public final class GearItemManager extends Manager {
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
             }
         }
-        for (GearDamageStat statType : GearDamageStat.values()) {
+        for (GearDamageStat statType : GearDamageStat.damageTypeIds) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
