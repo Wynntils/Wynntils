@@ -22,7 +22,8 @@ public class IdSpellTypes implements IdType {
         generate();
     }
 
-    IdSpellTypes(SpellType spellType, String displayName, String unit, String athenaName, String loreName, String apiName) {
+    IdSpellTypes(
+            SpellType spellType, String displayName, String unit, String athenaName, String loreName, String apiName) {
         this.spellType = spellType;
         this.displayName = displayName;
         this.unit = unit;
@@ -32,6 +33,7 @@ public class IdSpellTypes implements IdType {
     }
 
     private static void generate() {
+        // can also be "§a+1§r§7 {sp1} Cost"
         for (var spellType : SpellType.values()) {
             String ordinal =
                     switch (spellType.getSpellNumber()) {
@@ -44,6 +46,20 @@ public class IdSpellTypes implements IdType {
             String athenaName = ordinal + "SpellCost";
             String displayName = spellType.getName() + " Cost";
             // FIXME: figure out lore and api name
+
+    /*
+
+    "SPELL_COST_RAW_1" -> "raw1stSpellCost"
+    "SPELL_COST_RAW_2" -> "raw2ndSpellCost"
+    "SPELL_COST_RAW_3" -> "raw3rdSpellCost"
+    "SPELL_COST_RAW_4" -> "raw4thSpellCost"
+    "SPELL_COST_PCT_1" -> "1stSpellCost"
+    "SPELL_COST_PCT_2" -> "2ndSpellCost"
+    "SPELL_COST_PCT_3" -> "3rdSpellCost"
+    "SPELL_COST_PCT_4" -> "4thSpellCost"
+     */
+
+
             IdSpellTypes percentType = new IdSpellTypes(spellType, displayName, "%", athenaName, null, null);
             spellTypeIds.add(percentType);
             IdSpellTypes rawType = new IdSpellTypes(spellType, displayName, null, "raw" + athenaName, null, null);
@@ -58,6 +74,12 @@ public class IdSpellTypes implements IdType {
         } else {
             return spellType.name() + "_COST_PERCENT";
         }
+    }
+
+    @Override
+    public IsVariable getIsVariable() {
+        // spellCostRaw4 == variable!
+        return IsVariable.UNKNOWN;
     }
 
     @Override
