@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.wynn.gear.types.GearMaterial;
+import com.wynntils.wynn.gear.types.GearRestrictions;
 import com.wynntils.wynn.objects.profiles.item.GearDropType;
 import java.util.Optional;
 

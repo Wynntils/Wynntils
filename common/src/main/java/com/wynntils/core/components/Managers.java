@@ -18,6 +18,7 @@ import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.mc.TickSchedulerManager;
+import com.wynntils.wynn.gear.GearInfoManager;
 import com.wynntils.wynn.model.CharacterManager;
 import com.wynntils.wynn.model.CharacterSelectionManager;
 import com.wynntils.wynn.model.ContainerManager;
@@ -49,6 +50,7 @@ public final class Managers {
     public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
+    public static final GearInfoManager GearInfo = new GearInfoManager();
     public static final GearItemManager GearItem = new GearItemManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();

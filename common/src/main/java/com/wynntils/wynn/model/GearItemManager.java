@@ -18,7 +18,6 @@ import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
 import com.wynntils.wynn.gear.stats.GearStat;
-import com.wynntils.wynn.gear.stats.GearStatRegistry;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -155,7 +154,7 @@ public final class GearItemManager extends Manager {
                 String starsString = id2Matcher.group(4);
                 int stars = starsString == null ? 0 : starsString.length();
 
-                GearStat type = GearStatRegistry.getIdType(idName, unit);
+                GearStat type = Managers.GearInfo.getGearStat(idName, unit);
                 if (type == null && isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle
@@ -172,7 +171,7 @@ public final class GearItemManager extends Manager {
                 String unitMatch = id3Matcher.group(4);
                 String unit = unitMatch == null ? "" : unitMatch;
 
-                GearStat type = GearStatRegistry.getIdType(idName, unit);
+                GearStat type = Managers.GearInfo.getGearStat(idName, unit);
                 if (type == null && isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
-import com.wynntils.wynn.gear.GearStatUnit;
+import com.wynntils.wynn.gear.types.GearStatUnit;
 
 // The key is strictly not necessary, but is internally useful
 // The "loreName" is what is used in the json lore of other player's items

@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
-import com.wynntils.wynn.gear.GearStatUnit;
+import com.wynntils.wynn.gear.types.GearStatUnit;
 import java.util.Locale;
 
 public enum GearMiscStatType {

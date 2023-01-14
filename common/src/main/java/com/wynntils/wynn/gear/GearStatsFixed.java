@@ -4,8 +4,9 @@
  */
 package com.wynntils.wynn.gear;
 
-import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.Pair;
+import com.wynntils.utils.RangedValue;
+import com.wynntils.wynn.gear.types.GearDamageType;
 import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.objects.profiles.item.GearAttackSpeed;
