@@ -9,23 +9,7 @@ import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.SpellType;
 import java.util.List;
 
-public class GearSpellStatBuilder implements GearStat {
-    private final SpellType spellType;
-    private final String key;
-    private final String displayName;
-    private final GearStatUnit unit;
-    private final String loreName;
-    private final String apiName;
-
-    GearSpellStatBuilder(SpellType spellType, String key, String displayName, GearStatUnit unit, String loreName, String apiName) {
-        this.spellType = spellType;
-        this.key = key;
-        this.displayName = displayName;
-        this.unit = unit;
-        this.loreName = loreName;
-        this.apiName = apiName;
-    }
-
+public class GearSpellStatBuilder {
     public static void addStats(List<GearStat> registry) {
         for (var spellType : SpellType.values()) {
             int spellNumber = spellType.getSpellNumber();
@@ -39,60 +23,33 @@ public class GearSpellStatBuilder implements GearStat {
                     };
             String displayName = spellType.getName() + " Cost";
 
-            GearSpellStatBuilder percentType = new GearSpellStatBuilder(
+            GearSpellStatHolder percentType = new GearSpellStatHolder(
                     spellType,
                     "SPELL_" + spellType.name() + "_COST_PERCENT",
                     displayName,
-                    GearStatUnit.PERCENT,
+                    "spellCostPct" + spellNumber,
                     "SPELL_COST_PCT_" + spellNumber,
-                    "spellCostPct" + spellNumber);
+                    GearStatUnit.PERCENT);
             registry.add(percentType);
-            GearSpellStatBuilder rawType = new GearSpellStatBuilder(
+            GearSpellStatHolder rawType = new GearSpellStatHolder(
                     spellType,
                     "SPELL_" + spellType.name() + "_COST_RAW",
                     displayName,
-                    GearStatUnit.RAW,
+                    "spellCostRaw" + spellNumber,
                     "SPELL_COST_RAW_" + spellNumber,
-                    "spellCostRaw" + spellNumber);
+                    GearStatUnit.RAW);
             registry.add(rawType);
             if (spellType.getClassType() == ClassType.None) {
                 // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
-                GearSpellStatBuilder rawTypeAlias = new GearSpellStatBuilder(
+                GearSpellStatHolder rawTypeAlias = new GearSpellStatHolder(
                         spellType,
                         spellType.name() + "_COST_RAW_ALIAS",
                         "{sp" + spellNumber + "} Cost",
-                        null,
+                        "spellCostRaw" + spellNumber,
                         "SPELL_COST_RAW_" + spellNumber,
-                        "spellCostRaw" + spellNumber);
+                        null);
                 registry.add(rawTypeAlias);
             }
         }
-    }
-
-
-
-    @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    @Override
-    public GearStatUnit getUnit() {
-        return unit;
-    }
-
-    @Override
-    public String getLoreName() {
-        return loreName;
-    }
-
-    @Override
-    public String getApiName() {
-        return apiName;
     }
 }
