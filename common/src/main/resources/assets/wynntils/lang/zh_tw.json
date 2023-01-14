@@ -873,7 +873,7 @@
   "screens.wynntils.lootruns.lootrunButton.unload": "左鍵點擊以卸載這個尋寶計劃",
   "screens.wynntils.lootruns.lootrunButton.viewInFolder": "中鍵點擊以在資料夾中開啟這個尋寶計劃",
   "screens.wynntils.lootruns.name": "尋寶計劃",
-  "screens.wynntils.lootruns.noLootruns": "沒有找到尋寶計劃! 嘗試變更你的搜索詞。",
+  "screens.wynntils.lootruns.noLootruns": "找不到尋寶計劃! 嘗試變更你的搜索詞。",
   "screens.wynntils.lootruns.notes": "筆記",
   "screens.wynntils.lootruns.start": "起點",
   "screens.wynntils.map.focus.description1": "左鍵點擊這裡以導航點為中心。",
@@ -934,7 +934,7 @@
   "screens.wynntils.wynntilsDialogueHistory.reload.description": "重新載入所有對話資料。",
   "screens.wynntils.wynntilsDialogueHistory.reload.name": "重新載入按鈕",
   "screens.wynntils.wynntilsDialogueHistory.title": "對話",
-  "screens.wynntils.wynntilsDialogueHistory.tryReload": "沒有找到對話! 點擊右上角的按鈕嘗試重新載入對話。",
+  "screens.wynntils.wynntilsDialogueHistory.tryReload": "找不到對話! 點擊右上角的按鈕嘗試重新載入對話。",
   "screens.wynntils.wynntilsDiscoveries.clickToHide": "點擊以隱藏",
   "screens.wynntils.wynntilsDiscoveries.clickToShow": "點擊以顯示",
   "screens.wynntils.wynntilsDiscoveries.description": "在一個地方查看和分類你所有的探索地點。",
@@ -942,7 +942,7 @@
   "screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass": "左鍵點擊設置羅盤烽火台光束!",
   "screens.wynntils.wynntilsDiscoveries.middleClickToOpenOnMap": "中鍵點擊在地圖上檢視!",
   "screens.wynntils.wynntilsDiscoveries.name": "探索地點",
-  "screens.wynntils.wynntilsDiscoveries.noDiscoveries": "沒有找到探索地點! 嘗試更改你的搜索詞或點擊右上角的按鈕重新載入探索地點。",
+  "screens.wynntils.wynntilsDiscoveries.noDiscoveries": "找不到探索地點! 嘗試更改你的搜索詞或點擊右上角的按鈕重新載入探索地點。",
   "screens.wynntils.wynntilsDiscoveries.reload.description": "重新載入所有探索資料。",
   "screens.wynntils.wynntilsDiscoveries.reload.name": "重新載入按鈕",
   "screens.wynntils.wynntilsDiscoveries.requirements": "需求:",
@@ -997,5 +997,5 @@
   "screens.wynntils.wynntilsQuestBook.sort.distance.name": "根據距離排序",
   "screens.wynntils.wynntilsQuestBook.sort.level.description": "任務是根據等級排序的, 低等級的優先",
   "screens.wynntils.wynntilsQuestBook.sort.level.name": "根據等級排序",
-  "screens.wynntils.wynntilsQuestBook.tryReload": "沒有找到任務! 點擊右上角的按鈕嘗試重新載入任務。"
+  "screens.wynntils.wynntilsQuestBook.tryReload": "找不到任務! 點擊右上角的按鈕嘗試重新載入任務。"
 }
