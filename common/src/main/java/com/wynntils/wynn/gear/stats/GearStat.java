@@ -7,8 +7,6 @@ package com.wynntils.wynn.gear.stats;
 public interface GearStat {
     String getKey();
 
-    IsVariable getIsVariable();
-
     String getDisplayName();
 
     String getUnit();
@@ -18,10 +16,4 @@ public interface GearStat {
     String getLoreName();
 
     String getApiName();
-
-    enum IsVariable {
-        YES,
-        NO,
-        UNKNOWN;
-    }
 }

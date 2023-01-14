@@ -166,13 +166,6 @@ public final class GearItemManager extends Manager {
                 } else {
                     //       System.out.println("Got " + type.getKey());
                 }
-                if (name2.contains("Unidentified")) {
-                    if (type.getIsVariable() == GearStat.IsVariable.UNKNOWN) {
-                        boolean containsRange = unformattedLoreLine.contains(" to ");
-                        System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
-                                + idContainer.identification().isFixed());
-                    }
-                }
                 if (type == null) {
                     System.out.println(
                             "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
@@ -194,14 +187,6 @@ public final class GearItemManager extends Manager {
 
                 GearStat type = getIdType(idName, unit);
                 String name2 = ComponentUtils.getUnformatted(realName);
-                //                if (name2.contains("Unidentified")) {
-                if (type.getIsVariable() == GearStat.IsVariable.UNKNOWN
-                        || type.getIsVariable() == GearStat.IsVariable.NO) {
-                    boolean containsRange = unformattedLoreLine.contains(" to ");
-                    System.out.println("FIXED: " + type.getKey() + ":" + containsRange + " -- "
-                            + idContainer.identification().isFixed());
-                }
-                //    }
                 if (type == null) {
                     System.out.println(
                             "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
@@ -217,12 +202,6 @@ public final class GearItemManager extends Manager {
 
     private GearStat getIdType(String idName, String unit) {
         for (GearMiscStat statType : GearMiscStat.values()) {
-            if (statType.getDisplayName().equals(idName)) {
-                if (statType.getUnit() == null && unit == null) return statType;
-                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
-            }
-        }
-        for (GearSkillStat statType : GearSkillStat.values()) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;

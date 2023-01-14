@@ -6,27 +6,19 @@ package com.wynntils.wynn.gear.stats;
 
 public enum GearDefenceStat implements GearStat {
     // FIXME: check discrepancy between lore and api
-    DEFENCE_AIR(IsVariable.YES, "Air Defence", "%", "airDefence", "AIRDEFENSE", "bonusAirDefense"),
-    DEFENCE_EARTH(IsVariable.YES, "Earth Defence", "%", "earthDefence", "EARTHDEFENSE", "bonusEarthDefense"),
-    DEFENCE_FIRE(IsVariable.YES, "Fire Defence", "%", "fireDefence", "FIREDEFENSE", "bonusFireDefense"),
-    DEFENCE_THUNDER(IsVariable.YES, "Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
-    DEFENCE_WATER(IsVariable.YES, "Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense");
+    DEFENCE_AIR("Air Defence", "%", "airDefence", "AIRDEFENSE", "bonusAirDefense"),
+    DEFENCE_EARTH("Earth Defence", "%", "earthDefence", "EARTHDEFENSE", "bonusEarthDefense"),
+    DEFENCE_FIRE("Fire Defence", "%", "fireDefence", "FIREDEFENSE", "bonusFireDefense"),
+    DEFENCE_THUNDER("Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
+    DEFENCE_WATER("Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense");
 
-    private final IsVariable isVariable;
     private final String displayName;
     private final String unit;
     private final String athenaName;
     private final String loreName;
     private final String apiName;
 
-    GearDefenceStat(
-            IsVariable isVariable,
-            String displayName,
-            String unit,
-            String athenaName,
-            String loreName,
-            String apiName) {
-        this.isVariable = isVariable;
+    GearDefenceStat(String displayName, String unit, String athenaName, String loreName, String apiName) {
         this.displayName = displayName;
         this.unit = unit;
         this.athenaName = athenaName;
@@ -37,10 +29,6 @@ public enum GearDefenceStat implements GearStat {
     @Override
     public String getKey() {
         return this.name();
-    }
-
-    public IsVariable getIsVariable() {
-        return isVariable;
     }
 
     @Override

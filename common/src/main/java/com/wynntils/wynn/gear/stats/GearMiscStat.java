@@ -48,48 +48,40 @@ public enum GearMiscStat implements GearStat {
     DAMAGE_MAIN_WATER_PERCENT
      */
 
-    HEALTH(IsVariable.YES, "Health", null, "rawHealth", "HEALTHBONUS", "healthBonus"),
-    HEALTH_REGEN_PERCENT(IsVariable.YES, "Health Regen", "%", "healthRegen", "HEALTHREGEN", "healthRegen"),
-    HEALTH_REGEN_RAW(IsVariable.YES, "Health Regen", null, "rawHealthRegen", "HEALTHREGENRAW", "healthRegenRaw"),
-    LIFE_STEAL(IsVariable.YES, "Life Steal", "/3s", "lifeSteal", "LIFESTEAL", "lifeSteal"),
+    HEALTH("Health", null, "rawHealth", "HEALTHBONUS", "healthBonus"),
+    HEALTH_REGEN_PERCENT("Health Regen", "%", "healthRegen", "HEALTHREGEN", "healthRegen"),
+    HEALTH_REGEN_RAW("Health Regen", null, "rawHealthRegen", "HEALTHREGENRAW", "healthRegenRaw"),
+    LIFE_STEAL("Life Steal", "/3s", "lifeSteal", "LIFESTEAL", "lifeSteal"),
 
-    MANA_REGEN(IsVariable.YES, "Mana Regen", "/5s", "manaRegen", "MANAREGEN", "manaRegen"),
-    MANA_STEAL(IsVariable.YES, "Mana Steal", "/3s", "manaSteal", "MANASTEAL", "manaSteal"),
+    MANA_REGEN("Mana Regen", "/5s", "manaRegen", "MANAREGEN", "manaRegen"),
+    MANA_STEAL("Mana Steal", "/3s", "manaSteal", "MANASTEAL", "manaSteal"),
 
-    WALK_SPEED(IsVariable.YES, "Walk Speed", "%", "walkSpeed", "SPEED", "speed"),
+    WALK_SPEED("Walk Speed", "%", "walkSpeed", "SPEED", "speed"),
     // FIXME: is lore correct for these two?
-    SPRINT(IsVariable.YES, "Sprint", "%", "sprint", "STAMINA", "sprint"),
-    SPRINT_REGEN(IsVariable.YES, "Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN", "sprintRegen"),
+    SPRINT("Sprint", "%", "sprint", "STAMINA", "sprint"),
+    SPRINT_REGEN("Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN", "sprintRegen"),
 
-    THORNS(IsVariable.YES, "Thorns", "%", "thorns", "THORNS", "thorns"),
-    EXPLODING(IsVariable.YES, "Exploding", "%", "exploding", "EXPLODING", "exploding"),
-    POISON(IsVariable.YES, "Poison", "/3s", "poison", "POISON", "poison"),
-    REFLECTION(IsVariable.YES, "Reflection", "%", "reflection", "REFLECTION", "reflection"),
+    THORNS("Thorns", "%", "thorns", "THORNS", "thorns"),
+    EXPLODING("Exploding", "%", "exploding", "EXPLODING", "exploding"),
+    POISON("Poison", "/3s", "poison", "POISON", "poison"),
+    REFLECTION("Reflection", "%", "reflection", "REFLECTION", "reflection"),
 
-    STEALING(IsVariable.YES, "Stealing", "%", "stealing", "EMERALDSTEALING", "emeraldStealing"),
+    STEALING("Stealing", "%", "stealing", "EMERALDSTEALING", "emeraldStealing"),
     // FIXME: is lore correct?
-    ATTACK_SPEED(IsVariable.YES, "Attack Speed", " tier", "attackSpeed", "ATTACKSPEED", "attackSpeedBonus"),
+    ATTACK_SPEED("Attack Speed", " tier", "attackSpeed", "ATTACKSPEED", "attackSpeedBonus"),
     // FIXME: is lore correct?
-    JUMP_HEIGHT(IsVariable.YES, "Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "jumpHeight"),
-    LOOT_BONUS(IsVariable.YES, "Loot Bonus", "%", "lootBonus", "LOOTBONUS", "lootBonus"),
-    SOUL_POINT_REGEN(IsVariable.YES, "Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),
-    XP_BONUS(IsVariable.YES, "XP Bonus", "%", "xpBonus", "XPBONUS", "xpBonus");
+    JUMP_HEIGHT("Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "jumpHeight"),
+    LOOT_BONUS("Loot Bonus", "%", "lootBonus", "LOOTBONUS", "lootBonus"),
+    SOUL_POINT_REGEN("Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),
+    XP_BONUS("XP Bonus", "%", "xpBonus", "XPBONUS", "xpBonus");
 
-    private final IsVariable isVariable;
     private final String displayName;
     private final String unit;
     private final String athenaName;
     private final String loreName;
     private final String apiName;
 
-    GearMiscStat(
-            IsVariable isVariable,
-            String displayName,
-            String unit,
-            String athenaName,
-            String loreName,
-            String apiName) {
-        this.isVariable = isVariable;
+    GearMiscStat(String displayName, String unit, String athenaName, String loreName, String apiName) {
         this.displayName = displayName;
         this.unit = unit;
         this.athenaName = athenaName;
@@ -100,10 +92,6 @@ public enum GearMiscStat implements GearStat {
     @Override
     public String getKey() {
         return this.name();
-    }
-
-    public IsVariable getIsVariable() {
-        return isVariable;
     }
 
     @Override

@@ -94,11 +94,6 @@ public class GearSpellStat implements GearStat {
     }
 
     @Override
-    public IsVariable getIsVariable() {
-        return IsVariable.YES;
-    }
-
-    @Override
     public String getDisplayName() {
         return displayName;
     }
