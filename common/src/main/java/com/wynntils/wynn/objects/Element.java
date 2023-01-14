@@ -4,10 +4,22 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.utils.StringUtils;
+
 public enum Element {
     AIR,
     EARTH,
     FIRE,
     THUNDER,
-    WATER
+    WATER;
+
+    private final String displayName;
+
+    Element() {
+        this.displayName = StringUtils.capitalized(this.name());
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

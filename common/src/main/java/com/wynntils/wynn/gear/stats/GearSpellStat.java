@@ -48,7 +48,7 @@ public class GearSpellStat implements GearStat {
 
             GearSpellStat percentType = new GearSpellStat(
                     spellType,
-                    spellType.name() + "_COST_PERCENT",
+                    "SPELL_" + spellType.name() + "_COST_PERCENT",
                     displayName,
                     GearStatUnit.PERCENT,
                     "SPELL_COST_PCT_" + spellNumber,
@@ -56,7 +56,7 @@ public class GearSpellStat implements GearStat {
             spellTypeIds.add(percentType);
             GearSpellStat rawType = new GearSpellStat(
                     spellType,
-                    spellType.name() + "_COST_RAW",
+                    "SPELL_" + spellType.name() + "_COST_RAW",
                     displayName,
                     GearStatUnit.RAW,
                     "SPELL_COST_RAW_" + spellNumber,

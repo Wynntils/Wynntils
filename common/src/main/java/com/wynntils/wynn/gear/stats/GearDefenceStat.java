@@ -5,30 +5,46 @@
 package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.gear.GearStatUnit;
+import com.wynntils.wynn.objects.Element;
+import java.util.ArrayList;
+import java.util.List;
 
-public enum GearDefenceStat implements GearStat {
-    // Lore confirmed!
-    DEFENCE_AIR("Air Defence", "AIRDEFENSE", "bonusAirDefense"),
-    DEFENCE_EARTH("Earth Defence", "EARTHDEFENSE", "bonusEarthDefense"),
-    DEFENCE_FIRE("Fire Defence", "FIREDEFENSE", "bonusFireDefense"),
-    DEFENCE_THUNDER("Thunder Defence", "THUNDERDEFENSE", "bonusThunderDefense"),
-    DEFENCE_WATER("Water Defence", "WATERDEFENSE", "bonusWaterDefense");
+public class GearDefenceStat implements GearStat {
+    public static final List<GearDefenceStat> defenceTypeIds = new ArrayList<>();
+
+    static {
+        generate();
+    }
+
+    private static void generate() {
+        for (Element element : Element.values()) {
+            // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
+            String displayName = element.getDisplayName() + " Defence";
+            String apiName = "bonus" + element.getDisplayName() + "Defense";
+            String loreName = element.name() + "DEFENSE";
+            String key = "DEFENCE_" + element.name();
+            GearDefenceStat rawType = new GearDefenceStat(displayName, loreName, apiName, key);
+            defenceTypeIds.add(rawType);
+        }
+    }
 
     private final String displayName;
     private final GearStatUnit unit;
     private final String loreName;
     private final String apiName;
+    private final String key;
 
-    GearDefenceStat(String displayName, String loreName, String apiName) {
+    GearDefenceStat(String displayName, String loreName, String apiName, String key) {
         this.displayName = displayName;
         this.unit = GearStatUnit.PERCENT;
         this.loreName = loreName;
         this.apiName = apiName;
+        this.key = key;
     }
 
     @Override
     public String getKey() {
-        return this.name();
+        return key;
     }
 
     @Override

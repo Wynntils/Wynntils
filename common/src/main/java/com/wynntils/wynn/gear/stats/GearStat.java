@@ -13,7 +13,7 @@ public interface GearStat {
 
     GearStatUnit getUnit();
 
-    String getLoreName();
-
     String getApiName();
+
+    String getLoreName();
 }

@@ -50,7 +50,7 @@ public enum GearMiscStat implements GearStat {
 
     @Override
     public String getKey() {
-        return this.name();
+        return "MISC_"+ this.name();
     }
 
     @Override
