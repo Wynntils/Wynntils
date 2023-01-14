@@ -22,26 +22,24 @@ public class GearDamageStat implements GearStat {
         this.attackType = attackType;
         this.damageType = damageType;
         this.unit = unit;
-        this.apiName = "";
-        // api name: lowerCamelCase
-        // <type> <element> DamageBonus[Raw]
 
-        this.displayName = "";
-        // DISPLAY NAME:
-        // <element> <type> Damage
-        // <element> is:
-        // missing -- goes for all
-        // Neutral
-        // Elemental -- rainbow
-        // Air,Thunder,etc -- this element
+        this.apiName = buildApiName(attackType, damageType, unit);
+        this.displayName = buildDisplayName(attackType, damageType);
+        this.key = buildKey(attackType, damageType, unit);
+    }
 
-        // Type is:
-        // missing -- goes for all
-        // Spell
-        // Main Attack
+    private String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        return CaseFormat.UPPER_CAMEL.to(
+                CaseFormat.LOWER_CAMEL,
+                attackType.getApiName() + damageType.getApiName() + (unit == GearStatUnit.RAW ? "Raw" : ""));
+    }
 
-        this.key = "";
+    private String buildKey(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        return "DAMAGE_" + attackType.name() + "_" + damageType.name() + "_" + unit.name();
+    }
 
+    private String buildDisplayName(GearAttackType attackType, GearDamageType damageType) {
+        return damageType.getDisplayName() + attackType.getDisplayName() + "Damage";
     }
 
     private static void generate() {

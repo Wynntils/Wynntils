@@ -5,9 +5,23 @@
 package com.wynntils.wynn.gear;
 
 public enum GearAttackType {
-    ANY(null),
-    MAIN_ATTACK("Main Attack"),
-    SPELL("Spell");
+    ANY("", ""),
+    MAIN_ATTACK("Main Attack ", "MainAttack"),
+    SPELL("Spell ", "Spell");
 
-    GearAttackType(String name) {}
+    private final String displayName;
+    private final String apiName;
+
+    GearAttackType(String displayName, String apiName) {
+        this.displayName = displayName;
+        this.apiName = apiName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getApiName() {
+        return apiName;
+    }
 }
