@@ -89,12 +89,11 @@ public enum GearDamageStat implements GearStat {
     DAMAGE_SPELL_THUNDER_PERCENT("Thunder Spell Damage", "%", "spellThunderDamageBonus"),
     DAMAGE_SPELL_WATER_PERCENT("Water Spell Damage", "%", "spellWaterDamageBonus"),
 
-    // FIXME: CHECK LORE
-    DAMAGE_SPELL_WATER_RAW("Water Spell Damage", null, "spellWaterDamageBonusRaw", "SPELLWATERDAMAGEBONUSRAW"),
-    DAMAGE_SPELL_EARTH_RAW("Earth Spell Damage", null, "spellEarthDamageBonusRaw", "SPELLEARTHDAMAGEBONUSRAW"),
-    DAMAGE_SPELL_FIRE_RAW("Fire Spell Damage", null, "spellFireDamageBonusRaw", "SPELLFIREDAMAGEBONUSRAW"),
-    DAMAGE_SPELL_THUNDER_RAW("Thunder Spell Damage", null, "spellThunderDamageBonusRaw", "SPELLTHUNDERDAMAGEBONUSRAW"),
-    DAMAGE_SPELL_AIR_RAW("Air Spell Damage", null, "spellAirDamageBonusRaw", "SPELLAIRDAMAGEBONUSRAW");
+    DAMAGE_SPELL_WATER_RAW("Water Spell Damage", null, "spellWaterDamageBonusRaw"),
+    DAMAGE_SPELL_EARTH_RAW("Earth Spell Damage", null, "spellEarthDamageBonusRaw"),
+    DAMAGE_SPELL_FIRE_RAW("Fire Spell Damage", null, "spellFireDamageBonusRaw"),
+    DAMAGE_SPELL_THUNDER_RAW("Thunder Spell Damage", null, "spellThunderDamageBonusRaw"),
+    DAMAGE_SPELL_AIR_RAW("Air Spell Damage", null, "spellAirDamageBonusRaw");
 
     private final String displayName;
     private final String unit;

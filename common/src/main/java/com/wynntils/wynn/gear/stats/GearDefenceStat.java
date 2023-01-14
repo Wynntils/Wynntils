@@ -5,7 +5,7 @@
 package com.wynntils.wynn.gear.stats;
 
 public enum GearDefenceStat implements GearStat {
-    // FIXME: check discrepancy between lore and api
+    // Lore confirmed!
     DEFENCE_AIR("Air Defence", "%", "AIRDEFENSE", "bonusAirDefense"),
     DEFENCE_EARTH("Earth Defence", "%", "EARTHDEFENSE", "bonusEarthDefense"),
     DEFENCE_FIRE("Fire Defence", "%", "FIREDEFENSE", "bonusFireDefense"),
