@@ -81,6 +81,6 @@ public final class ColorUtils {
     }
 
     private static TextColor getFlatPercentageColor(float percentage) {
-        return FLAT_MAP.ceilingEntry(percentage).getValue();
+        return FLAT_MAP.higherEntry(percentage).getValue();
     }
 }
