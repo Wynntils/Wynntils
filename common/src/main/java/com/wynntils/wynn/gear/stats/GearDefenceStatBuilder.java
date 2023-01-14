@@ -8,7 +8,7 @@ import com.wynntils.wynn.gear.GearStatUnit;
 import com.wynntils.wynn.objects.Element;
 import java.util.List;
 
-public class GearDefenceStatBuilder  {
+public class GearDefenceStatBuilder {
     public static void addStats(List<GearStat> registry) {
         for (Element element : Element.values()) {
             // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
@@ -16,7 +16,7 @@ public class GearDefenceStatBuilder  {
             String apiName = "bonus" + element.getDisplayName() + "Defense";
             String loreName = element.name() + "DEFENSE";
             String key = "DEFENCE_" + element.name();
-            GearStatHolder rawType = new GearStatHolder(key, displayName, apiName, loreName, GearStatUnit.PERCENT);
+            GearStat rawType = new GearStat(key, displayName, apiName, loreName, GearStatUnit.PERCENT);
             registry.add(rawType);
         }
     }

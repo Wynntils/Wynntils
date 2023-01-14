@@ -6,14 +6,38 @@ package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.gear.GearStatUnit;
 
-public interface GearStat {
-    String getKey();
+public class GearStat {
+    private final String key;
+    private final String displayName;
+    private final String apiName;
+    private final String loreName;
+    private final GearStatUnit unit;
 
-    String getDisplayName();
+    GearStat(String key, String displayName, String apiName, String loreName, GearStatUnit unit) {
+        this.key = key;
+        this.displayName = displayName;
+        this.apiName = apiName;
+        this.loreName = loreName;
+        this.unit = unit;
+    }
 
-    GearStatUnit getUnit();
+    public String getKey() {
+        return key;
+    }
 
-    String getApiName();
+    public String getDisplayName() {
+        return displayName;
+    }
 
-    String getLoreName();
+    public String getApiName() {
+        return apiName;
+    }
+
+    public String getLoreName() {
+        return loreName;
+    }
+
+    public GearStatUnit getUnit() {
+        return unit;
+    }
 }

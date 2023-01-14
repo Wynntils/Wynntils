@@ -6,11 +6,15 @@ package com.wynntils.wynn.gear.stats;
 
 import java.util.List;
 
-public class GearMiscStatBuilder  {
+public class GearMiscStatBuilder {
     public static void addStats(List<GearStat> registry) {
-        for (GearMiscStatType miscStat : GearMiscStatType.values() ) {
-            GearStatHolder holder = new GearStatHolder( "MISC_"+ miscStat.name(),
-                    miscStat.getDisplayName(), miscStat.getApiName(), miscStat.getLoreName(), miscStat.getUnit());
+        for (GearMiscStatType miscStat : GearMiscStatType.values()) {
+            GearStat holder = new GearStat(
+                    "MISC_" + miscStat.name(),
+                    miscStat.getDisplayName(),
+                    miscStat.getApiName(),
+                    miscStat.getLoreName(),
+                    miscStat.getUnit());
             registry.add(holder);
         }
     }

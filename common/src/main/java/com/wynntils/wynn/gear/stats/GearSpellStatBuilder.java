@@ -23,7 +23,7 @@ public class GearSpellStatBuilder {
                     };
             String displayName = spellType.getName() + " Cost";
 
-            GearSpellStatHolder percentType = new GearSpellStatHolder(
+            GearSpellStat percentType = new GearSpellStat(
                     spellType,
                     "SPELL_" + spellType.name() + "_COST_PERCENT",
                     displayName,
@@ -31,7 +31,7 @@ public class GearSpellStatBuilder {
                     "SPELL_COST_PCT_" + spellNumber,
                     GearStatUnit.PERCENT);
             registry.add(percentType);
-            GearSpellStatHolder rawType = new GearSpellStatHolder(
+            GearSpellStat rawType = new GearSpellStat(
                     spellType,
                     "SPELL_" + spellType.name() + "_COST_RAW",
                     displayName,
@@ -41,7 +41,7 @@ public class GearSpellStatBuilder {
             registry.add(rawType);
             if (spellType.getClassType() == ClassType.None) {
                 // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
-                GearSpellStatHolder rawTypeAlias = new GearSpellStatHolder(
+                GearSpellStat rawTypeAlias = new GearSpellStat(
                         spellType,
                         spellType.name() + "_COST_RAW_ALIAS",
                         "{sp" + spellNumber + "} Cost",

@@ -14,20 +14,19 @@ public class GearDamageStatBuilder {
     public static void addStats(List<GearStat> registry) {
         for (GearAttackType attackType : GearAttackType.values()) {
             for (GearDamageType damageType : GearDamageType.values()) {
-                GearStatHolder rawType = buildDamageStat(attackType, damageType, GearStatUnit.RAW);
+                GearStat rawType = buildDamageStat(attackType, damageType, GearStatUnit.RAW);
                 registry.add(rawType);
 
-                GearStatHolder percentType = buildDamageStat(attackType, damageType, GearStatUnit.PERCENT);
+                GearStat percentType = buildDamageStat(attackType, damageType, GearStatUnit.PERCENT);
                 registry.add(percentType);
             }
         }
     }
 
-    private static GearStatHolder buildDamageStat(
-            GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
-        GearStatHolder rawType;
+    private static GearStat buildDamageStat(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+        GearStat rawType;
         String apiName = buildApiName(attackType, damageType, unit);
-        rawType = new GearStatHolder(
+        rawType = new GearStat(
                 buildKey(attackType, damageType, unit),
                 buildDisplayName(attackType, damageType),
                 apiName,
