@@ -31,6 +31,7 @@ public enum UrlId {
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
     DATA_STATIC_DISCOVERIES("dataStaticDiscoveries"),
     DATA_STATIC_ITEM_GUESSES("dataStaticItemGuesses"),
+    DATA_STATIC_MAJOR_IDS("dataStaticMajorIds"),
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SERVICES("dataStaticServices"),

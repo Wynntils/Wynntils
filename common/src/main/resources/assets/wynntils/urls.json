@@ -84,6 +84,10 @@
     "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8"
   },
   {
+    "id": "dataStaticMajorIds",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json",
+  },
+  {
     "id": "dataStaticMaps",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
     "md5": "dbb7c99accd944be4efc8fe991a4ac7c"

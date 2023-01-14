@@ -18,6 +18,7 @@ META:
 "armorType" -- vilken typ av material, guld diamant etc
 "material" -- för allt utom armor, t.ex. "359:5"
 "skin" -- player head base64 data for some helmets
+"armorColor" -- ska vara RGB. är nästan alltid "160,101,64" om det finns? isf kan vi skippa det.
 
 "addedLore" - lore text
 
@@ -147,6 +148,5 @@ IGNORE:
 "gatherXpBonus"-- nonsens, alltid 0
 "lootQuality" -- nonsens, alltid 0
 "set" -- nonsens, null for most sets (only given for "Leaf")
-"armorColor" -- ska vara RGB. är ALLTID "160,101,64" om det finns? nonsens.
 
 

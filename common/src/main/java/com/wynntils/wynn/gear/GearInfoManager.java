@@ -41,4 +41,7 @@ public final class GearInfoManager extends Manager {
         String lookupName = displayName + unit;
         return lookup.get(lookupName);
     }
+
+    // When reading, strip "֎" from name and quest name.
+    // classRequirement -> str to upper
 }
