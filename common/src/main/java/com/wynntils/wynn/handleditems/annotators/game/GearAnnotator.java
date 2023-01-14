@@ -29,7 +29,9 @@ public final class GearAnnotator implements ItemAnnotator {
         if (!name.startsWith(gearProfile.getTier().getChatFormatting().toString())) return null;
 
         if (Managers.GearItem.isUnidentified(itemName)) {
-            return Managers.GearItem.fromUnidentified(gearProfile);
+        // FIXME
+            return Managers.GearItem.fromItemStack(itemStack, gearProfile);
+//            return Managers.GearItem.fromUnidentified(gearProfile);
         } else {
             return Managers.GearItem.fromItemStack(itemStack, gearProfile);
         }
