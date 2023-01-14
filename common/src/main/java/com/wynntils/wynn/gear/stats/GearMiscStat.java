@@ -4,88 +4,47 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import java.util.Locale;
+
 public enum GearMiscStat implements GearStat {
-    /*
-    THESE HAVE SUSPICIOUS LORE:
+    HEALTH("Health", null, "healthBonus"),
+    HEALTH_REGEN_PERCENT("Health Regen", "%", "healthRegen"),
+    HEALTH_REGEN_RAW("Health Regen", null, "healthRegenRaw"),
+    LIFE_STEAL("Life Steal", "/3s", "lifeSteal"),
 
-    ALSO, ALL SPELL COST...
+    MANA_REGEN("Mana Regen", "/5s", "manaRegen"),
+    MANA_STEAL("Mana Steal", "/3s", "manaSteal"),
 
-    DAMAGE_ELEMANTAL
-    DAMAGE_ELEMENTAL
-    DAMAGE_MAIN_ATTACK_ELEMENTAL
-    DAMAGE_MAIN_ATTACK_PERCENT
-    DAMAGE_MAIN_ATTACK_RAW
-    DAMAGE_SPELL_PERCENT
-    DAMAGE_SPELL_RAW
-    SPRINT
-    SPRINT_REGEN
-    ATTACK_SPEED
-    JUMP_HEIGHT
-    DEFENCE_AIR
-    DEFENCE_EARTH
-    DEFENCE_FIRE
-    DEFENCE_THUNDER
-    DEFENCE_WATER
-    DAMAGE_AIR_RAW
-    DAMAGE_EARTH_RAW
-    DAMAGE_FIRE_RAW
-    DAMAGE_THUNDER_RAW
-    DAMAGE_WATER_RAW
-    DAMAGE_SPELL_AIR_PERCENT
-    DAMAGE_SPELL_EARTH_PERCENT
-    DAMAGE_SPELL_FIRE_PERCENT
-    DAMAGE_SPELL_THUNDER_PERCENT
-    DAMAGE_SPELL_WATER_PERCENT
-    DAMAGE_MAIN_AIR_RAW
-    DAMAGE_MAIN_EARTH_RAW
-    DAMAGE_MAIN_FIRE_RAW
-    DAMAGE_MAIN_THUNDER_RAW
-    DAMAGE_MAIN_WATER_RAW
-    DAMAGE_MAIN_AIR_PERCENT
-    DAMAGE_MAIN_EARTH_PERCENT
-    DAMAGE_MAIN_FIRE_PERCENT
-    DAMAGE_MAIN_THUNDER_PERCENT
-    DAMAGE_MAIN_WATER_PERCENT
-     */
+    WALK_SPEED("Walk Speed", "%", "speed"),
+    SPRINT("Sprint", "%", "sprint", "STAMINA"),
+    SPRINT_REGEN("Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN"),
 
-    HEALTH("Health", null, "HEALTHBONUS", "healthBonus"),
-    HEALTH_REGEN_PERCENT("Health Regen", "%", "HEALTHREGEN", "healthRegen"),
-    HEALTH_REGEN_RAW("Health Regen", null, "HEALTHREGENRAW", "healthRegenRaw"),
-    LIFE_STEAL("Life Steal", "/3s", "LIFESTEAL", "lifeSteal"),
+    THORNS("Thorns", "%", "thorns"),
+    EXPLODING("Exploding", "%", "exploding"),
+    POISON("Poison", "/3s", "poison"),
+    REFLECTION("Reflection", "%", "reflection"),
 
-    // type -> {JsonPrimitive@23815} ""MANAREGEN"" confirmed
-    MANA_REGEN("Mana Regen", "/5s", "MANAREGEN", "manaRegen"),
-    MANA_STEAL("Mana Steal", "/3s", "MANASTEAL", "manaSteal"),
-
-    WALK_SPEED("Walk Speed", "%", "SPEED", "speed"),
-    // Lore confirmed
-    SPRINT("Sprint", "%", "STAMINA", "sprint"),
-    SPRINT_REGEN("Sprint Regen", "%", "STAMINA_REGEN", "sprintRegen"),
-
-    THORNS("Thorns", "%", "THORNS", "thorns"),
-    EXPLODING("Exploding", "%", "EXPLODING", "exploding"),
-    POISON("Poison", "/3s", "POISON", "poison"),
-    REFLECTION("Reflection", "%", "REFLECTION", "reflection"),
-
-    STEALING("Stealing", "%", "EMERALDSTEALING", "emeraldStealing"),
-    // FIXME: is lore correct?
-    ATTACK_SPEED("Attack Speed", " tier", "ATTACKSPEED", "attackSpeedBonus"),
-    // Lore confirmed
-    JUMP_HEIGHT("Jump Height", null, "JUMP_HEIGHT", "jumpHeight"),
-    LOOT_BONUS("Loot Bonus", "%", "LOOTBONUS", "lootBonus"),
-    SOUL_POINT_REGEN("Soul Point Regen", "%", "SOULPOINTS", "soulPoints"),
-    XP_BONUS("XP Bonus", "%", "XPBONUS", "xpBonus");
+    STEALING("Stealing", "%", "emeraldStealing"),
+    ATTACK_SPEED("Attack Speed", " tier", "attackSpeedBonus", "ATTACKSPEED"),
+    JUMP_HEIGHT("Jump Height", null, "jumpHeight", "JUMP_HEIGHT"),
+    LOOT_BONUS("Loot Bonus", "%", "lootBonus"),
+    SOUL_POINT_REGEN("Soul Point Regen", "%", "soulPoints"),
+    XP_BONUS("XP Bonus", "%", "xpBonus");
 
     private final String displayName;
     private final String unit;
     private final String loreName;
     private final String apiName;
 
-    GearMiscStat(String displayName, String unit, String loreName, String apiName) {
+    GearMiscStat(String displayName, String unit, String apiName, String loreName) {
         this.displayName = displayName;
         this.unit = unit;
         this.loreName = loreName;
         this.apiName = apiName;
+    }
+
+    GearMiscStat(String displayName, String unit, String apiName) {
+        this(displayName, unit, apiName, apiName.toUpperCase(Locale.ROOT));
     }
 
     @Override

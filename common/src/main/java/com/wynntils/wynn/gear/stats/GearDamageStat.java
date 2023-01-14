@@ -4,6 +4,8 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.google.common.base.CaseFormat;
+
 public enum GearDamageStat implements GearStat {
 
     // Generate lore name:
@@ -28,97 +30,90 @@ public enum GearDamageStat implements GearStat {
     // <type> <element> DamageBonus[Raw]
 
     // ELEMENT UNSPECIFIED, ATTACK TYPE SPECIFIED
-    // Lore confirmed OK
-    DAMAGE_SPELL_PERCENT("Spell Damage", "%", "SPELLDAMAGE", "spellDamageBonus"),
-    // Lore confirmed OK
-    DAMAGE_SPELL_RAW("Spell Damage", null, "SPELLDAMAGERAW", "spellDamageBonusRaw"),
+    // Lore confirmed OK for these four
+    DAMAGE_SPELL_PERCENT("Spell Damage", "%", "spellDamageBonus", "SPELLDAMAGE"),
+    DAMAGE_SPELL_RAW("Spell Damage", null, "spellDamageBonusRaw", "SPELLDAMAGERAW"),
 
-    // Lore confirmed OK
-    DAMAGE_MAIN_ATTACK_PERCENT("Main Attack Damage", "%", "DAMAGEBONUS", "mainAttackDamageBonus"),
-    DAMAGE_MAIN_ATTACK_RAW("Main Attack Damage", null, "DAMAGEBONUSRAW", "mainAttackDamageBonusRaw"),
+    DAMAGE_MAIN_ATTACK_PERCENT("Main Attack Damage", "%", "mainAttackDamageBonus", "DAMAGEBONUS"),
+    DAMAGE_MAIN_ATTACK_RAW("Main Attack Damage", null, "mainAttackDamageBonusRaw", "DAMAGEBONUSRAW"),
 
     // ATTACK TYPE UNSPECIFIED, ELEMENT SPECIFIED
 
     // rainbow
-    // FIXME: Check lore name, with e.g. Aleph null.
-    DAMAGE_ELEMANTAL_PERCENT("Elemental Damage", "%", "FIXME:UNKNOWN", "elementalDamageBonus"),
-    // FIXME: these two: check Axion.
-    DAMAGE_ELEMENTAL_RAW("FIXME:UNKNOWN", null, "FIXME:UNKNOWN", "elementalDamageBonusRaw"),
+    DAMAGE_ELEMANTAL_PERCENT("Elemental Damage", "%", "elementalDamageBonus"),
+    DAMAGE_ELEMENTAL_RAW("Elemental Damage", null, "elementalDamageBonusRaw"),
 
     // ELEMENTAL
 
-    // Lore confirmed!!!
-    DAMAGE_AIR_PERCENT("Air Damage", "%", "AIRDAMAGEBONUS", "airDamageBonus"),
-    DAMAGE_EARTH_PERCENT("Earth Damage", "%", "EARTHDAMAGEBONUS", "earthDamageBonus"),
-    DAMAGE_FIRE_PERCENT("Fire Damage", "%", "FIREDAMAGEBONUS", "fireDamageBonus"),
-    DAMAGE_THUNDER_PERCENT("Thunder Damage", "%", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
-    DAMAGE_WATER_PERCENT("Water Damage", "%", "WATERDAMAGEBONUS", "waterDamageBonus"),
+    // Lore confirmed for these!
+    DAMAGE_AIR_PERCENT("Air Damage", "%", "airDamageBonus", "AIRDAMAGEBONUS"),
+    DAMAGE_EARTH_PERCENT("Earth Damage", "%", "earthDamageBonus", "EARTHDAMAGEBONUS"),
+    DAMAGE_FIRE_PERCENT("Fire Damage", "%", "fireDamageBonus", "FIREDAMAGEBONUS"),
+    DAMAGE_THUNDER_PERCENT("Thunder Damage", "%", "thunderDamageBonus", "THUNDERDAMAGEBONUS"),
+    DAMAGE_WATER_PERCENT("Water Damage", "%", "waterDamageBonus", "WATERDAMAGEBONUS"),
 
-    // FIXME: check lore
-    DAMAGE_AIR_RAW("Air Damage", "%", "FIXME:UNKNOWN", "airDamageBonusRaw"),
-    DAMAGE_EARTH_RAW("Earth Damage", "%", "FIXME:UNKNOWN", "earthDamageBonusRaw"),
-    DAMAGE_FIRE_RAW("Fire Damage", "%", "FIXME:UNKNOWN", "fireDamageBonusRaw"),
-    DAMAGE_THUNDER_RAW("Thunder Damage", "%", "FIXME:UNKNOWN", "thunderDamageBonusRaw"),
-    DAMAGE_WATER_RAW("Water Damage", "%", "FIXME:UNKNOWN", "waterDamageBonusRaw"),
+    DAMAGE_AIR_RAW("Air Damage", "%", "airDamageBonusRaw"),
+    DAMAGE_EARTH_RAW("Earth Damage", "%", "earthDamageBonusRaw"),
+    DAMAGE_FIRE_RAW("Fire Damage", "%", "fireDamageBonusRaw"),
+    DAMAGE_THUNDER_RAW("Thunder Damage", "%", "thunderDamageBonusRaw"),
+    DAMAGE_WATER_RAW("Water Damage", "%", "waterDamageBonusRaw"),
 
     // MAIN ATTACK:
     // rainbow
-    DAMAGE_MAIN_ATTACK_ELEMENTAL("FIXME:UNKNOWN", null, "FIXME:UNKNOWN", "mainAttackElementalDamageBonusRaw"),
+    DAMAGE_MAIN_ATTACK_ELEMENTAL("Elemental Main Attack Damage", null, "mainAttackElementalDamageBonusRaw"),
 
-    // Check lore with e.g. Spearmint or Darting Blur. Missing from Athena
-    DAMAGE_MAIN_AIR_RAW("Air Main Attack Damage", null, "FIXME:UNKNOWN", "mainAttackAirDamageBonusRaw"),
-    DAMAGE_MAIN_EARTH_RAW("Earth Main Attack Damage", null, "FIXME:UNKNOWN", "mainAttackEarthDamageBonusRaw"),
-    DAMAGE_MAIN_FIRE_RAW("Fire Main Attack Damage", null, "FIXME:UNKNOWN", "mainAttackFireDamageBonusRaw"),
-    DAMAGE_MAIN_THUNDER_RAW("Thunder Main Attack Damage", null, "FIXME:UNKNOWN", "mainAttackThunderDamageBonusRaw"),
-    DAMAGE_MAIN_WATER_RAW("Water Main Attack Damage", null, "FIXME:UNKNOWN", "mainAttackWaterDamageBonusRaw"),
+    DAMAGE_MAIN_AIR_RAW("Air Main Attack Damage", null, "mainAttackAirDamageBonusRaw"),
+    DAMAGE_MAIN_EARTH_RAW("Earth Main Attack Damage", null, "mainAttackEarthDamageBonusRaw"),
+    DAMAGE_MAIN_FIRE_RAW("Fire Main Attack Damage", null, "mainAttackFireDamageBonusRaw"),
+    DAMAGE_MAIN_THUNDER_RAW("Thunder Main Attack Damage", null, "mainAttackThunderDamageBonusRaw"),
+    DAMAGE_MAIN_WATER_RAW("Water Main Attack Damage", null, "mainAttackWaterDamageBonusRaw"),
 
-    // FIXME: check lore with Wind Spine
-    DAMAGE_MAIN_AIR_PERCENT("Air Main Attack Damage", "%", "FIXME:UNKNOWN", "mainAttackAirDamageBonus"),
-    DAMAGE_MAIN_EARTH_PERCENT("Earth Main Attack Damage", "%", "FIXME:UNKNOWN", "mainAttackEarthDamageBonus"),
-    DAMAGE_MAIN_FIRE_PERCENT("Fire Main Attack Damage", "%", "FIXME:UNKNOWN", "mainAttackFireDamageBonus"),
-    DAMAGE_MAIN_THUNDER_PERCENT("Thunder Main Attack Damage", "%", "FIXME:UNKNOWN", "mainAttackThunderDamageBonus"),
-    DAMAGE_MAIN_WATER_PERCENT("Water Main Attack Damage", "%", "FIXME:UNKNOWN", "mainAttackWaterDamageBonus"),
+    DAMAGE_MAIN_AIR_PERCENT("Air Main Attack Damage", "%", "mainAttackAirDamageBonus"),
+    DAMAGE_MAIN_EARTH_PERCENT("Earth Main Attack Damage", "%", "mainAttackEarthDamageBonus"),
+    DAMAGE_MAIN_FIRE_PERCENT("Fire Main Attack Damage", "%", "mainAttackFireDamageBonus"),
+    DAMAGE_MAIN_THUNDER_PERCENT("Thunder Main Attack Damage", "%", "mainAttackThunderDamageBonus"),
+    DAMAGE_MAIN_WATER_PERCENT("Water Main Attack Damage", "%", "mainAttackWaterDamageBonus"),
 
     // OK to here =====
     // SPELL ATTACK / SPELL DAMAGE
-    // LORE is WRONG, should be with _!!! as usual.
-    DAMAGE_SPELL_NEUTRAL("Neutral Spell Damage", null, "SPELLNEUTRALDAMAGEBONUSRAW", "spellNeutralDamageBonusRaw"),
+    DAMAGE_SPELL_NEUTRAL("Neutral Spell Damage", null, "spellNeutralDamageBonusRaw"),
 
     // rainbow
-    // LORE is WRONG, should be with _!!! as usual.
-    DAMAGE_SPELL_ELEMENTAL_PERCENT(
-            "Elemental Spell Damage", "%", "SPELLELEMENTALDAMAGEBONUS", "spellElementalDamageBonus"),
-    DAMAGE_SPELL_ELEMENTAL_RAW(
-            "Elemental Spell Damage", null, "SPELLELEMENTALDAMAGEBONUSRAW", "spellElementalDamageBonusRaw"),
+    DAMAGE_SPELL_ELEMENTAL_PERCENT("Elemental Spell Damage", "%", "spellElementalDamageBonus"),
+    DAMAGE_SPELL_ELEMENTAL_RAW("Elemental Spell Damage", null, "spellElementalDamageBonusRaw"),
 
     // elemental spell damage
-    // FIXME: this is e.g. on Soul Ink.  Check lore name!
-    DAMAGE_SPELL_AIR_PERCENT("Air Spell Damage", "%", "FIXME:UNKNOWN", "spellAirDamageBonus"),
-    // FIXME: check lore on e.g Decaying Headdress
-    DAMAGE_SPELL_EARTH_PERCENT("Earth Spell Damage", "%", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
-    DAMAGE_SPELL_FIRE_PERCENT("Fire Spell Damage", "%", "FIXME:UNKNOWN", "spellFireDamageBonus"),
-    DAMAGE_SPELL_THUNDER_PERCENT("Thunder Spell Damage", "%", "FIXME:UNKNOWN", "spellThunderDamageBonus"),
-    // FIXME: check lore on eg Ancient Waters
-    DAMAGE_SPELL_WATER_PERCENT("Water Spell Damage", "%", "FIXME:UNKNOWN", "spellWaterDamageBonus"),
+    DAMAGE_SPELL_AIR_PERCENT("Air Spell Damage", "%", "spellAirDamageBonus"),
+    DAMAGE_SPELL_EARTH_PERCENT("Earth Spell Damage", "%", "spellEarthDamageBonus"),
+    DAMAGE_SPELL_FIRE_PERCENT("Fire Spell Damage", "%", "spellFireDamageBonus"),
+    DAMAGE_SPELL_THUNDER_PERCENT("Thunder Spell Damage", "%", "spellThunderDamageBonus"),
+    DAMAGE_SPELL_WATER_PERCENT("Water Spell Damage", "%", "spellWaterDamageBonus"),
 
-    DAMAGE_SPELL_WATER_RAW("Water Spell Damage", null, "SPELLWATERDAMAGEBONUSRAW", "spellWaterDamageBonusRaw"),
-    DAMAGE_SPELL_EARTH_RAW("Earth Spell Damage", null, "SPELLEARTHDAMAGEBONUSRAW", "spellEarthDamageBonusRaw"),
-    DAMAGE_SPELL_FIRE_RAW("Fire Spell Damage", null, "SPELLFIREDAMAGEBONUSRAW", "spellFireDamageBonusRaw"),
-    DAMAGE_SPELL_THUNDER_RAW("Thunder Spell Damage", null, "SPELLTHUNDERDAMAGEBONUSRAW", "spellThunderDamageBonusRaw"),
-    DAMAGE_SPELL_AIR_RAW("Air Spell Damage", null, "SPELLAIRDAMAGEBONUSRAW", "spellAirDamageBonusRaw");
-
-    // FROM MISC
+    // FIXME: CHECK LORE
+    DAMAGE_SPELL_WATER_RAW("Water Spell Damage", null, "spellWaterDamageBonusRaw", "SPELLWATERDAMAGEBONUSRAW"),
+    DAMAGE_SPELL_EARTH_RAW("Earth Spell Damage", null, "spellEarthDamageBonusRaw", "SPELLEARTHDAMAGEBONUSRAW"),
+    DAMAGE_SPELL_FIRE_RAW("Fire Spell Damage", null, "spellFireDamageBonusRaw", "SPELLFIREDAMAGEBONUSRAW"),
+    DAMAGE_SPELL_THUNDER_RAW("Thunder Spell Damage", null, "spellThunderDamageBonusRaw", "SPELLTHUNDERDAMAGEBONUSRAW"),
+    DAMAGE_SPELL_AIR_RAW("Air Spell Damage", null, "spellAirDamageBonusRaw", "SPELLAIRDAMAGEBONUSRAW");
 
     private final String displayName;
     private final String unit;
     private final String loreName;
     private final String apiName;
 
-    GearDamageStat(String displayName, String unit, String loreName, String apiName) {
+    GearDamageStat(String displayName, String unit, String apiName, String loreName) {
         this.displayName = displayName;
         this.unit = unit;
         this.loreName = loreName;
         this.apiName = apiName;
+    }
+
+    GearDamageStat(String displayName, String unit, String apiName) {
+        this(displayName, unit, apiName, generateLoreName(apiName));
+    }
+
+    private static String generateLoreName(String apiName) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, apiName);
     }
 
     @Override
