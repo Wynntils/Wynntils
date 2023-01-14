@@ -59,56 +59,56 @@
 "mainAttackDamageBonusRaw" -- ID, ok
 "mainAttackElementalDamageBonusRaw" -- ID ok
 "mainAttackFireDamageBonusRaw" -- ID ok
-"mainAttackThunderDamageBonus"
-"mainAttackThunderDamageBonusRaw"
-"majorIds"
-"manaRegen"
-"manaSteal"
-"material"
-"name"
-"poison"
-"quest"
-"reflection"
-"restrictions"
-"set"
-"skin"
-"sockets"
-"soulPoints"
-"speed"
-"spellAirDamageBonus"
-"spellAirDamageBonusRaw"
-"spellCostPct1"
-"spellCostPct2"
-"spellCostPct3"
-"spellCostPct4"
-"spellCostRaw1"
-"spellCostRaw2"
-"spellCostRaw3"
-"spellCostRaw4"
-"spellDamageBonus"
-"spellDamageBonusRaw"
-"spellEarthDamageBonus"
-"spellEarthDamageBonusRaw"
-"spellElementalDamageBonus"
-"spellElementalDamageBonusRaw"
-"spellFireDamageBonusRaw"
-"spellNeutralDamageBonusRaw"
-"spellThunderDamageBonusRaw"
-"spellWaterDamageBonus"
-"spellWaterDamageBonusRaw"
-"sprint"
-"sprintRegen"
+"mainAttackThunderDamageBonus" -- ID ok
+"mainAttackThunderDamageBonusRaw" -- ID ok
+"majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
+"manaRegen" -- ID ok
+"manaSteal" -- ID ok
+"material" -- för allt utom armor, t.ex. "359:5"
+"name" -- the name unless overridden by displayName
+"poison" -- ID ok
+"quest" -- req, quest name as string
+"reflection" -- ID ok
+"restrictions" -- "req", can be "Untradable", "untradable" or "Quest Item"
+"set" -- nonsens, null for most sets (only given for "Leaf")
+"skin" -- player head base64 data for some helmets
+"sockets" -- fixed, number of powder slots, an integer
+"soulPoints" -- ID, ok
+"speed" -- ID, ok (walk speed)
+"spellAirDamageBonus" -- ID ok
+"spellAirDamageBonusRaw" -- ID ok
+"spellCostPct1" -- ID ok
+"spellCostPct2" -- ID ok
+"spellCostPct3" -- ID ok
+"spellCostPct4" -- ID ok
+"spellCostRaw1" -- ID ok
+"spellCostRaw2" -- ID ok
+"spellCostRaw3" -- ID ok
+"spellCostRaw4" -- ID ok
+"spellDamageBonus" -- ID ok
+"spellDamageBonusRaw" -- ID ok
+"spellEarthDamageBonus" -- ID ok
+"spellEarthDamageBonusRaw" -- ID ok
+"spellElementalDamageBonus" -- ID ok
+"spellElementalDamageBonusRaw" -- ID ok
+"spellFireDamageBonusRaw" -- ID ok
+"spellNeutralDamageBonusRaw" -- ID ok
+"spellThunderDamageBonusRaw" -- ID ok
+"spellWaterDamageBonus" -- ID ok
+"spellWaterDamageBonusRaw" -- ID ok
+"sprint" -- ID ok
+"sprintRegen" -- ID ok
 "strength" -- req skill points, number
 "strengthPoints" -- ID, OK
-"thorns"
+"thorns" -- ID ok
 "thunderDamage" -- fixed, range, elemental damage for a weapon
 "thunderDamageBonus" -- ID ok
-"thunderDamageBonusRaw"
+"thunderDamageBonusRaw" -- ID ok
 "thunderDefense" -- fixed, gives extra elemental defense
-"tier"
-"type"
+"tier" -- rarity level
+"type" -- gear type, string, "Helmet" etc
 "waterDamage" -- fixed, range, elemental damage for a weapon
 "waterDamageBonus" -- ID ok
-"waterDamageBonusRaw"
+"waterDamageBonusRaw" -- ID ok
 "waterDefense" -- fixed, gives extra elemental defense
-"xpBonus"
+"xpBonus" -- ID ok

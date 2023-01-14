@@ -12,21 +12,30 @@ public enum IdElementalTypes implements IdType {
     DEFENCE_THUNDER(IsVariable.YES, "Thunder Defence", "%", "thunderDefence", "THUNDERDEFENSE", "bonusThunderDefense"),
     DEFENCE_WATER(IsVariable.YES, "Water Defence", "%", "waterDefence", "WATERDEFENSE", "bonusWaterDefense"),
 
-    DAMAGE_AIR(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "airDamageBonus"),
-    DAMAGE_EARTH(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "earthDamageBonus"),
-    DAMAGE_FIRE(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "fireDamageBonus"),
-    DAMAGE_THUNDER(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
-    DAMAGE_WATER(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "waterDamageBonus"),
+    DAMAGE_AIR_PERCENT(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "airDamageBonus"),
+    DAMAGE_EARTH_PERCENT(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "earthDamageBonus"),
+    DAMAGE_FIRE_PERCENT(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "fireDamageBonus"),
+    DAMAGE_THUNDER_PERCENT(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
+    DAMAGE_WATER_PERCENT(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "waterDamageBonus"),
+
+    // FIXME: missing from Athena, check lore
+    DAMAGE_AIR_RAW(IsVariable.YES, "Air Damage", "%", "airDamage", "FIXME:UNKNOWN", "airDamageBonusRaw"),
+    DAMAGE_EARTH_RAW(IsVariable.YES, "Earth Damage", "%", "earthDamage", "FIXME:UNKNOWN", "earthDamageBonusRaw"),
+    DAMAGE_FIRE_RAW(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIXME:UNKNOWN", "fireDamageBonusRaw"),
+    DAMAGE_THUNDER_RAW(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "FIXME:UNKNOWN", "thunderDamageBonusRaw"),
+    DAMAGE_WATER_RAW(IsVariable.YES, "Water Damage", "%", "waterDamage", "FIXME:UNKNOWN", "waterDamageBonusRaw"),
 
     // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
     DAMAGE_SPELL_AIR_PERCENT(
             IsVariable.YES, "Air Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellAirDamageBonus"),
+    // FIXME: check lore on e.g Decaying Headdress
     DAMAGE_SPELL_EARTH_PERCENT(
             IsVariable.YES, "Earth Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
     DAMAGE_SPELL_FIRE_PERCENT(
             IsVariable.YES, "Fire Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellFireDamageBonus"),
     DAMAGE_SPELL_THUNDER_PERCENT(
             IsVariable.YES, "Thunder Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellThunderDamageBonus"),
+    // FIXME: check lore on eg Ancient Waters
     DAMAGE_SPELL_WATER_PERCENT(
             IsVariable.YES, "Water Spell Damage", "%", "MISSING", "FIXME:UNKNOWN", "spellWaterDamageBonus"),
 

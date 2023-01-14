@@ -51,8 +51,9 @@ public enum IdMiscTypes implements IdType {
             IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "mainAttackDamageBonus"),
     DAMAGE_MAIN_ATTACK_RAW(
             IsVariable.YES, "Main Attack Damage", null, "rawMainAttackDamage", "DAMAGEBONUSRAW", "mainAttackDamageBonusRaw"),
-    DAMAGE_SPELL_PERCENT(IsVariable.YES, "Spell Damage", "%", "spellDamage", "SPELLDAMAGE", "spellDamage"),
-    DAMAGE_SPELL_RAW(IsVariable.YES, "Spell Damage", null, "rawSpellDamage", "SPELLDAMAGERAW", "spellDamageRaw"),
+    // FIXME: lore???
+    DAMAGE_SPELL_PERCENT(IsVariable.YES, "Spell Damage", "%", "spellDamage", "SPELLDAMAGE", "spellDamageBonus"),
+    DAMAGE_SPELL_RAW(IsVariable.YES, "Spell Damage", null, "rawSpellDamage", "SPELLDAMAGERAW", "spellDamageBonusRaw"),
 
     HEALTH(IsVariable.YES, "Health", null, "rawHealth", "HEALTHBONUS", "healthBonus"),
     HEALTH_REGEN_PERCENT(IsVariable.YES, "Health Regen", "%", "healthRegen", "HEALTHREGEN", "healthRegen"),
