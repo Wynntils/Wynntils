@@ -5,11 +5,19 @@
 package com.wynntils.wynn.gear;
 
 public enum GearStatUnit {
-    RAW(null),
+    RAW(""),
     PERCENT("%"),
     PER_3_S("/3s"),
     PER_5_S("/5s"),
     TIER(" tier");
 
-    GearStatUnit(String string) {}
+    private final String displayName;
+
+    GearStatUnit(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

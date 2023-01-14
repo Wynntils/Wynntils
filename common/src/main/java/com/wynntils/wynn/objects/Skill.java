@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.utils.StringUtils;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
@@ -16,10 +17,12 @@ public enum Skill {
 
     private final String symbol;
     private final ChatFormatting color;
+    private final String displayName;
 
     Skill(String symbol, ChatFormatting color) {
         this.symbol = symbol;
         this.color = color;
+        this.displayName = StringUtils.capitalized(this.name());
     }
 
     public static Skill fromString(String str) {
@@ -36,5 +39,9 @@ public enum Skill {
 
     public ChatFormatting getColor() {
         return color;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }
