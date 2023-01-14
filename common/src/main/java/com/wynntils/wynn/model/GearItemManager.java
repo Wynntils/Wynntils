@@ -17,7 +17,7 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wynn.gear.stats.GearStat;
+import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;

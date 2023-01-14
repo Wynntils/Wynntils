@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.gear.types.GearStatUnit;
 import com.wynntils.wynn.objects.ClassType;
 import com.wynntils.wynn.objects.SpellType;

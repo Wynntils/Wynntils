@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.wynn.gear.types.GearStat;
 import java.util.function.Consumer;
 
 public final class MiscStatBuilder extends StatBuilder {

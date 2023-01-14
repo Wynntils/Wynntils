@@ -7,6 +7,7 @@ package com.wynntils.wynn.gear.stats;
 import com.google.common.base.CaseFormat;
 import com.wynntils.wynn.gear.types.GearAttackType;
 import com.wynntils.wynn.gear.types.GearDamageType;
+import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.gear.types.GearStatUnit;
 import java.util.function.Consumer;
 
