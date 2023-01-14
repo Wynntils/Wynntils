@@ -56,7 +56,7 @@ FIXED STATS:
 
 ID, VARIABLE STATS
 
-"airDamageBonus" -- ID, OK
+"airDamageBonus" -- ID, OK -- confirmed on TM
 "earthDamageBonus" -- ID, ok
 "fireDamageBonus" -- ID ok
 "thunderDamageBonus" -- ID ok
@@ -65,18 +65,18 @@ ID, VARIABLE STATS
 "waterDamageBonusRaw" -- ID ok
 "thunderDamageBonusRaw" -- ID ok
 
-"mainAttackAirDamageBonus" -- ID, ok
-"mainAttackThunderDamageBonus" -- ID ok
+"mainAttackAirDamageBonus" -- ID, ok, unconfirmed, check on Wind Spine
+"mainAttackThunderDamageBonus" -- ID ok, unconfirmed, check on Despondence
 ...
-"mainAttackAirDamageBonusRaw" -- ID, ok
+"mainAttackAirDamageBonusRaw" -- ID, ok, confirmed on Spearmint
 "mainAttackFireDamageBonusRaw" -- ID ok
 "mainAttackThunderDamageBonusRaw" -- ID ok
 
-"spellAirDamageBonus" -- ID ok -- only on Soul Ink, possibly wrong (should perhaps have been airDamageBonus?)
-"spellEarthDamageBonus" -- ID ok -- only on Decaying Headdress, possibly wrong
-"spellWaterDamageBonus" -- ID ok -- only on Ancient Waters, possibly wrong
+"spellAirDamageBonus" -- ID ok
+"spellEarthDamageBonus" -- ID ok
+"spellWaterDamageBonus" -- ID ok -- confirmed on Ancient Waters
 ...
-"spellAirDamageBonusRaw" -- ID ok Spearmint
+"spellAirDamageBonusRaw" -- ID ok Spearmint, confirmed on TM
 "spellEarthDamageBonusRaw" -- ID ok
 "spellFireDamageBonusRaw" -- ID ok
 "spellThunderDamageBonusRaw" -- ID ok
