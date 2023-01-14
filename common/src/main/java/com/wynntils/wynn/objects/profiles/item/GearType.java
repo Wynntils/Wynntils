@@ -6,7 +6,6 @@ package com.wynntils.wynn.objects.profiles.item;
 
 import com.wynntils.wynn.objects.ClassType;
 import java.util.Locale;
-import java.util.Optional;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -60,11 +59,11 @@ public enum GearType {
         return defaultItem;
     }
 
-    public static Optional<GearType> fromString(String typeStr) {
+    public static GearType fromString(String typeStr) {
         try {
-            return Optional.of(GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_")));
+            return GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_"));
         } catch (IllegalArgumentException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
