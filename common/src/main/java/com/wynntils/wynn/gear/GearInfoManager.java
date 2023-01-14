@@ -17,6 +17,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.utils.Pair;
+import com.wynntils.utils.RangedValue;
 import com.wynntils.wynn.gear.stats.DamageStatBuilder;
 import com.wynntils.wynn.gear.stats.DefenceStatBuilder;
 import com.wynntils.wynn.gear.stats.MiscStatBuilder;
@@ -82,12 +84,48 @@ public final class GearInfoManager extends Manager {
         public GearInfo deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
+
+            // Some names apparently has a random ֎ in them...
+            String name = json.get("name").getAsString().replace("֎", "");
+            GearType type = parseType(json);
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = json.get("sockets").getAsInt();
 
-            // When reading, strip "֎" from name and quest name.
+            GearMetaInfo metaInfo = parseMetaInfo(json);
+            GearRequirements requirements = parseRequirements(json);
+            GearStatsFixed statsFixed = parseStatsFixed(json);
+            List<Pair<GearStat, RangedValue>> statsIdentified = parseStatsIdentified(json);
+
+            return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, statsFixed, statsIdentified);
+        }
+
+        private GearType parseType(JsonObject json) {
+            String category = json.get("category").getAsString();
+            String typeString;
+            if (category.equals("accessory")) {
+                typeString = json.get("accessoryType").getAsString();
+            } else {
+                typeString = json.get("type").getAsString();
+            }
+            return GearType.fromString(typeString);
+        }
+
+        private List<Pair<GearStat, RangedValue>> parseStatsIdentified(JsonObject json) {
+            return List.of();
+        }
+
+        private GearStatsFixed parseStatsFixed(JsonObject json) {
+            return null;
+        }
+
+        private GearRequirements parseRequirements(JsonObject json) {
+            // When reading, strip "֎" from quest name.
             // classRequirement -> str to upper
-            String name = json.get("name").getAsString();
-            return new GearInfo(name, GearType.NECKLACE, GearTier.RARE, powderSlots, null, null, null, null);
+            return null;
+        }
+
+        private GearMetaInfo parseMetaInfo(JsonObject json) {
+            return null;
         }
     }
 }
