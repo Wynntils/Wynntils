@@ -76,10 +76,14 @@ public final class GearStatRegistry {
 
                 if (spellType.getClassType() == ClassType.None) {
                     // Also add an alias of the form "{sp1} Cost" which can appear on Unidentified gear
+                    String aliasName = "{sp" + spellNumber + "} Cost";
+                    GearStat percentTypeAlias =
+                            buildSpellStat(spellType, spellNumber, aliasName, GearStatUnit.PERCENT, "_ALIAS");
+                    callback.accept(percentTypeAlias);
+
                     GearStat rawTypeAlias =
-                            buildSpellStat(spellType, spellNumber, displayName, GearStatUnit.RAW, "_ALIAS");
+                            buildSpellStat(spellType, spellNumber, aliasName, GearStatUnit.RAW, "_ALIAS");
                     callback.accept(rawTypeAlias);
-                    // FIXME!!!! also for PERCENT????
                 }
             }
         }
