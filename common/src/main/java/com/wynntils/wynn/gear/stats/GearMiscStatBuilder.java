@@ -5,11 +5,10 @@
 package com.wynntils.wynn.gear.stats;
 
 import com.wynntils.wynn.gear.GearStatUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public enum GearMiscStat implements GearStat {
+public enum GearMiscStatBuilder implements GearStat {
     HEALTH("Health", GearStatUnit.RAW, "healthBonus"),
     HEALTH_REGEN_PERCENT("Health Regen", GearStatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", GearStatUnit.RAW, "healthRegenRaw"),
@@ -39,7 +38,7 @@ public enum GearMiscStat implements GearStat {
     private final String loreName;
     private final String apiName;
 
-    GearMiscStat(String displayName, GearStatUnit unit, String apiName, String loreName) {
+    GearMiscStatBuilder(String displayName, GearStatUnit unit, String apiName, String loreName) {
         this.displayName = displayName;
         this.unit = unit;
         this.loreName = loreName;
@@ -52,7 +51,7 @@ public enum GearMiscStat implements GearStat {
         }
     }
 
-    GearMiscStat(String displayName, GearStatUnit unit, String apiName) {
+    GearMiscStatBuilder(String displayName, GearStatUnit unit, String apiName) {
         this(displayName, unit, apiName, apiName.toUpperCase(Locale.ROOT));
     }
 

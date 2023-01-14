@@ -17,10 +17,8 @@ import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Utils;
-import com.wynntils.wynn.gear.stats.GearDamageStat;
-import com.wynntils.wynn.gear.stats.GearMiscStat;
-import com.wynntils.wynn.gear.stats.GearSpellStat;
 import com.wynntils.wynn.gear.stats.GearStat;
+import com.wynntils.wynn.gear.stats.GearStatRegistry;
 import com.wynntils.wynn.handleditems.FakeItemStack;
 import com.wynntils.wynn.handleditems.items.game.CharmItem;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
@@ -201,19 +199,7 @@ public final class GearItemManager extends Manager {
     }
 
     private GearStat getIdType(String idName, String unit) {
-        for (GearMiscStat statType : GearMiscStat.values()) {
-            if (statType.getDisplayName().equals(idName)) {
-                if (statType.getUnit() == null && unit == null) return statType;
-                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
-            }
-        }
-        for (GearDamageStat statType : GearDamageStat.damageTypeIds) {
-            if (statType.getDisplayName().equals(idName)) {
-                if (statType.getUnit() == null && unit == null) return statType;
-                if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;
-            }
-        }
-        for (GearSpellStat statType : GearSpellStat.spellTypeIds) {
+        for (GearStat statType : GearStatRegistry.registry) {
             if (statType.getDisplayName().equals(idName)) {
                 if (statType.getUnit() == null && unit == null) return statType;
                 if (statType.getUnit() != null && statType.getUnit().equals(unit)) return statType;

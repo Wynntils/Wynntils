@@ -8,17 +8,10 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.wynn.gear.GearAttackType;
 import com.wynntils.wynn.gear.GearDamageType;
 import com.wynntils.wynn.gear.GearStatUnit;
-import java.util.ArrayList;
 import java.util.List;
 
-public class GearDamageStat implements GearStat {
-    public static final List<GearDamageStat> damageTypeIds = new ArrayList<>();
-
-    static {
-        generate();
-    }
-
-    public GearDamageStat(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
+public class GearDamageStatBuilder implements GearStat {
+    public GearDamageStatBuilder(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
         this.attackType = attackType;
         this.damageType = damageType;
         this.unit = unit;
@@ -27,6 +20,7 @@ public class GearDamageStat implements GearStat {
         this.displayName = buildDisplayName(attackType, damageType);
         this.key = buildKey(attackType, damageType, unit);
     }
+
 
     private String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
         return CaseFormat.UPPER_CAMEL.to(
@@ -42,13 +36,13 @@ public class GearDamageStat implements GearStat {
         return damageType.getDisplayName() + attackType.getDisplayName() + "Damage";
     }
 
-    private static void generate() {
+    public static void addStats(List<GearStat> registry) {
         for (GearAttackType attackType : GearAttackType.values()) {
             for (GearDamageType damageType : GearDamageType.values()) {
-                GearDamageStat rawType = new GearDamageStat(attackType, damageType, GearStatUnit.RAW);
-                damageTypeIds.add(rawType);
-                GearDamageStat percentType = new GearDamageStat(attackType, damageType, GearStatUnit.PERCENT);
-                damageTypeIds.add(percentType);
+                GearDamageStatBuilder rawType = new GearDamageStatBuilder(attackType, damageType, GearStatUnit.RAW);
+                registry.add(rawType);
+                GearDamageStatBuilder percentType = new GearDamageStatBuilder(attackType, damageType, GearStatUnit.PERCENT);
+                registry.add(percentType);
             }
         }
     }
