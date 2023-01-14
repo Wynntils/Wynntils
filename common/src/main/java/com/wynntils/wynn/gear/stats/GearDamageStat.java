@@ -34,9 +34,9 @@ public enum GearDamageStat implements GearStat {
     // ATTACK TYPE UNSPECIFIED, ELEMENT SPECIFIED
 
     // rainbow
-    // FIXME: missing from Athena. Check lore name, with e.g. Aleph null.
+    // FIXME: Check lore name, with e.g. Aleph null.
     DAMAGE_ELEMANTAL_PERCENT("Elemental Damage", "%", "FIXME:UNKNOWN", "elementalDamageBonus"),
-    // FIXME: these two: check Axion. Missing in Athena.
+    // FIXME: these two: check Axion.
     DAMAGE_ELEMENTAL_RAW("FIXME:UNKNOWN", null, "FIXME:UNKNOWN", "elementalDamageBonusRaw"),
 
     // ELEMENTAL
@@ -47,7 +47,7 @@ public enum GearDamageStat implements GearStat {
     DAMAGE_THUNDER_PERCENT("Thunder Damage", "%", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
     DAMAGE_WATER_PERCENT("Water Damage", "%", "WATERDAMAGEBONUS", "waterDamageBonus"),
 
-    // FIXME: missing from Athena, check lore
+    // FIXME: check lore
     DAMAGE_AIR_RAW("Air Damage", "%", "FIXME:UNKNOWN", "airDamageBonusRaw"),
     DAMAGE_EARTH_RAW("Earth Damage", "%", "FIXME:UNKNOWN", "earthDamageBonusRaw"),
     DAMAGE_FIRE_RAW("Fire Damage", "%", "FIXME:UNKNOWN", "fireDamageBonusRaw"),
@@ -83,7 +83,7 @@ public enum GearDamageStat implements GearStat {
             "Elemental Spell Damage", null, "SPELLELEMENTALDAMAGEBONUSRAW", "spellElementalDamageBonusRaw"),
 
     // elemental spell damage
-    // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
+    // FIXME: this is e.g. on Soul Ink.  Check lore name!
     DAMAGE_SPELL_AIR_PERCENT("Air Spell Damage", "%", "FIXME:UNKNOWN", "spellAirDamageBonus"),
     // FIXME: check lore on e.g Decaying Headdress
     DAMAGE_SPELL_EARTH_PERCENT("Earth Spell Damage", "%", "FIXME:UNKNOWN", "spellEarthDamageBonus"),
