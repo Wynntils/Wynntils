@@ -5,10 +5,8 @@
 package com.wynntils.wynn.model.gear;
 
 public enum IdMiscTypes implements IdType {
-    // FIXME: missing from Athena. Check lore name, e.g. Aleph null.
-    DAMAGE_ELEMANTAL(IsVariable.YES, "Elemental Damage", "%", "FIXME:MISSING", "FIXME:UNKNWON", "elementalDamageBonus"),
-
-    // FIXME
+    // FIXME: missing from Athena. Check lore name, with e.g. Aleph null.
+    DAMAGE_ELEMANTAL(IsVariable.YES, "Elemental Damage", "%", "MISSING", "FIXME:UNKNOWN", "elementalDamageBonus"),
     DAMAGE_SPELL_ELEMENTAL_PERCENT(
             IsVariable.YES,
             "Elemental Spell Damage",
@@ -16,7 +14,6 @@ public enum IdMiscTypes implements IdType {
             "elementalSpellDamage",
             "SPELLELEMENTALDAMAGEBONUS",
             "spellElementalDamageBonus"),
-    // FIXME, check with only available item: Forest Aconite, untradable
     DAMAGE_SPELL_ELEMENTAL_RAW(
             IsVariable.YES,
             "Elemental Spell Damage",
@@ -25,14 +22,17 @@ public enum IdMiscTypes implements IdType {
             "SPELLELEMENTALDAMAGEBONUSRAW",
             "spellElementalDamageBonusRaw"),
 
-    // FIXME
+    // FIXME: these two: check Axion. Missing in Athena.
+    DAMAGE_ELEMENTAL(IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "elementalDamageBonusRaw"),
+    DAMAGE_MAIN_ATTACK_ELEMENTAL(IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "mainAttackElementalDamageBonusRaw"),
+
     DAMAGE_SPELL_NEUTRAL(
             IsVariable.YES,
             "Neutral Spell Damage",
             null,
             "rawNeutralSpellDamage",
             "SPELLNEUTRALDAMAGEBONUSRAW",
-            "FIXME"),
+            "spellNeutralDamageBonusRaw"),
     DAMAGE_MAIN_ATTACK_PERCENT(
             IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "damageBonus"),
     DAMAGE_MAIN_ATTACK_RAW(
@@ -49,10 +49,9 @@ public enum IdMiscTypes implements IdType {
     MANA_STEAL(IsVariable.YES, "Mana Steal", "/3s", "manaSteal", "MANASTEAL", "manaSteal"),
 
     WALK_SPEED(IsVariable.YES, "Walk Speed", "%", "walkSpeed", "SPEED", "speed"),
-    // FIXME
-    SPRINT(IsVariable.YES, "Sprint", "%", "sprint", "STAMINA", "FIXME"),
-    // FIXME
-    SPRINT_REGEN(IsVariable.YES, "Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN", "FIXME"),
+    // FIXME: is lore correct for these two?
+    SPRINT(IsVariable.YES, "Sprint", "%", "sprint", "STAMINA", "sprint"),
+    SPRINT_REGEN(IsVariable.YES, "Sprint Regen", "%", "sprintRegen", "STAMINA_REGEN", "sprintRegen"),
 
     THORNS(IsVariable.YES, "Thorns", "%", "thorns", "THORNS", "thorns"),
     EXPLODING(IsVariable.YES, "Exploding", "%", "exploding", "EXPLODING", "exploding"),
@@ -60,10 +59,9 @@ public enum IdMiscTypes implements IdType {
     REFLECTION(IsVariable.YES, "Reflection", "%", "reflection", "REFLECTION", "reflection"),
 
     STEALING(IsVariable.YES, "Stealing", "%", "stealing", "EMERALDSTEALING", "emeraldStealing"),
-    // FIXME: Check discrepancy between LORE and api
+    // FIXME: is lore correct?
     ATTACK_SPEED(IsVariable.YES, "Attack Speed", " tier", "attackSpeed", "ATTACKSPEED", "attackSpeedBonus"),
-    // FIXME
-    JUMP_HEIGHT(IsVariable.YES, "Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "FIXME"),
+    JUMP_HEIGHT(IsVariable.YES, "Jump Height", null, "rawJumpHeight", "JUMP_HEIGHT", "jumpHeight"),
     LOOT_BONUS(IsVariable.YES, "Loot Bonus", "%", "lootBonus", "LOOTBONUS", "lootBonus"),
     SOUL_POINT_REGEN(IsVariable.YES, "Soul Point Regen", "%", "soulPointRegen", "SOULPOINTS", "soulPoints"),
     XP_BONUS(IsVariable.YES, "XP Bonus", "%", "xpBonus", "XPBONUS", "xpBonus");
