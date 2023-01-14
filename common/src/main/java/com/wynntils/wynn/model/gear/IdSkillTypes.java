@@ -5,6 +5,7 @@
 package com.wynntils.wynn.model.gear;
 
 public enum IdSkillTypes implements IdType {
+    // FIXME: These are FIXED stats!!!!
     SKILL_AGILITY(IsVariable.NO, "Agility", null, "rawAgility", "AGILITYPOINTS", "agilityPoints"),
     SKILL_DEFENCE(IsVariable.NO, "Defence", null, "rawDefence", "DEFENSEPOINTS", "defensePoints"),
     SKILL_DEXTERITY(IsVariable.NO, "Dexterity", null, "rawDexterity", "DEXTERITYPOINTS", "dexterityPoints"),

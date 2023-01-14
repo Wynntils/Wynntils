@@ -19,54 +19,75 @@ META:
 "skin" -- player head base64 data for some helmets
 
 REQUIREMENTS
-"agility" -- req skill points, number
+"level" -- req, min combat level
+"quest" -- req, quest name as string
 "classRequirement" -- req, e.g. "Archer", för icke-vapen
+
+"agility" -- req skill points, number
 "defense" -- req skill points, number
 "dexterity" -- req skill points, number
 "intelligence" -- req skill points, number
-"level" -- req, min combat level
-"quest" -- req, quest name as string
 "strength" -- req skill points, number
 
+FIXED STATS:
+"health" -- fixed, gives additional health
+"damage" -- neutral spell damage, range
+"attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
+"majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
+
+"agilityPoints" -- fixed, gives extra skill points
+"defensePoints" -- fixed, gives extra skill points
+"dexterityPoints" -- fixed, gives extra skill points
+"intelligencePoints" -- fixed, gives extra skill points
+"strengthPoints" -- fixed, gives extra skill points
+
+"airDamage" -- fixed, range, elemental damage for a weapon
+"earthDamage" -- fixed, range, elemental damage for a weapon
+"fireDamage" -- fixed, range, elemental damage for a weapon
+"thunderDamage" -- fixed, range, elemental damage for a weapon
+"waterDamage" -- fixed, range, elemental damage for a weapon
+
+"airDefense" -- fixed, gives extra elemental defense
+"earthDefense" -- fixed, gives extra elemental defense
+"fireDefense" -- fixed, gives extra elemental defense
+"thunderDefense" -- fixed, gives extra elemental defense
+"waterDefense" -- fixed, gives extra elemental defense
+
+
 ID, VARIABLE STATS
-"agilityPoints" - ID, OK
+
 "airDamageBonus" -- ID, OK
-"attackSpeedBonus" -- ID, OK
+"earthDamageBonus" -- ID, ok
+"fireDamageBonus" -- ID ok
+"thunderDamageBonus" -- ID ok
+"waterDamageBonus" -- ID ok
+...
+"waterDamageBonusRaw" -- ID ok
+"thunderDamageBonusRaw" -- ID ok
+
+"mainAttackAirDamageBonus" -- ID, ok
+"mainAttackThunderDamageBonus" -- ID ok
+...
+"mainAttackAirDamageBonusRaw" -- ID, ok
+"mainAttackFireDamageBonusRaw" -- ID ok
+"mainAttackThunderDamageBonusRaw" -- ID ok
+
+"spellAirDamageBonus" -- ID ok -- only on Soul Ink, possibly wrong (should perhaps have been airDamageBonus?)
+"spellEarthDamageBonus" -- ID ok -- only on Decaying Headdress, possibly wrong
+"spellWaterDamageBonus" -- ID ok -- only on Ancient Waters, possibly wrong
+...
+"spellAirDamageBonusRaw" -- ID ok Spearmint
+"spellEarthDamageBonusRaw" -- ID ok
+"spellFireDamageBonusRaw" -- ID ok
+"spellThunderDamageBonusRaw" -- ID ok
+"spellWaterDamageBonusRaw" -- ID ok
+
 "bonusAirDefense" -- ID, OK
 "bonusEarthDefense"-- ID, OK
 "bonusFireDefense"-- ID, OK
 "bonusThunderDefense" -- ID, OK
 "bonusWaterDefense" -- ID, OK
-"dexterityPoints" -- ID, OK
-"earthDamageBonus" -- ID, ok
-"elementalDamageBonus" -- ID, ok
-"elementalDamageBonusRaw" -- ID, ok
-"emeraldStealing" -- ID, ok
-"exploding" -- ID ok
-"fireDamageBonus" -- ID ok
-"healthBonus" -- ID, ok
-"healthRegen" -- ID ok
-"healthRegenRaw" -- ID ok
-"intelligencePoints" -- ID, OK
-"jumpHeight" -- ID, ok
-"lifeSteal" -- ID, ok
-"lootBonus" -- ID, ok
-"mainAttackAirDamageBonus" -- ID, ok
-"mainAttackAirDamageBonusRaw" -- ID, ok
-"mainAttackDamageBonus" -- ID, ok
-"mainAttackDamageBonusRaw" -- ID, ok
-"mainAttackElementalDamageBonusRaw" -- ID ok
-"mainAttackFireDamageBonusRaw" -- ID ok
-"mainAttackThunderDamageBonus" -- ID ok
-"mainAttackThunderDamageBonusRaw" -- ID ok
-"manaRegen" -- ID ok
-"manaSteal" -- ID ok
-"poison" -- ID ok
-"reflection" -- ID ok
-"soulPoints" -- ID, ok
-"speed" -- ID, ok (walk speed)
-"spellAirDamageBonus" -- ID ok
-"spellAirDamageBonusRaw" -- ID ok
+
 "spellCostPct1" -- ID ok
 "spellCostPct2" -- ID ok
 "spellCostPct3" -- ID ok
@@ -75,43 +96,36 @@ ID, VARIABLE STATS
 "spellCostRaw2" -- ID ok
 "spellCostRaw3" -- ID ok
 "spellCostRaw4" -- ID ok
+
+"attackSpeedBonus" -- ID, OK
+"elementalDamageBonus" -- ID, ok
+"elementalDamageBonusRaw" -- ID, ok
+"emeraldStealing" -- ID, ok
+"exploding" -- ID ok
+"healthBonus" -- ID, ok
+"healthRegen" -- ID ok
+"healthRegenRaw" -- ID ok
+"jumpHeight" -- ID, ok
+"lifeSteal" -- ID, ok
+"lootBonus" -- ID, ok
+"mainAttackDamageBonus" -- ID, ok
+"mainAttackDamageBonusRaw" -- ID, ok
+"mainAttackElementalDamageBonusRaw" -- ID ok
+"manaRegen" -- ID ok
+"manaSteal" -- ID ok
+"poison" -- ID ok
+"reflection" -- ID ok
+"soulPoints" -- ID, ok
+"speed" -- ID, ok (walk speed)
 "spellDamageBonus" -- ID ok
 "spellDamageBonusRaw" -- ID ok
-"spellEarthDamageBonus" -- ID ok
-"spellEarthDamageBonusRaw" -- ID ok
 "spellElementalDamageBonus" -- ID ok
 "spellElementalDamageBonusRaw" -- ID ok
-"spellFireDamageBonusRaw" -- ID ok
 "spellNeutralDamageBonusRaw" -- ID ok
-"spellThunderDamageBonusRaw" -- ID ok
-"spellWaterDamageBonus" -- ID ok
-"spellWaterDamageBonusRaw" -- ID ok
 "sprint" -- ID ok
 "sprintRegen" -- ID ok
-"strengthPoints" -- ID, OK
 "thorns" -- ID ok
-"thunderDamageBonus" -- ID ok
-"thunderDamageBonusRaw" -- ID ok
-"waterDamageBonus" -- ID ok
-"waterDamageBonusRaw" -- ID ok
 "xpBonus" -- ID ok
-
-FIXED STATS:
-"airDamage" -- fixed, range, elemental damage for a weapon
-"airDefense" -- fixed, gives extra elemental defense
-"attackSpeed" -- statiskt, string, typ "SUPER_SLOW"
-"damage" -- neutral spell damage, range
-"defensePoints" -- fixed, gives extra defense skill points
-"earthDamage" -- fixed, range, elemental damage for a weapon
-"earthDefense" -- fixed, gives extra elemental defense
-"fireDamage" -- fixed, range, elemental damage for a weapon
-"fireDefense" -- fixed, gives extra elemental defense
-"health" -- fixed, gives additional health
-"majorIds" -- array with major id keys, eg [ "PLAGUE"  ],
-"thunderDamage" -- fixed, range, elemental damage for a weapon
-"thunderDefense" -- fixed, gives extra elemental defense
-"waterDamage" -- fixed, range, elemental damage for a weapon
-"waterDefense" -- fixed, gives extra elemental defense
 
 IGNORE:
 "bonusAirDamage" -- this is broken, is only 0 for one item, Inhibitor
