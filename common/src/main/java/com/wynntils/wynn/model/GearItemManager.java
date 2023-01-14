@@ -25,6 +25,7 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.handleditems.items.game.TomeItem;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
+import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.objects.SpellType;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
 import com.wynntils.wynn.objects.profiles.item.GearIdentification;
@@ -147,50 +148,40 @@ public final class GearItemManager extends Manager {
             String formatId = ComponentUtils.getCoded(loreLine);
             Matcher id2Matcher = ID_NEW_PATTERN.matcher(formatId);
             if (id2Matcher.matches()) {
-                boolean isNegative = id2Matcher.group(1).charAt(0) == 'c';
                 int value = Integer.parseInt(id2Matcher.group(2));
                 String idName = id2Matcher.group(5);
-                String unit = id2Matcher.group(3);
+                String unitMatch = id2Matcher.group(3);
+                String unit = unitMatch == null ? "" : unitMatch;
                 String starsString = id2Matcher.group(4);
                 int stars = starsString == null ? 0 : starsString.length();
 
                 GearStat type = getIdType(idName, unit);
                 String name2 = ComponentUtils.getUnformatted(realName);
                 if (type == null) {
-                    System.out.println(
-                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
-                                    + (isNegative ? "negative" : "positive") + ", stars: " + stars);
-                    continue;
-                } else {
-                    //       System.out.println("Got " + type.getKey());
-                }
-                if (type == null) {
-                    System.out.println(
-                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
-                                    + (isNegative ? "negative" : "positive") + ", stars: " + stars);
-                } else {
-                    //       System.out.println("Got " + type.getKey());
+                    // it can be a skill point buff
+                    if (isSkill(idName)) {
+                        // FIXME: handle... ?
+                    }
                 }
             }
 
+            // Range pattern will normally not happen...
             Matcher id3Matcher = RANGE_PATTERN.matcher(formatId);
             if (id3Matcher.matches()) {
                 boolean isNegative = id3Matcher.group(1).charAt(0) == 'c';
                 int value = Integer.parseInt(id3Matcher.group(2));
                 int valueMax = Integer.parseInt(id3Matcher.group(3));
                 String idName = id3Matcher.group(5);
-                String unit = id3Matcher.group(4);
-                //                String starsString = id3Matcher.group(4);
-                //              int stars = starsString == null ? 0 : starsString.length();
+                String unitMatch = id3Matcher.group(4);
+                String unit = unitMatch == null ? "" : unitMatch;
 
                 GearStat type = getIdType(idName, unit);
                 String name2 = ComponentUtils.getUnformatted(realName);
                 if (type == null) {
-                    System.out.println(
-                            "MISSING:" + idName + " = " + value + (unit != null ? (" (in " + unit + "), ") : ", ")
-                                    + (isNegative ? "negative" : "positive"));
-                } else {
-                    //       System.out.println("Got " + type.getKey());
+                    // it can be a skill point buff
+                    if (isSkill(idName)) {
+                        // FIXME: Handle
+                    }
                 }
             }
         }
@@ -198,11 +189,20 @@ public final class GearItemManager extends Manager {
         return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
     }
 
+    private static boolean isSkill(String idName) {
+        for (Skill skill : Skill.values()) {
+            if (idName.equals(skill.getDisplayName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private GearStat getIdType(String idName, String unit) {
         for (GearStat statType : GearStatRegistry.registry) {
-            if (statType.displayName().equals(idName)) {
-                if (statType.unit() == null && unit == null) return statType;
-                if (statType.unit() != null && statType.unit().equals(unit)) return statType;
+            if (statType.displayName().equals(idName)
+                    && statType.unit().getDisplayName().equals(unit)) {
+                return statType;
             }
         }
 
