@@ -1,27 +1,37 @@
 BASIC:
-"accessoryType" - typ av gear
+* "name" -- the name unless overridden by displayName
+
+"accessoryType" - gear type, if it is accessories!
+"type" -- gear type, if it is a weapon or armor!!! string, "Helmet" etc
 "category" -- armor/weapon/accessories
-"displayName" -- replace name if item been renamed???
+
+* "tier" -- rarity level
+* "sockets" -- fixed, number of powder slots, an integer
+
 "identified" -- if "true" then ID numbers are fixed, not baseline
-"name" -- the name unless overridden by displayName
-"sockets" -- fixed, number of powder slots, an integer
-"tier" -- rarity level
-"type" -- gear type, string, "Helmet" etc
 
 META:
-"addedLore" - lore text
-"allowCraftsman" -- bryr vi oss?
-"armorColor" -- ska vara RGB. är ALLTID "160,101,64" om det finns? nonsens.
-"armorType" -- vilken typ av material, guld diamant etc
 "dropType" -- string "never", "NORMAL" or "lootchest"
-"material" -- för allt utom armor, t.ex. "359:5"
+
 "restrictions" -- "req", can be "Untradable", "untradable" or "Quest Item"
+
+"armorType" -- vilken typ av material, guld diamant etc
+"material" -- för allt utom armor, t.ex. "359:5"
 "skin" -- player head base64 data for some helmets
+
+"addedLore" - lore text
+
+"displayName" -- replace name if item been renamed??? -- set "oldName" to name if "displayName" is present, and replace name with displayName.
+FIXME: check for lore from other player if "name" or "displayName" is used...
+
+// skip these for now
+"allowCraftsman" -- can be worn by craftsman
+
 
 REQUIREMENTS
 "level" -- req, min combat level
 "quest" -- req, quest name as string
-"classRequirement" -- req, e.g. "Archer", för icke-vapen
+"classRequirement" -- req, e.g. "Archer", för icke-vapen. men sätt alltid för vapen!
 
 "agility" -- req skill points, number
 "defense" -- req skill points, number
@@ -137,6 +147,6 @@ IGNORE:
 "gatherXpBonus"-- nonsens, alltid 0
 "lootQuality" -- nonsens, alltid 0
 "set" -- nonsens, null for most sets (only given for "Leaf")
-
+"armorColor" -- ska vara RGB. är ALLTID "160,101,64" om det finns? nonsens.
 
 

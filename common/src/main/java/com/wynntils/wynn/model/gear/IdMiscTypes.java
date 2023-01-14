@@ -9,7 +9,7 @@ public enum IdMiscTypes implements IdType {
     THESE HAVE SUSPICIOUS LORE:
 
     ALSO, ALL SPELL COST...
-    
+
     DAMAGE_ELEMANTAL
     DAMAGE_ELEMENTAL
     DAMAGE_MAIN_ATTACK_ELEMENTAL
@@ -48,7 +48,6 @@ public enum IdMiscTypes implements IdType {
     DAMAGE_MAIN_WATER_PERCENT
      */
 
-
     // FIXME: missing from Athena. Check lore name, with e.g. Aleph null.
     DAMAGE_ELEMANTAL(IsVariable.YES, "Elemental Damage", "%", "MISSING", "FIXME:UNKNOWN", "elementalDamageBonus"),
     DAMAGE_SPELL_ELEMENTAL_PERCENT(
@@ -68,7 +67,8 @@ public enum IdMiscTypes implements IdType {
 
     // FIXME: these two: check Axion. Missing in Athena.
     DAMAGE_ELEMENTAL(IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "elementalDamageBonusRaw"),
-    DAMAGE_MAIN_ATTACK_ELEMENTAL(IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "mainAttackElementalDamageBonusRaw"),
+    DAMAGE_MAIN_ATTACK_ELEMENTAL(
+            IsVariable.YES, "FIXME:UNKNOWN", null, "MISSING", "FIXME:UNKNOWN", "mainAttackElementalDamageBonusRaw"),
 
     DAMAGE_SPELL_NEUTRAL(
             IsVariable.YES,
@@ -81,7 +81,12 @@ public enum IdMiscTypes implements IdType {
     DAMAGE_MAIN_ATTACK_PERCENT(
             IsVariable.YES, "Main Attack Damage", "%", "mainAttackDamage", "DAMAGEBONUS", "mainAttackDamageBonus"),
     DAMAGE_MAIN_ATTACK_RAW(
-            IsVariable.YES, "Main Attack Damage", null, "rawMainAttackDamage", "DAMAGEBONUSRAW", "mainAttackDamageBonusRaw"),
+            IsVariable.YES,
+            "Main Attack Damage",
+            null,
+            "rawMainAttackDamage",
+            "DAMAGEBONUSRAW",
+            "mainAttackDamageBonusRaw"),
     // FIXME: lore???
     DAMAGE_SPELL_PERCENT(IsVariable.YES, "Spell Damage", "%", "spellDamage", "SPELLDAMAGE", "spellDamageBonus"),
     DAMAGE_SPELL_RAW(IsVariable.YES, "Spell Damage", null, "rawSpellDamage", "SPELLDAMAGERAW", "spellDamageBonusRaw"),

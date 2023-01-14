@@ -15,14 +15,16 @@ public enum IdElementalTypes implements IdType {
     DAMAGE_AIR_PERCENT(IsVariable.YES, "Air Damage", "%", "airDamage", "AIRDAMAGEBONUS", "airDamageBonus"),
     DAMAGE_EARTH_PERCENT(IsVariable.YES, "Earth Damage", "%", "earthDamage", "EARTHDAMAGEBONUS", "earthDamageBonus"),
     DAMAGE_FIRE_PERCENT(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIREDAMAGEBONUS", "fireDamageBonus"),
-    DAMAGE_THUNDER_PERCENT(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
+    DAMAGE_THUNDER_PERCENT(
+            IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "THUNDERDAMAGEBONUS", "thunderDamageBonus"),
     DAMAGE_WATER_PERCENT(IsVariable.YES, "Water Damage", "%", "waterDamage", "WATERDAMAGEBONUS", "waterDamageBonus"),
 
     // FIXME: missing from Athena, check lore
     DAMAGE_AIR_RAW(IsVariable.YES, "Air Damage", "%", "airDamage", "FIXME:UNKNOWN", "airDamageBonusRaw"),
     DAMAGE_EARTH_RAW(IsVariable.YES, "Earth Damage", "%", "earthDamage", "FIXME:UNKNOWN", "earthDamageBonusRaw"),
     DAMAGE_FIRE_RAW(IsVariable.YES, "Fire Damage", "%", "fireDamage", "FIXME:UNKNOWN", "fireDamageBonusRaw"),
-    DAMAGE_THUNDER_RAW(IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "FIXME:UNKNOWN", "thunderDamageBonusRaw"),
+    DAMAGE_THUNDER_RAW(
+            IsVariable.YES, "Thunder Damage", "%", "thunderDamage", "FIXME:UNKNOWN", "thunderDamageBonusRaw"),
     DAMAGE_WATER_RAW(IsVariable.YES, "Water Damage", "%", "waterDamage", "FIXME:UNKNOWN", "waterDamageBonusRaw"),
 
     // FIXME: this is e.g. on Soul Ink. Afaict, Athena is missing this. Check lore name!
