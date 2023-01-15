@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.handleditems.items.game;
 
+import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.GearInstance;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
