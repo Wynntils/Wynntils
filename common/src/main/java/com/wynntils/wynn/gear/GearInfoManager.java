@@ -27,6 +27,8 @@ import com.wynntils.wynn.gear.stats.StatBuilder;
 import com.wynntils.wynn.gear.types.GearMaterial;
 import com.wynntils.wynn.gear.types.GearRestrictions;
 import com.wynntils.wynn.gear.types.GearStat;
+import com.wynntils.wynn.objects.ClassType;
+import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.objects.profiles.item.GearDropType;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.GearType;
@@ -34,9 +36,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import org.jetbrains.annotations.Nullable;
 
 public final class GearInfoManager extends Manager {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
@@ -102,7 +104,7 @@ public final class GearInfoManager extends Manager {
 
             String altName = (secondaryName == null ? null : primaryName.getAsString());
             GearMetaInfo metaInfo = parseMetaInfo(json, altName);
-            GearRequirements requirements = parseRequirements(json);
+            GearRequirements requirements = parseRequirements(json, type);
             GearStatsFixed statsFixed = parseStatsFixed(json);
             List<Pair<GearStat, RangedValue>> statsIdentified = parseStatsIdentified(json);
 
@@ -130,7 +132,7 @@ public final class GearInfoManager extends Manager {
             Optional<String> altNameOpt = Optional.ofNullable(altName);
 
             JsonElement allowCraftsmanJson = json.get("allowCraftsman");
-            boolean allowCraftsman = allowCraftsmanJson == null ? false : allowCraftsmanJson.getAsBoolean();
+            boolean allowCraftsman = allowCraftsmanJson != null && allowCraftsmanJson.getAsBoolean();
 
             return new GearMetaInfo(restrictions, material, dropType, loreOpt, altNameOpt, allowCraftsman);
         }
@@ -148,16 +150,50 @@ public final class GearInfoManager extends Manager {
             return new GearMaterial();
         }
 
-        private GearRequirements parseRequirements(JsonObject json) {
-            // When reading, strip "֎" from quest name.
-            // classRequirement -> str to upper
+        private GearRequirements parseRequirements(JsonObject json, GearType type) {
+            int level = json.get("level").getAsInt();
+            Optional<ClassType> classType = parseClassType(json, type);
+            List<Pair<Skill, Integer>> skills = parseSkills(json);
+            Optional<String> quest = parseQuest(json);
 
-            /*
-            public record GearRequirements(
-                    int level, Optional<ClassType> classType, List<Pair<Skill, Integer>> skills, Optional<String> quest) {}
+            return new GearRequirements(level, classType, skills, quest);
+        }
 
-                         */
-            return null;
+        private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
+            List<Pair<Skill, Integer>> list = new ArrayList<>();
+            for (Skill skill : Skill.values()) {
+                String skillJsonName = skill.name().toLowerCase(Locale.ROOT);
+                JsonElement skillJson = json.get(skillJsonName);
+                if (skillJson == null) continue;
+
+                int minPoints = skillJson.getAsInt();
+                list.add(Pair.of(skill, minPoints));
+            }
+
+            // Return an immutable list
+            return List.copyOf(list);
+        }
+
+        private Optional<String> parseQuest(JsonObject json) {
+            JsonElement questJson = json.get("quest");
+            if (questJson == null) return Optional.empty();
+            if (questJson.isJsonNull()) return Optional.empty();
+
+            // Apparently some quests got an extra "֎" added to the name
+            Optional<String> quest = Optional.of(questJson.getAsString().replace("֎", ""));
+            return quest;
+        }
+
+        private Optional<ClassType> parseClassType(JsonObject json, GearType type) {
+            if (type.isWeapon()) {
+                return Optional.of(type.getClassReq());
+            }
+
+            JsonElement classReq = json.get("classRequirement");
+            if (classReq == null) return Optional.empty();
+            if (classReq.isJsonNull()) return Optional.empty();
+
+            return Optional.of(ClassType.fromName(classReq.getAsString()));
         }
 
         private GearStatsFixed parseStatsFixed(JsonObject json) {
