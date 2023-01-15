@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ShamanMaskTitlePacketEvent extends Event {}
+public class ShamanMaskTitlePacketEvent extends WynntilsEvent {}
