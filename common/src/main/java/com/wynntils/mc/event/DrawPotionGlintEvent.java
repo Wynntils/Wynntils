@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.item.PotionItem;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class DrawPotionGlintEvent extends Event {
+public class DrawPotionGlintEvent extends WynntilsEvent {
     private final PotionItem item;
 
     public DrawPotionGlintEvent(PotionItem item) {

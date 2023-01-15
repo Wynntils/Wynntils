@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class CommandSentEvent extends Event {
+public class CommandSentEvent extends WynntilsEvent {
     private final String command;
     private final boolean signed;
 

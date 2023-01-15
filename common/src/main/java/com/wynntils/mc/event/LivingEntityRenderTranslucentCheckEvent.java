@@ -4,14 +4,14 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Fired when {@link net.minecraft.client.renderer.entity.LivingEntityRenderer} checks whether an
  * entity should be rendered translucent or not
  */
-public class LivingEntityRenderTranslucentCheckEvent extends Event {
+public class LivingEntityRenderTranslucentCheckEvent extends WynntilsEvent {
     private boolean translucent;
     private final LivingEntity entity;
     private float translucence;

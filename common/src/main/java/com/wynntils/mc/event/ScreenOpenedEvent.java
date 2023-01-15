@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on setting the active screen */
-public class ScreenOpenedEvent extends Event {
+public class ScreenOpenedEvent extends WynntilsEvent {
     private final Screen screen;
 
     public ScreenOpenedEvent(Screen screen) {

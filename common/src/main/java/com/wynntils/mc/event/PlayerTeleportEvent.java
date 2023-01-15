@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.core.Position;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fires when player is teleported */
-public class PlayerTeleportEvent extends Event {
+public class PlayerTeleportEvent extends WynntilsEvent {
     private final Position newPosition;
 
     public PlayerTeleportEvent(Position newPosition) {

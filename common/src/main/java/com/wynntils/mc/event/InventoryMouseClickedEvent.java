@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class InventoryMouseClickedEvent extends Event {
+public class InventoryMouseClickedEvent extends WynntilsEvent {
     private final double mouseX;
     private final double mouseY;
     private final int button;

@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fired for Menu events */
-public abstract class MenuEvent extends Event {
+public abstract class MenuEvent extends WynntilsEvent {
     /** Fired for Menu opened events */
     @Cancelable
     public static class MenuOpenedEvent extends MenuEvent {

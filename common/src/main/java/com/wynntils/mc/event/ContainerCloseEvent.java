@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class ContainerCloseEvent extends Event {
+public abstract class ContainerCloseEvent extends WynntilsEvent {
     @Cancelable
     public static class Pre extends ContainerCloseEvent {}
 

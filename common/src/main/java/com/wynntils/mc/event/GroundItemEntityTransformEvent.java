@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
 
-public class GroundItemEntityTransformEvent extends Event {
+public class GroundItemEntityTransformEvent extends WynntilsEvent {
 
     private final PoseStack poseStack;
     private final ItemStack itemStack;

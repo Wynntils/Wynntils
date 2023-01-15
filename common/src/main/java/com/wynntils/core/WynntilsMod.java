@@ -10,6 +10,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.events.EventBusWrapper;
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
@@ -55,8 +56,9 @@ public final class WynntilsMod {
         eventBus.register(object);
     }
 
-    public static boolean postEvent(Event event) {
+    public static boolean postEvent(WynntilsEvent event) {
         try {
+            event.setPosted();
             return eventBus.post(event);
         } catch (Throwable t) {
             handleExceptionInEventListener(t, event);

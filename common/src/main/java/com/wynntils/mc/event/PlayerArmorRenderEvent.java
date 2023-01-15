@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class PlayerArmorRenderEvent extends Event {
+public class PlayerArmorRenderEvent extends WynntilsEvent {
     private final Player player;
     private final EquipmentSlot slot;
 

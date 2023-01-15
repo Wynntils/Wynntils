@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ArmSwingEvent extends Event {
+public class ArmSwingEvent extends WynntilsEvent {
 
     private final ArmSwingContext actionContext;
 

@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class SetPlayerTeamEvent extends Event {
+public class SetPlayerTeamEvent extends WynntilsEvent {
     private final int method;
     private final String teamName;
 

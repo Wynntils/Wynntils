@@ -5,12 +5,12 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraftforge.eventbus.api.Event;
 import org.joml.Matrix4f;
 
-public abstract class RenderLevelEvent extends Event {
+public abstract class RenderLevelEvent extends WynntilsEvent {
     private final LevelRenderer levelRenderer;
     private final PoseStack poseStack;
     private final float partialTick;

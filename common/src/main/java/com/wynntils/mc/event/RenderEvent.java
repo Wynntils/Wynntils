@@ -6,10 +6,10 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class RenderEvent extends Event {
+public abstract class RenderEvent extends WynntilsEvent {
     private final PoseStack poseStack;
     private final float partialTicks;
     private final Window window;

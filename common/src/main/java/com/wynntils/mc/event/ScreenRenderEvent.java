@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.eventbus.api.Event;
 
-public class ScreenRenderEvent extends Event {
+public class ScreenRenderEvent extends WynntilsEvent {
     private final Screen screen;
     private final PoseStack poseStack;
     private final int mouseX;

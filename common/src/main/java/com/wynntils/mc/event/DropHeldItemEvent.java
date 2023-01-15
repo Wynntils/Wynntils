@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class DropHeldItemEvent extends Event {
+public class DropHeldItemEvent extends WynntilsEvent {
     private final boolean fullStack;
 
     public DropHeldItemEvent(boolean fullStack) {

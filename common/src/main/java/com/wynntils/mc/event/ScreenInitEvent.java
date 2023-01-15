@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Fired when a screen is re-inited. Use this to add widgets.
  */
-public class ScreenInitEvent extends Event {
+public class ScreenInitEvent extends WynntilsEvent {
     private final Screen screen;
 
     public ScreenInitEvent(Screen screen) {

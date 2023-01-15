@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fired when an item is set in a slot */
-public abstract class SetSlotEvent extends Event {
+public abstract class SetSlotEvent extends WynntilsEvent {
     private final Container container;
     private final int slot;
     protected ItemStack item;

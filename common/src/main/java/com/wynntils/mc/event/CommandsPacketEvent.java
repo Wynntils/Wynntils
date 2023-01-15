@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraftforge.eventbus.api.Event;
 
-public class CommandsPacketEvent extends Event {
+public class CommandsPacketEvent extends WynntilsEvent {
     private RootCommandNode<SharedSuggestionProvider> root;
 
     public CommandsPacketEvent(RootCommandNode<SharedSuggestionProvider> root) {

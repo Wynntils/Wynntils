@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class SetEntityPassengersEvent extends Event {
+public class SetEntityPassengersEvent extends WynntilsEvent {
     private final int vehicle;
 
     public SetEntityPassengersEvent(int vehicle) {

@@ -4,6 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class ScreenClosedEvent extends Event {}
+public class ScreenClosedEvent extends WynntilsEvent {}

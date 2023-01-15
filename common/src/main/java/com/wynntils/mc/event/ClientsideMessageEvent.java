@@ -4,14 +4,14 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 // Fired when a message is sent to the local chat.
 @Cancelable
-public class ClientsideMessageEvent extends Event {
+public class ClientsideMessageEvent extends WynntilsEvent {
     private final Component originalComponent;
     private final String originalCodedMessage;
 

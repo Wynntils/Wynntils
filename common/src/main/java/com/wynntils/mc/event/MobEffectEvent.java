@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class MobEffectEvent extends Event {
+public abstract class MobEffectEvent extends WynntilsEvent {
     private final Entity entity;
     private final MobEffect effect;
 

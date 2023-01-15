@@ -4,9 +4,9 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class MouseScrollEvent extends Event {
+public class MouseScrollEvent extends WynntilsEvent {
 
     private final double windowPointer;
     private final double xOffset;

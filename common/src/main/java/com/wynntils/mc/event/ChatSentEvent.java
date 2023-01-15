@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ChatSentEvent extends Event {
+public class ChatSentEvent extends WynntilsEvent {
     private final String message;
 
     public ChatSentEvent(String message) {

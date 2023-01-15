@@ -5,16 +5,16 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class NametagRenderEvent extends Event {
+public class NametagRenderEvent extends WynntilsEvent {
     private final AbstractClientPlayer entity;
     private final Component displayName;
     private final PoseStack poseStack;

@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import java.util.UUID;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraftforge.eventbus.api.Event;
 
-public class PlayerJoinedWorldEvent extends Event {
+public class PlayerJoinedWorldEvent extends WynntilsEvent {
     private final int entityId;
     private final UUID playerId;
     private final double x;

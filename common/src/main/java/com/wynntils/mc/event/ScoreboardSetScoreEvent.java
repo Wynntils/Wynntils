@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ScoreboardSetScoreEvent extends Event {
+public class ScoreboardSetScoreEvent extends WynntilsEvent {
     private final String owner;
     private final String objectiveName;
     private final int score;

@@ -4,9 +4,9 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class SetXpEvent extends Event {
+public class SetXpEvent extends WynntilsEvent {
     private final float experienceProgress;
     private final int totalExperience;
     private final int experienceLevel;

@@ -4,13 +4,13 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on initialization of {@link TitleScreen} */
-public abstract class TitleScreenInitEvent extends Event {
+public abstract class TitleScreenInitEvent extends WynntilsEvent {
     private final TitleScreen titleScreen;
     private final Consumer<AbstractWidget> addButton;
 

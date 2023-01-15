@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class EntityEvent extends Event {
+public abstract class EntityEvent extends WynntilsEvent {
     private final Entity entity;
 
     protected EntityEvent(Entity entity) {

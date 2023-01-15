@@ -4,14 +4,14 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.Event;
 
-public class AdvancementUpdateEvent extends Event {
+public class AdvancementUpdateEvent extends WynntilsEvent {
     private final boolean reset;
     private final Map<ResourceLocation, Advancement.Builder> added;
     private final Set<ResourceLocation> removed;

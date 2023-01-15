@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
 /** Fired on connection to a server */
-public abstract class ConnectionEvent extends Event {
+public abstract class ConnectionEvent extends WynntilsEvent {
     public static class ConnectedEvent extends ConnectionEvent {
         private final String host;
         private final int port;

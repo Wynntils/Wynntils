@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
 
-public class ContainerSetSlotEvent extends Event {
+public class ContainerSetSlotEvent extends WynntilsEvent {
     private final int containerId;
     private final int stateId;
     private final int slot;

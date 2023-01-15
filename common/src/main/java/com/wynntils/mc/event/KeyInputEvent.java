@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class KeyInputEvent extends Event {
+public class KeyInputEvent extends WynntilsEvent {
     private final int action;
     private final int key;
     private final int modifiers;

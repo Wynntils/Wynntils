@@ -4,9 +4,9 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class ChestMenuQuickMoveEvent extends Event {
+public class ChestMenuQuickMoveEvent extends WynntilsEvent {
     private final int containerId;
 
     public ChestMenuQuickMoveEvent(int containerId) {

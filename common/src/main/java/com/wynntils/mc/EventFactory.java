@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
@@ -144,7 +145,7 @@ import org.joml.Matrix4f;
 
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
-    private static <T extends Event> T post(T event) {
+    private static <T extends WynntilsEvent> T post(T event) {
         if (WynnUtils.onServer()) {
             WynntilsMod.postEvent(event);
         }
@@ -154,7 +155,7 @@ public final class EventFactory {
     /**
      * Post event without checking if we are connected to a Wynncraft server
      */
-    private static <T extends Event> T postAlways(T event) {
+    private static <T extends WynntilsEvent> T postAlways(T event) {
         WynntilsMod.postEvent(event);
         return event;
     }

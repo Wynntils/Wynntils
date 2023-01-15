@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
 
-public class ItemTooltipHoveredNameEvent extends Event {
+public class ItemTooltipHoveredNameEvent extends WynntilsEvent {
     private Component hoveredName;
     private final ItemStack stack;
 

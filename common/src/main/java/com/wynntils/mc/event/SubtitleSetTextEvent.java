@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class SubtitleSetTextEvent extends Event {
+public class SubtitleSetTextEvent extends WynntilsEvent {
     private final Component component;
 
     public SubtitleSetTextEvent(Component component) {

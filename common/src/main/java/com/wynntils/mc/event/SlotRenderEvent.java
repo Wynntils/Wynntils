@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class SlotRenderEvent extends Event {
+public abstract class SlotRenderEvent extends WynntilsEvent {
     private final Screen screen;
     private final Slot slot;
 

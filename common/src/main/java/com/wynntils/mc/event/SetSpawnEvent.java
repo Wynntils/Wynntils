@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class SetSpawnEvent extends Event {
+public class SetSpawnEvent extends WynntilsEvent {
     private final BlockPos spawnPos;
 
     public SetSpawnEvent(BlockPos spawnPos) {

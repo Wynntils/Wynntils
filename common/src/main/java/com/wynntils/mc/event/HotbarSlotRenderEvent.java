@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class HotbarSlotRenderEvent extends Event {
+public abstract class HotbarSlotRenderEvent extends WynntilsEvent {
     private final ItemStack stack;
     private final int x;
     private final int y;

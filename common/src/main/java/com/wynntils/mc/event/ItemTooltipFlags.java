@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class ItemTooltipFlags extends Event {
+public abstract class ItemTooltipFlags extends WynntilsEvent {
     private final ItemStack itemStack;
 
     protected ItemTooltipFlags(ItemStack itemStack) {

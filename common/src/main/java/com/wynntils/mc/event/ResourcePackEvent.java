@@ -5,13 +5,13 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.EventThread;
+import com.wynntils.core.events.WynntilsEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 /** Fires on receiving {@link net.minecraft.network.protocol.game.ClientboundResourcePackPacket} */
 @EventThread(EventThread.Type.IO)
 @Cancelable
-public class ResourcePackEvent extends Event {
+public class ResourcePackEvent extends WynntilsEvent {
     private final String url;
     private final String hash;
     private final boolean required;
