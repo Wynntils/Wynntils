@@ -159,26 +159,27 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                                 };
 
-                                        String suffix, detail;
+                                        String suffix, detail = "";
                                         // Check if we should be saying "Summoned"
                                         if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
                                             suffix = " Summoned";
-                                            detail = "";
                                         } else {
-                                            suffix = " (" + shamanTotem.getTime() + "s)";
-                                            detail = switch (totemTrackingDetail) {
-                                                case NONE -> "";
-                                                case COORDS -> " "
-                                                        + shamanTotem
-                                                                .getLocation()
-                                                                .toString();
-                                                case DISTANCE -> " ["
+                                            switch (totemTrackingDetail) {
+                                                case NONE -> suffix = " (" + shamanTotem.getTime() + " s";
+                                                case COORDS -> {
+                                                    suffix = " (" + shamanTotem.getTime() + " s";
+                                                    detail = shamanTotem
+                                                            .getLocation()
+                                                            .toString();
+                                                }
+                                                case DISTANCE -> suffix = " (" + shamanTotem.getTime() + " s, "
                                                         + Math.round(McUtils.player()
                                                                 .position()
                                                                 .distanceTo(shamanTotem
                                                                         .getLocation()
                                                                         .toVec3()))
-                                                        + " blocks away]";};
+                                                        + " m)";
+                                            }
                                         }
                                         return new TextRenderTask(
                                                 getFormattedTotemText(prefix, suffix, detail), textRenderSetting);
