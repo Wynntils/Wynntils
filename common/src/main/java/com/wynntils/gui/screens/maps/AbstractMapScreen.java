@@ -31,6 +31,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -144,6 +145,9 @@ public abstract class AbstractMapScreen extends Screen {
 
         List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
 
+        MultiBufferSource.BufferSource bufferSource =
+                McUtils.mc().renderBuffers().bufferSource();
+
         // Reverse and Render
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             Poi poi = filteredPois.get(i);
@@ -151,8 +155,10 @@ public abstract class AbstractMapScreen extends Screen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
-            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
+            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
         }
+
+        bufferSource.endBatch();
     }
 
     protected List<Poi> getRenderedPois(

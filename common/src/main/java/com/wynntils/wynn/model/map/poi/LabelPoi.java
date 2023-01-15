@@ -9,8 +9,10 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
     private final PoiLocation location;
@@ -84,7 +86,13 @@ public class LabelPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack, float renderX, float renderZ, boolean hovered, float scale, float mapZoom) {
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderY,
+            boolean hovered,
+            float scale,
+            float mapZoom) {
         // TODO hovered behavior?
         // TODO reimplement minscaleforlabel through fading instead
 
@@ -101,20 +109,22 @@ public class LabelPoi implements Poi {
         }
 
         poseStack.pushPose();
-        poseStack.translate(renderX, renderZ, 0);
+        poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
         poseStack.scale(modifier, modifier, modifier);
 
-        FontRenderer.getInstance()
+        BufferedFontRenderer.getInstance()
                 .renderText(
                         poseStack,
+                        bufferSource,
                         label.getName(),
-                        0,
                         0,
                         0,
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
-                        getTextShadow());
+                        getTextShadow(),
+                        1f);
+
         poseStack.popPose();
     }
 

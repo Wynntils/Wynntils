@@ -243,4 +243,12 @@ public final class ItemUtils {
         newTooltip.addAll(tooltipAddon);
         return newTooltip;
     }
+
+    public static boolean isEquals(ItemStack firstItem, ItemStack secondItem) {
+        if (!firstItem.getItem().equals(secondItem.getItem())) return false;
+        if (firstItem.getCount() != secondItem.getCount()) return false;
+        if (firstItem.getTag() == null) return secondItem.getTag() == null;
+        if (!firstItem.getTag().equals(secondItem.getTag())) return false;
+        return true;
+    }
 }

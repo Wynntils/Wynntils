@@ -21,11 +21,12 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -44,6 +45,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
@@ -213,7 +215,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             }
         }
 
-        private void renderDialogue(PoseStack poseStack, List<String> currentDialogue, NpcDialogueType dialogueType) {
+        private void renderDialogue(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                List<String> currentDialogue,
+                NpcDialogueType dialogueType) {
             List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
                     .map(s -> new TextRenderTask(s, renderSetting))
                     .toList();
@@ -240,8 +246,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                         case Bottom -> this.getRenderY() + this.getHeight() - rectHeight;
                     };
             int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity, 0, 255));
-            RenderUtils.drawRect(
+            BufferedRenderUtils.drawRect(
                     poseStack,
+                    bufferSource,
                     CommonColors.BLACK.withAlpha(colorAlphaRect),
                     this.getRenderX(),
                     rectRenderY,
@@ -250,9 +257,10 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     rectHeight);
 
             // Render the message
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             dialogueRenderTasks,
@@ -289,9 +297,10 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     renderTaskList.add(autoProgressMessage);
                 }
 
-                FontRenderer.getInstance()
+                BufferedFontRenderer.getInstance()
                         .renderTextsWithAlignment(
                                 poseStack,
+                                bufferSource,
                                 this.getRenderX() + 5,
                                 this.getRenderY() + 20 + textHeight,
                                 renderTaskList,
@@ -303,7 +312,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
             LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
@@ -316,17 +326,18 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 // Remove the initial blank line in that case
                 allDialogues.removeFirst();
             }
-            renderDialogue(poseStack, allDialogues, dialogueType);
+            renderDialogue(poseStack, bufferSource, allDialogues, dialogueType);
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             List<String> fakeDialogue = List.of(
                     "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
             // we have to force update every time
             updateTextRenderSettings();
 
-            renderDialogue(poseStack, fakeDialogue, NpcDialogueType.NORMAL);
+            renderDialogue(poseStack, bufferSource, fakeDialogue, NpcDialogueType.NORMAL);
         }
     }
 
