@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     @Override
@@ -71,13 +72,21 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         GearMaterial material = parseMaterial(json);
         GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
-        Optional<String> loreOpt = Optional.ofNullable(JsonUtils.getNullableJsonString(json, "addedLore"));
+        Optional<String> loreOpt = parseLore(json);
         Optional<String> altNameOpt = Optional.ofNullable(altName);
 
         JsonElement allowCraftsmanJson = json.get("allowCraftsman");
         boolean allowCraftsman = allowCraftsmanJson != null && allowCraftsmanJson.getAsBoolean();
 
         return new GearMetaInfo(restrictions, material, dropType, loreOpt, altNameOpt, allowCraftsman);
+    }
+
+    private Optional<String> parseLore(JsonObject json) {
+        String lore = JsonUtils.getNullableJsonString(json, "addedLore");
+        if (lore == null) return Optional.empty();
+
+        // Some lore contain like "\\[Community Event Winner\\]", fix that
+        return Optional.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"}));
     }
 
     private GearRestrictions parseRestrictions(JsonObject json) {
