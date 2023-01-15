@@ -14,5 +14,5 @@ public record GearMetaInfo(
         GearMaterial material,
         GearDropType dropType,
         Optional<String> lore,
-        Optional<String> oldName,
+        Optional<String> altName,
         boolean allowCraftsman) {}

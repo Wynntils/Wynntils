@@ -4,8 +4,18 @@
  */
 package com.wynntils.wynn.gear.types;
 
+import java.util.Locale;
+
 public enum GearRestrictions {
     NONE,
     UNTRADABLE,
-    QUEST_ITEM
+    QUEST_ITEM;
+
+    public static GearRestrictions fromString(String typeStr) {
+        try {
+            return GearRestrictions.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

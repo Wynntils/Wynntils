@@ -24,7 +24,10 @@ import com.wynntils.wynn.gear.stats.DefenceStatBuilder;
 import com.wynntils.wynn.gear.stats.MiscStatBuilder;
 import com.wynntils.wynn.gear.stats.SpellStatBuilder;
 import com.wynntils.wynn.gear.stats.StatBuilder;
+import com.wynntils.wynn.gear.types.GearMaterial;
+import com.wynntils.wynn.gear.types.GearRestrictions;
 import com.wynntils.wynn.gear.types.GearStat;
+import com.wynntils.wynn.objects.profiles.item.GearDropType;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.lang.reflect.Type;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public final class GearInfoManager extends Manager {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
@@ -86,12 +90,17 @@ public final class GearInfoManager extends Manager {
             JsonObject json = jsonElement.getAsJsonObject();
 
             // Some names apparently has a random ֎ in them...
-            String name = json.get("name").getAsString().replace("֎", "");
+            JsonElement primaryName = json.get("name");
+            JsonElement secondaryName = json.get("displayName");
+            String name = (secondaryName.isJsonNull() ? primaryName : secondaryName)
+                    .getAsString()
+                    .replace("֎", "");
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = json.get("sockets").getAsInt();
 
-            GearMetaInfo metaInfo = parseMetaInfo(json);
+            String altName = (secondaryName.isJsonNull() ? null : primaryName.getAsString());
+            GearMetaInfo metaInfo = parseMetaInfo(json, altName);
             GearRequirements requirements = parseRequirements(json);
             GearStatsFixed statsFixed = parseStatsFixed(json);
             List<Pair<GearStat, RangedValue>> statsIdentified = parseStatsIdentified(json);
@@ -110,12 +119,25 @@ public final class GearInfoManager extends Manager {
             return GearType.fromString(typeString);
         }
 
-        private List<Pair<GearStat, RangedValue>> parseStatsIdentified(JsonObject json) {
-            return List.of();
+        private GearMetaInfo parseMetaInfo(JsonObject json, String altName) {
+            GearRestrictions restrictions =
+                    GearRestrictions.fromString(json.get("restrictions").getAsString());
+            GearMaterial material = parseMaterial(json);
+            GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
+
+            JsonElement loreJson = json.get("lore");
+            Optional<String> loreOpt = loreJson.isJsonNull() ? Optional.empty() : Optional.of(loreJson.getAsString());
+            Optional<String> altNameOpt = Optional.ofNullable(altName);
+
+            JsonElement allowCraftsmanJson = json.get("allowCraftsman");
+            boolean allowCraftsman = allowCraftsmanJson.isJsonNull() ? false : allowCraftsmanJson.getAsBoolean();
+
+            return new GearMetaInfo(restrictions, material, dropType, loreOpt, altNameOpt, allowCraftsman);
         }
 
-        private GearStatsFixed parseStatsFixed(JsonObject json) {
-            return null;
+        private GearMaterial parseMaterial(JsonObject json) {
+            // FIXME: Needs to be done correctly
+            return new GearMaterial();
         }
 
         private GearRequirements parseRequirements(JsonObject json) {
@@ -124,8 +146,12 @@ public final class GearInfoManager extends Manager {
             return null;
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json) {
+        private GearStatsFixed parseStatsFixed(JsonObject json) {
             return null;
+        }
+
+        private List<Pair<GearStat, RangedValue>> parseStatsIdentified(JsonObject json) {
+            return List.of();
         }
     }
 }
