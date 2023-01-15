@@ -9,7 +9,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
@@ -29,10 +31,35 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
+    // For reference, uncommonly used item types:
+    // stick: Breaker Bar, Cracked Oak Wand, Sharpened Stylus, Valix
+    // bone: Wybel Paw
+    // pumpkin: Pumpkin Helmet
+    private static final Map<Integer, String> KNOWN_USED_ITEM_CODES = Map.of(
+            256,
+            "iron_shovel",
+            259,
+            "flint_and_steel",
+            261,
+            "bow",
+            269,
+            "wooden_shovel",
+            273,
+            "stone_shovel",
+            359,
+            "shears",
+            280,
+            "stick",
+            352,
+            "bone",
+            86,
+            "pumpkin");
+
     @Override
     public GearInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
             throws JsonParseException {
@@ -49,7 +76,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         int powderSlots = json.get("sockets").getAsInt();
 
         String altName = (secondaryName == null ? null : primaryName.getAsString());
-        GearMetaInfo metaInfo = parseMetaInfo(json, altName);
+        GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
         GearRequirements requirements = parseRequirements(json, type);
         GearStatsFixed statsFixed = parseStatsFixed(json);
         List<Pair<GearStat, RangedValue>> statsIdentified = parseStatsIdentified(json);
@@ -68,9 +95,9 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return GearType.fromString(typeString);
     }
 
-    private GearMetaInfo parseMetaInfo(JsonObject json, String altName) {
+    private GearMetaInfo parseMetaInfo(JsonObject json, String altName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
-        GearMaterial material = parseMaterial(json);
+        GearMaterial material = parseMaterial(json, type);
         GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
         Optional<String> loreOpt = parseLore(json);
@@ -97,9 +124,66 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return GearRestrictions.fromString(restrictions);
     }
 
-    private GearMaterial parseMaterial(JsonObject json) {
-        // FIXME: Needs to be done correctly
-        return new GearMaterial();
+    private GearMaterial parseMaterial(JsonObject json, GearType type) {
+        return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+    }
+
+    private GearMaterial parseArmorType(JsonObject json, GearType gearType) {
+        // We might have a specified material (like a carved pumpkin or mob head),
+        // if so this takes precedence
+        String material = JsonUtils.getNullableJsonString(json, "material");
+        if (material != null) {
+            return parseOtherMaterial(json, gearType);
+        }
+
+        String armorType = JsonUtils.getNullableJsonString(json, "armorType").toUpperCase(Locale.ROOT);
+
+        CustomColor color = null;
+        if (armorType.equals("LEATHER")) {
+            String colorStr = JsonUtils.getNullableJsonString(json, "armorColor");
+            // Oddly enough a lot of items has a "dummy" color value of "160,101,64"; ignore them
+            if (colorStr != null && !colorStr.equals("160,101,64")) {
+                String[] colorArray = colorStr.split("[, ]");
+                if (colorArray.length == 3) {
+                    int r = Integer.parseInt(colorArray[0]);
+                    int g = Integer.parseInt(colorArray[0]);
+                    int b = Integer.parseInt(colorArray[0]);
+                    color = new CustomColor(r, g, b);
+                }
+            }
+        }
+
+        return new GearMaterial(armorType, gearType, color);
+    }
+
+    private GearMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
+        String material = JsonUtils.getNullableJsonString(json, "material");
+        if (material == null) {
+            // We're screwed. The best we can do is to give a generic default representation
+            // for this gear type
+            return new GearMaterial(gearType);
+        }
+
+        String[] materialArray = material.split(":");
+        int itemTypeCode = Integer.parseInt(materialArray[0]);
+        int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
+        return getItemFromCodeAndDamage(itemTypeCode, damageCode);
+    }
+
+    private GearMaterial getItemFromCodeAndDamage(int itemTypeCode, int damageCode) {
+        String itemId;
+        if (itemTypeCode == 392 && damageCode == 2) {
+            // Special case for Mama Zomble's memory
+            itemId = "zombie_head";
+        } else {
+            // This is not ideal, but in practice just a subset of all mincraft items are used
+            itemId = KNOWN_USED_ITEM_CODES.get(itemTypeCode);
+            if (itemId == null) {
+                WynntilsMod.warn("Could not convert item id: " + itemTypeCode + " from gear database");
+                itemId = "bedrock"; // whatever...
+            }
+        }
+        return new GearMaterial(itemId, damageCode);
     }
 
     private GearRequirements parseRequirements(JsonObject json, GearType type) {

@@ -4,9 +4,21 @@
  */
 package com.wynntils.wynn.gear.types;
 
+import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.wynn.objects.profiles.item.GearType;
+
 public class GearMaterial {
-    // FIXME
-    // Either like "Golden" for golden leggings
-    // or "359:5"
-    // or player head with skin base64 coded
+    // FIXME: Somehow get this together so we can present a suitable item icon...
+
+    public GearMaterial(String armorType, GearType gearType, CustomColor color) {
+        // armorType is any of: CHAIN DIAMOND GOLDEN IRON LEATHER
+    }
+
+    public GearMaterial(GearType gearType) {
+        // Material is missing, so just give generic icon for this type of gear (weapon or accessory)
+    }
+
+    public GearMaterial(String itemId, int damageCode) {
+        // itemId is e.g. "stick", not "minecraft:stick"
+    }
 }
