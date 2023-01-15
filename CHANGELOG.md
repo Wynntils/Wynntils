@@ -1,9 +1,21 @@
+## [0.0.2-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.105...v0.0.2-alpha.106) (2023-01-15)
+
+
+### Bug Fixes
+
+* Broken tooltips with "Health" id after optimization update ([#1038](https://github.com/Wynntils/Artemis/issues/1038)) ([5cc37f2](https://github.com/Wynntils/Artemis/commit/5cc37f20a5f271149e4cbae1e87f085067a22738))
+
 ## [0.0.2-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.104...v0.0.2-alpha.105) (2023-01-15)
 
 
 ### Bug Fixes
 
 * Do not create buffers per render ([#1036](https://github.com/Wynntils/Artemis/issues/1036)) ([d13220f](https://github.com/Wynntils/Artemis/commit/d13220fcd747eada5a8ef920737ba83f254df8e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.105 [skip ci] ([8bcdbaa](https://github.com/Wynntils/Artemis/commit/8bcdbaa5903eb4d3f79571f0dcfd91fa3cfc3a0f))
 
 ## [0.0.2-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.103...v0.0.2-alpha.104) (2023-01-15)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.102 [skip ci] ([c9afdb3](https://github.com/Wynntils/Artemis/commit/c9afdb3398cfe744e46cdc24da877ec7a76cc6ec))
-
-## [0.0.2-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.100...v0.0.2-alpha.101) (2023-01-13)
-
-
-### Miscellaneous Chores
-
-* Move TextShadow to its own class ([#1028](https://github.com/Wynntils/Artemis/issues/1028)) ([fa5c1ce](https://github.com/Wynntils/Artemis/commit/fa5c1ce129b5908cec7bab02346b0e0114734a62))
-* **release:** v0.0.2-alpha.101 [skip ci] ([27afca1](https://github.com/Wynntils/Artemis/commit/27afca10757547b93c20b6062ebf12c94c4fd9fe))
 
