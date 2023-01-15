@@ -102,6 +102,18 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return new GearRequirements(level, classType, skills, quest);
     }
 
+    private Optional<ClassType> parseClassType(JsonObject json, GearType type) {
+        if (type.isWeapon()) {
+            return Optional.of(type.getClassReq());
+        }
+
+        JsonElement classReq = json.get("classRequirement");
+        if (classReq == null) return Optional.empty();
+        if (classReq.isJsonNull()) return Optional.empty();
+
+        return Optional.of(ClassType.fromName(classReq.getAsString()));
+    }
+
     private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
         List<Pair<Skill, Integer>> list = new ArrayList<>();
         for (Skill skill : Skill.values()) {
@@ -127,18 +139,6 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         // Apparently some quests got an extra "֎" added to the name
         Optional<String> quest = Optional.of(questJson.getAsString().replace("֎", ""));
         return quest;
-    }
-
-    private Optional<ClassType> parseClassType(JsonObject json, GearType type) {
-        if (type.isWeapon()) {
-            return Optional.of(type.getClassReq());
-        }
-
-        JsonElement classReq = json.get("classRequirement");
-        if (classReq == null) return Optional.empty();
-        if (classReq.isJsonNull()) return Optional.empty();
-
-        return Optional.of(ClassType.fromName(classReq.getAsString()));
     }
 
     private GearStatsFixed parseStatsFixed(JsonObject json) {
@@ -184,7 +184,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             if (damageJson == null) continue;
 
             String rangeString = damageJson.getAsString();
-            RangedValue range = rangeFromString(rangeString);
+            RangedValue range = RangedValue.fromString(rangeString);
             if (range.equals(RangedValue.NONE)) continue;
 
             list.add(Pair.of(GearDamageType.fromElement(element), range));
@@ -193,7 +193,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         JsonElement damageJson = json.get("damage");
         if (damageJson != null) {
             String rangeString = damageJson.getAsString();
-            RangedValue range = rangeFromString(rangeString);
+            RangedValue range = RangedValue.fromString(rangeString);
             if (!range.equals(RangedValue.NONE)) {
                 list.add(Pair.of(GearDamageType.NEUTRAL, range));
             }
@@ -201,11 +201,6 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
 
         // Return an immutable list
         return List.copyOf(list);
-    }
-
-    private RangedValue rangeFromString(String range) {
-        String[] pair = range.split("-");
-        return new RangedValue(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
     }
 
     private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
@@ -248,10 +243,10 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     private RangedValue calculateRange(int baseValue, boolean preIdentified) {
         if (preIdentified) {
             // This is actually a single, fixed value
-            return new RangedValue(baseValue, baseValue);
+            return RangedValue.of(baseValue, baseValue);
         } else {
             // FIXME: Do proper calculations
-            return new RangedValue(0, baseValue);
+            return RangedValue.of(0, baseValue);
         }
     }
 }
