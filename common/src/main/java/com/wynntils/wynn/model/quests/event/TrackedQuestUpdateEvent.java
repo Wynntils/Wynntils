@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.quests.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.wynn.model.quests.QuestInfo;
-import net.minecraftforge.eventbus.api.Event;
 
-public class TrackedQuestUpdateEvent extends Event {
+public class TrackedQuestUpdateEvent extends WynntilsEvent {
     private final QuestInfo questInfo;
 
     public TrackedQuestUpdateEvent(QuestInfo questInfo) {

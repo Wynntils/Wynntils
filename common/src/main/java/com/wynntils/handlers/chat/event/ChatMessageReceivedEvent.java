@@ -4,15 +4,15 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.mc.utils.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class ChatMessageReceivedEvent extends Event {
+public class ChatMessageReceivedEvent extends WynntilsEvent {
     // These are used to keep the original message so different features don't have to fight over it.
     private final Component originalMessage;
     private final String originalCodedMessage;

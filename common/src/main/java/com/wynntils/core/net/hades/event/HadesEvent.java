@@ -4,9 +4,9 @@
  */
 package com.wynntils.core.net.hades.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public abstract class HadesEvent extends Event {
+public abstract class HadesEvent extends WynntilsEvent {
     public static class Authenticated extends HadesEvent {}
 
     public static class Disconnected extends HadesEvent {}

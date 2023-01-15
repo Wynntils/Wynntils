@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.wynn.objects.WorldState;
-import net.minecraftforge.eventbus.api.Event;
 
-public class WorldStateEvent extends Event {
+public class WorldStateEvent extends WynntilsEvent {
     private final WorldState newState;
     private final WorldState oldState;
     private final String worldName;

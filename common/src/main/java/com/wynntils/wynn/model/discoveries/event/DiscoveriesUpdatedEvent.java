@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.model.discoveries.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public abstract class DiscoveriesUpdatedEvent extends Event {
+public abstract class DiscoveriesUpdatedEvent extends WynntilsEvent {
     public static class Normal extends DiscoveriesUpdatedEvent {}
 
     public static class Secret extends DiscoveriesUpdatedEvent {}

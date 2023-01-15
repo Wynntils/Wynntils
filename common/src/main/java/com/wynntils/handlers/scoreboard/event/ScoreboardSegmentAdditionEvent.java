@@ -5,13 +5,13 @@
 package com.wynntils.handlers.scoreboard.event;
 
 import com.wynntils.core.events.EventThread;
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.handlers.scoreboard.Segment;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 @EventThread(EventThread.Type.WORKER)
-public class ScoreboardSegmentAdditionEvent extends Event {
+public class ScoreboardSegmentAdditionEvent extends WynntilsEvent {
     private final Segment segment;
 
     public ScoreboardSegmentAdditionEvent(Segment segment) {

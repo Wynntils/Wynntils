@@ -4,14 +4,14 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class NpcDialogEvent extends Event {
+public class NpcDialogEvent extends WynntilsEvent {
     private final List<Component> chatMessage;
     private final NpcDialogueType type;
     private final boolean isProtected;

@@ -4,6 +4,6 @@
  */
 package com.wynntils.core.net.athena.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class AthenaLoginEvent extends Event {}
+public class AthenaLoginEvent extends WynntilsEvent {}

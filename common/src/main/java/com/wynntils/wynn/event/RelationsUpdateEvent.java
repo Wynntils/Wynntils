@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
-import net.minecraftforge.eventbus.api.Event;
 
-public abstract class RelationsUpdateEvent extends Event {
+public abstract class RelationsUpdateEvent extends WynntilsEvent {
     private final Set<String> changedPlayers;
     private final ChangeType changeType;
 

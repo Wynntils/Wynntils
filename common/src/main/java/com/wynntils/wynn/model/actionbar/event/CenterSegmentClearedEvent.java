@@ -4,6 +4,6 @@
  */
 package com.wynntils.wynn.model.actionbar.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class CenterSegmentClearedEvent extends Event {}
+public class CenterSegmentClearedEvent extends WynntilsEvent {}

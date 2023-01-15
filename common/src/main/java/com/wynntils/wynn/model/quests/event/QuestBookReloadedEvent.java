@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.model.quests.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public abstract class QuestBookReloadedEvent extends Event {
+public abstract class QuestBookReloadedEvent extends WynntilsEvent {
     public static class QuestsReloaded extends QuestBookReloadedEvent {}
 
     public static class MiniQuestsReloaded extends QuestBookReloadedEvent {}

@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.model.actionbar.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import java.util.regex.Matcher;
-import net.minecraftforge.eventbus.api.Event;
 
-public class SpellSegmentUpdateEvent extends Event {
+public class SpellSegmentUpdateEvent extends WynntilsEvent {
     private final Matcher matcher;
 
     public SpellSegmentUpdateEvent(Matcher matcher) {

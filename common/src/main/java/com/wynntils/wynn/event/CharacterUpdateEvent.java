@@ -4,6 +4,6 @@
  */
 package com.wynntils.wynn.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class CharacterUpdateEvent extends Event {}
+public class CharacterUpdateEvent extends WynntilsEvent {}

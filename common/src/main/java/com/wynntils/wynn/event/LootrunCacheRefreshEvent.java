@@ -4,6 +4,6 @@
  */
 package com.wynntils.wynn.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import com.wynntils.core.events.WynntilsEvent;
 
-public class LootrunCacheRefreshEvent extends Event {}
+public class LootrunCacheRefreshEvent extends WynntilsEvent {}

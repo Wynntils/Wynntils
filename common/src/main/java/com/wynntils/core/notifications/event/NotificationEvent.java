@@ -4,10 +4,10 @@
  */
 package com.wynntils.core.notifications.event;
 
+import com.wynntils.core.events.WynntilsEvent;
 import com.wynntils.core.notifications.MessageContainer;
-import net.minecraftforge.eventbus.api.Event;
 
-public class NotificationEvent extends Event {
+public class NotificationEvent extends WynntilsEvent {
     private final MessageContainer messageContainer;
 
     private NotificationEvent(MessageContainer messageContainer) {
