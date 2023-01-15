@@ -15,15 +15,16 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.wynn.objects.ShamanMaskType;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanMasksOverlayFeature extends UserFeature {
@@ -66,26 +67,30 @@ public class ShamanMasksOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
             if (currentMaskType == ShamanMaskType.NONE && !displayNone) return;
 
-            renderMaskString(poseStack, currentMaskType);
+            renderMaskString(poseStack, bufferSource, currentMaskType);
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            renderMaskString(poseStack, ShamanMaskType.AWAKENED);
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            renderMaskString(poseStack, bufferSource, ShamanMaskType.AWAKENED);
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-        private void renderMaskString(PoseStack poseStack, ShamanMaskType currentMaskType) {
-            FontRenderer.getInstance()
+        private void renderMaskString(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ShamanMaskType currentMaskType) {
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             maskDisplay.replace("%mask%", currentMaskType.getName()),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),

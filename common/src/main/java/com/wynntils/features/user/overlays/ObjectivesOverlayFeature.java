@@ -21,10 +21,11 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -32,6 +33,7 @@ import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.wynn.model.objectives.WynnObjective;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -87,7 +89,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             WynnObjective guildObjective = Managers.Objectives.getGuildObjective();
 
             if (guildObjective == null) {
@@ -117,9 +120,10 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
             final String text =
                     guildObjective.getGoal() + ": " + guildObjective.getScore() + "/" + guildObjective.getMaxScore();
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
@@ -136,8 +140,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
             }
 
             if (this.enableProgressBar) {
-                RenderUtils.drawProgressBar(
+                BufferedRenderUtils.drawProgressBar(
                         poseStack,
+                        bufferSource,
                         Texture.BUBBLE_BAR,
                         this.getRenderX(),
                         renderY + SPACE_BETWEEN,
@@ -149,11 +154,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         objectivesTexture.yOffset + 10,
                         guildObjective.getProgress());
             }
-        }
-
-        @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            render(poseStack, partialTicks, window);
         }
 
         @Override
@@ -178,7 +178,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             List<WynnObjective> objectives = Managers.Objectives.getPersonalObjectives();
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
@@ -212,9 +213,10 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 float renderY = offsetY + this.getRenderY();
 
                 final String text = objective.asObjectiveString();
-                FontRenderer.getInstance()
+                BufferedFontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
+                                bufferSource,
                                 text,
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
@@ -231,8 +233,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 }
 
                 if (this.enableProgressBar) {
-                    RenderUtils.drawProgressBar(
+                    BufferedRenderUtils.drawProgressBar(
                             poseStack,
+                            bufferSource,
                             Texture.EXPERIENCE_BAR,
                             this.getRenderX(),
                             renderY + SPACE_BETWEEN,
@@ -247,11 +250,6 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
                 offsetY += renderedHeightWithoutTextHeight + textHeight;
             }
-        }
-
-        @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            render(poseStack, partialTicks, window);
         }
 
         @Override

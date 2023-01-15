@@ -5,6 +5,8 @@
 package com.wynntils.gui.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -12,6 +14,7 @@ import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
@@ -44,45 +47,23 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        float renderX;
-        float renderY;
+        MultiBufferSource.BufferSource bufferSource =
+                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
-        if (text == null) return;
+        BufferedFontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        bufferSource,
+                        text,
+                        x,
+                        y,
+                        customColor,
+                        horizontalAlignment,
+                        verticalAlignment,
+                        shadow,
+                        textScale);
 
-        // TODO: Add rainbow color support
-
-        renderX = switch (horizontalAlignment) {
-            case Left -> x;
-            case Center -> x - (font.width(text) / 2f * textScale);
-            case Right -> x - font.width(text) * textScale;};
-
-        renderY = switch (verticalAlignment) {
-            case Top -> y;
-            case Middle -> y - (font.lineHeight / 2f * textScale);
-            case Bottom -> y - font.lineHeight * textScale;};
-
-        poseStack.pushPose();
-        poseStack.translate(renderX, renderY, 0);
-        poseStack.scale(textScale, textScale, 0);
-
-        switch (shadow) {
-            case OUTLINE -> {
-                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                String strippedText = ComponentUtils.stripColorFormatting(text);
-
-                // draw outline behind text
-                font.draw(poseStack, strippedText, 1, 0, shadowColor);
-                font.draw(poseStack, strippedText, -1, 0, shadowColor);
-                font.draw(poseStack, strippedText, 0, 1, shadowColor);
-                font.draw(poseStack, strippedText, 0, -1, shadowColor);
-
-                font.draw(poseStack, text, 0, 0, customColor.asInt());
-            }
-            case NORMAL -> font.drawShadow(poseStack, text, 0, 0, customColor.asInt());
-            default -> font.draw(poseStack, text, 0, 0, customColor.asInt());
-        }
-
-        poseStack.popPose();
+        bufferSource.endBatch();
     }
 
     public void renderText(
