@@ -38,7 +38,8 @@ public final class DamageStatBuilder extends StatBuilder {
     private static String buildApiName(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {
         return CaseFormat.UPPER_CAMEL.to(
                 CaseFormat.LOWER_CAMEL,
-                attackType.getApiName() + damageType.getApiName() + "DamageBonus" + (unit == GearStatUnit.RAW ? "Raw" : ""));
+                attackType.getApiName() + damageType.getApiName() + "DamageBonus"
+                        + (unit == GearStatUnit.RAW ? "Raw" : ""));
     }
 
     private static String buildKey(GearAttackType attackType, GearDamageType damageType, GearStatUnit unit) {

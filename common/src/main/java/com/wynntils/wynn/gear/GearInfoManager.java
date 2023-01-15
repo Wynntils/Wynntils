@@ -4,19 +4,28 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.utils.JsonUtils;
 import com.wynntils.wynn.gear.stats.DamageStatBuilder;
 import com.wynntils.wynn.gear.stats.DefenceStatBuilder;
 import com.wynntils.wynn.gear.stats.MiscStatBuilder;
 import com.wynntils.wynn.gear.stats.SpellStatBuilder;
 import com.wynntils.wynn.gear.stats.StatBuilder;
+import com.wynntils.wynn.gear.types.GearMajorId;
 import com.wynntils.wynn.gear.types.GearStat;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +34,7 @@ import java.util.Map;
 public final class GearInfoManager extends Manager {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
+            .registerTypeHierarchyAdapter(GearMajorId.class, new GearMajorIdDeserializer())
             .create();
 
     private static final List<StatBuilder> STAT_BUILDERS =
@@ -34,6 +44,7 @@ public final class GearInfoManager extends Manager {
     public final Map<String, GearStat> gearStatLookup = new HashMap<>();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
+    private List<GearMajorId> majorIds;
 
     public GearInfoManager(NetManager netManager) {
         super(List.of(netManager));
@@ -56,30 +67,57 @@ public final class GearInfoManager extends Manager {
         return gearStatLookup.get(lookupName);
     }
 
+    public GearMajorId getMajorId(String majorIdName) {
+        return majorIds.stream()
+                .filter(mId -> mId.name().equals(majorIdName))
+                .findFirst()
+                .orElse(null);
+    }
+
     private void loadGearInfoRegistry() {
-        Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_GEARS);
-        dl.handleReader(reader -> {
-            WynncraftGearInfoResponse gearInfoResponse =
-                    GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
+        Download majorIdsDl = Managers.Net.download(UrlId.DATA_STATIC_MAJOR_IDS);
+        majorIdsDl.handleReader(majorIdsReader -> {
+            Type type = new TypeToken<List<GearMajorId>>() {}.getType();
+            majorIds = GEAR_INFO_GSON.fromJson(majorIdsReader, type);
 
-            // Remove the dummy "default" entry
-            List<GearInfo> registry = gearInfoResponse.items.stream()
-                    .filter(gearInfo -> !gearInfo.name().equals("default"))
-                    .toList();
+            // We must download and parse Major IDs before attempting to parse the gear DB
+            Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_GEARS);
+            dl.handleReader(reader -> {
+                WynncraftGearInfoResponse gearInfoResponse =
+                        GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
 
-            // Create a fast lookup map
-            Map<String, GearInfo> lookupMap = new HashMap<>();
-            for (GearInfo gearInfo : registry) {
-                lookupMap.put(gearInfo.name(), gearInfo);
-            }
+                // Remove the dummy "default" entry
+                List<GearInfo> registry = gearInfoResponse.items.stream()
+                        .filter(gearInfo -> !gearInfo.name().equals("default"))
+                        .toList();
 
-            // Make it visisble to the world
-            gearInfoRegistry = registry;
-            gearInfoLookup = lookupMap;
+                // Create a fast lookup map
+                Map<String, GearInfo> lookupMap = new HashMap<>();
+                for (GearInfo gearInfo : registry) {
+                    lookupMap.put(gearInfo.name(), gearInfo);
+                }
+
+                // Make it visisble to the world
+                gearInfoRegistry = registry;
+                gearInfoLookup = lookupMap;
+            });
         });
     }
 
     private static class WynncraftGearInfoResponse {
         List<GearInfo> items;
+    }
+
+    private static class GearMajorIdDeserializer implements JsonDeserializer<GearMajorId> {
+        @Override
+        public GearMajorId deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonObject json = jsonElement.getAsJsonObject();
+
+            return new GearMajorId(
+                    JsonUtils.getNullableJsonString(json, "id"),
+                    JsonUtils.getNullableJsonString(json, "name"),
+                    JsonUtils.getNullableJsonString(json, "lore"));
+        }
     }
 }

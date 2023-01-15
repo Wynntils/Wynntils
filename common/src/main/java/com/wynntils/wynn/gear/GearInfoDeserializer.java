@@ -14,6 +14,7 @@ import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.wynn.gear.types.GearDamageType;
+import com.wynntils.wynn.gear.types.GearMajorId;
 import com.wynntils.wynn.gear.types.GearMaterial;
 import com.wynntils.wynn.gear.types.GearRestrictions;
 import com.wynntils.wynn.gear.types.GearStat;
@@ -33,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     @Override
-    public GearInfo deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+    public GearInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject json = jsonElement.getAsJsonObject();
 
@@ -155,12 +156,21 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
                 ? Optional.empty()
                 : Optional.of(GearAttackSpeed.valueOf(attackSpeedJson.getAsString()));
 
-        // FIXME: parse major ID array
-        List<String> majorIds = List.of();
+        List<GearMajorId> majorIds = parseMajorIds(json);
         List<Pair<GearDamageType, RangedValue>> damages = parseDamages(json);
         List<Pair<Element, Integer>> defences = parseDefences(json);
 
         return new GearStatsFixed(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
+    }
+
+    private List<GearMajorId> parseMajorIds(JsonObject json) {
+        JsonElement majorIdsJson = json.get("majorIds");
+        if (majorIdsJson == null || majorIdsJson.isJsonNull()) return List.of();
+
+        return majorIdsJson.getAsJsonArray().asList().stream()
+                .map(majorIdName -> Managers.GearInfo.getMajorId(majorIdName.getAsString()))
+                .filter(majorId -> majorId != null)
+                .toList();
     }
 
     private List<Pair<Skill, Integer>> parseSkillBuffs(JsonObject json) {
@@ -252,14 +262,14 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         } else {
             if (baseValue > 0) {
                 // Between 30% and 130% of base value, always at least 1
-                int min = Math.max((int) Math.round(baseValue*0.3), 1);
-                int max = (int) Math.round(baseValue*1.3);
+                int min = Math.max((int) Math.round(baseValue * 0.3), 1);
+                int max = (int) Math.round(baseValue * 1.3);
                 return RangedValue.of(min, max);
             } else {
                 // Between 70% and 130% of base value, always at most -1
                 // Round ties towards positive infinity (confirmed on Wynncraft)
-                int min = (int) Math.round(baseValue*1.3);
-                int max = Math.min((int) Math.round(baseValue*0.7), -1);
+                int min = (int) Math.round(baseValue * 1.3);
+                int max = Math.min((int) Math.round(baseValue * 0.7), -1);
                 return RangedValue.of(min, max);
             }
         }
