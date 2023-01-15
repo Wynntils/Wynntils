@@ -15,4 +15,8 @@ public record RangedValue(int low, int high) {
         String[] pair = range.split("-");
         return new RangedValue(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
     }
+
+    public String asString() {
+        return low + "-" + high;
+    }
 }

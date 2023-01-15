@@ -7,11 +7,11 @@ package com.wynntils.wynn.objects;
 import com.wynntils.utils.StringUtils;
 
 public enum Element {
-    AIR,
-    EARTH,
     FIRE,
+    WATER,
+    AIR,
     THUNDER,
-    WATER;
+    EARTH;
 
     private final String displayName;
 

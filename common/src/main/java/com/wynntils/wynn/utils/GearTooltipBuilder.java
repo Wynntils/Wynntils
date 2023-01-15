@@ -8,11 +8,17 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.utils.Pair;
+import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.gear.GearInfo;
+import com.wynntils.wynn.gear.GearStatsFixed;
+import com.wynntils.wynn.gear.types.GearDamageType;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.profiles.item.DamageType;
+import com.wynntils.wynn.objects.profiles.item.GearAttackSpeed;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
@@ -21,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,20 +37,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearTooltipBuilder {
+public  class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private final GearProfile gearProfile;
-    private final GearItem gearItem;
+    private  GearProfile gearProfile;
+    private  GearItem gearItem;
 
-    private final List<Component> topTooltip;
-    private final List<Component> bottomTooltip;
+    private  List<Component> topTooltip;
+    private  List<Component> bottomTooltip;
 
     private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
+
+    public GearTooltipBuilder() {
+    }
 
     private GearTooltipBuilder(GearProfile gearProfile, GearItem gearItem) {
         this.gearProfile = gearProfile;
@@ -68,6 +78,46 @@ public final class GearTooltipBuilder {
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
         return new GearTooltipBuilder(gearItem.getGearProfile(), gearItem);
+    }
+
+    public static GearTooltipBuilder fromItemStackNew(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
+        List<Component> tooltips = new ArrayList<>();
+        GearInfo gearInfo = Managers.GearInfo.getGearInfo(gearProfile.getDisplayName());
+
+        // Fixed stats
+        GearStatsFixed fixedStats = gearInfo.statsFixed();
+        Optional<GearAttackSpeed> attackSpeed = fixedStats.attackSpeed();
+        if (attackSpeed.isPresent()) {
+            tooltips.add(Component.literal(attackSpeed.get().getName()));
+        }
+        tooltips.add(Component.literal(""));
+        if (fixedStats.healthBuff() != 0) {
+            tooltips.add(Component.literal("Health: " + StringUtils.toSignedString(fixedStats.healthBuff())));
+        }
+        for (Pair<Element, Integer> defenseValue :fixedStats.defences()) {
+            tooltips.add(Component.literal(defenseValue.key().getDisplayName() + " Defence: " + StringUtils.toSignedString(defenseValue.value())));
+        }
+        for (Pair<GearDamageType, RangedValue> damageValue :fixedStats.damages()) {
+            tooltips.add(Component.literal(damageValue.key().getDisplayName() + " Damage: " + damageValue.value().asString()));
+        }
+        if (!fixedStats.damages().isEmpty()) {
+            tooltips.add(Component.literal("Average DPS: ???"));
+        }
+
+        return new FixedTB(tooltips);
+    }
+
+    public static class FixedTB extends GearTooltipBuilder {
+        private List<Component> tooltip;
+
+        public FixedTB(List<Component> tooltip) {
+            this.tooltip = tooltip;
+        }
+
+        @Override
+        public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
+            return tooltip;
+        }
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {

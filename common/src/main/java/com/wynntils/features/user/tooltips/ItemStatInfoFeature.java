@@ -70,7 +70,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
+        if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
 
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
@@ -82,7 +82,7 @@ public class ItemStatInfoFeature extends UserFeature {
             GearTooltipBuilder builder = gearItem.getCache()
                     .getOrCalculate(
                             WynnItemCache.TOOLTIP_KEY,
-                            () -> GearTooltipBuilder.fromItemStack(
+                            () -> GearTooltipBuilder.fromItemStackNew(
                                     event.getItemStack(), gearItem.getGearProfile(), gearItem));
             if (builder == null) return;
 

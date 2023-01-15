@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -179,7 +180,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             // This is not ideal, but in practice just a subset of all mincraft items are used
             itemId = KNOWN_USED_ITEM_CODES.get(itemTypeCode);
             if (itemId == null) {
-                WynntilsMod.warn("Could not convert item id: " + itemTypeCode + " from gear database");
+                WynntilsMod.warn("Could not convert item id: " + itemTypeCode + ":" + damageCode + " from gear database");
                 itemId = "bedrock"; // whatever...
             }
         }
@@ -253,7 +254,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
 
         return majorIdsJson.getAsJsonArray().asList().stream()
                 .map(majorIdName -> Managers.GearInfo.getMajorIdFromId(majorIdName.getAsString()))
-                .filter(majorId -> majorId != null)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -276,7 +277,17 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
 
     private List<Pair<GearDamageType, RangedValue>> parseDamages(JsonObject json) {
         List<Pair<GearDamageType, RangedValue>> list = new ArrayList<>();
-        // First look for elemental damage
+        // First look for neutral damage, which has a non-standard name
+        JsonElement neutralDamageJson = json.get("damage");
+        if (neutralDamageJson != null) {
+            String rangeString = neutralDamageJson.getAsString();
+            RangedValue range = RangedValue.fromString(rangeString);
+            if (!range.equals(RangedValue.NONE)) {
+                list.add(Pair.of(GearDamageType.NEUTRAL, range));
+            }
+        }
+
+        // Then check for elemental damage
         for (Element element : Element.values()) {
             String damageJsonName = element.name().toLowerCase(Locale.ROOT) + "Damage";
             JsonElement damageJson = json.get(damageJsonName);
@@ -287,15 +298,6 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             if (range.equals(RangedValue.NONE)) continue;
 
             list.add(Pair.of(GearDamageType.fromElement(element), range));
-        }
-        // Then check neutral damage, which has a non-standard name
-        JsonElement damageJson = json.get("damage");
-        if (damageJson != null) {
-            String rangeString = damageJson.getAsString();
-            RangedValue range = RangedValue.fromString(rangeString);
-            if (!range.equals(RangedValue.NONE)) {
-                list.add(Pair.of(GearDamageType.NEUTRAL, range));
-            }
         }
 
         // Return an immutable list

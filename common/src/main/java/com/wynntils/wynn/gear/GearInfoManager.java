@@ -67,6 +67,11 @@ public final class GearInfoManager extends Manager {
         return gearStatLookup.get(lookupName);
     }
 
+
+    public GearInfo getGearInfo(String gearName) {
+        return gearInfoLookup.get(gearName);
+    }
+
     public GearMajorId getMajorIdFromId(String majorIdId) {
         // Check the "id" field of the "majorId", hence "majodIdId"
         return majorIds.stream()
