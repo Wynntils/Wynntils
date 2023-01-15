@@ -90,6 +90,7 @@ public final class UrlManager extends Manager {
                 throw new RuntimeException(e);
             }
         }
+        verifyUrlMap();
 
         // Then trigger a (re-)download from the net to the cache
         // We need to do the urlInfo lookup ourself, since we might have
@@ -107,10 +108,20 @@ public final class UrlManager extends Manager {
             try {
                 Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
                 tryUpdateUrlMap(tryMap);
+                verifyUrlMap();
             } catch (IOException e) {
                 WynntilsMod.warn("Problem updating URL list from online source", e);
             }
         });
+    }
+
+    private void verifyUrlMap() {
+        // Sanity check that we got all ids
+        for (UrlId urlId : UrlId.values()) {
+            if (!urlMap.containsKey(urlId)) {
+                WynntilsMod.warn("Missing URL in urls.json: " + urlId);
+            }
+        }
     }
 
     private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap) {
@@ -172,14 +183,6 @@ public final class UrlManager extends Manager {
                             Method.from(urlProfile.method),
                             Encoding.from(urlProfile.encoding),
                             Optional.ofNullable(urlProfile.md5)));
-        }
-
-        // Sanity check that we got all ids
-        for (UrlId urlId : UrlId.values()) {
-            if (!newMap.containsKey(urlId)) {
-                WynntilsMod.warn("Missing URL in urls.json: " + urlId);
-                return Pair.of(-1, Map.of());
-            }
         }
 
         return Pair.of(version, newMap);
