@@ -1,9 +1,21 @@
+## [0.0.2-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.104...v0.0.2-alpha.105) (2023-01-15)
+
+
+### Bug Fixes
+
+* Do not create buffers per render ([#1036](https://github.com/Wynntils/Artemis/issues/1036)) ([d13220f](https://github.com/Wynntils/Artemis/commit/d13220fcd747eada5a8ef920737ba83f254df8e2))
+
 ## [0.0.2-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.103...v0.0.2-alpha.104) (2023-01-15)
 
 
 ### Bug Fixes
 
 * More robust handling of problematic item tooltip ([#1037](https://github.com/Wynntils/Artemis/issues/1037)) ([eee1114](https://github.com/Wynntils/Artemis/commit/eee1114245076597d76438f501ae71722e4937c7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.104 [skip ci] ([2d366f2](https://github.com/Wynntils/Artemis/commit/2d366f2f3cdcde5177503837b1bbbbcf851dfe72))
 
 ## [0.0.2-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.102...v0.0.2-alpha.103) (2023-01-15)
 
@@ -36,16 +48,4 @@
 
 * Move TextShadow to its own class ([#1028](https://github.com/Wynntils/Artemis/issues/1028)) ([fa5c1ce](https://github.com/Wynntils/Artemis/commit/fa5c1ce129b5908cec7bab02346b0e0114734a62))
 * **release:** v0.0.2-alpha.101 [skip ci] ([27afca1](https://github.com/Wynntils/Artemis/commit/27afca10757547b93c20b6062ebf12c94c4fd9fe))
-
-## [0.0.2-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.99...v0.0.2-alpha.100) (2023-01-12)
-
-
-### New Features
-
-* Proper tick scheduler ([#1025](https://github.com/Wynntils/Artemis/issues/1025)) ([d40646c](https://github.com/Wynntils/Artemis/commit/d40646c16a5cd2aea54f3255e7e200e12222453e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.100 [skip ci] ([b6049e4](https://github.com/Wynntils/Artemis/commit/b6049e49a8b7a031b0c8fb799a59ceb19d5dc999))
 
