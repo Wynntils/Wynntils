@@ -118,6 +118,9 @@ public abstract class ClientPacketListenerMixin {
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
         CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
 
+        // do not run mixin code if event wasn't posted
+        if (!event.wasPosted()) return;
+
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
             this.commands = new CommandDispatcher<>(event.getRoot());
@@ -194,6 +197,10 @@ public abstract class ClientPacketListenerMixin {
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+
+        // do not run mixin code if event wasn't posted
+        if (!event.wasPosted()) return;
+
         if (event.isCanceled()) {
             ci.cancel();
         }
@@ -304,6 +311,10 @@ public abstract class ClientPacketListenerMixin {
     private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
+
+        // do not run mixin code if event wasn't posted
+        if (!result.wasPosted()) return;
+
         if (result.isCanceled()) {
             ci.cancel();
             return;
@@ -353,13 +364,16 @@ public abstract class ClientPacketListenerMixin {
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onSystemChatReceived(packet.content(), packet.overlay());
+
+        // do not run mixin code if event wasn't posted
+        if (!result.wasPosted()) return;
+
         if (result.isCanceled()) {
             ci.cancel();
             return;
         }
 
         if (!result.getMessage().equals(packet.content())) {
-
             this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
             ci.cancel();
         }
