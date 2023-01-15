@@ -127,7 +127,12 @@ public enum SpellType {
 
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
-            if (name.startsWith(spellType.name)) {
+            // After the matching part, the string needs to be done, or a blank character
+            // must appaear
+            if (name.startsWith(spellType.name)
+                    && (name.length() == spellType.name.length()
+                            || String.valueOf(name.charAt(spellType.name.length()))
+                                    .isBlank())) {
                 return spellType;
             }
         }
