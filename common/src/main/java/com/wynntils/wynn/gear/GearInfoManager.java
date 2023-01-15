@@ -33,6 +33,7 @@ public final class GearInfoManager extends Manager {
     public final List<GearStat> gearStatRegistry = new ArrayList<>();
     public final Map<String, GearStat> gearStatLookup = new HashMap<>();
     private List<GearInfo> gearInfoRegistry = List.of();
+    private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
 
     public GearInfoManager(NetManager netManager) {
         super(List.of(netManager));
@@ -60,7 +61,17 @@ public final class GearInfoManager extends Manager {
         dl.handleReader(reader -> {
             WynncraftGearInfoResponse gearInfoResponse =
                     GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
+
+            // Create a fast lookup map
+            Map<String, GearInfo> lookupMap = new HashMap<>();
+            for (GearInfo gearInfo : gearInfoResponse.items) {
+                lookupMap.put(gearInfo.name(), gearInfo);
+            }
             gearInfoRegistry = gearInfoResponse.items;
+            gearInfoLookup = lookupMap;
+
+            GearInfo kaze = gearInfoLookup.get("Kaze");
+            System.out.println("kaze:" + kaze);
         });
     }
 

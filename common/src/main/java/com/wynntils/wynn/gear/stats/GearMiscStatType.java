@@ -37,7 +37,6 @@ public enum GearMiscStatType {
     GATHER_XP_BONUS("Gather XP Bonus", GearStatUnit.PERCENT, "<unknown2>"),
     GATHER_SPEED("Gather Speed", GearStatUnit.PERCENT, "<unknown3>");
 
-
     private final String displayName;
     private final String apiName;
     private final GearStatUnit unit;

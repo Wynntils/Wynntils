@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Managers;
+import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.wynn.gear.types.GearDamageType;
@@ -70,8 +71,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         GearMaterial material = parseMaterial(json);
         GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
-        JsonElement loreJson = json.get("lore");
-        Optional<String> loreOpt = loreJson == null ? Optional.empty() : Optional.of(loreJson.getAsString());
+        Optional<String> loreOpt = Optional.ofNullable(JsonUtils.getNullableJsonString(json, "addedLore"));
         Optional<String> altNameOpt = Optional.ofNullable(altName);
 
         JsonElement allowCraftsmanJson = json.get("allowCraftsman");
@@ -81,11 +81,10 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     }
 
     private GearRestrictions parseRestrictions(JsonObject json) {
-        JsonElement restrictionsJson = json.get("restrictions");
-        if (restrictionsJson == null) return GearRestrictions.NONE;
-        if (restrictionsJson.isJsonNull()) return GearRestrictions.NONE;
+        String restrictions = JsonUtils.getNullableJsonString(json, "restrictions");
+        if (restrictions == null) return GearRestrictions.NONE;
 
-        return GearRestrictions.fromString(restrictionsJson.getAsString());
+        return GearRestrictions.fromString(restrictions);
     }
 
     private GearMaterial parseMaterial(JsonObject json) {
@@ -107,11 +106,10 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             return Optional.of(type.getClassReq());
         }
 
-        JsonElement classReq = json.get("classRequirement");
+        String classReq = JsonUtils.getNullableJsonString(json, "classRequirement");
         if (classReq == null) return Optional.empty();
-        if (classReq.isJsonNull()) return Optional.empty();
 
-        return Optional.of(ClassType.fromName(classReq.getAsString()));
+        return Optional.of(ClassType.fromName(classReq));
     }
 
     private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
@@ -132,13 +130,11 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     }
 
     private Optional<String> parseQuest(JsonObject json) {
-        JsonElement questJson = json.get("quest");
-        if (questJson == null) return Optional.empty();
-        if (questJson.isJsonNull()) return Optional.empty();
+        String questName = JsonUtils.getNullableJsonString(json, "quest");
+        if (questName == null) return Optional.empty();
 
         // Apparently some quests got an extra "֎" added to the name
-        Optional<String> quest = Optional.of(questJson.getAsString().replace("֎", ""));
-        return quest;
+        return Optional.of(questName.replace("֎", ""));
     }
 
     private GearStatsFixed parseStatsFixed(JsonObject json) {
