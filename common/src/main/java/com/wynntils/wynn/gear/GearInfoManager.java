@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 public final class GearInfoManager extends Manager {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
@@ -92,14 +93,14 @@ public final class GearInfoManager extends Manager {
             // Some names apparently has a random ֎ in them...
             JsonElement primaryName = json.get("name");
             JsonElement secondaryName = json.get("displayName");
-            String name = (secondaryName.isJsonNull() ? primaryName : secondaryName)
+            String name = (secondaryName == null ? primaryName : secondaryName)
                     .getAsString()
                     .replace("֎", "");
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = json.get("sockets").getAsInt();
 
-            String altName = (secondaryName.isJsonNull() ? null : primaryName.getAsString());
+            String altName = (secondaryName == null ? null : primaryName.getAsString());
             GearMetaInfo metaInfo = parseMetaInfo(json, altName);
             GearRequirements requirements = parseRequirements(json);
             GearStatsFixed statsFixed = parseStatsFixed(json);
@@ -120,19 +121,26 @@ public final class GearInfoManager extends Manager {
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String altName) {
-            GearRestrictions restrictions =
-                    GearRestrictions.fromString(json.get("restrictions").getAsString());
+            GearRestrictions restrictions = parseRestrictions(json);
             GearMaterial material = parseMaterial(json);
             GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
             JsonElement loreJson = json.get("lore");
-            Optional<String> loreOpt = loreJson.isJsonNull() ? Optional.empty() : Optional.of(loreJson.getAsString());
+            Optional<String> loreOpt = loreJson == null ? Optional.empty() : Optional.of(loreJson.getAsString());
             Optional<String> altNameOpt = Optional.ofNullable(altName);
 
             JsonElement allowCraftsmanJson = json.get("allowCraftsman");
-            boolean allowCraftsman = allowCraftsmanJson.isJsonNull() ? false : allowCraftsmanJson.getAsBoolean();
+            boolean allowCraftsman = allowCraftsmanJson == null ? false : allowCraftsmanJson.getAsBoolean();
 
             return new GearMetaInfo(restrictions, material, dropType, loreOpt, altNameOpt, allowCraftsman);
+        }
+
+        private GearRestrictions parseRestrictions(JsonObject json) {
+            JsonElement restrictionsJson = json.get("restrictions");
+            if (restrictionsJson == null) return GearRestrictions.NONE;
+            if (restrictionsJson.isJsonNull()) return GearRestrictions.NONE;
+
+            return GearRestrictions.fromString(restrictionsJson.getAsString());
         }
 
         private GearMaterial parseMaterial(JsonObject json) {
@@ -143,6 +151,12 @@ public final class GearInfoManager extends Manager {
         private GearRequirements parseRequirements(JsonObject json) {
             // When reading, strip "֎" from quest name.
             // classRequirement -> str to upper
+
+            /*
+            public record GearRequirements(
+                    int level, Optional<ClassType> classType, List<Pair<Skill, Integer>> skills, Optional<String> quest) {}
+
+                         */
             return null;
         }
 
