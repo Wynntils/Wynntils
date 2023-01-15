@@ -35,9 +35,9 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             throws JsonParseException {
         JsonObject json = jsonElement.getAsJsonObject();
 
-        // Some names apparently has a random ֎ in them...
         JsonElement primaryName = json.get("name");
         JsonElement secondaryName = json.get("displayName");
+        // Some names apparently has a random ֎ in them...
         String name = (secondaryName == null ? primaryName : secondaryName)
                 .getAsString()
                 .replace("֎", "");

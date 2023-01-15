@@ -58,7 +58,8 @@ public final class GearInfoManager extends Manager {
     private void loadGearInfoRegistry() {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_GEARS);
         dl.handleReader(reader -> {
-            WynncraftGearInfoResponse gearInfoResponse = GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
+            WynncraftGearInfoResponse gearInfoResponse =
+                    GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
             gearInfoRegistry = gearInfoResponse.items;
         });
     }
