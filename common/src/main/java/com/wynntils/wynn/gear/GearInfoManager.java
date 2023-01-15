@@ -62,16 +62,20 @@ public final class GearInfoManager extends Manager {
             WynncraftGearInfoResponse gearInfoResponse =
                     GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
 
+            // Remove the dummy "default" entry
+            List<GearInfo> registry = gearInfoResponse.items.stream()
+                    .filter(gearInfo -> !gearInfo.name().equals("default"))
+                    .toList();
+
             // Create a fast lookup map
             Map<String, GearInfo> lookupMap = new HashMap<>();
-            for (GearInfo gearInfo : gearInfoResponse.items) {
+            for (GearInfo gearInfo : registry) {
                 lookupMap.put(gearInfo.name(), gearInfo);
             }
-            gearInfoRegistry = gearInfoResponse.items;
-            gearInfoLookup = lookupMap;
 
-            GearInfo kaze = gearInfoLookup.get("Kaze");
-            System.out.println("kaze:" + kaze);
+            // Make it visisble to the world
+            gearInfoRegistry = registry;
+            gearInfoLookup = lookupMap;
         });
     }
 
