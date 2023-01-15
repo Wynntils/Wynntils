@@ -12,16 +12,25 @@ public enum Skill {
     STRENGTH("✤", ChatFormatting.DARK_GREEN),
     DEXTERITY("✦", ChatFormatting.YELLOW),
     INTELLIGENCE("✽", ChatFormatting.AQUA),
-    DEFENCE("✹", ChatFormatting.RED), // Note! Must be spelled with "C" to match in-game
+    DEFENCE("✹", ChatFormatting.RED, "defense"), // Note! Must be spelled with "C" to match in-game
     AGILITY("❋", ChatFormatting.WHITE);
 
     private final String symbol;
     private final ChatFormatting color;
+    private final String apiName;
     private final String displayName;
+
+    Skill(String symbol, ChatFormatting color, String apiName) {
+        this.symbol = symbol;
+        this.color = color;
+        this.apiName = apiName;
+        this.displayName = StringUtils.capitalized(this.name());
+    }
 
     Skill(String symbol, ChatFormatting color) {
         this.symbol = symbol;
         this.color = color;
+        this.apiName = this.name().toLowerCase(Locale.ROOT);
         this.displayName = StringUtils.capitalized(this.name());
     }
 
@@ -43,5 +52,9 @@ public enum Skill {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getApiName() {
+        return apiName;
     }
 }

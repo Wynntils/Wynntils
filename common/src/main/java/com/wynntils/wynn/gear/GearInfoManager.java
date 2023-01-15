@@ -36,7 +36,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -162,11 +161,13 @@ public final class GearInfoManager extends Manager {
         private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
             List<Pair<Skill, Integer>> list = new ArrayList<>();
             for (Skill skill : Skill.values()) {
-                String skillJsonName = skill.name().toLowerCase(Locale.ROOT);
+                String skillJsonName = skill.getApiName();
                 JsonElement skillJson = json.get(skillJsonName);
                 if (skillJson == null) continue;
 
                 int minPoints = skillJson.getAsInt();
+                if (minPoints == 0) continue;
+
                 list.add(Pair.of(skill, minPoints));
             }
 
