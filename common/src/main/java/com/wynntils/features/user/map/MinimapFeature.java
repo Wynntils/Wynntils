@@ -39,11 +39,11 @@ import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
 import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import com.wynntils.wynn.utils.WynnUtils;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @FeatureInfo(category = FeatureCategory.MAP)
 public class MinimapFeature extends UserFeature {
@@ -110,8 +110,11 @@ public class MinimapFeature extends UserFeature {
                     new GuiScaledOverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
         }
 
+        // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
+        // currently not working with buffer sources.
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -219,31 +222,36 @@ public class MinimapFeature extends UserFeature {
                 double playerZ,
                 BoundingBox textureBoundingBox) {
 
-            float sinRotationRadians = 0f;
-            float cosRotationRadians = 0f;
+            float sinRotationRadians;
+            float cosRotationRadians;
 
             if (followPlayerRotation) {
                 double rotationRadians = Math.toRadians(McUtils.player().getYRot());
                 sinRotationRadians = (float) StrictMath.sin(rotationRadians);
                 cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+            } else {
+                sinRotationRadians = 0f;
+                cosRotationRadians = 0f;
             }
 
             float currentZoom = 1f / scale;
 
-            List<Poi> poisToRender = new ArrayList<>(Models.Map.getServicePois());
-            poisToRender.addAll(MapFeature.INSTANCE.customPois);
-            List<PlayerMiniMapPoi> playerPois = Models.HadesUser.getHadesUserMap().values().stream()
-                    .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
-                            || (user.isMutualFriend() && renderRemoteFriendPlayers))
-                    .map(PlayerMiniMapPoi::new)
-                    .toList();
-            poisToRender.addAll(playerPois);
+            Stream<? extends Poi> poisToRender = Models.Map.getServicePois().stream();
 
-            poisToRender.addAll(Models.Map.getCombatPois());
+            poisToRender = Stream.concat(
+                    poisToRender,
+                    Models.HadesUser.getHadesUserMap().values().stream()
+                            .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
+                                    || (user.isMutualFriend() && renderRemoteFriendPlayers))
+                            .map(PlayerMiniMapPoi::new));
 
-            // Reverse order to make sure higher priority is drawn later than lower priority to overwrite them
-            poisToRender.sort(Comparator.comparing(Poi::getDisplayPriority).reversed());
-            for (Poi poi : poisToRender) {
+            poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
+
+            MultiBufferSource.BufferSource bufferSource =
+                    McUtils.mc().renderBuffers().bufferSource();
+
+            Poi[] pois = poisToRender.toArray(Poi[]::new);
+            for (Poi poi : pois) {
                 float dX = (poi.getLocation().getX() - (float) playerX) / scale;
                 float dZ = (poi.getLocation().getZ() - (float) playerZ) / scale;
 
@@ -264,9 +272,11 @@ public class MinimapFeature extends UserFeature {
                         poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
                 if (box.intersects(textureBoundingBox)) {
-                    poi.renderAt(poseStack, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
+                    poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale, currentZoom);
                 }
             }
+
+            bufferSource.endBatch();
 
             // Compass icon
             Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
@@ -323,11 +333,13 @@ public class MinimapFeature extends UserFeature {
                 poseStack.pushPose();
                 RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
                 compass.getPointerPoi()
-                        .renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
+                        .renderAt(poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale, 1f / scale);
                 poseStack.popPose();
             } else {
-                compass.renderAt(poseStack, compassRenderX, compassRenderZ, false, poiScale, currentZoom);
+                compass.renderAt(poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale, currentZoom);
             }
+
+            bufferSource.endBatch();
 
             poseStack.pushPose();
             poseStack.translate(centerX, centerZ, 0);

@@ -5,6 +5,7 @@
 package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -34,6 +36,8 @@ public final class OverlayManager extends Manager {
     private final Set<Overlay> enabledOverlays = new HashSet<>();
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
+    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
 
     public OverlayManager(CrashReportManager crashReportManager) {
         super(List.of(crashReportManager));
@@ -84,6 +88,8 @@ public final class OverlayManager extends Manager {
             shouldRender = false;
         }
 
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
         List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
@@ -105,10 +111,13 @@ public final class OverlayManager extends Manager {
 
             try {
                 if (testMode) {
-                    overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                    overlay.renderPreview(
+                            event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
                 } else {
                     if (shouldRender) {
-                        overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                        long startTime = System.currentTimeMillis();
+                        overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
+                        logProfilingData(startTime, overlay);
                     }
                 }
             } catch (Throwable t) {
@@ -122,10 +131,35 @@ public final class OverlayManager extends Manager {
             }
         }
 
+        bufferSource.endBatch();
+
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
             overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
+    }
+
+    private void logProfilingData(long startTime, Overlay overlay) {
+        long endTime = System.currentTimeMillis();
+        int timeSpent = (int) (endTime - startTime);
+        int allTime = profilingTimes.getOrDefault(overlay.getClass(), 0);
+        profilingTimes.put(overlay.getClass(), allTime + timeSpent);
+
+        int allCount = profilingCounts.getOrDefault(overlay.getClass(), 0);
+        profilingCounts.put(overlay.getClass(), allCount + 1);
+    }
+
+    public Map<Class<?>, Integer> getProfilingTimes() {
+        return profilingTimes;
+    }
+
+    public Map<Class<?>, Integer> getProfilingCounts() {
+        return profilingCounts;
+    }
+
+    public void resetProfiling() {
+        profilingTimes.clear();
+        profilingCounts.clear();
     }
 
     private void addCrashCallbacks() {
