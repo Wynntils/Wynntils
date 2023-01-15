@@ -168,7 +168,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         if (majorIdsJson == null || majorIdsJson.isJsonNull()) return List.of();
 
         return majorIdsJson.getAsJsonArray().asList().stream()
-                .map(majorIdName -> Managers.GearInfo.getMajorId(majorIdName.getAsString()))
+                .map(majorIdName -> Managers.GearInfo.getMajorIdFromId(majorIdName.getAsString()))
                 .filter(majorId -> majorId != null)
                 .toList();
     }

@@ -67,9 +67,10 @@ public final class GearInfoManager extends Manager {
         return gearStatLookup.get(lookupName);
     }
 
-    public GearMajorId getMajorId(String majorIdName) {
+    public GearMajorId getMajorIdFromId(String majorIdId) {
+        // Check the "id" field of the "majorId", hence "majodIdId"
         return majorIds.stream()
-                .filter(mId -> mId.name().equals(majorIdName))
+                .filter(mId -> mId.id().equals(majorIdId))
                 .findFirst()
                 .orElse(null);
     }
