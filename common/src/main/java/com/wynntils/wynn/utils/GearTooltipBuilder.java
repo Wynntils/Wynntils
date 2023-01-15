@@ -37,23 +37,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public  class GearTooltipBuilder {
+public class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private  GearProfile gearProfile;
-    private  GearItem gearItem;
+    private GearProfile gearProfile;
+    private GearItem gearItem;
 
-    private  List<Component> topTooltip;
-    private  List<Component> bottomTooltip;
+    private List<Component> topTooltip;
+    private List<Component> bottomTooltip;
 
     private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
-    public GearTooltipBuilder() {
-    }
+    public GearTooltipBuilder() {}
 
     private GearTooltipBuilder(GearProfile gearProfile, GearItem gearItem) {
         this.gearProfile = gearProfile;
@@ -94,11 +93,13 @@ public  class GearTooltipBuilder {
         if (fixedStats.healthBuff() != 0) {
             tooltips.add(Component.literal("Health: " + StringUtils.toSignedString(fixedStats.healthBuff())));
         }
-        for (Pair<Element, Integer> defenseValue :fixedStats.defences()) {
-            tooltips.add(Component.literal(defenseValue.key().getDisplayName() + " Defence: " + StringUtils.toSignedString(defenseValue.value())));
+        for (Pair<Element, Integer> defenseValue : fixedStats.defences()) {
+            tooltips.add(Component.literal(defenseValue.key().getDisplayName() + " Defence: "
+                    + StringUtils.toSignedString(defenseValue.value())));
         }
-        for (Pair<GearDamageType, RangedValue> damageValue :fixedStats.damages()) {
-            tooltips.add(Component.literal(damageValue.key().getDisplayName() + " Damage: " + damageValue.value().asString()));
+        for (Pair<GearDamageType, RangedValue> damageValue : fixedStats.damages()) {
+            tooltips.add(Component.literal(damageValue.key().getDisplayName() + " Damage: "
+                    + damageValue.value().asString()));
         }
         if (!fixedStats.damages().isEmpty()) {
             tooltips.add(Component.literal("Average DPS: ???"));

@@ -67,7 +67,6 @@ public final class GearInfoManager extends Manager {
         return gearStatLookup.get(lookupName);
     }
 
-
     public GearInfo getGearInfo(String gearName) {
         return gearInfoLookup.get(gearName);
     }

@@ -180,7 +180,8 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             // This is not ideal, but in practice just a subset of all mincraft items are used
             itemId = KNOWN_USED_ITEM_CODES.get(itemTypeCode);
             if (itemId == null) {
-                WynntilsMod.warn("Could not convert item id: " + itemTypeCode + ":" + damageCode + " from gear database");
+                WynntilsMod.warn(
+                        "Could not convert item id: " + itemTypeCode + ":" + damageCode + " from gear database");
                 itemId = "bedrock"; // whatever...
             }
         }
