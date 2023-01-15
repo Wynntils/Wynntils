@@ -217,8 +217,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
         pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
         pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
-
-        // Make sure compass and player pois are on top
+        pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
                 Models.HadesUser.getHadesUserMap().values().stream()
@@ -228,7 +227,6 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
-        pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
 
         if (KeyboardUtils.isControlDown()) {
             pois = Stream.concat(pois, Managers.Territory.getTerritoryPois().stream());
