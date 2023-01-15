@@ -30,6 +30,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends Manager {
+    private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
     private final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
     private final Map<Overlay, Feature> overlayParent = new HashMap<>();
 
@@ -87,8 +89,6 @@ public final class OverlayManager extends Manager {
             testMode = screen.isTestMode();
             shouldRender = false;
         }
-
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
         List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
