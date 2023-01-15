@@ -225,7 +225,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         JsonElement identifiedJson = json.get("identified");
         boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
-        for (GearStat stat : Managers.GearInfo.registry) {
+        for (GearStat stat : Managers.GearInfo.gearStatRegistry) {
             JsonElement statJson = json.get(stat.apiName());
             if (statJson == null) continue;
 

@@ -4,7 +4,6 @@
  */
 package com.wynntils.wynn.gear;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.components.Manager;
@@ -18,7 +17,6 @@ import com.wynntils.wynn.gear.stats.MiscStatBuilder;
 import com.wynntils.wynn.gear.stats.SpellStatBuilder;
 import com.wynntils.wynn.gear.stats.StatBuilder;
 import com.wynntils.wynn.gear.types.GearStat;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,37 +30,36 @@ public final class GearInfoManager extends Manager {
     private static final List<StatBuilder> STAT_BUILDERS =
             List.of(new MiscStatBuilder(), new DefenceStatBuilder(), new SpellStatBuilder(), new DamageStatBuilder());
 
-    public final List<GearStat> registry = new ArrayList<>();
-    public final Map<String, GearStat> lookup = new HashMap<>();
-    private List<GearInfo> allGearInfos = List.of();
+    public final List<GearStat> gearStatRegistry = new ArrayList<>();
+    public final Map<String, GearStat> gearStatLookup = new HashMap<>();
+    private List<GearInfo> gearInfoRegistry = List.of();
 
     public GearInfoManager(NetManager netManager) {
         super(List.of(netManager));
 
         for (StatBuilder builder : STAT_BUILDERS) {
-            builder.buildStats(registry::add);
+            builder.buildStats(gearStatRegistry::add);
         }
 
         // Create a fast lookup map
-        for (GearStat stat : registry) {
+        for (GearStat stat : gearStatRegistry) {
             String lookupName = stat.displayName() + stat.unit().getDisplayName();
-            lookup.put(lookupName, stat);
+            gearStatLookup.put(lookupName, stat);
         }
 
-        loadInfoProfiles();
+        loadGearInfoRegistry();
     }
 
     public GearStat getGearStat(String displayName, String unit) {
         String lookupName = displayName + unit;
-        return lookup.get(lookupName);
+        return gearStatLookup.get(lookupName);
     }
 
-    private void loadInfoProfiles() {
+    private void loadGearInfoRegistry() {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_GEARS);
         dl.handleReader(reader -> {
-            Type type = new TypeToken<WynncraftGearInfoResponse>() {}.getType();
-            WynncraftGearInfoResponse newGearInfoList = GEAR_INFO_GSON.fromJson(reader, type);
-            allGearInfos = newGearInfoList.items;
+            WynncraftGearInfoResponse gearInfoResponse = GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
+            gearInfoRegistry = gearInfoResponse.items;
         });
     }
 
