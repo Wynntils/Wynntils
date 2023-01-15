@@ -18,12 +18,12 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
@@ -33,6 +33,7 @@ import com.wynntils.wynn.model.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -141,7 +142,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
 
             if (trackedQuest == null) {
@@ -151,9 +153,10 @@ public class QuestInfoOverlayFeature extends UserFeature {
             toRender.get(1).setText(trackedQuest.getName());
             toRender.get(2).setText(trackedQuest.getNextTask());
 
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             toRender,
@@ -164,12 +167,14 @@ public class QuestInfoOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             toRenderPreview,

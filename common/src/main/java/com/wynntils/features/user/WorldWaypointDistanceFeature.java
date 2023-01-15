@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
@@ -28,6 +29,7 @@ import com.wynntils.wynn.model.map.poi.WaypointPoi;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -205,9 +207,12 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
+            MultiBufferSource.BufferSource bufferSource =
+                    MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
             waypointPoi
                     .getPointerPoi()
-                    .renderAt(poseStack, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
+                    .renderAt(poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
+            bufferSource.endBatch();
             poseStack.popPose();
         }
     }

@@ -15,16 +15,17 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.utils.MathUtils;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -89,24 +90,28 @@ public class AuraTimerOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             long remainingMs = getRemainingTimeUntilAura();
             if (remainingMs <= 0) return;
 
             String renderedString = "Aura: %.1fs".formatted(remainingMs / 1000f);
 
-            renderText(poseStack, renderedString);
+            renderText(poseStack, bufferSource, renderedString);
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            renderText(poseStack, "Aura: 3.2s");
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            renderText(poseStack, bufferSource, "Aura: 3.2s");
         }
 
-        private void renderText(PoseStack poseStack, String renderedString) {
-            FontRenderer.getInstance()
+        private void renderText(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String renderedString) {
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             renderedString,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),

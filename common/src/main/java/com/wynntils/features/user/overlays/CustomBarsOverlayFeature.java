@@ -18,12 +18,12 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.handlers.bossbar.BossBarProgress;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
@@ -40,6 +40,7 @@ import com.wynntils.wynn.objects.ManaTexture;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -126,7 +127,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
         protected abstract boolean isActive();
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (!WynnUtils.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
@@ -135,10 +137,10 @@ public class CustomBarsOverlayFeature extends UserFeature {
             BossBarProgress barProgress = progress();
 
             String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
-            renderText(poseStack, renderY, text);
+            renderText(poseStack, bufferSource, renderY, text);
 
             float progress = (flip ? -1 : 1) * barProgress.progress();
-            renderBar(poseStack, renderY + 10, barHeight, progress);
+            renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
         }
 
         protected float getModifiedRenderY(float renderedHeight) {
@@ -153,11 +155,17 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float renderY,
+                float renderHeight,
+                float progress) {
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
-            RenderUtils.drawColoredProgressBar(
+            BufferedRenderUtils.drawColoredProgressBar(
                     poseStack,
+                    bufferSource,
                     universalBarTexture,
                     this.textColor,
                     this.getRenderX(),
@@ -171,10 +179,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     progress);
         }
 
-        protected void renderText(PoseStack poseStack, float renderY, String text) {
-            FontRenderer.getInstance()
+        protected void renderText(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float renderY, String text) {
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
@@ -233,7 +243,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float renderY,
+                float renderHeight,
+                float progress) {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
@@ -241,10 +256,21 @@ public class CustomBarsOverlayFeature extends UserFeature {
                 int textureY2 = healthTexture.getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                RenderUtils.drawProgressBarBackground(
-                        poseStack, Texture.HEALTH_BAR, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
-                RenderUtils.drawProgressBarForeground(
+                BufferedRenderUtils.drawProgressBarBackground(
                         poseStack,
+                        bufferSource,
+                        Texture.HEALTH_BAR,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        textureY1,
+                        81,
+                        half);
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
                         Texture.HEALTH_BAR,
                         x1,
                         renderY,
@@ -255,8 +281,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                         81,
                         textureY2 + (textureY2 - textureY1) % 2,
                         1f / progress);
-                RenderUtils.drawProgressBarForeground(
+                BufferedRenderUtils.drawProgressBarForeground(
                         poseStack,
+                        bufferSource,
                         Texture.HEALTH_BAR_OVERFLOW,
                         x1,
                         renderY,
@@ -271,8 +298,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                 return;
             }
 
-            RenderUtils.drawProgressBar(
+            BufferedRenderUtils.drawProgressBar(
                     poseStack,
+                    bufferSource,
                     Texture.HEALTH_BAR,
                     this.getRenderX(),
                     renderY,
@@ -366,7 +394,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         @Override
-        protected void renderBar(PoseStack poseStack, float renderY, float renderHeight, float progress) {
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float renderY,
+                float renderHeight,
+                float progress) {
             if (progress > 1) { // overflowing mana
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
@@ -374,10 +407,21 @@ public class CustomBarsOverlayFeature extends UserFeature {
                 int textureY2 = manaTexture.getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                RenderUtils.drawProgressBarBackground(
-                        poseStack, Texture.MANA_BAR, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
-                RenderUtils.drawProgressBarForeground(
+                BufferedRenderUtils.drawProgressBarBackground(
                         poseStack,
+                        bufferSource,
+                        Texture.MANA_BAR,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        textureY1,
+                        81,
+                        half);
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
                         Texture.MANA_BAR,
                         x1,
                         renderY,
@@ -388,8 +432,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                         81,
                         textureY2 + (textureY2 - textureY1) % 2,
                         1f / progress);
-                RenderUtils.drawProgressBarForeground(
+                BufferedRenderUtils.drawProgressBarForeground(
                         poseStack,
+                        bufferSource,
                         Texture.MANA_BAR_OVERFLOW,
                         x1,
                         renderY,
@@ -404,8 +449,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                 return;
             }
 
-            RenderUtils.drawProgressBar(
+            BufferedRenderUtils.drawProgressBar(
                     poseStack,
+                    bufferSource,
                     Texture.MANA_BAR,
                     this.getRenderX(),
                     renderY,
