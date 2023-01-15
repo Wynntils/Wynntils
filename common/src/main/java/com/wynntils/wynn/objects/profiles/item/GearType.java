@@ -68,12 +68,13 @@ public enum GearType {
     }
 
     public boolean isWeapon() {
-        switch (this) {
-            case SPEAR, WAND, DAGGER, BOW, RELIK -> {
-                return true;
-            }
-        }
+        return classReq != null;
+    }
 
-        return false;
+    public boolean isArmour() {
+        return switch (this) {
+            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> true;
+            default -> false;
+        };
     }
 }
