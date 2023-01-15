@@ -5,7 +5,9 @@
 package com.wynntils.gui.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
+import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
@@ -354,5 +356,111 @@ public class BufferedFontRenderer {
                     verticalAlignment,
                     shadow);
         }
+    }
+
+    public void renderTextsWithAlignment(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float x,
+            float y,
+            List<TextRenderTask> toRender,
+            float width,
+            float height,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case Left -> x;
+                    case Center -> x + width / 2;
+                    case Right -> x + width;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case Top -> y;
+                    case Middle -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
+                    case Bottom -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                };
+
+        renderTexts(poseStack, bufferSource, renderX, renderY, toRender);
+    }
+
+    public void renderTexts(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float x,
+            float y,
+            List<TextRenderTask> lines) {
+        float currentY = y;
+        for (TextRenderTask line : lines) {
+            renderText(poseStack, bufferSource, x, currentY, line);
+            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
+            currentY += FontRenderer.getInstance()
+                    .calculateRenderHeight(
+                            line.getText().isEmpty() ? " " : line.getText(),
+                            line.getSetting().maxWidth());
+        }
+    }
+
+    public void renderText(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float x, float y, TextRenderTask line) {
+        renderText(
+                poseStack,
+                bufferSource,
+                line.getText(),
+                x,
+                y,
+                line.getSetting().maxWidth(),
+                line.getSetting().customColor(),
+                line.getSetting().horizontalAlignment(),
+                line.getSetting().verticalAlignment(),
+                line.getSetting().shadow());
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            String text,
+            float x,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
+        renderText(
+                poseStack,
+                bufferSource,
+                text,
+                x,
+                y,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                1f);
+    }
+
+    public void renderTextWithAlignment(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            float renderX,
+            float renderY,
+            TextRenderTask toRender,
+            float width,
+            float height,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        renderTextsWithAlignment(
+                poseStack,
+                bufferSource,
+                renderX,
+                renderY,
+                List.of(toRender),
+                width,
+                height,
+                horizontalAlignment,
+                verticalAlignment);
     }
 }

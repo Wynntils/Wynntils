@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
@@ -207,7 +208,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
             MultiBufferSource.BufferSource bufferSource =
-                    McUtils.mc().renderBuffers().bufferSource();
+                    MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
             waypointPoi
                     .getPointerPoi()
                     .renderAt(poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);

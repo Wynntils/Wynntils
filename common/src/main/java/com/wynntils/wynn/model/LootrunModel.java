@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
@@ -104,7 +105,8 @@ public final class LootrunModel extends Model {
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
-        MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource source =
+                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         var points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();

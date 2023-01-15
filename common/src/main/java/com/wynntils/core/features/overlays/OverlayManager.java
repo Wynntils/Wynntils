@@ -5,6 +5,7 @@
 package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -86,6 +88,8 @@ public final class OverlayManager extends Manager {
             shouldRender = false;
         }
 
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
         List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
             OverlayInfo annotation = overlayInfoMap.get(overlay);
@@ -107,11 +111,12 @@ public final class OverlayManager extends Manager {
 
             try {
                 if (testMode) {
-                    overlay.renderPreview(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                    overlay.renderPreview(
+                            event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
                 } else {
                     if (shouldRender) {
                         long startTime = System.currentTimeMillis();
-                        overlay.render(event.getPoseStack(), event.getPartialTicks(), event.getWindow());
+                        overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
                         logProfilingData(startTime, overlay);
                     }
                 }
@@ -125,6 +130,8 @@ public final class OverlayManager extends Manager {
                 crashedOverlays.add(overlay);
             }
         }
+
+        bufferSource.endBatch();
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {

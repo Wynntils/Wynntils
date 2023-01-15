@@ -4,6 +4,7 @@
  */
 package com.wynntils.gui.render.buffered;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.gui.render.Texture;
@@ -11,6 +12,7 @@ import com.wynntils.mc.objects.CustomColor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 public final class BufferedRenderUtils {
     public static void drawLine(
@@ -267,6 +269,159 @@ public final class BufferedRenderUtils {
         buffer.vertex(matrix, x, y, z).uv(uOffset * uScale, vOffset * vScale).endVertex();
     }
 
+    public static void drawTexturedRectWithColor(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            ResourceLocation tex,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
+        float uScale = 1f / textureWidth;
+        float vScale = 1f / textureHeight;
+
+        Matrix4f matrix = poseStack.last().pose();
+
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
+
+        buffer.vertex(matrix, x, y + height, z)
+                .color(color.r, color.g, color.b, color.a)
+                .uv(uOffset * uScale, (vOffset + v) * vScale)
+                .endVertex();
+        buffer.vertex(matrix, x + width, y + height, z)
+                .color(color.r, color.g, color.b, color.a)
+                .uv((uOffset + u) * uScale, (vOffset + v) * vScale)
+                .endVertex();
+        buffer.vertex(matrix, x + width, y, z)
+                .color(color.r, color.g, color.b, color.a)
+                .uv((uOffset + u) * uScale, vOffset * vScale)
+                .endVertex();
+        buffer.vertex(matrix, x, y, z)
+                .color(color.r, color.g, color.b, color.a)
+                .uv(uOffset * uScale, vOffset * vScale)
+                .endVertex();
+    }
+
+    /**
+     * drawProgressBar
+     * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
+     *
+     * @param poseStack poseStack to use
+     * @param bufferSource bufferSource to use
+     * @param texture   the texture to use
+     * @param customColor the color for the bar
+     * @param x1        left x on screen
+     * @param y1        top y on screen
+     * @param x2        right x on screen
+     * @param y2        bottom right on screen
+     * @param textureX1 texture left x for the part
+     * @param textureY1 texture top y for the part (top of background)
+     * @param textureX2 texture right x for the part
+     * @param textureY2 texture bottom y for the part (bottom of bar)
+     * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
+     */
+    public static void drawColoredProgressBar(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            Texture texture,
+            CustomColor customColor,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int textureX1,
+            int textureY1,
+            int textureX2,
+            int textureY2,
+            float progress) {
+
+        int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+        drawProgressBarBackground(
+                poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
+        drawProgressBarForegroundWithColor(
+                poseStack,
+                bufferSource,
+                texture,
+                customColor,
+                x1,
+                y1,
+                x2,
+                y2,
+                textureX1,
+                half,
+                textureX2,
+                textureY2 + (textureY2 - textureY1) % 2,
+                progress);
+    }
+
+    private static void drawProgressBarForegroundWithColor(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            Texture texture,
+            CustomColor customColor,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int textureX1,
+            int textureY1,
+            int textureX2,
+            int textureY2,
+            float progress) {
+        if (progress == 0f) {
+            return;
+        }
+
+        Matrix4f matrix = poseStack.last().pose();
+
+        VertexConsumer buffer =
+                bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(texture.resource()));
+
+        float xMin = Math.min(x1, x2),
+                xMax = Math.max(x1, x2),
+                yMin = Math.min(y1, y2),
+                yMax = Math.max(y1, y2),
+                txMin = (float) Math.min(textureX1, textureX2) / texture.width(),
+                txMax = (float) Math.max(textureX1, textureX2) / texture.width(),
+                tyMin = (float) Math.min(textureY1, textureY2) / texture.height(),
+                tyMax = (float) Math.max(textureY1, textureY2) / texture.height();
+
+        if (progress < 1.0f && progress > -1.0f) {
+            if (progress < 0.0f) {
+                xMin += (1.0f + progress) * (xMax - xMin);
+                txMin += (1.0f + progress) * (txMax - txMin);
+            } else {
+                xMax -= (1.0f - progress) * (xMax - xMin);
+                txMax -= (1.0f - progress) * (txMax - txMin);
+            }
+        }
+
+        buffer.vertex(matrix, xMin, yMin, 0)
+                .color(customColor.asInt())
+                .uv(txMin, tyMin)
+                .endVertex();
+        buffer.vertex(matrix, xMin, yMax, 0)
+                .color(customColor.asInt())
+                .uv(txMin, tyMax)
+                .endVertex();
+        buffer.vertex(matrix, xMax, yMax, 0)
+                .color(customColor.asInt())
+                .uv(txMax, tyMax)
+                .endVertex();
+        buffer.vertex(matrix, xMax, yMin, 0)
+                .color(customColor.asInt())
+                .uv(txMax, tyMin)
+                .endVertex();
+    }
+
     /**
      * drawProgressBar
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
@@ -391,5 +546,84 @@ public final class BufferedRenderUtils {
         buffer.vertex(matrix, xMin, yMax, 0).uv(txMin, tyMax).endVertex();
         buffer.vertex(matrix, xMax, yMax, 0).uv(txMax, tyMax).endVertex();
         buffer.vertex(matrix, xMax, yMin, 0).uv(txMax, tyMin).endVertex();
+    }
+
+    public static void createMask(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            Texture texture,
+            int x1,
+            int y1,
+            int x2,
+            int y2) {
+        createMask(poseStack, bufferSource, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
+    }
+
+    /**
+     * Creates a mask that will remove anything drawn after
+     * this and before the next {clearMask()}(or {endGL()})
+     * and is not inside the mask.
+     * A mask, is a clear and white texture where anything
+     * white will allow drawing.
+     *
+     * @param texture mask texture(please use Textures.Masks)
+     * @param x1 bottom-left x(on screen)
+     * @param y1 bottom-left y(on screen)
+     * @param x2 top-right x(on screen)
+     * @param y2 top-right y(on screen)
+     */
+    public static void createMask(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            Texture texture,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int tx1,
+            int ty1,
+            int tx2,
+            int ty2) {
+        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
+
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        // Draw textured image
+        int width = texture.width();
+        int height = texture.height();
+        drawTexturedRect(
+                poseStack,
+                bufferSource,
+                texture.resource(),
+                x1,
+                y1,
+                0f,
+                x2 - x1,
+                y2 - y1,
+                tx1,
+                ty1,
+                tx2 - tx1,
+                ty2 - ty1,
+                width,
+                height);
+
+        // Reenable color and depth
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 }

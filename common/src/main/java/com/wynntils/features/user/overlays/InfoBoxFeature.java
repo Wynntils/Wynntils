@@ -21,11 +21,13 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -102,7 +104,8 @@ public class InfoBoxFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
@@ -113,9 +116,10 @@ public class InfoBoxFeature extends UserFeature {
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
             for (String line : cachedLines) {
-                FontRenderer.getInstance()
+                BufferedFontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
+                                bufferSource,
                                 line,
                                 renderX,
                                 renderX + this.getWidth(),
@@ -132,7 +136,8 @@ public class InfoBoxFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (!WynnUtils.onWorld()) return;
 
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
@@ -148,9 +153,10 @@ public class InfoBoxFeature extends UserFeature {
             float renderX = this.getRenderX();
             float renderY = this.getRenderY();
             for (String line : renderedLines) {
-                FontRenderer.getInstance()
+                BufferedFontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
+                                bufferSource,
                                 line,
                                 renderX,
                                 renderX + this.getWidth(),
