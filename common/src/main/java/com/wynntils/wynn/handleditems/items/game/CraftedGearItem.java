@@ -8,7 +8,7 @@ import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.properties.DurableItemProperty;
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
 

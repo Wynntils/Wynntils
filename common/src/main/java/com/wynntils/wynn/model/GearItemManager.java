@@ -26,7 +26,7 @@ import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
@@ -74,7 +74,7 @@ public final class GearItemManager extends Manager {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private static final Pattern ID_NEW_PATTERN =
+    public static final Pattern ID_NEW_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     private static final Pattern RANGE_PATTERN =
@@ -127,6 +127,21 @@ public final class GearItemManager extends Manager {
             }
 
             // Look for identifications
+            String formatId = ComponentUtils.getCoded(loreLine);
+            Matcher statMatcher = ID_NEW_PATTERN.matcher(formatId);
+            if (statMatcher.matches()) {
+                int value = Integer.parseInt(statMatcher.group(2));
+                String unit = statMatcher.group(3);
+                String statDisplayName = statMatcher.group(5);
+
+                GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+                if (type == null && Skill.isSkill(statDisplayName)) {
+                    // Skill point buff looks like stats when parsing
+                    continue;
+                }
+
+                identifications.add(new GearIdentification(type, value));
+            }
 
             GearIdentificationContainer idContainer = null;
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
@@ -135,29 +150,11 @@ public final class GearItemManager extends Manager {
                         identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
                 int stars = identificationMatcher.group("Stars").length();
-                identifications.add(new GearIdentification(idName, value, stars));
 
                 // This is partially overlapping with GearIdentification, sort this out later
                 idContainer = identificationFromLore(loreLine, gearProfile);
                 if (idContainer == null) continue;
                 idContainers.add(idContainer);
-            }
-
-            String formatId = ComponentUtils.getCoded(loreLine);
-            Matcher id2Matcher = ID_NEW_PATTERN.matcher(formatId);
-            if (id2Matcher.matches()) {
-                int value = Integer.parseInt(id2Matcher.group(2));
-                String idName = id2Matcher.group(5);
-                String unitMatch = id2Matcher.group(3);
-                String unit = unitMatch == null ? "" : unitMatch;
-                String starsString = id2Matcher.group(4);
-                int stars = starsString == null ? 0 : starsString.length();
-
-                GearStat type = Managers.GearInfo.getGearStat(idName, unit);
-                if (type == null && isSkill(idName)) {
-                    // Skill point buff looks like stats when parsing
-                    // FIXME: Handle
-                }
             }
 
             // Range pattern will normally not happen...
@@ -171,7 +168,7 @@ public final class GearItemManager extends Manager {
                 String unit = unitMatch == null ? "" : unitMatch;
 
                 GearStat type = Managers.GearInfo.getGearStat(idName, unit);
-                if (type == null && isSkill(idName)) {
+                if (type == null && Skill.isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle
                 }
@@ -179,15 +176,6 @@ public final class GearItemManager extends Manager {
         }
 
         return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
-    }
-
-    private static boolean isSkill(String idName) {
-        for (Skill skill : Skill.values()) {
-            if (idName.equals(skill.getDisplayName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
@@ -254,14 +242,21 @@ public final class GearItemManager extends Manager {
     private Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
-        Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-        if (!identificationMatcher.find()) return Optional.empty();
+        // Look for identifications
+        Matcher statMatcher = ID_NEW_PATTERN.matcher(unformattedLoreLine);
+        if (!statMatcher.matches()) return Optional.empty();
 
-        String idName = WynnItemMatchers.getShortIdentificationName(
-                identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
-        int value = Integer.parseInt(identificationMatcher.group("Value"));
-        int stars = identificationMatcher.group("Stars").length();
-        return Optional.of(new GearIdentification(idName, value, stars));
+        int value = Integer.parseInt(statMatcher.group(2));
+        String unit = statMatcher.group(3);
+        String statDisplayName = statMatcher.group(5);
+
+        GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+        if (type == null && Skill.isSkill(statDisplayName)) {
+            // Skill point buff looks like stats when parsing
+            return Optional.empty();
+        }
+
+        return Optional.of(new GearIdentification(type, value));
     }
 
     /**
@@ -455,8 +450,11 @@ public final class GearItemManager extends Manager {
 
                 idContainers.add(identificationFromValue(
                         null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
-                // FIXME: Get proper short name!
-                identifications.add(new GearIdentification(translatedId, value, 0));
+
+                GearStat stat = Managers.GearInfo.getGearStatFromLore(id);
+                if (stat == null) continue;
+
+                identifications.add(new GearIdentification(stat, value));
             }
         }
 
@@ -537,7 +535,7 @@ public final class GearItemManager extends Manager {
             GearIdentificationContainer idContainer =
                     identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
-            identifications.add(new GearIdentification(shortIdName, value, stars));
+            identifications.add(new GearIdentification(null, value));
         }
 
         // powders

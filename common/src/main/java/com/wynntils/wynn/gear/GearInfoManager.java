@@ -63,7 +63,7 @@ public final class GearInfoManager extends Manager {
     }
 
     public GearStat getGearStat(String displayName, String unit) {
-        String lookupName = displayName + unit;
+        String lookupName = displayName + (unit == null ? "" : unit);
         return gearStatLookup.get(lookupName);
     }
 
@@ -103,6 +103,13 @@ public final class GearInfoManager extends Manager {
                 gearInfoLookup = lookupMap;
             });
         });
+    }
+
+    public GearStat getGearStatFromLore(String id) {
+        for (GearStat stat : gearStatRegistry) {
+            if (stat.loreName().equals(id)) return stat;
+        }
+        return null;
     }
 
     private static class WynncraftGearInfoResponse {

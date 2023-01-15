@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.items.game;
 
 import com.wynntils.wynn.handleditems.properties.GearTierItemProperty;
 import com.wynntils.wynn.objects.profiles.item.CharmProfile;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import java.util.List;
 

@@ -4,13 +4,16 @@
  */
 package com.wynntils.wynn.handleditems.annotators.game;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.utils.CappedValue;
+import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.handleditems.items.game.CraftedGearItem;
 import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.gear.types.GearIdentification;
+import com.wynntils.wynn.objects.Skill;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -56,14 +59,20 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
             }
 
             // Look for identifications
-            // FIXME: This pattern is likely to fail, needs fixing
-            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-            if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
-                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
-                int value = Integer.parseInt(identificationMatcher.group("Value"));
-                int stars = identificationMatcher.group("Stars").length();
-                identifications.add(new GearIdentification(idName, value, stars));
+            String formatId = ComponentUtils.getCoded(loreLine);
+            Matcher statMatcher = Managers.GearItem.ID_NEW_PATTERN.matcher(formatId);
+            if (statMatcher.matches()) {
+                int value = Integer.parseInt(statMatcher.group(2));
+                String unit = statMatcher.group(3);
+                String statDisplayName = statMatcher.group(5);
+
+                GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+                if (type == null && Skill.isSkill(statDisplayName)) {
+                    // Skill point buff looks like stats when parsing
+                    continue;
+                }
+
+                identifications.add(new GearIdentification(type, value));
             }
         }
 

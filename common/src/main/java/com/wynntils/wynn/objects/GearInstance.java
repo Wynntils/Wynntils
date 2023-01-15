@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.objects;
 
-import com.wynntils.wynn.objects.profiles.item.GearIdentification;
+import com.wynntils.wynn.gear.types.GearIdentification;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.function.Predicate;

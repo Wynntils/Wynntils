@@ -42,6 +42,15 @@ public enum Skill {
         }
     }
 
+    public static boolean isSkill(String idName) {
+        for (Skill skill : values()) {
+            if (idName.equals(skill.getDisplayName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getSymbol() {
         return symbol;
     }
