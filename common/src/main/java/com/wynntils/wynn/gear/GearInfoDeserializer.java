@@ -12,17 +12,21 @@ import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Managers;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
+import com.wynntils.wynn.gear.types.GearDamageType;
 import com.wynntils.wynn.gear.types.GearMaterial;
 import com.wynntils.wynn.gear.types.GearRestrictions;
 import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.objects.ClassType;
+import com.wynntils.wynn.objects.Element;
 import com.wynntils.wynn.objects.Skill;
+import com.wynntils.wynn.objects.profiles.item.GearAttackSpeed;
 import com.wynntils.wynn.objects.profiles.item.GearDropType;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
@@ -138,7 +142,87 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     }
 
     private GearStatsFixed parseStatsFixed(JsonObject json) {
-        return null;
+        JsonElement healthJson = json.get("health");
+        int healthBuff = healthJson == null ? 0 : healthJson.getAsInt();
+        List<Pair<Skill, Integer>> skillBuffs = parseSkillBuffs(json);
+        JsonElement attackSpeedJson = json.get("attackSpeed");
+        Optional<GearAttackSpeed> attackSpeed = (attackSpeedJson == null)
+                ? Optional.empty()
+                : Optional.of(GearAttackSpeed.valueOf(attackSpeedJson.getAsString()));
+
+        // FIXME: parse major ID array
+        List<String> majorIds = List.of();
+        List<Pair<GearDamageType, RangedValue>> damages = parseDamages(json);
+        List<Pair<Element, Integer>> defences = parseDefences(json);
+
+        return new GearStatsFixed(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
+    }
+
+    private List<Pair<Skill, Integer>> parseSkillBuffs(JsonObject json) {
+        List<Pair<Skill, Integer>> list = new ArrayList<>();
+        for (Skill skill : Skill.values()) {
+            String skillJsonName = skill.getApiName() + "Points";
+            JsonElement skillJson = json.get(skillJsonName);
+            if (skillJson == null) continue;
+
+            int minPoints = skillJson.getAsInt();
+            if (minPoints == 0) continue;
+
+            list.add(Pair.of(skill, minPoints));
+        }
+
+        // Return an immutable list
+        return List.copyOf(list);
+    }
+
+    private List<Pair<GearDamageType, RangedValue>> parseDamages(JsonObject json) {
+        List<Pair<GearDamageType, RangedValue>> list = new ArrayList<>();
+        // First look for elemental damage
+        for (Element element : Element.values()) {
+            String damageJsonName = element.name().toLowerCase(Locale.ROOT) + "Damage";
+            JsonElement damageJson = json.get(damageJsonName);
+            if (damageJson == null) continue;
+
+            String rangeString = damageJson.getAsString();
+            RangedValue range = rangeFromString(rangeString);
+            if (range.equals(RangedValue.NONE)) continue;
+
+            list.add(Pair.of(GearDamageType.fromElement(element), range));
+        }
+        // Then check neutral damage, which has a non-standard name
+        JsonElement damageJson = json.get("damage");
+        if (damageJson != null) {
+            String rangeString = damageJson.getAsString();
+            RangedValue range = rangeFromString(rangeString);
+            if (!range.equals(RangedValue.NONE)) {
+                list.add(Pair.of(GearDamageType.NEUTRAL, range));
+            }
+        }
+
+        // Return an immutable list
+        return List.copyOf(list);
+    }
+
+    private RangedValue rangeFromString(String range) {
+        String[] pair = range.split("-");
+        return new RangedValue(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
+    }
+
+    private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
+        List<Pair<Element, Integer>> list = new ArrayList<>();
+        for (Element element : Element.values()) {
+            String skillJsonName = element.name().toLowerCase(Locale.ROOT) + "Defense";
+            JsonElement skillJson = json.get(skillJsonName);
+            if (skillJson == null) continue;
+
+            int minPoints = skillJson.getAsInt();
+            if (minPoints == 0) continue;
+
+            list.add(Pair.of(element, minPoints));
+        }
+
+        // Return an immutable list
+        return List.copyOf(list);
     }
 
     private List<Pair<GearStat, RangedValue>> parseStatsIdentified(JsonObject json) {

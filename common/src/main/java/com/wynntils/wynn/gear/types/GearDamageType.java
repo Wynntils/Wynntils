@@ -35,6 +35,13 @@ public enum GearDamageType {
         this.apiName = element.getDisplayName();
     }
 
+    public static GearDamageType fromElement(Element element) {
+        for (GearDamageType type : values()) {
+            if (type.element == element) return type;
+        }
+        return null;
+    }
+
     public Optional<Element> getElement() {
         return Optional.ofNullable(element);
     }
