@@ -21,6 +21,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.McUtils;
@@ -41,6 +42,9 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
     @Config
     public boolean highlightShamanTotems = true;
+
+    @Config
+    public static TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
 
     @Config
     public static ChatFormatting firstTotemColor = ChatFormatting.WHITE;
@@ -99,9 +103,15 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         return List.of(Models.Spell, Models.ShamanTotem);
     }
 
+    public enum TotemTrackingDetail {
+        NONE,
+        COORDS,
+        DISTANCE
+    }
+
     public static class ShamanTotemTimerOverlay extends Overlay {
         @Config
-        public FontRenderer.TextShadow textShadow = FontRenderer.TextShadow.OUTLINE;
+        public TextShadow textShadow = TextShadow.OUTLINE;
 
         private TextRenderSetting textRenderSetting;
 
@@ -118,16 +128,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
             updateTextRenderSetting();
         }
 
-        private String getFormattedTotemText(String prefix, String suffix, String coords) {
+        private String getFormattedTotemText(String prefix, String suffix, String detail) {
             String maxFitting = StringUtils.getMaxFittingText(
-                    prefix + suffix + coords,
+                    prefix + suffix + detail,
                     this.getWidth(),
                     FontRenderer.getInstance().getFont());
             if (maxFitting.contains("[")
-                    && !maxFitting.contains("]")) { // Coordinate line did not appear to fit, force break
-                return prefix + suffix + "\n" + coords;
+                    && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
+                return prefix + suffix + "\n" + detail;
             } else { // Fits fine, give normal lines
-                return prefix + suffix + coords;
+                return prefix + suffix + detail;
             }
         }
 
@@ -149,18 +159,29 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                                 };
 
-                                        String suffix, coords;
+                                        String suffix, detail;
                                         // Check if we should be saying "Summoned"
                                         if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
                                             suffix = " Summoned";
-                                            coords = "";
+                                            detail = "";
                                         } else {
                                             suffix = " (" + shamanTotem.getTime() + "s)";
-                                            coords = " "
-                                                    + shamanTotem.getLocation().toString();
+                                            detail = switch (totemTrackingDetail) {
+                                                case NONE -> "";
+                                                case COORDS -> " "
+                                                        + shamanTotem
+                                                                .getLocation()
+                                                                .toString();
+                                                case DISTANCE -> " ["
+                                                        + Math.round(McUtils.player()
+                                                                .position()
+                                                                .distanceTo(shamanTotem
+                                                                        .getLocation()
+                                                                        .toVec3()))
+                                                        + " blocks away]";};
                                         }
                                         return new TextRenderTask(
-                                                getFormattedTotemText(prefix, suffix, coords), textRenderSetting);
+                                                getFormattedTotemText(prefix, suffix, detail), textRenderSetting);
                                     })
                                     .toList(),
                             this.getWidth(),

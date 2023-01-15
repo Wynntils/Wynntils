@@ -642,6 +642,8 @@
   "feature.wynntils.shamanTotemTracking.secondTotemColor.name": "Shaman Totem 2 Color",
   "feature.wynntils.shamanTotemTracking.thirdTotemColor.description": "What color should the totem 3 highlight and tracking text be?",
   "feature.wynntils.shamanTotemTracking.thirdTotemColor.name": "Shaman Totem 3 Color",
+  "feature.wynntils.shamanTotemTracking.totemTrackingDetail.description": "What extra totem detail should be displayed?",
+  "feature.wynntils.shamanTotemTracking.totemTrackingDetail.name": "Totem Tracking Detail",
   "feature.wynntils.shamanTotemTracking.trackTotem.description": "Should Shaman/Skyseer totems be tracked?",
   "feature.wynntils.shamanTotemTracking.trackTotem.name": "Track Totem",
   "feature.wynntils.soulPointTimer.lore": "Time until next soul point: %s",
