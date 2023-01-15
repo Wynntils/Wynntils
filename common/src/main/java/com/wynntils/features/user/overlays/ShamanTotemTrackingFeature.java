@@ -159,7 +159,8 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                                 };
 
-                                        String suffix, detail = "";
+                                        String suffix = "";
+                                        String detail = "";
                                         // Check if we should be saying "Summoned"
                                         if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
                                             suffix = " Summoned";
