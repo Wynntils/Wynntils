@@ -12,6 +12,7 @@ public class GearMaterial {
 
     public GearMaterial(String armorType, GearType gearType, CustomColor color) {
         // armorType is any of: CHAIN DIAMOND GOLDEN IRON LEATHER
+        // color is only set in case of LEATHER
     }
 
     public GearMaterial(GearType gearType) {
