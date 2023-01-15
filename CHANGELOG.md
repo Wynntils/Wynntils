@@ -1,9 +1,21 @@
+## [0.0.2-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.102...v0.0.2-alpha.103) (2023-01-15)
+
+
+### New Features
+
+* Multiple performance optimizations ([#1002](https://github.com/Wynntils/Artemis/issues/1002)) ([a9e0585](https://github.com/Wynntils/Artemis/commit/a9e0585d0718c5385c4c21f68abe873a6a06d1a4)), closes [#1006](https://github.com/Wynntils/Artemis/issues/1006) [#1004](https://github.com/Wynntils/Artemis/issues/1004) [#1003](https://github.com/Wynntils/Artemis/issues/1003) [#1017](https://github.com/Wynntils/Artemis/issues/1017) [#1019](https://github.com/Wynntils/Artemis/issues/1019) [#1012](https://github.com/Wynntils/Artemis/issues/1012) [#1027](https://github.com/Wynntils/Artemis/issues/1027) [#1031](https://github.com/Wynntils/Artemis/issues/1031)
+
 ## [0.0.2-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.101...v0.0.2-alpha.102) (2023-01-14)
 
 
 ### Bug Fixes
 
 * apply correct ID color value on exact thresholds ([#1029](https://github.com/Wynntils/Artemis/issues/1029)) ([1c4a152](https://github.com/Wynntils/Artemis/commit/1c4a152897b4eeae23d6118934a0aa95fe31544d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.102 [skip ci] ([c9afdb3](https://github.com/Wynntils/Artemis/commit/c9afdb3398cfe744e46cdc24da877ec7a76cc6ec))
 
 ## [0.0.2-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.100...v0.0.2-alpha.101) (2023-01-13)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.99 [skip ci] ([bde980a](https://github.com/Wynntils/Artemis/commit/bde980a4b4ccbeb64fd594bea3519fbe0759b9d3))
-
-## [0.0.2-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.97...v0.0.2-alpha.98) (2023-01-12)
-
-
-### Bug Fixes
-
-* Do not crash the mod, if there is a newer URL list than expected ([#1024](https://github.com/Wynntils/Artemis/issues/1024)) ([51a662c](https://github.com/Wynntils/Artemis/commit/51a662c91679f7cdc51ef49030d97a4ac61f45ea))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.98 [skip ci] ([738d767](https://github.com/Wynntils/Artemis/commit/738d767d05173846f81900d3e153a1ea904ab6de))
 
