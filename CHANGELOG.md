@@ -1,9 +1,21 @@
+## [0.0.2-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.109...v0.0.2-alpha.110) (2023-01-16)
+
+
+### New Features
+
+* Add and use MixinExtras ([#1041](https://github.com/Wynntils/Artemis/issues/1041)) ([7bc6f9d](https://github.com/Wynntils/Artemis/commit/7bc6f9dbcebd10f9ee4a91384df1f95131e8a324))
+
 ## [0.0.2-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.108...v0.0.2-alpha.109) (2023-01-16)
 
 
 ### Bug Fixes
 
 * Render custom POIs on minimap ([#1043](https://github.com/Wynntils/Artemis/issues/1043)) ([13f1b39](https://github.com/Wynntils/Artemis/commit/13f1b39f35c5e7f7be142ebd954e3a19245beaa1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.109 [skip ci] ([f1d794b](https://github.com/Wynntils/Artemis/commit/f1d794bb21c0c4884dbb27ea416e7863abc8cad8))
 
 ## [0.0.2-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.107...v0.0.2-alpha.108) (2023-01-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.106 [skip ci] ([6c0ec57](https://github.com/Wynntils/Artemis/commit/6c0ec57010b6951e5b11601c0c16217624cd146d))
-
-## [0.0.2-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.104...v0.0.2-alpha.105) (2023-01-15)
-
-
-### Bug Fixes
-
-* Do not create buffers per render ([#1036](https://github.com/Wynntils/Artemis/issues/1036)) ([d13220f](https://github.com/Wynntils/Artemis/commit/d13220fcd747eada5a8ef920737ba83f254df8e2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.105 [skip ci] ([8bcdbaa](https://github.com/Wynntils/Artemis/commit/8bcdbaa5903eb4d3f79571f0dcfd91fa3cfc3a0f))
 
