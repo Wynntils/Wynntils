@@ -1,9 +1,21 @@
+## [0.0.2-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.106...v0.0.2-alpha.107) (2023-01-16)
+
+
+### Bug Fixes
+
+* Two micro-opts, and prohibit infinite recursion on equals ([#1040](https://github.com/Wynntils/Artemis/issues/1040)) ([03cc02e](https://github.com/Wynntils/Artemis/commit/03cc02e5fc4db67145e71099aeebbb2681e996b5))
+
 ## [0.0.2-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.105...v0.0.2-alpha.106) (2023-01-15)
 
 
 ### Bug Fixes
 
 * Broken tooltips with "Health" id after optimization update ([#1038](https://github.com/Wynntils/Artemis/issues/1038)) ([5cc37f2](https://github.com/Wynntils/Artemis/commit/5cc37f20a5f271149e4cbae1e87f085067a22738))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.106 [skip ci] ([6c0ec57](https://github.com/Wynntils/Artemis/commit/6c0ec57010b6951e5b11601c0c16217624cd146d))
 
 ## [0.0.2-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.104...v0.0.2-alpha.105) (2023-01-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.103 [skip ci] ([3f1c241](https://github.com/Wynntils/Artemis/commit/3f1c2412d414bbc87d8dd3eb40971d8bcfde6de5))
-
-## [0.0.2-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.101...v0.0.2-alpha.102) (2023-01-14)
-
-
-### Bug Fixes
-
-* apply correct ID color value on exact thresholds ([#1029](https://github.com/Wynntils/Artemis/issues/1029)) ([1c4a152](https://github.com/Wynntils/Artemis/commit/1c4a152897b4eeae23d6118934a0aa95fe31544d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.102 [skip ci] ([c9afdb3](https://github.com/Wynntils/Artemis/commit/c9afdb3398cfe744e46cdc24da877ec7a76cc6ec))
 
