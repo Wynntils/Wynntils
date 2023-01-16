@@ -111,7 +111,7 @@ public class Location extends Vector3d implements Position {
         if (this == obj) return true;
 
         if (obj instanceof Vector3d) {
-            return equals(obj);
+            return super.equals(obj);
         }
         return false;
     }
