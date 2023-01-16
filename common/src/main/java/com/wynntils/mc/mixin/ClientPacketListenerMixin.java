@@ -14,7 +14,6 @@ import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -305,8 +304,7 @@ public abstract class ClientPacketListenerMixin {
             ClientboundPlayerChatPacket packet,
             CallbackInfo ci,
             @Local PlayerChatMessage playerChatMessage,
-            @Local PlayerInfo playerInfo,
-            @Local Optional<ChatType.Bound> optional2) {
+            @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
@@ -315,9 +313,12 @@ public abstract class ClientPacketListenerMixin {
         }
 
         if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
-            this.minecraft
-                    .getChatListener()
-                    .handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), optional2.get());
+            // We know this is present because of the injection point
+            ChatType.Bound bound = packet.chatType()
+                    .resolve(this.registryAccess.compositeAccess())
+                    .get();
+
+            this.minecraft.getChatListener().handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), bound);
             this.messageSignatureCache.push(playerChatMessage);
 
             ci.cancel();
