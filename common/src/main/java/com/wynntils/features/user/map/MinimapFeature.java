@@ -246,6 +246,7 @@ public class MinimapFeature extends UserFeature {
                             .map(PlayerMiniMapPoi::new));
 
             poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
+            poisToRender = Stream.concat(poisToRender, MapFeature.INSTANCE.customPois.stream());
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
