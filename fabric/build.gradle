@@ -70,6 +70,8 @@ dependencies {
     // Hades Protocol
     shadowImplementation("com.wynntils.hades:hades:${rootProject.hades_version}") { transitive false }
 
+    shadowImplementation("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}") { transitive false }
+
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
     runtimeOnly "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
@@ -96,6 +98,10 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
+
+    relocate("com.llamalad7.mixinextras", "com.wynntils.mixinextras.shadow")
+    exclude 'META-INF/services/javax.*'
+
     classifier "dev-shadow"
 }
 
