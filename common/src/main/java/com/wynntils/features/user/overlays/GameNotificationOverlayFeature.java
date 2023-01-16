@@ -18,12 +18,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.core.notifications.event.NotificationEvent;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -108,7 +109,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             List<TimedMessageContainer> toRender = new ArrayList<>();
 
             ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -156,9 +158,10 @@ public class GameNotificationOverlayFeature extends UserFeature {
                 }
             }
 
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             renderedValues.stream()
@@ -177,10 +180,12 @@ public class GameNotificationOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            FontRenderer.getInstance()
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            BufferedFontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             new TextRenderTask("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]", textRenderSetting),

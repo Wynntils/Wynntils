@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.QuadConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public class BasicOverlay extends Overlay {
     private final QuadConsumer<Overlay, PoseStack, Float, Window> renderConsumer;
@@ -34,12 +35,14 @@ public class BasicOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, float partialTicks, Window window) {
+    public void render(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         renderConsumer.consume(this, poseStack, partialTicks, window);
     }
 
     @Override
-    public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         renderPreviewConsumer.consume(this, poseStack, partialTicks, window);
     }
 

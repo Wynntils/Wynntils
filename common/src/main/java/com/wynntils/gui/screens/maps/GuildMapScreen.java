@@ -31,6 +31,7 @@ import com.wynntils.wynn.objects.profiles.TerritoryProfile;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -197,6 +198,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
             }
         }
 
+        MultiBufferSource.BufferSource bufferSource =
+                McUtils.mc().renderBuffers().bufferSource();
+
         // Reverse and Render
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             Poi poi = filteredPois.get(i);
@@ -204,8 +208,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
-            poi.renderAt(poseStack, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
+            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
         }
+
+        bufferSource.endBatch();
     }
 
     @Override

@@ -5,9 +5,9 @@
 package com.wynntils.wynn.model.map.poi;
 
 public enum DisplayPriority {
-    HIGHEST,
-    HIGH,
-    NORMAL,
+    LOWEST,
     LOW,
-    LOWEST
+    NORMAL,
+    HIGH,
+    HIGHEST
 }

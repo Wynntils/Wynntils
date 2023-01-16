@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
@@ -36,7 +37,7 @@ public class BeaconBeamFeature extends UserFeature {
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
+                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         Vec3 camera = event.getCamera().getPosition();
         Location location = Models.Compass.getCompassLocation().get();
