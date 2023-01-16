@@ -55,6 +55,6 @@
   "minVersion": "0.8.5",
   "mixins": [],
   "package": "com.wynntils.mc.mixin",
-  "plugin": "com.wynntils.mc.mixin.plugin.WynntilsMixinPlugin",
+  "plugin": "com.wynntils.core.mod.WynntilsMixinPlugin",
   "required": true
 }
