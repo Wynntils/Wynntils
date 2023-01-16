@@ -17,12 +17,12 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
+import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
@@ -30,6 +30,7 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.objects.Powder;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class PowderSpecialBarOverlayFeature extends UserFeature {
@@ -66,26 +67,31 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             float powderSpecialCharge = Models.ActionBar.getPowderSpecialCharge();
             Powder powderSpecialType = Models.ActionBar.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
-            renderWithSpecificSpecial(poseStack, powderSpecialCharge, powderSpecialType);
+            renderWithSpecificSpecial(poseStack, bufferSource, powderSpecialCharge, powderSpecialType);
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            renderWithSpecificSpecial(poseStack, 40, Powder.THUNDER);
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            renderWithSpecificSpecial(poseStack, bufferSource, 40, Powder.THUNDER);
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
 
         private void renderWithSpecificSpecial(
-                PoseStack poseStack, float powderSpecialCharge, Powder powderSpecialType) {
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float powderSpecialCharge,
+                Powder powderSpecialType) {
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
             final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
@@ -107,9 +113,10 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                 text = powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%";
             }
 
-            FontRenderer.getInstance()
+            BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
+                            bufferSource,
                             text,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
@@ -119,8 +126,9 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.textShadow);
 
-            RenderUtils.drawColoredProgressBar(
+            BufferedRenderUtils.drawColoredProgressBar(
                     poseStack,
+                    bufferSource,
                     universalBarTexture,
                     color,
                     this.getRenderX(),

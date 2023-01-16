@@ -18,6 +18,7 @@ import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
@@ -64,10 +65,12 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         this.verticalAlignmentOverride = verticalAlignmentOverride;
     }
 
-    public abstract void render(PoseStack poseStack, float partialTicks, Window window);
+    public abstract void render(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window);
 
-    public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-        this.render(poseStack, partialTicks, window);
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        this.render(poseStack, bufferSource, partialTicks, window);
     }
 
     @Override
