@@ -4,23 +4,22 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.DrawPotionGlintEvent;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionItem.class)
 public abstract class PotionItemMixin {
-    @Inject(method = "isFoil(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
-    private void isFoilPre(ItemStack item, CallbackInfoReturnable<Boolean> cir) {
+    @ModifyReturnValue(method = "isFoil(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"))
+    private boolean isFoilPre(boolean original) {
         DrawPotionGlintEvent event = EventFactory.onPotionIsFoil((PotionItem) (Object) this);
         if (event.isCanceled()) {
-            cir.setReturnValue(false);
-            cir.cancel();
+            return false;
         }
+
+        return original;
     }
 }

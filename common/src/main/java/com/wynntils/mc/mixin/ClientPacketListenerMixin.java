@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
@@ -12,6 +13,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.utils.McUtils;
+import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -24,9 +26,6 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.network.chat.RemoteChatSession;
-import net.minecraft.network.chat.SignedMessageBody;
-import net.minecraft.network.chat.SignedMessageLink;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -301,7 +300,11 @@ public abstract class ClientPacketListenerMixin {
                             target =
                                     "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
             cancellable = true)
-    private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
+    private void handlePlayerChat(
+            ClientboundPlayerChatPacket packet,
+            CallbackInfo ci,
+            @Local PlayerChatMessage playerChatMessage,
+            @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
@@ -309,31 +312,11 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!result.getMessage().equals(packet.unsignedContent())) {
-            // Because of the injection point, we know these optionals are present
-            SignedMessageBody signedMessageBody =
-                    packet.body().unpack(this.messageSignatureCache).get();
+        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+            // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
                     .get();
-
-            UUID uuid = packet.sender();
-            PlayerInfo playerInfo = this.getPlayerInfo(uuid);
-            RemoteChatSession remoteChatSession = playerInfo.getChatSession();
-
-            SignedMessageLink signedMessageLink;
-            if (remoteChatSession != null) {
-                signedMessageLink = new SignedMessageLink(packet.index(), uuid, remoteChatSession.sessionId());
-            } else {
-                signedMessageLink = SignedMessageLink.unsigned(uuid);
-            }
-
-            PlayerChatMessage playerChatMessage = new PlayerChatMessage(
-                    signedMessageLink,
-                    packet.signature(),
-                    signedMessageBody,
-                    packet.unsignedContent(),
-                    packet.filterMask());
 
             this.minecraft.getChatListener().handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), bound);
             this.messageSignatureCache.push(playerChatMessage);
@@ -358,8 +341,7 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!result.getMessage().equals(packet.content())) {
-
+        if (!Objects.equals(result.getMessage(), packet.content())) {
             this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
             ci.cancel();
         }
