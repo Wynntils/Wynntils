@@ -134,7 +134,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        confirmationlessDialogues.removeIf(dialogue -> System.currentTimeMillis() >= dialogue.removeTime);
+        long now = System.currentTimeMillis();
+        confirmationlessDialogues.removeIf(dialogue -> now >= dialogue.removeTime);
     }
 
     private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
