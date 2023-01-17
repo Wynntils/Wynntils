@@ -44,9 +44,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     public boolean highlightShamanTotems = true;
 
     @Config
-    public static TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
-
-    @Config
     public static ChatFormatting firstTotemColor = ChatFormatting.WHITE;
 
     @Config
@@ -103,13 +100,10 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         return List.of(Models.Spell, Models.ShamanTotem);
     }
 
-    public enum TotemTrackingDetail {
-        NONE,
-        COORDS,
-        DISTANCE
-    }
-
     public static class ShamanTotemTimerOverlay extends Overlay {
+        @Config
+        public static TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
+
         @Config
         public TextShadow textShadow = TextShadow.OUTLINE;
 
@@ -227,6 +221,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
+        }
+
+        public enum TotemTrackingDetail {
+            NONE,
+            COORDS,
+            DISTANCE
         }
     }
 }
