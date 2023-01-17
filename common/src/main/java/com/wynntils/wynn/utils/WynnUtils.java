@@ -5,6 +5,7 @@
 package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
+import org.apache.commons.lang3.StringUtils;
 
 public final class WynnUtils {
     /**
@@ -16,11 +17,8 @@ public final class WynnUtils {
      */
     public static String normalizeBadString(String input) {
         if (input == null) return "";
-        return input.trim()
-                .replace("ÀÀÀ", " ")
-                .replace("À", "")
-                .replace("\u058e", "")
-                .replace('\u2019', '\'')
+        return StringUtils.replaceEach(
+                        input, new String[] {"ÀÀÀ", "À", "\u058e", "\u2019"}, new String[] {" ", "", "", "'"})
                 .trim();
     }
 

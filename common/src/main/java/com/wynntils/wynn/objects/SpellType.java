@@ -6,8 +6,6 @@ package com.wynntils.wynn.objects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 
 public enum SpellType {
     ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", 6, 0),
@@ -72,7 +70,6 @@ public enum SpellType {
     private final String name;
     private final int startManaCost;
     private final int gradeManaChange;
-    private final Pattern spellPattern;
 
     public ClassType getClassType() {
         return classType;
@@ -140,13 +137,16 @@ public enum SpellType {
         this.name = name;
         this.startManaCost = startManaCost;
         this.gradeManaChange = gradeManaChange;
-
-        this.spellPattern = Pattern.compile("^" + name + "\\b.*");
     }
 
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
-            if (spellType.spellPattern.matcher(name).matches()) {
+            // After the matching part, the string needs to be done, or a blank character
+            // must appaear
+            if (name.startsWith(spellType.name)
+                    && (name.length() == spellType.name.length()
+                            || String.valueOf(name.charAt(spellType.name.length()))
+                                    .isBlank())) {
                 return spellType;
             }
         }

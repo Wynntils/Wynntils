@@ -75,6 +75,7 @@ allprojects {
 
     repositories {
         maven { url "https://maven.parchmentmc.org/" }
+        maven { url "https://jitpack.io" }
     }
 
     tasks.withType(JavaCompile) {

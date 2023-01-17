@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.user;
+package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,17 +15,21 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.gui.render.FontRenderer;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.wynn.event.StatusEffectsChangedEvent;
 import java.util.List;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class StatusOverlayFeature extends UserFeature {
     private List<TextRenderTask> renderCache = List.of();
 
@@ -68,10 +72,12 @@ public class StatusOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
-            FontRenderer.getInstance()
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             StatusOverlayFeature.this.renderCache,
@@ -82,10 +88,12 @@ public class StatusOverlayFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            FontRenderer.getInstance()
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            BufferedFontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             new TextRenderTask("§8⬤ §7 Purification 00:02", textRenderSetting),

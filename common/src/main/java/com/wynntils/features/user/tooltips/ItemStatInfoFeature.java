@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user.tooltips;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -11,6 +12,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.ColorUtils;
 import com.wynntils.utils.KeyboardUtils;
 import com.wynntils.utils.MathUtils;
@@ -19,8 +21,10 @@ import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,6 +35,8 @@ import org.lwjgl.glfw.GLFW;
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     public static ItemStatInfoFeature INSTANCE;
+
+    private final Set<GearItem> brokenItems = new HashSet<>();
 
     @Config
     public boolean showStars = true;
@@ -70,34 +76,53 @@ public class ItemStatInfoFeature extends UserFeature {
         if (gearItemOpt.isEmpty()) return;
 
         GearItem gearItem = gearItemOpt.get();
+        if (brokenItems.contains(gearItem)) return;
 
-        GearTooltipBuilder builder = gearItem.getCache()
-                .getOrCalculate(
-                        WynnItemCache.TOOLTIP_KEY,
-                        () -> GearTooltipBuilder.fromItemStack(
-                                event.getItemStack(), gearItem.getGearProfile(), gearItem));
-        if (builder == null) return;
+        try {
+            GearTooltipBuilder builder = gearItem.getCache()
+                    .getOrCalculate(
+                            WynnItemCache.TOOLTIP_KEY,
+                            () -> GearTooltipBuilder.fromItemStack(
+                                    event.getItemStack(), gearItem.getGearProfile(), gearItem));
+            if (builder == null) return;
 
-        LinkedList<Component> tooltips =
-                new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle()));
+            LinkedList<Component> tooltips =
+                    new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle()));
 
-        if (gearItem.hasVariableIds()) {
-            if (perfect && gearItem.isPerfect()) {
-                tooltips.removeFirst();
-                tooltips.addFirst(getPerfectName(gearItem.getGearProfile().getDisplayName()));
-            } else if (defective && gearItem.isDefective()) {
-                tooltips.removeFirst();
-                tooltips.addFirst(getDefectiveName(gearItem.getGearProfile().getDisplayName()));
-            } else if (overallPercentageInName) {
-                MutableComponent name = Component.literal(tooltips.getFirst().getString())
-                        .withStyle(tooltips.getFirst().getStyle());
-                name.append(getPercentageTextComponent(gearItem.getOverallPercentage()));
-                tooltips.removeFirst();
-                tooltips.addFirst(name);
+            if (gearItem.hasVariableIds()) {
+                if (perfect && gearItem.isPerfect()) {
+                    tooltips.removeFirst();
+                    tooltips.addFirst(getPerfectName(gearItem.getGearProfile().getDisplayName()));
+                } else if (defective && gearItem.isDefective()) {
+                    tooltips.removeFirst();
+                    tooltips.addFirst(getDefectiveName(gearItem.getGearProfile().getDisplayName()));
+                } else if (overallPercentageInName) {
+                    MutableComponent name = Component.literal(
+                                    tooltips.getFirst().getString())
+                            .withStyle(tooltips.getFirst().getStyle());
+                    name.append(getPercentageTextComponent(gearItem.getOverallPercentage()));
+                    tooltips.removeFirst();
+                    tooltips.addFirst(name);
+                }
+            }
+
+            event.setTooltips(tooltips);
+        } catch (Exception e) {
+            brokenItems.add(gearItem);
+            WynntilsMod.error(
+                    "Exception when creating tooltips for item "
+                            + gearItem.getGearProfile().getDisplayName(),
+                    e);
+            WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + gearItem);
+            McUtils.sendMessageToClient(Component.literal("Wynntils error: Problem showing tooltip for item "
+                            + gearItem.getGearProfile().getDisplayName())
+                    .withStyle(ChatFormatting.RED));
+
+            if (brokenItems.size() > 10) {
+                // Give up and disable feature
+                throw new RuntimeException(e);
             }
         }
-
-        event.setTooltips(tooltips);
     }
 
     private MutableComponent getPercentageTextComponent(float percentage) {
