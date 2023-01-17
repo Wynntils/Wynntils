@@ -1,9 +1,21 @@
+## [0.0.2-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.112...v0.0.2-alpha.113) (2023-01-17)
+
+
+### New Features
+
+* totem tracking ([#1005](https://github.com/Wynntils/Artemis/issues/1005)) ([48ca90f](https://github.com/Wynntils/Artemis/commit/48ca90fb3927a07aa210cf6dc537c680da035128))
+
 ## [0.0.2-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.111...v0.0.2-alpha.112) (2023-01-17)
 
 
 ### Bug Fixes
 
 * De-duplicate confirmationless NPC dialogue lines ([#1044](https://github.com/Wynntils/Artemis/issues/1044)) ([3b75b1b](https://github.com/Wynntils/Artemis/commit/3b75b1b3d3565dea24fcc7c36a410051aacf0ad0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.112 [skip ci] ([4c3356c](https://github.com/Wynntils/Artemis/commit/4c3356c949b27b0ae2c022c4435b0a9493e5ba8d))
 
 ## [0.0.2-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.110...v0.0.2-alpha.111) (2023-01-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.109 [skip ci] ([f1d794b](https://github.com/Wynntils/Artemis/commit/f1d794bb21c0c4884dbb27ea416e7863abc8cad8))
-
-## [0.0.2-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.107...v0.0.2-alpha.108) (2023-01-16)
-
-
-### Bug Fixes
-
-* Use separate buffer for lootrun rendering to prevent crashes ([#1042](https://github.com/Wynntils/Artemis/issues/1042)) ([4adc5df](https://github.com/Wynntils/Artemis/commit/4adc5dfd11fa8c573b18ad501cc878f6da9a93c2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.108 [skip ci] ([8099f6a](https://github.com/Wynntils/Artemis/commit/8099f6a1488b5e1ecaa919b85e9e285e6ac93101))
 
