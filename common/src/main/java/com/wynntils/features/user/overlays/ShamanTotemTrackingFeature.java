@@ -25,6 +25,7 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.TotemEvent;
@@ -97,12 +98,24 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
     }
 
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        shamanTotemTimerOverlay.ticksUntilUpdate--;
+
+        if (shamanTotemTimerOverlay.ticksUntilUpdate <= 0) {
+            shamanTotemTimerOverlay.ticksUntilUpdate = ShamanTotemTimerOverlay.TICKS_PER_UPDATE;
+            shamanTotemTimerOverlay.updateRenderTaskCache();
+        }
+    }
+
     @Override
     public List<Model> getModelDependencies() {
         return List.of(Models.Spell, Models.ShamanTotem);
     }
 
     public static class ShamanTotemTimerOverlay extends Overlay {
+        static final int TICKS_PER_UPDATE = 5;
+
         @Config
         public static TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
 
@@ -110,6 +123,9 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         public TextShadow textShadow = TextShadow.OUTLINE;
 
         private TextRenderSetting textRenderSetting;
+
+        int ticksUntilUpdate = 0;
+        List<TextRenderTask> renderTaskCache;
 
         protected ShamanTotemTimerOverlay() {
             super(
@@ -124,66 +140,20 @@ public class ShamanTotemTrackingFeature extends UserFeature {
             updateTextRenderSetting();
         }
 
-        private String getFormattedTotemText(String prefix, String suffix, String detail) {
-            String maxFitting = StringUtils.getMaxFittingText(
-                    prefix + suffix + detail,
-                    this.getWidth(),
-                    FontRenderer.getInstance().getFont());
-            if (maxFitting.contains("[")
-                    && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
-                return prefix + suffix + "\n" + detail;
-            } else { // Fits fine, give normal lines
-                return prefix + suffix + detail;
-            }
-        }
-
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            if (renderTaskCache == null) {
+                updateRenderTaskCache();
+            }
+
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            Models.ShamanTotem.getActiveTotems().stream()
-                                    .map(shamanTotem -> {
-                                        String prefix =
-                                                switch (shamanTotem.getTotemNumber()) {
-                                                    case 1 -> firstTotemColor + "Totem 1";
-                                                    case 2 -> secondTotemColor + "Totem 2";
-                                                    case 3 -> thirdTotemColor + "Totem 3";
-                                                    default -> throw new IllegalArgumentException(
-                                                            "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
-                                                };
-
-                                        String suffix = "";
-                                        String detail = "";
-                                        // Check if we should be saying "Summoned"
-                                        if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
-                                            suffix = " Summoned";
-                                        } else {
-                                            switch (totemTrackingDetail) {
-                                                case NONE -> suffix = " (" + shamanTotem.getTime() + " s)";
-                                                case COORDS -> {
-                                                    suffix = " (" + shamanTotem.getTime() + " s)";
-                                                    detail = shamanTotem
-                                                            .getLocation()
-                                                            .toString();
-                                                }
-                                                case DISTANCE -> suffix = " (" + shamanTotem.getTime() + " s, "
-                                                        + Math.round(McUtils.player()
-                                                                .position()
-                                                                .distanceTo(shamanTotem
-                                                                        .getLocation()
-                                                                        .toVec3()))
-                                                        + " m)";
-                                            }
-                                        }
-                                        return new TextRenderTask(
-                                                getFormattedTotemText(prefix, suffix, detail), textRenderSetting);
-                                    })
-                                    .toList(),
+                            renderTaskCache,
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -215,6 +185,57 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
+        }
+
+        void updateRenderTaskCache() {
+            renderTaskCache = Models.ShamanTotem.getActiveTotems().stream()
+                    .map(shamanTotem -> {
+                        String prefix =
+                                switch (shamanTotem.getTotemNumber()) {
+                                    case 1 -> firstTotemColor + "Totem 1";
+                                    case 2 -> secondTotemColor + "Totem 2";
+                                    case 3 -> thirdTotemColor + "Totem 3";
+                                    default -> throw new IllegalArgumentException(
+                                            "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
+                                };
+
+                        String suffix = "";
+                        String detail = "";
+                        // Check if we should be saying "Summoned"
+                        if (shamanTotem.getState() == ShamanTotem.TotemState.SUMMONED) {
+                            suffix = " Summoned";
+                        } else {
+                            switch (totemTrackingDetail) {
+                                case NONE -> suffix = " (" + shamanTotem.getTime() + " s)";
+                                case COORDS -> {
+                                    suffix = " (" + shamanTotem.getTime() + " s)";
+                                    detail = shamanTotem.getLocation().toString();
+                                }
+                                case DISTANCE -> suffix = " (" + shamanTotem.getTime() + " s, "
+                                        + Math.round(McUtils.player()
+                                                .position()
+                                                .distanceTo(shamanTotem
+                                                        .getLocation()
+                                                        .toVec3()))
+                                        + " m)";
+                            }
+                        }
+                        return new TextRenderTask(getFormattedTotemText(prefix, suffix, detail), textRenderSetting);
+                    })
+                    .toList();
+        }
+
+        private String getFormattedTotemText(String prefix, String suffix, String detail) {
+            String maxFitting = StringUtils.getMaxFittingText(
+                    prefix + suffix + detail,
+                    this.getWidth(),
+                    FontRenderer.getInstance().getFont());
+            if (maxFitting.contains("[")
+                    && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
+                return prefix + suffix + "\n" + detail;
+            } else { // Fits fine, give normal lines
+                return prefix + suffix + detail;
+            }
         }
 
         @Override
