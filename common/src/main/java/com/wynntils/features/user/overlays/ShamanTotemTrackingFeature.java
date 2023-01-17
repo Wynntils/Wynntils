@@ -23,6 +23,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
+import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
@@ -30,6 +31,7 @@ import com.wynntils.wynn.event.TotemEvent;
 import com.wynntils.wynn.objects.ShamanTotem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -136,10 +138,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
 
         @Override
-        public void render(PoseStack poseStack, float partialTicks, Window window) {
-            FontRenderer.getInstance()
+        public void render(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             Models.ShamanTotem.getActiveTotems().stream()
@@ -187,10 +191,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, float partialTicks, Window window) {
-            FontRenderer.getInstance()
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+            BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
+                            bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
                             List.of(
