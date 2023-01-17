@@ -4,7 +4,9 @@
  */
 package com.wynntils.wynn.objects;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
+import java.util.Arrays;
 
 public enum SpellType {
     ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", 6, 0),
@@ -37,6 +39,19 @@ public enum SpellType {
     SECOND_SPELL(ClassType.None, 2, "2nd Spell", 0, 0),
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", 0, 0);
+
+    public static final boolean SPELL_RIGHT = true;
+    public static final boolean SPELL_LEFT = false;
+
+    private static final boolean[] RLR = {SPELL_RIGHT, SPELL_LEFT, SPELL_RIGHT};
+    private static final boolean[] RRR = {SPELL_RIGHT, SPELL_RIGHT, SPELL_RIGHT};
+    private static final boolean[] RLL = {SPELL_RIGHT, SPELL_LEFT, SPELL_LEFT};
+    private static final boolean[] RRL = {SPELL_RIGHT, SPELL_RIGHT, SPELL_LEFT};
+    // Archer only
+    private static final boolean[] LRL = {SPELL_LEFT, SPELL_RIGHT, SPELL_LEFT};
+    private static final boolean[] LLL = {SPELL_LEFT, SPELL_LEFT, SPELL_LEFT};
+    private static final boolean[] LRR = {SPELL_LEFT, SPELL_RIGHT, SPELL_RIGHT};
+    private static final boolean[] LLR = {SPELL_LEFT, SPELL_LEFT, SPELL_RIGHT};
 
     private static final int[][] MANA_REDUCTION_LEVELS = {
         {},
@@ -162,5 +177,17 @@ public enum SpellType {
 
     public String getShortIdName(boolean isRaw) {
         return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
+    }
+
+    public static SpellType fromBooleanArray(boolean[] casted) {
+        int spellNumber = 4;
+        if (Arrays.equals(casted, RLR) || Arrays.equals(casted, LRL)) {
+            spellNumber = 1;
+        } else if (Arrays.equals(casted, RRR) || Arrays.equals(casted, LLL)) {
+            spellNumber = 2;
+        } else if (Arrays.equals(casted, RLL) || Arrays.equals(casted, LRR)) {
+            spellNumber = 3;
+        }
+        return forClass(Managers.Character.getClassType(), spellNumber);
     }
 }

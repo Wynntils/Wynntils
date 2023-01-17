@@ -14,7 +14,6 @@ import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +28,8 @@ public class ItemHandler extends Handler {
     private final List<ItemAnnotator> annotators = new ArrayList<>();
     private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
     private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
+    // Keep this as a field just of performance reasons to skip a new allocation in annotate()
+    private List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
         if (item == null) return Optional.empty();
@@ -91,7 +92,6 @@ public class ItemHandler extends Handler {
         ItemAnnotation annotation = null;
 
         long startTime = System.currentTimeMillis();
-        List<ItemAnnotator> crashedAnnotators = new LinkedList<>();
         String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
 
         for (ItemAnnotator annotator : annotators) {
@@ -119,6 +119,7 @@ public class ItemHandler extends Handler {
         for (ItemAnnotator annotator : crashedAnnotators) {
             annotators.remove(annotator);
         }
+        crashedAnnotators.clear();
 
         if (annotation == null) return;
 

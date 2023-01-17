@@ -90,4 +90,17 @@ public abstract class MultiPlayerGameModeMixin {
             ci.cancel();
         }
     }
+
+    // As of 1.19.3, this seems to be the only method which sends carried item update packets to the server.
+    // Please look into this and confirm this is still the case, in future versions.
+    @Inject(
+            method = "ensureHasSentCarriedItem",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void ensureHasSentCarriedItem(CallbackInfo ci) {
+        EventFactory.onChangeCarriedItemEvent();
+    }
 }

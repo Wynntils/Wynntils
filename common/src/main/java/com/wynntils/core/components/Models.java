@@ -18,6 +18,8 @@ import com.wynntils.wynn.model.PlayerModel;
 import com.wynntils.wynn.model.PlayerRelationsModel;
 import com.wynntils.wynn.model.ServerListModel;
 import com.wynntils.wynn.model.ShamanMaskModel;
+import com.wynntils.wynn.model.ShamanTotemModel;
+import com.wynntils.wynn.model.SpellModel;
 import com.wynntils.wynn.model.TabModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
 import com.wynntils.wynn.model.bossbar.BossBarModel;
@@ -44,6 +46,8 @@ public final class Models {
     public static final ScoreboardModel Scoreboard = new ScoreboardModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
+    public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
+    public static final SpellModel Spell = new SpellModel();
     public static final TabModel Tab = new TabModel();
     public static final TranslationModel Translation = new TranslationModel();
 }
