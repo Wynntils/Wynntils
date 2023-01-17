@@ -101,7 +101,7 @@ public class ShamanTotemModel extends Model {
                                 "totemNumber should be 1, 2, or 3! (totem variable switch in #onTotemSpawn in ShamanTotemTrackingFeature");
                     }
                 },
-                2);
+                3);
     }
 
     @SubscribeEvent
