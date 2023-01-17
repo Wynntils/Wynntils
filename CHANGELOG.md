@@ -1,9 +1,21 @@
+## [0.0.2-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.111...v0.0.2-alpha.112) (2023-01-17)
+
+
+### Bug Fixes
+
+* De-duplicate confirmationless NPC dialogue lines ([#1044](https://github.com/Wynntils/Artemis/issues/1044)) ([3b75b1b](https://github.com/Wynntils/Artemis/commit/3b75b1b3d3565dea24fcc7c36a410051aacf0ad0))
+
 ## [0.0.2-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.110...v0.0.2-alpha.111) (2023-01-17)
 
 
 ### Bug Fixes
 
 * Improve error handling on network error ([#1030](https://github.com/Wynntils/Artemis/issues/1030)) ([81c8369](https://github.com/Wynntils/Artemis/commit/81c83697c85ab6e06960f7a7018cac15c735668f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.111 [skip ci] ([ef874ea](https://github.com/Wynntils/Artemis/commit/ef874ea843642683a00df41befd225a56e21aa28))
 
 ## [0.0.2-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.109...v0.0.2-alpha.110) (2023-01-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.108 [skip ci] ([8099f6a](https://github.com/Wynntils/Artemis/commit/8099f6a1488b5e1ecaa919b85e9e285e6ac93101))
-
-## [0.0.2-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.106...v0.0.2-alpha.107) (2023-01-16)
-
-
-### Bug Fixes
-
-* Two micro-opts, and prohibit infinite recursion on equals ([#1040](https://github.com/Wynntils/Artemis/issues/1040)) ([03cc02e](https://github.com/Wynntils/Artemis/commit/03cc02e5fc4db67145e71099aeebbb2681e996b5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.107 [skip ci] ([f8180e6](https://github.com/Wynntils/Artemis/commit/f8180e64dd1917c333ff88934362ad83438ffe78))
 
