@@ -6,6 +6,7 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
@@ -88,7 +89,14 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     public void onNpcDialogue(NpcDialogEvent e) {
         List<String> msg =
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
+
+        // Print dialogue to the system log
+        msg.forEach(s -> WynntilsMod.info("[NPC] " + s));
+
         if (e.getType() == NpcDialogueType.CONFIRMATIONLESS) {
+            // The same message can be repeating before we have finished removing the old
+            // Just remove the old and add the new with an updated remove time
+            confirmationlessDialogues.removeIf(d -> d.text.equals(msg));
             ConfirmationlessDialogue dialogue =
                     new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
             confirmationlessDialogues.add(dialogue);
