@@ -86,6 +86,7 @@ import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.user.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.user.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.user.overlays.ShamanMasksOverlayFeature;
+import com.wynntils.features.user.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.user.overlays.StatusOverlayFeature;
 import com.wynntils.features.user.players.PlayerArmorHidingFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
@@ -194,6 +195,7 @@ public final class FeatureRegistry {
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ShamanMasksOverlayFeature());
+        registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
