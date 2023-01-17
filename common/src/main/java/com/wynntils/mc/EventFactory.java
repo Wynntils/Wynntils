@@ -9,10 +9,12 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -57,6 +59,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
@@ -67,6 +70,7 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -103,6 +107,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
@@ -111,8 +116,10 @@ import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -430,6 +437,10 @@ public final class EventFactory {
     public static ArmSwingEvent onArmSwing(ArmSwingEvent.ArmSwingContext actionContext, InteractionHand hand) {
         return post(new ArmSwingEvent(actionContext, hand));
     }
+
+    public static ChangeCarriedItemEvent onChangeCarriedItemEvent() {
+        return post(new ChangeCarriedItemEvent());
+    }
     // endregion
 
     // region Chat Events
@@ -608,6 +619,21 @@ public final class EventFactory {
 
     public static Event onMouseScroll(double windowPointer, double xOffset, double yOffset) {
         return post(new MouseScrollEvent(windowPointer, xOffset, yOffset));
+    }
+
+    // endregion
+
+    // region Entity Events
+    public static AddEntityEvent onAddEntity(ClientboundAddEntityPacket packet) {
+        return post(new AddEntityEvent(packet));
+    }
+
+    public static SetEntityDataEvent onSetEntityData(ClientboundSetEntityDataPacket packet) {
+        return post(new SetEntityDataEvent(packet));
+    }
+
+    public static RemoveEntitiesEvent onRemoveEntities(ClientboundRemoveEntitiesPacket packet) {
+        return post(new RemoveEntitiesEvent(packet));
     }
 
     // endregion
