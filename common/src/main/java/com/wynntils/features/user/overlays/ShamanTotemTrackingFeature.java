@@ -164,9 +164,9 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                             suffix = " Summoned";
                                         } else {
                                             switch (totemTrackingDetail) {
-                                                case NONE -> suffix = " (" + shamanTotem.getTime() + " s";
+                                                case NONE -> suffix = " (" + shamanTotem.getTime() + " s)";
                                                 case COORDS -> {
-                                                    suffix = " (" + shamanTotem.getTime() + " s";
+                                                    suffix = " (" + shamanTotem.getTime() + " s)";
                                                     detail = shamanTotem
                                                             .getLocation()
                                                             .toString();
