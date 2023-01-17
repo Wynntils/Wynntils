@@ -609,6 +609,8 @@
   "feature.wynntils.shamanMasksOverlay.overlay.shamanMask.maskDisplay.description": "面具文本要如何显示？ %mask% 的词会被您的当今的面具代替。",
   "feature.wynntils.shamanMasksOverlay.overlay.shamanMask.maskDisplay.name": "显示的文本",
   "feature.wynntils.shamanMasksOverlay.overlay.shamanMask.name": "萨满面具叠加层",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.description": "文本阴影要如何显示？",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.name": "文本阴影",
   "feature.wynntils.soulPointTimer.lore": "时间直到下个灵魂点: %s",
   "feature.wynntils.soulPointTimer.name": "灵魂点定时器",
   "feature.wynntils.statusOverlay.name": "效果",
