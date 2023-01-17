@@ -1,9 +1,21 @@
+## [0.0.2-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.114...v0.0.2-alpha.115) (2023-01-17)
+
+
+### Bug Fixes
+
+* Better default config for CustomCharacterSelectionScreenFeature ([#1045](https://github.com/Wynntils/Artemis/issues/1045)) ([a2515bf](https://github.com/Wynntils/Artemis/commit/a2515bfdb936da6308328cbbd82c17ecf88c7bf2))
+
 ## [0.0.2-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.113...v0.0.2-alpha.114) (2023-01-17)
 
 
 ### Bug Fixes
 
 * Render tooltip at the correct location for WynntilsMenuScreen ([#1046](https://github.com/Wynntils/Artemis/issues/1046)) ([bcca30e](https://github.com/Wynntils/Artemis/commit/bcca30ed134e28e67d29f82113fb601f5c6dc5bf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.114 [skip ci] ([b3a1ba9](https://github.com/Wynntils/Artemis/commit/b3a1ba9748c8db0d47edffa4fc9ca40b2acf982e))
 
 ## [0.0.2-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.112...v0.0.2-alpha.113) (2023-01-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.111 [skip ci] ([ef874ea](https://github.com/Wynntils/Artemis/commit/ef874ea843642683a00df41befd225a56e21aa28))
-
-## [0.0.2-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.109...v0.0.2-alpha.110) (2023-01-16)
-
-
-### New Features
-
-* Add and use MixinExtras ([#1041](https://github.com/Wynntils/Artemis/issues/1041)) ([7bc6f9d](https://github.com/Wynntils/Artemis/commit/7bc6f9dbcebd10f9ee4a91384df1f95131e8a324))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.110 [skip ci] ([9a656f9](https://github.com/Wynntils/Artemis/commit/9a656f9097b760552ea44cf87efb7c205c8c23b9))
 
