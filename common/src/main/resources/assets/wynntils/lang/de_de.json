@@ -77,6 +77,8 @@
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.textShadow.name": "Textschatten",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.questInfoOverlay.overlay.questInfo.textShadow.name": "Textschatten",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.description": "Wie soll der Textschatten aussehen?",
+  "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.name": "Textschatten",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "Textschatten",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "Wie soll der Textschatten aussehen?",
