@@ -196,11 +196,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderButtons(poseStack, mouseX, mouseY);
 
-        renderTooltip(poseStack, mouseX, mouseY, translationX, translationY);
-
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
         renderPlayerInfo(poseStack, mouseX, mouseY, translationX, translationY);
+
+        renderTooltip(poseStack, mouseX, mouseY, translationX, translationY);
 
         poseStack.popPose();
     }
@@ -263,14 +263,14 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         if (this.hovered != null) {
-            poseStack.pushPose();
-            poseStack.translate(mouseX - translationX, mouseY - translationY, 1);
-            RenderUtils.drawTooltip(
+            RenderUtils.drawTooltipAt(
                     poseStack,
+                    mouseX - translationX,
+                    mouseY - translationY,
+                    0,
                     this.hovered.tooltipList(),
                     FontRenderer.getInstance().getFont(),
                     true);
-            poseStack.popPose();
         }
     }
 
