@@ -1,9 +1,21 @@
+## [0.0.2-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.110...v0.0.2-alpha.111) (2023-01-17)
+
+
+### Bug Fixes
+
+* Improve error handling on network error ([#1030](https://github.com/Wynntils/Artemis/issues/1030)) ([81c8369](https://github.com/Wynntils/Artemis/commit/81c83697c85ab6e06960f7a7018cac15c735668f))
+
 ## [0.0.2-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.109...v0.0.2-alpha.110) (2023-01-16)
 
 
 ### New Features
 
 * Add and use MixinExtras ([#1041](https://github.com/Wynntils/Artemis/issues/1041)) ([7bc6f9d](https://github.com/Wynntils/Artemis/commit/7bc6f9dbcebd10f9ee4a91384df1f95131e8a324))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.110 [skip ci] ([9a656f9](https://github.com/Wynntils/Artemis/commit/9a656f9097b760552ea44cf87efb7c205c8c23b9))
 
 ## [0.0.2-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.108...v0.0.2-alpha.109) (2023-01-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.107 [skip ci] ([f8180e6](https://github.com/Wynntils/Artemis/commit/f8180e64dd1917c333ff88934362ad83438ffe78))
-
-## [0.0.2-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.105...v0.0.2-alpha.106) (2023-01-15)
-
-
-### Bug Fixes
-
-* Broken tooltips with "Health" id after optimization update ([#1038](https://github.com/Wynntils/Artemis/issues/1038)) ([5cc37f2](https://github.com/Wynntils/Artemis/commit/5cc37f20a5f271149e4cbae1e87f085067a22738))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.106 [skip ci] ([6c0ec57](https://github.com/Wynntils/Artemis/commit/6c0ec57010b6951e5b11601c0c16217624cd146d))
 
