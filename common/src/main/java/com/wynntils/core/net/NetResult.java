@@ -44,7 +44,16 @@ public abstract class NetResult {
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonObject()), onError);
+        handleReader(
+                reader -> {
+                    try {
+                        handler.accept(JsonParser.parseReader(reader).getAsJsonObject());
+                    } catch (Exception e) {
+                        WynntilsMod.error("Failure in net resource processing", e);
+                        onError.accept(e);
+                    }
+                },
+                onError);
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler) {
@@ -52,7 +61,16 @@ public abstract class NetResult {
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonArray()), onError);
+        handleReader(
+                reader -> {
+                    try {
+                        handler.accept(JsonParser.parseReader(reader).getAsJsonArray());
+                    } catch (Exception e) {
+                        WynntilsMod.error("Failure in net resource processing", e);
+                        onError.accept(e);
+                    }
+                },
+                onError);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
@@ -61,22 +79,22 @@ public abstract class NetResult {
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
         CompletableFuture<Void> future = getInputStreamFuture()
-                .thenAccept(wrappingHandler(onCompletion))
+                .thenAccept(wrappingHandler(onCompletion, onError))
                 .exceptionally(e -> {
-                    // FIXME: Error handling
+                    WynntilsMod.error("Failure in net resource processing", e);
                     onError.accept(e);
                     return null;
                 });
     }
 
-    private Consumer<InputStream> wrappingHandler(Consumer<InputStream> c) {
+    private Consumer<InputStream> wrappingHandler(Consumer<InputStream> c, Consumer<Throwable> onError) {
         return (inputStream) -> {
             try {
                 c.accept(inputStream);
             } catch (Throwable t) {
                 // Something went wrong in our handlers, perhaps an NPE?
-                // FIXME: Improve error handling
                 WynntilsMod.error("Failure in net resource processing", t);
+                onError.accept(t);
             } finally {
                 try {
                     // We must always close the input stream

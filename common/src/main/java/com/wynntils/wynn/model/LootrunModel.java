@@ -8,12 +8,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.features.statemanaged.LootrunFeature;
-import com.wynntils.gui.render.CustomRenderType;
+import com.wynntils.gui.render.buffered.CustomRenderType;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -56,6 +57,9 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 public final class LootrunModel extends Model {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new BufferBuilder(256));
+
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private static final List<Integer> COLORS = List.of(
@@ -104,7 +108,6 @@ public final class LootrunModel extends Model {
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
-        MultiBufferSource.BufferSource source = McUtils.mc().renderBuffers().bufferSource();
         var points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
@@ -122,15 +125,15 @@ public final class LootrunModel extends Model {
                 long chunkLong = chunk.toLong();
 
                 if (points.containsKey(chunkLong)) {
-                    renderPoints(poseStack, source, points, chunkLong);
+                    renderPoints(poseStack, points, chunkLong);
                 }
 
                 if (lootrun.chests().containsKey(chunkLong)) {
-                    renderChests(poseStack, lootrun, color, source, chunkLong);
+                    renderChests(poseStack, lootrun, color, chunkLong);
                 }
 
                 if (LootrunFeature.INSTANCE.showNotes && lootrun.notes().containsKey(chunkLong)) {
-                    renderNotes(poseStack, lootrun, color, source, chunkLong);
+                    renderNotes(poseStack, lootrun, color, chunkLong);
                 }
             }
         }
@@ -138,8 +141,7 @@ public final class LootrunModel extends Model {
         poseStack.popPose();
     }
 
-    private void renderNotes(
-            PoseStack poseStack, LootrunInstance lootrun, int color, MultiBufferSource source, long chunkLong) {
+    private void renderNotes(PoseStack poseStack, LootrunInstance lootrun, int color, long chunkLong) {
         List<Note> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
@@ -155,20 +157,16 @@ public final class LootrunModel extends Model {
             int offsetY = -(font.lineHeight * lines.size()) / 2;
             for (FormattedCharSequence line : lines) {
                 int offsetX = -font.width(line) / 2;
-                font.drawInBatch(line, offsetX, offsetY, color, false, pose, source, false, 0x80000000, 0xf000f0);
+                font.drawInBatch(
+                        line, offsetX, offsetY, color, false, pose, BUFFER_SOURCE, false, 0x80000000, 0xf000f0);
                 offsetY += font.lineHeight + 2;
             }
             poseStack.popPose();
         }
     }
 
-    private void renderChests(
-            PoseStack poseStack,
-            LootrunInstance lootrun,
-            int color,
-            MultiBufferSource.BufferSource source,
-            long chunkLong) {
-        VertexConsumer consumer = source.getBuffer(RenderType.lines());
+    private void renderChests(PoseStack poseStack, LootrunInstance lootrun, int color, long chunkLong) {
+        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(RenderType.lines());
         Set<BlockPos> chests = lootrun.chests().get(chunkLong);
 
         float red = ((float) FastColor.ARGB32.red(color)) / 255;
@@ -179,30 +177,22 @@ public final class LootrunModel extends Model {
             LevelRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
         }
 
-        source.endBatch();
+        BUFFER_SOURCE.endBatch();
     }
 
-    private void renderPoints(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource source,
-            Long2ObjectMap<List<ColoredPath>> points,
-            long chunkLong) {
+    private void renderPoints(PoseStack poseStack, Long2ObjectMap<List<ColoredPath>> points, long chunkLong) {
         List<ColoredPath> locations = points.get(chunkLong);
 
         Level level = McUtils.mc().level;
         if (level == null) return;
 
-        renderNonTexturedLootrunPoints(poseStack, source, locations, level, CustomRenderType.LOOTRUN_LINE);
+        renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
     }
 
     private void renderNonTexturedLootrunPoints(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource source,
-            List<ColoredPath> locations,
-            Level level,
-            RenderType renderType) {
+            PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
         for (ColoredPath locationsInRoute : locations) {
-            VertexConsumer consumer = source.getBuffer(renderType);
+            VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
             Matrix4f lastMatrix = poseStack.last().pose();
             boolean sourceBatchEnded = false;
 
@@ -224,7 +214,7 @@ public final class LootrunModel extends Model {
                     if (blockValidness == BlockValidness.VALID) {
                         pauseDraw = false;
                         if (sourceBatchEnded) {
-                            consumer = source.getBuffer(renderType);
+                            consumer = BUFFER_SOURCE.getBuffer(renderType);
                             sourceBatchEnded = false;
                         }
                         renderQueuedPoints(consumer, lastMatrix, toRender);
@@ -244,13 +234,13 @@ public final class LootrunModel extends Model {
                 if (!pauseDraw) {
                     renderPoint(consumer, lastMatrix, point);
                 } else if (!sourceBatchEnded) {
-                    source.endBatch();
+                    BUFFER_SOURCE.endBatch();
                     sourceBatchEnded = true;
                 }
             }
             if (!sourceBatchEnded) {
                 renderQueuedPoints(consumer, lastMatrix, toRender);
-                source.endBatch();
+                BUFFER_SOURCE.endBatch();
             }
         }
     }
