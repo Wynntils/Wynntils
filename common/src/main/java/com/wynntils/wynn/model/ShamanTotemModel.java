@@ -62,7 +62,7 @@ public class ShamanTotemModel extends Model {
                 () -> {
                     if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > 450) return;
                     Entity entity = getBufferedEntity(e.getId());
-                    if (!(entity instanceof net.minecraft.world.entity.decoration.ArmorStand totemAS)) return;
+                    if (!(entity instanceof ArmorStand totemAS)) return;
 
                     // Checks to verify this is a totem
                     if (Math.abs(totemAS.getMyRidingOffset() - 0.10000000149011612f) > 0.00000000000012f) return;
@@ -110,7 +110,7 @@ public class ShamanTotemModel extends Model {
 
         int entityId = e.getId();
         Entity entity = getBufferedEntity(entityId);
-        if (!(entity instanceof net.minecraft.world.entity.decoration.ArmorStand)) return;
+        if (!(entity instanceof ArmorStand)) return;
 
         String name = getNameFromMetadata(e.getPackedItems());
         if (name == null || name.isEmpty()) return;
@@ -132,10 +132,10 @@ public class ShamanTotemModel extends Model {
         if (getBoundTotem(entityId) == null && Math.abs(totemCastTimestamp - System.currentTimeMillis()) < 15000) {
             // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
             // First check if this is actually one casted by us
-            List<net.minecraft.world.entity.decoration.ArmorStand> toCheck = McUtils.mc()
+            List<ArmorStand> toCheck = McUtils.mc()
                     .level
                     .getEntitiesOfClass(
-                            net.minecraft.world.entity.decoration.ArmorStand.class,
+                            ArmorStand.class,
                             new AABB(
                                     entity.position().x - 0.5,
                                     entity.position().y - 0.1,
@@ -144,7 +144,7 @@ public class ShamanTotemModel extends Model {
                                     entity.position().y + 0.1,
                                     entity.position().z + 0.5));
 
-            for (net.minecraft.world.entity.decoration.ArmorStand as : toCheck) {
+            for (ArmorStand as : toCheck) {
                 if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
                     totem1 = new ShamanTotem(1, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
                     WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
@@ -221,7 +221,7 @@ public class ShamanTotemModel extends Model {
         if (entity != null) return entity;
 
         if (entityId == -1) {
-            return new net.minecraft.world.entity.decoration.ArmorStand(McUtils.mc().level, 0, 0, 0);
+            return new ArmorStand(McUtils.mc().level, 0, 0, 0);
         }
 
         return null;
@@ -237,19 +237,23 @@ public class ShamanTotemModel extends Model {
                 WynntilsMod.postEvent(new TotemEvent.Removed(1, totem1));
                 totem1 = null;
                 pendingTotem1Id = null;
-                return;
+                nextTotemSlot = 1;
             }
             case 2 -> {
                 WynntilsMod.postEvent(new TotemEvent.Removed(2, totem2));
                 totem2 = null;
                 pendingTotem2Id = null;
-                return;
+                if (nextTotemSlot != 1) {
+                    nextTotemSlot = 2; // Only set to 2 if it's not already lower
+                }
             }
             case 3 -> {
                 WynntilsMod.postEvent(new TotemEvent.Removed(3, totem3));
                 totem3 = null;
                 pendingTotem3Id = null;
-                return;
+                if (nextTotemSlot != 1 && nextTotemSlot != 2) {
+                    nextTotemSlot = 3; // Only set to 3 if it's not already lower
+                }
             }
             default -> throw new IllegalArgumentException("Totem must be 1, 2, or 3");
         }
