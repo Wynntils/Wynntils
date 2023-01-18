@@ -131,6 +131,9 @@ public class ShamanTotemModel extends Model {
         Location parsedLocation = new Location(entity.position().x, entity.position().y, entity.position().z);
 
         if (getBoundTotem(entityId) == null && Math.abs(totemCastTimestamp - System.currentTimeMillis()) < 15000) {
+            // Don't unnecessarily check if we aren't even waiting for a totem
+            if (pendingTotem1Id == null && pendingTotem2Id == null && pendingTotem3Id == null) return;
+
             // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
             // First check if this is actually one casted by us
             List<ArmorStand> toCheck = McUtils.mc()
@@ -142,7 +145,7 @@ public class ShamanTotemModel extends Model {
                                     entity.position().y - 0.1,
                                     entity.position().z - 0.5,
                                     entity.position().x + 0.5,
-                                    entity.position().y + 0.1,
+                                    entity.position().y + 1.7,
                                     entity.position().z + 0.5));
 
             for (ArmorStand as : toCheck) {
