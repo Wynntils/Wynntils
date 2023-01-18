@@ -106,6 +106,43 @@ public class ShamanTotemModel extends Model {
                 3);
     }
 
+    // TODO: remove debug/tests
+    @SubscribeEvent
+    public void onTimerSpawn(AddEntityEvent e) {
+        Entity possibleTimer = getBufferedEntity(e.getId());
+        if (!(possibleTimer instanceof ArmorStand as)) return;
+
+        Matcher m = SHAMAN_TOTEM_TIMER.matcher(as.getDisplayName().toString());
+        if (!m.find()) return;
+
+        System.out.println("an entity " + e.getId() + " passed totem timer checks");
+        if (pendingTotem1Id == null && pendingTotem2Id == null && pendingTotem3Id == null) return;
+
+        List<ArmorStand> nearbyVisibleTotems = McUtils.mc()
+                .level
+                .getEntitiesOfClass(
+                        ArmorStand.class,
+                        new AABB(
+                                as.position().x,
+                                as.position().y,
+                                as.position().z,
+                                as.position().x,
+                                as.position().y,
+                                as.position().z));
+
+        for (ArmorStand vt : nearbyVisibleTotems) {
+            if (pendingTotem1Id != null && vt.getId() == pendingTotem1Id) {
+                System.out.println("matched totem 1's visible entity");
+            } else if (pendingTotem2Id != null && vt.getId() == pendingTotem2Id) {
+                System.out.println("matched totem 2's visible entity");
+            } else if (pendingTotem3Id != null && vt.getId() == pendingTotem3Id) {
+                System.out.println("matched totem 3's visible entity");
+            } else {
+                System.out.println("ArmorStand " + vt.getId() + " detected, but did not match any totem");
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onTotemRename(SetEntityDataEvent e) {
         if (!WynnUtils.onWorld()) return;
