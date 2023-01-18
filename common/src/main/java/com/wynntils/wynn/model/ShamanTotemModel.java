@@ -36,19 +36,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ShamanTotemModel extends Model {
 
     private ShamanTotem totem1 = null;
-    private Integer pendingTotem1Id = null;
+    private Integer pendingTotem1VisibleId = null;
 
     private ShamanTotem totem2 = null;
-    private Integer pendingTotem2Id = null;
+    private Integer pendingTotem2VisibleId = null;
 
     private ShamanTotem totem3 = null;
-    private Integer pendingTotem3Id = null;
+    private Integer pendingTotem3VisibleId = null;
 
     private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;
 
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
-    private static final double TOTEM_SEARCH_RADIUS = 1.2;
+    private static final double TOTEM_SEARCH_RADIUS = 1.0;
 
     @SubscribeEvent
     public void onTotemSpellCast(SpellCastEvent e) {
@@ -89,15 +89,15 @@ public class ShamanTotemModel extends Model {
                     switch (totemNumber) {
                         case 1 -> {
                             totem1 = newTotem;
-                            pendingTotem1Id = totemAS.getId();
+                            pendingTotem1VisibleId = totemAS.getId();
                         }
                         case 2 -> {
                             totem2 = newTotem;
-                            pendingTotem2Id = totemAS.getId();
+                            pendingTotem2VisibleId = totemAS.getId();
                         }
                         case 3 -> {
                             totem3 = newTotem;
-                            pendingTotem3Id = totemAS.getId();
+                            pendingTotem3VisibleId = totemAS.getId();
                         }
                         default -> throw new IllegalArgumentException(
                                 "totemNumber should be 1, 2, or 3! (totem variable switch in #onTotemSpawn in ShamanTotemTrackingFeature");
@@ -106,39 +106,58 @@ public class ShamanTotemModel extends Model {
                 3);
     }
 
-    // TODO: remove debug/tests
     @SubscribeEvent
     public void onTimerSpawn(AddEntityEvent e) {
-        Entity possibleTimer = getBufferedEntity(e.getId());
-        if (!(possibleTimer instanceof ArmorStand as)) return;
+        // We aren't looking for a new timer, skip
+        if (pendingTotem1VisibleId == null && pendingTotem2VisibleId == null && pendingTotem3VisibleId == null) return;
 
-        Matcher m = SHAMAN_TOTEM_TIMER.matcher(as.getDisplayName().toString());
-        if (!m.find()) return;
+        int entityId = e.getId();
 
-        System.out.println("an entity " + e.getId() + " passed totem timer checks");
-        if (pendingTotem1Id == null && pendingTotem2Id == null && pendingTotem3Id == null) return;
+        // This timer is already bound to a totem but got respawned? skip
+        if (getBoundTotem(entityId) != null) return;
 
-        List<ArmorStand> nearbyVisibleTotems = McUtils.mc()
+        Entity possibleTimer = getBufferedEntity(entityId);
+        if (!(possibleTimer instanceof ArmorStand)) return;
+
+        // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
+        // First check if this is actually one casted by us
+        List<ArmorStand> toCheck = McUtils.mc()
                 .level
                 .getEntitiesOfClass(
                         ArmorStand.class,
                         new AABB(
-                                as.position().x,
-                                as.position().y,
-                                as.position().z,
-                                as.position().x,
-                                as.position().y,
-                                as.position().z));
+                                possibleTimer.position().x - TOTEM_SEARCH_RADIUS,
+                                possibleTimer.position().y
+                                        - 0.3, // Don't modify this unless you are certain it is causing issues
+                                possibleTimer.position().z - TOTEM_SEARCH_RADIUS,
+                                possibleTimer.position().x + TOTEM_SEARCH_RADIUS,
+                                // (a LOT) more vertical radius required for totems casted off high places
+                                // This increased radius requirement increases as you cast from higher places and as the
+                                // server gets laggier
+                                possibleTimer.position().y + TOTEM_SEARCH_RADIUS * 5,
+                                possibleTimer.position().z + TOTEM_SEARCH_RADIUS));
 
-        for (ArmorStand vt : nearbyVisibleTotems) {
-            if (pendingTotem1Id != null && vt.getId() == pendingTotem1Id) {
-                System.out.println("matched totem 1's visible entity");
-            } else if (pendingTotem2Id != null && vt.getId() == pendingTotem2Id) {
-                System.out.println("matched totem 2's visible entity");
-            } else if (pendingTotem3Id != null && vt.getId() == pendingTotem3Id) {
-                System.out.println("matched totem 3's visible entity");
+        for (ArmorStand as : toCheck) {
+            // Recreate location for each ArmorStand checked for most accurate coordinates
+            Location parsedLocation = new Location(as.position().x, as.position().y, as.position().z);
+            if (pendingTotem1VisibleId != null && as.getId() == pendingTotem1VisibleId) {
+                totem1 = new ShamanTotem(
+                        1, entityId, totem1.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedLocation));
+                pendingTotem1VisibleId = null;
+            } else if (pendingTotem2VisibleId != null && as.getId() == pendingTotem2VisibleId) {
+                totem2 = new ShamanTotem(
+                        2, entityId, totem2.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedLocation));
+                pendingTotem2VisibleId = null;
+            } else if (pendingTotem3VisibleId != null && as.getId() == pendingTotem3VisibleId) {
+                totem3 = new ShamanTotem(
+                        3, entityId, totem3.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedLocation));
+                pendingTotem3VisibleId = null;
             } else {
-                System.out.println("ArmorStand " + vt.getId() + " detected, but did not match any totem");
+                // No totem slots available?
+                // WynntilsMod.getLogger().warn("Received a new totem {}, but no totem slots are available", entityId);
             }
         }
     }
@@ -154,89 +173,25 @@ public class ShamanTotemModel extends Model {
         String name = getNameFromMetadata(e.getPackedItems());
         if (name == null || name.isEmpty()) return;
 
-        /*
-        Logic flow for the following bits:
-        - First, the given entity is checked to see if it is a totem timer
-        - If the given timerId (int entityId) is not already a totem, assign it to the lowest # totem slot
-          - Additionally, assign location, state, and time, and keep the old visibleEntityId from when the spell was cast
-        - If the given timerId is already a totem, update the time and location instead
-          - Location is updated because there are now totems that can move
-         */
         Matcher m = SHAMAN_TOTEM_TIMER.matcher(name);
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));
         Location parsedLocation = new Location(entity.position().x, entity.position().y, entity.position().z);
+        if (getBoundTotem(entityId) == null) return;
 
-        if (getBoundTotem(entityId) == null && Math.abs(totemCastTimestamp - System.currentTimeMillis()) < 15000) {
-            // Don't unnecessarily check if we aren't even waiting for a totem
-            if (pendingTotem1Id == null && pendingTotem2Id == null && pendingTotem3Id == null) return;
-
-            // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
-            // First check if this is actually one casted by us
-            List<ArmorStand> toCheck = McUtils.mc()
-                    .level
-                    .getEntitiesOfClass(
-                            ArmorStand.class,
-                            new AABB(
-                                    entity.position().x - TOTEM_SEARCH_RADIUS,
-                                    entity.position().y
-                                            - 0.35, // Don't modify this unless you are certain it is causing issues
-                                    entity.position().z - TOTEM_SEARCH_RADIUS,
-                                    entity.position().x + TOTEM_SEARCH_RADIUS,
-                                    entity.position().y
-                                            + TOTEM_SEARCH_RADIUS
-                                            + 0.8, // More vertical radius required for totems casted off high places
-                                    entity.position().z + TOTEM_SEARCH_RADIUS));
-
-            for (ArmorStand as : toCheck) {
-                if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
-                    totem1 = new ShamanTotem(
-                            1,
-                            entityId,
-                            totem1.getVisibleEntityId(),
-                            parsedTime,
-                            ShamanTotem.TotemState.ACTIVE,
-                            parsedLocation);
-                    WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
-                    pendingTotem1Id = null;
-                } else if (pendingTotem2Id != null && as.getId() == pendingTotem2Id) {
-                    totem2 = new ShamanTotem(
-                            2,
-                            entityId,
-                            totem2.getVisibleEntityId(),
-                            parsedTime,
-                            ShamanTotem.TotemState.ACTIVE,
-                            parsedLocation);
-                    WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedTime, parsedLocation));
-                    pendingTotem2Id = null;
-                } else if (pendingTotem3Id != null && as.getId() == pendingTotem3Id) {
-                    totem3 = new ShamanTotem(
-                            3,
-                            entityId,
-                            totem3.getVisibleEntityId(),
-                            parsedTime,
-                            ShamanTotem.TotemState.ACTIVE,
-                            parsedLocation);
-                    WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedTime, parsedLocation));
-                    pendingTotem3Id = null;
-                } else {
-                    // No totem slots available?
-                    WynntilsMod.getLogger().warn("Received a new totem {}, but no totem slots are available", entityId);
-                }
-            }
-        } else if (totem1 != null && getBoundTotem(entityId) == totem1) {
+        if (totem1 != null && getBoundTotem(entityId) == totem1) {
             totem1.setTime(parsedTime);
             totem1.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Updated(1, parsedTime, parsedLocation));
         } else if (totem2 != null && getBoundTotem(entityId) == totem2) {
             totem2.setTime(parsedTime);
             totem2.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Updated(2, parsedTime, parsedLocation));
         } else if (totem3 != null && getBoundTotem(entityId) == totem3) {
             totem3.setTime(parsedTime);
             totem3.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedTime, parsedLocation));
+            WynntilsMod.postEvent(new TotemEvent.Updated(3, parsedTime, parsedLocation));
         }
     }
 
@@ -305,13 +260,13 @@ public class ShamanTotemModel extends Model {
             case 1 -> {
                 WynntilsMod.postEvent(new TotemEvent.Removed(1, totem1));
                 totem1 = null;
-                pendingTotem1Id = null;
+                pendingTotem1VisibleId = null;
                 nextTotemSlot = 1;
             }
             case 2 -> {
                 WynntilsMod.postEvent(new TotemEvent.Removed(2, totem2));
                 totem2 = null;
-                pendingTotem2Id = null;
+                pendingTotem2VisibleId = null;
                 if (nextTotemSlot != 1) {
                     nextTotemSlot = 2; // Only set to 2 if it's not already lower
                 }
@@ -319,7 +274,7 @@ public class ShamanTotemModel extends Model {
             case 3 -> {
                 WynntilsMod.postEvent(new TotemEvent.Removed(3, totem3));
                 totem3 = null;
-                pendingTotem3Id = null;
+                pendingTotem3VisibleId = null;
                 if (nextTotemSlot != 1 && nextTotemSlot != 2) {
                     nextTotemSlot = 3; // Only set to 3 if it's not already lower
                 }
