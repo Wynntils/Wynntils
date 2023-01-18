@@ -119,8 +119,7 @@ public class ShamanTotemModel extends Model {
         Entity possibleTimer = getBufferedEntity(entityId);
         if (!(possibleTimer instanceof ArmorStand)) return;
 
-        // Given timerId is not a totem, make a new totem (assuming regex matches and we are within 15s of casting)
-        // First check if this is actually one casted by us
+        // Given timerId is not a totem, make a new totem
         List<ArmorStand> toCheck = McUtils.mc()
                 .level
                 .getEntitiesOfClass(
