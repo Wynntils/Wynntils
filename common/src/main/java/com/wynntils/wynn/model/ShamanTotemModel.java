@@ -48,6 +48,7 @@ public class ShamanTotemModel extends Model {
     private int nextTotemSlot = 1;
 
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
+    private static final double TOTEM_SEARCH_RADIUS = 1.2;
 
     @SubscribeEvent
     public void onTotemSpellCast(SpellCastEvent e) {
@@ -141,12 +142,15 @@ public class ShamanTotemModel extends Model {
                     .getEntitiesOfClass(
                             ArmorStand.class,
                             new AABB(
-                                    entity.position().x - 0.5,
-                                    entity.position().y - 0.1,
-                                    entity.position().z - 0.5,
-                                    entity.position().x + 0.5,
-                                    entity.position().y + 1.7,
-                                    entity.position().z + 0.5));
+                                    entity.position().x - TOTEM_SEARCH_RADIUS,
+                                    entity.position().y
+                                            - 0.35, // Don't modify this unless you are certain it is causing issues
+                                    entity.position().z - TOTEM_SEARCH_RADIUS,
+                                    entity.position().x + TOTEM_SEARCH_RADIUS,
+                                    entity.position().y
+                                            + TOTEM_SEARCH_RADIUS
+                                            + 0.8, // More vertical radius required for totems casted off high places
+                                    entity.position().z + TOTEM_SEARCH_RADIUS));
 
             for (ArmorStand as : toCheck) {
                 if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
