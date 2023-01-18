@@ -80,6 +80,7 @@ public class ShamanTotemModel extends Model {
                     ShamanTotem newTotem = new ShamanTotem(
                             totemNumber,
                             -1,
+                            totemAS.getId(),
                             -1,
                             ShamanTotem.TotemState.SUMMONED,
                             new Location(totemAS.position().x, totemAS.position().y, totemAS.position().z));
@@ -119,7 +120,7 @@ public class ShamanTotemModel extends Model {
         Logic flow for the following bits:
         - First, the given entity is checked to see if it is a totem timer
         - If the given timerId (int entityId) is not already a totem, assign it to the lowest # totem slot
-          - Additionally, assign location, state, and time
+          - Additionally, assign location, state, and time, and keep the old visibleEntityId from when the spell was cast
         - If the given timerId is already a totem, update the time and location instead
           - Location is updated because there are now totems that can move
          */
@@ -146,15 +147,33 @@ public class ShamanTotemModel extends Model {
 
             for (ArmorStand as : toCheck) {
                 if (pendingTotem1Id != null && as.getId() == pendingTotem1Id) {
-                    totem1 = new ShamanTotem(1, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                    totem1 = new ShamanTotem(
+                            1,
+                            entityId,
+                            totem1.getVisibleEntityId(),
+                            parsedTime,
+                            ShamanTotem.TotemState.ACTIVE,
+                            parsedLocation);
                     WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedTime, parsedLocation));
                     pendingTotem1Id = null;
                 } else if (pendingTotem2Id != null && as.getId() == pendingTotem2Id) {
-                    totem2 = new ShamanTotem(2, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                    totem2 = new ShamanTotem(
+                            2,
+                            entityId,
+                            totem2.getVisibleEntityId(),
+                            parsedTime,
+                            ShamanTotem.TotemState.ACTIVE,
+                            parsedLocation);
                     WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedTime, parsedLocation));
                     pendingTotem2Id = null;
                 } else if (pendingTotem3Id != null && as.getId() == pendingTotem3Id) {
-                    totem3 = new ShamanTotem(3, entityId, parsedTime, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                    totem3 = new ShamanTotem(
+                            3,
+                            entityId,
+                            totem3.getVisibleEntityId(),
+                            parsedTime,
+                            ShamanTotem.TotemState.ACTIVE,
+                            parsedLocation);
                     WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedTime, parsedLocation));
                     pendingTotem3Id = null;
                 } else {
@@ -183,13 +202,19 @@ public class ShamanTotemModel extends Model {
 
         List<Integer> destroyedEntities = e.getEntityIds();
 
-        if (totem1 != null && destroyedEntities.contains(totem1.getTimerId())) {
+        if (totem1 != null
+                && (destroyedEntities.contains(totem1.getTimerEntityId())
+                        || destroyedEntities.contains(totem1.getVisibleEntityId()))) {
             removeTotem(1);
         }
-        if (totem2 != null && destroyedEntities.contains(totem2.getTimerId())) {
+        if (totem2 != null
+                && (destroyedEntities.contains(totem2.getTimerEntityId())
+                        || destroyedEntities.contains(totem2.getVisibleEntityId()))) {
             removeTotem(2);
         }
-        if (totem3 != null && destroyedEntities.contains(totem3.getTimerId())) {
+        if (totem3 != null
+                && (destroyedEntities.contains(totem3.getTimerEntityId())
+                        || destroyedEntities.contains(totem3.getVisibleEntityId()))) {
             removeTotem(3);
         }
     }
@@ -285,9 +310,9 @@ public class ShamanTotemModel extends Model {
      * @return The totem bound to the given timerId, or null if no totem is bound
      */
     private ShamanTotem getBoundTotem(int timerId) {
-        if (totem1 != null && totem1.getTimerId() == timerId) return totem1;
-        if (totem2 != null && totem2.getTimerId() == timerId) return totem2;
-        if (totem3 != null && totem3.getTimerId() == timerId) return totem3;
+        if (totem1 != null && totem1.getTimerEntityId() == timerId) return totem1;
+        if (totem2 != null && totem2.getTimerEntityId() == timerId) return totem2;
+        if (totem3 != null && totem3.getTimerEntityId() == timerId) return totem3;
         return null;
     }
 
