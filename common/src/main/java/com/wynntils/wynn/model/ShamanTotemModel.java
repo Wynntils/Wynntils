@@ -55,7 +55,8 @@ public class ShamanTotemModel extends Model {
     public void onTotemSpellCast(SpellCastEvent e) {
         if (e.getSpell() != SpellType.TOTEM) return;
 
-        totemCastTimestamp = System.currentTimeMillis();
+        totemCastTimestamp = System.currentTimeMillis() - 40; // 40 == 2 ticks
+        // The -2 ticks is required so that the #onTotemSpawn event does not occasionally fail the cast timestamp check
     }
 
     @SubscribeEvent
@@ -63,13 +64,11 @@ public class ShamanTotemModel extends Model {
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
+        if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > CAST_DELAY_MAX_MS) return;
+
         Managers.TickScheduler.scheduleLater(
                 () -> {
                     // Checks to verify this is a totem
-                    // This must be ran with a delay, as the totem spawns on the same tick as the spell cast, so we
-                    // cannot immediately check the timestamp
-                    if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > CAST_DELAY_MAX_MS) return;
-
                     // These must be ran with a delay, as health and inventory contents
                     // are set a couple ticks after the totem actually spawns
                     if (Math.abs(totemAS.getHealth() - 1.0f) > 0.0001f) return;
