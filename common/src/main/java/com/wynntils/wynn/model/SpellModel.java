@@ -14,11 +14,9 @@ import com.wynntils.wynn.event.SpellProgressEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.objects.SpellType;
-
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
@@ -35,7 +33,8 @@ public class SpellModel extends Model {
         WynntilsMod.postEvent(new SpellProgressEvent(spell, SpellEvent.Source.HOTBAR));
 
         if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(new SpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
+            WynntilsMod.postEvent(
+                    new SpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 
@@ -46,7 +45,8 @@ public class SpellModel extends Model {
 
         SpellDirection[] spell = getSpellFromMatcher(matcher);
         // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
-        SpellEvent.Source source = (matcher.group(1).endsWith("t")) ? SpellEvent.Source.TITLE_FULL : SpellEvent.Source.TITLE_LETTER;
+        SpellEvent.Source source =
+                (matcher.group(1).endsWith("t")) ? SpellEvent.Source.TITLE_FULL : SpellEvent.Source.TITLE_LETTER;
 
         WynntilsMod.postEvent(new SpellProgressEvent(spell, source));
 

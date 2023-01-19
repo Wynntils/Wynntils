@@ -9,14 +9,12 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.SpellProgressEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -179,6 +177,4 @@ public class QuickCastFeature extends UserFeature {
         PRIMARY,
         SECONDARY
     }
-
-
 }
