@@ -143,18 +143,21 @@ public class ShamanTotemModel extends Model {
             // Recreate location for each ArmorStand checked for most accurate coordinates
             Location parsedLocation = new Location(as.position().x, as.position().y, as.position().z);
             if (pendingTotem1VisibleId != null && as.getId() == pendingTotem1VisibleId) {
-                totem1 = new ShamanTotem(
-                        1, entityId, totem1.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                totem1.setTimerEntityId(entityId);
+                totem1.setLocation(parsedLocation);
+                totem1.setState(ShamanTotem.TotemState.ACTIVE);
                 WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedLocation));
                 pendingTotem1VisibleId = null;
             } else if (pendingTotem2VisibleId != null && as.getId() == pendingTotem2VisibleId) {
-                totem2 = new ShamanTotem(
-                        2, entityId, totem2.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                totem2.setTimerEntityId(entityId);
+                totem2.setLocation(parsedLocation);
+                totem2.setState(ShamanTotem.TotemState.ACTIVE);
                 WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedLocation));
                 pendingTotem2VisibleId = null;
             } else if (pendingTotem3VisibleId != null && as.getId() == pendingTotem3VisibleId) {
-                totem3 = new ShamanTotem(
-                        3, entityId, totem3.getVisibleEntityId(), -1, ShamanTotem.TotemState.ACTIVE, parsedLocation);
+                totem3.setTimerEntityId(entityId);
+                totem3.setLocation(parsedLocation);
+                totem3.setState(ShamanTotem.TotemState.ACTIVE);
                 WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedLocation));
                 pendingTotem3VisibleId = null;
             } else {
