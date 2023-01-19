@@ -22,6 +22,6 @@ public enum SpellDirection {
     }
 
     public static SpellDirection[] invertArray(SpellDirection[] initial) {
-        return (SpellDirection[]) Arrays.stream(initial).map((x) -> (x == RIGHT) ? LEFT : RIGHT).toArray();
+        return Arrays.stream(initial).map((x) -> (x == RIGHT) ? LEFT : RIGHT).toArray(SpellDirection[]::new);
     }
 }
