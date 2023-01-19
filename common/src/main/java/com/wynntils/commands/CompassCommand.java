@@ -18,7 +18,6 @@ import com.wynntils.wynn.model.map.poi.Poi;
 import com.wynntils.wynn.model.map.poi.ServiceKind;
 import com.wynntils.wynn.model.map.poi.ServicePoi;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -144,28 +143,8 @@ public class CompassCommand extends CommandBase {
     private int compassService(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<ServiceKind> matchedKinds = Arrays.stream(ServiceKind.values())
-                .filter(kind -> StringUtils.partialMatch(kind.getName(), searchedName))
-                .toList();
-
-        if (matchedKinds.isEmpty()) {
-            MutableComponent response = Component.literal("Found no services matching '" + searchedName + "'")
-                    .withStyle(ChatFormatting.RED);
-            context.getSource().sendFailure(response);
-            return 0;
-        }
-
-        if (matchedKinds.size() > 1) {
-            MutableComponent response = Component.literal("Found multiple services matching '" + searchedName
-                            + "'. Pleace specify with more detail. Matching: ")
-                    .withStyle(ChatFormatting.RED);
-            response.append(Component.literal(String.join(
-                    ", ", matchedKinds.stream().map(ServiceKind::getName).toList())));
-            context.getSource().sendFailure(response);
-            return 0;
-        }
-
-        ServiceKind selectedKind = matchedKinds.get(0);
+        ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
+        if (selectedKind == null) return 0;
 
         Vec3 currentLocation = McUtils.player().position();
         Optional<ServicePoi> closestServiceOptional = Models.Map.getServicePois().stream()
