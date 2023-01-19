@@ -1,9 +1,21 @@
+## [0.0.2-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.116...v0.0.2-alpha.117) (2023-01-19)
+
+
+### Bug Fixes
+
+* Fix HadesEvent$Authenticated errors ([#1049](https://github.com/Wynntils/Artemis/issues/1049)) ([a06c56c](https://github.com/Wynntils/Artemis/commit/a06c56c2f07aeb744a17843a6289221318843bd2))
+
 ## [0.0.2-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.115...v0.0.2-alpha.116) (2023-01-19)
 
 
 ### Bug Fixes
 
 * Fix MixinExtras bundling for Forge ([#1048](https://github.com/Wynntils/Artemis/issues/1048)) ([37b061c](https://github.com/Wynntils/Artemis/commit/37b061c44762bbddac4438254816bc469858d742))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.116 [skip ci] ([9b46b7c](https://github.com/Wynntils/Artemis/commit/9b46b7ca1e693198753d968cfeb9346ec5b83562))
 
 ## [0.0.2-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.114...v0.0.2-alpha.115) (2023-01-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.113 [skip ci] ([5b8dd1c](https://github.com/Wynntils/Artemis/commit/5b8dd1cd28678260f27ce34110fe573bafd71afe))
-
-## [0.0.2-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.111...v0.0.2-alpha.112) (2023-01-17)
-
-
-### Bug Fixes
-
-* De-duplicate confirmationless NPC dialogue lines ([#1044](https://github.com/Wynntils/Artemis/issues/1044)) ([3b75b1b](https://github.com/Wynntils/Artemis/commit/3b75b1b3d3565dea24fcc7c36a410051aacf0ad0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.112 [skip ci] ([4c3356c](https://github.com/Wynntils/Artemis/commit/4c3356c949b27b0ae2c022c4435b0a9493e5ba8d))
 
