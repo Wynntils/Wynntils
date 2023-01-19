@@ -144,7 +144,7 @@ public final class BufferedRenderUtils {
             float height) {
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_TRIANGLE_STRIP);
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
         buffer.vertex(matrix, x, y + height, z)
                 .color(color.r, color.g, color.b, color.a)
