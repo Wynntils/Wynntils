@@ -7,6 +7,11 @@ package com.wynntils.wynn.event;
 import com.wynntils.wynn.objects.SpellType;
 import net.minecraftforge.eventbus.api.Event;
 
+/**
+ * Fired upon successful, completed spell cast.
+ * FIXME: This event fires upon every three-click sequence, no matter if the spell was actually casted or not.
+ * FIXME: This event should be checking if the cast failed due to mana/unlock restrictions.
+ */
 public class SpellCastEvent extends Event {
 
     private final SpellType spell;
