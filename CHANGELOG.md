@@ -1,9 +1,21 @@
+## [0.0.2-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.117...v0.0.2-alpha.118) (2023-01-19)
+
+
+### Bug Fixes
+
+* BufferedRenderUtils#drawRect now uses the correct CustomRenderType ([#1050](https://github.com/Wynntils/Artemis/issues/1050)) ([86c2709](https://github.com/Wynntils/Artemis/commit/86c2709b743f62b3c25efbb88747c58d4637a9a4))
+
 ## [0.0.2-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.116...v0.0.2-alpha.117) (2023-01-19)
 
 
 ### Bug Fixes
 
 * Fix HadesEvent$Authenticated errors ([#1049](https://github.com/Wynntils/Artemis/issues/1049)) ([a06c56c](https://github.com/Wynntils/Artemis/commit/a06c56c2f07aeb744a17843a6289221318843bd2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.117 [skip ci] ([5c5b72a](https://github.com/Wynntils/Artemis/commit/5c5b72af9124b7d8ba017cafb8535f311df69d1d))
 
 ## [0.0.2-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.115...v0.0.2-alpha.116) (2023-01-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.114 [skip ci] ([b3a1ba9](https://github.com/Wynntils/Artemis/commit/b3a1ba9748c8db0d47edffa4fc9ca40b2acf982e))
-
-## [0.0.2-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.112...v0.0.2-alpha.113) (2023-01-17)
-
-
-### New Features
-
-* totem tracking ([#1005](https://github.com/Wynntils/Artemis/issues/1005)) ([48ca90f](https://github.com/Wynntils/Artemis/commit/48ca90fb3927a07aa210cf6dc537c680da035128))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.113 [skip ci] ([5b8dd1c](https://github.com/Wynntils/Artemis/commit/5b8dd1cd28678260f27ce34110fe573bafd71afe))
 
