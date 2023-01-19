@@ -83,27 +83,46 @@ public class GearTooltipBuilder {
         List<Component> tooltips = new ArrayList<>();
         GearInfo gearInfo = Managers.GearInfo.getGearInfo(gearProfile.getDisplayName());
 
-        // Fixed stats
+        // FIXED STATS
+        // Attack speed
         GearStatsFixed fixedStats = gearInfo.statsFixed();
         Optional<GearAttackSpeed> attackSpeed = fixedStats.attackSpeed();
         if (attackSpeed.isPresent()) {
             tooltips.add(Component.literal(attackSpeed.get().getName()));
         }
         tooltips.add(Component.literal(""));
+
+        // Health
         if (fixedStats.healthBuff() != 0) {
-            tooltips.add(Component.literal("Health: " + StringUtils.toSignedString(fixedStats.healthBuff())));
+            tooltips.add(Component.literal("❤ Health: " + StringUtils.toSignedString(fixedStats.healthBuff()))
+                    .withStyle(ChatFormatting.DARK_RED));
+            tooltips.add(Component.literal(""));
         }
+
+        // Defences
         for (Pair<Element, Integer> defenseValue : fixedStats.defences()) {
-            tooltips.add(Component.literal(defenseValue.key().getDisplayName() + " Defence: "
-                    + StringUtils.toSignedString(defenseValue.value())));
+            tooltips.add(Component.literal(defenseValue.key().getSymbol() + " "
+                            + defenseValue.key().getDisplayName())
+                    .withStyle(defenseValue.key().getColorCode())
+                    .append(Component.literal(" Defence: " + StringUtils.toSignedString(defenseValue.value()))
+                            .withStyle(ChatFormatting.GRAY)));
         }
+
+        // Damages
         for (Pair<GearDamageType, RangedValue> damageValue : fixedStats.damages()) {
-            tooltips.add(Component.literal(damageValue.key().getDisplayName() + " Damage: "
-                    + damageValue.value().asString()));
+            GearDamageType damageType = damageValue.key();
+            tooltips.add(Component.literal(damageType.getSymbol() + " " + damageType.getDisplayName())
+                    .withStyle(damageType.getColorCode())
+                    .append(Component.literal(" Damage: " + damageValue.value().asString())
+                            .withStyle(damageType.getColorCode())));
+
+            // : ChatFormatting.GRAY)); // neutral is all gold ???
         }
+
         if (!fixedStats.damages().isEmpty()) {
             tooltips.add(Component.literal("Average DPS: ???"));
         }
+        tooltips.add(Component.literal(""));
 
         return new FixedTB(tooltips);
     }
