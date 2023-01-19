@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.user;
 
+import static com.wynntils.wynn.objects.SpellDirection.NO_SPELL;
+
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -52,7 +54,6 @@ public class QuickCastFeature extends UserFeature {
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
     private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
-    private static final SpellDirection[] NO_SPELL = new SpellDirection[0];
 
     private SpellDirection[] spellInProgress = NO_SPELL;
 

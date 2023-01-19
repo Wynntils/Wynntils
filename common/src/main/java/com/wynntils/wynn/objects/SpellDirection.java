@@ -16,6 +16,8 @@ public enum SpellDirection {
 
     private final Runnable sendPacketRunnable;
 
+    public static final SpellDirection[] NO_SPELL = new SpellDirection[0];
+
     SpellDirection(Runnable sendPacketRunnable) {
         this.sendPacketRunnable = sendPacketRunnable;
     }

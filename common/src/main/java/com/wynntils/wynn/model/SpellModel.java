@@ -24,7 +24,7 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_TITLE_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
 
-    private SpellDirection[] lastSpell = new SpellDirection[3];
+    private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
     @SubscribeEvent
     public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
