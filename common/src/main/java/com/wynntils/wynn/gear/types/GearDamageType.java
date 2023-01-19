@@ -6,10 +6,11 @@ package com.wynntils.wynn.gear.types;
 
 import com.wynntils.wynn.objects.Element;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 
 public enum GearDamageType {
     ANY(""),
-    NEUTRAL("Neutral"),
+    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD),
     RAINBOW("Elemental"),
     AIR(Element.AIR),
     EARTH(Element.EARTH),
@@ -20,12 +21,26 @@ public enum GearDamageType {
     private final Element element;
     private final String displayName;
     private final String apiName;
+    private final String symbol;
+    private final ChatFormatting colorCode;
 
     GearDamageType(String name) {
         this.element = null;
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
         this.apiName = name;
+        this.symbol = "";
+        this.colorCode = null;
+    }
+
+    GearDamageType(String name, String symbol, ChatFormatting colorCode) {
+        this.element = null;
+        // displayName needs padding if non-empty
+        this.displayName = name.isEmpty() ? "" : name + " ";
+        this.apiName = name;
+
+        this.symbol = symbol;
+        this.colorCode = colorCode;
     }
 
     GearDamageType(Element element) {
@@ -33,6 +48,8 @@ public enum GearDamageType {
         // displayName needs padding
         this.displayName = element.getDisplayName() + " ";
         this.apiName = element.getDisplayName();
+        this.symbol = element.getSymbol();
+        this.colorCode = element.getColorCode();
     }
 
     public static GearDamageType fromElement(Element element) {
@@ -52,5 +69,13 @@ public enum GearDamageType {
 
     public String getApiName() {
         return apiName;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public ChatFormatting getColorCode() {
+        return colorCode;
     }
 }
