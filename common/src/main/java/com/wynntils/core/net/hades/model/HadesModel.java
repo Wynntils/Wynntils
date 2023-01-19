@@ -97,6 +97,8 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
+        WynntilsMod.info("Starting Hades Ping Scheduler Task");
+
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
         pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
