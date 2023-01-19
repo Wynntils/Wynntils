@@ -1,9 +1,21 @@
+## [0.0.2-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.115...v0.0.2-alpha.116) (2023-01-19)
+
+
+### Bug Fixes
+
+* Fix MixinExtras bundling for Forge ([#1048](https://github.com/Wynntils/Artemis/issues/1048)) ([37b061c](https://github.com/Wynntils/Artemis/commit/37b061c44762bbddac4438254816bc469858d742))
+
 ## [0.0.2-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.114...v0.0.2-alpha.115) (2023-01-17)
 
 
 ### Bug Fixes
 
 * Better default config for CustomCharacterSelectionScreenFeature ([#1045](https://github.com/Wynntils/Artemis/issues/1045)) ([a2515bf](https://github.com/Wynntils/Artemis/commit/a2515bfdb936da6308328cbbd82c17ecf88c7bf2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.115 [skip ci] ([65f9ef9](https://github.com/Wynntils/Artemis/commit/65f9ef999367bc69e68c9b3b210468f8c76f6073))
 
 ## [0.0.2-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.113...v0.0.2-alpha.114) (2023-01-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.112 [skip ci] ([4c3356c](https://github.com/Wynntils/Artemis/commit/4c3356c949b27b0ae2c022c4435b0a9493e5ba8d))
-
-## [0.0.2-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.110...v0.0.2-alpha.111) (2023-01-17)
-
-
-### Bug Fixes
-
-* Improve error handling on network error ([#1030](https://github.com/Wynntils/Artemis/issues/1030)) ([81c8369](https://github.com/Wynntils/Artemis/commit/81c83697c85ab6e06960f7a7018cac15c735668f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.111 [skip ci] ([ef874ea](https://github.com/Wynntils/Artemis/commit/ef874ea843642683a00df41befd225a56e21aa28))
 
