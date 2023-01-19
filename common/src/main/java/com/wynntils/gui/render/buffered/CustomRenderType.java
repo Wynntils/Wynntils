@@ -47,9 +47,9 @@ public class CustomRenderType extends RenderType {
                     .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
                     .createCompositeState(false));
 
-    public static final RenderType POSITION_QUAD = RenderType.create(
-            "wynntils_position_texture_quad",
-            DefaultVertexFormat.POSITION_TEX,
+    public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
+            "wynntils_position_color_quad",
+            DefaultVertexFormat.POSITION_COLOR,
             Mode.QUADS,
             256,
             false,
