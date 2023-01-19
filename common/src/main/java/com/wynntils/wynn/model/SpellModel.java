@@ -14,6 +14,7 @@ import com.wynntils.wynn.event.SpellProgressEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.objects.SpellType;
+import java.util.Arrays;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,12 +24,16 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_TITLE_PATTERN =
             StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
 
+    private SpellDirection[] lastSpell = new SpellDirection[3];
+
     @SubscribeEvent
     public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
         Matcher matcher = e.getMatcher();
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(e.getMatcher());
+        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        lastSpell = spell;
 
         WynntilsMod.postEvent(new SpellProgressEvent(spell, SpellEvent.Source.HOTBAR));
 
@@ -44,6 +49,9 @@ public class SpellModel extends Model {
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(matcher);
+        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        lastSpell = spell;
+
         // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
         SpellEvent.Source source =
                 (matcher.group(1).endsWith("t")) ? SpellEvent.Source.TITLE_FULL : SpellEvent.Source.TITLE_LETTER;
