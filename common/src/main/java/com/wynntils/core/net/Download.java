@@ -27,13 +27,13 @@ public class Download extends NetResult {
     // Saved since we might need to get timestamps from the HttpResponse
     private CompletableFuture<HttpResponse<Path>> httpResponse = null;
 
-    public Download(File localFile) {
-        super(null); // Only use cached file
+    public Download(String desc, File localFile) {
+        super("DL:" + desc, null); // Only use cached file
         this.localFile = localFile;
     }
 
-    public Download(File localFile, HttpRequest request) {
-        super(request);
+    public Download(String desc, File localFile, HttpRequest request) {
+        super("DL:" + desc, request);
         this.localFile = localFile;
     }
 

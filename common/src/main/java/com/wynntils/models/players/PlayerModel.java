@@ -5,6 +5,7 @@
 package com.wynntils.models.players;
 
 import com.google.gson.JsonObject;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.ApiResponse;
@@ -28,10 +29,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
+    private static final int MAX_ERRORS = 5;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
+    private int errorCount;
+
+    @Override
+    public void init() {
+        errorCount = 0;
+    }
 
     // Returns true if the player is on the same server and is not a npc
     public boolean isLocalPlayer(Player player) {
@@ -94,19 +102,31 @@ public final class PlayerModel extends Model {
 
     private void loadUser(UUID uuid) {
         if (fetching.contains(uuid)) return;
+        if (errorCount >= MAX_ERRORS) {
+            // Athena is having problems, skip this
+            return;
+        }
 
         fetching.add(uuid); // temporary, avoid extra loads
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
-        apiResponse.handleJsonObject(json -> {
-            if (!json.has("user")) return;
+        apiResponse.handleJsonObject(
+                json -> {
+                    if (!json.has("user")) return;
 
-            JsonObject user = json.getAsJsonObject("user");
-            users.put(
-                    uuid,
-                    new WynntilsUser(AccountType.valueOf(user.get("accountType").getAsString())));
-            fetching.remove(uuid);
-        });
+                    JsonObject user = json.getAsJsonObject("user");
+                    users.put(
+                            uuid,
+                            new WynntilsUser(
+                                    AccountType.valueOf(user.get("accountType").getAsString())));
+                    fetching.remove(uuid);
+                },
+                onError -> {
+                    errorCount++;
+                    if (errorCount >= MAX_ERRORS) {
+                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups.");
+                    }
+                });
     }
 
     private void clearUserCache() {
