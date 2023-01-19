@@ -63,12 +63,9 @@ public class ShamanTotemModel extends Model {
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
-        // Checks to verify this is a totem
-        if (Math.abs(totemAS.getMyRidingOffset() - 0.10000000149011612f) > 0.00000000000012f) return;
-
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    // Continue checks to verify this is a totem
+                    // Checks to verify this is a totem
                     // This must be ran with a delay, as the totem spawns on the same tick as the spell cast, so we
                     // cannot immediately check the timestamp
                     if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > CAST_DELAY_MAX_MS) return;
