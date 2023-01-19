@@ -49,6 +49,7 @@ public class ShamanTotemModel extends Model {
 
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
     private static final double TOTEM_SEARCH_RADIUS = 1.0;
+    private static final int CAST_DELAY_MAX_MS = 450;
 
     @SubscribeEvent
     public void onTotemSpellCast(SpellCastEvent e) {
@@ -59,23 +60,29 @@ public class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
+        Entity entity = getBufferedEntity(e.getId());
+        if (!(entity instanceof ArmorStand totemAS)) return;
+
+        // Checks to verify this is a totem
+        if (Math.abs(totemAS.getMyRidingOffset() - 0.10000000149011612f) > 0.00000000000012f) return;
+
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > 450) return;
-                    Entity entity = getBufferedEntity(e.getId());
-                    if (!(entity instanceof ArmorStand totemAS)) return;
+                    // Continue checks to verify this is a totem
+                    // This must be ran with a delay, as the totem spawns on the same tick as the spell cast, so we
+                    // cannot immediately check the timestamp
+                    if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > CAST_DELAY_MAX_MS) return;
 
-                    // Checks to verify this is a totem
-                    if (Math.abs(totemAS.getMyRidingOffset() - 0.10000000149011612f) > 0.00000000000012f) return;
+                    // These must be ran with a delay, as health and inventory contents
+                    // are set a couple ticks after the totem actually spawns
                     if (Math.abs(totemAS.getHealth() - 1.0f) > 0.0001f) return;
-                    if (Math.abs(totemAS.getEyeHeight() - 1.7775f) > 0.00001f) return;
                     List<ItemStack> inv = new ArrayList<>();
                     totemAS.getArmorSlots().forEach(inv::add);
                     if (inv.size() < 4 || inv.get(3).getItem() != Items.STONE_SHOVEL) return;
+                    // Checks complete, this is a valid totem
 
                     int totemNumber = getNextTotemSlot();
 
-                    // Chores complete, this is a valid totem
                     WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, (ArmorStand) entity));
 
                     ShamanTotem newTotem = new ShamanTotem(
