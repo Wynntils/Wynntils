@@ -14,8 +14,10 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.ItemUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.wynn.event.SpellProgressEvent;
 import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
+import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
@@ -29,8 +31,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,22 +65,8 @@ public class QuickCastFeature extends UserFeature {
     private int lastSelectedSlot = 0;
 
     @SubscribeEvent
-    public void onSubtitleUpdate(SubtitleSetTextEvent e) {
-        // only actually used when player is still low-level
-        if (!WynnUtils.onWorld()) return;
-
-        Matcher matcher = SPELL_TITLE_PATTERN.matcher(e.getComponent().getString());
-        if (!matcher.matches()) return;
-
-        SpellDirection[] spell = getSpellFromMatcher(matcher);
-
-        updateSpell(spell);
-    }
-
-    @SubscribeEvent
-    public void updateSpellFromActionBar(SpellSegmentUpdateEvent event) {
-        SpellDirection[] spell = getSpellFromMatcher(event.getMatcher());
-        updateSpell(spell);
+    public void onSpellSequenceUpdate(SpellProgressEvent e) {
+        updateSpell(e.getSpellDirectionArray());
     }
 
     private void updateSpell(SpellDirection[] spell) {
@@ -92,20 +78,6 @@ public class QuickCastFeature extends UserFeature {
             spellInProgress = spell;
             spellCountdown = 40;
         }
-    }
-
-    private static SpellDirection[] getSpellFromMatcher(Matcher spellMatcher) {
-        int size = 1;
-        for (; size < 3; ++size) {
-            if (spellMatcher.group(size + 1).equals("?")) break;
-        }
-
-        SpellDirection[] spell = new SpellDirection[size];
-        for (int i = 0; i < size; ++i) {
-            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R' ? SpellDirection.RIGHT : SpellDirection.LEFT;
-        }
-
-        return spell;
     }
 
     private void castFirstSpell() {
@@ -208,18 +180,5 @@ public class QuickCastFeature extends UserFeature {
         SECONDARY
     }
 
-    private enum SpellDirection {
-        RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
-        LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
 
-        private final Runnable sendPacketRunnable;
-
-        SpellDirection(Runnable sendPacketRunnable) {
-            this.sendPacketRunnable = sendPacketRunnable;
-        }
-
-        private Runnable getSendPacketRunnable() {
-            return sendPacketRunnable;
-        }
-    }
 }

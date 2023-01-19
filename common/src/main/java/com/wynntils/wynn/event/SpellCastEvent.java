@@ -4,6 +4,7 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.objects.SpellType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -12,11 +13,12 @@ import net.minecraftforge.eventbus.api.Event;
  * FIXME: This event fires upon every three-click sequence, no matter if the spell was actually casted or not.
  * FIXME: This event should be checking if the cast failed due to mana/unlock restrictions.
  */
-public class SpellCastEvent extends Event {
+public class SpellCastEvent extends SpellEvent {
 
     private final SpellType spell;
 
-    public SpellCastEvent(SpellType spell) {
+    public SpellCastEvent(SpellDirection[] spellDirectionArray, Source source, SpellType spell) {
+        super(spellDirectionArray, source);
         this.spell = spell;
     }
 
