@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.gui;
 
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
 
 public class CosmeticItem extends GuiItem {
     private final CustomColor highlightColor;

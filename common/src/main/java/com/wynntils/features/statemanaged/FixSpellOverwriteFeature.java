@@ -8,7 +8,7 @@ import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.GuiAccessor;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.Gui;

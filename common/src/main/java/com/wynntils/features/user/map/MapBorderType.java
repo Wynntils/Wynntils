@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user.map;
 
-import com.wynntils.gui.render.Texture;
+import com.wynntils.utils.render.Texture;
 
 public enum MapBorderType {
     Gilded(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),

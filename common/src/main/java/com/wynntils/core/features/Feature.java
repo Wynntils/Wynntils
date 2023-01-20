@@ -16,7 +16,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

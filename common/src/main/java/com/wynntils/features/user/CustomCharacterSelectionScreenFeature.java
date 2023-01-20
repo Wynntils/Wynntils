@@ -9,10 +9,10 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

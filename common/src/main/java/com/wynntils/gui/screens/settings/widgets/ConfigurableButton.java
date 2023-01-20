@@ -9,15 +9,15 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.CommonColors;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {

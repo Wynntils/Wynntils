@@ -6,7 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 
 public class MinecraftFunctions {
     public static class XFunction extends Function<Integer> {

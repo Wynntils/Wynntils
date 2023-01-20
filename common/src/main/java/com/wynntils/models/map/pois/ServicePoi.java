@@ -5,10 +5,10 @@
 package com.wynntils.models.map.pois;
 
 import com.wynntils.features.user.map.MapFeature;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.utils.render.Texture;
 
 public class ServicePoi extends StaticIconPoi {
     private final ServiceKind kind;

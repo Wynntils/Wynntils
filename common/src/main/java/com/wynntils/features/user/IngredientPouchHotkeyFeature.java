@@ -9,8 +9,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.wynn.utils.InventoryUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)

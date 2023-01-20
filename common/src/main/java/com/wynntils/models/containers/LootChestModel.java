@@ -10,9 +10,9 @@ import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.wynn.utils.WynnItemMatchers;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

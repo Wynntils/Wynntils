@@ -8,7 +8,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.screens.WynntilsMenuScreen;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
 import com.wynntils.mc.event.PauseMenuInitEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

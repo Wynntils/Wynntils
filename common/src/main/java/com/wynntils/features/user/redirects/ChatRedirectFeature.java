@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.wynn.utils.WynnPlayerUtils;
+import com.wynntils.utils.wynn.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

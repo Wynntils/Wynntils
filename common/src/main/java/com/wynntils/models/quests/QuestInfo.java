@@ -5,14 +5,14 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.RenderedStringUtils;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
-import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

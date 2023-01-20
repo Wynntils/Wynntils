@@ -9,9 +9,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 

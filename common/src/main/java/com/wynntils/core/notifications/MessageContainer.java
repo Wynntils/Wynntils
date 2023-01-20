@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.notifications;
 
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
 import java.util.Objects;
 
 public class MessageContainer {

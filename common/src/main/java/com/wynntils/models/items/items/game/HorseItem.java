@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.utils.CappedValue;
+import com.wynntils.utils.type.CappedValue;
 
 public class HorseItem extends GameItem {
     private final int tier;
