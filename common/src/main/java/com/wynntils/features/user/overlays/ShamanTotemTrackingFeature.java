@@ -209,7 +209,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                 case NONE -> suffix = " (" + shamanTotem.getTime() + " s)";
                                 case COORDS -> {
                                     suffix = " (" + shamanTotem.getTime() + " s)";
-                                    detail = shamanTotem.getLocation().toString();
+                                    detail = " " + shamanTotem.getLocation().toString();
                                 }
                                 case DISTANCE -> suffix = " (" + shamanTotem.getTime() + " s, "
                                         + Math.round(McUtils.player()
