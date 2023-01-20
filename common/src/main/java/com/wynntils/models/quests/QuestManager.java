@@ -5,12 +5,14 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.handlers.scoreboard.ScoreboardListener;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
@@ -27,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestManager extends Manager {
-    public static final ScoreboardListener SCOREBOARD_LISTENER = new QuestScoreboardListener();
+    private static final ScoreboardPart QUEST_SCOREBOARD_PART = new QuestScoreboardPart();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
@@ -43,9 +45,19 @@ public final class QuestManager extends Manager {
         super(List.of(netManager));
     }
 
+    public void initWorkaround() {
+        // FIXME: A Handler accessed from a Manager, not good. Will be fixed when this becomes
+        // a Model.
+        Handlers.Scoreboard.addPart(QUEST_SCOREBOARD_PART);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         reset();
+    }
+
+    public boolean isQuestSegment(ScoreboardSegment segment) {
+        return segment.getMatcher() == QuestScoreboardPart.QUEST_MATCHER;
     }
 
     private void reset() {

@@ -6,16 +6,20 @@ package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.handlers.scoreboard.ScoreboardListener;
-import com.wynntils.handlers.scoreboard.Segment;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.handlers.scoreboard.ScoreboardSegment;
+import com.wynntils.handlers.scoreboard.SegmentMatcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ObjectiveListener implements ScoreboardListener {
+public class ObjectivesScoreboardPart implements ScoreboardPart {
+    static final SegmentMatcher OBJECTIVES_MATCHER = SegmentMatcher.fromPattern("([★⭑] )?(Daily )?Objectives?:");
+    static final SegmentMatcher GUILD_OBJECTIVES_MATCHER = SegmentMatcher.fromPattern("([★⭑] )?Guild Obj: (.+)");
+
     // §b is guild objective, §a is normal objective and §c is daily objective
     private static final Pattern OBJECTIVE_PATTERN_ONE_LINE =
             Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
@@ -24,12 +28,17 @@ public class ObjectiveListener implements ScoreboardListener {
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
     @Override
-    public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
+    public Set<SegmentMatcher> getSegmentMatchers() {
+        return Set.of(OBJECTIVES_MATCHER, GUILD_OBJECTIVES_MATCHER);
+    }
+
+    @Override
+    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
         List<WynnObjective> objectives = parseObjectives(newValue).stream()
                 .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
                 .toList();
 
-        if (segmentType == ScoreboardModel.SegmentType.GuildObjective) {
+        if (segmentMatcher == GUILD_OBJECTIVES_MATCHER) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
                     Managers.Objectives.updateGuildObjective(objective);
@@ -47,7 +56,7 @@ public class ObjectiveListener implements ScoreboardListener {
         }
     }
 
-    private List<WynnObjective> parseObjectives(Segment segment) {
+    private List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
         List<String> actualContent = new ArrayList<>();
@@ -102,7 +111,7 @@ public class ObjectiveListener implements ScoreboardListener {
     }
 
     @Override
-    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
+    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
         List<WynnObjective> objectives = parseObjectives(segment);
 
         for (WynnObjective objective : objectives) {

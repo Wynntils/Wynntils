@@ -25,7 +25,6 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
 public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
@@ -43,7 +42,6 @@ public final class Models {
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final PlayerModel Player = new PlayerModel();
-    public static final ScoreboardModel Scoreboard = new ScoreboardModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
