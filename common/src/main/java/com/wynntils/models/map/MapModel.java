@@ -16,7 +16,7 @@ import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.ServicePoi;
 import com.wynntils.models.map.type.CombatKind;
 import com.wynntils.models.map.type.ServiceKind;
-import com.wynntils.utils.BoundingBox;
+import com.wynntils.utils.type.BoundingBox;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;

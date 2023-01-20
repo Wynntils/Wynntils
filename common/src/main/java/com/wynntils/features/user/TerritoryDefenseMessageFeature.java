@@ -6,9 +6,9 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LoreUtils;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;

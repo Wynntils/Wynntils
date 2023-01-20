@@ -6,7 +6,7 @@ package com.wynntils.models.items.items.gui;
 
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.properties.CountedItemProperty;
-import com.wynntils.utils.Pair;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class IngredientPouchItem extends GuiItem implements CountedItemProperty {

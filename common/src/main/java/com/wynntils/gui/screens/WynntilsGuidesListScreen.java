@@ -5,10 +5,6 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.guides.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.gui.screens.guides.WynntilsIngredientGuideScreen;
 import com.wynntils.gui.screens.guides.WynntilsItemGuideScreen;
@@ -16,9 +12,13 @@ import com.wynntils.gui.screens.guides.WynntilsPowderGuideScreen;
 import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.GuidesButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.utils.CommonColors;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;

@@ -5,11 +5,11 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

@@ -6,7 +6,7 @@ package com.wynntils.gui.widgets;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;

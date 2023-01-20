@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.abilities;
 
-import com.wynntils.mc.objects.Location;
+import com.wynntils.utils.mc.type.Location;
 
 public class ShamanTotem {
     private final int totemNumber;

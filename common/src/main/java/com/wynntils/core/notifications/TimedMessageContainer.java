@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.notifications;
 
-import com.wynntils.gui.render.TextRenderTask;
+import com.wynntils.utils.render.TextRenderTask;
 
 public class TimedMessageContainer {
     private final MessageContainer messageContainer;
