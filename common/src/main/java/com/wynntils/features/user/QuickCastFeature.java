@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import static com.wynntils.wynn.objects.SpellDirection.NO_SPELL;
-
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -55,7 +53,7 @@ public class QuickCastFeature extends UserFeature {
     private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
-    private SpellDirection[] spellInProgress = NO_SPELL;
+    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
     private static final Queue<Runnable> SPELL_PACKET_QUEUE = new LinkedList<>();
 
@@ -71,7 +69,7 @@ public class QuickCastFeature extends UserFeature {
     private void updateSpell(SpellDirection[] spell) {
         if (Arrays.equals(spellInProgress, spell)) return;
         if (spell.length == 3) {
-            spellInProgress = NO_SPELL;
+            spellInProgress = SpellDirection.NO_SPELL;
             spellCountdown = 0;
         } else {
             spellInProgress = spell;
