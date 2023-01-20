@@ -1,9 +1,21 @@
+## [0.0.2-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.127...v0.0.2-alpha.128) (2023-01-20)
+
+
+### Code Refactoring
+
+* Move all utils under top-level util hierarchy ([#1062](https://github.com/Wynntils/Artemis/issues/1062)) ([2752498](https://github.com/Wynntils/Artemis/commit/275249887c613e8c26c34a40ddb8d6a7ad77d34d))
+
 ## [0.0.2-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.126...v0.0.2-alpha.127) (2023-01-20)
 
 
 ### Code Refactoring
 
 * Remove ScoreboardModel ([#1059](https://github.com/Wynntils/Artemis/issues/1059)) ([e01f7f0](https://github.com/Wynntils/Artemis/commit/e01f7f03742b2db5e520e3abcfbd1403d8e66f29))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.127 [skip ci] ([3160a35](https://github.com/Wynntils/Artemis/commit/3160a35867ab6aec950a0f94116dd15e6eb165ea))
 
 ## [0.0.2-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.125...v0.0.2-alpha.126) (2023-01-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.124 [skip ci] ([e844920](https://github.com/Wynntils/Artemis/commit/e844920a6996afc30e05edc88fb5d881290fca19))
-
-## [0.0.2-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.122...v0.0.2-alpha.123) (2023-01-20)
-
-
-### New Features
-
-* Several main map UX improvements ([#1054](https://github.com/Wynntils/Artemis/issues/1054)) ([b57b855](https://github.com/Wynntils/Artemis/commit/b57b855a4c1d52dc8019a75b4568bab56049d022))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.123 [skip ci] ([90e970d](https://github.com/Wynntils/Artemis/commit/90e970d81b23aaa15bf3049d956d6cd106d9f9d1))
 
