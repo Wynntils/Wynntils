@@ -334,8 +334,6 @@
   "feature.wynntils.map.minTierForAutoWaypoint.name": "Minimum Láda Szintje az Automatikus Jelöléshez",
   "feature.wynntils.map.name": "Térkép",
   "feature.wynntils.map.playerPointerScale.description": "Milyen nagy legyen a játékos jelölése?",
-  "feature.wynntils.map.poiFadeDistance.description": "Milyen hosszan halványuljanak a térképen jelölt pontok?",
-  "feature.wynntils.map.poiFadeDistance.name": "Térképen Jelölt Pontok Halványulása",
   "feature.wynntils.map.poiScale.description": "Milyen nagyságúak legyenek a jelölések ikonjai?",
   "feature.wynntils.map.poiScale.name": "Térképen Jelölt Pontok Mérete",
   "feature.wynntils.map.pointerColor.description": "Milyen színű legyen a térkép fő jelölője?",
