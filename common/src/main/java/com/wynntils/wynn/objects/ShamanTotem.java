@@ -8,14 +8,22 @@ import com.wynntils.mc.objects.Location;
 
 public class ShamanTotem {
     private final int totemNumber;
-    private int timerId;
+    private final int visibleEntityId;
+    private int timerEntityId;
     private int time;
     private TotemState state;
     private Location location;
 
-    public ShamanTotem(int totemNumber, int timerId, int time, TotemState totemState, Location location) {
+    public ShamanTotem(
+            int totemNumber,
+            int timerEntityId,
+            int visibleEntityId,
+            int time,
+            TotemState totemState,
+            Location location) {
         this.totemNumber = totemNumber;
-        this.timerId = timerId;
+        this.timerEntityId = timerEntityId;
+        this.visibleEntityId = visibleEntityId;
         this.time = time;
         this.state = totemState;
         this.location = location;
@@ -25,12 +33,16 @@ public class ShamanTotem {
         return totemNumber;
     }
 
-    public int getTimerId() {
-        return timerId;
+    public int getVisibleEntityId() {
+        return visibleEntityId;
     }
 
-    public void setTimerId(int timerId) {
-        this.timerId = timerId;
+    public int getTimerEntityId() {
+        return timerEntityId;
+    }
+
+    public void setTimerEntityId(int timerEntityId) {
+        this.timerEntityId = timerEntityId;
     }
 
     public int getTime() {
