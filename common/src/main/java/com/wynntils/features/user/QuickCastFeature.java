@@ -146,7 +146,7 @@ public class QuickCastFeature extends UserFeature {
         if (!WynnUtils.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = NO_SPELL;
+        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = SpellDirection.NO_SPELL;
 
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
@@ -165,7 +165,7 @@ public class QuickCastFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         SPELL_PACKET_QUEUE.clear();
-        spellInProgress = NO_SPELL;
+        spellInProgress = SpellDirection.NO_SPELL;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
