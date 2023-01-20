@@ -6,8 +6,8 @@ package com.wynntils.wynn.handleditems.annotators.gui;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.wynn.handleditems.items.gui.CosmeticItem;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -30,7 +30,7 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
     }
 
     private static boolean isCosmetic(ItemStack itemStack) {
-        for (Component c : ItemUtils.getTooltipLines(itemStack)) {
+        for (Component c : LoreUtils.getTooltipLines(itemStack)) {
             if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
         }
         return false;

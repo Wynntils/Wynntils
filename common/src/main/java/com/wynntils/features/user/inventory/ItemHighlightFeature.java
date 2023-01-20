@@ -14,7 +14,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.wynn.handleditems.WynnItem;
 import com.wynntils.wynn.handleditems.WynnItemCache;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;

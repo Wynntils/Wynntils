@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.objects.EmeraldSymbols;
@@ -30,7 +30,7 @@ public final class EmeraldPouchAnnotator implements ItemAnnotator {
 
         int tier = MathUtils.integerFromRoman(matcher.group(1));
 
-        Matcher amountMatcher = ItemUtils.matchLoreLine(itemStack, 0, EMERALD_POUCH_LORE_PATTERN);
+        Matcher amountMatcher = LoreUtils.matchLoreLine(itemStack, 0, EMERALD_POUCH_LORE_PATTERN);
         // This can be an emerald pouch on the trade market, it has no amount line
         if (!amountMatcher.matches()) return new EmeraldPouchItem(tier, 0);
 

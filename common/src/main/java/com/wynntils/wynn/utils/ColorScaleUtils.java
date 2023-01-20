@@ -2,8 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils;
+package com.wynntils.wynn.utils;
 
+import com.wynntils.utils.MathUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -16,7 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
-public final class ColorUtils {
+public final class ColorScaleUtils {
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),

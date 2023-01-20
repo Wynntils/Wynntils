@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.annotators.gui;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.handleditems.items.gui.SkillPointItem;
 import com.wynntils.wynn.objects.Skill;
 import java.util.regex.Matcher;
@@ -25,7 +25,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
         String skillName = matcher.group(1);
         Skill skill = Skill.fromString(skillName);
 
-        Matcher m = ItemUtils.matchLoreLine(itemStack, 3, LORE_PATTERN);
+        Matcher m = LoreUtils.matchLoreLine(itemStack, 3, LORE_PATTERN);
         if (!m.matches()) return null;
 
         int skillPoints = Integer.parseInt(m.group(1));

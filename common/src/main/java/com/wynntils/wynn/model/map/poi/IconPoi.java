@@ -12,8 +12,8 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedRenderUtils;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 

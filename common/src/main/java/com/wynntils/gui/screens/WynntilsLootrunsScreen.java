@@ -17,7 +17,7 @@ import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.utils.CommonColors;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.wynn.event.LootrunCacheRefreshEvent;

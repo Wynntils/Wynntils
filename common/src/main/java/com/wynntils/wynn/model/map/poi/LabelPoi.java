@@ -10,7 +10,7 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 

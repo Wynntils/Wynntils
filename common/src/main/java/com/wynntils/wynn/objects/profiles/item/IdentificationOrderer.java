@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.objects.profiles.item;
 
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -72,7 +72,7 @@ public class IdentificationOrderer {
                 int currentGroup = getGroup(keys.getKey()); // next key group
 
                 if (currentGroup != lastGroup)
-                    result.add(ItemUtils.toLoreStringTag(
+                    result.add(LoreUtils.toLoreStringTag(
                             Component.literal(" "))); // adds a space before if the group is different
 
                 result.add(keys.getValue());

@@ -7,7 +7,7 @@ package com.wynntils.wynn.utils;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.mc.utils.KeyboardUtils;
 import com.wynntils.wynn.objects.GearIdentificationContainer;
 import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;

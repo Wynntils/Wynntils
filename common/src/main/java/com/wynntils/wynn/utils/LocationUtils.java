@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.utils;
+package com.wynntils.wynn.utils;
 
 import com.wynntils.mc.objects.Location;
+import com.wynntils.mc.utils.McUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

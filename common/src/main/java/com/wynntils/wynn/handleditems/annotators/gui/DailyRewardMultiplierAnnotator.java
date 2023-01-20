@@ -7,7 +7,7 @@ package com.wynntils.wynn.handleditems.annotators.gui;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.handleditems.items.gui.DailyRewardItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,7 +19,7 @@ public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
         try {
             // Multiplier line is always on index 3
             String loreLine =
-                    ComponentUtils.stripFormatting(ItemUtils.getLore(itemStack).get(3));
+                    ComponentUtils.stripFormatting(LoreUtils.getLore(itemStack).get(3));
             String value = String.valueOf(loreLine.charAt(loreLine.indexOf("Streak Multiplier: ") + 19));
             int count = Integer.parseInt(value);
             return new DailyRewardItem(count);

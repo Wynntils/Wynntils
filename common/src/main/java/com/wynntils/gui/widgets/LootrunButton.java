@@ -13,11 +13,11 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsLootrunsScreen;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.KeyboardUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.wynn.model.LootrunModel;
 import java.io.File;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public class LootrunButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StringUtils.getMaxFittingText(
+                        RenderedStringUtils.getMaxFittingText(
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),

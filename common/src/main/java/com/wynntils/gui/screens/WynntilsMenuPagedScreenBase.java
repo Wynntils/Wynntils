@@ -9,7 +9,7 @@ import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.utils.CommonColors;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsMenuPagedScreenBase extends WynntilsMenuScreenBase {

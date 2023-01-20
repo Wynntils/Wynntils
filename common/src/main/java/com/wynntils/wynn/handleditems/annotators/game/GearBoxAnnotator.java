@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
 import com.wynntils.wynn.objects.profiles.item.GearType;
@@ -42,7 +42,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
     }
 
     private static String getLevelRange(ItemStack itemStack) {
-        Matcher matcher = ItemUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
         if (!matcher.matches()) return null;
         return matcher.group(1) + "-" + matcher.group(2);
     }

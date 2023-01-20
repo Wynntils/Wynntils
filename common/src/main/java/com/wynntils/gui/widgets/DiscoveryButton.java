@@ -12,9 +12,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryInfo;
 import com.wynntils.wynn.model.discoveries.objects.DiscoveryType;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StringUtils.getMaxFittingText(
+                        RenderedStringUtils.getMaxFittingText(
                                 discoveryInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
