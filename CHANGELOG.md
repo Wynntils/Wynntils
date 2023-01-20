@@ -1,9 +1,17 @@
+## [0.0.2-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.120...v0.0.2-alpha.121) (2023-01-20)
+
+
+### Code Refactoring
+
+* integrate SpellModel with QuickCastFeature ([#1051](https://github.com/Wynntils/Artemis/issues/1051)) ([24fe4d9](https://github.com/Wynntils/Artemis/commit/24fe4d93aec5f26df1f2b78d07ea304930875467))
+
 ## [0.0.2-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.119...v0.0.2-alpha.120) (2023-01-20)
 
 
 ### Miscellaneous Chores
 
 * Don't build on drafts ([#1053](https://github.com/Wynntils/Artemis/issues/1053)) ([8f29c26](https://github.com/Wynntils/Artemis/commit/8f29c26b14dc3b5c3eb4f5808b0b2df68b952181))
+* **release:** v0.0.2-alpha.120 [skip ci] ([2cb4444](https://github.com/Wynntils/Artemis/commit/2cb444486c382c75b191e0c3b719aaae529a7c66))
 
 ## [0.0.2-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.118...v0.0.2-alpha.119) (2023-01-20)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.117 [skip ci] ([5c5b72a](https://github.com/Wynntils/Artemis/commit/5c5b72af9124b7d8ba017cafb8535f311df69d1d))
-
-## [0.0.2-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.115...v0.0.2-alpha.116) (2023-01-19)
-
-
-### Bug Fixes
-
-* Fix MixinExtras bundling for Forge ([#1048](https://github.com/Wynntils/Artemis/issues/1048)) ([37b061c](https://github.com/Wynntils/Artemis/commit/37b061c44762bbddac4438254816bc469858d742))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.116 [skip ci] ([9b46b7c](https://github.com/Wynntils/Artemis/commit/9b46b7ca1e693198753d968cfeb9346ec5b83562))
 
