@@ -298,9 +298,7 @@ public final class ScoreboardHandler extends Handler {
 
     private List<SegmentMatcher> getSegmentMatchers() {
         // FIXME: Not very efficient; cache this!
-        return scoreboardParts.stream()
-                .flatMap(mapper -> getSegmentMatchers().stream())
-                .toList();
+        return scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
     }
 
     public void init() {
