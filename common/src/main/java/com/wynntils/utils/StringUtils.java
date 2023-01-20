@@ -61,15 +61,6 @@ public final class StringUtils {
         return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
     }
 
-    /**
-     * Creates a new pattern, but replaces all occurrences of '§' in the regex with an expression for detecting any color code
-     * @param regex - the expression to be modified and compiled
-     * @return a Pattern with the modified regex
-     */
-    public static Pattern compileCCRegex(String regex) {
-        return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
-    }
-
     public static String encodeUrl(String url) {
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }

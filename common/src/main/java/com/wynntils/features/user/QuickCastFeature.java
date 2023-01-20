@@ -12,10 +12,9 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.models.spells.event.SpellProgressEvent;
+import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.SpellProgressEvent;
-import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
@@ -48,10 +47,8 @@ public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
-    private static final Pattern SPELL_TITLE_PATTERN =
-            StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
-    private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
-    private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
+    private static final Pattern INCORRECT_CLASS_PATTERN = compileCCRegex("§✖§ Class Req: (.+)");
+    private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
     private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
@@ -170,6 +167,10 @@ public class QuickCastFeature extends UserFeature {
 
     private static void sendCancelReason(MutableComponent reason) {
         Managers.Notification.queueMessage(reason.withStyle(ChatFormatting.RED));
+    }
+
+    private static Pattern compileCCRegex(String regex) {
+        return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
     }
 
     public enum SpellUnit {
