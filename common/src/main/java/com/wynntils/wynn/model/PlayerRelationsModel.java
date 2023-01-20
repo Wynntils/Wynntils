@@ -43,6 +43,8 @@ public final class PlayerRelationsModel extends Model {
             Pattern.compile("§eSay hello to (.+) which just joined your party!");
     private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
             Pattern.compile("§eYou have been removed from the party.");
+    private static final Pattern PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN =
+            Pattern.compile("§eYou must be in a party to leave\\.");
     private static final Pattern PARTY_SELF_JOIN_MESSAGE_PATTERN =
             Pattern.compile("§eYou have successfully joined the party.");
     private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded.");
@@ -123,7 +125,7 @@ public final class PlayerRelationsModel extends Model {
 
     private boolean tryParsePartyMessages(String coded) {
         if (PARTY_DISBAND.matcher(coded).matches()
-                || PARTY_SELF_LEAVE_MESSAGE_PATTERN.matcher(coded).matches()) {
+                || PARTY_SELF_LEAVE_MESSAGE_PATTERN.matcher(coded).matches() || PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
 
             partyMembers = Set.of();
