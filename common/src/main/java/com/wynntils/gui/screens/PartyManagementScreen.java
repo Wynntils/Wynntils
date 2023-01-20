@@ -3,11 +3,9 @@ package com.wynntils.gui.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.FrameWidget;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -92,7 +90,7 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         // region Party list headers
-        RenderUtils.drawRect(poseStack, CustomColor.fromHexString("0xffffff"), this.width / 2, this.height / 2, 0, 20, 20);
+        RenderUtils.drawRect(poseStack, CustomColor.fromHexString("0xFFFFFF"), this.width / 2, this.height / 2, 0, 20, 20);
 
         // something about a fontrenderer
     }
