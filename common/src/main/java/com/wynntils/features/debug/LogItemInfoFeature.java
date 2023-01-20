@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.McUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
@@ -32,7 +32,7 @@ public class LogItemInfoFeature extends DebugFeature {
     private void logItem(ItemStack itemStack) {
         String sb = "[Logging Item]\nName: "
                 + itemStack.getHoverName().getString() + "\nLore:\n"
-                + String.join("\n", ItemUtils.getLore(itemStack)) + "\nItem Type: "
+                + String.join("\n", LoreUtils.getLore(itemStack)) + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nNBT: "
                 + itemStack.getTag() + "\nGlint: "

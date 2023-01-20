@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;

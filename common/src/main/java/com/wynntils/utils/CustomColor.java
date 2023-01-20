@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.objects;
+package com.wynntils.utils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -10,10 +10,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.wynntils.utils.MathUtils;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.CRC32;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Mth;
 
@@ -22,6 +25,7 @@ public class CustomColor {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})");
     private static final Pattern STRING_PATTERN = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");
+    private static final Map<String, CustomColor> REGISTERED_HASHED_COLORS = new HashMap<>();
 
     public final int r;
     public final int g;
@@ -133,6 +137,25 @@ public class CustomColor {
                 Integer.parseInt(stringMatcher.group(2)),
                 Integer.parseInt(stringMatcher.group(3)),
                 Integer.parseInt(stringMatcher.group(4)));
+    }
+
+    /**
+     * Generates a Color based in the input string
+     * The color will be always the same if the string is the same
+     *
+     * @param input the input stream
+     * @return the color
+     */
+    public static CustomColor colorForStringHash(String input) {
+        if (REGISTERED_HASHED_COLORS.containsKey(input)) return REGISTERED_HASHED_COLORS.get(input);
+
+        CRC32 crc32 = new CRC32();
+        crc32.update(input.getBytes(StandardCharsets.UTF_8));
+
+        CustomColor color = fromInt(((int) crc32.getValue()) & 0xFFFFFF).withAlpha(255);
+        REGISTERED_HASHED_COLORS.put(input, color);
+
+        return color;
     }
 
     public CustomColor withAlpha(int a) {

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.objects;
+package com.wynntils.utils;
 
 public final class CommonColors {
     public static final CustomColor BLACK = CustomColor.fromInt(0x000000).withAlpha(255);

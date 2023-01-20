@@ -4,8 +4,8 @@
  */
 package com.wynntils.gui.render;
 
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 
 public record TextRenderSetting(
         float maxWidth,

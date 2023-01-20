@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 
 public class CustomColorConfigOptionElement extends TextConfigOptionElement {
     public CustomColorConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen) {
