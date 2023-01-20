@@ -151,15 +151,17 @@ public final class TerritoryManager extends Manager {
         // level = 1 is also injected.
 
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
-        dl.handleJsonObject(json -> {
-            if (!json.has("territories")) return;
+        dl.handleJsonObject(
+                json -> {
+                    if (!json.has("territories")) return;
 
-            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-            territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
-            allTerritoryPois =
-                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
-            // TODO: Add events if territories changed
-        },
+                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+                    territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+                    allTerritoryPois = territoryProfileMap.values().stream()
+                            .map(TerritoryPoi::new)
+                            .collect(Collectors.toSet());
+                    // TODO: Add events if territories changed
+                },
                 onError -> {
                     errorCount++;
                     if (errorCount >= MAX_ERRORS) {
