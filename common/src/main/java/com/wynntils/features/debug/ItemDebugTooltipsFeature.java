@@ -11,7 +11,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.KeyboardUtils;
 import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.RenderedStringUtils;
-import com.wynntils.wynn.handleditems.WynnItem;
+import com.wynntils.models.items.WynnItem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

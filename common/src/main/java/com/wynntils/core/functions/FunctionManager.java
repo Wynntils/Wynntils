@@ -14,7 +14,7 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

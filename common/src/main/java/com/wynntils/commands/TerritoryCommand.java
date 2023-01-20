@@ -12,7 +12,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.objects.Location;
-import com.wynntils.wynn.objects.profiles.TerritoryProfile;
+import com.wynntils.models.territories.profile.TerritoryProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

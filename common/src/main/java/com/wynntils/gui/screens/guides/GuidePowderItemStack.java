@@ -4,10 +4,10 @@
  */
 package com.wynntils.gui.screens.guides;
 
+import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.concepts.PowderProfile;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.profiles.PowderProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

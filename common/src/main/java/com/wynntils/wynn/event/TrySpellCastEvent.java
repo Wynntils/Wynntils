@@ -4,8 +4,8 @@
  */
 package com.wynntils.wynn.event;
 
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.wynn.objects.SpellDirection;
-import com.wynntils.wynn.objects.SpellType;
 
 /**
  * Fired upon successful, completed spell cast.
