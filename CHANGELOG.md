@@ -1,9 +1,21 @@
+## [0.0.2-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.123...v0.0.2-alpha.124) (2023-01-20)
+
+
+### Code Refactoring
+
+* Shuffle around/split up Utils classes so they are in the right place ([#1056](https://github.com/Wynntils/Artemis/issues/1056)) ([46a2243](https://github.com/Wynntils/Artemis/commit/46a2243f7b278c21f2f603829a28ef153c24150d))
+
 ## [0.0.2-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.122...v0.0.2-alpha.123) (2023-01-20)
 
 
 ### New Features
 
 * Several main map UX improvements ([#1054](https://github.com/Wynntils/Artemis/issues/1054)) ([b57b855](https://github.com/Wynntils/Artemis/commit/b57b855a4c1d52dc8019a75b4568bab56049d022))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.123 [skip ci] ([90e970d](https://github.com/Wynntils/Artemis/commit/90e970d81b23aaa15bf3049d956d6cd106d9f9d1))
 
 ## [0.0.2-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.121...v0.0.2-alpha.122) (2023-01-20)
 
@@ -36,16 +48,4 @@
 
 * Don't build on drafts ([#1053](https://github.com/Wynntils/Artemis/issues/1053)) ([8f29c26](https://github.com/Wynntils/Artemis/commit/8f29c26b14dc3b5c3eb4f5808b0b2df68b952181))
 * **release:** v0.0.2-alpha.120 [skip ci] ([2cb4444](https://github.com/Wynntils/Artemis/commit/2cb444486c382c75b191e0c3b719aaae529a7c66))
-
-## [0.0.2-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.118...v0.0.2-alpha.119) (2023-01-20)
-
-
-### Bug Fixes
-
-* Totem tracking improvements ([#1047](https://github.com/Wynntils/Artemis/issues/1047)) ([ef15daf](https://github.com/Wynntils/Artemis/commit/ef15daf5cf849891b05de05b4aed96352ca4c44d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.119 [skip ci] ([b8ee44b](https://github.com/Wynntils/Artemis/commit/b8ee44b52eb4102c868a05156c34d7bb5252f6f2))
 
