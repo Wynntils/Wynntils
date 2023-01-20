@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.objects;
 
-import com.wynntils.wynn.model.map.poi.PoiLocation;
+import com.wynntils.models.map.PoiLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;

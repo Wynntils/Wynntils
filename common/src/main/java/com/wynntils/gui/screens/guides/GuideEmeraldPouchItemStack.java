@@ -4,8 +4,8 @@
  */
 package com.wynntils.gui.screens.guides;
 
+import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.objects.EmeraldSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;

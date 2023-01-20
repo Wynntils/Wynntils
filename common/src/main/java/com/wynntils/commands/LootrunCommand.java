@@ -16,7 +16,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.gui.screens.WynntilsLootrunsScreen;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.LootrunModel;
+import com.wynntils.models.lootruns.LootrunModel;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;

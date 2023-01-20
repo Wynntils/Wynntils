@@ -6,8 +6,13 @@ package com.wynntils.wynn.model.actionbar;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.models.character.actionbar.HealthSegment;
+import com.wynntils.models.character.actionbar.ManaSegment;
+import com.wynntils.models.character.actionbar.PowderSpecialSegment;
+import com.wynntils.models.character.actionbar.SprintSegment;
+import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.wynn.model.actionbar.event.CenterSegmentClearedEvent;
-import com.wynntils.wynn.objects.Powder;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarModel extends Model {

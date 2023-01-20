@@ -12,7 +12,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.ArrayList;

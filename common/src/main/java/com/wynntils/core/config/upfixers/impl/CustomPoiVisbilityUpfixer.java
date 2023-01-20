@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
-import com.wynntils.wynn.model.map.poi.CustomPoi;
+import com.wynntils.models.map.pois.CustomPoi;
 
 public class CustomPoiVisbilityUpfixer implements ConfigUpfixer {
     private static final String CUSTOM_POIS_ARRAY = "mapFeature.customPois";

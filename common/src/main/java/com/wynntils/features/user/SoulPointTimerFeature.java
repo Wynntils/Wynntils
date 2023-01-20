@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.LoreUtils;
-import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
+import com.wynntils.models.items.items.gui.SoulPointItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

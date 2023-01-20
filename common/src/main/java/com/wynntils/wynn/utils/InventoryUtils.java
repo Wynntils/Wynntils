@@ -6,7 +6,7 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.items.game.GearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.Optional;
