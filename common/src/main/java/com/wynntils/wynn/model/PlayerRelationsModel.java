@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public final class PlayerRelationsModel extends Model {
     private static final Pattern FRIEND_LIST_MESSAGE_PATTERN = Pattern.compile(".+'s friends \\(.+\\): (.*)");
-    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 = Pattern.compile("§eWe couldn't find any friends.");
+    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 = Pattern.compile("§eWe couldn't find any friends\\.");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_2 =
             Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =
@@ -36,18 +36,18 @@ public final class PlayerRelationsModel extends Model {
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
 
     private static final Pattern PARTY_LIST_MESSAGE_PATTERN = Pattern.compile("Party members: (.*)");
-    private static final Pattern PARTY_NO_LIST_MESSAGE_PATTERN = Pattern.compile("§eYou must be in a party to list.");
-    private static final Pattern PARTY_OTHER_LEAVE_MESSAGE_PATTERN = Pattern.compile("§e(.+) has left the party.");
-    private static final Pattern PARTY_OTHER_JOIN_MESSAGE_PATTERN = Pattern.compile("§e(.+) has joined the party.");
+    private static final Pattern PARTY_NO_LIST_MESSAGE_PATTERN = Pattern.compile("§eYou must be in a party to list\\.");
+    private static final Pattern PARTY_OTHER_LEAVE_MESSAGE_PATTERN = Pattern.compile("§e(.+) has left the party\\.");
+    private static final Pattern PARTY_OTHER_JOIN_MESSAGE_PATTERN = Pattern.compile("§e(.+) has joined the party\\.");
     private static final Pattern PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN =
             Pattern.compile("§eSay hello to (.+) which just joined your party!");
     private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
-            Pattern.compile("§eYou have been removed from the party.");
+            Pattern.compile("§eYou have been removed from the party\\.");
     private static final Pattern PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN =
             Pattern.compile("§eYou must be in a party to leave\\.");
     private static final Pattern PARTY_SELF_JOIN_MESSAGE_PATTERN =
-            Pattern.compile("§eYou have successfully joined the party.");
-    private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded.");
+            Pattern.compile("§eYou have successfully joined the party\\.");
+    private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded\\.");
 
     private boolean expectingFriendMessage = false;
     private boolean expectingPartyMessage = false;
