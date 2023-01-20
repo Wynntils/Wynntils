@@ -1,9 +1,21 @@
+## [0.0.2-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.125...v0.0.2-alpha.126) (2023-01-20)
+
+
+### Code Refactoring
+
+* Split up Lootrun in more manageable parts ([#1058](https://github.com/Wynntils/Artemis/issues/1058)) ([1b0da51](https://github.com/Wynntils/Artemis/commit/1b0da51cbfefbfd2ec3063e4054119507c29a78d))
+
 ## [0.0.2-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.124...v0.0.2-alpha.125) (2023-01-20)
 
 
 ### Code Refactoring
 
 * The Great Model Reshuffling ([#1057](https://github.com/Wynntils/Artemis/issues/1057)) ([612421c](https://github.com/Wynntils/Artemis/commit/612421c2a6cec4e48620c3b6048f01b0684b7e42))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.125 [skip ci] ([946344a](https://github.com/Wynntils/Artemis/commit/946344a36930e7ee7f11df02025509e880009ca9))
 
 ## [0.0.2-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.123...v0.0.2-alpha.124) (2023-01-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.122 [skip ci] ([8eb6c72](https://github.com/Wynntils/Artemis/commit/8eb6c72c55c6023a2fc1511e3d6f86a0fc036c05))
-
-## [0.0.2-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.120...v0.0.2-alpha.121) (2023-01-20)
-
-
-### Code Refactoring
-
-* integrate SpellModel with QuickCastFeature ([#1051](https://github.com/Wynntils/Artemis/issues/1051)) ([24fe4d9](https://github.com/Wynntils/Artemis/commit/24fe4d93aec5f26df1f2b78d07ea304930875467))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.121 [skip ci] ([34cca89](https://github.com/Wynntils/Artemis/commit/34cca89b731c83733f5da36c10e62a60a048907a))
 
