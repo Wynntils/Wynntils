@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.event;
+package com.wynntils.models.spells.event;
 
-import com.wynntils.wynn.objects.SpellDirection;
+import com.wynntils.models.spells.type.SpellDirection;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class SpellEvent extends Event {
