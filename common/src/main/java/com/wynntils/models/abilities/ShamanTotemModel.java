@@ -15,8 +15,8 @@ import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.spells.event.SpellCastEvent;
 import com.wynntils.models.spells.type.SpellType;
+import com.wynntils.wynn.event.TrySpellCastEvent;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class ShamanTotemModel extends Model {
     private static final int CAST_DELAY_MAX_MS = 450;
 
     @SubscribeEvent
-    public void onTotemSpellCast(SpellCastEvent e) {
+    public void onTotemSpellCast(TrySpellCastEvent e) {
         if (e.getSpell() != SpellType.TOTEM) return;
 
         totemCastTimestamp = System.currentTimeMillis() - 40; // 40 == 2 ticks

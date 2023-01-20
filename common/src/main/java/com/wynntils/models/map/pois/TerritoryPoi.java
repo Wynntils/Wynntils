@@ -13,13 +13,13 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.gui.screens.maps.GuildMapScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class TerritoryPoi implements Poi {

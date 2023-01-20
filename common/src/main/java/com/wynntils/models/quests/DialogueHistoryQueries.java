@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class DialogueHistoryQueries {
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
                             .equals("§bDialogue History")) return;
 
-                    for (String line : ItemUtils.getLore(dialogueHistoryItem)) {
+                    for (String line : LoreUtils.getLore(dialogueHistoryItem)) {
                         Matcher matcher = DIALOGUE_HISTORY_PAGE_PATTERN.matcher(line);
 
                         if (matcher.matches()) {
@@ -68,7 +68,7 @@ public class DialogueHistoryQueries {
 
                     newDialogueHistory = new ArrayList<>();
 
-                    List<String> current = ItemUtils.getLore(dialogueHistoryItem).stream()
+                    List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
                             .dropWhile(String::isBlank)
                             .takeWhile(s -> !s.isBlank())
                             .toList();
@@ -88,7 +88,7 @@ public class DialogueHistoryQueries {
                         if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
                                 .equals("§bDialogue History")) return;
 
-                        List<String> current = ItemUtils.getLore(dialogueHistoryItem).stream()
+                        List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
                                 .dropWhile(String::isBlank)
                                 .takeWhile(s -> !s.isBlank())
                                 .toList();

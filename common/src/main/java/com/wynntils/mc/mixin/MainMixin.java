@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.SystemUtils;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import net.minecraft.client.main.Main;
@@ -28,7 +28,7 @@ public abstract class MainMixin {
 
         // This uses a Mixin because this must be done as early as possible - before other mods load that use AWT
         // see https://github.com/BuiltBrokenModding/SBM-SheepMetal/issues/2
-        if (!Utils.isMac()) {
+        if (!SystemUtils.isMac()) {
             // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
             System.out.println("[Wynntils/Artemis] Setting java.awt.headless to false");
             System.setProperty("java.awt.headless", "false");

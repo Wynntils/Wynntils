@@ -5,9 +5,9 @@
 package com.wynntils.core.net.hades.objects;
 
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.models.map.PoiLocation;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import java.util.UUID;
 
 public class HadesUser {

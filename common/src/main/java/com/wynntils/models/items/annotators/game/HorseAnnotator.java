@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.CappedValue;
 import java.util.regex.Matcher;
@@ -25,7 +25,7 @@ public final class HorseAnnotator implements ItemAnnotator {
         Matcher matcher = HORSE_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        String lore = ItemUtils.getStringLore(itemStack);
+        String lore = LoreUtils.getStringLore(itemStack);
         Matcher m = HORSE_LORE_PATTERN.matcher(lore);
 
         if (!m.matches()) return null;

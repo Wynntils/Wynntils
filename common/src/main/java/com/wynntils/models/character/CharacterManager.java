@@ -9,7 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -228,7 +228,7 @@ public final class CharacterManager extends Manager {
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
-        List<String> lore = ItemUtils.getLore(characterInfoItem);
+        List<String> lore = LoreUtils.getLore(characterInfoItem);
 
         int level = 0;
         String className = "";
@@ -249,7 +249,7 @@ public final class CharacterManager extends Manager {
         ClassType classType = ClassType.fromName(className);
 
         Map<ProfessionType, Integer> levels = new HashMap<>();
-        List<String> professionLore = ItemUtils.getLore(professionInfoItem);
+        List<String> professionLore = LoreUtils.getLore(professionInfoItem);
         for (String line : professionLore) {
             Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
 
@@ -278,7 +278,7 @@ public final class CharacterManager extends Manager {
     }
 
     private void parseCharacter(ItemStack itemStack, int id) {
-        List<String> lore = ItemUtils.getLore(itemStack);
+        List<String> lore = LoreUtils.getLore(itemStack);
 
         int level = 0;
         String className = "";

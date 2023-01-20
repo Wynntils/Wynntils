@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.Pair;
@@ -31,7 +31,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         List<Pair<IngredientProfile, Integer>> ingredients = new ArrayList<>();
-        List<String> lore = ItemUtils.getLore(itemStack);
+        List<String> lore = LoreUtils.getLore(itemStack);
         for (String line : lore) {
             Matcher loreMatcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line);
             if (!loreMatcher.matches()) continue;

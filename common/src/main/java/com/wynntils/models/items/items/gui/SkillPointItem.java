@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.items.items.gui;
 
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.items.properties.CountedItemProperty;
+import com.wynntils.utils.CustomColor;
 
 public class SkillPointItem extends GuiItem implements CountedItemProperty {
     private final Skill skill;

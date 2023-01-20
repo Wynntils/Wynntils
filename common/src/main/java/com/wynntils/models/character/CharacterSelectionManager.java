@@ -10,7 +10,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.wynn.utils.ContainerUtils;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public final class CharacterSelectionManager extends Manager {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (String line : ItemUtils.getLore(item)) {
+        for (String line : LoreUtils.getLore(item)) {
             Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
 
             if (matcher.matches()) {

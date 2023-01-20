@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
         String scrollName = nameMatcher.group(1);
 
         if (scrollName.equals("Dungeon")) {
-            Matcher dungeonMatcher = ItemUtils.matchLoreLine(itemStack, 3, TELEPORT_LOCATION_PATTERN);
+            Matcher dungeonMatcher = LoreUtils.matchLoreLine(itemStack, 3, TELEPORT_LOCATION_PATTERN);
             if (!dungeonMatcher.matches()) return null;
 
             // remove "the" to properly represent forgery scrolls

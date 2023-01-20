@@ -25,7 +25,11 @@ public class ServicePoi extends StaticIconPoi {
 
     @Override
     public float getMinZoomForRender() {
-        return MapFeature.INSTANCE.servicePoiMinZoom;
+        if (kind == ServiceKind.FAST_TRAVEL) {
+            return MapFeature.INSTANCE.fastTravelPoiMinZoom;
+        } else {
+            return MapFeature.INSTANCE.servicePoiMinZoom;
+        }
     }
 
     @Override

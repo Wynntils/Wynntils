@@ -10,16 +10,19 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.models.map.Label;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
-    private final PoiLocation location;
+    private static final CustomColor AQUA = new CustomColor(0f, 0.8f, 0.8f);
+    private static final CustomColor YELLOW = new CustomColor(1f, 1f, 0f);
+    private static final CustomColor WHITE = new CustomColor(1f, 1f, 1f);
 
+    private final PoiLocation location;
     private final Label label;
 
     public LabelPoi(Label label) {
@@ -53,38 +56,37 @@ public class LabelPoi implements Poi {
     }
 
     private float getAlphaFromScale(float zoom) {
-        float alpha =
-                switch (label.getLayer()) {
-                    case PROVINCE -> MathUtils.map(zoom, 0.2f, 3f, 2f, -5f);
-                    case CITY -> MathUtils.map(zoom, 0.2f, 3f, 0f, 5f);
-                    case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 3f, -0.5f, 6f);
-                };
+        float alpha;
+        if (zoom >= 1) {
+            // Fade out when zoomed in
+            alpha = switch (label.getLayer()) {
+                case PROVINCE -> 0; // Never visible at high zoom
+                case CITY -> MathUtils.map(zoom, 1.0f, 1.3f, 1f, 0f);
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);};
+        } else {
+            // Fade out/in when zoomed out
+            alpha = switch (label.getLayer()) {
+                case PROVINCE -> MathUtils.map(zoom, 0.2f, 0.25f, 1f, 0f);
+                case CITY -> 1; // always visible at low zoom
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);};
+        }
 
-        return MathUtils.clamp(alpha, 0f, 1f);
+        return MathUtils.clamp(alpha, 0f, 1f) * 0.9f;
     }
 
     private TextShadow getTextShadow() {
-        if (label.getLayer() == Label.LabelLayer.PROVINCE) {
-            return TextShadow.OUTLINE;
-        }
-
-        return TextShadow.NORMAL;
+        return TextShadow.OUTLINE;
     }
 
-    private static final CustomColor GOLD = new CustomColor(1f, 0.6f, 0f);
-    private static final CustomColor YELLOW = new CustomColor(1f, 1f, 0.3f);
-    private static final CustomColor WHITE = new CustomColor(1f, 1f, 1f);
-
-    private CustomColor getRenderedColor(float zoom, boolean hovered) {
-        float alpha = getAlphaFromScale(zoom);
+    private CustomColor getRenderedColor(float alpha) {
         CustomColor color =
                 switch (label.getLayer()) {
-                    case PROVINCE -> GOLD;
+                    case PROVINCE -> AQUA;
                     case CITY -> YELLOW;
                     case TOWN_OR_PLACE -> WHITE;
                 };
 
-        return color.withAlpha(alpha * (hovered ? 1f : 0.75f));
+        return color.withAlpha(alpha);
     }
 
     @Override
@@ -96,20 +98,16 @@ public class LabelPoi implements Poi {
             boolean hovered,
             float scale,
             float mapZoom) {
-        // TODO hovered behavior?
-        // TODO reimplement minscaleforlabel through fading instead
-
-        float modifier = scale;
-
-        if (hovered) {
-            modifier *= 1.05;
-        }
-
-        CustomColor color = getRenderedColor(mapZoom, hovered);
-
-        if (color.a < 4) {
+        float alpha = getAlphaFromScale(mapZoom);
+        if (alpha < 0.01) {
             return; // small enough alphas are turned into 255
         }
+        float modifier = scale;
+        if (hovered) {
+            modifier *= 1.05;
+            alpha = 1f;
+        }
+        CustomColor color = getRenderedColor(alpha);
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
@@ -127,7 +125,23 @@ public class LabelPoi implements Poi {
                         VerticalAlignment.Middle,
                         getTextShadow(),
                         1f);
-
+        if (hovered) {
+            String level = label.getLevel();
+            if (!level.isEmpty()) {
+                BufferedFontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                bufferSource,
+                                "[Lv " + level + "]",
+                                0,
+                                10,
+                                color,
+                                HorizontalAlignment.Center,
+                                VerticalAlignment.Middle,
+                                getTextShadow(),
+                                1f);
+            }
+        }
         poseStack.popPose();
     }
 

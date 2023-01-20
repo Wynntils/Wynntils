@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.Pair;
@@ -30,7 +30,7 @@ public final class QuestInfoParser {
             String name = getQuestName(item);
             if (name == null) return null;
 
-            LinkedList<String> lore = ItemUtils.getLore(item);
+            LinkedList<String> lore = LoreUtils.getLore(item);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;

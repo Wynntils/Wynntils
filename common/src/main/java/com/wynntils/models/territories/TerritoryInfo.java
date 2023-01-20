@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.territories;
 
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.utils.CustomColor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

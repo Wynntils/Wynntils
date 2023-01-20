@@ -8,7 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.items.items.gui.ServerItem;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class LobbyUptimeFeature extends UserFeature {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);
         if (serverItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = ItemUtils.appendTooltip(
+        List<Component> tooltips = LoreUtils.appendTooltip(
                 event.getItemStack(), event.getTooltips(), getTooltipAddon(serverItemOpt.get()));
         event.setTooltips(tooltips);
     }

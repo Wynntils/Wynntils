@@ -7,6 +7,7 @@ package com.wynntils.models.spells.type;
 import com.wynntils.core.components.Managers;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.wynn.objects.SpellDirection;
 import java.util.Arrays;
 
 public enum SpellType {
@@ -41,18 +42,15 @@ public enum SpellType {
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", 0, 0);
 
-    public static final boolean SPELL_RIGHT = true;
-    public static final boolean SPELL_LEFT = false;
-
-    private static final boolean[] RLR = {SPELL_RIGHT, SPELL_LEFT, SPELL_RIGHT};
-    private static final boolean[] RRR = {SPELL_RIGHT, SPELL_RIGHT, SPELL_RIGHT};
-    private static final boolean[] RLL = {SPELL_RIGHT, SPELL_LEFT, SPELL_LEFT};
-    private static final boolean[] RRL = {SPELL_RIGHT, SPELL_RIGHT, SPELL_LEFT};
+    private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
+    private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
+    private static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
+    private static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
     // Archer only
-    private static final boolean[] LRL = {SPELL_LEFT, SPELL_RIGHT, SPELL_LEFT};
-    private static final boolean[] LLL = {SPELL_LEFT, SPELL_LEFT, SPELL_LEFT};
-    private static final boolean[] LRR = {SPELL_LEFT, SPELL_RIGHT, SPELL_RIGHT};
-    private static final boolean[] LLR = {SPELL_LEFT, SPELL_LEFT, SPELL_RIGHT};
+    private static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
+    private static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
+    private static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
+    private static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
 
     private static final int[][] MANA_REDUCTION_LEVELS = {
         {},
@@ -144,7 +142,7 @@ public enum SpellType {
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
             // After the matching part, the string needs to be done, or a blank character
-            // must appaear
+            // must appear
             if (name.startsWith(spellType.name)
                     && (name.length() == spellType.name.length()
                             || String.valueOf(name.charAt(spellType.name.length()))
@@ -180,7 +178,7 @@ public enum SpellType {
         return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
     }
 
-    public static SpellType fromBooleanArray(boolean[] casted) {
+    public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
         int spellNumber = 4;
         if (Arrays.equals(casted, RLR) || Arrays.equals(casted, LRL)) {
             spellNumber = 1;

@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.container.ContainerContent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.McUtils;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     int discoveryCount = -1;
-                    for (String line : ItemUtils.getLore(discoveriesItem)) {
+                    for (String line : LoreUtils.getLore(discoveriesItem)) {
                         Matcher matcher = DISCOVERY_COUNT_PATTERN.matcher(line);
 
                         if (matcher.matches()) {
@@ -69,7 +69,7 @@ public class DiscoveryContainerQueries {
                         return;
                     }
 
-                    for (String line : ItemUtils.getLore(secretDiscoveriesItem)) {
+                    for (String line : LoreUtils.getLore(secretDiscoveriesItem)) {
                         Matcher matcher = SECRET_DISCOVERY_COUNT_PATTERN.matcher(line);
 
                         if (matcher.matches()) {
@@ -81,9 +81,9 @@ public class DiscoveryContainerQueries {
                                 return;
                             }
 
-                            Managers.Discovery.setDiscoveriesTooltip(ItemUtils.getTooltipLines(discoveriesItem));
+                            Managers.Discovery.setDiscoveriesTooltip(LoreUtils.getTooltipLines(discoveriesItem));
                             Managers.Discovery.setSecretDiscoveriesTooltip(
-                                    ItemUtils.getTooltipLines(secretDiscoveriesItem));
+                                    LoreUtils.getTooltipLines(secretDiscoveriesItem));
 
                             int discoveryPages = discoveryCount / DISCOVERIES_PER_PAGE
                                     + (discoveryCount % DISCOVERIES_PER_PAGE == 0 ? 0 : 1);

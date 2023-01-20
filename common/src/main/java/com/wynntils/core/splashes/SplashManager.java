@@ -11,14 +11,15 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.utils.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public final class SplashManager extends Manager {
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
+    private static final Random RANDOM = new Random();
 
     private List<String> allSplashes = new ArrayList<>();
     private String currentSplash = DEFAULT_SPLASH;
@@ -45,7 +46,7 @@ public final class SplashManager extends Manager {
                 // Use fallback in case of failure
                 currentSplash = DEFAULT_SPLASH;
             } else {
-                currentSplash = allSplashes.get(Utils.getRandom().nextInt(allSplashes.size()));
+                currentSplash = allSplashes.get(RANDOM.nextInt(allSplashes.size()));
             }
         });
     }

@@ -12,7 +12,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;

@@ -27,6 +27,9 @@ public class CombatPoi extends StaticIconPoi {
 
     @Override
     public float getMinZoomForRender() {
+        if (kind == CombatKind.CAVES) {
+            return MapFeature.INSTANCE.cavePoiMinZoom;
+        }
         return MapFeature.INSTANCE.combatPoiMinZoom;
     }
 

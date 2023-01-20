@@ -17,13 +17,26 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class EmeraldManager extends Manager {
+    private static final Pattern STX_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(s|stx|stacks)");
+    private static final Pattern LE_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(l|le)");
+    private static final Pattern EB_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(b|eb)");
+    private static final Pattern K_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(k|thousand)");
+    private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
+    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
+    private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
+    private static final int STACK_SIZE = 64;
+    private static final double TAX_AMOUNT = 1.05;
+
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
@@ -43,6 +56,60 @@ public final class EmeraldManager extends Manager {
 
     public int getAmountInContainer() {
         return containerEmeralds;
+    }
+
+    public String convertEmeraldPrice(String input) {
+        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
+        if (rawMatcher.matches()) return "";
+
+        input = input.toLowerCase(Locale.ROOT);
+        long emeralds = 0;
+
+        try {
+            // stx
+            Matcher stxMatcher = STX_PATTERN.matcher(input);
+            while (stxMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(stxMatcher.group(1)) * STACK_SIZE * STACK_SIZE * STACK_SIZE);
+            }
+
+            // le
+            Matcher leMatcher = LE_PATTERN.matcher(input);
+            while (leMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(leMatcher.group(1)) * STACK_SIZE * STACK_SIZE);
+            }
+
+            // eb
+            Matcher ebMatcher = EB_PATTERN.matcher(input);
+            while (ebMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(ebMatcher.group(1)) * STACK_SIZE);
+            }
+            // k
+            Matcher kMatcher = K_PATTERN.matcher(input);
+            while (kMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(kMatcher.group(1)) * 1000);
+            }
+
+            // m
+            Matcher mMatcher = M_PATTERN.matcher(input);
+            while (mMatcher.find()) {
+                emeralds += (long) (Double.parseDouble(mMatcher.group(1)) * 1000000);
+            }
+
+            // standard numbers/emeralds
+            Matcher eMatcher = E_PATTERN.matcher(input);
+            while (eMatcher.find()) {
+                emeralds += Long.parseLong(eMatcher.group(1));
+            }
+
+            // account for tax if flagged
+            if (input.contains("-t")) {
+                emeralds = Math.round(emeralds / TAX_AMOUNT);
+            }
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+        return (emeralds > 0) ? String.valueOf(emeralds) : "";
     }
 
     @SubscribeEvent

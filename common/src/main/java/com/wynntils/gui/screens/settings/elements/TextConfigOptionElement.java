@@ -9,7 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.utils.CommonColors;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {
