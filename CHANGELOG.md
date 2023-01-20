@@ -1,9 +1,21 @@
+## [0.0.2-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.122...v0.0.2-alpha.123) (2023-01-20)
+
+
+### New Features
+
+* Several main map UX improvements ([#1054](https://github.com/Wynntils/Artemis/issues/1054)) ([b57b855](https://github.com/Wynntils/Artemis/commit/b57b855a4c1d52dc8019a75b4568bab56049d022))
+
 ## [0.0.2-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.121...v0.0.2-alpha.122) (2023-01-20)
 
 
 ### Bug Fixes
 
 * Exact match for service name counts will select it ([#1052](https://github.com/Wynntils/Artemis/issues/1052)) ([8188890](https://github.com/Wynntils/Artemis/commit/81888905689e4d40db540b7954eb1ab9b4bbe6e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.122 [skip ci] ([8eb6c72](https://github.com/Wynntils/Artemis/commit/8eb6c72c55c6023a2fc1511e3d6f86a0fc036c05))
 
 ## [0.0.2-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.120...v0.0.2-alpha.121) (2023-01-20)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.119 [skip ci] ([b8ee44b](https://github.com/Wynntils/Artemis/commit/b8ee44b52eb4102c868a05156c34d7bb5252f6f2))
-
-## [0.0.2-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.117...v0.0.2-alpha.118) (2023-01-19)
-
-
-### Bug Fixes
-
-* BufferedRenderUtils#drawRect now uses the correct CustomRenderType ([#1050](https://github.com/Wynntils/Artemis/issues/1050)) ([86c2709](https://github.com/Wynntils/Artemis/commit/86c2709b743f62b3c25efbb88747c58d4637a9a4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.118 [skip ci] ([13c96dd](https://github.com/Wynntils/Artemis/commit/13c96dd0cd8465e7e967ac2b7568c3d93cae97d0))
 
