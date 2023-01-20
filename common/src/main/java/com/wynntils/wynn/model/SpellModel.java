@@ -8,9 +8,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.SpellCastEvent;
 import com.wynntils.wynn.event.SpellEvent;
 import com.wynntils.wynn.event.SpellProgressEvent;
+import com.wynntils.wynn.event.TrySpellCastEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
 import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.objects.SpellType;
@@ -39,7 +39,7 @@ public class SpellModel extends Model {
 
         if (!matcher.group(3).equals("?")) {
             WynntilsMod.postEvent(
-                    new SpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
+                    new TrySpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 
@@ -59,7 +59,7 @@ public class SpellModel extends Model {
         WynntilsMod.postEvent(new SpellProgressEvent(spell, source));
 
         if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(new SpellCastEvent(spell, source, SpellType.fromSpellDirectionArray(spell)));
+            WynntilsMod.postEvent(new TrySpellCastEvent(spell, source, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 

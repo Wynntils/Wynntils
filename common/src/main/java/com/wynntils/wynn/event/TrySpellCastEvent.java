@@ -12,11 +12,11 @@ import com.wynntils.wynn.objects.SpellType;
  * FIXME: This event fires upon every three-click sequence, no matter if the spell was actually casted or not.
  * FIXME: This event should be checking if the cast failed due to mana/unlock restrictions.
  */
-public class SpellCastEvent extends SpellEvent {
+public class TrySpellCastEvent extends SpellEvent {
 
     private final SpellType spell;
 
-    public SpellCastEvent(SpellDirection[] spellDirectionArray, Source source, SpellType spell) {
+    public TrySpellCastEvent(SpellDirection[] spellDirectionArray, Source source, SpellType spell) {
         super(spellDirectionArray, source);
         this.spell = spell;
     }
