@@ -51,28 +51,34 @@ public class MapFeature extends UserFeature {
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
 
     @Config
-    public float poiFadeDistance = 0.6f;
+    public float poiFadeAdjustment = 0.4f;
 
     @Config
-    public float combatPoiMinZoom = 0.1f;
+    public float combatPoiMinZoom = 0.166f;
 
     @Config
-    public float servicePoiMinZoom = 1f;
+    public float cavePoiMinZoom = 0.28f;
 
     @Config
-    public float customPoiMinZoom = 0.1f;
+    public float servicePoiMinZoom = 0.8f;
 
     @Config
-    public float lootChestTier1PoiMinZoom = 1f;
+    public float fastTravelPoiMinZoom = 0.166f;
 
     @Config
-    public float lootChestTier2PoiMinZoom = 1f;
+    public float customPoiMinZoom = 0.28f;
 
     @Config
-    public float lootChestTier3PoiMinZoom = 0.1f;
+    public float lootChestTier1PoiMinZoom = 0.8f;
 
     @Config
-    public float lootChestTier4PoiMinZoom = 0.1f;
+    public float lootChestTier2PoiMinZoom = 0.8f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.28f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.28f;
 
     @Config
     public PointerType pointerType = PointerType.Arrow;

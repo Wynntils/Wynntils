@@ -35,17 +35,11 @@ public abstract class IconPoi implements Poi {
     protected abstract float getMinZoomForRender();
 
     public float getIconAlpha(float zoom) {
-        if (getMinZoomForRender() <= -1) return 1f;
+        float minZoom = getMinZoomForRender();
+        if (minZoom <= -1) return 1f;
 
         return MathUtils.clamp(
-                MathUtils.map(
-                        zoom,
-                        getMinZoomForRender() - MapFeature.INSTANCE.poiFadeDistance,
-                        getMinZoomForRender(),
-                        0f,
-                        1f),
-                0f,
-                1f);
+                MathUtils.map(zoom, minZoom * (1 - MapFeature.INSTANCE.poiFadeAdjustment), minZoom, 0f, 1f), 0f, 1f);
     }
 
     public CustomColor getIconColor() {
@@ -94,7 +88,7 @@ public abstract class IconPoi implements Poi {
                             poseStack,
                             getName(),
                             renderX,
-                            20 + renderY,
+                            15 + renderY,
                             CommonColors.GREEN,
                             HorizontalAlignment.Center,
                             VerticalAlignment.Middle,
