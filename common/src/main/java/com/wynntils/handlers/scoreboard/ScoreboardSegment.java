@@ -4,22 +4,21 @@
  */
 package com.wynntils.handlers.scoreboard;
 
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Segment {
-    private final ScoreboardModel.SegmentType type;
+public final class ScoreboardSegment {
+    private final SegmentMatcher matcher;
     private final String header;
+    private final int startIndex;
+
     private String end;
     private List<String> content = null;
-    private final int startIndex;
     private int endIndex = -1;
-
     private boolean changed;
 
-    public Segment(ScoreboardModel.SegmentType type, String header, int startIndex) {
-        this.type = type;
+    public ScoreboardSegment(SegmentMatcher matcher, String header, int startIndex) {
+        this.matcher = matcher;
         this.header = header;
         this.startIndex = startIndex;
         this.changed = false;
@@ -27,8 +26,8 @@ public final class Segment {
 
     @Override
     public String toString() {
-        return "Segment[" + "type="
-                + type + ", " + "header="
+        return "Segment[" + "matcher="
+                + matcher + ", " + "header="
                 + header + ", " + "content="
                 + content + ", " + "startIndex="
                 + startIndex + ", " + "endIndex="
@@ -47,8 +46,8 @@ public final class Segment {
         return endIndex;
     }
 
-    public ScoreboardModel.SegmentType getType() {
-        return type;
+    public SegmentMatcher getMatcher() {
+        return matcher;
     }
 
     public String getHeader() {

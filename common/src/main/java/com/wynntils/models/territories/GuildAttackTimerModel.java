@@ -4,11 +4,12 @@
  */
 package com.wynntils.models.territories;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.scoreboard.ScoreboardListener;
-import com.wynntils.handlers.scoreboard.Segment;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.TimedSet;
 import java.util.ArrayList;
@@ -22,11 +23,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
+    private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
-    public static final ScoreboardListener SCOREBOARD_LISTENER = new GuildAttackListener();
     private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
 
     private List<TerritoryAttackTimer> attackTimers = List.of();
+
+    @Override
+    public void init() {
+        Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
+    }
+
+    @Override
+    public void disable() {
+        Handlers.Scoreboard.removePart(GUILD_ATTACK_SCOREBOARD_PART);
+    }
 
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent event) {
@@ -53,7 +64,21 @@ public final class GuildAttackTimerModel extends Model {
         }
     }
 
-    public void processChanges(Segment segment) {
+    public List<TerritoryAttackTimer> getAttackTimers() {
+        return attackTimers;
+    }
+
+    public Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
+        return attackTimers.stream()
+                .filter(t -> t.territory().equals(territory))
+                .findFirst();
+    }
+
+    public boolean isGuildAttackSegment(ScoreboardSegment segment) {
+        return segment.getMatcher() == GuildAttackScoreboardPart.GUILD_ATTACK_MATCHER;
+    }
+
+    void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
         for (String line : segment.getContent()) {
@@ -91,17 +116,7 @@ public final class GuildAttackTimerModel extends Model {
         attackTimers = newList;
     }
 
-    public void resetTimers() {
+    void resetTimers() {
         attackTimers = List.of();
-    }
-
-    public List<TerritoryAttackTimer> getAttackTimers() {
-        return attackTimers;
-    }
-
-    public Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
-        return attackTimers.stream()
-                .filter(t -> t.territory().equals(territory))
-                .findFirst();
     }
 }
