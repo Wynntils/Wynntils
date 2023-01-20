@@ -7,6 +7,7 @@ package com.wynntils.wynn.model.quests;
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
@@ -191,7 +192,7 @@ public class QuestInfo {
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
             String nextTask = questInfo.getNextTask();
-            String[] lines = StringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+            String[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
             for (String line : lines) {
                 tooltipLines.add(Component.literal(line).withStyle(ChatFormatting.GRAY));

@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.handleditems.items.game.DungeonKeyItem;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -41,7 +41,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
     private boolean verifyDungeonKey(ItemStack itemStack, String name) {
         if (name.startsWith("Broken")) return true;
 
-        Matcher matcher = ItemUtils.matchLoreLine(itemStack, 0, LORE_PATTERN);
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 0, LORE_PATTERN);
         return matcher.matches();
     }
 }

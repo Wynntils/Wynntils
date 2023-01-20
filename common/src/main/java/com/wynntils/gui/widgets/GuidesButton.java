@@ -10,11 +10,11 @@ import com.wynntils.gui.render.HorizontalAlignment;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -38,7 +38,7 @@ public class GuidesButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StringUtils.getMaxFittingText(
+                        RenderedStringUtils.getMaxFittingText(
                                 ComponentUtils.getUnformatted(guideScreen.getTitle()),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),

@@ -13,7 +13,7 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.utils.CommonColors;
 import com.wynntils.wynn.objects.ClassInfo;
 import net.minecraft.network.chat.Component;
 

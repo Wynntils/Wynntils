@@ -19,12 +19,13 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.gui.render.TextShadow;
+import com.wynntils.gui.render.TooltipUtils;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.KeyboardUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.Pair;
 import java.util.Arrays;
@@ -217,10 +218,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
                 List<ClientTooltipComponent> clientTooltipComponents =
-                        RenderUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES);
-                int tooltipWidth = RenderUtils.getToolTipWidth(
+                        TooltipUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES);
+                int tooltipWidth = TooltipUtils.getToolTipWidth(
                         clientTooltipComponents, FontRenderer.getInstance().getFont());
-                int tooltipHeight = RenderUtils.getToolTipHeight(clientTooltipComponents);
+                int tooltipHeight = TooltipUtils.getToolTipHeight(clientTooltipComponents);
 
                 float renderX = mouseX > McUtils.window().getGuiScaledWidth() / 2f ? mouseX - tooltipWidth : mouseX;
                 float renderY = mouseY > McUtils.window().getGuiScaledHeight() / 2f ? mouseY - tooltipHeight : mouseY;

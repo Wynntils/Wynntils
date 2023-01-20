@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.discoveries.objects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.wynn.objects.profiles.DiscoveryProfile;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class DiscoveryInfo {
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<String> lore = ItemUtils.getLore(itemStack);
+        List<String> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) {
             return null;
         }

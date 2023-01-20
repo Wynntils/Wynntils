@@ -11,7 +11,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LocationUtils;
+import com.wynntils.wynn.utils.LocationUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
 import java.util.Optional;
