@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    // If you modify please test with
+    // If you modify please test with link below
     // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
     // https://regexr.com/76ijo
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
