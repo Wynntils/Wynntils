@@ -5,7 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.tabs.ChatTab;
+import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Models;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.HorizontalAlignment;
@@ -13,9 +13,9 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 

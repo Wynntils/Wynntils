@@ -14,13 +14,13 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.Pair;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.quests.QuestInfo;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -51,7 +51,7 @@ public class QuestButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StringUtils.getMaxFittingText(
+                        RenderedStringUtils.getMaxFittingText(
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),

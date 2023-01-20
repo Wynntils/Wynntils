@@ -4,10 +4,8 @@
  */
 package com.wynntils.gui.render;
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -16,14 +14,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.image.BufferedImage;
+import com.wynntils.utils.CustomColor;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -525,10 +517,10 @@ public final class RenderUtils {
 
     public static void drawTooltip(
             PoseStack poseStack, List<Component> componentLines, Font font, boolean firstLineHasPlusHeight) {
-        List<ClientTooltipComponent> lines = componentToClientTooltipComponent(componentLines);
+        List<ClientTooltipComponent> lines = TooltipUtils.componentToClientTooltipComponent(componentLines);
 
-        int tooltipWidth = getToolTipWidth(lines, font);
-        int tooltipHeight = getToolTipHeight(lines);
+        int tooltipWidth = TooltipUtils.getToolTipWidth(lines, font);
+        int tooltipHeight = TooltipUtils.getToolTipHeight(lines);
 
         // background box
         poseStack.pushPose();
@@ -667,28 +659,6 @@ public final class RenderUtils {
         drawTooltip(poseStack, componentLines, font, firstLineHasPlusHeight);
 
         poseStack.popPose();
-    }
-
-    public static int getToolTipWidth(List<ClientTooltipComponent> lines, Font font) {
-        return lines.stream()
-                .map(clientTooltipComponent -> clientTooltipComponent.getWidth(font))
-                .max(Integer::compareTo)
-                .orElse(0);
-    }
-
-    public static int getToolTipHeight(List<ClientTooltipComponent> lines) {
-        return (lines.size() == 1 ? -2 : 0)
-                + lines.stream()
-                        .map(ClientTooltipComponent::getHeight)
-                        .mapToInt(Integer::intValue)
-                        .sum();
-    }
-
-    public static List<ClientTooltipComponent> componentToClientTooltipComponent(List<Component> components) {
-        return components.stream()
-                .map(Component::getVisualOrderText)
-                .map(ClientTooltipComponent::create)
-                .toList();
     }
 
     /**
@@ -959,25 +929,6 @@ public final class RenderUtils {
                 .endVertex();
     }
 
-    public static void copyImageToClipboard(BufferedImage bi) {
-        ClipboardImage ci = new ClipboardImage(bi);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ci, null);
-    }
-
-    public static BufferedImage createScreenshot(RenderTarget fb) {
-        BufferedImage bufferedimage = new BufferedImage(fb.width, fb.height, BufferedImage.TYPE_INT_ARGB);
-        try (NativeImage image = new NativeImage(fb.width, fb.height, false)) {
-            RenderSystem.bindTexture(fb.getColorTextureId());
-            image.downloadTexture(0, false);
-            image.flipY();
-
-            int[] pixelValues = image.makePixelArray();
-
-            bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
-        }
-        return bufferedimage;
-    }
-
     /*
        Normal GL implementation is in screen coordinates and thus y is inverted,
        this changes it so it doesn't do that
@@ -1210,29 +1161,5 @@ public final class RenderUtils {
 
         // Always succeed in the stencil test, no matter what.
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
-    }
-
-    private static final class ClipboardImage implements Transferable {
-        private final Image image;
-
-        private ClipboardImage(Image image) {
-            this.image = image;
-        }
-
-        @Override
-        public DataFlavor[] getTransferDataFlavors() {
-            return new DataFlavor[] {DataFlavor.imageFlavor};
-        }
-
-        @Override
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return DataFlavor.imageFlavor.equals(flavor);
-        }
-
-        @Override
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            if (!DataFlavor.imageFlavor.equals(flavor)) throw new UnsupportedFlavorException(flavor);
-            return this.image;
-        }
     }
 }

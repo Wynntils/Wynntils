@@ -26,11 +26,10 @@ import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.model.quests.QuestInfo;
-import com.wynntils.wynn.model.quests.event.TrackedQuestUpdateEvent;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -48,14 +47,15 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Scoreboard, Models.Compass);
+        // FIXME: Should include QuestManager when this has become a model
+        return List.of(Models.Compass);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.isEnabled()
                 && disableQuestTrackingOnScoreboard
-                && event.getSegment().getType() == ScoreboardModel.SegmentType.Quest) {
+                && Managers.Quest.isQuestSegment(event.getSegment())) {
             event.setCanceled(true);
         }
     }

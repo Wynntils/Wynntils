@@ -6,17 +6,18 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.models.concepts.DamageType;
+import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.gear.GearIdentificationContainer;
+import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.models.gear.profile.MajorIdentification;
+import com.wynntils.models.gear.type.RequirementType;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.objects.GearIdentificationContainer;
-import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.objects.profiles.item.DamageType;
-import com.wynntils.wynn.objects.profiles.item.GearProfile;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
-import com.wynntils.wynn.objects.profiles.item.MajorIdentification;
-import com.wynntils.wynn.objects.profiles.item.RequirementType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +72,7 @@ public final class GearTooltipBuilder {
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
-        List<Component> tooltips = ItemUtils.getTooltipLines(itemStack);
+        List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore =
@@ -246,7 +247,7 @@ public final class GearTooltipBuilder {
         // major ids
         if (gearProfile.getMajorIds() != null && !gearProfile.getMajorIds().isEmpty()) {
             for (MajorIdentification majorId : gearProfile.getMajorIds()) {
-                Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
+                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.asLore(), 150))
                         .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
             baseTooltip.add(Component.literal(""));
@@ -291,7 +292,7 @@ public final class GearTooltipBuilder {
 
         String lore = gearProfile.getLore();
         if (lore != null) {
-            Stream.of(StringUtils.wrapTextBySize(lore, 150))
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore, 150))
                     .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
         }
 

@@ -5,7 +5,7 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.tabs.ChatTab;
+import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ChatTabsFeature;
@@ -15,8 +15,8 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
 import com.wynntils.handlers.chat.RecipientType;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.CommonColors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

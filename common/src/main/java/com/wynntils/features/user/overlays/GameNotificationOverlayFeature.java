@@ -25,7 +25,7 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;

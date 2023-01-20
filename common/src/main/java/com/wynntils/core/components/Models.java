@@ -4,28 +4,27 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.chat.tabs.ChatTabModel;
+import com.wynntils.core.chat.ChatTabModel;
 import com.wynntils.core.net.hades.model.HadesModel;
 import com.wynntils.core.net.hades.model.HadesUserModel;
-import com.wynntils.core.services.TranslationModel;
-import com.wynntils.wynn.handleditems.ItemModel;
-import com.wynntils.wynn.model.BombBellModel;
-import com.wynntils.wynn.model.CompassModel;
-import com.wynntils.wynn.model.LootChestModel;
-import com.wynntils.wynn.model.LootrunModel;
-import com.wynntils.wynn.model.PlayerInventoryModel;
-import com.wynntils.wynn.model.PlayerModel;
-import com.wynntils.wynn.model.PlayerRelationsModel;
-import com.wynntils.wynn.model.ServerListModel;
-import com.wynntils.wynn.model.ShamanMaskModel;
-import com.wynntils.wynn.model.ShamanTotemModel;
-import com.wynntils.wynn.model.SpellModel;
-import com.wynntils.wynn.model.TabModel;
+import com.wynntils.core.net.translation.TranslationModel;
+import com.wynntils.models.abilities.BossBarModel;
+import com.wynntils.models.abilities.ShamanMaskModel;
+import com.wynntils.models.abilities.ShamanTotemModel;
+import com.wynntils.models.character.PlayerInventoryModel;
+import com.wynntils.models.character.statuseffects.TabModel;
+import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.items.ItemModel;
+import com.wynntils.models.lootruns.LootrunModel;
+import com.wynntils.models.map.CompassModel;
+import com.wynntils.models.map.MapModel;
+import com.wynntils.models.players.PlayerModel;
+import com.wynntils.models.players.PlayerRelationsModel;
+import com.wynntils.models.spells.SpellModel;
+import com.wynntils.models.territories.GuildAttackTimerModel;
+import com.wynntils.models.worlds.BombBellModel;
+import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
-import com.wynntils.wynn.model.bossbar.BossBarModel;
-import com.wynntils.wynn.model.guild.GuildAttackTimerModel;
-import com.wynntils.wynn.model.map.MapModel;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 
 public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
@@ -43,7 +42,6 @@ public final class Models {
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final PlayerModel Player = new PlayerModel();
-    public static final ScoreboardModel Scoreboard = new ScoreboardModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();

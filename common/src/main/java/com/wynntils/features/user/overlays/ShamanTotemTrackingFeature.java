@@ -27,9 +27,9 @@ import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.TotemEvent;
-import com.wynntils.wynn.objects.ShamanTotem;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.models.abilities.ShamanTotem;
+import com.wynntils.models.abilities.event.TotemEvent;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -226,7 +226,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
 
         private String getFormattedTotemText(String prefix, String suffix, String detail) {
-            String maxFitting = StringUtils.getMaxFittingText(
+            String maxFitting = RenderedStringUtils.getMaxFittingText(
                     prefix + suffix + detail,
                     this.getWidth(),
                     FontRenderer.getInstance().getFont());

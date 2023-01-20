@@ -4,7 +4,7 @@
  */
 package com.wynntils.gui.screens.guides;
 
-import com.wynntils.wynn.objects.profiles.item.GearProfile;
+import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.wynn.utils.GearTooltipBuilder;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import java.util.ArrayList;

@@ -18,9 +18,9 @@ import com.wynntils.gui.screens.settings.elements.CustomColorConfigOptionElement
 import com.wynntils.gui.screens.settings.elements.EnumConfigOptionElement;
 import com.wynntils.gui.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -96,7 +96,7 @@ public class ConfigButton extends WynntilsButton {
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
-            String[] parts = StringUtils.wrapTextBySize(description, 200);
+            String[] parts = RenderedStringUtils.wrapTextBySize(description, 200);
             List<Component> components = Arrays.stream(parts)
                     .map(s -> (Component) Component.literal(s))
                     .toList();

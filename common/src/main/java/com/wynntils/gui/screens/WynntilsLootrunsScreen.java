@@ -17,11 +17,11 @@ import com.wynntils.gui.widgets.BackButton;
 import com.wynntils.gui.widgets.LootrunButton;
 import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.ReloadButton;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.models.lootruns.LootrunInstance;
+import com.wynntils.models.lootruns.event.LootrunCacheRefreshEvent;
+import com.wynntils.utils.CommonColors;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
-import com.wynntils.wynn.event.LootrunCacheRefreshEvent;
-import com.wynntils.wynn.model.LootrunModel;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
@@ -31,7 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunModel.LootrunInstance, LootrunButton> {
+public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunInstance, LootrunButton> {
     private WynntilsLootrunsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
 
@@ -93,7 +93,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+            LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
@@ -160,7 +160,7 @@ public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<Lootrun
     }
 
     private void renderDescription(PoseStack poseStack) {
-        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);

@@ -13,12 +13,13 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.WynntilsLootrunsScreen;
 import com.wynntils.gui.screens.maps.MainMapScreen;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.mc.utils.KeyboardUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.KeyboardUtils;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.LootrunModel;
+import com.wynntils.mc.utils.RenderedStringUtils;
+import com.wynntils.models.lootruns.LootrunInstance;
+import com.wynntils.models.lootruns.type.LootrunPath;
+import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.CustomColor;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
@@ -32,11 +33,10 @@ public class LootrunButton extends WynntilsButton {
     private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
     private static final CustomColor TRACKED_BUTTON_COLOR_HOVERED = new CustomColor(126, 211, 106);
 
-    private final LootrunModel.LootrunInstance lootrun;
+    private final LootrunInstance lootrun;
     private final WynntilsLootrunsScreen screen;
 
-    public LootrunButton(
-            int x, int y, int width, int height, LootrunModel.LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
+    public LootrunButton(int x, int y, int width, int height, LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
         super(x, y, width, height, Component.literal("Lootrun Button"));
         this.lootrun = lootrun;
         this.screen = screen;
@@ -51,7 +51,7 @@ public class LootrunButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StringUtils.getMaxFittingText(
+                        RenderedStringUtils.getMaxFittingText(
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont()),
@@ -78,7 +78,7 @@ public class LootrunButton extends WynntilsButton {
             if (isLoaded()) {
                 Models.Lootrun.clearCurrentLootrun();
             } else {
-                Models.Lootrun.tryLoadFile(lootrun.name());
+                Models.Lootrun.loadFile(lootrun.name());
             }
             return true;
         }
@@ -96,7 +96,7 @@ public class LootrunButton extends WynntilsButton {
                 return true;
             }
 
-            LootrunModel.Path path = lootrun.path();
+            LootrunPath path = lootrun.path();
             Vec3 start = path.points().get(0);
 
             McUtils.mc().setScreen(MainMapScreen.create((float) start.x, (float) start.z));
@@ -117,11 +117,11 @@ public class LootrunButton extends WynntilsButton {
     }
 
     private boolean isLoaded() {
-        LootrunModel.LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         return currentLootrun != null && Objects.equals(currentLootrun.name(), lootrun.name());
     }
 
-    public LootrunModel.LootrunInstance getLootrun() {
+    public LootrunInstance getLootrun() {
         return lootrun;
     }
 }

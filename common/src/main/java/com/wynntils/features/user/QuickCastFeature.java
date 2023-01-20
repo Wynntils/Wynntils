@@ -10,11 +10,11 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.SpellProgressEvent;
-import com.wynntils.wynn.event.WorldStateEvent;
 import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -106,7 +106,7 @@ public class QuickCastFeature extends UserFeature {
             return;
         }
 
-        List<String> loreLines = ItemUtils.getLore(heldItem);
+        List<String> loreLines = LoreUtils.getLore(heldItem);
 
         boolean isArcher = false;
         for (String lore : loreLines) {

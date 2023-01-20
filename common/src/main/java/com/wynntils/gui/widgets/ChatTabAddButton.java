@@ -11,8 +11,8 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.screens.ChatTabEditingScreen;
-import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.CommonColors;
 import net.minecraft.network.chat.Component;
 
 public class ChatTabAddButton extends WynntilsButton {

@@ -10,7 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.services.TranslationModel;
+import com.wynntils.core.net.translation.TranslationModel;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;

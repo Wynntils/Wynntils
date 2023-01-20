@@ -5,10 +5,10 @@
 package com.wynntils.wynn.utils;
 
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
+import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +39,7 @@ public final class WynnItemMatchers {
 
         boolean isCraftedPotion = false;
         boolean hasHealEffect = false;
-        ListTag lore = ItemUtils.getLoreTagElseEmpty(itemStack);
+        ListTag lore = LoreUtils.getLoreTagElseEmpty(itemStack);
         for (Tag tag : lore) {
             String unformattedLoreLine = ComponentUtils.getUnformatted(tag.getAsString());
 
@@ -78,7 +78,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item has an attack speed
      */
     public static boolean isWeapon(ItemStack itemStack) {
-        String lore = ItemUtils.getStringLore(itemStack);
+        String lore = LoreUtils.getStringLore(itemStack);
         return lore.contains("Attack Speed") && lore.contains("§7");
     }
 
@@ -86,7 +86,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
      */
     private static boolean isGear(ItemStack itemStack) {
-        for (Component line : ItemUtils.getTooltipLines(itemStack)) {
+        for (Component line : LoreUtils.getTooltipLines(itemStack)) {
             if (rarityLineMatcher(line).find()) return true;
         }
         return false;

@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.render.Texture;
+import com.wynntils.gui.render.TooltipUtils;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -56,13 +57,13 @@ public class PlayButton extends WynntilsButton {
         if (isHovered) {
             poseStack.pushPose();
             List<ClientTooltipComponent> clientTooltipComponents =
-                    RenderUtils.componentToClientTooltipComponent(TOOLTIP);
+                    TooltipUtils.componentToClientTooltipComponent(TOOLTIP);
             poseStack.translate(
                     mouseX
-                            - RenderUtils.getToolTipWidth(
+                            - TooltipUtils.getToolTipWidth(
                                     clientTooltipComponents,
                                     FontRenderer.getInstance().getFont()),
-                    mouseY - RenderUtils.getToolTipHeight(clientTooltipComponents),
+                    mouseY - TooltipUtils.getToolTipHeight(clientTooltipComponents),
                     100);
             RenderUtils.drawTooltip(
                     poseStack, TOOLTIP, FontRenderer.getInstance().getFont(), true);
