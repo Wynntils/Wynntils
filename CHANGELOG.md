@@ -1,9 +1,21 @@
+## [0.0.2-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.121...v0.0.2-alpha.122) (2023-01-20)
+
+
+### Bug Fixes
+
+* Exact match for service name counts will select it ([#1052](https://github.com/Wynntils/Artemis/issues/1052)) ([8188890](https://github.com/Wynntils/Artemis/commit/81888905689e4d40db540b7954eb1ab9b4bbe6e2))
+
 ## [0.0.2-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.120...v0.0.2-alpha.121) (2023-01-20)
 
 
 ### Code Refactoring
 
 * integrate SpellModel with QuickCastFeature ([#1051](https://github.com/Wynntils/Artemis/issues/1051)) ([24fe4d9](https://github.com/Wynntils/Artemis/commit/24fe4d93aec5f26df1f2b78d07ea304930875467))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.121 [skip ci] ([34cca89](https://github.com/Wynntils/Artemis/commit/34cca89b731c83733f5da36c10e62a60a048907a))
 
 ## [0.0.2-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.119...v0.0.2-alpha.120) (2023-01-20)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.118 [skip ci] ([13c96dd](https://github.com/Wynntils/Artemis/commit/13c96dd0cd8465e7e967ac2b7568c3d93cae97d0))
-
-## [0.0.2-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.116...v0.0.2-alpha.117) (2023-01-19)
-
-
-### Bug Fixes
-
-* Fix HadesEvent$Authenticated errors ([#1049](https://github.com/Wynntils/Artemis/issues/1049)) ([a06c56c](https://github.com/Wynntils/Artemis/commit/a06c56c2f07aeb744a17843a6289221318843bd2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.117 [skip ci] ([5c5b72a](https://github.com/Wynntils/Artemis/commit/5c5b72af9124b7d8ba017cafb8535f311df69d1d))
 
