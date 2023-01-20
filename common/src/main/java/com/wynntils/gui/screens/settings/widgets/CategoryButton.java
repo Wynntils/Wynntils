@@ -6,11 +6,11 @@ package com.wynntils.gui.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 

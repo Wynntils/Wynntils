@@ -5,9 +5,9 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

@@ -9,7 +9,7 @@ import com.wynntils.models.gear.GearIdentification;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.utils.CappedValue;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {

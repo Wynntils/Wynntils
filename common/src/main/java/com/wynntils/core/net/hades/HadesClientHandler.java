@@ -19,7 +19,7 @@ import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

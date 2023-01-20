@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.map.pois;
 
-import com.wynntils.gui.render.Texture;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
+import com.wynntils.utils.render.Texture;
 import java.util.function.Supplier;
 
 public class PointerPoi extends DynamicIconPoi {

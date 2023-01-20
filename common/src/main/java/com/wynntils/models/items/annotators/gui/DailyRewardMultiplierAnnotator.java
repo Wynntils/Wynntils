@@ -6,9 +6,9 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.items.items.gui.DailyRewardItem;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {

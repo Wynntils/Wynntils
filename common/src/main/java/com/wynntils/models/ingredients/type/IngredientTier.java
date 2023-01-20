@@ -5,7 +5,7 @@
 package com.wynntils.models.ingredients.type;
 
 import com.google.gson.annotations.SerializedName;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.ChatFormatting;
 
 public enum IngredientTier {

@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.gear.profile;
 
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.gear.GearIdentificationContainer;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;

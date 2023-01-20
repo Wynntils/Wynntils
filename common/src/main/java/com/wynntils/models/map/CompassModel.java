@@ -5,13 +5,13 @@
 package com.wynntils.models.map;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.map.pois.WaypointPoi;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.Texture;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
