@@ -1,9 +1,21 @@
+## [0.0.2-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.126...v0.0.2-alpha.127) (2023-01-20)
+
+
+### Code Refactoring
+
+* Remove ScoreboardModel ([#1059](https://github.com/Wynntils/Artemis/issues/1059)) ([e01f7f0](https://github.com/Wynntils/Artemis/commit/e01f7f03742b2db5e520e3abcfbd1403d8e66f29))
+
 ## [0.0.2-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.125...v0.0.2-alpha.126) (2023-01-20)
 
 
 ### Code Refactoring
 
 * Split up Lootrun in more manageable parts ([#1058](https://github.com/Wynntils/Artemis/issues/1058)) ([1b0da51](https://github.com/Wynntils/Artemis/commit/1b0da51cbfefbfd2ec3063e4054119507c29a78d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.126 [skip ci] ([6b4d606](https://github.com/Wynntils/Artemis/commit/6b4d606e192f3d7c8eb60f9887ea8d7af7a32969))
 
 ## [0.0.2-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.124...v0.0.2-alpha.125) (2023-01-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.123 [skip ci] ([90e970d](https://github.com/Wynntils/Artemis/commit/90e970d81b23aaa15bf3049d956d6cd106d9f9d1))
-
-## [0.0.2-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.121...v0.0.2-alpha.122) (2023-01-20)
-
-
-### Bug Fixes
-
-* Exact match for service name counts will select it ([#1052](https://github.com/Wynntils/Artemis/issues/1052)) ([8188890](https://github.com/Wynntils/Artemis/commit/81888905689e4d40db540b7954eb1ab9b4bbe6e2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.122 [skip ci] ([8eb6c72](https://github.com/Wynntils/Artemis/commit/8eb6c72c55c6023a2fc1511e3d6f86a0fc036c05))
 
