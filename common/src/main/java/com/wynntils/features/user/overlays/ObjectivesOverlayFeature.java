@@ -30,7 +30,7 @@ import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.model.objectives.WynnObjective;
+import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;

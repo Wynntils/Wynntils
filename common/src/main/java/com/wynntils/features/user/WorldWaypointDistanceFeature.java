@@ -25,7 +25,7 @@ import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.objects.Location;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.map.poi.WaypointPoi;
+import com.wynntils.models.map.pois.WaypointPoi;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Camera;

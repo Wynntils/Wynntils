@@ -27,7 +27,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.objects.CustomColor;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.Powder;
+import com.wynntils.models.concepts.Powder;
 import com.wynntils.wynn.utils.InventoryUtils;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;

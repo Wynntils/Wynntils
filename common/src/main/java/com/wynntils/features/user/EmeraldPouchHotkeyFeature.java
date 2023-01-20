@@ -15,7 +15,7 @@ import com.wynntils.gui.render.TextRenderSetting;
 import com.wynntils.gui.render.TextRenderTask;
 import com.wynntils.mc.objects.CommonColors;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.wynn.utils.InventoryUtils;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.Optional;

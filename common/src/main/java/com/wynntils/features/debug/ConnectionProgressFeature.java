@@ -7,8 +7,8 @@ package com.wynntils.features.debug;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.objects.WorldState;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ConnectionProgressFeature extends DebugFeature {

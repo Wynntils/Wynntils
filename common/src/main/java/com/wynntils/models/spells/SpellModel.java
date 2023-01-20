@@ -1,0 +1,53 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.models.spells;
+
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.models.spells.event.SpellCastEvent;
+import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
+import com.wynntils.models.spells.type.SpellType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+public class SpellModel extends Model {
+    private static final Pattern LEVEL_1_SPELL_PATTERN =
+            Pattern.compile("§a(Left|Right|\\?)§7-§a(Left|Right|\\?)§7-§r§a(Left|Right|\\?)§r");
+    private static final Pattern LOW_LEVEL_SPELL_PATTERN = Pattern.compile("§a([LR?])§7-§a([LR?])§7-§r§a([LR?])§r");
+
+    @SubscribeEvent
+    public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
+        Matcher matcher = e.getMatcher();
+        if (!matcher.matches()) return;
+
+        if (matcher.group(3) != null && !matcher.group(3).equals("?")) {
+            boolean[] lastSpell = new boolean[3];
+            lastSpell[0] = matcher.group(1).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            lastSpell[1] = matcher.group(2).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            lastSpell[2] = matcher.group(3).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+            SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(lastSpell));
+            WynntilsMod.postEvent(spellCasted);
+        }
+    }
+
+    @SubscribeEvent
+    public void onSubtitleSetText(SubtitleSetTextEvent e) {
+        int level = Managers.Character.getXpLevel();
+        String right = (level == 1) ? "Right" : "R";
+        Matcher m = (level == 1 ? LEVEL_1_SPELL_PATTERN : LOW_LEVEL_SPELL_PATTERN)
+                .matcher(e.getComponent().getString());
+        if (!m.matches() || m.group(3).equals("?")) return;
+
+        boolean[] spell = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            spell[i] = m.group(i + 1).equals(right) ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+        }
+        SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(spell));
+        WynntilsMod.postEvent(spellCasted);
+    }
+}

@@ -10,7 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;

@@ -4,12 +4,12 @@
  */
 package com.wynntils.gui.screens.guides;
 
-import com.wynntils.wynn.objects.profiles.ingredient.IngredientIdentificationContainer;
-import com.wynntils.wynn.objects.profiles.ingredient.IngredientItemModifiers;
-import com.wynntils.wynn.objects.profiles.ingredient.IngredientModifiers;
-import com.wynntils.wynn.objects.profiles.ingredient.IngredientProfile;
-import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
+import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
+import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
+import com.wynntils.models.ingredients.profile.IngredientModifiers;
+import com.wynntils.models.ingredients.profile.IngredientProfile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

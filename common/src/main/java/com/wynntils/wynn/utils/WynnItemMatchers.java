@@ -6,9 +6,9 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.objects.SpellType;
-import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
