@@ -1,9 +1,21 @@
+## [0.0.2-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.118...v0.0.2-alpha.119) (2023-01-20)
+
+
+### Bug Fixes
+
+* Totem tracking improvements ([#1047](https://github.com/Wynntils/Artemis/issues/1047)) ([ef15daf](https://github.com/Wynntils/Artemis/commit/ef15daf5cf849891b05de05b4aed96352ca4c44d))
+
 ## [0.0.2-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.117...v0.0.2-alpha.118) (2023-01-19)
 
 
 ### Bug Fixes
 
 * BufferedRenderUtils#drawRect now uses the correct CustomRenderType ([#1050](https://github.com/Wynntils/Artemis/issues/1050)) ([86c2709](https://github.com/Wynntils/Artemis/commit/86c2709b743f62b3c25efbb88747c58d4637a9a4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.118 [skip ci] ([13c96dd](https://github.com/Wynntils/Artemis/commit/13c96dd0cd8465e7e967ac2b7568c3d93cae97d0))
 
 ## [0.0.2-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.116...v0.0.2-alpha.117) (2023-01-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.115 [skip ci] ([65f9ef9](https://github.com/Wynntils/Artemis/commit/65f9ef999367bc69e68c9b3b210468f8c76f6073))
-
-## [0.0.2-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.113...v0.0.2-alpha.114) (2023-01-17)
-
-
-### Bug Fixes
-
-* Render tooltip at the correct location for WynntilsMenuScreen ([#1046](https://github.com/Wynntils/Artemis/issues/1046)) ([bcca30e](https://github.com/Wynntils/Artemis/commit/bcca30ed134e28e67d29f82113fb601f5c6dc5bf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.114 [skip ci] ([b3a1ba9](https://github.com/Wynntils/Artemis/commit/b3a1ba9748c8db0d47edffa4fc9ca40b2acf982e))
 
