@@ -463,8 +463,6 @@
   "feature.wynntils.map.name": "地图",
   "feature.wynntils.map.playerPointerScale.description": "在地图上，您的标记要多大呢？",
   "feature.wynntils.map.playerPointerScale.name": "您的标记规模",
-  "feature.wynntils.map.poiFadeDistance.description": "标记点要过多长变暗，最後就不见？",
-  "feature.wynntils.map.poiFadeDistance.name": "标记消失长度",
   "feature.wynntils.map.poiScale.description": "别的标记点图片的规模是什麽？",
   "feature.wynntils.map.poiScale.name": "别的标记规模",
   "feature.wynntils.map.pointerColor.description": "在地图上，您的标记点要什麽颜色显示？",
