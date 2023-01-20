@@ -2,6 +2,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -27,9 +28,56 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
 
     @Override
     protected void init() {
+        // region Invite input and button
+        int inviteInputWidth = 300;
+        int inviteButtonWidth = 40;
+        int inviteGap = 4;
+        int inviteSum = inviteInputWidth + inviteButtonWidth + inviteGap;
+        int xStart = inviteSum / 2;
         this.addRenderableWidget(
-                inviteInput = new TextInputBoxWidget(this.width / 2 - 160, this.height / 2 + 100, 300, 20, null, this, inviteInput));
+                inviteInput = new TextInputBoxWidget(this.width / 2 - xStart, this.height / 2 - 200, inviteInputWidth, 20, null, this, inviteInput));
 
+        this.addRenderableWidget(
+                inviteButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.inviteButton"),
+                (button) -> inviteFromField())
+                        .pos(this.width / 2 - (xStart - inviteSum + inviteButtonWidth), this.height / 2 - 200)
+                        .size(inviteButtonWidth, 20)
+                        .build());
+
+        inviteButton.active = false;
+        // endregion
+
+        // region Management button row
+        this.addRenderableWidget(
+                refreshButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.refreshButton").withStyle(ChatFormatting.GREEN),
+                (button) -> refreshParty())
+                        .pos(this.width / 2 - xStart, this.height / 2 - 176)
+                        .size(83, 20)
+                        .build());
+        this.addRenderableWidget(
+                kickOfflineButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton").withStyle(ChatFormatting.RED),
+                (button) -> kickOffline())
+                        .pos(this.width / 2 - (xStart - 87), this.height / 2 - 176)
+                        .size(83, 20)
+                        .build());
+        this.addRenderableWidget(
+                createPartyButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.createPartyButton"),
+                (button) -> createParty())
+                        .pos(this.width / 2 - (xStart - 174), this.height / 2 - 176)
+                        .size(83, 20)
+                        .build());
+        this.addRenderableWidget(
+                leavePartyButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.leavePartyButton").withStyle(ChatFormatting.RED),
+                (button) -> leaveParty())
+                        .pos(this.width / 2 - (xStart - 261), this.height / 2 - 176)
+                        .size(83, 20)
+                        .build());
+        // endregion
     }
 
     @Override
@@ -40,6 +88,27 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
         // something about a fontrenderer
     }
 
+    private void inviteFromField() {
+
+        inviteInput.setTextBoxInput("");
+    }
+
+    private void refreshParty() {
+
+    }
+
+    private void kickOffline() {
+
+    }
+
+    private void createParty() {
+
+    }
+
+    private void leaveParty() {
+
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
@@ -48,6 +117,7 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
+        inviteButton.active = (!inviteInput.getTextBoxInput().isEmpty());
         return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers)) || super.charTyped(codePoint, modifiers);
     }
 
