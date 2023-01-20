@@ -6,17 +6,25 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.handlers.scoreboard.ScoreboardListener;
-import com.wynntils.handlers.scoreboard.Segment;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.handlers.scoreboard.ScoreboardSegment;
+import com.wynntils.handlers.scoreboard.SegmentMatcher;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 
-public class QuestScoreboardListener implements ScoreboardListener {
+public class QuestScoreboardPart implements ScoreboardPart {
+    static final SegmentMatcher QUEST_MATCHER = SegmentMatcher.fromPattern("Tracked Quest:");
+
     @Override
-    public void onSegmentChange(Segment newValue, ScoreboardModel.SegmentType segmentType) {
+    public Set<SegmentMatcher> getSegmentMatchers() {
+        return Set.of(QUEST_MATCHER);
+    }
+
+    @Override
+    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
         List<String> content = newValue.getContent();
 
         if (content.isEmpty()) {
@@ -42,7 +50,7 @@ public class QuestScoreboardListener implements ScoreboardListener {
     }
 
     @Override
-    public void onSegmentRemove(Segment segment, ScoreboardModel.SegmentType segmentType) {
+    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
         Managers.Quest.clearTrackedQuestFromScoreBoard();
     }
 

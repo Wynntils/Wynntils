@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -26,12 +25,12 @@ import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.gui.render.buffered.BufferedRenderUtils;
+import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.CommonColors;
 import com.wynntils.utils.CustomColor;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -46,19 +45,19 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Scoreboard);
+        // FIXME: Should be ObjectivesManager when this has become a model
+        return List.of();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard) {
-            if (event.getSegment().getType() == ScoreboardModel.SegmentType.GuildObjective
-                    && guildObjectiveOverlay.isEnabled()) {
+            ScoreboardSegment segment = event.getSegment();
+            if (Managers.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (event.getSegment().getType() == ScoreboardModel.SegmentType.Objective
-                    && dailyObjectiveOverlay.isEnabled()) {
+            if (Managers.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
