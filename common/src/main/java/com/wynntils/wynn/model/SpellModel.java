@@ -5,49 +5,77 @@
 package com.wynntils.wynn.model;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.wynn.event.SpellCastEvent;
+import com.wynntils.wynn.event.SpellEvent;
+import com.wynntils.wynn.event.SpellProgressEvent;
+import com.wynntils.wynn.event.TrySpellCastEvent;
 import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
+import com.wynntils.wynn.objects.SpellDirection;
 import com.wynntils.wynn.objects.SpellType;
+import java.util.Arrays;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    private static final Pattern LEVEL_1_SPELL_PATTERN =
-            Pattern.compile("§a(Left|Right|\\?)§7-§a(Left|Right|\\?)§7-§r§a(Left|Right|\\?)§r");
-    private static final Pattern LOW_LEVEL_SPELL_PATTERN = Pattern.compile("§a([LR?])§7-§a([LR?])§7-§r§a([LR?])§r");
+    // If you modify please test with link below
+    // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
+    // https://regexr.com/76ijo
+    private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
+            "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
+
+    private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
     @SubscribeEvent
     public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
         Matcher matcher = e.getMatcher();
         if (!matcher.matches()) return;
 
-        if (matcher.group(3) != null && !matcher.group(3).equals("?")) {
-            boolean[] lastSpell = new boolean[3];
-            lastSpell[0] = matcher.group(1).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-            lastSpell[1] = matcher.group(2).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-            lastSpell[2] = matcher.group(3).charAt(0) == 'R' ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
-            SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(lastSpell));
-            WynntilsMod.postEvent(spellCasted);
+        SpellDirection[] spell = getSpellFromMatcher(e.getMatcher());
+        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        lastSpell = spell;
+
+        WynntilsMod.postEvent(new SpellProgressEvent(spell, SpellEvent.Source.HOTBAR));
+
+        if (!matcher.group(3).equals("?")) {
+            WynntilsMod.postEvent(
+                    new TrySpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent e) {
-        int level = Managers.Character.getXpLevel();
-        String right = (level == 1) ? "Right" : "R";
-        Matcher m = (level == 1 ? LEVEL_1_SPELL_PATTERN : LOW_LEVEL_SPELL_PATTERN)
-                .matcher(e.getComponent().getString());
-        if (!m.matches() || m.group(3).equals("?")) return;
+        Matcher matcher = SPELL_TITLE_PATTERN.matcher(e.getComponent().getString());
+        if (!matcher.matches()) return;
 
-        boolean[] spell = new boolean[3];
-        for (int i = 0; i < 3; i++) {
-            spell[i] = m.group(i + 1).equals(right) ? SpellType.SPELL_RIGHT : SpellType.SPELL_LEFT;
+        SpellDirection[] spell = getSpellFromMatcher(matcher);
+        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        lastSpell = spell;
+
+        // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
+        SpellEvent.Source source =
+                (matcher.group(1).endsWith("t")) ? SpellEvent.Source.TITLE_FULL : SpellEvent.Source.TITLE_LETTER;
+
+        WynntilsMod.postEvent(new SpellProgressEvent(spell, source));
+
+        if (!matcher.group(3).equals("?")) {
+            WynntilsMod.postEvent(new TrySpellCastEvent(spell, source, SpellType.fromSpellDirectionArray(spell)));
         }
-        SpellCastEvent spellCasted = new SpellCastEvent(SpellType.fromBooleanArray(spell));
-        WynntilsMod.postEvent(spellCasted);
+    }
+
+    private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
+        int size = 1;
+        for (; size < 3; ++size) {
+            if (spellMatcher.group(size + 1).equals("?")) break;
+        }
+
+        SpellDirection[] spell = new SpellDirection[size];
+        for (int i = 0; i < size; ++i) {
+            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R' ? SpellDirection.RIGHT : SpellDirection.LEFT;
+        }
+
+        return spell;
     }
 }

@@ -1,0 +1,32 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.wynn.objects;
+
+import com.wynntils.mc.utils.McUtils;
+import java.util.Arrays;
+import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
+import net.minecraft.world.InteractionHand;
+
+public enum SpellDirection {
+    RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
+    LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
+
+    private final Runnable sendPacketRunnable;
+
+    public static final SpellDirection[] NO_SPELL = new SpellDirection[0];
+
+    SpellDirection(Runnable sendPacketRunnable) {
+        this.sendPacketRunnable = sendPacketRunnable;
+    }
+
+    public Runnable getSendPacketRunnable() {
+        return sendPacketRunnable;
+    }
+
+    public static SpellDirection[] invertArray(SpellDirection[] initial) {
+        return Arrays.stream(initial).map((x) -> (x == RIGHT) ? LEFT : RIGHT).toArray(SpellDirection[]::new);
+    }
+}
