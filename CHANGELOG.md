@@ -1,9 +1,21 @@
+## [0.0.2-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.119...v0.0.2-alpha.120) (2023-01-20)
+
+
+### Miscellaneous Chores
+
+* Don't build on drafts ([#1053](https://github.com/Wynntils/Artemis/issues/1053)) ([8f29c26](https://github.com/Wynntils/Artemis/commit/8f29c26b14dc3b5c3eb4f5808b0b2df68b952181))
+
 ## [0.0.2-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.118...v0.0.2-alpha.119) (2023-01-20)
 
 
 ### Bug Fixes
 
 * Totem tracking improvements ([#1047](https://github.com/Wynntils/Artemis/issues/1047)) ([ef15daf](https://github.com/Wynntils/Artemis/commit/ef15daf5cf849891b05de05b4aed96352ca4c44d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.119 [skip ci] ([b8ee44b](https://github.com/Wynntils/Artemis/commit/b8ee44b52eb4102c868a05156c34d7bb5252f6f2))
 
 ## [0.0.2-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.117...v0.0.2-alpha.118) (2023-01-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.116 [skip ci] ([9b46b7c](https://github.com/Wynntils/Artemis/commit/9b46b7ca1e693198753d968cfeb9346ec5b83562))
-
-## [0.0.2-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.114...v0.0.2-alpha.115) (2023-01-17)
-
-
-### Bug Fixes
-
-* Better default config for CustomCharacterSelectionScreenFeature ([#1045](https://github.com/Wynntils/Artemis/issues/1045)) ([a2515bf](https://github.com/Wynntils/Artemis/commit/a2515bfdb936da6308328cbbd82c17ecf88c7bf2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.115 [skip ci] ([65f9ef9](https://github.com/Wynntils/Artemis/commit/65f9ef999367bc69e68c9b3b210468f8c76f6073))
 
