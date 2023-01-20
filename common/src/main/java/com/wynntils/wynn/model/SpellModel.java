@@ -7,7 +7,6 @@ package com.wynntils.wynn.model;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.event.SpellEvent;
 import com.wynntils.wynn.event.SpellProgressEvent;
 import com.wynntils.wynn.event.TrySpellCastEvent;
@@ -21,8 +20,11 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    private static final Pattern SPELL_TITLE_PATTERN =
-            StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
+    // If you modify please test with
+    // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
+    // https://regexr.com/76ijo
+    private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
+            "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
