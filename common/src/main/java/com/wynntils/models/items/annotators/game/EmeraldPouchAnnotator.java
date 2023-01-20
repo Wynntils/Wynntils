@@ -6,10 +6,10 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;

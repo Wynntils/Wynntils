@@ -4,7 +4,7 @@
  */
 package com.wynntils.gui.widgets;
 
-import com.wynntils.gui.render.Texture;
+import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

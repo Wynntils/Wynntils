@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.client.resources.DownloadedPackSource;

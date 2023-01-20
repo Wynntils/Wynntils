@@ -5,11 +5,11 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.render.TooltipUtils;
-import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.TooltipUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;

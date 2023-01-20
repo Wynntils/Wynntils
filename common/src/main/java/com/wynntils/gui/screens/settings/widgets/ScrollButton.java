@@ -5,11 +5,11 @@
 package com.wynntils.gui.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 

@@ -5,8 +5,8 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Manager;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

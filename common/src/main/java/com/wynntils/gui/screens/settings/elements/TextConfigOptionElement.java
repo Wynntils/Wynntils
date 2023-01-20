@@ -6,10 +6,10 @@ package com.wynntils.gui.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.gui.render.FontRenderer;
 import com.wynntils.gui.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.gui.widgets.TextInputBoxWidget;
-import com.wynntils.utils.CommonColors;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
 import java.util.Objects;
 
 public class TextConfigOptionElement extends ConfigOptionElement {

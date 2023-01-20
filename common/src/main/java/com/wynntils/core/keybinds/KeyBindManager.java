@@ -13,7 +13,7 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
