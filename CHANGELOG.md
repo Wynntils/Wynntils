@@ -1,9 +1,21 @@
+## [0.0.2-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.128...v0.0.2-alpha.129) (2023-01-20)
+
+
+### Miscellaneous Chores
+
+* Clean up merge mistakes after the series of refactoring merges ([#1061](https://github.com/Wynntils/Artemis/issues/1061)) ([2716869](https://github.com/Wynntils/Artemis/commit/27168696bd196f9052b9123afe4273c53ea39d4c))
+
 ## [0.0.2-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.127...v0.0.2-alpha.128) (2023-01-20)
 
 
 ### Code Refactoring
 
 * Move all utils under top-level util hierarchy ([#1062](https://github.com/Wynntils/Artemis/issues/1062)) ([2752498](https://github.com/Wynntils/Artemis/commit/275249887c613e8c26c34a40ddb8d6a7ad77d34d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.128 [skip ci] ([ad4b15f](https://github.com/Wynntils/Artemis/commit/ad4b15f172e4dd2f08d36bfe25dd6eee1fffb756))
 
 ## [0.0.2-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.126...v0.0.2-alpha.127) (2023-01-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.125 [skip ci] ([946344a](https://github.com/Wynntils/Artemis/commit/946344a36930e7ee7f11df02025509e880009ca9))
-
-## [0.0.2-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.123...v0.0.2-alpha.124) (2023-01-20)
-
-
-### Code Refactoring
-
-* Shuffle around/split up Utils classes so they are in the right place ([#1056](https://github.com/Wynntils/Artemis/issues/1056)) ([46a2243](https://github.com/Wynntils/Artemis/commit/46a2243f7b278c21f2f603829a28ef153c24150d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.124 [skip ci] ([e844920](https://github.com/Wynntils/Artemis/commit/e844920a6996afc30e05edc88fb5d881290fca19))
 
