@@ -1,9 +1,21 @@
+## [0.0.2-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.133...v0.0.2-alpha.134) (2023-01-21)
+
+
+### New Features
+
+* Models are now always loaded ([#1067](https://github.com/Wynntils/Artemis/issues/1067)) ([9a68959](https://github.com/Wynntils/Artemis/commit/9a689596376a2e49996f1784dbc0a801cfc85dc1))
+
 ## [0.0.2-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.132...v0.0.2-alpha.133) (2023-01-21)
 
 
 ### New Features
 
 * Disable Athena lookups after several failures ([#1060](https://github.com/Wynntils/Artemis/issues/1060)) ([b74efa5](https://github.com/Wynntils/Artemis/commit/b74efa5f62129faef03d6d8c0342595a7069afa1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.133 [skip ci] ([4d82389](https://github.com/Wynntils/Artemis/commit/4d8238972ad6830140819561b2bdf921c1b88580))
 
 ## [0.0.2-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.131...v0.0.2-alpha.132) (2023-01-21)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.130 [skip ci] ([7858cb3](https://github.com/Wynntils/Artemis/commit/7858cb3bbe8f79aabb93366638b1d230140af55d))
-
-## [0.0.2-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.128...v0.0.2-alpha.129) (2023-01-20)
-
-
-### Miscellaneous Chores
-
-* Clean up merge mistakes after the series of refactoring merges ([#1061](https://github.com/Wynntils/Artemis/issues/1061)) ([2716869](https://github.com/Wynntils/Artemis/commit/27168696bd196f9052b9123afe4273c53ea39d4c))
-* **release:** v0.0.2-alpha.129 [skip ci] ([7e8dcfc](https://github.com/Wynntils/Artemis/commit/7e8dcfcc74f0ffcd846e7c26086a21f04026860f))
 
