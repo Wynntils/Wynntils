@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Workarounds;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
@@ -197,7 +196,6 @@ public final class WynntilsMod {
         Managers.init();
         Handlers.init();
         Models.init();
-        Workarounds.init();
         addCrashCallbacks();
     }
 

@@ -19,9 +19,7 @@ public class ObjectivesModel extends Model {
     private List<WynnObjective> personalObjectives = new ArrayList<>();
     private WynnObjective guildObjective = null;
 
-    public void initWorkaround() {
-        // FIXME: A Handler accessed from a Manager, not good. Will be fixed when this becomes
-        // a Model.
+    public ObjectivesModel() {
         Handlers.Scoreboard.addPart(OBJECTIVES_SCOREBOARD_PART);
     }
 

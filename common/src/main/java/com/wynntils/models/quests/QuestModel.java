@@ -41,9 +41,7 @@ public final class QuestModel extends Model {
     private String afterRescanName;
     private String afterRescanTask;
 
-    public void initWorkaround() {
-        // FIXME: A Handler accessed from a Manager, not good. Will be fixed when this becomes
-        // a Model.
+    public QuestModel() {
         Handlers.Scoreboard.addPart(QUEST_SCOREBOARD_PART);
     }
 
