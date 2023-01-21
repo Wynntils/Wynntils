@@ -46,7 +46,7 @@ import net.minecraft.network.chat.Style;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class CommandManager extends Manager {
-    private final Set<CommandBase> commandInstanceSet = new HashSet<>();
+    private final Set<Command> commandInstanceSet = new HashSet<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     public CommandManager() {
@@ -58,7 +58,7 @@ public final class CommandManager extends Manager {
         return clientDispatcher;
     }
 
-    private void registerCommand(CommandBase command) {
+    private void registerCommand(Command command) {
         commandInstanceSet.add(command);
         command.register(clientDispatcher);
     }
@@ -161,7 +161,7 @@ public final class CommandManager extends Manager {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public Set<CommandBase> getCommandInstanceSet() {
+    public Set<Command> getCommandInstanceSet() {
         return commandInstanceSet;
     }
 

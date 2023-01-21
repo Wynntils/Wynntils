@@ -7,7 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.utils.mc.type.Location;
@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public class TerritoryCommand extends CommandBase {
+public class TerritoryCommand extends Command {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("territory")

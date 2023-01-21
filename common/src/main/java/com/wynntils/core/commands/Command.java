@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 
-public abstract class CommandBase {
+public abstract class Command {
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(getBaseCommandBuilder());
     }
