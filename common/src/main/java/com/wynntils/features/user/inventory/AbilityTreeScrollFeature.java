@@ -4,7 +4,8 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -12,6 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,12 +27,17 @@ public class AbilityTreeScrollFeature extends UserFeature {
     @Config
     public boolean invertScroll = false;
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Container);
+    }
+
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {
         Screen screen = McUtils.mc().screen;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
-        if (!Managers.Container.isAbilityTreeScreen(gui)) return;
+        if (!Models.Container.isAbilityTreeScreen(gui)) return;
 
         boolean up = event.isScrollingUp() ^ invertScroll;
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;

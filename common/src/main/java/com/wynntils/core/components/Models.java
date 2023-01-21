@@ -14,6 +14,7 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.character.statuseffects.TabModel;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.horse.HorseModel;
@@ -37,6 +38,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
+    public static final ContainerModel Container = new ContainerModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();

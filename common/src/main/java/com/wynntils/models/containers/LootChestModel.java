@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -13,6 +14,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
+import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,9 +23,15 @@ public final class LootChestModel extends Model {
 
     private int nextExpectedLootContainerId = -2;
 
+    // @Override
+    public List<Model> getModelDependencies() {
+        // FIXME: Sort this out
+        return List.of(Models.Container);
+    }
+
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Managers.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
+        if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
             DataStorageFeature.INSTANCE.dryCount++;

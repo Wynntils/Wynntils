@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
@@ -22,6 +23,7 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -40,10 +42,15 @@ public class ItemFavoriteFeature extends UserFeature {
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Container);
+    }
+
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!WynnUtils.onWorld()) return;
-        if (!Managers.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!Models.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {

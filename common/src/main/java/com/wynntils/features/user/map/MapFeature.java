@@ -134,7 +134,7 @@ public class MapFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
+        return List.of(Models.Container, Models.Map);
     }
 
     @SubscribeEvent
@@ -153,7 +153,7 @@ public class MapFeature extends UserFeature {
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
-        Matcher matcher = Managers.Container.lootChestMatcher(event.getScreen());
+        Matcher matcher = Models.Container.lootChestMatcher(event.getScreen());
         if (!matcher.matches()) return;
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));

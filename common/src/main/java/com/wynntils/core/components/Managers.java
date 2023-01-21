@@ -20,7 +20,6 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
 import com.wynntils.models.character.CharacterManager;
-import com.wynntils.models.containers.ContainerManager;
 import com.wynntils.models.discoveries.DiscoveryManager;
 import com.wynntils.models.favorites.FavoritesManager;
 import com.wynntils.models.gear.GearItemManager;
@@ -38,7 +37,6 @@ public final class Managers {
     public static final CharacterManager Character = new CharacterManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
-    public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();

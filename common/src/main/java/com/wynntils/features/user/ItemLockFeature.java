@@ -55,7 +55,7 @@ public class ItemLockFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Emerald);
+        return List.of(Models.Container, Models.Emerald);
     }
 
     @SubscribeEvent
@@ -63,7 +63,7 @@ public class ItemLockFeature extends UserFeature {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         // Don't render lock on ability tree slots
-        if (Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+        if (Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
 
         for (Integer slotId : classSlotLockMap.getOrDefault(Managers.Character.getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
@@ -82,7 +82,7 @@ public class ItemLockFeature extends UserFeature {
     public void onInventoryClickEvent(ContainerClickEvent event) {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+                || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
