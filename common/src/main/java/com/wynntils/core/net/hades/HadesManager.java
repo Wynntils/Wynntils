@@ -25,7 +25,6 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
-import com.wynntils.models.worlds.WorldStateManager;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -54,8 +53,8 @@ public final class HadesManager extends Manager {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    public HadesManager(WynntilsAccountManager wynntilsAccountManager, WorldStateManager worldStateManager) {
-        super(List.of(wynntilsAccountManager, worldStateManager));
+    public HadesManager(WynntilsAccountManager wynntilsAccountManager) {
+        super(List.of(wynntilsAccountManager));
 
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
@@ -165,7 +164,7 @@ public final class HadesManager extends Manager {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
-        if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -218,7 +217,7 @@ public final class HadesManager extends Manager {
         if (!isConnected()) return;
 
         hadesConnection.sendPacket(
-                new HCPacketUpdateWorld(Managers.WorldState.getCurrentWorldName(), Models.Character.getId()));
+                new HCPacketUpdateWorld(Models.WorldState.getCurrentWorldName(), Models.Character.getId()));
     }
 
     public void resetSocialType(SocialType socialType) {

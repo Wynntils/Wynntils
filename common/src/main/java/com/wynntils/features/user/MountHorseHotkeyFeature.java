@@ -13,7 +13,6 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -38,7 +37,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
             new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::onMountHorseKeyPress);
 
     private void onMountHorseKeyPress() {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         if (McUtils.player().getVehicle() != null) {
             postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);

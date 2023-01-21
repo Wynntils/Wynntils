@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
@@ -84,7 +85,6 @@ import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -152,7 +152,7 @@ import org.joml.Matrix4f;
 /** Creates events from mixins and platform dependent hooks */
 public final class EventFactory {
     private static <T extends Event> T post(T event) {
-        if (WynnUtils.onServer()) {
+        if (Managers.Connection.onServer()) {
             WynntilsMod.postEvent(event);
         }
         return event;

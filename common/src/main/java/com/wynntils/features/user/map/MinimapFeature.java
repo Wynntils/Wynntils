@@ -38,7 +38,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -110,7 +109,7 @@ public class MinimapFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!Models.WorldState.onWorld()) return;
 
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 

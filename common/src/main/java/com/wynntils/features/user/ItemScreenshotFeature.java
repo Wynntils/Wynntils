@@ -60,7 +60,7 @@ public class ItemScreenshotFeature extends UserFeature {
     // All other features (besides scaling) must be able to update the tooltip first
     @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
         Screen screen = McUtils.mc().screen;

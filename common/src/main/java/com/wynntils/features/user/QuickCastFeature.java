@@ -5,6 +5,7 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -16,7 +17,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -140,7 +140,7 @@ public class QuickCastFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
         if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = SpellDirection.NO_SPELL;

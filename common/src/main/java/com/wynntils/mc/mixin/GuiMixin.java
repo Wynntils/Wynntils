@@ -6,9 +6,9 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
@@ -106,7 +106,8 @@ public abstract class GuiMixin {
     // This does not work on forge. See ForgeIngameGui for replacement.
     @Inject(method = "renderVehicleHealth", at = @At("HEAD"), cancellable = true)
     private void onVehicleHealthRender(PoseStack poseStack, CallbackInfo ci) {
-        if (WynnUtils.onWorld()) {
+        // FIXME: What if managers are not loaded? We should send event!
+        if (Managers.Connection.onServer()) {
             ci.cancel();
         }
     }

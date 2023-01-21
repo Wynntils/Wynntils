@@ -33,6 +33,7 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -66,6 +67,7 @@ public final class Models {
     public static final SpellModel Spell = new SpellModel();
     public static final TabModel Tab = new TabModel();
     public static final TerritoryModel Territory = new TerritoryModel();
+    public static final WorldStateModel WorldState = new WorldStateModel();
 
     public static void init() {
         // Register all model singletons as event listeners

@@ -12,6 +12,7 @@ import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
+import com.wynntils.core.mod.ConnectionManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.net.NetManager;
@@ -22,7 +23,6 @@ import com.wynntils.core.net.hades.HadesManager;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
-import com.wynntils.models.worlds.WorldStateManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
@@ -32,13 +32,13 @@ public final class Managers {
     public static final ChatTabManager ChatTab = new ChatTabManager();
     public static final CommandManager Command = new CommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
+    public static final ConnectionManager Connection = new ConnectionManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
     public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
     public static final TranslationManager Translation = new TranslationManager();
-    public static final WorldStateManager WorldState = new WorldStateManager();
 
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
@@ -47,7 +47,7 @@ public final class Managers {
     public static final SplashManager Splash = new SplashManager(Net);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
-    public static final HadesManager Hades = new HadesManager(WynntilsAccount, WorldState);
+    public static final HadesManager Hades = new HadesManager(WynntilsAccount);
 
     public static void init() {
         // Register all manager singletons as event listeners
