@@ -1,9 +1,17 @@
+## [0.0.2-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.129...v0.0.2-alpha.130) (2023-01-21)
+
+
+### Bug Fixes
+
+* Bug in ScoreboardHandler after refactoring ([#1064](https://github.com/Wynntils/Artemis/issues/1064)) ([f868b7d](https://github.com/Wynntils/Artemis/commit/f868b7d2eab177fab5ea8043cafac86f1dfb2a9b))
+
 ## [0.0.2-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.128...v0.0.2-alpha.129) (2023-01-20)
 
 
 ### Miscellaneous Chores
 
 * Clean up merge mistakes after the series of refactoring merges ([#1061](https://github.com/Wynntils/Artemis/issues/1061)) ([2716869](https://github.com/Wynntils/Artemis/commit/27168696bd196f9052b9123afe4273c53ea39d4c))
+* **release:** v0.0.2-alpha.129 [skip ci] ([7e8dcfc](https://github.com/Wynntils/Artemis/commit/7e8dcfcc74f0ffcd846e7c26086a21f04026860f))
 
 ## [0.0.2-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.127...v0.0.2-alpha.128) (2023-01-20)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.126 [skip ci] ([6b4d606](https://github.com/Wynntils/Artemis/commit/6b4d606e192f3d7c8eb60f9887ea8d7af7a32969))
-
-## [0.0.2-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.124...v0.0.2-alpha.125) (2023-01-20)
-
-
-### Code Refactoring
-
-* The Great Model Reshuffling ([#1057](https://github.com/Wynntils/Artemis/issues/1057)) ([612421c](https://github.com/Wynntils/Artemis/commit/612421c2a6cec4e48620c3b6048f01b0684b7e42))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.125 [skip ci] ([946344a](https://github.com/Wynntils/Artemis/commit/946344a36930e7ee7f11df02025509e880009ca9))
 
