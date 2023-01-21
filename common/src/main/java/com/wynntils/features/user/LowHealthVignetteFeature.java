@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -14,7 +13,6 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
-import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -36,11 +34,6 @@ public class LowHealthVignetteFeature extends UserFeature {
     private float animation = 10f;
     private float value = INTENSITY;
     private boolean shouldRender = false;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar);
-    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {

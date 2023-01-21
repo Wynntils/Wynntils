@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -36,18 +35,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.WynnUtils;
-import java.util.List;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar, Models.BossBar);
-    }
 
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {

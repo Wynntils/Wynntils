@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -27,7 +26,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Comparator;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -40,11 +38,6 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
 
     @Config
     public boolean disableAttackTimersOnScoreboard = true;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.GuildAttackTimer);
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {

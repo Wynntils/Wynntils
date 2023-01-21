@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.players;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -13,7 +12,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerArmorRenderEvent;
-import java.util.List;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -24,11 +22,6 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
 
     @Config
     public boolean transparentPlayerGhostArmor = true;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Player);
-    }
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
