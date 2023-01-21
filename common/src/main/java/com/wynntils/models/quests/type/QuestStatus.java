@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.quests.type;
 
-import com.wynntils.gui.screens.WynntilsQuestBookScreen;
+import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
