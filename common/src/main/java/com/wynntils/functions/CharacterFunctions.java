@@ -116,7 +116,7 @@ public class CharacterFunctions {
     public static class LiquidEmeraldFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Managers.Emerald.getAmountInInventory();
+            int ems = Models.Emerald.getAmountInInventory();
             return ems / 4096;
         }
 
@@ -127,14 +127,14 @@ public class CharacterFunctions {
 
         @Override
         public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return List.of(Models.Emerald);
         }
     }
 
     public static class EmeraldBlockFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Managers.Emerald.getAmountInInventory();
+            int ems = Models.Emerald.getAmountInInventory();
             return (ems % 4096) / 64;
         }
 
@@ -145,14 +145,14 @@ public class CharacterFunctions {
 
         @Override
         public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return List.of(Models.Emerald);
         }
     }
 
     public static class EmeraldsFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Emerald.getAmountInInventory() % 64;
+            return Models.Emerald.getAmountInInventory() % 64;
         }
 
         @Override
@@ -162,19 +162,19 @@ public class CharacterFunctions {
 
         @Override
         public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return List.of(Models.Emerald);
         }
     }
 
     public static class MoneyFunction extends DependantFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Emerald.getAmountInInventory();
+            return Models.Emerald.getAmountInInventory();
         }
 
         @Override
         public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return List.of(Models.Emerald);
         }
     }
 

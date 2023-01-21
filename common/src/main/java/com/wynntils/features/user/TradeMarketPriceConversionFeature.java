@@ -4,12 +4,14 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,6 +23,11 @@ public class TradeMarketPriceConversionFeature extends UserFeature {
     private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled.$");
 
     private boolean shouldConvert = false;
+
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Emerald);
+    }
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
@@ -37,7 +44,7 @@ public class TradeMarketPriceConversionFeature extends UserFeature {
         if (!shouldConvert) return;
         shouldConvert = false;
 
-        String price = Managers.Emerald.convertEmeraldPrice(event.getMessage());
+        String price = Models.Emerald.convertEmeraldPrice(event.getMessage());
         if (!price.isEmpty()) {
             event.setCanceled(true);
             McUtils.mc().getConnection().sendChat(price);

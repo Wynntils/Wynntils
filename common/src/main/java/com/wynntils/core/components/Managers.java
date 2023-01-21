@@ -23,7 +23,6 @@ import com.wynntils.models.character.CharacterManager;
 import com.wynntils.models.character.CharacterSelectionManager;
 import com.wynntils.models.containers.ContainerManager;
 import com.wynntils.models.discoveries.DiscoveryManager;
-import com.wynntils.models.emeralds.EmeraldManager;
 import com.wynntils.models.favorites.FavoritesManager;
 import com.wynntils.models.gear.GearItemManager;
 import com.wynntils.models.gear.GearProfilesManager;
@@ -44,7 +43,6 @@ public final class Managers {
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
-    public static final EmeraldManager Emerald = new EmeraldManager();
     public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final GearItemManager GearItem = new GearItemManager();

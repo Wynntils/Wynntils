@@ -5,7 +5,6 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
@@ -51,7 +50,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.PlayerInventory);
+        return List.of(Models.Emerald, Models.PlayerInventory);
     }
 
     @SubscribeEvent
@@ -66,12 +65,12 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int topEmeralds;
         if (isInventory) {
             if (!showInventoryEmeraldCount) return;
-            topEmeralds = Managers.Emerald.getAmountInInventory();
+            topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount) topEmeralds += Managers.Emerald.getAmountInContainer();
+            if (showContainerEmeraldCount) topEmeralds += Models.Emerald.getAmountInContainer();
             if (combineInventoryAndContainer && showInventoryEmeraldCount) {
-                topEmeralds += Managers.Emerald.getAmountInInventory();
+                topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
 
@@ -85,7 +84,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         }
 
         if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
-            int bottomEmeralds = Managers.Emerald.getAmountInInventory();
+            int bottomEmeralds = Models.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType) {

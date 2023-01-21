@@ -7,6 +7,8 @@ package com.wynntils.features.user;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -21,6 +23,7 @@ import com.wynntils.utils.render.Texture;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -49,6 +52,11 @@ public class ItemLockFeature extends UserFeature {
 
     @Config
     public boolean allowClickOnEmeraldPouchInBlockingMode = true;
+
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Emerald);
+    }
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -88,7 +96,7 @@ public class ItemLockFeature extends UserFeature {
         // We want to allow opening emerald pouch even if locked
         if (allowClickOnEmeraldPouchInBlockingMode
                 && event.getClickType() == ClickType.PICKUP
-                && Managers.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
+                && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 
