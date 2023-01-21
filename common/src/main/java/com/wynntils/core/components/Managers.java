@@ -34,13 +34,10 @@ public final class Managers {
     public static final UrlManager Url = new UrlManager();
 
     // Managers with no dependencies, alphabetically sorted
-    public static final CharacterManager Character = new CharacterManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
-    public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
-    public static final GearItemManager GearItem = new GearItemManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
     public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
@@ -49,13 +46,18 @@ public final class Managers {
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final NetManager Net = new NetManager(Url);
-    public static final GearProfilesManager GearProfiles = new GearProfilesManager(Net, GearItem);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
-    public static final QuestManager Quest = new QuestManager(Net);
     public static final SplashManager Splash = new SplashManager(Net);
-    public static final TerritoryManager Territory = new TerritoryManager(Net);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
+
+    // Should be models
+    public static final CharacterManager Character = new CharacterManager();
+    public static final FavoritesManager Favorites = new FavoritesManager();
+    public static final GearItemManager GearItem = new GearItemManager();
+    public static final GearProfilesManager GearProfiles = new GearProfilesManager(Net, GearItem);
+    public static final QuestManager Quest = new QuestManager(Net);
+    public static final TerritoryManager Territory = new TerritoryManager(Net);
     public static final DiscoveryManager Discovery = new DiscoveryManager(Net, Territory, TickScheduler);
 
     public static void init() {
