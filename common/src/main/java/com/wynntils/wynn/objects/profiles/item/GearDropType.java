@@ -8,7 +8,8 @@ import java.util.Locale;
 
 public enum GearDropType {
     NEVER, // quests or merchants
-    LOOTCHEST, // lootchests
+    LOOTCHEST, // lootchests (implies t3 or t4, afaict)
+    DUNGEON, // drop on dungeon completion or forgery chest
     NORMAL; // mobs
 
     public static GearDropType fromString(String typeStr) {
