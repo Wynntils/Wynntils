@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.items.properties;
 
-import com.wynntils.utils.CommonColors;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 
 public interface CountedItemProperty {
     int getCount();

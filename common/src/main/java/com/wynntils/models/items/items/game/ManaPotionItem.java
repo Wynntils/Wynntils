@@ -5,7 +5,7 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.items.properties.UsesItemPropery;
-import com.wynntils.utils.CappedValue;
+import com.wynntils.utils.type.CappedValue;
 
 public class ManaPotionItem extends GameItem implements UsesItemPropery {
     private final CappedValue uses;

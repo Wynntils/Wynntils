@@ -5,8 +5,8 @@
 package com.wynntils.models.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.BoundingBox;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.BoundingBox;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 

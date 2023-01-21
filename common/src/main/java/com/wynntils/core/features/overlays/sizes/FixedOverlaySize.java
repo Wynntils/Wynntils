@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features.overlays.sizes;
 
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 
 // We need to divide by the GUI scale to get the fixed size, since we use guiScaledWidth/guiScaledHeight for Overlays.
 public abstract class FixedOverlaySize extends OverlaySize {

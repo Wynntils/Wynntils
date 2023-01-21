@@ -7,8 +7,8 @@ package com.wynntils.models.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MinimapFeature;
-import com.wynntils.gui.render.buffered.BufferedRenderUtils;
-import com.wynntils.mc.utils.PlayerInfoUtils;
+import com.wynntils.utils.mc.PlayerInfoUtils;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 

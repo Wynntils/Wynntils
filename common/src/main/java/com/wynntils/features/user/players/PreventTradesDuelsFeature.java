@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.wynn.utils.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

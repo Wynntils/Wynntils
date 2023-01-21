@@ -8,12 +8,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.Pair;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -51,6 +51,7 @@ public final class ScoreboardHandler extends Handler {
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
     private final List<Pair<ScoreboardPart, Set<SegmentMatcher>>> scoreboardParts = new ArrayList<>();
+    private List<SegmentMatcher> segmentMatchers = List.of();
 
     private ScheduledExecutorService executor = null;
 
@@ -267,7 +268,7 @@ public final class ScoreboardHandler extends Handler {
                 continue;
             }
 
-            for (SegmentMatcher value : getSegmentMatchers()) {
+            for (SegmentMatcher value : segmentMatchers) {
                 if (!value.headerPattern().matcher(strippedLine).matches()) continue;
 
                 if (currentSegment != null) {
@@ -296,13 +297,6 @@ public final class ScoreboardHandler extends Handler {
         return segments;
     }
 
-    private List<SegmentMatcher> getSegmentMatchers() {
-        // FIXME: Not very efficient; cache this!
-        return scoreboardParts.stream()
-                .flatMap(mapper -> getSegmentMatchers().stream())
-                .toList();
-    }
-
     public void init() {
         startThread();
     }
@@ -310,10 +304,12 @@ public final class ScoreboardHandler extends Handler {
     public void disable() {
         resetState();
         scoreboardParts.clear();
+        updateSegmentMatchers();
     }
 
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
+        updateSegmentMatchers();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -350,6 +346,11 @@ public final class ScoreboardHandler extends Handler {
         for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
             scoreboardPart.a().reset();
         }
+    }
+
+    private void updateSegmentMatchers() {
+        segmentMatchers =
+                scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
     }
 
     public void removePart(ScoreboardPart scoreboardPart) {

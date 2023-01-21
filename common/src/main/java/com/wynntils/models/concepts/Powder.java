@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.concepts;
 
-import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;

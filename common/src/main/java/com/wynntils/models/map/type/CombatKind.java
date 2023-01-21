@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.map.type;
 
-import com.wynntils.gui.render.Texture;
+import com.wynntils.utils.render.Texture;
 import java.util.Arrays;
 
 public enum CombatKind {

@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.wynntils.utils.Pair;
+import com.wynntils.utils.type.Pair;
 import net.minecraft.world.phys.Vec2;
 
 public enum Edge {

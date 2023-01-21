@@ -6,14 +6,14 @@ package com.wynntils.models.favorites;
 
 import com.wynntils.core.components.Manager;
 import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
-import com.wynntils.utils.Pair;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.network.chat.Component;

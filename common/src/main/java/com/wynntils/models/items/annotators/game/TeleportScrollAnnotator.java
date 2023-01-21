@@ -6,9 +6,9 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;

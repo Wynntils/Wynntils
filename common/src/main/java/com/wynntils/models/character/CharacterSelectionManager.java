@@ -5,14 +5,14 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Manager;
-import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.screens.characterselector.CharacterSelectorScreen;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
