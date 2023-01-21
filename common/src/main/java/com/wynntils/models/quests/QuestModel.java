@@ -6,10 +6,10 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
-public final class QuestManager extends Manager {
+public final class QuestModel extends Model {
     private static final ScoreboardPart QUEST_SCOREBOARD_PART = new QuestScoreboardPart();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
@@ -40,10 +40,6 @@ public final class QuestManager extends Manager {
     private QuestInfo trackedQuest = null;
     private String afterRescanName;
     private String afterRescanTask;
-
-    public QuestManager(NetManager netManager) {
-        super(List.of(netManager));
-    }
 
     public void initWorkaround() {
         // FIXME: A Handler accessed from a Manager, not good. Will be fixed when this becomes
@@ -235,7 +231,7 @@ public final class QuestManager extends Manager {
                 trackedQuest.setNextTask(afterRescanTask);
                 afterRescanName = null;
                 afterRescanTask = null;
-                Managers.Quest.updateTrackedQuest(trackedQuest);
+                Models.Quest.updateTrackedQuest(trackedQuest);
             }
             WynntilsMod.warn("Tracked Quest according to scoreboard is " + this.trackedQuest + " but query says "
                     + trackedQuest);

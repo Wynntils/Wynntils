@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -30,7 +31,7 @@ public class HadesFeature extends UserFeature {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo) {
-                    Models.Hades.tryResendWorldData();
+                    Managers.Hades.tryResendWorldData();
                 } else {
                     Models.HadesUser.getHadesUserMap().clear();
                 }
@@ -39,14 +40,14 @@ public class HadesFeature extends UserFeature {
                 if (shareWithParty) {
                     Models.PlayerRelations.requestPartyListUpdate();
                 } else {
-                    Models.Hades.resetSocialType(SocialType.PARTY);
+                    Managers.Hades.resetSocialType(SocialType.PARTY);
                 }
             }
             case "shareWithFriends" -> {
                 if (shareWithFriends) {
                     Models.PlayerRelations.requestFriendListUpdate();
                 } else {
-                    Models.Hades.resetSocialType(SocialType.FRIEND);
+                    Managers.Hades.resetSocialType(SocialType.FRIEND);
                 }
             }
             case "shareWithGuild" -> {

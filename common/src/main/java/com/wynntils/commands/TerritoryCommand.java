@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.utils.mc.type.Location;
@@ -26,7 +25,7 @@ public class TerritoryCommand extends CommandBase {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests((context, builder) ->
-                                SharedSuggestionProvider.suggest(Managers.Territory.getTerritoryNames(), builder))
+                                SharedSuggestionProvider.suggest(Models.Territory.getTerritoryNames(), builder))
                         .executes(this::territory))
                 .executes(this::help);
     }
@@ -44,7 +43,7 @@ public class TerritoryCommand extends CommandBase {
     private int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
 
-        TerritoryProfile territoryProfile = Managers.Territory.getTerritoryProfile(territoryArg);
+        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(territoryArg);
 
         if (territoryProfile == null) {
             context.getSource()

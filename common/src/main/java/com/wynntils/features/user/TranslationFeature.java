@@ -5,11 +5,11 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.net.translation.TranslationModel;
+import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.handlers.chat.NpcDialogueType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -42,7 +42,7 @@ public class TranslationFeature extends UserFeature {
     public boolean keepOriginal = true;
 
     @Config
-    public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
+    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
@@ -51,7 +51,7 @@ public class TranslationFeature extends UserFeature {
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        Models.Translation.getTranslator(translationService)
+        Managers.Translation.getTranslator(translationService)
                 .translate(List.of(wrapped), languageName, translatedMsgList -> {
                     String messageToSend;
                     if (!translatedMsgList.isEmpty()) {
@@ -79,20 +79,22 @@ public class TranslationFeature extends UserFeature {
             List<String> wrapped = e.getChatMessage().stream()
                     .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
                     .toList();
-            Models.Translation.getTranslator(translationService).translate(wrapped, languageName, translatedMsgList -> {
-                List<String> unwrapped =
-                        translatedMsgList.stream().map(this::unwrapCoding).toList();
-                // FIXME: We need a ComponentUtils.componentFromCoded()...
-                // This will currently remove all formatting :(
-                List<Component> translatedComponents = unwrapped.stream()
-                        .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
-                        .toList();
-                McUtils.mc().doRunTask(() -> {
-                    NpcDialogEvent translatedEvent =
-                            new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
-                    WynntilsMod.postEvent(translatedEvent);
-                });
-            });
+            Managers.Translation.getTranslator(translationService)
+                    .translate(wrapped, languageName, translatedMsgList -> {
+                        List<String> unwrapped = translatedMsgList.stream()
+                                .map(this::unwrapCoding)
+                                .toList();
+                        // FIXME: We need a ComponentUtils.componentFromCoded()...
+                        // This will currently remove all formatting :(
+                        List<Component> translatedComponents = unwrapped.stream()
+                                .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
+                                .toList();
+                        McUtils.mc().doRunTask(() -> {
+                            NpcDialogEvent translatedEvent =
+                                    new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
+                            WynntilsMod.postEvent(translatedEvent);
+                        });
+                    });
         } else {
             // We must also pass on the null event to clear the dialogue
             NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());

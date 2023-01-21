@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.character;
 
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public final class CharacterSelectionManager extends Manager {
+public final class CharacterSelectionModel extends Model {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§a\\[\\+\\] Create a new character");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§6\\[>\\] Select (.+)");
     private static final Pattern CLASS_ITEM_CLASS_PATTERN =
@@ -41,10 +41,6 @@ public final class CharacterSelectionManager extends Manager {
     private int containerId = -1;
     private int firstNewCharacterSlot = -1;
     private final List<ClassInfo> classInfoList = new ArrayList<>();
-
-    public CharacterSelectionManager() {
-        super(List.of());
-    }
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent event) {

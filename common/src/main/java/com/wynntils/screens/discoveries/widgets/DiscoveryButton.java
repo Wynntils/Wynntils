@@ -5,7 +5,7 @@
 package com.wynntils.screens.discoveries.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.screens.base.TooltipProvider;
@@ -84,11 +84,11 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Managers.Discovery.setDiscoveryCompass(discoveryInfo);
+            Models.Discovery.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Managers.Discovery.openDiscoveryOnMap(discoveryInfo);
+            Models.Discovery.openDiscoveryOnMap(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.getType() == DiscoveryType.SECRET) {
-            Managers.Discovery.openSecretDiscoveryWiki(discoveryInfo);
+            Models.Discovery.openSecretDiscoveryWiki(discoveryInfo);
         }
 
         return true;
@@ -105,7 +105,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> Managers.Discovery.getAllDiscoveries()
+                    .filter(requirement -> Models.Discovery.getAllDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 
@@ -120,7 +120,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         }
 
         if (discoveryInfo.getType() == DiscoveryType.SECRET
-                || Managers.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
+                || Models.Territory.getTerritoryProfile(discoveryInfo.getName()) != null) {
             lines.add(Component.empty());
             lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)

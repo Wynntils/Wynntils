@@ -5,7 +5,7 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.ContainerContent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -40,7 +40,7 @@ public class DiscoveryContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Count Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting discovery count in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitle(1))
                 .processContainer((c) -> {
                     ItemStack discoveriesItem = c.items().get(DISCOVERIES_SLOT);
                     ItemStack secretDiscoveriesItem = c.items().get(SECRET_DISCOVERIES_SLOT);
@@ -81,8 +81,8 @@ public class DiscoveryContainerQueries {
                                 return;
                             }
 
-                            Managers.Discovery.setDiscoveriesTooltip(LoreUtils.getTooltipLines(discoveriesItem));
-                            Managers.Discovery.setSecretDiscoveriesTooltip(
+                            Models.Discovery.setDiscoveriesTooltip(LoreUtils.getTooltipLines(discoveriesItem));
+                            Models.Discovery.setSecretDiscoveriesTooltip(
                                     LoreUtils.getTooltipLines(secretDiscoveriesItem));
 
                             int discoveryPages = discoveryCount / DISCOVERIES_PER_PAGE
@@ -106,7 +106,7 @@ public class DiscoveryContainerQueries {
                             Component.literal("Error updating discoveries.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Managers.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitle(1))
                 .processContainer(c -> {})
                 .clickOnSlot(DISCOVERIES_SLOT)
                 .matchTitle(getDiscoveryPageTitle(1))
@@ -157,10 +157,10 @@ public class DiscoveryContainerQueries {
             // Last page finished
             if (secretDiscovery) {
                 // Secret discoveries finished
-                Managers.Discovery.setSecretDiscoveries(newDiscoveries);
+                Models.Discovery.setSecretDiscoveries(newDiscoveries);
             } else {
                 // Normal discoveries finished
-                Managers.Discovery.setDiscoveries(newDiscoveries);
+                Models.Discovery.setDiscoveries(newDiscoveries);
             }
         }
     }

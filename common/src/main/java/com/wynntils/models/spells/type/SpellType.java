@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.spells.type;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import java.util.Arrays;
@@ -186,6 +186,6 @@ public enum SpellType {
         } else if (Arrays.equals(casted, RLL) || Arrays.equals(casted, LRR)) {
             spellNumber = 3;
         }
-        return forClass(Managers.Character.getClassType(), spellNumber);
+        return forClass(Models.Character.getClassType(), spellNumber);
     }
 }

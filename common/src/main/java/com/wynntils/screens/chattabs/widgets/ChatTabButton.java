@@ -6,7 +6,7 @@ package com.wynntils.screens.chattabs.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Managers;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -52,9 +52,9 @@ public class ChatTabButton extends WynntilsButton {
     }
 
     private CustomColor getTabColor() {
-        if (Models.ChatTab.getFocusedTab() == tab) return CommonColors.GREEN;
+        if (Managers.ChatTab.getFocusedTab() == tab) return CommonColors.GREEN;
 
-        return Models.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE;
+        return Managers.ChatTab.hasUnreadMessages(tab) ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ChatTabButton extends WynntilsButton {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Models.ChatTab.setFocusedTab(tab);
+            Managers.ChatTab.setFocusedTab(tab);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             McUtils.mc().setScreen(ChatTabEditingScreen.create(tab));
         }

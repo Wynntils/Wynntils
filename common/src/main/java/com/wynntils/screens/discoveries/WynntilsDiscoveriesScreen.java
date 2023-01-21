@@ -6,7 +6,7 @@ package com.wynntils.screens.discoveries;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.screens.base.TooltipProvider;
@@ -75,7 +75,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
 
     @Override
     protected void doInit() {
-        Managers.Discovery.reloadDiscoveries();
+        Models.Discovery.reloadDiscoveries();
 
         super.doInit();
 
@@ -196,7 +196,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                Managers.Discovery::reloadDiscoveries));
+                Models.Discovery::reloadDiscoveries));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -326,21 +326,20 @@ public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<Disc
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        Managers.Discovery.getDiscoveryInfoList().stream()
+                        Models.Discovery.getDiscoveryInfoList().stream()
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
                                 })
-                                .filter(discoveryInfo -> Managers.Discovery.getAllDiscoveries()
+                                .filter(discoveryInfo -> Models.Discovery.getAllDiscoveries()
                                         .noneMatch(
                                                 discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        Managers.Discovery.getAllDiscoveries()
-                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
-                                    case TERRITORY -> showFoundTerritory;
-                                    case WORLD -> showFoundWorld;
-                                    case SECRET -> showFoundSecrets;
-                                }))
+                        Models.Discovery.getAllDiscoveries().filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                            case TERRITORY -> showFoundTerritory;
+                            case WORLD -> showFoundWorld;
+                            case SECRET -> showFoundSecrets;
+                        }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());

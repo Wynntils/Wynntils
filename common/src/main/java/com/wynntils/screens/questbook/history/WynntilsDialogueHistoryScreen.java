@@ -6,7 +6,7 @@ package com.wynntils.screens.questbook.history;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.screens.base.WynntilsMenuPagedScreenBase;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -67,7 +67,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
 
     @Override
     protected void doInit() {
-        Managers.Quest.rescanDialogueHistory();
+        Models.Quest.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -80,7 +80,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                Managers.Quest::rescanDialogueHistory));
+                Models.Quest::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -183,7 +183,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
-        this.setDialogues(Managers.Quest.getDialogueHistory());
+        this.setDialogues(Models.Quest.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

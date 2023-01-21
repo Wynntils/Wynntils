@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -30,7 +30,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         Screen screen = McUtils.mc().screen;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
-        if (!Managers.Container.isAbilityTreeScreen(gui)) return;
+        if (!Models.Container.isAbilityTreeScreen(gui)) return;
 
         boolean up = event.isScrollingUp() ^ invertScroll;
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;

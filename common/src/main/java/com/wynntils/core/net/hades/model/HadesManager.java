@@ -5,9 +5,10 @@
 package com.wynntils.core.net.hades.model;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.net.hades.HadesClientHandler;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.PlayerStatus;
@@ -24,6 +25,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.worlds.WorldStateManager;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -41,7 +43,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class HadesModel extends Model {
+public final class HadesManager extends Manager {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
@@ -50,7 +52,9 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    public HadesModel() {
+    public HadesManager(WynntilsAccountManager wynntilsAccountManager, WorldStateManager worldStateManager) {
+        super(List.of(wynntilsAccountManager, worldStateManager));
+
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }
@@ -207,7 +211,7 @@ public final class HadesModel extends Model {
         if (!isConnected()) return;
 
         hadesConnection.sendPacket(
-                new HCPacketUpdateWorld(Managers.WorldState.getCurrentWorldName(), Managers.Character.getId()));
+                new HCPacketUpdateWorld(Managers.WorldState.getCurrentWorldName(), Models.Character.getId()));
     }
 
     public void resetSocialType(SocialType socialType) {

@@ -5,17 +5,19 @@
 package com.wynntils.core.net.translation;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Manager;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class TranslationModel extends Model {
+public final class TranslationManager extends Manager {
     private TranslationService translator = null;
 
-    public TranslationModel() {
+    public TranslationManager() {
+        super(List.of());
+
         CachingTranslationService.loadTranslationCache();
     }
 
@@ -45,7 +47,7 @@ public final class TranslationModel extends Model {
      *
      * @return An instance of the selected translation service, or null on failure
      */
-    public TranslationService getTranslator(TranslationModel.TranslationServices translationService) {
+    public TranslationService getTranslator(TranslationManager.TranslationServices translationService) {
         // These might not have been created yet, or reset by config changing
         if (translator == null) {
             translator = getService(translationService);

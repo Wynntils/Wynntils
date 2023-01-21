@@ -228,7 +228,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         .map(PlayerMainMapPoi::new));
 
         if (KeyboardUtils.isControlDown()) {
-            pois = Stream.concat(pois, Managers.Territory.getTerritoryPois().stream());
+            pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
 
         renderPois(

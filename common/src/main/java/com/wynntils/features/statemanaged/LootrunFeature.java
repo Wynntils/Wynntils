@@ -5,7 +5,6 @@
 package com.wynntils.features.statemanaged;
 
 import com.google.common.collect.ImmutableList;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -65,7 +64,7 @@ public class LootrunFeature extends StateManagedFeature {
 
     @SubscribeEvent
     public void onOpen(ScreenOpenedEvent event) {
-        if (Managers.Container.isLootChest(event.getScreen())) {
+        if (Models.Container.isLootChest(event.getScreen())) {
             Models.Lootrun.addChestIfRecording();
         }
     }
