@@ -1,9 +1,10 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.widgets.TextInputBoxWidget;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
