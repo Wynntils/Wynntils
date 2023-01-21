@@ -98,6 +98,10 @@ public final class TerritoryManager extends Manager {
         return territoryPoiMap.get(name);
     }
 
+    public void reset() {
+        errorCount = 0;
+    }
+
     @SubscribeEvent
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();

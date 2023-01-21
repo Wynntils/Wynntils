@@ -59,6 +59,10 @@ public final class PlayerModel extends Model {
         return users.getOrDefault(uuid, null);
     }
 
+    public void reset() {
+        errorCount = 0;
+    }
+
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
