@@ -10,7 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.screens.GearViewerScreen;
+import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.List;
