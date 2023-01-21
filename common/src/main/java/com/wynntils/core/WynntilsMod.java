@@ -6,8 +6,11 @@ package com.wynntils.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
@@ -25,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,10 +197,26 @@ public final class WynntilsMod {
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
-        Managers.init();
-        Handlers.init();
-        Models.init();
+        registerComponents(Managers.class, Manager.class);
+        registerComponents(Handlers.class, Handler.class);
+        registerComponents(Models.class, Model.class);
+
         addCrashCallbacks();
+    }
+
+    private static void registerComponents(Class<?> registryClass, Class<?> componentClass) {
+        // Register all handler singletons as event listeners
+
+        FieldUtils.getAllFieldsList(registryClass).stream()
+                .filter(field -> componentClass.isAssignableFrom(field.getType()))
+                .forEach(field -> {
+                    try {
+                        WynntilsMod.registerEventListener(field.get(null));
+                    } catch (IllegalAccessException e) {
+                        WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     private static void parseVersion(String modVersion) {

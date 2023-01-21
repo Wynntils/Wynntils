@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.ChatTabManager;
 import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
@@ -22,7 +21,6 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -46,19 +44,4 @@ public final class Managers {
     public static final SplashManager Splash = new SplashManager(Net);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
-
-    public static void init() {
-        // Register all manager singletons as event listeners
-
-        FieldUtils.getAllFieldsList(Managers.class).stream()
-                .filter(field -> Manager.class.isAssignableFrom(field.getType()))
-                .forEach(field -> {
-                    try {
-                        WynntilsMod.registerEventListener(field.get(null));
-                    } catch (IllegalAccessException e) {
-                        WynntilsMod.error("Internal error in Managers", e);
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
 }

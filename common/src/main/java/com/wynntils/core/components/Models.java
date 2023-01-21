@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
@@ -36,7 +35,6 @@ import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.wynn.model.actionbar.ActionBarModel;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
@@ -70,20 +68,4 @@ public final class Models {
     public static final TabModel Tab = new TabModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
-
-    public static void init() {
-        // Register all model singletons as event listeners
-
-        FieldUtils.getAllFieldsList(Models.class).stream()
-                .filter(field -> Model.class.isAssignableFrom(field.getType()))
-                .forEach(field -> {
-                    try {
-                        Model model = (Model) field.get(null);
-                        WynntilsMod.registerEventListener(model);
-                    } catch (IllegalAccessException e) {
-                        WynntilsMod.error("Internal error in Models", e);
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
 }
