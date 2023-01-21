@@ -23,6 +23,6 @@ public class DataStorageFeature extends StateManagedFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.LootChest);
+        return List.of(Models.Container);
     }
 }

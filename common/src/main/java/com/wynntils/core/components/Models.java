@@ -15,7 +15,6 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.character.statuseffects.TabModel;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.items.ItemModel;
@@ -45,7 +44,6 @@ public final class Models {
     public static final HadesUserModel HadesUser = new HadesUserModel();
     public static final HorseModel Horse = new HorseModel();
     public static final ItemModel Item = new ItemModel();
-    public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
     public static final MapModel Map = new MapModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
