@@ -1,9 +1,21 @@
+## [0.0.2-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.131...v0.0.2-alpha.132) (2023-01-21)
+
+
+### Code Refactoring
+
+* Get rid of wynn.objects ([#1065](https://github.com/Wynntils/Artemis/issues/1065)) ([4fd6105](https://github.com/Wynntils/Artemis/commit/4fd6105c471710070ab4d1bb20e3e7c5d46f889d))
+
 ## [0.0.2-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.130...v0.0.2-alpha.131) (2023-01-21)
 
 
 ### Code Refactoring
 
 * Move all screens into a new hierarchy in its own package ([#1063](https://github.com/Wynntils/Artemis/issues/1063)) ([e0adbee](https://github.com/Wynntils/Artemis/commit/e0adbee1b062c68ed7c7d67484f10d6fcf2899c8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.131 [skip ci] ([9b24405](https://github.com/Wynntils/Artemis/commit/9b244053723eff78c026c290780f93afa4262ac1))
 
 ## [0.0.2-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.129...v0.0.2-alpha.130) (2023-01-21)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.128 [skip ci] ([ad4b15f](https://github.com/Wynntils/Artemis/commit/ad4b15f172e4dd2f08d36bfe25dd6eee1fffb756))
-
-## [0.0.2-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.126...v0.0.2-alpha.127) (2023-01-20)
-
-
-### Code Refactoring
-
-* Remove ScoreboardModel ([#1059](https://github.com/Wynntils/Artemis/issues/1059)) ([e01f7f0](https://github.com/Wynntils/Artemis/commit/e01f7f03742b2db5e520e3abcfbd1403d8e66f29))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.127 [skip ci] ([3160a35](https://github.com/Wynntils/Artemis/commit/3160a35867ab6aec950a0f94116dd15e6eb165ea))
 
