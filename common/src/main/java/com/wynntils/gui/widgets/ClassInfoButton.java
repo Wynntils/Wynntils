@@ -5,7 +5,7 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.models.character.ClassInfo;
 import com.wynntils.utils.colors.CommonColors;
@@ -99,7 +99,7 @@ public class ClassInfoButton extends WynntilsButton {
     @Override
     public void onPress() {
         if (characterSelectorScreen.getSelected() == this) {
-            Managers.CharacterSelection.playWithCharacter(classInfo.slot());
+            Models.CharacterSelection.playWithCharacter(classInfo.slot());
         }
     }
 

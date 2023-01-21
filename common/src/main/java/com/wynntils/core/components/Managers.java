@@ -20,7 +20,6 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
 import com.wynntils.models.character.CharacterManager;
-import com.wynntils.models.character.CharacterSelectionManager;
 import com.wynntils.models.containers.ContainerManager;
 import com.wynntils.models.discoveries.DiscoveryManager;
 import com.wynntils.models.favorites.FavoritesManager;
@@ -37,7 +36,6 @@ public final class Managers {
 
     // Managers with no dependencies, alphabetically sorted
     public static final CharacterManager Character = new CharacterManager();
-    public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();

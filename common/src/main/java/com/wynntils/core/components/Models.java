@@ -11,6 +11,7 @@ import com.wynntils.core.net.translation.TranslationModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
+import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.character.statuseffects.TabModel;
 import com.wynntils.models.containers.LootChestModel;
@@ -33,6 +34,7 @@ public final class Models {
     public static final ActionBarModel ActionBar = new ActionBarModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
+    public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final ChatTabModel ChatTab = new ChatTabModel();
     public static final CompassModel Compass = new CompassModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
