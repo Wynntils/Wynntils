@@ -7,6 +7,7 @@ package com.wynntils.models.territories;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -41,6 +43,7 @@ public final class TerritoryManager extends Manager {
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
+    private static final int MAX_ERRORS = 5;
 
     // This is territory POIs as returned by the advancement from Wynncraft
     private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
@@ -52,10 +55,12 @@ public final class TerritoryManager extends Manager {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledFuture<?> timerFuture;
+    private int errorCount = 0;
 
     public TerritoryManager(NetManager netManager) {
         super(List.of(netManager));
-        timerExecutor.scheduleWithFixedDelay(
+        timerFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
@@ -91,6 +96,10 @@ public final class TerritoryManager extends Manager {
 
     public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
+    }
+
+    public void reset() {
+        errorCount = 0;
     }
 
     @SubscribeEvent
@@ -146,14 +155,23 @@ public final class TerritoryManager extends Manager {
         // level = 1 is also injected.
 
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
-        dl.handleJsonObject(json -> {
-            if (!json.has("territories")) return;
+        dl.handleJsonObject(
+                json -> {
+                    if (!json.has("territories")) return;
 
-            Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-            territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
-            allTerritoryPois =
-                    territoryProfileMap.values().stream().map(TerritoryPoi::new).collect(Collectors.toSet());
-            // TODO: Add events if territories changed
-        });
+                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
+                    territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+                    allTerritoryPois = territoryProfileMap.values().stream()
+                            .map(TerritoryPoi::new)
+                            .collect(Collectors.toSet());
+                    // TODO: Add events if territories changed
+                },
+                onError -> {
+                    errorCount++;
+                    if (errorCount >= MAX_ERRORS) {
+                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups.");
+                        timerFuture.cancel(false);
+                    }
+                });
     }
 }
