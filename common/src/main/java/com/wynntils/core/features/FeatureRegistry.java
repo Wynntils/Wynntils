@@ -102,7 +102,7 @@ import com.wynntils.features.user.tooltips.ItemGuessFeature;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.user.tooltips.TooltipFittingFeature;
 import com.wynntils.features.user.tooltips.TooltipVanillaHideFeature;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

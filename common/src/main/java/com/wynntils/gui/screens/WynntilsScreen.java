@@ -6,7 +6,7 @@ package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

@@ -6,7 +6,7 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.wynn.utils.ContainerUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;

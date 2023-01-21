@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.properties;
 
-import com.wynntils.utils.CappedValue;
+import com.wynntils.utils.type.CappedValue;
 
 public interface DurableItemProperty {
     CappedValue getDurability();

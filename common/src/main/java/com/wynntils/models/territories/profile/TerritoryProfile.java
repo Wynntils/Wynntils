@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.objectives;
 
-import com.wynntils.mc.utils.ComponentUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

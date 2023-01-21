@@ -6,8 +6,8 @@ package com.wynntils.models.horse;
 
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Models;
-import com.wynntils.mc.utils.McUtils;
 import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;

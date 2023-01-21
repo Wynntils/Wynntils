@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.map;
 
-import com.wynntils.mc.objects.Location;
+import com.wynntils.utils.mc.type.Location;
 import java.util.Objects;
 import java.util.Optional;
 

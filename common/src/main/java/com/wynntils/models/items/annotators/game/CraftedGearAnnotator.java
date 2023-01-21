@@ -6,13 +6,13 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gear.GearIdentification;
 import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.utils.CappedValue;
-import com.wynntils.wynn.utils.WynnItemMatchers;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
