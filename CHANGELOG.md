@@ -1,9 +1,21 @@
+## [0.0.2-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.132...v0.0.2-alpha.133) (2023-01-21)
+
+
+### New Features
+
+* Disable Athena lookups after several failures ([#1060](https://github.com/Wynntils/Artemis/issues/1060)) ([b74efa5](https://github.com/Wynntils/Artemis/commit/b74efa5f62129faef03d6d8c0342595a7069afa1))
+
 ## [0.0.2-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.131...v0.0.2-alpha.132) (2023-01-21)
 
 
 ### Code Refactoring
 
 * Get rid of wynn.objects ([#1065](https://github.com/Wynntils/Artemis/issues/1065)) ([4fd6105](https://github.com/Wynntils/Artemis/commit/4fd6105c471710070ab4d1bb20e3e7c5d46f889d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.132 [skip ci] ([dcb1d39](https://github.com/Wynntils/Artemis/commit/dcb1d39bb15435c96cd5e232879877bdf9d6e92d))
 
 ## [0.0.2-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.130...v0.0.2-alpha.131) (2023-01-21)
 
@@ -36,16 +48,4 @@
 
 * Clean up merge mistakes after the series of refactoring merges ([#1061](https://github.com/Wynntils/Artemis/issues/1061)) ([2716869](https://github.com/Wynntils/Artemis/commit/27168696bd196f9052b9123afe4273c53ea39d4c))
 * **release:** v0.0.2-alpha.129 [skip ci] ([7e8dcfc](https://github.com/Wynntils/Artemis/commit/7e8dcfcc74f0ffcd846e7c26086a21f04026860f))
-
-## [0.0.2-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.127...v0.0.2-alpha.128) (2023-01-20)
-
-
-### Code Refactoring
-
-* Move all utils under top-level util hierarchy ([#1062](https://github.com/Wynntils/Artemis/issues/1062)) ([2752498](https://github.com/Wynntils/Artemis/commit/275249887c613e8c26c34a40ddb8d6a7ad77d34d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.128 [skip ci] ([ad4b15f](https://github.com/Wynntils/Artemis/commit/ad4b15f172e4dd2f08d36bfe25dd6eee1fffb756))
 
