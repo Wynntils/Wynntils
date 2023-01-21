@@ -51,6 +51,7 @@ public final class ScoreboardHandler extends Handler {
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
     private final List<Pair<ScoreboardPart, Set<SegmentMatcher>>> scoreboardParts = new ArrayList<>();
+    private List<SegmentMatcher> segmentMatchers = List.of();
 
     private ScheduledExecutorService executor = null;
 
@@ -267,7 +268,7 @@ public final class ScoreboardHandler extends Handler {
                 continue;
             }
 
-            for (SegmentMatcher value : getSegmentMatchers()) {
+            for (SegmentMatcher value : segmentMatchers) {
                 if (!value.headerPattern().matcher(strippedLine).matches()) continue;
 
                 if (currentSegment != null) {
@@ -296,11 +297,6 @@ public final class ScoreboardHandler extends Handler {
         return segments;
     }
 
-    private List<SegmentMatcher> getSegmentMatchers() {
-        // FIXME: Not very efficient; cache this!
-        return scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
-    }
-
     public void init() {
         startThread();
     }
@@ -308,10 +304,12 @@ public final class ScoreboardHandler extends Handler {
     public void disable() {
         resetState();
         scoreboardParts.clear();
+        updateSegmentMatchers();
     }
 
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
+        updateSegmentMatchers();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -348,6 +346,11 @@ public final class ScoreboardHandler extends Handler {
         for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
             scoreboardPart.a().reset();
         }
+    }
+
+    private void updateSegmentMatchers() {
+        segmentMatchers =
+                scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
     }
 
     public void removePart(ScoreboardPart scoreboardPart) {
