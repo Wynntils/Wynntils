@@ -26,7 +26,6 @@ import com.wynntils.models.discoveries.DiscoveryManager;
 import com.wynntils.models.favorites.FavoritesManager;
 import com.wynntils.models.gear.GearItemManager;
 import com.wynntils.models.gear.GearProfilesManager;
-import com.wynntils.models.horse.HorseManager;
 import com.wynntils.models.quests.QuestManager;
 import com.wynntils.models.territories.TerritoryManager;
 import com.wynntils.models.worlds.WorldStateManager;
@@ -46,7 +45,6 @@ public final class Managers {
     public static final FavoritesManager Favorites = new FavoritesManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final GearItemManager GearItem = new GearItemManager();
-    public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
     public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();

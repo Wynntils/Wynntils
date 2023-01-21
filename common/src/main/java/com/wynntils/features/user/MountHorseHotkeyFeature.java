@@ -5,6 +5,8 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -13,6 +15,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -36,6 +39,11 @@ public class MountHorseHotkeyFeature extends UserFeature {
     private final KeyBind mountHorseKeyBind =
             new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::onMountHorseKeyPress);
 
+    @Override
+    public List<Model> getModelDependencies() {
+        return List.of(Models.Horse);
+    }
+
     private void onMountHorseKeyPress() {
         if (!WynnUtils.onWorld()) return;
 
@@ -44,9 +52,9 @@ public class MountHorseHotkeyFeature extends UserFeature {
             return;
         }
 
-        AbstractHorse horse = Managers.Horse.searchForHorseNearby(SEARCH_RADIUS);
+        AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
         if (horse == null) { // Horse has not spawned, we should do that
-            int horseInventorySlot = Managers.Horse.findHorseSlotNum();
+            int horseInventorySlot = Models.Horse.findHorseSlotNum();
             if (horseInventorySlot > 8 || horseInventorySlot == -1) {
                 postHorseErrorMessage(MountHorseStatus.NO_HORSE);
                 return;
@@ -79,7 +87,7 @@ public class MountHorseHotkeyFeature extends UserFeature {
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    AbstractHorse horse = Managers.Horse.searchForHorseNearby(SEARCH_RADIUS);
+                    AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;

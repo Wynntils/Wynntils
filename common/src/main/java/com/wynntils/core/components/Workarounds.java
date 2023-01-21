@@ -8,6 +8,8 @@ public final class Workarounds {
     // These workarounds are temporary, awaiting the full refactoringsation
     public static void init() {
         scoreboardHandlerWorkarounds();
+        // A lot of models depend on this.
+        Models.Item.init();
     }
 
     private static void scoreboardHandlerWorkarounds() {

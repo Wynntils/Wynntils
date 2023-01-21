@@ -4,7 +4,8 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.models.items.items.game.HorseItem;
 import java.util.List;
@@ -14,7 +15,7 @@ public class HorseFunctions {
     public static class HorseLevelFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            HorseItem horse = Managers.Horse.getHorse();
+            HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getLevel().getCurrent();
         }
@@ -23,14 +24,24 @@ public class HorseFunctions {
         public List<String> getAliases() {
             return List.of("h_lvl");
         }
+
+        @Override
+        public List<Model> getModelDependencies() {
+            return List.of(Models.Horse);
+        }
     }
 
     public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            HorseItem horse = Managers.Horse.getHorse();
+            HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getLevel().getMax();
+        }
+
+        @Override
+        public List<Model> getModelDependencies() {
+            return List.of(Models.Horse);
         }
 
         @Override
@@ -42,9 +53,14 @@ public class HorseFunctions {
     public static class HorseXpFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            HorseItem horse = Managers.Horse.getHorse();
+            HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getXp();
+        }
+
+        @Override
+        public List<Model> getModelDependencies() {
+            return List.of(Models.Horse);
         }
 
         @Override
@@ -56,9 +72,14 @@ public class HorseFunctions {
     public static class HorseTierFunction extends ActiveFunction<Integer> {
         @Override
         public Integer getValue(String argument) {
-            HorseItem horse = Managers.Horse.getHorse();
+            HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getTier();
+        }
+
+        @Override
+        public List<Model> getModelDependencies() {
+            return List.of(Models.Horse);
         }
 
         @Override
@@ -70,10 +91,15 @@ public class HorseFunctions {
     public static class HorseNameFunction extends ActiveFunction<String> {
         @Override
         public String getValue(String argument) {
-            HorseItem horse = Managers.Horse.getHorse();
+            HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             String name = horse.getName();
             return (name.isEmpty()) ? null : name;
+        }
+
+        @Override
+        public List<Model> getModelDependencies() {
+            return List.of(Models.Horse);
         }
 
         @Override
