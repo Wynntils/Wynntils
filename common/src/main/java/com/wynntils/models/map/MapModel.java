@@ -31,8 +31,7 @@ public final class MapModel extends Model {
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
 
-    @Override
-    public void init() {
+    public MapModel() {
         loadData();
     }
 

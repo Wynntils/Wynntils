@@ -18,13 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class PlayerInventoryModel extends Model {
     private int openSlots = 0;
 
-    @Override
-    public void init() {
-        resetCache();
-    }
-
-    @Override
-    public void disable() {
+    public PlayerInventoryModel() {
         resetCache();
     }
 

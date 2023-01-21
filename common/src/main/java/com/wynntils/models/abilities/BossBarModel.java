@@ -29,13 +29,7 @@ public final class BossBarModel extends Model {
     private static final List<TrackedBar> ALL_BARS =
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
 
-    @Override
-    public void init() {
+    public BossBarModel() {
         ALL_BARS.forEach(Handlers.BossBar::registerBar);
-    }
-
-    @Override
-    public void disable() {
-        ALL_BARS.forEach(Handlers.BossBar::unregisterBar);
     }
 }

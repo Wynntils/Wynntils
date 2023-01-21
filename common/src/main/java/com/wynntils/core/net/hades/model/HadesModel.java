@@ -50,20 +50,12 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    @Override
-    public void init() {
+    public HadesModel() {
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }
 
         Managers.WynntilsAccount.onLoginRun(this::onLogin);
-    }
-
-    @Override
-    public void disable() {
-        tryDisconnect();
-
-        Managers.WynntilsAccount.removeOnLogin(this::onLogin);
     }
 
     private void onLogin() {
