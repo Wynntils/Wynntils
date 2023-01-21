@@ -220,7 +220,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
-                Models.HadesUser.getHadesUserMap().values().stream()
+                Managers.Hades.getHadesUsers()
                         .filter(
                                 hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
                                         || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)

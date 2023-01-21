@@ -33,7 +33,7 @@ public class HadesFeature extends UserFeature {
                 if (getOtherPlayerInfo) {
                     Managers.Hades.tryResendWorldData();
                 } else {
-                    Models.HadesUser.getHadesUserMap().clear();
+                    Managers.Hades.resetHadesUsers();
                 }
             }
             case "shareWithParty" -> {

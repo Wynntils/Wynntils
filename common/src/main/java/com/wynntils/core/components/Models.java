@@ -5,7 +5,6 @@
 package com.wynntils.core.components;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.net.hades.model.HadesUserModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
@@ -51,7 +50,6 @@ public final class Models {
     public static final GearItemModel GearItem = new GearItemModel();
     public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final HadesUserModel HadesUser = new HadesUserModel();
     public static final HorseModel Horse = new HorseModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();

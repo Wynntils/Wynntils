@@ -7,6 +7,7 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -234,7 +235,7 @@ public class MinimapFeature extends UserFeature {
 
             poisToRender = Stream.concat(
                     poisToRender,
-                    Models.HadesUser.getHadesUserMap().values().stream()
+                    Managers.Hades.getHadesUsers()
                             .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                                     || (user.isMutualFriend() && renderRemoteFriendPlayers))
                             .map(PlayerMiniMapPoi::new));

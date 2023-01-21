@@ -6,7 +6,6 @@ package com.wynntils.core.net.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.hades.event.HadesEvent;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.HadesFeature;
@@ -26,9 +25,11 @@ import net.minecraft.network.chat.Component;
 
 public class HadesClientHandler implements IHadesClientAdapter {
     private final HadesConnection hadesConnection;
+    private final HadesUserRegistry userRegistry;
 
-    public HadesClientHandler(HadesConnection hadesConnection) {
+    public HadesClientHandler(HadesConnection hadesConnection, HadesUserRegistry userRegistry) {
         this.hadesConnection = hadesConnection;
+        this.userRegistry = userRegistry;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
         WynntilsMod.info("Disconnected from HadesServer.");
 
-        Models.HadesUser.getHadesUserMap().clear();
+        userRegistry.getHadesUserMap().clear();
     }
 
     @Override
@@ -100,11 +101,11 @@ public class HadesClientHandler implements IHadesClientAdapter {
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
         if (!HadesFeature.INSTANCE.getOtherPlayerInfo) return;
 
-        Optional<HadesUser> userOptional = Models.HadesUser.getUser(packet.getUser());
+        Optional<HadesUser> userOptional = userRegistry.getUser(packet.getUser());
         if (userOptional.isPresent()) {
             userOptional.get().updateFromPacket(packet);
         } else {
-            Models.HadesUser.putUser(packet.getUser(), new HadesUser(packet));
+            userRegistry.putUser(packet.getUser(), new HadesUser(packet));
         }
     }
 
@@ -115,7 +116,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleClearMutual(HSPacketClearMutual packet) {
-        Models.HadesUser.removeUser(packet.getUser());
+        userRegistry.removeUser(packet.getUser());
     }
 
     @Override
@@ -127,6 +128,6 @@ public class HadesClientHandler implements IHadesClientAdapter {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        Models.HadesUser.getHadesUserMap().clear();
+        userRegistry.getHadesUserMap().clear();
     }
 }
