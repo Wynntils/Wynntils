@@ -7,7 +7,6 @@ package com.wynntils.features.user;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -48,11 +47,6 @@ public class ChatTabsFeature extends UserFeature {
 
     @TypeOverride
     private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ChatTab);
-    }
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)

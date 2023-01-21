@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -47,11 +46,6 @@ public class CustomNametagRendererFeature extends UserFeature {
     public float customNametagScale = 0.5f;
 
     private Player hitPlayerCache = null;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Player);
-    }
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {

@@ -9,7 +9,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.utils.mc.type.Location;
@@ -60,15 +59,6 @@ public class TerritoryCommand extends CommandBase {
 
         MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
-
-        if (!ModelRegistry.isEnabled(Models.Compass)) {
-            MutableComponent success = territoryComponent
-                    .append(": ")
-                    .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")")
-                            .withStyle(ChatFormatting.GREEN));
-            context.getSource().sendSuccess(success, false);
-            return 1;
-        }
 
         Models.Compass.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
 
