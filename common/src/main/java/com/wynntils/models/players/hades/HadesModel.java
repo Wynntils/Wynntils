@@ -2,16 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.net.hades;
+package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.net.hades.event.HadesEvent;
-import com.wynntils.core.net.hades.objects.HadesUser;
-import com.wynntils.core.net.hades.objects.PlayerStatus;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -25,6 +21,9 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.players.hades.objects.HadesUser;
+import com.wynntils.models.players.hades.objects.PlayerStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -43,7 +42,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class HadesManager extends Manager {
+public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
@@ -53,9 +52,7 @@ public final class HadesManager extends Manager {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    public HadesManager(WynntilsAccountManager wynntilsAccountManager) {
-        super(List.of(wynntilsAccountManager));
-
+    public HadesModel() {
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }

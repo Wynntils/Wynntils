@@ -19,7 +19,6 @@ import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.core.net.athena.WynntilsAccountManager;
-import com.wynntils.core.net.hades.HadesManager;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
@@ -47,7 +46,6 @@ public final class Managers {
     public static final SplashManager Splash = new SplashManager(Net);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
-    public static final HadesManager Hades = new HadesManager(WynntilsAccount);
 
     public static void init() {
         // Register all manager singletons as event listeners

@@ -137,7 +137,7 @@ public class WynntilsCommand extends CommandBase {
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
-        Managers.Hades.tryDisconnect();
+        Models.Hades.tryDisconnect();
         Managers.WynntilsAccount.reauth();
         Models.Player.reset();
         Models.Territory.reset();

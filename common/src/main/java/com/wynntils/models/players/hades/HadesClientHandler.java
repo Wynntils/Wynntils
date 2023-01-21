@@ -2,12 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.net.hades;
+package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.net.hades.event.HadesEvent;
-import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -18,6 +16,8 @@ import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
+import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;

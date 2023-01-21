@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.net.hades;
+package com.wynntils.models.players.hades;
 
-import com.wynntils.core.net.hades.objects.HadesUser;
+import com.wynntils.models.players.hades.objects.HadesUser;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;

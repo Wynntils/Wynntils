@@ -27,6 +27,7 @@ import com.wynntils.models.map.MapModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.PlayerRelationsModel;
+import com.wynntils.models.players.hades.HadesModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -51,6 +52,7 @@ public final class Models {
     public static final GearItemModel GearItem = new GearItemModel();
     public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
+    public static final HadesModel Hades = new HadesModel();
     public static final HorseModel Horse = new HorseModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
