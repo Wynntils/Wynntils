@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -44,11 +43,6 @@ public class TranslationFeature extends UserFeature {
 
     @Config
     public TranslationModel.TranslationServices translationService = TranslationModel.TranslationServices.GOOGLEAPI;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Translation);
-    }
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {

@@ -6,8 +6,6 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -130,11 +128,6 @@ public class MapFeature extends UserFeature {
         }
 
         McUtils.mc().setScreen(MainMapScreen.create());
-    }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
     }
 
     @SubscribeEvent

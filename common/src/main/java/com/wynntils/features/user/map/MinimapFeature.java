@@ -7,7 +7,6 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -51,11 +50,6 @@ public class MinimapFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
-    }
 
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;

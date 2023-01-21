@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -19,10 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LobbyUptimeFeature extends UserFeature {
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ServerList);
-    }
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
