@@ -15,6 +15,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.map.PoiLocation;
@@ -26,7 +27,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.wynn.objects.HealthTexture;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public class MapFeature extends UserFeature {
     //    public boolean renderRemoteGuildPlayers = true;
 
     @Config(subcategory = "Remote Players")
-    public HealthTexture remotePlayerHealthTexture = HealthTexture.a;
+    public CustomBarsOverlayFeature.HealthTexture remotePlayerHealthTexture = CustomBarsOverlayFeature.HealthTexture.a;
 
     @Config(subcategory = "Remote Players")
     public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
