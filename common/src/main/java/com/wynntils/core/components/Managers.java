@@ -6,7 +6,7 @@ package com.wynntils.core.components;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.ChatTabManager;
-import com.wynntils.core.commands.ClientCommandManager;
+import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.overlays.OverlayManager;
@@ -30,7 +30,7 @@ public final class Managers {
     public static final UrlManager Url = new UrlManager();
 
     public static final ChatTabManager ChatTab = new ChatTabManager();
-    public static final ClientCommandManager ClientCommand = new ClientCommandManager();
+    public static final CommandManager Command = new CommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();

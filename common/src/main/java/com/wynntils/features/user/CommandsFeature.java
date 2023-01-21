@@ -15,7 +15,7 @@ public class CommandsFeature extends UserFeature {
     public void onCommand(CommandSentEvent e) {
         String command = e.getCommand();
 
-        if (Managers.ClientCommand.handleCommand(command)) {
+        if (Managers.Command.handleCommand(command)) {
             e.setCanceled(true);
         }
     }
