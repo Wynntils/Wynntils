@@ -1,9 +1,21 @@
+## [0.0.2-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.130...v0.0.2-alpha.131) (2023-01-21)
+
+
+### Code Refactoring
+
+* Move all screens into a new hierarchy in its own package ([#1063](https://github.com/Wynntils/Artemis/issues/1063)) ([e0adbee](https://github.com/Wynntils/Artemis/commit/e0adbee1b062c68ed7c7d67484f10d6fcf2899c8))
+
 ## [0.0.2-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.129...v0.0.2-alpha.130) (2023-01-21)
 
 
 ### Bug Fixes
 
 * Bug in ScoreboardHandler after refactoring ([#1064](https://github.com/Wynntils/Artemis/issues/1064)) ([f868b7d](https://github.com/Wynntils/Artemis/commit/f868b7d2eab177fab5ea8043cafac86f1dfb2a9b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.130 [skip ci] ([7858cb3](https://github.com/Wynntils/Artemis/commit/7858cb3bbe8f79aabb93366638b1d230140af55d))
 
 ## [0.0.2-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.128...v0.0.2-alpha.129) (2023-01-20)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.127 [skip ci] ([3160a35](https://github.com/Wynntils/Artemis/commit/3160a35867ab6aec950a0f94116dd15e6eb165ea))
-
-## [0.0.2-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.125...v0.0.2-alpha.126) (2023-01-20)
-
-
-### Code Refactoring
-
-* Split up Lootrun in more manageable parts ([#1058](https://github.com/Wynntils/Artemis/issues/1058)) ([1b0da51](https://github.com/Wynntils/Artemis/commit/1b0da51cbfefbfd2ec3063e4054119507c29a78d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.126 [skip ci] ([6b4d606](https://github.com/Wynntils/Artemis/commit/6b4d606e192f3d7c8eb60f9887ea8d7af7a32969))
 
