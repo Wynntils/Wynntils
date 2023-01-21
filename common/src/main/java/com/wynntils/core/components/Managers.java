@@ -28,7 +28,6 @@ import com.wynntils.models.favorites.FavoritesManager;
 import com.wynntils.models.gear.GearItemManager;
 import com.wynntils.models.gear.GearProfilesManager;
 import com.wynntils.models.horse.HorseManager;
-import com.wynntils.models.objectives.ObjectivesManager;
 import com.wynntils.models.quests.QuestManager;
 import com.wynntils.models.territories.TerritoryManager;
 import com.wynntils.models.worlds.WorldStateManager;
@@ -42,7 +41,6 @@ public final class Managers {
     public static final CharacterManager Character = new CharacterManager();
     public static final CharacterSelectionManager CharacterSelection = new CharacterSelectionManager();
     public static final ClientCommandManager ClientCommand = new ClientCommandManager();
-    public static final NotificationManager Notification = new NotificationManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ContainerManager Container = new ContainerManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
@@ -52,8 +50,8 @@ public final class Managers {
     public static final GearItemManager GearItem = new GearItemManager();
     public static final HorseManager Horse = new HorseManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
+    public static final NotificationManager Notification = new NotificationManager();
     public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
-    public static final ObjectivesManager Objectives = new ObjectivesManager();
     public static final WorldStateManager WorldState = new WorldStateManager();
 
     // Managers with dependencies, ordered by dependency and then alphabetically

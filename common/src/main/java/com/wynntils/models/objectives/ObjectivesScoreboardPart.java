@@ -5,7 +5,6 @@
 package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.SegmentMatcher;
@@ -26,6 +25,11 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_START = Pattern.compile("^§([abc])[- ]\\s§7(.*)$");
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
+    private final ObjectivesModel model;
+
+    public ObjectivesScoreboardPart(ObjectivesModel model) {
+        this.model = model;
+    }
 
     @Override
     public Set<SegmentMatcher> getSegmentMatchers() {
@@ -41,18 +45,18 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
         if (segmentMatcher == GUILD_OBJECTIVES_MATCHER) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
-                    Managers.Objectives.updateGuildObjective(objective);
+                    model.updateGuildObjective(objective);
                 }
             }
         } else {
             for (WynnObjective objective : objectives) {
                 if (!objective.isGuildObjective()) {
-                    Managers.Objectives.updatePersonalObjective(objective);
+                    model.updatePersonalObjective(objective);
                 }
             }
 
             // filter out deleted objectives
-            Managers.Objectives.purgePersonalObjectives(objectives);
+            model.purgePersonalObjectives(objectives);
         }
     }
 
@@ -116,13 +120,13 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
 
         for (WynnObjective objective : objectives) {
             if (objective.getGoal() != null) {
-                Managers.Objectives.removeObjective(objective);
+                model.removeObjective(objective);
             }
         }
     }
 
     @Override
     public void reset() {
-        Managers.Objectives.resetObjectives();
+        model.resetObjectives();
     }
 }

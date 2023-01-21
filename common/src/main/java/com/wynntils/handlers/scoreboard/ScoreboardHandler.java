@@ -316,6 +316,10 @@ public final class ScoreboardHandler extends Handler {
         scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
     }
 
+    public void removePart(ScoreboardPart scoreboardPart) {
+        scoreboardParts.remove(scoreboardPart);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardSetScoreEvent event) {
         queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
@@ -350,9 +354,5 @@ public final class ScoreboardHandler extends Handler {
         for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
             scoreboardPart.a().reset();
         }
-    }
-
-    public void removePart(ScoreboardPart scoreboardPart) {
-        // FIXME: Implement
     }
 }

@@ -12,7 +12,6 @@ public final class Workarounds {
 
     private static void scoreboardHandlerWorkarounds() {
         // FIXME: Need ugly workarounds for init until all model refactoring is complete
-        Managers.Objectives.initWorkaround();
         Managers.Quest.initWorkaround();
 
         // FIXME: ScoreboardHandler should be able to init ifself upon listener registration
