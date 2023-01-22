@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -35,19 +34,12 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.WynnUtils;
-import java.util.List;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar, Models.BossBar);
-    }
 
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
@@ -127,7 +119,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld() || !isActive()) return;
+            if (!Models.WorldState.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
@@ -230,13 +222,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.ActionBar.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.ActionBar.getCurrentHealth();
-            int max = Models.ActionBar.getMaxHealth();
+            int current = Models.Character.getCurrentHealth();
+            int max = Models.Character.getMaxHealth();
             return new BossBarProgress(current, max, current / (float) max);
         }
 
@@ -371,8 +363,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.ActionBar.getCurrentMana();
-            int max = Models.ActionBar.getMaxMana();
+            int current = Models.Character.getCurrentMana();
+            int max = Models.Character.getMaxMana();
             return new BossBarProgress(current, max, current / (float) max);
         }
 
@@ -388,7 +380,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.ActionBar.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override

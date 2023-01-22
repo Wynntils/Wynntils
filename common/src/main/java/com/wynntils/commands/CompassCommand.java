@@ -8,7 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.ServicePoi;
@@ -33,7 +33,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public class CompassCommand extends CommandBase {
+public class CompassCommand extends Command {
 
     private final SuggestionProvider<CommandSourceStack> shareTargetSuggestionProvider =
             (context, builder) -> SharedSuggestionProvider.suggest(

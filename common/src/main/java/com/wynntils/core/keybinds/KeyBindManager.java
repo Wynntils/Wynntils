@@ -115,7 +115,7 @@ public final class KeyBindManager extends Manager {
     }
 
     private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
-        if (!Managers.WorldState.onServer()) return;
+        if (!Managers.Connection.onServer()) return;
 
         List<KeyBind> crashedKeyBinds = new LinkedList<>();
 

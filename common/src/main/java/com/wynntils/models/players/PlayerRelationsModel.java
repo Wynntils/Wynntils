@@ -5,12 +5,12 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.net.hades.event.HadesEvent;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -55,19 +55,13 @@ public final class PlayerRelationsModel extends Model {
     private Set<String> friends;
     private Set<String> partyMembers;
 
-    @Override
-    public void init() {
-        resetRelations();
-    }
-
-    @Override
-    public void disable() {
+    public PlayerRelationsModel() {
         resetRelations();
     }
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
-        if (!Managers.WorldState.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         requestFriendListUpdate();
         requestPartyListUpdate();

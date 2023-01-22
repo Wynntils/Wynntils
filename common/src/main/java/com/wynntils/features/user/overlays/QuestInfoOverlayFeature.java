@@ -6,8 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -45,17 +43,11 @@ public class QuestInfoOverlayFeature extends UserFeature {
     @Config
     public boolean autoTrackQuestCoordinates = true;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        // FIXME: Should include QuestManager when this has become a model
-        return List.of(Models.Compass);
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.isEnabled()
                 && disableQuestTrackingOnScoreboard
-                && Managers.Quest.isQuestSegment(event.getSegment())) {
+                && Models.Quest.isQuestSegment(event.getSegment())) {
             event.setCanceled(true);
         }
     }
@@ -66,7 +58,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         if (event.getQuestInfo() == null) return;
 
         // set if valid
-        Models.Compass.setDynamicCompassLocation(Managers.Quest::getTrackedQuestNextLocation);
+        Models.Compass.setDynamicCompassLocation(Models.Quest::getTrackedQuestNextLocation);
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -144,7 +136,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
+            QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
 
             if (trackedQuest == null) {
                 return;

@@ -5,7 +5,6 @@
 package com.wynntils.features.user;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -13,7 +12,6 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
@@ -26,11 +24,6 @@ public class GearViewerFeature extends UserFeature {
             InputConstants.Type.MOUSE,
             true,
             this::tryOpenGearViewer);
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Player);
-    }
 
     private void tryOpenGearViewer() {
         Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();

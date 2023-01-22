@@ -6,6 +6,7 @@ package com.wynntils.screens.wynntilsmenu;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
@@ -231,8 +232,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        Managers.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                + Managers.Character.getXpLevel(),
+                        Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
+                                + Models.Character.getXpLevel(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         145,

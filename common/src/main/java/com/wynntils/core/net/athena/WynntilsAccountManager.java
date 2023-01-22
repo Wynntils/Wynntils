@@ -128,10 +128,6 @@ public final class WynntilsAccountManager extends Manager {
         onLogin.add(runnable);
     }
 
-    public void removeOnLogin(Runnable runnable) {
-        onLogin.remove(runnable);
-    }
-
     private String parseAndJoinPublicKey(String key) {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());

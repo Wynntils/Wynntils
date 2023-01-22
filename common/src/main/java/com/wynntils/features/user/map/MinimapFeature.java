@@ -7,7 +7,6 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -38,7 +37,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -51,11 +49,6 @@ public class MinimapFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
-    }
 
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
@@ -115,7 +108,7 @@ public class MinimapFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!Models.WorldState.onWorld()) return;
 
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -240,7 +233,7 @@ public class MinimapFeature extends UserFeature {
 
             poisToRender = Stream.concat(
                     poisToRender,
-                    Models.HadesUser.getHadesUserMap().values().stream()
+                    Models.Hades.getHadesUsers()
                             .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                                     || (user.isMutualFriend() && renderRemoteFriendPlayers))
                             .map(PlayerMiniMapPoi::new));

@@ -36,8 +36,7 @@ public final class PlayerModel extends Model {
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
 
-    @Override
-    public void init() {
+    public PlayerModel() {
         errorCount = 0;
     }
 

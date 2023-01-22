@@ -21,11 +21,6 @@ public final class BombBellModel extends Model {
 
     private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
 
-    @Override
-    public void disable() {
-        BOMB_BELLS.clear();
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
         String unformatted = ComponentUtils.stripFormatting(event.getOriginalCodedMessage());

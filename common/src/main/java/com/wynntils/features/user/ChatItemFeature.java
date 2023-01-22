@@ -4,13 +4,12 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -26,7 +25,7 @@ public class ChatItemFeature extends UserFeature {
 
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
         if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
 
         EditBox chatInput = ((ChatScreenAccessor) chatScreen).getChatInput();
@@ -41,7 +40,7 @@ public class ChatItemFeature extends UserFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Managers.GearItem.chatItemMatcher(chatInput.getValue());
+        Matcher m = Models.GearItem.chatItemMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -56,10 +55,10 @@ public class ChatItemFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         Component message = e.getMessage();
 
-        e.setMessage(Managers.GearItem.replaceComponentWithItemHover(message));
+        e.setMessage(Models.GearItem.replaceComponentWithItemHover(message));
     }
 }

@@ -29,14 +29,8 @@ public final class GuildAttackTimerModel extends Model {
 
     private List<TerritoryAttackTimer> attackTimers = List.of();
 
-    @Override
-    public void init() {
+    public GuildAttackTimerModel() {
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
-    }
-
-    @Override
-    public void disable() {
-        Handlers.Scoreboard.removePart(GUILD_ATTACK_SCOREBOARD_PART);
     }
 
     @SubscribeEvent

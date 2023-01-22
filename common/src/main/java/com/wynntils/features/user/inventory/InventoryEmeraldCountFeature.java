@@ -5,8 +5,6 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -26,7 +24,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -49,11 +46,6 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     @Config
     public boolean combineInventoryAndContainer = false;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.PlayerInventory);
-    }
-
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         Screen screen = McUtils.mc().screen;
@@ -66,12 +58,12 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int topEmeralds;
         if (isInventory) {
             if (!showInventoryEmeraldCount) return;
-            topEmeralds = Managers.Emerald.getAmountInInventory();
+            topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount) topEmeralds += Managers.Emerald.getAmountInContainer();
+            if (showContainerEmeraldCount) topEmeralds += Models.Emerald.getAmountInContainer();
             if (combineInventoryAndContainer && showInventoryEmeraldCount) {
-                topEmeralds += Managers.Emerald.getAmountInInventory();
+                topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
 
@@ -85,7 +77,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         }
 
         if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
-            int bottomEmeralds = Managers.Emerald.getAmountInInventory();
+            int bottomEmeralds = Models.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType) {

@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -35,11 +34,6 @@ public class StatusOverlayFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final StatusOverlay statusOverlay = new StatusOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Tab);
-    }
 
     @SubscribeEvent
     public void onStatusChange(StatusEffectsChangedEvent event) {

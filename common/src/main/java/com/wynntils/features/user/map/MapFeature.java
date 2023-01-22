@@ -6,7 +6,6 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
@@ -132,11 +131,6 @@ public class MapFeature extends UserFeature {
         McUtils.mc().setScreen(MainMapScreen.create());
     }
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
-    }
-
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (!autoWaypointChests) return;
@@ -153,7 +147,7 @@ public class MapFeature extends UserFeature {
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
-        Matcher matcher = Managers.Container.lootChestMatcher(event.getScreen());
+        Matcher matcher = Models.Container.lootChestMatcher(event.getScreen());
         if (!matcher.matches()) return;
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));

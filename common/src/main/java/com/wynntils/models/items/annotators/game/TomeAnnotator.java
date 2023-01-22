@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
@@ -37,6 +37,6 @@ public final class TomeAnnotator implements ItemAnnotator {
         // TODO: replace with API lookup
         TomeProfile tomeProfile = new TomeProfile(matcher.group(1), gearTier, variant, tomeType, tier);
 
-        return Managers.GearItem.fromTomeItemStack(itemStack, tomeProfile);
+        return Models.GearItem.fromTomeItemStack(itemStack, tomeProfile);
     }
 }

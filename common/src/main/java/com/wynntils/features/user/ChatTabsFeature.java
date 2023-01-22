@@ -7,8 +7,7 @@ package com.wynntils.features.user;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
@@ -49,11 +48,6 @@ public class ChatTabsFeature extends UserFeature {
     @TypeOverride
     private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ChatTab);
-    }
-
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
@@ -62,7 +56,7 @@ public class ChatTabsFeature extends UserFeature {
             if (!chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                Models.ChatTab.addMessageToTab(chatTab, event.getMessage());
+                Managers.ChatTab.addMessageToTab(chatTab, event.getMessage());
                 return;
             }
         }
@@ -72,7 +66,7 @@ public class ChatTabsFeature extends UserFeature {
             if (chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                Models.ChatTab.addMessageToTab(chatTab, event.getMessage());
+                Managers.ChatTab.addMessageToTab(chatTab, event.getMessage());
             }
         }
 
@@ -87,7 +81,7 @@ public class ChatTabsFeature extends UserFeature {
             if (!chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                Models.ChatTab.addMessageToTab(chatTab, event.getComponent());
+                Managers.ChatTab.addMessageToTab(chatTab, event.getComponent());
                 return;
             }
         }
@@ -97,7 +91,7 @@ public class ChatTabsFeature extends UserFeature {
             if (chatTab.isConsuming()) continue;
 
             if (chatTab.matchMessageFromEvent(event)) {
-                Models.ChatTab.addMessageToTab(chatTab, event.getComponent());
+                Managers.ChatTab.addMessageToTab(chatTab, event.getComponent());
             }
         }
 
@@ -122,9 +116,11 @@ public class ChatTabsFeature extends UserFeature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.WORLD && !chatTabs.isEmpty() && Models.ChatTab.getFocusedTab() == null) {
+        if (event.getNewState() == WorldState.WORLD
+                && !chatTabs.isEmpty()
+                && Managers.ChatTab.getFocusedTab() == null) {
             // We joined wynn, time to override our focused tab.
-            Models.ChatTab.setFocusedTab(chatTabs.get(0));
+            Managers.ChatTab.setFocusedTab(chatTabs.get(0));
         }
     }
 
@@ -145,21 +141,21 @@ public class ChatTabsFeature extends UserFeature {
         if (!KeyboardUtils.isShiftDown()) return;
 
         event.setCanceled(true);
-        Models.ChatTab.setFocusedTab(
-                chatTabs.get((chatTabs.indexOf(Models.ChatTab.getFocusedTab()) + 1) % chatTabs.size()));
+        Managers.ChatTab.setFocusedTab(
+                chatTabs.get((chatTabs.indexOf(Managers.ChatTab.getFocusedTab()) + 1) % chatTabs.size()));
     }
 
     @Override
     protected void postEnable() {
         if (chatTabs.isEmpty()) return;
 
-        Models.ChatTab.setFocusedTab(chatTabs.get(0));
+        Managers.ChatTab.setFocusedTab(chatTabs.get(0));
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (!chatTabs.isEmpty()) {
-            Models.ChatTab.setFocusedTab(chatTabs.get(0));
+            Managers.ChatTab.setFocusedTab(chatTabs.get(0));
         }
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
