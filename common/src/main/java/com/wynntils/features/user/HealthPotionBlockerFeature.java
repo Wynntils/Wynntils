@@ -46,7 +46,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
         ItemStack stack = McUtils.inventory().getSelected();
         if (!WynnItemMatchers.isHealingPotion(stack)) return null;
 
-        if (Models.ActionBar.getCurrentHealth() * 100 < Models.ActionBar.getMaxHealth() * threshold) return null;
+        if (Models.Character.getCurrentHealth() * 100 < Models.Character.getMaxHealth() * threshold) return null;
 
         if (threshold < 100)
             return Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
