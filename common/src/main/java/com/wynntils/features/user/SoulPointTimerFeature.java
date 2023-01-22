@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -36,7 +35,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
         addon.add(Component.literal(" "));
 
-        int rawSecondsUntilSoulPoint = Managers.Character.getTicksToNextSoulPoint() / 20;
+        int rawSecondsUntilSoulPoint = Models.Character.getTicksToNextSoulPoint() / 20;
         int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
         int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 

@@ -2,15 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.net.hades.model;
+package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.hades.HadesClientHandler;
-import com.wynntils.core.net.hades.event.HadesEvent;
-import com.wynntils.core.net.hades.objects.PlayerStatus;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -24,6 +21,9 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.players.hades.objects.HadesUser;
+import com.wynntils.models.players.hades.objects.PlayerStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ClickEvent;
@@ -46,6 +47,7 @@ public final class HadesModel extends Model {
     private static final int MS_PER_PING = 1000;
 
     private HadesConnection hadesConnection;
+    private HadesUserRegistry userRegistry = new HadesUserRegistry();
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
@@ -56,6 +58,10 @@ public final class HadesModel extends Model {
         }
 
         Managers.WynntilsAccount.onLoginRun(this::onLogin);
+    }
+
+    public Stream<HadesUser> getHadesUsers() {
+        return userRegistry.getHadesUserMap().values().stream();
     }
 
     private void onLogin() {
@@ -71,7 +77,7 @@ public final class HadesModel extends Model {
                     .setAddress(InetAddress.getByName("io.wynntils.com"), 9000)
                     .setDirection(PacketDirection.SERVER)
                     .setCompressionThreshold(256)
-                    .setHandlerFactory(HadesClientHandler::new)
+                    .setHandlerFactory(a -> new HadesClientHandler(a, userRegistry))
                     .buildClient();
 
             tickCountUntilUpdate = 0;
@@ -128,6 +134,7 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        userRegistry.reset();
         if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
                 MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
@@ -154,7 +161,7 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
-        if (!Managers.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
+        if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty
                 && !HadesFeature.INSTANCE.shareWithGuild
                 && !HadesFeature.INSTANCE.shareWithFriends) return;
@@ -207,13 +214,17 @@ public final class HadesModel extends Model {
         if (!isConnected()) return;
 
         hadesConnection.sendPacket(
-                new HCPacketUpdateWorld(Managers.WorldState.getCurrentWorldName(), Managers.Character.getId()));
+                new HCPacketUpdateWorld(Models.WorldState.getCurrentWorldName(), Models.Character.getId()));
     }
 
     public void resetSocialType(SocialType socialType) {
         if (!isConnected()) return;
 
         hadesConnection.sendPacketAndFlush(new HCPacketSocialUpdate(List.of(), PacketAction.RESET, socialType));
+    }
+
+    public void resetHadesUsers() {
+        userRegistry.getHadesUserMap().clear();
     }
 
     private boolean isConnected() {

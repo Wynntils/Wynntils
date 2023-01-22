@@ -5,11 +5,11 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CombatXpGainMessageFeature extends UserFeature {
@@ -32,7 +32,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
 
     @SubscribeEvent
     public void onXpChange(SetXpEvent event) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay * 1000) return;
 
@@ -40,7 +40,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
     }
 
     private void gatherAndDispatchMessage() {
-        int newLevel = Managers.Character.getXpLevel();
+        int newLevel = Models.Character.getXpLevel();
 
         if (trackedLevel == 0) {
             trackedLevel = newLevel;
@@ -53,11 +53,11 @@ public class CombatXpGainMessageFeature extends UserFeature {
             trackedPercentage = 0;
         }
 
-        newTickXp = Managers.Character.getCurrentXp();
+        newTickXp = Models.Character.getCurrentXp();
 
         if (newTickXp == lastTickXp) return;
 
-        int neededXp = Managers.Character.getXpPointsNeededToLevelUp();
+        int neededXp = Models.Character.getXpPointsNeededToLevelUp();
 
         // Something went wrong, or you're at the level cap.
         if (neededXp == 0) return;

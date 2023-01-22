@@ -6,18 +6,15 @@ package com.wynntils.models.discoveries;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
-import com.wynntils.models.territories.TerritoryManager;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -33,7 +30,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class DiscoveryManager extends Manager {
+public final class DiscoveryModel extends Model {
     private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
 
     private List<DiscoveryInfo> discoveries = List.of();
@@ -42,11 +39,6 @@ public final class DiscoveryManager extends Manager {
 
     private List<Component> discoveriesTooltip = List.of();
     private List<Component> secretDiscoveriesTooltip = List.of();
-
-    public DiscoveryManager(
-            NetManager netManager, TerritoryManager territoryManager, TickSchedulerManager tickSchedulerManager) {
-        super(List.of(netManager, territoryManager, tickSchedulerManager));
-    }
 
     public void reloadData() {
         updateDiscoveriesResource();
@@ -64,7 +56,7 @@ public final class DiscoveryManager extends Manager {
             return;
         }
 
-        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -79,7 +71,7 @@ public final class DiscoveryManager extends Manager {
             return;
         }
 
-        TerritoryProfile guildTerritory = Managers.Territory.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;

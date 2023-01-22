@@ -5,12 +5,15 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
@@ -111,11 +114,14 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
-public final class FeatureRegistry {
-    private static boolean initCompleted = false;
+public final class FeatureManager extends Manager {
     private static final List<Feature> FEATURES = new ArrayList<>();
 
-    public static void init() {
+    public FeatureManager(ConfigManager configManager, CrashReportManager crashReportManager) {
+        super(List.of(configManager, crashReportManager));
+    }
+
+    public void init() {
         // debug
         registerFeature(new ConnectionProgressFeature());
         registerFeature(new ItemDebugTooltipsFeature());
@@ -226,11 +232,9 @@ public final class FeatureRegistry {
         }
 
         addCrashCallbacks();
-
-        initCompleted = true;
     }
 
-    private static void registerFeature(Feature feature) {
+    private void registerFeature(Feature feature) {
         FEATURES.add(feature);
 
         try {
@@ -242,7 +246,7 @@ public final class FeatureRegistry {
         }
     }
 
-    private static void initializeFeature(Feature feature) {
+    private void initializeFeature(Feature feature) {
         Class<? extends Feature> featureClass = feature.getClass();
 
         // instance field
@@ -301,21 +305,17 @@ public final class FeatureRegistry {
         }
     }
 
-    public static List<Feature> getFeatures() {
+    public List<Feature> getFeatures() {
         return FEATURES;
     }
 
-    public static boolean isInitCompleted() {
-        return initCompleted;
-    }
-
-    public static Optional<Feature> getFeatureFromString(String featureName) {
-        return FeatureRegistry.getFeatures().stream()
+    public Optional<Feature> getFeatureFromString(String featureName) {
+        return getFeatures().stream()
                 .filter(feature -> feature.getShortName().equals(featureName))
                 .findFirst();
     }
 
-    private static void addCrashCallbacks() {
+    private void addCrashCallbacks() {
         Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
             StringBuilder result = new StringBuilder();
 

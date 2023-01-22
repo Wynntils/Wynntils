@@ -45,11 +45,11 @@ import net.minecraft.network.chat.Style;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
-public final class ClientCommandManager extends Manager {
-    private final Set<CommandBase> commandInstanceSet = new HashSet<>();
+public final class CommandManager extends Manager {
+    private final Set<Command> commandInstanceSet = new HashSet<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
-    public ClientCommandManager() {
+    public CommandManager() {
         super(List.of());
         registerAllCommands();
     }
@@ -58,7 +58,7 @@ public final class ClientCommandManager extends Manager {
         return clientDispatcher;
     }
 
-    private void registerCommand(CommandBase command) {
+    private void registerCommand(Command command) {
         commandInstanceSet.add(command);
         command.register(clientDispatcher);
     }
@@ -161,7 +161,7 @@ public final class ClientCommandManager extends Manager {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public Set<CommandBase> getCommandInstanceSet() {
+    public Set<Command> getCommandInstanceSet() {
         return commandInstanceSet;
     }
 

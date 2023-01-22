@@ -5,7 +5,7 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Model;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
@@ -29,7 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class CharacterManager extends Manager {
+public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §r§7Class: §r§f(.+)");
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
@@ -67,10 +67,6 @@ public final class CharacterManager extends Manager {
     private int id;
 
     private ProfessionInfo professionInfo;
-
-    public CharacterManager() {
-        super(List.of());
-    }
 
     /**
      * Return the maximum number of soul points the character can currently have

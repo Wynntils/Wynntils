@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -107,7 +106,7 @@ public class CustomNametagRendererFeature extends UserFeature {
             return Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA);
         }
 
-        GearProfile gearProfile = Managers.GearProfiles.getItemsProfile(itemName);
+        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
         if (gearProfile == null) return null;
 
         // this solves an unidentified item showcase exploit

@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.map.pois;
 
-import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
+import com.wynntils.models.players.hades.objects.HadesUser;
 
 public abstract class PlayerPoiBase implements Poi {
     private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 20;

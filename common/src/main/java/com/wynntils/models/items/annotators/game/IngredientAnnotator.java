@@ -5,7 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
@@ -25,9 +25,9 @@ public final class IngredientAnnotator implements ItemAnnotator {
 
         String ingredientName = matcher.group(1);
         String tierColor = matcher.group(2);
-        int tier = Managers.GearProfiles.getTierFromColorCode(tierColor);
+        int tier = Models.GearProfiles.getTierFromColorCode(tierColor);
 
-        IngredientProfile ingredientProfile = Managers.GearProfiles.getIngredient(ingredientName);
+        IngredientProfile ingredientProfile = Models.GearProfiles.getIngredient(ingredientName);
         if (ingredientProfile == null) return null;
         if (ingredientProfile.getTier().getTierInt() != tier) {
             WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);

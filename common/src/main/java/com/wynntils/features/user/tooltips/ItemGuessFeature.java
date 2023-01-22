@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.tooltips;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -57,13 +56,13 @@ public class ItemGuessFeature extends UserFeature {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String itemName : itemPossibilities) {
-            GearProfile profile = Managers.GearProfiles.getItemsProfile(itemName);
+            GearProfile profile = Models.GearProfiles.getItemsProfile(itemName);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
             MutableComponent itemDesc = Component.literal(itemName).withStyle(gearTier.getChatFormatting());
 
-            if (Managers.Favorites.isFavorite(itemName)) {
+            if (Models.Favorites.isFavorite(itemName)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
             }
 

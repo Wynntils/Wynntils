@@ -6,7 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -187,7 +187,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
+                TerritoryPoi routePoi = Models.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
                 // Only render connection if the other poi is also in the filtered pois
                 if (routePoi != null && filteredPois.contains(routePoi)) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
@@ -370,9 +370,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
         List<Poi> pois = territoryDefenseFilterEnabled
-                ? Managers.Territory.getFilteredTerritoryPoisFromAdvancement(
+                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
                         territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Managers.Territory.getTerritoryPoisFromAdvancement();
+                : Models.Territory.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,

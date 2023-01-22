@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.horse;
 
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -17,11 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-public class HorseManager extends Manager {
-    public HorseManager() {
-        super(List.of());
-    }
-
+public class HorseModel extends Model {
     public HorseItem getHorse() {
         int horseSlot = findHorseSlotNum();
         if (horseSlot == -1) return null;

@@ -11,7 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.lootruns.type.LootrunNote;
@@ -38,7 +38,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-public class LootrunCommand extends CommandBase {
+public class LootrunCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> LOOTRUN_SUGGESTION_PROVIDER =
             (context, suggestions) -> SharedSuggestionProvider.suggest(
                     Stream.of(Models.Lootrun.LOOTRUNS.list())

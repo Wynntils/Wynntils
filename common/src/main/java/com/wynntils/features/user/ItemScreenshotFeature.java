@@ -8,7 +8,6 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
@@ -61,7 +60,7 @@ public class ItemScreenshotFeature extends UserFeature {
     // All other features (besides scaling) must be able to update the tooltip first
     @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
         Screen screen = McUtils.mc().screen;
@@ -166,7 +165,7 @@ public class ItemScreenshotFeature extends UserFeature {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        String encoded = Managers.GearItem.toEncodedString(gearItemOpt.get());
+        String encoded = Models.GearItem.toEncodedString(gearItemOpt.get());
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)

@@ -10,11 +10,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.overlays.Overlay;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,17 +30,17 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.StringUtils;
 
-public class ConfigCommand extends CommandBase {
+public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FeatureRegistry.getFeatures().stream().map(Feature::getShortName), builder);
+                    Managers.Feature.getFeatures().stream().map(Feature::getShortName), builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
 
-                        Optional<Feature> foundFeature = FeatureRegistry.getFeatureFromString(featureName);
+                        Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
                         if (foundFeature.isEmpty()) return Collections.emptyIterator();
 
@@ -55,7 +54,7 @@ public class ConfigCommand extends CommandBase {
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
 
-                        Optional<Feature> foundFeature = FeatureRegistry.getFeatureFromString(featureName);
+                        Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
                         if (foundFeature.isEmpty()) return Collections.emptyIterator();
 
@@ -71,7 +70,7 @@ public class ConfigCommand extends CommandBase {
                         String featureName = context.getArgument("feature", String.class);
                         String overlayName = context.getArgument("overlay", String.class);
 
-                        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+                        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
                         if (featureOptional.isEmpty()) return Collections.emptyIterator();
 
@@ -534,7 +533,7 @@ public class ConfigCommand extends CommandBase {
     }
 
     private Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty()) {
             context.getSource()

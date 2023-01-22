@@ -5,7 +5,7 @@
 package com.wynntils.screens.questbook.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -86,7 +86,7 @@ public class QuestButton extends WynntilsButton {
     private CustomColor getBackgroundColor() {
         Pair<CustomColor, CustomColor> colors;
 
-        if (this.questInfo.equals(Managers.Quest.getTrackedQuest())) {
+        if (this.questInfo.equals(Models.Quest.getTrackedQuest())) {
             colors = TRACKED_BUTTON_COLOR;
         } else if (this.questInfo.equals(questBookScreen.getTrackingRequested())) {
             colors = TRACKING_REQUESTED_BUTTON_COLOR;
@@ -120,11 +120,11 @@ public class QuestButton extends WynntilsButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.playSound(SoundEvents.ANVIL_LAND);
-            if (this.questInfo.equals(Managers.Quest.getTrackedQuest())) {
-                Managers.Quest.stopTracking();
+            if (this.questInfo.equals(Models.Quest.getTrackedQuest())) {
+                Models.Quest.stopTracking();
                 questBookScreen.setTrackingRequested(null);
             } else {
-                Managers.Quest.startTracking(this.questInfo);
+                Models.Quest.startTracking(this.questInfo);
                 questBookScreen.setTrackingRequested(this.questInfo);
             }
         }
@@ -132,7 +132,7 @@ public class QuestButton extends WynntilsButton {
 
     private void openQuestWiki() {
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
-        Managers.Quest.openQuestOnWiki(questInfo);
+        Models.Quest.openQuestOnWiki(questInfo);
     }
 
     public QuestInfo getQuestInfo() {

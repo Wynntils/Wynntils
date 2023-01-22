@@ -28,8 +28,6 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
-        if (!Managers.WorldState.onServer()) return;
-
         if (Objects.equals(event.getHash(), appliedHash)) {
             event.setCanceled(true);
             return;

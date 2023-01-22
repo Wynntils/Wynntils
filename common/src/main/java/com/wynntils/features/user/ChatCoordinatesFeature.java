@@ -4,13 +4,13 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.LocationUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -28,7 +28,7 @@ public class ChatCoordinatesFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         Component message = e.getMessage();
 
@@ -37,7 +37,7 @@ public class ChatCoordinatesFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientsideMessage(ClientsideMessageEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         Component message = e.getComponent();
 

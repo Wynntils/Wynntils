@@ -6,26 +6,20 @@ package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Model;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ObjectivesManager extends Manager {
+public class ObjectivesModel extends Model {
     private static final ScoreboardPart OBJECTIVES_SCOREBOARD_PART = new ObjectivesScoreboardPart();
 
     private List<WynnObjective> personalObjectives = new ArrayList<>();
     private WynnObjective guildObjective = null;
 
-    public ObjectivesManager() {
-        super(List.of());
-    }
-
-    public void initWorkaround() {
-        // FIXME: A Handler accessed from a Manager, not good. Will be fixed when this becomes
-        // a Model.
+    public ObjectivesModel() {
         Handlers.Scoreboard.addPart(OBJECTIVES_SCOREBOARD_PART);
     }
 

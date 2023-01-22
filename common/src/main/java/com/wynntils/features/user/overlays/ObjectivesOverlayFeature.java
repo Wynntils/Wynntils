@@ -6,7 +6,7 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -46,11 +46,11 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard) {
             ScoreboardSegment segment = event.getSegment();
-            if (Managers.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (Managers.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
                 return;
             }
@@ -83,7 +83,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            WynnObjective guildObjective = Managers.Objectives.getGuildObjective();
+            WynnObjective guildObjective = Models.Objectives.getGuildObjective();
 
             if (guildObjective == null) {
                 return;
@@ -172,7 +172,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            List<WynnObjective> objectives = Managers.Objectives.getPersonalObjectives();
+            List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
             final int barHeight = this.enableProgressBar ? 5 : 0;
             final int barWidth = 182;

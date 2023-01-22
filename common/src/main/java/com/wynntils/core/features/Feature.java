@@ -146,7 +146,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         }
 
         // Reload configs to load new keybinds
-        if (!keyBinds.isEmpty() && FeatureRegistry.isInitCompleted()) {
+        if (!keyBinds.isEmpty()) {
             synchronized (McUtils.options()) {
                 McUtils.mc().options.load();
             }

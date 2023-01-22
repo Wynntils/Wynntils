@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
@@ -55,9 +56,9 @@ public class ItemLockFeature extends UserFeature {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         // Don't render lock on ability tree slots
-        if (Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+        if (Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        for (Integer slotId : classSlotLockMap.getOrDefault(Managers.Character.getId(), Set.of())) {
+        for (Integer slotId : classSlotLockMap.getOrDefault(Models.Character.getId(), Set.of())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -74,7 +75,7 @@ public class ItemLockFeature extends UserFeature {
     public void onInventoryClickEvent(ContainerClickEvent event) {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || Managers.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+                || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
@@ -88,12 +89,12 @@ public class ItemLockFeature extends UserFeature {
         // We want to allow opening emerald pouch even if locked
         if (allowClickOnEmeraldPouchInBlockingMode
                 && event.getClickType() == ClickType.PICKUP
-                && Managers.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
+                && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 
         if (classSlotLockMap
-                .getOrDefault(Managers.Character.getId(), Set.of())
+                .getOrDefault(Models.Character.getId(), Set.of())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -108,7 +109,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
-                .getOrDefault(Managers.Character.getId(), Set.of())
+                .getOrDefault(Models.Character.getId(), Set.of())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -130,9 +131,9 @@ public class ItemLockFeature extends UserFeature {
     private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        classSlotLockMap.putIfAbsent(Managers.Character.getId(), new HashSet<>());
+        classSlotLockMap.putIfAbsent(Models.Character.getId(), new HashSet<>());
 
-        Set<Integer> classSet = classSlotLockMap.get(Managers.Character.getId());
+        Set<Integer> classSet = classSlotLockMap.get(Models.Character.getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

@@ -10,11 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
@@ -28,10 +27,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
-public class FeatureCommand extends CommandBase {
+public class FeatureCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> USER_FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    FeatureRegistry.getFeatures().stream()
+                    Managers.Feature.getFeatures().stream()
                             .filter(feature -> feature instanceof UserFeature && isVisible(feature))
                             .map(Feature::getShortName),
                     builder);
@@ -56,7 +55,7 @@ public class FeatureCommand extends CommandBase {
     }
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
-        List<Feature> features = FeatureRegistry.getFeatures().stream()
+        List<Feature> features = Managers.Feature.getFeatures().stream()
                 .filter(FeatureCommand::isVisible)
                 .sorted(Feature::compareTo)
                 .toList();
@@ -126,7 +125,7 @@ public class FeatureCommand extends CommandBase {
     private int enableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
             context.getSource()
@@ -173,7 +172,7 @@ public class FeatureCommand extends CommandBase {
     private int disableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
             context.getSource()
@@ -220,7 +219,7 @@ public class FeatureCommand extends CommandBase {
     private int reloadFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureName);
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
             context.getSource()
