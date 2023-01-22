@@ -34,10 +34,8 @@ import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
-import com.wynntils.wynn.model.actionbar.ActionBarModel;
 
 public final class Models {
-    public static final ActionBarModel ActionBar = new ActionBarModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();

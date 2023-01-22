@@ -182,36 +182,36 @@ public class CharacterFunctions {
     public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.ActionBar.getCurrentMana();
+            return Models.Character.getCurrentMana();
         }
     }
 
     public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.ActionBar.getMaxMana();
+            return Models.Character.getMaxMana();
         }
     }
 
     public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.ActionBar.getCurrentHealth();
+            return Models.Character.getCurrentHealth();
         }
     }
 
     public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.ActionBar.getMaxHealth();
+            return Models.Character.getMaxHealth();
         }
     }
 
     public static class HealthPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            int currentHealth = Models.ActionBar.getCurrentHealth();
-            int maxHealth = Models.ActionBar.getMaxHealth();
+            int currentHealth = Models.Character.getCurrentHealth();
+            int maxHealth = Models.Character.getMaxHealth();
             return ((float) currentHealth / maxHealth * 100.0f);
         }
     }
@@ -219,8 +219,8 @@ public class CharacterFunctions {
     public static class ManaPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            int currentMana = Models.ActionBar.getCurrentMana();
-            int maxMana = Models.ActionBar.getMaxMana();
+            int currentMana = Models.Character.getCurrentMana();
+            int maxMana = Models.Character.getMaxMana();
             return ((float) currentMana / maxMana * 100.0f);
         }
     }

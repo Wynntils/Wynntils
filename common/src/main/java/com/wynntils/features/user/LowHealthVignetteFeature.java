@@ -44,7 +44,7 @@ public class LowHealthVignetteFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        float healthPercent = (float) Models.ActionBar.getCurrentHealth() / Models.ActionBar.getMaxHealth();
+        float healthPercent = (float) Models.Character.getCurrentHealth() / Models.Character.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;
 
