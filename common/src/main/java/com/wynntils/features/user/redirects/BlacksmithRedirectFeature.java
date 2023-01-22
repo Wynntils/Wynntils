@@ -9,7 +9,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.EnumMap;
@@ -98,7 +97,11 @@ public class BlacksmithRedirectFeature extends UserFeature {
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
             sendableMessage = String.format(
                     "§dSold %d %s %s for §a%s%s§d.",
-                    totalItemInteger, itemPluralizer, countByTierString, paymentString, EmeraldSymbols.EMERALDS);
+                    totalItemInteger,
+                    itemPluralizer,
+                    countByTierString,
+                    paymentString,
+                    EmeraldUnits.EMERALD.getSymbol());
         }
         // Scrapping items for scrap.
         else {

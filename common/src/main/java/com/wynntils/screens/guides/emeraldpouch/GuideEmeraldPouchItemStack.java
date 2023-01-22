@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
-import com.wynntils.models.emeralds.type.EmeraldSymbols;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
@@ -61,9 +61,9 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
         if (tier >= 7) {
             totalString = tier - 6 + "stx";
         } else if (tier >= 4) {
-            totalString += EmeraldSymbols.L_STRING + EmeraldSymbols.E_STRING;
+            totalString += EmeraldUnits.LIQUID_EMERALD.getSymbol();
         } else {
-            totalString += EmeraldSymbols.E_STRING + EmeraldSymbols.B_STRING;
+            totalString += EmeraldUnits.EMERALD_BLOCK.getSymbol();
         }
 
         List<Component> itemLore = new ArrayList<>();
