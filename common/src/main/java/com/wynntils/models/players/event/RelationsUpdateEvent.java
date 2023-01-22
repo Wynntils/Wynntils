@@ -7,6 +7,7 @@ package com.wynntils.models.players.event;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.Event;
+import org.apache.commons.compress.utils.CharsetNames;
 
 public abstract class RelationsUpdateEvent extends Event {
     private final Set<String> changedPlayers;
@@ -34,6 +35,12 @@ public abstract class RelationsUpdateEvent extends Event {
     public static class PartyList extends RelationsUpdateEvent {
 
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
+            super(changedPlayers, changeType);
+        }
+    }
+
+    public static class UserList extends RelationsUpdateEvent {
+        public UserList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }
