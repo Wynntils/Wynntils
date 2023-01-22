@@ -1,9 +1,21 @@
+## [0.0.2-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.136...v0.0.2-alpha.137) (2023-01-22)
+
+
+### Code Refactoring
+
+* Remove final wynn.actionbar package ([#1070](https://github.com/Wynntils/Artemis/issues/1070)) ([a63421f](https://github.com/Wynntils/Artemis/commit/a63421fce66d650d09344a777e73546502e50679))
+
 ## [0.0.2-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.135...v0.0.2-alpha.136) (2023-01-22)
 
 
 ### Code Refactoring
 
 * Models <-> Managers switcheroo ([#1069](https://github.com/Wynntils/Artemis/issues/1069)) ([0bd8484](https://github.com/Wynntils/Artemis/commit/0bd8484030837517ca7d61ac1174c6d7ab71db30))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.136 [skip ci] ([5bad1c4](https://github.com/Wynntils/Artemis/commit/5bad1c4c0e70f7007ce45674153aad4ade3f48f1))
 
 ## [0.0.2-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.134...v0.0.2-alpha.135) (2023-01-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.133 [skip ci] ([4d82389](https://github.com/Wynntils/Artemis/commit/4d8238972ad6830140819561b2bdf921c1b88580))
-
-## [0.0.2-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.131...v0.0.2-alpha.132) (2023-01-21)
-
-
-### Code Refactoring
-
-* Get rid of wynn.objects ([#1065](https://github.com/Wynntils/Artemis/issues/1065)) ([4fd6105](https://github.com/Wynntils/Artemis/commit/4fd6105c471710070ab4d1bb20e3e7c5d46f889d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.132 [skip ci] ([dcb1d39](https://github.com/Wynntils/Artemis/commit/dcb1d39bb15435c96cd5e232879877bdf9d6e92d))
 
