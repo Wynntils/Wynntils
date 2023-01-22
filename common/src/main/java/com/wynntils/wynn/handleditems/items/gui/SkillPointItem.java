@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.handleditems.items.gui;
 
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import com.wynntils.wynn.handleditems.properties.CountedItemProperty;
 import com.wynntils.wynn.objects.Skill;
 

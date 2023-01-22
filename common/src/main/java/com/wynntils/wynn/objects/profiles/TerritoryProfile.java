@@ -10,8 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.CustomColor;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -178,7 +177,7 @@ public class TerritoryProfile {
 
             CustomColor guildColor;
             if (territory.get("guildColor").getAsString().isEmpty()) {
-                guildColor = StringUtils.colorFromString(guild);
+                guildColor = CustomColor.colorForStringHash(guild);
             } else {
                 guildColor =
                         CustomColor.fromHexString(territory.get("guildColor").getAsString());

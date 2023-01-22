@@ -20,7 +20,7 @@ import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.utils.ComponentUtils;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.SystemUtils;
 import com.wynntils.wynn.handleditems.items.game.GearItem;
 import com.wynntils.wynn.utils.WynnItemUtils;
 import com.wynntils.wynn.utils.WynnUtils;
@@ -116,7 +116,7 @@ public class ItemScreenshotFeature extends UserFeature {
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
-        BufferedImage bi = RenderUtils.createScreenshot(fb);
+        BufferedImage bi = SystemUtils.createScreenshot(fb);
 
         // First try to save it to disk
         String itemNameForFile = WynnUtils.normalizeBadString(
@@ -144,14 +144,14 @@ public class ItemScreenshotFeature extends UserFeature {
         }
 
         // Then try to send a copy to the clipboard
-        if (Utils.isMac()) {
+        if (SystemUtils.isMac()) {
             McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
                     .withStyle(ChatFormatting.GRAY));
             return;
         }
 
         try {
-            RenderUtils.copyImageToClipboard(bi);
+            SystemUtils.copyImageToClipboard(bi);
             McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
                     .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {

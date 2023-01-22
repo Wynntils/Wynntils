@@ -6,7 +6,7 @@ package com.wynntils.wynn.handleditems.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.utils.CappedValue;
 import com.wynntils.wynn.handleditems.items.game.TrinketItem;
 import com.wynntils.wynn.objects.profiles.item.GearTier;
@@ -26,7 +26,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
 
         try {
             // Verify by first line of the lore
-            Matcher loreMatcher = ItemUtils.matchLoreLine(itemStack, 0, TRINKET_LORE_PATTERN);
+            Matcher loreMatcher = LoreUtils.matchLoreLine(itemStack, 0, TRINKET_LORE_PATTERN);
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);

@@ -6,7 +6,7 @@ package com.wynntils.wynn.model.map.poi;
 
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.gui.render.Texture;
-import com.wynntils.mc.objects.CustomColor;
+import com.wynntils.utils.CustomColor;
 import java.util.Objects;
 
 public class CustomPoi extends StaticIconPoi {

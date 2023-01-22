@@ -20,7 +20,7 @@ import com.wynntils.gui.widgets.PageSelectorButton;
 import com.wynntils.gui.widgets.QuestsPageButton;
 import com.wynntils.gui.widgets.ReloadButton;
 import com.wynntils.gui.widgets.WynntilsButton;
-import com.wynntils.mc.objects.CommonColors;
+import com.wynntils.utils.CommonColors;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.wynn.model.quests.event.QuestBookReloadedEvent;
 import java.util.ArrayList;

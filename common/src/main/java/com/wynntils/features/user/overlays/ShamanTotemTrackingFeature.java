@@ -27,7 +27,7 @@ import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
 import com.wynntils.wynn.event.TotemEvent;
 import com.wynntils.wynn.objects.ShamanTotem;
 import java.util.List;
@@ -209,7 +209,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                 case NONE -> suffix = " (" + shamanTotem.getTime() + " s)";
                                 case COORDS -> {
                                     suffix = " (" + shamanTotem.getTime() + " s)";
-                                    detail = shamanTotem.getLocation().toString();
+                                    detail = " " + shamanTotem.getLocation().toString();
                                 }
                                 case DISTANCE -> suffix = " (" + shamanTotem.getTime() + " s, "
                                         + Math.round(McUtils.player()
@@ -226,7 +226,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         }
 
         private String getFormattedTotemText(String prefix, String suffix, String detail) {
-            String maxFitting = StringUtils.getMaxFittingText(
+            String maxFitting = RenderedStringUtils.getMaxFittingText(
                     prefix + suffix + detail,
                     this.getWidth(),
                     FontRenderer.getInstance().getFont());

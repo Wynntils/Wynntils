@@ -13,10 +13,9 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.utils.ColorUtils;
+import com.wynntils.mc.utils.LoreUtils;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.Utils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.wynn.gear.types.GearIdentification;
 import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.handleditems.FakeItemStack;
@@ -31,6 +30,7 @@ import com.wynntils.wynn.objects.profiles.item.GearProfile;
 import com.wynntils.wynn.objects.profiles.item.IdentificationModifier;
 import com.wynntils.wynn.objects.profiles.item.IdentificationProfile;
 import com.wynntils.wynn.objects.profiles.item.TomeProfile;
+import com.wynntils.wynn.utils.ColorScaleUtils;
 import com.wynntils.wynn.utils.WynnItemMatchers;
 import com.wynntils.wynn.utils.WynnUtils;
 import java.math.BigDecimal;
@@ -92,7 +92,7 @@ public final class GearItemManager extends Manager {
         List<Component> setBonus = new ArrayList<>();
 
         // Parse lore for identifications, powders and rerolls
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(ItemUtils.getTooltipLines(itemStack));
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
         lore.remove(0); // remove item name
 
         boolean collectingSetBonus = false;
@@ -363,7 +363,7 @@ public final class GearItemManager extends Manager {
     }
 
     private MutableComponent getPercentageTextComponent(float percentage) {
-        return ColorUtils.getPercentageTextComponent(
+        return ColorScaleUtils.getPercentageTextComponent(
                 percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
     }
 
@@ -376,11 +376,11 @@ public final class GearItemManager extends Manager {
      * @return the styled reroll chance text component
      */
     private MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
-        return Component.literal(String.format(Utils.getGameLocale(), " \u2605%.2f%%", perfect * 100))
+        return Component.literal(String.format(Locale.ROOT, " \u2605%.2f%%", perfect * 100))
                 .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E7%.1f%%", increase * 100))
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", increase * 100))
                         .withStyle(ChatFormatting.GREEN))
-                .append(Component.literal(String.format(Utils.getGameLocale(), " \u21E9%.1f%%", decrease * 100))
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", decrease * 100))
                         .withStyle(ChatFormatting.RED));
     }
 
@@ -413,9 +413,8 @@ public final class GearItemManager extends Manager {
     public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {
         // attempt to parse item itemData
         JsonObject itemData;
-        String rawLore =
-                org.apache.commons.lang3.StringUtils.substringBeforeLast(ItemUtils.getStringLore(itemStack), "}")
-                        + "}"; // remove extra unnecessary info
+        String rawLore = StringUtils.substringBeforeLast(LoreUtils.getStringLore(itemStack), "}")
+                + "}"; // remove extra unnecessary info
         try {
             itemData = JsonParser.parseString(rawLore).getAsJsonObject();
         } catch (JsonSyntaxException e) {

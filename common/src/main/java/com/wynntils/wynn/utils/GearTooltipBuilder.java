@@ -6,7 +6,8 @@ package com.wynntils.wynn.utils;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
+import com.wynntils.mc.utils.LoreUtils;
+import com.wynntils.mc.utils.RenderedStringUtils;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.StringUtils;
@@ -141,7 +142,7 @@ public class GearTooltipBuilder {
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
-        List<Component> tooltips = ItemUtils.getTooltipLines(itemStack);
+        List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore =
@@ -316,7 +317,7 @@ public class GearTooltipBuilder {
         // major ids
         if (gearProfile.getMajorIds() != null && !gearProfile.getMajorIds().isEmpty()) {
             for (MajorIdentification majorId : gearProfile.getMajorIds()) {
-                Stream.of(StringUtils.wrapTextBySize(majorId.asLore(), 150))
+                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.asLore(), 150))
                         .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
             baseTooltip.add(Component.literal(""));
@@ -361,7 +362,7 @@ public class GearTooltipBuilder {
 
         String lore = gearProfile.getLore();
         if (lore != null) {
-            Stream.of(StringUtils.wrapTextBySize(lore, 150))
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore, 150))
                     .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
         }
 

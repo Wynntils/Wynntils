@@ -4,12 +4,12 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -37,7 +37,7 @@ public class TradeMarketPriceConversionFeature extends UserFeature {
         if (!shouldConvert) return;
         shouldConvert = false;
 
-        String price = StringUtils.convertEmeraldPrice(event.getMessage());
+        String price = Managers.Emerald.convertEmeraldPrice(event.getMessage());
         if (!price.isEmpty()) {
             event.setCanceled(true);
             McUtils.mc().getConnection().sendChat(price);

@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils;
+package com.wynntils.mc.utils;
 
-import com.wynntils.mc.utils.McUtils;
 import org.lwjgl.glfw.GLFW;
 
 public final class KeyboardUtils {
