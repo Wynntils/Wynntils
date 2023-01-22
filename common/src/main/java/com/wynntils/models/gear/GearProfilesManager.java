@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
@@ -51,12 +50,6 @@ public final class GearProfilesManager extends Manager {
     public GearProfilesManager(NetManager netManager, GearItemManager gearItemManager) {
         super(List.of(netManager, gearItemManager));
         loadData();
-
-        // The dependency on GearItemManager is due to the Item model by its
-        // GearAnnotator
-        // This is slightly hacky, awaiting the full refactoring
-        WynntilsMod.registerEventListener(Models.Item);
-        Models.Item.init();
     }
 
     public int getTierFromColorCode(String tierColor) {

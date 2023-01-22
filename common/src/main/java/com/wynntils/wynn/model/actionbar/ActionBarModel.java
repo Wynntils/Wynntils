@@ -23,24 +23,13 @@ public final class ActionBarModel extends Model {
     private final SpellSegment spellSegment = new SpellSegment();
     private final SprintSegment sprintSegment = new SprintSegment();
 
-    @Override
-    public void init() {
+    public ActionBarModel() {
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);
         Handlers.ActionBar.registerSegment(manaSegment);
         Handlers.ActionBar.registerSegment(powderSpecialSegment);
         Handlers.ActionBar.registerSegment(spellSegment);
         Handlers.ActionBar.registerSegment(sprintSegment);
-    }
-
-    @Override
-    public void disable() {
-        Handlers.ActionBar.unregisterSegment(coordinatesSegment);
-        Handlers.ActionBar.unregisterSegment(healthSegment);
-        Handlers.ActionBar.unregisterSegment(manaSegment);
-        Handlers.ActionBar.unregisterSegment(powderSpecialSegment);
-        Handlers.ActionBar.unregisterSegment(spellSegment);
-        Handlers.ActionBar.unregisterSegment(sprintSegment);
     }
 
     public int getCurrentHealth() {
