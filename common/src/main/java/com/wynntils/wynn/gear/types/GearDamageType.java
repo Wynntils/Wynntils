@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.gear.types;
 
-import com.wynntils.models.spells.type.Element;
+import com.wynntils.models.concepts.Element;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 

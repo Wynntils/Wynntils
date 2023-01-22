@@ -4,7 +4,7 @@
  */
 package com.wynntils.wynn.gear.stats;
 
-import com.wynntils.models.spells.type.Element;
+import com.wynntils.models.concepts.Element;
 import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.gear.types.GearStatUnit;
 import java.util.function.Consumer;
