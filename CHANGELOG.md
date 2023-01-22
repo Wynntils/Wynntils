@@ -1,9 +1,21 @@
+## [0.0.2-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.137...v0.0.2-alpha.138) (2023-01-22)
+
+
+### Bug Fixes
+
+* Check connection status first to avoid crash in bad model->feature relation ([#1071](https://github.com/Wynntils/Artemis/issues/1071)) ([6dec1e4](https://github.com/Wynntils/Artemis/commit/6dec1e442974a1d348549510391cbb624d913eec))
+
 ## [0.0.2-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.136...v0.0.2-alpha.137) (2023-01-22)
 
 
 ### Code Refactoring
 
 * Remove final wynn.actionbar package ([#1070](https://github.com/Wynntils/Artemis/issues/1070)) ([a63421f](https://github.com/Wynntils/Artemis/commit/a63421fce66d650d09344a777e73546502e50679))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.137 [skip ci] ([334ab0b](https://github.com/Wynntils/Artemis/commit/334ab0ba9edeb9489b572b1c360dc62fba18f347))
 
 ## [0.0.2-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.135...v0.0.2-alpha.136) (2023-01-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.134 [skip ci] ([79899aa](https://github.com/Wynntils/Artemis/commit/79899aa335d000a4e5f64fe559f711dc309386fc))
-
-## [0.0.2-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.132...v0.0.2-alpha.133) (2023-01-21)
-
-
-### New Features
-
-* Disable Athena lookups after several failures ([#1060](https://github.com/Wynntils/Artemis/issues/1060)) ([b74efa5](https://github.com/Wynntils/Artemis/commit/b74efa5f62129faef03d6d8c0342595a7069afa1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.133 [skip ci] ([4d82389](https://github.com/Wynntils/Artemis/commit/4d8238972ad6830140819561b2bdf921c1b88580))
 
