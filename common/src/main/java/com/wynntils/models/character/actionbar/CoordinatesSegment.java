@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.model.actionbar;
+package com.wynntils.models.character.actionbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarPosition;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
-import com.wynntils.wynn.model.actionbar.event.CenterSegmentClearedEvent;
+import com.wynntils.models.character.actionbar.event.CenterSegmentClearedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

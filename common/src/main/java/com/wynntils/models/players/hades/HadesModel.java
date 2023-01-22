@@ -180,10 +180,10 @@ public final class HadesModel extends Model {
                             pX,
                             pY,
                             pZ,
-                            Models.ActionBar.getCurrentHealth(),
-                            Models.ActionBar.getMaxHealth(),
-                            Models.ActionBar.getCurrentMana(),
-                            Models.ActionBar.getMaxMana())) {
+                            Models.Character.getCurrentHealth(),
+                            Models.Character.getMaxHealth(),
+                            Models.Character.getCurrentMana(),
+                            Models.Character.getMaxMana())) {
                 tickCountUntilUpdate = 1;
                 return;
             }
@@ -194,10 +194,10 @@ public final class HadesModel extends Model {
                     pX,
                     pY,
                     pZ,
-                    Models.ActionBar.getCurrentHealth(),
-                    Models.ActionBar.getMaxHealth(),
-                    Models.ActionBar.getCurrentMana(),
-                    Models.ActionBar.getMaxMana());
+                    Models.Character.getCurrentHealth(),
+                    Models.Character.getMaxHealth(),
+                    Models.Character.getCurrentMana(),
+                    Models.Character.getMaxMana());
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),

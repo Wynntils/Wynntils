@@ -5,14 +5,23 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
+import com.wynntils.models.character.actionbar.CoordinatesSegment;
+import com.wynntils.models.character.actionbar.HealthSegment;
+import com.wynntils.models.character.actionbar.ManaSegment;
+import com.wynntils.models.character.actionbar.PowderSpecialSegment;
+import com.wynntils.models.character.actionbar.SprintSegment;
+import com.wynntils.models.character.actionbar.event.CenterSegmentClearedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.ProfessionInfo;
 import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -54,6 +63,13 @@ public final class CharacterModel extends Model {
         21196500, 23315500, 25649000, 249232940
     };
 
+    private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment();
+    private final HealthSegment healthSegment = new HealthSegment();
+    private final ManaSegment manaSegment = new ManaSegment();
+    private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
+    private final SpellSegment spellSegment = new SpellSegment();
+    private final SprintSegment sprintSegment = new SprintSegment();
+
     private boolean inCharacterSelection;
     private boolean hasCharacter;
 
@@ -67,6 +83,52 @@ public final class CharacterModel extends Model {
     private int id;
 
     private ProfessionInfo professionInfo;
+
+    public CharacterModel() {
+        Handlers.ActionBar.registerSegment(coordinatesSegment);
+        Handlers.ActionBar.registerSegment(healthSegment);
+        Handlers.ActionBar.registerSegment(manaSegment);
+        Handlers.ActionBar.registerSegment(powderSpecialSegment);
+        Handlers.ActionBar.registerSegment(spellSegment);
+        Handlers.ActionBar.registerSegment(sprintSegment);
+    }
+
+    public int getCurrentHealth() {
+        return healthSegment.getCurrentHealth();
+    }
+
+    public int getMaxHealth() {
+        return healthSegment.getMaxHealth();
+    }
+
+    public int getCurrentMana() {
+        return manaSegment.getCurrentMana();
+    }
+
+    public int getMaxMana() {
+        return manaSegment.getMaxMana();
+    }
+
+    public float getPowderSpecialCharge() {
+        return powderSpecialSegment.getPowderSpecialCharge();
+    }
+
+    public Powder getPowderSpecialType() {
+        return powderSpecialSegment.getPowderSpecialType();
+    }
+
+    public void hideHealth(boolean shouldHide) {
+        healthSegment.setHidden(shouldHide);
+    }
+
+    public void hideMana(boolean shouldHide) {
+        manaSegment.setHidden(shouldHide);
+    }
+
+    @SubscribeEvent
+    public void onCenterSegmentCleared(CenterSegmentClearedEvent event) {
+        powderSpecialSegment.replaced();
+    }
 
     /**
      * Return the maximum number of soul points the character can currently have
