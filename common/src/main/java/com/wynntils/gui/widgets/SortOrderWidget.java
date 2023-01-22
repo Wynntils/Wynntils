@@ -5,10 +5,10 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.gui.screens.WynntilsQuestBookScreen;
 import com.wynntils.models.quests.type.QuestSortOrder;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends WynntilsButton {

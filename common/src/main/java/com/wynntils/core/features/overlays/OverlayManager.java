@@ -16,7 +16,7 @@ import com.wynntils.gui.screens.overlays.OverlayManagementScreen;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

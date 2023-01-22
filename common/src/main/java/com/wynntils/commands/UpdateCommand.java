@@ -10,7 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.CommandBase;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.athena.UpdateManager;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;

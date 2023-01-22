@@ -6,8 +6,8 @@ package com.wynntils.wynn.gear;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.wynn.gear.types.GearStat;
 import java.util.List;
 

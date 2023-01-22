@@ -12,7 +12,7 @@ import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

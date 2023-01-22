@@ -24,7 +24,7 @@ import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

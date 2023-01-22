@@ -5,8 +5,8 @@
 package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.gui.screens.GearViewerScreen;
+import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 

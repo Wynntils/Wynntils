@@ -6,8 +6,8 @@ package com.wynntils.gui.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 

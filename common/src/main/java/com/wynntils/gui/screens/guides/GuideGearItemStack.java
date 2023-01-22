@@ -5,8 +5,8 @@
 package com.wynntils.gui.screens.guides;
 
 import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.wynn.utils.GearTooltipBuilder;
-import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.utils.wynn.GearTooltipBuilder;
+import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.nbt.CompoundTag;

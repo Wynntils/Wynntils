@@ -6,8 +6,8 @@ package com.wynntils.models.items;
 
 import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.wynn.utils.GearTooltipBuilder;
-import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.utils.wynn.GearTooltipBuilder;
+import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

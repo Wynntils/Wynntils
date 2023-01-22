@@ -5,16 +5,16 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.models.map.Label;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
-import com.wynntils.utils.CustomColor;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {

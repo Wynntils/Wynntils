@@ -6,7 +6,7 @@ package com.wynntils.wynn.gear;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.utils.Pair;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
 

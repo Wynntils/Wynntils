@@ -5,7 +5,7 @@
 package com.wynntils.wynn.gear.types;
 
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.utils.CustomColor;
+import com.wynntils.utils.colors.CustomColor;
 
 public class GearMaterial {
     // FIXME: Somehow get this together so we can present a suitable item icon...

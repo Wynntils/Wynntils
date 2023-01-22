@@ -15,7 +15,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Optional;
