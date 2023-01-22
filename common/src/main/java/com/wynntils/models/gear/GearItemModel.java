@@ -8,8 +8,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.wynntils.core.components.Manager;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.concepts.Powder;
@@ -48,7 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class GearItemManager extends Manager {
+public final class GearItemModel extends Model {
     public static final String UNIDENTIFIED_PREFIX = "Unidentified ";
 
     // private-use unicode chars
@@ -69,10 +69,6 @@ public final class GearItemManager extends Manager {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
-
-    public GearItemManager() {
-        super(List.of());
-    }
 
     public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
@@ -245,7 +241,7 @@ public final class GearItemManager extends Manager {
         // FIXME: This is kind of an inverse dependency! Need to fix!
         boolean isInverted = idProfile != null
                 ? idProfile.isInverted()
-                : Managers.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
+                : Models.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
         IdentificationModifier type =
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
@@ -377,7 +373,7 @@ public final class GearItemManager extends Manager {
                 float percent = idInfo.get("percent").getAsInt() / 100f;
 
                 // get wynntils name from internal wynncraft name
-                String translatedId = Managers.GearProfiles.getInternalIdentification(id);
+                String translatedId = Models.GearProfiles.getInternalIdentification(id);
                 if (translatedId == null || !gearProfile.getStatuses().containsKey(translatedId)) continue;
 
                 // calculate value
@@ -427,7 +423,7 @@ public final class GearItemManager extends Manager {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        GearProfile item = Managers.GearProfiles.getItemsProfile(name);
+        GearProfile item = Models.GearProfiles.getItemsProfile(name);
         if (item == null) return null;
 
         // ids
@@ -435,7 +431,7 @@ public final class GearItemManager extends Manager {
         List<GearIdentification> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(Managers.GearProfiles::getOrder));
+        sortedIds.sort(Comparator.comparingInt(Models.GearProfiles::getOrder));
 
         int counter = 0; // for id value array
         for (String shortIdName : sortedIds) {
@@ -532,7 +528,7 @@ public final class GearItemManager extends Manager {
 
         // get identification data - ordered for consistency
         List<GearIdentificationContainer> sortedIds =
-                Managers.GearProfiles.orderIdentifications(gearItem.getIdContainers());
+                Models.GearProfiles.orderIdentifications(gearItem.getIdContainers());
 
         // name
         StringBuilder encoded = new StringBuilder(START);

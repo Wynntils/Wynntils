@@ -8,10 +8,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationOrderer;
@@ -27,7 +26,7 @@ import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public final class GearProfilesManager extends Manager {
+public final class GearProfilesModel extends Model {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
@@ -47,8 +46,7 @@ public final class GearProfilesManager extends Manager {
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
 
-    public GearProfilesManager(NetManager netManager, GearItemManager gearItemManager) {
-        super(List.of(netManager, gearItemManager));
+    public GearProfilesModel() {
         loadData();
     }
 

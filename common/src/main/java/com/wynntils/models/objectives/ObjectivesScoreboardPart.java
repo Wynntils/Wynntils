@@ -5,7 +5,7 @@
 package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.SegmentMatcher;
@@ -41,18 +41,18 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
         if (segmentMatcher == GUILD_OBJECTIVES_MATCHER) {
             for (WynnObjective objective : objectives) {
                 if (objective.isGuildObjective()) {
-                    Managers.Objectives.updateGuildObjective(objective);
+                    Models.Objectives.updateGuildObjective(objective);
                 }
             }
         } else {
             for (WynnObjective objective : objectives) {
                 if (!objective.isGuildObjective()) {
-                    Managers.Objectives.updatePersonalObjective(objective);
+                    Models.Objectives.updatePersonalObjective(objective);
                 }
             }
 
             // filter out deleted objectives
-            Managers.Objectives.purgePersonalObjectives(objectives);
+            Models.Objectives.purgePersonalObjectives(objectives);
         }
     }
 
@@ -116,13 +116,13 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
 
         for (WynnObjective objective : objectives) {
             if (objective.getGoal() != null) {
-                Managers.Objectives.removeObjective(objective);
+                Models.Objectives.removeObjective(objective);
             }
         }
     }
 
     @Override
     public void reset() {
-        Managers.Objectives.resetObjectives();
+        Models.Objectives.resetObjectives();
     }
 }

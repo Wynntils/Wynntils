@@ -6,7 +6,7 @@ package com.wynntils.screens.questbook;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
@@ -72,7 +72,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
      * */
     @Override
     protected void doInit() {
-        Managers.Quest.rescanQuestBook(true, true);
+        Models.Quest.rescanQuestBook(true, true);
 
         super.doInit();
 
@@ -88,7 +88,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                () -> Managers.Quest.rescanQuestBook(!miniQuestMode, miniQuestMode)));
+                () -> Models.Quest.rescanQuestBook(!miniQuestMode, miniQuestMode)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -212,7 +212,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
             tooltipLines.add(Component.literal(""));
 
             if (questInfo.isTrackable()) {
-                if (questInfo.equals(Managers.Quest.getTrackedQuest())) {
+                if (questInfo.equals(Models.Quest.getTrackedQuest())) {
                     tooltipLines.add(Component.literal("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
                             .withStyle(ChatFormatting.BOLD));
@@ -407,7 +407,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return miniQuestMode ? Managers.Quest.getMiniQuests(questSortOrder) : Managers.Quest.getQuests(questSortOrder);
+        return miniQuestMode ? Models.Quest.getMiniQuests(questSortOrder) : Models.Quest.getQuests(questSortOrder);
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -447,7 +447,7 @@ public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestI
         this.setQuests(getSortedQuests());
         this.setCurrentPage(0);
 
-        Managers.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
+        Models.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
     }
 
     public QuestSortOrder getQuestSortOrder() {

@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.profile.GearProfile;
@@ -84,7 +84,7 @@ public final class WynnItemUtils {
 
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Managers.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
+        return Models.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
     }
 
     public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {

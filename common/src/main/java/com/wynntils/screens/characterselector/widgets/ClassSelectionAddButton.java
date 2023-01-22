@@ -5,7 +5,7 @@
 package com.wynntils.screens.characterselector.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.render.FontRenderer;
@@ -38,7 +38,7 @@ public class ClassSelectionAddButton extends WynntilsButton {
     public void onPress() {
         if (characterSelectorScreen.getFirstNewCharacterSlot() == -1) return;
 
-        Managers.CharacterSelection.createNewClass();
+        Models.CharacterSelection.createNewClass();
     }
 
     @Override

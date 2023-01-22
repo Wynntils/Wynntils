@@ -4,13 +4,14 @@
  */
 package com.wynntils.core.chat;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,11 +21,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ChatTabModel extends Model {
+public final class ChatTabManager extends Manager {
     private ChatTab focusedTab = null;
 
     private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
     private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
+
+    public ChatTabManager() {
+        super(List.of());
+    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

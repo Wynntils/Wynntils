@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -12,7 +12,6 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -23,8 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class MythicBlockerFeature extends UserFeature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
-        if (!WynnUtils.onWorld()) return;
-        if (!Managers.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!Models.WorldState.onWorld()) return;
+        if (!Models.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {

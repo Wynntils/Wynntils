@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -23,7 +24,7 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Managers.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
+        if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
             DataStorageFeature.INSTANCE.dryCount++;

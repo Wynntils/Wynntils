@@ -5,7 +5,7 @@
 package com.wynntils.screens.discoveries.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
@@ -69,9 +69,9 @@ public class DiscoveryProgressButton extends WynntilsButton implements TooltipPr
     @Override
     public List<Component> getTooltipLines() {
         if (isSecretDiscoveryButton()) {
-            return Managers.Discovery.getSecretDiscoveriesTooltip();
+            return Models.Discovery.getSecretDiscoveriesTooltip();
         } else {
-            return Managers.Discovery.getDiscoveriesTooltip();
+            return Models.Discovery.getDiscoveriesTooltip();
         }
     }
 }

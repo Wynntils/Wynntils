@@ -7,7 +7,6 @@ package com.wynntils.screens.chattabs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
@@ -350,11 +349,11 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
 
     private void deleteChatTab() {
         ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
-        if (Objects.equals(Models.ChatTab.getFocusedTab(), edited)) {
+        if (Objects.equals(Managers.ChatTab.getFocusedTab(), edited)) {
             if (!ChatTabsFeature.INSTANCE.chatTabs.isEmpty()) {
-                Models.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
+                Managers.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
             } else {
-                Models.ChatTab.setFocusedTab(null);
+                Managers.ChatTab.setFocusedTab(null);
             }
         }
 

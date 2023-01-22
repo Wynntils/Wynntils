@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.gear;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.WynntilsMenuListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -100,7 +100,7 @@ public final class WynntilsItemGuideScreen
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
-            if (Managers.Favorites.isFavorite(itemStack)) {
+            if (Models.Favorites.isFavorite(itemStack)) {
                 tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
@@ -153,7 +153,7 @@ public final class WynntilsItemGuideScreen
     private List<GuideGearItemStack> getAllGearItems() {
         if (allGearItems.isEmpty()) {
             // Populate list
-            allGearItems = Managers.GearProfiles.getItemsCollection().stream()
+            allGearItems = Models.GearProfiles.getItemsCollection().stream()
                     .map(GuideGearItemStack::new)
                     .toList();
         }

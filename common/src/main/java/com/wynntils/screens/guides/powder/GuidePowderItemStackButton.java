@@ -6,6 +6,7 @@ package com.wynntils.screens.guides.powder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -65,7 +66,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                         TextShadow.OUTLINE);
         poseStack.popPose();
 
-        if (Managers.Favorites.isFavorite(itemStack)) {
+        if (Models.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
@@ -87,7 +88,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
 
         String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Managers.Favorites.toggleFavorite(unformattedName);
+            Models.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();
         }
 

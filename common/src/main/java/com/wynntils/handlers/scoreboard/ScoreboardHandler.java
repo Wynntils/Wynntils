@@ -6,6 +6,7 @@ package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -13,7 +14,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -58,7 +58,8 @@ public final class ScoreboardHandler extends Handler {
     private boolean firstExecution = false;
 
     private void periodicTask() {
-        if (!WynnUtils.onWorld() || McUtils.player() == null) return;
+        // FIXME: Reverse dependency
+        if (!Models.WorldState.onWorld() || McUtils.player() == null) return;
 
         if (queuedChanges.isEmpty()) {
             handleScoreboardReconstruction();

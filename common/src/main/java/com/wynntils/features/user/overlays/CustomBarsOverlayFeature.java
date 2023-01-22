@@ -34,7 +34,6 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -120,7 +119,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld() || !isActive()) return;
+            if (!Models.WorldState.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);

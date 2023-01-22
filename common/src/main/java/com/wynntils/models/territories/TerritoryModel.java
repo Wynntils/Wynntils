@@ -8,10 +8,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.map.pois.Poi;
@@ -38,7 +37,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class TerritoryManager extends Manager {
+public final class TerritoryModel extends Model {
     private static final int TERRITORY_UPDATE_MS = 15000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
@@ -58,8 +57,7 @@ public final class TerritoryManager extends Manager {
     private final ScheduledFuture<?> timerFuture;
     private int errorCount = 0;
 
-    public TerritoryManager(NetManager netManager) {
-        super(List.of(netManager));
+    public TerritoryModel() {
         timerFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }

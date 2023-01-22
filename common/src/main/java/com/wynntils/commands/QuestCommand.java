@@ -8,8 +8,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.CommandBase;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.commands.Command;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.utils.StringUtils;
@@ -27,10 +27,10 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.phys.Vec3;
 
-public class QuestCommand extends CommandBase {
+public class QuestCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.Quest.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+                    Models.Quest.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
 
     private static final SuggestionProvider<CommandSourceStack> SORT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
@@ -68,9 +68,9 @@ public class QuestCommand extends CommandBase {
     private int listQuests(CommandContext<CommandSourceStack> context, String sort) {
         QuestSortOrder order = QuestSortOrder.fromString(sort);
 
-        Managers.Quest.rescanQuestBook(true, false);
+        Models.Quest.rescanQuestBook(true, false);
 
-        if (Managers.Quest.getQuestsRaw().isEmpty()) {
+        if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
                             Component.literal("Quest Book was not scanned. You might have to retry this command.")
@@ -78,7 +78,7 @@ public class QuestCommand extends CommandBase {
                             false);
         }
 
-        List<QuestInfo> quests = Managers.Quest.getQuests(order).stream()
+        List<QuestInfo> quests = Models.Quest.getQuests(order).stream()
                 .filter(QuestInfo::isTrackable)
                 .toList();
 
@@ -98,9 +98,9 @@ public class QuestCommand extends CommandBase {
     private int searchQuests(CommandContext<CommandSourceStack> context) {
         String searchText = context.getArgument("text", String.class);
 
-        Managers.Quest.rescanQuestBook(true, false);
+        Models.Quest.rescanQuestBook(true, false);
 
-        if (Managers.Quest.getQuestsRaw().isEmpty()) {
+        if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
                             Component.literal("Quest Book was not scanned. You might have to retry this command.")
@@ -111,7 +111,7 @@ public class QuestCommand extends CommandBase {
         List<QuestInfo> quests;
         MutableComponent response;
 
-        quests = Managers.Quest.getQuestsRaw().stream()
+        quests = Models.Quest.getQuestsRaw().stream()
                 .filter(quest -> StringUtils.initialMatch(quest.getName(), searchText)
                         || StringUtils.initialMatch(quest.getNextTask(), searchText))
                 .toList();
@@ -150,7 +150,7 @@ public class QuestCommand extends CommandBase {
                         .withStyle(ChatFormatting.DARK_GREEN));
             }
 
-            if (quest.equals(Managers.Quest.getTrackedQuest())) {
+            if (quest.equals(Models.Quest.getTrackedQuest())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
                         .withStyle(style ->
@@ -203,7 +203,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        Managers.Quest.startTracking(quest);
+        Models.Quest.startTracking(quest);
         MutableComponent response =
                 Component.literal("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -211,14 +211,14 @@ public class QuestCommand extends CommandBase {
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        QuestInfo trackedQuest = Managers.Quest.getTrackedQuest();
+        QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
         if (trackedQuest == null) {
             context.getSource()
                     .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        Managers.Quest.stopTracking();
+        Models.Quest.stopTracking();
 
         MutableComponent response = Component.literal("Stopped tracking quest " + trackedQuest.getName())
                 .withStyle(ChatFormatting.AQUA);
@@ -231,7 +231,7 @@ public class QuestCommand extends CommandBase {
         QuestInfo quest = getQuestInfo(context, questName);
         if (quest == null) return 0;
 
-        Managers.Quest.openQuestOnWiki(quest);
+        Models.Quest.openQuestOnWiki(quest);
         MutableComponent response =
                 Component.literal("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
@@ -245,7 +245,7 @@ public class QuestCommand extends CommandBase {
 
     private QuestInfo getQuestInfo(CommandContext<CommandSourceStack> context, String questName) {
         String questNameLowerCase = questName.toLowerCase(Locale.ROOT);
-        List<QuestInfo> matchingQuests = Managers.Quest.getQuestsRaw().stream()
+        List<QuestInfo> matchingQuests = Models.Quest.getQuestsRaw().stream()
                 .filter(questInfo ->
                         questInfo.getName().toLowerCase(Locale.ROOT).contains(questNameLowerCase))
                 .toList();
