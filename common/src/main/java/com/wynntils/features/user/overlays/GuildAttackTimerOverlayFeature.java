@@ -26,7 +26,6 @@ import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.territories.TerritoryAttackTimer;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -44,13 +43,13 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
 
     @Override
     public List<Model> getModelDependencies() {
-        return List.of(Models.Scoreboard, Models.GuildAttackTimer);
+        return List.of(Models.GuildAttackTimer);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableAttackTimersOnScoreboard) {
-            if (event.getSegment().getType() == ScoreboardModel.SegmentType.GuildAttackTimer
+            if (Models.GuildAttackTimer.isGuildAttackSegment(event.getSegment())
                     && territoryAttackTimerOverlay.isEnabled()) {
                 event.setCanceled(true);
             }
