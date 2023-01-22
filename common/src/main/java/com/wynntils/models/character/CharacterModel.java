@@ -15,7 +15,6 @@ import com.wynntils.models.character.actionbar.HealthSegment;
 import com.wynntils.models.character.actionbar.ManaSegment;
 import com.wynntils.models.character.actionbar.PowderSpecialSegment;
 import com.wynntils.models.character.actionbar.SprintSegment;
-import com.wynntils.models.character.actionbar.event.CenterSegmentClearedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Powder;
@@ -63,7 +62,7 @@ public final class CharacterModel extends Model {
         21196500, 23315500, 25649000, 249232940
     };
 
-    private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment();
+    private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
     private final HealthSegment healthSegment = new HealthSegment();
     private final ManaSegment manaSegment = new ManaSegment();
     private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
@@ -123,11 +122,6 @@ public final class CharacterModel extends Model {
 
     public void hideMana(boolean shouldHide) {
         manaSegment.setHidden(shouldHide);
-    }
-
-    @SubscribeEvent
-    public void onCenterSegmentCleared(CenterSegmentClearedEvent event) {
-        powderSpecialSegment.replaced();
     }
 
     /**
@@ -333,6 +327,10 @@ public final class CharacterModel extends Model {
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
         }
+    }
+
+    private void centerSegmentCleared() {
+        powderSpecialSegment.replaced();
     }
 
     private void parseCharacter(ItemStack itemStack, int id) {
