@@ -60,7 +60,6 @@ public final class Models {
                     try {
                         Model model = (Model) field.get(null);
                         WynntilsMod.registerEventListener(model);
-                        model.init();
                     } catch (IllegalAccessException e) {
                         WynntilsMod.error("Internal error in Models", e);
                         throw new RuntimeException(e);

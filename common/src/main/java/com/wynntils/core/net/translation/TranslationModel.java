@@ -15,6 +15,14 @@ import java.util.function.Consumer;
 public final class TranslationModel extends Model {
     private TranslationService translator = null;
 
+    public TranslationModel() {
+        CachingTranslationService.loadTranslationCache();
+    }
+
+    public void shutdown() {
+        CachingTranslationService.saveTranslationCache();
+    }
+
     /**
      * Get a TranslationService.
      *
@@ -50,15 +58,6 @@ public final class TranslationModel extends Model {
      */
     public void resetTranslator() {
         translator = null;
-    }
-
-    @Override
-    public void init() {
-        CachingTranslationService.loadTranslationCache();
-    }
-
-    public void shutdown() {
-        CachingTranslationService.saveTranslationCache();
     }
 
     public enum TranslationServices {

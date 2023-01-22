@@ -26,13 +26,6 @@ public final class ChatTabModel extends Model {
     private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
     private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
 
-    @Override
-    public void disable() {
-        chatTabData.clear();
-        unreadMessages.clear();
-        setFocusedTab(null);
-    }
-
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {

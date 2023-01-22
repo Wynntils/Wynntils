@@ -17,14 +17,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class HadesUserModel extends Model {
     private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
-    @Override
-    public void init() {
+    public HadesUserModel() {
         hadesUserMap = new HashMap<>();
-    }
-
-    @Override
-    public void disable() {
-        hadesUserMap.clear();
     }
 
     @SubscribeEvent
