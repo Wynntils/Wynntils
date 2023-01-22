@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.concepts.Powder;
@@ -66,7 +67,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
                 String unit = statMatcher.group(3);
                 String statDisplayName = statMatcher.group(5);
 
-                GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+                GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;

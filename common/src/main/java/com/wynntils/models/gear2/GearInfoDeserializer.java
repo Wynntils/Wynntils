@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
@@ -254,7 +254,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         if (majorIdsJson == null || majorIdsJson.isJsonNull()) return List.of();
 
         return majorIdsJson.getAsJsonArray().asList().stream()
-                .map(majorIdName -> Managers.GearInfo.getMajorIdFromId(majorIdName.getAsString()))
+                .map(majorIdName -> Models.GearInfo.getMajorIdFromId(majorIdName.getAsString()))
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -327,7 +327,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         JsonElement identifiedJson = json.get("identified");
         boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
-        for (GearStat stat : Managers.GearInfo.gearStatRegistry) {
+        for (GearStat stat : Models.GearInfo.gearStatRegistry) {
             JsonElement statJson = json.get(stat.apiName());
             if (statJson == null) continue;
 

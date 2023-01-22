@@ -12,10 +12,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear2.stats.DamageStatBuilder;
 import com.wynntils.models.gear2.stats.DefenceStatBuilder;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class GearInfoManager extends Manager {
+public final class GearInfoModel extends Model {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
             .registerTypeHierarchyAdapter(GearMajorId.class, new GearMajorIdDeserializer())
@@ -46,9 +45,7 @@ public final class GearInfoManager extends Manager {
     private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
     private List<GearMajorId> majorIds;
 
-    public GearInfoManager(NetManager netManager) {
-        super(List.of(netManager));
-
+    public GearInfoModel() {
         for (StatBuilder builder : STAT_BUILDERS) {
             builder.buildStats(gearStatRegistry::add);
         }

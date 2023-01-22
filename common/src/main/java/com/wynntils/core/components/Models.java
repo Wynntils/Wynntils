@@ -15,6 +15,7 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.character.statuseffects.TabModel;
 import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.gear2.GearInfoModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
@@ -50,6 +51,7 @@ public final class Models {
     public static final SpellModel Spell = new SpellModel();
     public static final TabModel Tab = new TabModel();
     public static final TranslationModel Translation = new TranslationModel();
+    public static final GearInfoModel GearInfo = new GearInfoModel();
 
     public static void init() {
         // Register all model singletons as event listeners

@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.DamageType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
@@ -82,7 +83,7 @@ public class GearTooltipBuilder {
 
     public static GearTooltipBuilder fromItemStackNew(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
         List<Component> tooltips = new ArrayList<>();
-        GearInfo gearInfo = Managers.GearInfo.getGearInfo(gearProfile.getDisplayName());
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
 
         // FIXED STATS
         // Attack speed

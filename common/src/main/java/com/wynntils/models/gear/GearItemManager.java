@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.concepts.Powder;
@@ -133,7 +134,7 @@ public final class GearItemManager extends Manager {
                 String unit = statMatcher.group(3);
                 String statDisplayName = statMatcher.group(5);
 
-                GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+                GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;
@@ -166,7 +167,7 @@ public final class GearItemManager extends Manager {
                 String unitMatch = id3Matcher.group(4);
                 String unit = unitMatch == null ? "" : unitMatch;
 
-                GearStat type = Managers.GearInfo.getGearStat(idName, unit);
+                GearStat type = Models.GearInfo.getGearStat(idName, unit);
                 if (type == null && Skill.isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle
@@ -249,7 +250,7 @@ public final class GearItemManager extends Manager {
         String unit = statMatcher.group(3);
         String statDisplayName = statMatcher.group(5);
 
-        GearStat type = Managers.GearInfo.getGearStat(statDisplayName, unit);
+        GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
         if (type == null && Skill.isSkill(statDisplayName)) {
             // Skill point buff looks like stats when parsing
             return Optional.empty();
@@ -449,7 +450,7 @@ public final class GearItemManager extends Manager {
                 idContainers.add(identificationFromValue(
                         null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
 
-                GearStat stat = Managers.GearInfo.getGearStatFromLore(id);
+                GearStat stat = Models.GearInfo.getGearStatFromLore(id);
                 if (stat == null) continue;
 
                 identifications.add(new GearIdentification(stat, value));
