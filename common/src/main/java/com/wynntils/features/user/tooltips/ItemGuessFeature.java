@@ -11,6 +11,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;

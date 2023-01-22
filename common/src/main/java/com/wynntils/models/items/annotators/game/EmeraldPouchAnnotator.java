@@ -6,6 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
