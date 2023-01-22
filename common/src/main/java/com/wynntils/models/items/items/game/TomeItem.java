@@ -6,8 +6,8 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.TomeProfile;
+import com.wynntils.models.gear2.types.GearIdentification;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.wynn.gear.types.GearIdentification;
 import java.util.List;
 
 public class TomeItem extends GameItem implements GearTierItemProperty {

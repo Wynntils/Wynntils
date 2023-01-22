@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.gear;
+package com.wynntils.models.gear2;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -17,14 +17,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear2.stats.DamageStatBuilder;
+import com.wynntils.models.gear2.stats.DefenceStatBuilder;
+import com.wynntils.models.gear2.stats.MiscStatBuilder;
+import com.wynntils.models.gear2.stats.SpellStatBuilder;
+import com.wynntils.models.gear2.stats.StatBuilder;
+import com.wynntils.models.gear2.types.GearMajorId;
+import com.wynntils.models.gear2.types.GearStat;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.wynn.gear.stats.DamageStatBuilder;
-import com.wynntils.wynn.gear.stats.DefenceStatBuilder;
-import com.wynntils.wynn.gear.stats.MiscStatBuilder;
-import com.wynntils.wynn.gear.stats.SpellStatBuilder;
-import com.wynntils.wynn.gear.stats.StatBuilder;
-import com.wynntils.wynn.gear.types.GearMajorId;
-import com.wynntils.wynn.gear.types.GearStat;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;

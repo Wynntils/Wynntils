@@ -6,10 +6,10 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear2.types.GearIdentification;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.wynn.gear.types.GearIdentification;
 import java.util.List;
 
 public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {

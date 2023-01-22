@@ -2,6 +2,6 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.gear.types;
+package com.wynntils.models.gear2.types;
 
 public record GearIdentification(GearStat stat, int value) {}

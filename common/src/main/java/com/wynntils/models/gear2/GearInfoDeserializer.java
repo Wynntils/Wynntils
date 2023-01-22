@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wynn.gear;
+package com.wynntils.models.gear2;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -18,15 +18,15 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear2.types.GearDamageType;
+import com.wynntils.models.gear2.types.GearMajorId;
+import com.wynntils.models.gear2.types.GearMaterial;
+import com.wynntils.models.gear2.types.GearRestrictions;
+import com.wynntils.models.gear2.types.GearStat;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.wynn.gear.types.GearDamageType;
-import com.wynntils.wynn.gear.types.GearMajorId;
-import com.wynntils.wynn.gear.types.GearMaterial;
-import com.wynntils.wynn.gear.types.GearRestrictions;
-import com.wynntils.wynn.gear.types.GearStat;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

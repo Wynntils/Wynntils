@@ -27,12 +27,12 @@ import com.wynntils.models.emeralds.EmeraldManager;
 import com.wynntils.models.favorites.FavoritesManager;
 import com.wynntils.models.gear.GearItemManager;
 import com.wynntils.models.gear.GearProfilesManager;
+import com.wynntils.models.gear2.GearInfoManager;
 import com.wynntils.models.horse.HorseManager;
 import com.wynntils.models.objectives.ObjectivesManager;
 import com.wynntils.models.quests.QuestManager;
 import com.wynntils.models.territories.TerritoryManager;
 import com.wynntils.models.worlds.WorldStateManager;
-import com.wynntils.wynn.gear.GearInfoManager;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Managers {

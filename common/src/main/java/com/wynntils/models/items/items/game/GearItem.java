@@ -9,8 +9,8 @@ import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.GearInstance;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear2.types.GearIdentification;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.wynn.gear.types.GearIdentification;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
