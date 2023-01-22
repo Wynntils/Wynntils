@@ -1,9 +1,21 @@
+## [0.0.2-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.135...v0.0.2-alpha.136) (2023-01-22)
+
+
+### Code Refactoring
+
+* Models <-> Managers switcheroo ([#1069](https://github.com/Wynntils/Artemis/issues/1069)) ([0bd8484](https://github.com/Wynntils/Artemis/commit/0bd8484030837517ca7d61ac1174c6d7ab71db30))
+
 ## [0.0.2-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.134...v0.0.2-alpha.135) (2023-01-22)
 
 
 ### Code Refactoring
 
 * Move Model setup from init() to constructor ([#1068](https://github.com/Wynntils/Artemis/issues/1068)) ([799a3fb](https://github.com/Wynntils/Artemis/commit/799a3fb5ca9b185bc9429d9b349d8b646c8750ac))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.135 [skip ci] ([28cf7ae](https://github.com/Wynntils/Artemis/commit/28cf7ae47b074332300f886d853fbcca7d2e5d7d))
 
 ## [0.0.2-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.133...v0.0.2-alpha.134) (2023-01-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.132 [skip ci] ([dcb1d39](https://github.com/Wynntils/Artemis/commit/dcb1d39bb15435c96cd5e232879877bdf9d6e92d))
-
-## [0.0.2-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.130...v0.0.2-alpha.131) (2023-01-21)
-
-
-### Code Refactoring
-
-* Move all screens into a new hierarchy in its own package ([#1063](https://github.com/Wynntils/Artemis/issues/1063)) ([e0adbee](https://github.com/Wynntils/Artemis/commit/e0adbee1b062c68ed7c7d67484f10d6fcf2899c8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.131 [skip ci] ([9b24405](https://github.com/Wynntils/Artemis/commit/9b244053723eff78c026c290780f93afa4262ac1))
 
