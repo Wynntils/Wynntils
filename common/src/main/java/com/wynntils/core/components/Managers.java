@@ -8,6 +8,7 @@ import com.wynntils.core.chat.ChatTabManager;
 import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
+import com.wynntils.core.features.FeatureManager;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.functions.FunctionManager;
 import com.wynntils.core.keybinds.KeyBindManager;
@@ -39,6 +40,7 @@ public final class Managers {
 
     // Managers with dependencies, ordered by dependency and then alphabetically
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
+    public static final FeatureManager Feature = new FeatureManager(Config, CrashReport);
     public static final NetManager Net = new NetManager(Url);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final SplashManager Splash = new SplashManager(Net);

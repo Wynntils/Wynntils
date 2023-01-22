@@ -14,7 +14,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -46,6 +45,7 @@ public final class WynntilsMod {
     private static boolean developmentEnvironment;
     private static IEventBus eventBus;
     private static File modJar;
+    private static boolean initCompleted = false;
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -84,7 +84,12 @@ public final class WynntilsMod {
         }
 
         String featureClassName = crashingFeatureName.substring(crashingFeatureName.lastIndexOf('.') + 1);
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureClassName);
+        if (Managers.Feature == null) {
+            WynntilsMod.warn("Cannot lookup feature name: " + featureClassName, t);
+            return;
+        }
+
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureClassName);
         if (featureOptional.isEmpty()) {
             WynntilsMod.error(
                     "Exception in event listener in feature that cannot be located: " + crashingFeatureName, t);
@@ -169,7 +174,7 @@ public final class WynntilsMod {
 
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
-        if (FeatureRegistry.isInitCompleted()) return;
+        if (initCompleted) return;
 
         try {
             initFeatures();
@@ -231,10 +236,11 @@ public final class WynntilsMod {
 
     private static void initFeatures() {
         // Init all features. Now resources (i.e I18n) are available.
-        FeatureRegistry.init();
+        Managers.Feature.init();
         LOGGER.info(
                 "Wynntils: {} features are now loaded and ready",
-                FeatureRegistry.getFeatures().size());
+                Managers.Feature.getFeatures().size());
+        initCompleted = true;
     }
 
     private static void addCrashCallbacks() {
