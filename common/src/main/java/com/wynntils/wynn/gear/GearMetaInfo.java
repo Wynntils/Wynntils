@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.wynn.gear.types.GearMaterial;
 import com.wynntils.wynn.gear.types.GearRestrictions;
-import com.wynntils.wynn.objects.profiles.item.GearDropType;
 import java.util.Optional;
 
 public record GearMetaInfo(

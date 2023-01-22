@@ -24,7 +24,7 @@ import com.wynntils.gui.render.TextShadow;
 import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.StatusEffectsChangedEvent;
+import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -4,11 +4,11 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.wynn.gear.types.GearStat;
-import com.wynntils.wynn.objects.profiles.item.GearTier;
-import com.wynntils.wynn.objects.profiles.item.GearType;
 import java.util.List;
 
 public record GearInfo(

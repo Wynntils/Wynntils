@@ -4,10 +4,10 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.gear.types.GearStatUnit;
-import com.wynntils.wynn.objects.ClassType;
-import com.wynntils.wynn.objects.SpellType;
 import java.util.Locale;
 import java.util.function.Consumer;
 

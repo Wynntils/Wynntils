@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.concepts.Skill;
 import com.wynntils.utils.Pair;
-import com.wynntils.wynn.objects.ClassType;
-import com.wynntils.wynn.objects.Skill;
 import java.util.List;
 import java.util.Optional;
 

@@ -4,13 +4,13 @@
  */
 package com.wynntils.wynn.gear;
 
+import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.utils.Pair;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.wynn.gear.types.GearDamageType;
 import com.wynntils.wynn.gear.types.GearMajorId;
 import com.wynntils.wynn.objects.Element;
-import com.wynntils.wynn.objects.Skill;
-import com.wynntils.wynn.objects.profiles.item.GearAttackSpeed;
 import java.util.List;
 import java.util.Optional;
 

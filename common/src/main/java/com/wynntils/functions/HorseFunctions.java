@@ -6,7 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.ActiveFunction;
-import com.wynntils.wynn.handleditems.items.game.HorseItem;
+import com.wynntils.models.items.items.game.HorseItem;
 import java.util.List;
 
 public class HorseFunctions {
