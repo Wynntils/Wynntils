@@ -6,7 +6,6 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -40,18 +39,6 @@ public final class FunctionManager extends Manager {
     public FunctionManager() {
         super(List.of());
         registerAllFunctions();
-    }
-
-    /**
-     * This needs to be called after Models are setup, to associate all
-     * functions with the proper models.
-     */
-    public void activateAllFunctions() {
-        for (Function<?> function : functions) {
-            if (function instanceof DependantFunction<?> dependantFunction) {
-                ModelRegistry.addAllDependencies(dependantFunction);
-            }
-        }
     }
 
     public List<Function<?>> getFunctions() {

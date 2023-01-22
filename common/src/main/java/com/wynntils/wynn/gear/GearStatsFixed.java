@@ -6,11 +6,11 @@ package com.wynntils.wynn.gear;
 
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.spells.type.Element;
 import com.wynntils.utils.RangedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.wynn.gear.types.GearDamageType;
 import com.wynntils.wynn.gear.types.GearMajorId;
-import com.wynntils.wynn.objects.Element;
 import java.util.List;
 import java.util.Optional;
 

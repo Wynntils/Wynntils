@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -106,11 +105,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
             shamanTotemTimerOverlay.ticksUntilUpdate = ShamanTotemTimerOverlay.TICKS_PER_UPDATE;
             shamanTotemTimerOverlay.updateRenderTaskCache();
         }
-    }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Spell, Models.ShamanTotem);
     }
 
     public static class ShamanTotemTimerOverlay extends Overlay {

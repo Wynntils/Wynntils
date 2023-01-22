@@ -6,7 +6,6 @@ package com.wynntils.features.user;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -16,7 +15,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.phys.Vec3;
@@ -25,11 +23,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BeaconBeamFeature extends UserFeature {
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Compass);
-    }
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {

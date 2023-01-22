@@ -4,9 +4,9 @@
  */
 package com.wynntils.wynn.gear.stats;
 
+import com.wynntils.models.spells.type.Element;
 import com.wynntils.wynn.gear.types.GearStat;
 import com.wynntils.wynn.gear.types.GearStatUnit;
-import com.wynntils.wynn.objects.Element;
 import java.util.function.Consumer;
 
 public final class DefenceStatBuilder extends StatBuilder {

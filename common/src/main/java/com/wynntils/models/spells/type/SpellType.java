@@ -7,7 +7,6 @@ package com.wynntils.models.spells.type;
 import com.wynntils.core.components.Managers;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.wynn.objects.SpellDirection;
 import java.util.Arrays;
 
 public enum SpellType {

@@ -7,6 +7,7 @@ package com.wynntils.models.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.utils.mc.PlayerInfoUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
@@ -14,7 +15,6 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.wynn.objects.HealthTexture;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
@@ -73,7 +73,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 64);
 
         // health
-        HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
+        CustomBarsOverlayFeature.HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
                 bufferSource,

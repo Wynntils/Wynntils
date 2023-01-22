@@ -7,14 +7,11 @@ package com.wynntils.features.user;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.gui.widgets.ChatTabAddButton;
-import com.wynntils.gui.widgets.ChatTabButton;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
@@ -23,6 +20,8 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.chattabs.widgets.ChatTabAddButton;
+import com.wynntils.screens.chattabs.widgets.ChatTabButton;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
@@ -48,11 +47,6 @@ public class ChatTabsFeature extends UserFeature {
 
     @TypeOverride
     private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ChatTab);
-    }
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)

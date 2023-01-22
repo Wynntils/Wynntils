@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -29,18 +28,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.InventoryUtils;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class PowderSpecialBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar);
-    }
 
     public static class PowderSpecialBarOverlay extends Overlay {
         @Config

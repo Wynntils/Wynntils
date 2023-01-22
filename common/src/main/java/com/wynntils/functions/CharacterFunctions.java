@@ -5,9 +5,7 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.utils.StringUtils;
@@ -113,7 +111,7 @@ public class CharacterFunctions {
         }
     }
 
-    public static class LiquidEmeraldFunction extends DependantFunction<Integer> {
+    public static class LiquidEmeraldFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             int ems = Managers.Emerald.getAmountInInventory();
@@ -124,14 +122,9 @@ public class CharacterFunctions {
         public List<String> getAliases() {
             return List.of("le");
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class EmeraldBlockFunction extends DependantFunction<Integer> {
+    public static class EmeraldBlockFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             int ems = Managers.Emerald.getAmountInInventory();
@@ -142,14 +135,9 @@ public class CharacterFunctions {
         public List<String> getAliases() {
             return List.of("eb");
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class EmeraldsFunction extends DependantFunction<Integer> {
+    public static class EmeraldsFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Emerald.getAmountInInventory() % 64;
@@ -159,26 +147,16 @@ public class CharacterFunctions {
         public List<String> getAliases() {
             return List.of("em");
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class MoneyFunction extends DependantFunction<Integer> {
+    public static class MoneyFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Managers.Emerald.getAmountInInventory();
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class InventoryFreeFunction extends DependantFunction<Integer> {
+    public static class InventoryFreeFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.PlayerInventory.getOpenInvSlots();
@@ -188,14 +166,9 @@ public class CharacterFunctions {
         public List<String> getAliases() {
             return List.of("inv_free");
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class InventoryUsedFunction extends DependantFunction<Integer> {
+    public static class InventoryUsedFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.PlayerInventory.getUsedInvSlots();
@@ -205,86 +178,51 @@ public class CharacterFunctions {
         public List<String> getAliases() {
             return List.of("inv_used");
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
     }
 
-    public static class ManaFunction extends DependantFunction<Integer> {
+    public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.ActionBar.getCurrentMana();
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class ManaMaxFunction extends DependantFunction<Integer> {
+    public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.ActionBar.getMaxMana();
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class HealthFunction extends DependantFunction<Integer> {
+    public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.ActionBar.getCurrentHealth();
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class HealthMaxFunction extends DependantFunction<Integer> {
+    public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             return Models.ActionBar.getMaxHealth();
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class HealthPctFunction extends DependantFunction<Float> {
+    public static class HealthPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
             int currentHealth = Models.ActionBar.getCurrentHealth();
             int maxHealth = Models.ActionBar.getMaxHealth();
             return ((float) currentHealth / maxHealth * 100.0f);
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class ManaPctFunction extends DependantFunction<Float> {
+    public static class ManaPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
             int currentMana = Models.ActionBar.getCurrentMana();
             int maxMana = Models.ActionBar.getMaxMana();
             return ((float) currentMana / maxMana * 100.0f);
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
         }
     }
 
