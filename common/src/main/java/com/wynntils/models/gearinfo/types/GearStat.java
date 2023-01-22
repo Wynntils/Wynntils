@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear2.types;
+package com.wynntils.models.gearinfo.types;
 
 // The key is strictly not necessary, but is internally useful
 // The "loreName" is what is used in the json lore of other player's items

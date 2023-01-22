@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear2.stats;
+package com.wynntils.models.gearinfo.stats;
 
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gear2.types.GearStat;
-import com.wynntils.models.gear2.types.GearStatUnit;
+import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.types.GearStatUnit;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.Locale;
 import java.util.function.Consumer;

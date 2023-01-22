@@ -6,7 +6,7 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.TomeProfile;
-import com.wynntils.models.gear2.types.GearIdentification;
+import com.wynntils.models.gearinfo.types.GearIdentification;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import java.util.List;
 

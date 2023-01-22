@@ -5,7 +5,7 @@
 package com.wynntils.models.gear;
 
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gear2.types.GearIdentification;
+import com.wynntils.models.gearinfo.types.GearIdentification;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.function.Predicate;

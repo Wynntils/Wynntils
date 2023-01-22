@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear2.stats;
+package com.wynntils.models.gearinfo.stats;
 
 import com.google.common.base.CaseFormat;
-import com.wynntils.models.gear2.types.GearAttackType;
-import com.wynntils.models.gear2.types.GearDamageType;
-import com.wynntils.models.gear2.types.GearStat;
-import com.wynntils.models.gear2.types.GearStatUnit;
+import com.wynntils.models.gearinfo.types.GearAttackType;
+import com.wynntils.models.gearinfo.types.GearDamageType;
+import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.types.GearStatUnit;
 import java.util.function.Consumer;
 
 public final class DamageStatBuilder extends StatBuilder {

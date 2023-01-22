@@ -15,7 +15,7 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.character.statuseffects.TabModel;
 import com.wynntils.models.containers.LootChestModel;
-import com.wynntils.models.gear2.GearInfoModel;
+import com.wynntils.models.gearinfo.GearInfoModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;

@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear2.stats;
+package com.wynntils.models.gearinfo.stats;
 
-import com.wynntils.models.gear2.types.GearStatUnit;
+import com.wynntils.models.gearinfo.types.GearStatUnit;
 import java.util.Locale;
 
 public enum GearMiscStatType {
