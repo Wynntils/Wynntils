@@ -1,9 +1,21 @@
+## [0.0.2-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.138...v0.0.2-alpha.139) (2023-01-23)
+
+
+### Code Refactoring
+
+* Inline TabModel into CharacterModel ([#1072](https://github.com/Wynntils/Artemis/issues/1072)) ([cae7822](https://github.com/Wynntils/Artemis/commit/cae7822c3f5c4a99fc5f29fd8083ea7b5dd35541))
+
 ## [0.0.2-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.137...v0.0.2-alpha.138) (2023-01-22)
 
 
 ### Bug Fixes
 
 * Check connection status first to avoid crash in bad model->feature relation ([#1071](https://github.com/Wynntils/Artemis/issues/1071)) ([6dec1e4](https://github.com/Wynntils/Artemis/commit/6dec1e442974a1d348549510391cbb624d913eec))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.138 [skip ci] ([fe7ba04](https://github.com/Wynntils/Artemis/commit/fe7ba044ef2c728dbaf76d61b65267ce2cb788c1))
 
 ## [0.0.2-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.136...v0.0.2-alpha.137) (2023-01-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.135 [skip ci] ([28cf7ae](https://github.com/Wynntils/Artemis/commit/28cf7ae47b074332300f886d853fbcca7d2e5d7d))
-
-## [0.0.2-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.133...v0.0.2-alpha.134) (2023-01-21)
-
-
-### New Features
-
-* Models are now always loaded ([#1067](https://github.com/Wynntils/Artemis/issues/1067)) ([9a68959](https://github.com/Wynntils/Artemis/commit/9a689596376a2e49996f1784dbc0a801cfc85dc1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.134 [skip ci] ([79899aa](https://github.com/Wynntils/Artemis/commit/79899aa335d000a4e5f64fe559f711dc309386fc))
 
