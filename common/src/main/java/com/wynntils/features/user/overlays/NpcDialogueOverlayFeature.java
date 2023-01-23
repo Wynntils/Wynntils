@@ -93,10 +93,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         // Print dialogue to the system log
         msg.forEach(s -> WynntilsMod.info("[NPC] " + s));
 
+        // The same message can be repeating before we have finished removing the old
+        // Just remove the old and add the new with an updated remove time
+        // It can also happen that a confirmationless dialogue turn into a normal
+        // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
+        confirmationlessDialogues.removeIf(d -> d.text.equals(msg));
+
         if (e.getType() == NpcDialogueType.CONFIRMATIONLESS) {
-            // The same message can be repeating before we have finished removing the old
-            // Just remove the old and add the new with an updated remove time
-            confirmationlessDialogues.removeIf(d -> d.text.equals(msg));
             ConfirmationlessDialogue dialogue =
                     new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
             confirmationlessDialogues.add(dialogue);
