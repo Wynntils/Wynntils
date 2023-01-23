@@ -10,7 +10,6 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
-import com.wynntils.models.character.statuseffects.TabModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
@@ -63,7 +62,6 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final SpellModel Spell = new SpellModel();
-    public static final TabModel Tab = new TabModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
 }
