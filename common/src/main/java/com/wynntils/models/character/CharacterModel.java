@@ -10,13 +10,16 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
+import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.character.actionbar.CoordinatesSegment;
 import com.wynntils.models.character.actionbar.HealthSegment;
 import com.wynntils.models.character.actionbar.ManaSegment;
 import com.wynntils.models.character.actionbar.PowderSpecialSegment;
 import com.wynntils.models.character.actionbar.SprintSegment;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.character.type.StatusEffect;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.ProfessionInfo;
 import com.wynntils.models.concepts.ProfessionType;
@@ -27,6 +30,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +50,23 @@ public final class CharacterModel extends Model {
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
+
+    /**
+     * CG1 is the color and symbol used for the effect, and the strength modifier string (e.g. "79%")
+     * NCG1 is for strength modifiers without a decimal, and the % sign
+     * NCG2 is the decimal point and second \d+ option for strength modifiers with a decimal
+     * CG2 is the actual name of the effect
+     * CG3 is the duration string (eg. "1:23")
+     * Note: Buffs like "+190 Main Attack Damage" will have the +190 be considered as part of the name.
+     * Buffs like "17% Frenzy" will have the 17% be considered as part of the prefix.
+     * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
+     *
+     * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
+     */
+    private static final Pattern STATUS_EFFECT_PATTERN =
+            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
+
+    private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
@@ -81,6 +102,7 @@ public final class CharacterModel extends Model {
     // This was implemented the same way by legacy.
     private int id;
 
+    private List<StatusEffect> statusEffects = new ArrayList<>();
     private ProfessionInfo professionInfo;
 
     public CharacterModel() {
@@ -90,6 +112,10 @@ public final class CharacterModel extends Model {
         Handlers.ActionBar.registerSegment(powderSpecialSegment);
         Handlers.ActionBar.registerSegment(spellSegment);
         Handlers.ActionBar.registerSegment(sprintSegment);
+    }
+
+    public List<StatusEffect> getStatusEffects() {
+        return statusEffects;
     }
 
     public int getCurrentHealth() {
@@ -248,6 +274,42 @@ public final class CharacterModel extends Model {
                 scanCharacterInfoPage(oldId);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
+        String footer = event.getFooter();
+
+        if (footer.isEmpty()) {
+            if (!statusEffects.isEmpty()) {
+                statusEffects = new ArrayList<>(); // No timers, get rid of them
+                WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+            }
+
+            return;
+        }
+
+        if (!footer.startsWith(STATUS_EFFECTS_TITLE)) return;
+
+        List<StatusEffect> newStatusEffects = new ArrayList<>();
+
+        String[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        for (String effect : effects) {
+            effect = effect.trim();
+            if (effect.isEmpty()) continue;
+
+            Matcher m = STATUS_EFFECT_PATTERN.matcher(effect);
+            if (!m.find()) continue;
+
+            // See comment at TAB_EFFECT_PATTERN definition for format description of these
+            String prefix = m.group(1);
+            String name = m.group(2);
+            String displayedTime = m.group(3);
+            newStatusEffects.add(new StatusEffect(prefix, name, displayedTime));
+        }
+
+        statusEffects = newStatusEffects;
+        WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
     private void scanCharacterInfoPage(int oldId) {

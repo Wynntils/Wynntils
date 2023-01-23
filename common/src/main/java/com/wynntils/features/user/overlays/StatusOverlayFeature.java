@@ -41,7 +41,7 @@ public class StatusOverlayFeature extends UserFeature {
     }
 
     private void recalculateRenderCache() {
-        renderCache = Models.Tab.getTimers().stream()
+        renderCache = Models.Character.getStatusEffects().stream()
                 .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
                 .toList();
     }
