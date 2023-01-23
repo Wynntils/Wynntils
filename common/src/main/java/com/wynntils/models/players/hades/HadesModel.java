@@ -114,7 +114,8 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
-        if (!HadesFeature.INSTANCE.shareWithFriends || !isConnected()) return;
+        if (!isConnected()) return;
+        if (!HadesFeature.INSTANCE.shareWithFriends) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -124,7 +125,8 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
-        if (!HadesFeature.INSTANCE.shareWithParty || !isConnected()) return;
+        if (!isConnected()) return;
+        if (!HadesFeature.INSTANCE.shareWithParty) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
