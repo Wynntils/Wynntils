@@ -9,9 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public enum EmeraldUnits {
-    EMERALD(Items.EMERALD, EmeraldSymbols.EMERALDS, 1),
-    EMERALD_BLOCK(Items.EMERALD_BLOCK, EmeraldSymbols.EB, 64),
-    LE(Items.EXPERIENCE_BOTTLE, EmeraldSymbols.LE, 64 * 64);
+    EMERALD(Items.EMERALD, "\u00B2", 1),
+    EMERALD_BLOCK(Items.EMERALD_BLOCK, "\u00B2\u00BD", 64),
+    LIQUID_EMERALD(Items.EXPERIENCE_BOTTLE, "\u00BC\u00B2", 64 * 64);
 
     private final Item itemType;
     private final ItemStack itemStack;
