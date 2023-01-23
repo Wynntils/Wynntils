@@ -1,9 +1,21 @@
+## [0.0.2-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.139...v0.0.2-alpha.140) (2023-01-23)
+
+
+### Code Refactoring
+
+* Unify the two emerald types ([#1073](https://github.com/Wynntils/Artemis/issues/1073)) ([9776a83](https://github.com/Wynntils/Artemis/commit/9776a83ab0e333f5547fca63d2fcea030663bb32))
+
 ## [0.0.2-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.138...v0.0.2-alpha.139) (2023-01-23)
 
 
 ### Code Refactoring
 
 * Inline TabModel into CharacterModel ([#1072](https://github.com/Wynntils/Artemis/issues/1072)) ([cae7822](https://github.com/Wynntils/Artemis/commit/cae7822c3f5c4a99fc5f29fd8083ea7b5dd35541))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.139 [skip ci] ([482e132](https://github.com/Wynntils/Artemis/commit/482e1323dc22f5684cd836635f3e8766fc7e8ce4))
 
 ## [0.0.2-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.137...v0.0.2-alpha.138) (2023-01-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.136 [skip ci] ([5bad1c4](https://github.com/Wynntils/Artemis/commit/5bad1c4c0e70f7007ce45674153aad4ade3f48f1))
-
-## [0.0.2-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.134...v0.0.2-alpha.135) (2023-01-22)
-
-
-### Code Refactoring
-
-* Move Model setup from init() to constructor ([#1068](https://github.com/Wynntils/Artemis/issues/1068)) ([799a3fb](https://github.com/Wynntils/Artemis/commit/799a3fb5ca9b185bc9429d9b349d8b646c8750ac))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.135 [skip ci] ([28cf7ae](https://github.com/Wynntils/Artemis/commit/28cf7ae47b074332300f886d853fbcca7d2e5d7d))
 
