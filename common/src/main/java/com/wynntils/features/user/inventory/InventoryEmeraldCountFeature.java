@@ -11,7 +11,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ContainerRenderEvent;
-import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -94,7 +93,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
         String emeraldText;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            emeraldText = String.valueOf(emeralds) + EmeraldSymbols.E;
+            emeraldText = String.valueOf(emeralds) + EmeraldUnits.EMERALD.getSymbol();
         } else {
             int[] emeraldAmounts = calculateEmeraldAmounts(emeralds);
             StringBuilder builder = new StringBuilder();
