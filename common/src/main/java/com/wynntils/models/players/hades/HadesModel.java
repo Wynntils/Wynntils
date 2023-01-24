@@ -103,7 +103,9 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onDisconnect(HadesEvent.Disconnected event) {
+        if (pingScheduler == null) return;
         pingScheduler.shutdown();
+        pingScheduler = null;
     }
 
     private void sendPing() {
