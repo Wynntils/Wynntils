@@ -91,7 +91,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
 
         // Print dialogue to the system log
-        msg.forEach(s -> WynntilsMod.info("[NPC] " + s));
+        WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "") + e.getType());
+        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old
         // Just remove the old and add the new with an updated remove time
@@ -116,9 +117,9 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             Managers.Notification.queueMessage(msg.get(0));
         }
 
-        if (e.getType() == NpcDialogueType.SELECTION && e.isProtected()) {
+        if (e.getType() == NpcDialogueType.SELECTION && !e.isProtected()) {
             // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg = Component.literal("Open chat and click on the option to select it.")
+            MutableComponent clickMsg = Component.literal("Select an option to continue:")
                     .withStyle(ChatFormatting.AQUA);
             e.getChatMessage()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
@@ -290,8 +291,15 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
+                    String msg;
+                    if (isProtected) {
+                        msg = "Select an option to continue";
+                    } else {
+                        msg = "Open chat and click on the option to select it";
+                    }
+
                     TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection + "§cSelect an option to continue", renderSetting);
+                            new TextRenderTask(protection + "§c" + msg, renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 
