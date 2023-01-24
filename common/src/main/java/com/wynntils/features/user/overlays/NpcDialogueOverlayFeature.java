@@ -91,7 +91,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
 
         // Print dialogue to the system log
-        WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "") + e.getType());
+        WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "")
+                + e.getType());
         msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old
@@ -119,8 +120,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
         if (e.getType() == NpcDialogueType.SELECTION && !e.isProtected()) {
             // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg = Component.literal("Select an option to continue:")
-                    .withStyle(ChatFormatting.AQUA);
+            MutableComponent clickMsg =
+                    Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
             e.getChatMessage()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
             McUtils.sendMessageToClient(clickMsg);
@@ -298,8 +299,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                         msg = "Open chat and click on the option to select it";
                     }
 
-                    TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection + "§c" + msg, renderSetting);
+                    TextRenderTask pressSneakMessage = new TextRenderTask(protection + "§c" + msg, renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 
