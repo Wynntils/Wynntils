@@ -6,10 +6,11 @@ package com.wynntils.handlers.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.ItemUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -52,7 +54,7 @@ public class ItemHandler extends Handler {
         NonNullList<ItemStack> existingItems;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.player().getInventory().items;
+            existingItems = McUtils.player().inventoryMenu.getItems();
         } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
@@ -64,14 +66,6 @@ public class ItemHandler extends Handler {
 
         List<ItemStack> newItems = event.getItems();
 
-        if (newItems.size() != existingItems.size()) {
-            // This is not a proper update, just annotate everyting
-            for (ItemStack newItem : newItems) {
-                annotate(newItem);
-            }
-            return;
-        }
-
         for (int i = 0; i < newItems.size(); i++) {
             updateAnnotation(existingItems.get(i), newItems.get(i));
         }
@@ -79,13 +73,44 @@ public class ItemHandler extends Handler {
 
     private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
         ItemAnnotation annotation = ((AnnotatedItemStack) existingItem).getAnnotation();
-        if (annotation != null && ItemUtils.isEquals(existingItem, newItem)) {
-            // Copy existing annotation
-            ((AnnotatedItemStack) newItem).setAnnotation(annotation);
-        } else {
-            // Calculate a new annotation
+        if (annotation == null) {
             annotate(newItem);
+            return;
         }
+
+        // Check if item type, damage and count matches, if not, it's definitely a new item
+        if (!similarStack(existingItem, newItem)) {
+            annotate(newItem);
+            return;
+        }
+
+        // This might be just a name update. Check if lore matches:
+        ListTag existingLore = LoreUtils.getLoreTag(existingItem);
+        ListTag newLore = LoreUtils.getLoreTag(newItem);
+
+        if (!LoreUtils.isLoreEquals(existingLore, newLore)) {
+            annotate(newItem);
+            return;
+        }
+
+        // We consider it to be the same item, so copy existing annotation
+        ((AnnotatedItemStack) newItem).setAnnotation(annotation);
+
+        // Name might have changed for Wynn to use this functionality to
+        // signal info like spells etc.
+        Component existingName = existingItem.getHoverName();
+        Component newName = newItem.getHoverName();
+        if (!newName.equals(existingName)) {
+            WynntilsMod.postEvent(new ItemRenamedEvent(existingName.getString(), newName.getString()));
+        }
+    }
+
+    private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
+        if (!firstItem.getItem().equals(secondItem.getItem())) return false;
+        if (firstItem.getCount() != secondItem.getCount()) return false;
+        if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
+
+        return true;
     }
 
     private void annotate(ItemStack item) {
