@@ -4,22 +4,13 @@
  */
 package com.wynntils.features.statemanaged;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.event.TickEvent;
-import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 public class LootrunFeature extends StateManagedFeature {
