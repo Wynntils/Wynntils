@@ -19,7 +19,6 @@ import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.statemanaged.DataStorageFeature;
-import com.wynntils.features.statemanaged.FixSpellOverwriteFeature;
 import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AbbreviateMobHealthFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
@@ -129,7 +128,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PacketDebuggerFeature());
 
         // always on
-        registerFeature(new FixSpellOverwriteFeature());
         registerFeature(new LootrunFeature());
         registerFeature(new DataStorageFeature());
 
