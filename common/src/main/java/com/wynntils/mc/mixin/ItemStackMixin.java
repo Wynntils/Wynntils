@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.handlers.item.AnnotatedItemStack;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipFlags;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
+import com.wynntils.mc.extension.ItemStackExtension;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements AnnotatedItemStack {
+public abstract class ItemStackMixin implements ItemStackExtension {
     @Unique
     private ItemAnnotation wynntilsAnnotation;
 
