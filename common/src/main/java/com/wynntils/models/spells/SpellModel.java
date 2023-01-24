@@ -5,9 +5,11 @@
 package com.wynntils.models.spells;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellProgressEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -30,7 +32,13 @@ public class SpellModel extends Model {
     private static final String NOT_ENOUGH_MANA = "§4You don't have enough mana to cast that spell!";
     private static final String SPELL_NOT_UNLOCKED = "§4You have not unlocked this spell!";
 
+    private final SpellSegment spellSegment = new SpellSegment();
+
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+
+    public SpellModel() {
+        Handlers.ActionBar.registerSegment(spellSegment);
+    }
 
     @SubscribeEvent
     public void onItemRenamed(ItemRenamedEvent event) {
