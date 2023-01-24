@@ -1,9 +1,21 @@
+## [0.0.2-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.142...v0.0.2-alpha.143) (2023-01-24)
+
+
+### Bug Fixes
+
+* Fix air item slots getting annotated ([#1079](https://github.com/Wynntils/Artemis/issues/1079)) ([dc1aebb](https://github.com/Wynntils/Artemis/commit/dc1aebbcc2ec1af97616e4a1f5da004d09031ae0))
+
 ## [0.0.2-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.141...v0.0.2-alpha.142) (2023-01-24)
 
 
 ### New Features
 
 * Add custom totem highlight color support ([#1075](https://github.com/Wynntils/Artemis/issues/1075)) ([c475186](https://github.com/Wynntils/Artemis/commit/c475186d327badede173f2a4d8c67ad3f412d9ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.142 [skip ci] ([62b5a51](https://github.com/Wynntils/Artemis/commit/62b5a5147a75542bfa568bc2a0805ae1af1701aa))
 
 ## [0.0.2-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.140...v0.0.2-alpha.141) (2023-01-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.139 [skip ci] ([482e132](https://github.com/Wynntils/Artemis/commit/482e1323dc22f5684cd836635f3e8766fc7e8ce4))
-
-## [0.0.2-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.137...v0.0.2-alpha.138) (2023-01-22)
-
-
-### Bug Fixes
-
-* Check connection status first to avoid crash in bad model->feature relation ([#1071](https://github.com/Wynntils/Artemis/issues/1071)) ([6dec1e4](https://github.com/Wynntils/Artemis/commit/6dec1e442974a1d348549510391cbb624d913eec))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.138 [skip ci] ([fe7ba04](https://github.com/Wynntils/Artemis/commit/fe7ba044ef2c728dbaf76d61b65267ce2cb788c1))
 
