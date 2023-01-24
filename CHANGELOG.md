@@ -1,9 +1,21 @@
+## [0.0.2-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.141...v0.0.2-alpha.142) (2023-01-24)
+
+
+### New Features
+
+* Add custom totem highlight color support ([#1075](https://github.com/Wynntils/Artemis/issues/1075)) ([c475186](https://github.com/Wynntils/Artemis/commit/c475186d327badede173f2a4d8c67ad3f412d9ae))
+
 ## [0.0.2-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.140...v0.0.2-alpha.141) (2023-01-24)
 
 
 ### New Features
 
 * ItemHandler can now detect item renames ([#1077](https://github.com/Wynntils/Artemis/issues/1077)) ([0401a62](https://github.com/Wynntils/Artemis/commit/0401a629041a65181b3faed4c95939a4ca1e839c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.141 [skip ci] ([1e0ee84](https://github.com/Wynntils/Artemis/commit/1e0ee8428260131580924dc9a2cf54a20a91da45))
 
 ## [0.0.2-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.139...v0.0.2-alpha.140) (2023-01-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.138 [skip ci] ([fe7ba04](https://github.com/Wynntils/Artemis/commit/fe7ba044ef2c728dbaf76d61b65267ce2cb788c1))
-
-## [0.0.2-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.136...v0.0.2-alpha.137) (2023-01-22)
-
-
-### Code Refactoring
-
-* Remove final wynn.actionbar package ([#1070](https://github.com/Wynntils/Artemis/issues/1070)) ([a63421f](https://github.com/Wynntils/Artemis/commit/a63421fce66d650d09344a777e73546502e50679))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.137 [skip ci] ([334ab0b](https://github.com/Wynntils/Artemis/commit/334ab0ba9edeb9489b572b1c360dc62fba18f347))
 
