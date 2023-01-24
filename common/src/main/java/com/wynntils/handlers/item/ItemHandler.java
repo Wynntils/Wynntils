@@ -107,8 +107,12 @@ public class ItemHandler extends Handler {
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
         if (!firstItem.getItem().equals(secondItem.getItem())) return false;
-        if (firstItem.count != secondItem.count)
-            return false; // We have to use the count field here to bypass the getCount method empty flag.
+
+        // We have to use the count field here to bypass the getCount method empty flag
+        if (firstItem.count != secondItem.count) {
+            return false;
+        }
+
         if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
 
         return true;
