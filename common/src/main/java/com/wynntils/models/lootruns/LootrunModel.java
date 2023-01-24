@@ -9,13 +9,19 @@ import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.lootruns.event.LootrunCacheRefreshEvent;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunPath;
 import com.wynntils.models.lootruns.type.LootrunSaveResult;
 import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.FileReader;
@@ -27,7 +33,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
@@ -44,11 +53,15 @@ public final class LootrunModel extends Model {
 
     private RecordingInformation recordingInformation = null;
 
+    public LootrunModel() {
+        FileUtils.mkdir(Models.Lootrun.LOOTRUNS);
+    }
+
     public LootrunState getState() {
         return state;
     }
 
-    public void render(PoseStack poseStack) {
+    private void render(PoseStack poseStack) {
         LootrunRenderer.renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
         LootrunRenderer.renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
     }
@@ -234,7 +247,7 @@ public final class LootrunModel extends Model {
         return new ArrayList<>();
     }
 
-    public void setLastChestIfRecording(BlockPos pos) {
+    private void setLastChestIfRecording(BlockPos pos) {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -242,7 +255,7 @@ public final class LootrunModel extends Model {
         recordingInformation.setLastChest(pos);
     }
 
-    public void addChestIfRecording() {
+    private void addChestIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -256,7 +269,7 @@ public final class LootrunModel extends Model {
         recordingInformation.setLastChest(null);
     }
 
-    public void recordMovementIfRecording() {
+    private void recordMovementIfRecording() {
         if (state != LootrunState.RECORDING) {
             return;
         }
@@ -303,6 +316,33 @@ public final class LootrunModel extends Model {
 
         return LootrunFileParser.writeJson(activeLootrun, file, name);
     }
+
+
+    @SubscribeEvent
+    public void recordMovement(TickEvent event) {
+        recordMovementIfRecording();
+    }
+
+    @SubscribeEvent
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        BlockState block = event.getWorld().getBlockState(event.getPos());
+        if (block.is(Blocks.CHEST)) {
+            setLastChestIfRecording(event.getPos());
+        }
+    }
+
+    @SubscribeEvent
+    public void onOpen(ScreenOpenedEvent event) {
+        if (Models.Container.isLootChest(event.getScreen())) {
+            addChestIfRecording();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderLastLevel(RenderLevelEvent.Post event) {
+        render(event.getPoseStack());
+    }
+
 
     private LootrunUncompiled getActiveLootrun() {
         LootrunUncompiled instance = null;

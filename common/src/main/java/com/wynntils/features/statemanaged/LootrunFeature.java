@@ -45,36 +45,6 @@ public class LootrunFeature extends StateManagedFeature {
     public boolean showNotes = true;
 
     @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        FileUtils.mkdir(Models.Lootrun.LOOTRUNS);
-    }
-
-    @SubscribeEvent
-    public void recordMovement(TickEvent event) {
-        Models.Lootrun.recordMovementIfRecording();
-    }
-
-    @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        BlockState block = event.getWorld().getBlockState(event.getPos());
-        if (block.is(Blocks.CHEST)) {
-            Models.Lootrun.setLastChestIfRecording(event.getPos());
-        }
-    }
-
-    @SubscribeEvent
-    public void onOpen(ScreenOpenedEvent event) {
-        if (Models.Container.isLootChest(event.getScreen())) {
-            Models.Lootrun.addChestIfRecording();
-        }
-    }
-
-    @SubscribeEvent
-    public void onRenderLastLevel(RenderLevelEvent.Post event) {
-        Models.Lootrun.render(event.getPoseStack());
-    }
-
-    @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         Models.Lootrun.recompileLootrun(false);
     }
