@@ -779,8 +779,6 @@
   "function.wynntils.woodcuttingLevel.name": "砍樹",
   "function.wynntils.woodworkingLevel.description": "您的木工階級",
   "function.wynntils.woodworkingLevel.name": "木工",
-  "function.wynntils.worldName.description": "您的世界名數",
-  "function.wynntils.worldName.name": "世界數",
   "function.wynntils.x.description": "您的 X 座標",
   "function.wynntils.x.name": "X 座標",
   "function.wynntils.xp.description": "您在這現在等級收集到的經驗的數量 (格式化的)",
