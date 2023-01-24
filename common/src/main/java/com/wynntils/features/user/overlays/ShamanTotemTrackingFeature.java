@@ -20,6 +20,9 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.abilities.ShamanTotem;
 import com.wynntils.models.abilities.event.TotemEvent;
+import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -30,11 +33,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -46,16 +46,15 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     public boolean highlightShamanTotems = true;
 
     @Config
-    public static TotemTrackingColors firstTotemColor = TotemTrackingColors.WHITE;
+    public static CustomColor firstTotemColor = CommonColors.WHITE;
 
     @Config
-    public static TotemTrackingColors secondTotemColor = TotemTrackingColors.AQUA;
+    public static CustomColor secondTotemColor = CommonColors.BLUE;
 
     @Config
-    public static TotemTrackingColors thirdTotemColor = TotemTrackingColors.RED;
+    public static CustomColor thirdTotemColor = CommonColors.RED;
 
     private static final String TOTEM_HIGHLIGHT_TEAM_BASE = "wynntilsTH";
-    private static final int ENTITY_GLOWING_FLAG = 6;
 
     @SubscribeEvent
     public void onTotemSummoned(TotemEvent.Summoned e) {
@@ -64,7 +63,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         int totemNumber = e.getTotemNumber();
         ArmorStand totemAS = e.getTotemEntity();
 
-        TotemTrackingColors color =
+        CustomColor color =
                 switch (totemNumber) {
                     case 1 -> firstTotemColor;
                     case 2 -> secondTotemColor;
@@ -73,28 +72,9 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
 
-        // Make or get scoreboard to set highlight colors
-        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
-        if (!scoreboard.getTeamNames().contains(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber)) {
-            scoreboard.addPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
-        }
-        PlayerTeam team = scoreboard.getPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + totemNumber);
-        team.setColor(ChatFormatting.getByCode(color.getColorCode()));
+        ((WynntilsCustomGlowEntityProperty) totemAS).setGlowColor(color);
 
-        scoreboard.addPlayerToTeam(totemAS.getStringUUID(), team);
-        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true); // Makes the totem glow
-    }
-
-    @SubscribeEvent
-    public void onTotemDestroy(TotemEvent.Removed e) {
-        if (!highlightShamanTotems) return;
-
-        // Teams should be destroyed and recreated every cast to allow the user to change totem highlight colors without
-        // having to reload the feature
-        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
-        if (scoreboard.getTeamNames().contains(TOTEM_HIGHLIGHT_TEAM_BASE + e.getTotemNumber())) {
-            scoreboard.removePlayerTeam(scoreboard.getPlayerTeam(TOTEM_HIGHLIGHT_TEAM_BASE + e.getTotemNumber()));
-        }
+        totemAS.setGlowingTag(true);
     }
 
     @SubscribeEvent
@@ -165,21 +145,14 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderY(),
                             List.of(
                                     new TextRenderTask(
-                                            getFormattedTotemText(
-                                                    firstTotemColor.getFormatCode() + "Totem 1", " Summoned", ""),
-                                            textRenderSetting),
+                                            getFormattedTotemText("Totem 1", " Summoned", ""),
+                                            textRenderSetting.withCustomColor(firstTotemColor)),
                                     new TextRenderTask(
-                                            getFormattedTotemText(
-                                                    secondTotemColor.getFormatCode() + "Totem 2",
-                                                    " (01s)",
-                                                    " [-1434, 104, -5823]"),
-                                            textRenderSetting),
+                                            getFormattedTotemText("Totem 2", " (01s)", " [-1434, 104, -5823]"),
+                                            textRenderSetting.withCustomColor(secondTotemColor)),
                                     new TextRenderTask(
-                                            getFormattedTotemText(
-                                                    thirdTotemColor.getFormatCode() + "Totem 3",
-                                                    " (14s)",
-                                                    " [1, 8, -41]"),
-                                            textRenderSetting)),
+                                            getFormattedTotemText("Totem 3", " (14s)", " [1, 8, -41]"),
+                                            textRenderSetting.withCustomColor(thirdTotemColor))),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -189,11 +162,21 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         void updateRenderTaskCache() {
             renderTaskCache = Models.ShamanTotem.getActiveTotems().stream()
                     .map(shamanTotem -> {
+                        CustomColor color =
+                                switch (shamanTotem.getTotemNumber()) {
+                                    case 1 -> firstTotemColor;
+                                    case 2 -> secondTotemColor;
+                                    case 3 -> thirdTotemColor;
+                                    default -> throw new IllegalArgumentException(
+                                            "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
+                                };
+                        ;
+
                         String prefix =
                                 switch (shamanTotem.getTotemNumber()) {
-                                    case 1 -> firstTotemColor.getFormatCode() + "Totem 1";
-                                    case 2 -> secondTotemColor.getFormatCode() + "Totem 2";
-                                    case 3 -> thirdTotemColor.getFormatCode() + "Totem 3";
+                                    case 1 -> "Totem 1";
+                                    case 2 -> "Totem 2";
+                                    case 3 -> "Totem 3";
                                     default -> throw new IllegalArgumentException(
                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                 };
@@ -219,7 +202,11 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                         + " m)";
                             }
                         }
-                        return new TextRenderTask(getFormattedTotemText(prefix, suffix, detail), textRenderSetting);
+                        // FIXME: textRenderSetting.withCustomColor is really bad allocation wise, consider using an
+                        // alternative
+                        return new TextRenderTask(
+                                getFormattedTotemText(prefix, suffix, detail),
+                                textRenderSetting.withCustomColor(color));
                     })
                     .toList();
         }
@@ -253,52 +240,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
             NONE,
             COORDS,
             DISTANCE
-        }
-    }
-
-    /**
-     * This enum exists for two reasons:
-     * <p>
-     * 1. The previously used ChatFormatting enum does not work as a config. ChatFormatting contains options such as
-     *   OBFUSCATED, BOLD, STRIKETHROUGH, UNDERLINE, ITALIC, and RESET. These are not valid colors for a totem highlight.
-     * <p>
-     * 2. When the config system tries to render the names of ChatFormatting enums, it pulls the formatting code instead
-     *   of a proper name. For example, instead of displaying WHITE for white, it will display §f, which is actually just
-     *   parsed to an invisible string.
-     * <p>
-     * This is otherwise a trimmed down version of ChatFormatting with those issues fixed.
-     * Oh, I also ordered the colors to a rainbow-ish pattern.
-     */
-    private enum TotemTrackingColors {
-        WHITE('f'),
-        DARK_RED('4'),
-        RED('c'),
-        GOLD('6'),
-        YELLOW('e'),
-        DARK_GREEN('2'),
-        GREEN('a'),
-        AQUA('b'),
-        DARK_AQUA('3'),
-        BLUE('9'),
-        DARK_BLUE('1'),
-        LIGHT_PURPLE('d'),
-        DARK_PURPLE('5'),
-        GRAY('7'),
-        DARK_GRAY('8'),
-        BLACK('0');
-
-        private final char colorCode;
-
-        TotemTrackingColors(char colorCode) {
-            this.colorCode = colorCode;
-        }
-
-        public char getColorCode() {
-            return colorCode;
-        }
-
-        public String getFormatCode() {
-            return "§" + colorCode;
         }
     }
 }
