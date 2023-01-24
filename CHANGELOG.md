@@ -1,3 +1,10 @@
+## [0.0.2-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.144...v0.0.2-alpha.145) (2023-01-24)
+
+
+### New Features
+
+* Add a bunch of new functions ([#1080](https://github.com/Wynntils/Artemis/issues/1080)) ([a4dff07](https://github.com/Wynntils/Artemis/commit/a4dff079a1490de7d5f3adc6505b46b691770bb1))
+
 ## [0.0.2-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.143...v0.0.2-alpha.144) (2023-01-24)
 
 
@@ -9,6 +16,11 @@
 ### Code Refactoring
 
 * Move SpellSegment to SpellModel ([#1076](https://github.com/Wynntils/Artemis/issues/1076)) ([d322513](https://github.com/Wynntils/Artemis/commit/d32251300f672aaecf416c2807f6968d745287b5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.144 [skip ci] ([6643658](https://github.com/Wynntils/Artemis/commit/6643658b9948e0f0dc4bc50dd2cb1d1c7a209272))
 
 ## [0.0.2-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.142...v0.0.2-alpha.143) (2023-01-24)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.141 [skip ci] ([1e0ee84](https://github.com/Wynntils/Artemis/commit/1e0ee8428260131580924dc9a2cf54a20a91da45))
-
-## [0.0.2-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.139...v0.0.2-alpha.140) (2023-01-23)
-
-
-### Code Refactoring
-
-* Unify the two emerald types ([#1073](https://github.com/Wynntils/Artemis/issues/1073)) ([9776a83](https://github.com/Wynntils/Artemis/commit/9776a83ab0e333f5547fca63d2fcea030663bb32))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.140 [skip ci] ([f8f3822](https://github.com/Wynntils/Artemis/commit/f8f382278f43bebedf749870b261f99317dd51f5))
 
