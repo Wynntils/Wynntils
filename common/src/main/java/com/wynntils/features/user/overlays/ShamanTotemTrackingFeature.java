@@ -54,7 +54,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     @Config
     public static CustomColor thirdTotemColor = CommonColors.RED;
 
-    private static final String TOTEM_HIGHLIGHT_TEAM_BASE = "wynntilsTH";
+    private static final int ENTITY_GLOWING_FLAG = 6;
 
     @SubscribeEvent
     public void onTotemSummoned(TotemEvent.Summoned e) {
@@ -75,6 +75,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         ((WynntilsCustomGlowEntityProperty) totemAS).setGlowColor(color);
 
         totemAS.setGlowingTag(true);
+        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
     }
 
     @SubscribeEvent
@@ -172,14 +173,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                 };
                         ;
 
-                        String prefix =
-                                switch (shamanTotem.getTotemNumber()) {
-                                    case 1 -> "Totem 1";
-                                    case 2 -> "Totem 2";
-                                    case 3 -> "Totem 3";
-                                    default -> throw new IllegalArgumentException(
-                                            "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
-                                };
+                        String prefix = "Totem " + shamanTotem.getTotemNumber();
 
                         String suffix = "";
                         String detail = "";
@@ -203,7 +197,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             }
                         }
                         // FIXME: textRenderSetting.withCustomColor is really bad allocation wise, consider using an
-                        // alternative
+                        //        alternative
                         return new TextRenderTask(
                                 getFormattedTotemText(prefix, suffix, detail),
                                 textRenderSetting.withCustomColor(color));
