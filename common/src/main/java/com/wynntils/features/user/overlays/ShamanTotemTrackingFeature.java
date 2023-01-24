@@ -165,15 +165,20 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             this.getRenderY(),
                             List.of(
                                     new TextRenderTask(
-                                            getFormattedTotemText(firstTotemColor.getFormatCode() + "Totem 1", " Summoned", ""),
+                                            getFormattedTotemText(
+                                                    firstTotemColor.getFormatCode() + "Totem 1", " Summoned", ""),
                                             textRenderSetting),
                                     new TextRenderTask(
                                             getFormattedTotemText(
-                                                    secondTotemColor.getFormatCode() + "Totem 2", " (01s)", " [-1434, 104, -5823]"),
+                                                    secondTotemColor.getFormatCode() + "Totem 2",
+                                                    " (01s)",
+                                                    " [-1434, 104, -5823]"),
                                             textRenderSetting),
                                     new TextRenderTask(
                                             getFormattedTotemText(
-                                                    thirdTotemColor.getFormatCode() + "Totem 3", " (14s)", " [1, 8, -41]"),
+                                                    thirdTotemColor.getFormatCode() + "Totem 3",
+                                                    " (14s)",
+                                                    " [1, 8, -41]"),
                                             textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
@@ -281,7 +286,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         GRAY('7'),
         DARK_GRAY('8'),
         BLACK('0');
-
 
         private final char colorCode;
 
