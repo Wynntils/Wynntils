@@ -52,7 +52,7 @@ public class ItemHandler extends Handler {
         NonNullList<ItemStack> existingItems;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.player().getInventory().items;
+            existingItems = McUtils.player().inventoryMenu.getItems();
         } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
@@ -63,14 +63,6 @@ public class ItemHandler extends Handler {
         }
 
         List<ItemStack> newItems = event.getItems();
-
-        if (newItems.size() != existingItems.size()) {
-            // This is not a proper update, just annotate everyting
-            for (ItemStack newItem : newItems) {
-                annotate(newItem);
-            }
-            return;
-        }
 
         for (int i = 0; i < newItems.size(); i++) {
             updateAnnotation(existingItems.get(i), newItems.get(i));
