@@ -13,7 +13,7 @@ import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.SocialFunctions;
-import com.wynntils.functions.WorldFunction;
+import com.wynntils.functions.WorldFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -285,7 +285,8 @@ public final class FunctionManager extends Manager {
     }
 
     private void registerAllFunctions() {
-        registerFunction(new WorldFunction());
+        registerFunction(new WorldFunctions.CurrentWorldFunction());
+        registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
 
         registerFunction(new CharacterFunctions.AlchemismLevelFunction());
         registerFunction(new CharacterFunctions.ArmouringLevelFunction());
@@ -333,6 +334,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
         registerFunction(new InventoryFunctions.InventoryUsedFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
+        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
         registerFunction(new HorseFunctions.HorseLevelFunction());

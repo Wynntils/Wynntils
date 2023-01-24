@@ -7,11 +7,13 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
@@ -121,6 +123,46 @@ public class InventoryFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("pouch_used");
+        }
+    }
+
+    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+
+            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
+
+            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
+                return craftedGearItem.getDurability().getCurrent();
+            }
+
+            return -1;
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_durability");
+        }
+    }
+
+    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+
+            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
+
+            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
+                return craftedGearItem.getDurability().getMax();
+            }
+
+            return -1;
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_durability");
         }
     }
 }
