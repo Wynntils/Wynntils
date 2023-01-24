@@ -9,6 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
+import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.WorldFunction;
@@ -291,23 +292,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CookingLevelFunction());
-        registerFunction(new CharacterFunctions.EmeraldBlockFunction());
-        registerFunction(new CharacterFunctions.EmeraldsFunction());
         registerFunction(new CharacterFunctions.FarmingLevelFunction());
         registerFunction(new CharacterFunctions.FishingLevelFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
-        registerFunction(new CharacterFunctions.InventoryFreeFunction());
-        registerFunction(new CharacterFunctions.InventoryUsedFunction());
         registerFunction(new CharacterFunctions.JewelingLevelFunction());
         registerFunction(new CharacterFunctions.LevelFunction());
-        registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
         registerFunction(new CharacterFunctions.MiningLevelFunction());
-        registerFunction(new CharacterFunctions.MoneyFunction());
         registerFunction(new CharacterFunctions.ScribingLevelFunction());
         registerFunction(new CharacterFunctions.SoulpointFunction());
         registerFunction(new CharacterFunctions.SoulpointMaxFunction());
@@ -329,6 +324,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
+
+        registerFunction(new InventoryFunctions.EmeraldBlockFunction());
+        registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
+        registerFunction(new InventoryFunctions.InventoryFreeFunction());
+        registerFunction(new InventoryFunctions.InventoryUsedFunction());
+        registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
+        registerFunction(new InventoryFunctions.MoneyFunction());
 
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
