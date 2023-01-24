@@ -4,20 +4,26 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
+import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
@@ -53,6 +59,20 @@ public abstract class LevelRendererMixin {
             CallbackInfo ci) {
         EventFactory.onRenderLevelPre(
                 this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @ModifyArgs(
+            method = "renderLevel",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OutlineBufferSource;setColor(IIII)V"))
+    private void modifyOutlineColor(Args args, @Local Entity entity) {
+        WynntilsCustomGlowEntityProperty property = (WynntilsCustomGlowEntityProperty) entity;
+
+        if (property.getGlowColor() != CustomColor.NONE) {
+            args.set(0, property.getGlowColor().r);
+            args.set(1, property.getGlowColor().g);
+            args.set(2, property.getGlowColor().b);
+            args.set(3, property.getGlowColor().a);
+        }
     }
 
     @Inject(
