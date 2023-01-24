@@ -6,6 +6,7 @@ package com.wynntils.models.spells;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellProgressEvent;
@@ -25,8 +26,31 @@ public class SpellModel extends Model {
     // https://regexr.com/76ijo
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
+    private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
+    private static final String NOT_ENOUGH_MANA = "§4You don't have enough mana to cast that spell!";
+    private static final String SPELL_NOT_UNLOCKED = "§4You have not unlocked this spell!";
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+
+    @SubscribeEvent
+    public void onItemRenamed(ItemRenamedEvent event) {
+        String msg = event.getNewName();
+        if (msg.equals(NOT_ENOUGH_MANA)) {
+            // send SpellFailedEvent(Reason.NOT_ENOUGH_MANA)
+            return;
+        }
+        if (msg.equals(SPELL_NOT_UNLOCKED)) {
+            // send SpellFailedEvent(Reason.SPELL_NOT_UNLOCKED)
+            return;
+        }
+
+        Matcher spellMatcher = SPELL_CAST.matcher(event.getNewName());
+        if (spellMatcher.matches()) {
+            String spellType = spellMatcher.group(1);
+            int manaCost = Integer.parseInt(spellMatcher.group(2));
+            // send SpellCastEvent(spellType, manaCost)
+        }
+    }
 
     @SubscribeEvent
     public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
