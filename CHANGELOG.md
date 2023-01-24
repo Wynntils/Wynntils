@@ -1,9 +1,26 @@
+## [0.0.2-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.143...v0.0.2-alpha.144) (2023-01-24)
+
+
+### Bug Fixes
+
+* NPC dialogue issues, and Hades disconnect NPE ([#1074](https://github.com/Wynntils/Artemis/issues/1074)) ([127c09f](https://github.com/Wynntils/Artemis/commit/127c09f669bbed08fe74e3356f83230b69f6f560))
+
+
+### Code Refactoring
+
+* Move SpellSegment to SpellModel ([#1076](https://github.com/Wynntils/Artemis/issues/1076)) ([d322513](https://github.com/Wynntils/Artemis/commit/d32251300f672aaecf416c2807f6968d745287b5))
+
 ## [0.0.2-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.142...v0.0.2-alpha.143) (2023-01-24)
 
 
 ### Bug Fixes
 
 * Fix air item slots getting annotated ([#1079](https://github.com/Wynntils/Artemis/issues/1079)) ([dc1aebb](https://github.com/Wynntils/Artemis/commit/dc1aebbcc2ec1af97616e4a1f5da004d09031ae0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.143 [skip ci] ([e9d4616](https://github.com/Wynntils/Artemis/commit/e9d46168c346bf91402b72dc7f6d94ec3fae18ea))
 
 ## [0.0.2-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.141...v0.0.2-alpha.142) (2023-01-24)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.140 [skip ci] ([f8f3822](https://github.com/Wynntils/Artemis/commit/f8f382278f43bebedf749870b261f99317dd51f5))
-
-## [0.0.2-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.138...v0.0.2-alpha.139) (2023-01-23)
-
-
-### Code Refactoring
-
-* Inline TabModel into CharacterModel ([#1072](https://github.com/Wynntils/Artemis/issues/1072)) ([cae7822](https://github.com/Wynntils/Artemis/commit/cae7822c3f5c4a99fc5f29fd8083ea7b5dd35541))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.139 [skip ci] ([482e132](https://github.com/Wynntils/Artemis/commit/482e1323dc22f5684cd836635f3e8766fc7e8ce4))
 
