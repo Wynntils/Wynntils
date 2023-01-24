@@ -756,6 +756,8 @@
   "function.wynntils.cookingLevel.name": "Cooking",
   "function.wynntils.currentWorldName.description": "Get the current world name",
   "function.wynntils.currentWorldName.name": "World",
+  "function.wynntils.currentWorldUptime.description": "Time since the current world is online",
+  "function.wynntils.currentWorldUptime.name": "World Uptime",
   "function.wynntils.dir.description": "Your current direction (heading)",
   "function.wynntils.dir.name": "Dir",
   "function.wynntils.emeraldBlock.description": "Amount of money in emerald blocks in inventory (Besides LE)",
