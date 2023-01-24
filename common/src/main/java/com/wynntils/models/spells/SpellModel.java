@@ -5,8 +5,10 @@
 package com.wynntils.models.spells;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellProgressEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -26,7 +28,13 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
 
+    private final SpellSegment spellSegment = new SpellSegment();
+
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+
+    public SpellModel() {
+        Handlers.ActionBar.registerSegment(spellSegment);
+    }
 
     @SubscribeEvent
     public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
