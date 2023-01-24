@@ -1,5 +1,6 @@
 {
   "client": [
+    "EntityMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "ChatScreenMixin",
@@ -44,8 +45,11 @@
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {
+    "net/minecraft/class_1297": [
+      "com/wynntils/models/entities/WynntilsCustomGlowEntityProperty"
+    ],
     "net/minecraft/class_437": [
-      "com/wynntils/gui/widgets/TextInputBoxWidget"
+      "com/wynntils/screens/base/TextboxScreen"
     ]
   },
   "injectors": {
