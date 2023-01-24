@@ -1,9 +1,21 @@
+## [0.0.2-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.140...v0.0.2-alpha.141) (2023-01-24)
+
+
+### New Features
+
+* ItemHandler can now detect item renames ([#1077](https://github.com/Wynntils/Artemis/issues/1077)) ([0401a62](https://github.com/Wynntils/Artemis/commit/0401a629041a65181b3faed4c95939a4ca1e839c))
+
 ## [0.0.2-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.139...v0.0.2-alpha.140) (2023-01-23)
 
 
 ### Code Refactoring
 
 * Unify the two emerald types ([#1073](https://github.com/Wynntils/Artemis/issues/1073)) ([9776a83](https://github.com/Wynntils/Artemis/commit/9776a83ab0e333f5547fca63d2fcea030663bb32))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.140 [skip ci] ([f8f3822](https://github.com/Wynntils/Artemis/commit/f8f382278f43bebedf749870b261f99317dd51f5))
 
 ## [0.0.2-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.138...v0.0.2-alpha.139) (2023-01-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.137 [skip ci] ([334ab0b](https://github.com/Wynntils/Artemis/commit/334ab0ba9edeb9489b572b1c360dc62fba18f347))
-
-## [0.0.2-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.135...v0.0.2-alpha.136) (2023-01-22)
-
-
-### Code Refactoring
-
-* Models <-> Managers switcheroo ([#1069](https://github.com/Wynntils/Artemis/issues/1069)) ([0bd8484](https://github.com/Wynntils/Artemis/commit/0bd8484030837517ca7d61ac1174c6d7ab71db30))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.136 [skip ci] ([5bad1c4](https://github.com/Wynntils/Artemis/commit/5bad1c4c0e70f7007ce45674153aad4ade3f48f1))
 
