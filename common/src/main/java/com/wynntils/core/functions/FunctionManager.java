@@ -12,6 +12,7 @@ import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
+import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunction;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
@@ -348,5 +349,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());
         registerFunction(new MinecraftFunctions.ZFunction());
+
+        registerFunction(new SocialFunctions.OnlineFriendsFunction());
+        registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
     }
 }
