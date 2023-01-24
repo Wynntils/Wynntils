@@ -65,13 +65,13 @@ public abstract class LevelRendererMixin {
             method = "renderLevel",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OutlineBufferSource;setColor(IIII)V"))
     private void modifyOutlineColor(Args args, @Local Entity entity) {
-        if (entity instanceof WynntilsCustomGlowEntityProperty property) {
-            if (property.getGlowColor() != CustomColor.NONE) {
-                args.set(0, property.getGlowColor().r);
-                args.set(1, property.getGlowColor().g);
-                args.set(2, property.getGlowColor().b);
-                args.set(3, property.getGlowColor().a);
-            }
+        WynntilsCustomGlowEntityProperty property = (WynntilsCustomGlowEntityProperty) entity;
+
+        if (property.getGlowColor() != CustomColor.NONE) {
+            args.set(0, property.getGlowColor().r);
+            args.set(1, property.getGlowColor().g);
+            args.set(2, property.getGlowColor().b);
+            args.set(3, property.getGlowColor().a);
         }
     }
 
