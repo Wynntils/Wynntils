@@ -11,7 +11,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.event.SpellProgressEvent;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
@@ -59,7 +59,7 @@ public class QuickCastFeature extends UserFeature {
     private int lastSelectedSlot = 0;
 
     @SubscribeEvent
-    public void onSpellSequenceUpdate(SpellProgressEvent e) {
+    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
         updateSpell(e.getSpellDirectionArray());
     }
 
