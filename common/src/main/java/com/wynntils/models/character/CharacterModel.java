@@ -23,7 +23,6 @@ import com.wynntils.models.character.type.StatusEffect;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.ProfessionInfo;
 import com.wynntils.models.concepts.ProfessionType;
-import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -87,7 +86,6 @@ public final class CharacterModel extends Model {
     private final HealthSegment healthSegment = new HealthSegment();
     private final ManaSegment manaSegment = new ManaSegment();
     private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
-    private final SpellSegment spellSegment = new SpellSegment();
     private final SprintSegment sprintSegment = new SprintSegment();
 
     private boolean inCharacterSelection;
@@ -110,7 +108,6 @@ public final class CharacterModel extends Model {
         Handlers.ActionBar.registerSegment(healthSegment);
         Handlers.ActionBar.registerSegment(manaSegment);
         Handlers.ActionBar.registerSegment(powderSpecialSegment);
-        Handlers.ActionBar.registerSegment(spellSegment);
         Handlers.ActionBar.registerSegment(sprintSegment);
     }
 
