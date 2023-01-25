@@ -374,6 +374,7 @@
   "feature.wynntils.quickCast.levelRequirementNotReached": "El kell érned %s %s, mielőtt ezt a harci eszközt használhatnád.",
   "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.description": "Hogyan nézzen ki a szöveg árnyéka?",
   "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.name": "Szöveg Árnyék",
+  "feature.wynntils.spellCastRender.vignetteColor.name": "Átfedés Szín",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.description": "Hogyan nézzen ki a szöveg árnyéka?",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "Szöveg Árnyék",
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.description": "Milyen átlátszósági szintje legyen a szöveg hátterének?",
