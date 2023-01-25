@@ -7,14 +7,12 @@ package com.wynntils.models.items.items.game;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gear.GearIdentification;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.items.properties.DurabilityItemProperty;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
-public class CraftedGearItem extends GameItem
-        implements GearTierItemProperty, DurableItemProperty, DurabilityItemProperty {
+public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {
     // FIXME: Better types than strings...
     private final List<String> damages;
     private final List<String> requirements;

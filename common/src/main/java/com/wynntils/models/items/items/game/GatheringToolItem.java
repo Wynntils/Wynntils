@@ -5,13 +5,11 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gathering.ToolProfile;
-import com.wynntils.models.items.properties.DurabilityItemProperty;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
 import com.wynntils.utils.type.CappedValue;
 
-public class GatheringToolItem extends GameItem
-        implements NumberedTierItemProperty, DurableItemProperty, DurabilityItemProperty {
+public class GatheringToolItem extends GameItem implements NumberedTierItemProperty, DurableItemProperty {
     private final ToolProfile toolProfile;
     private final CappedValue durability;
 

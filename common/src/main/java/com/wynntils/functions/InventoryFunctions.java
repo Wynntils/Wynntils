@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
-import com.wynntils.models.items.properties.DurabilityItemProperty;
+import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
@@ -133,7 +133,7 @@ public class InventoryFunctions {
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
                 return String.valueOf(durableItem.getDurability().getCurrent());
             }
 
@@ -153,7 +153,7 @@ public class InventoryFunctions {
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
                 return String.valueOf(durableItem.getDurability().getMax());
             }
 
