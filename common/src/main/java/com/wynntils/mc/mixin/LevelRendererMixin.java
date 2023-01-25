@@ -7,7 +7,7 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -65,13 +65,13 @@ public abstract class LevelRendererMixin {
             method = "renderLevel",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OutlineBufferSource;setColor(IIII)V"))
     private void modifyOutlineColor(Args args, @Local Entity entity) {
-        WynntilsCustomGlowEntityProperty property = (WynntilsCustomGlowEntityProperty) entity;
+        EntityExtension entityExt = (EntityExtension) entity;
 
-        if (property.getGlowColor() != CustomColor.NONE) {
-            args.set(0, property.getGlowColor().r);
-            args.set(1, property.getGlowColor().g);
-            args.set(2, property.getGlowColor().b);
-            args.set(3, property.getGlowColor().a);
+        if (entityExt.getGlowColor() != CustomColor.NONE) {
+            args.set(0, entityExt.getGlowColor().r);
+            args.set(1, entityExt.getGlowColor().g);
+            args.set(2, entityExt.getGlowColor().b);
+            args.set(3, entityExt.getGlowColor().a);
         }
     }
 
