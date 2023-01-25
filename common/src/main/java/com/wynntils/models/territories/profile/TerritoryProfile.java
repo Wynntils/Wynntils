@@ -15,9 +15,9 @@ import com.wynntils.utils.colors.CustomColor;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 
 public class TerritoryProfile {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
@@ -133,9 +133,11 @@ public class TerritoryProfile {
     }
 
     private long getTimeHeldInMillis() {
-        return Calendar.getInstance()
-                .getTimeZone()
-                .getOffset(new Date().getTime() - this.getAcquired().getTime());
+        return new Date().getTime() - this.getAcquired().getTime() + getTimezoneOffset();
+    }
+
+    private long getTimezoneOffset() {
+        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
     }
 
     public boolean isOnCooldown() {
@@ -145,6 +147,21 @@ public class TerritoryProfile {
     public String getReadableRelativeTimeAcquired() {
         long difference = getTimeHeldInMillis();
         return DATE_FORMATTER.format(difference);
+    }
+
+    public ChatFormatting getTimeAcquiredColor() {
+        // 0 - 1 hours > Green
+        // 1 hour - 1 day > Yellow
+        // 1 day - > Red
+
+        long difference = getTimeHeldInMillis();
+        if (difference < 60 * 60 * 1000) {
+            return ChatFormatting.GREEN;
+        } else if (difference < 24 * 60 * 60 * 1000) {
+            return ChatFormatting.YELLOW;
+        } else {
+            return ChatFormatting.RED;
+        }
     }
 
     public static class TerritoryDeserializer implements JsonDeserializer<TerritoryProfile> {
