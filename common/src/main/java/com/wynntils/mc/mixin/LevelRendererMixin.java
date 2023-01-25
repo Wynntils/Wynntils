@@ -67,7 +67,7 @@ public abstract class LevelRendererMixin {
         EntityExtension entityExt = (EntityExtension) entity;
 
         if (entityExt.getGlowColor() != CustomColor.NONE) {
-            return property.getGlowColorInt();
+            return entityExt.getGlowColorInt();
         }
 
         return original;
