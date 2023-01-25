@@ -226,4 +226,15 @@ public final class LoreUtils {
         newTooltip.addAll(tooltipAddon);
         return newTooltip;
     }
+
+    public static boolean isLoreEquals(ListTag existingLore, ListTag newLore) {
+        if (existingLore == null && newLore == null) return true;
+        if (existingLore == null || newLore == null) return false;
+
+        // Both are non-null, compare content
+        String existingLoreString = existingLore.getAsString();
+        String newLoreString = newLore.getAsString();
+
+        return existingLoreString.equals(newLoreString);
+    }
 }
