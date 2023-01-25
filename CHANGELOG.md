@@ -1,9 +1,21 @@
+## [0.0.2-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.150...v0.0.2-alpha.151) (2023-01-25)
+
+
+### New Features
+
+* Always mount horse when using saddle ([#1094](https://github.com/Wynntils/Artemis/issues/1094)) ([8280fe0](https://github.com/Wynntils/Artemis/commit/8280fe0f0a2d60101ed9684ca1511ead449ff3c6))
+
 ## [0.0.2-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.149...v0.0.2-alpha.150) (2023-01-25)
 
 
 ### Bug Fixes
 
 * Fix function aliases ([c6742f3](https://github.com/Wynntils/Artemis/commit/c6742f3ff365bbfdfafefc84004c70a685c77399))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.150 [skip ci] ([df59492](https://github.com/Wynntils/Artemis/commit/df5949247e3d4fe4eed3e58dcc8d1572ea4643a5))
 
 ## [0.0.2-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.148...v0.0.2-alpha.149) (2023-01-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.147 [skip ci] ([b22ff32](https://github.com/Wynntils/Artemis/commit/b22ff32e0f7a4185660b4b90a9dd138f1291040a))
-
-## [0.0.2-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.145...v0.0.2-alpha.146) (2023-01-25)
-
-
-### Bug Fixes
-
-* Fix Forge compatibility of LevelRendererMixin ([#1087](https://github.com/Wynntils/Artemis/issues/1087)) ([c5f8461](https://github.com/Wynntils/Artemis/commit/c5f84612b43cf407473c7b6ccecfc8b738d9f92f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.146 [skip ci] ([4a67176](https://github.com/Wynntils/Artemis/commit/4a67176a1d2e98a178e7505b3c6c6dabb1fdccc2))
 
