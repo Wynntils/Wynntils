@@ -101,7 +101,11 @@ public class ItemHandler extends Handler {
         Component existingName = existingItem.getHoverName();
         Component newName = newItem.getHoverName();
         if (!newName.equals(existingName)) {
-            WynntilsMod.postEvent(new ItemRenamedEvent(existingName.getString(), newName.getString()));
+            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName.getString(), newName.getString());
+            WynntilsMod.postEvent(event);
+            if (event.isCanceled()) {
+                newItem.setHoverName(existingName);
+            }
         }
     }
 

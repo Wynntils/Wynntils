@@ -655,6 +655,7 @@
   "feature.wynntils.shamanTotemTracking.trackTotem.name": "Track Totem",
   "feature.wynntils.soulPointTimer.lore": "Time until next soul point: %s",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer",
+  "feature.wynntils.spellCastInfo.name": "Prohibit Rename on Spell Cast Info",
   "feature.wynntils.statusOverlay.name": "Statuses",
   "feature.wynntils.statusOverlay.overlay.status.name": "Status Overlay",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.description": "What should the text shadow look like?",
