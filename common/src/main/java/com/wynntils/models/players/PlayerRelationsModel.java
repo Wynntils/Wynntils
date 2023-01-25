@@ -302,6 +302,10 @@ public final class PlayerRelationsModel extends Model {
         if (McUtils.player() == null) return;
 
         worldPlayers = new HashSet<>(McUtils.mc().level.getScoreboard().getTeamNames());
+        System.out.println(worldPlayers);
+        McUtils.mc().level.players().forEach(player -> {
+            System.out.println(player.getDisplayName());
+        });
     }
 
     public Set<String> getFriends() {

@@ -8,6 +8,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -23,14 +25,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
-public class PartyManagementScreen extends Screen implements TextboxScreen {
+public final class PartyManagementScreen extends Screen implements TextboxScreen {
+    private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w,; ]+");
+    private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget inviteInput;
 
     private Button inviteButton;
-    private Button refreshButton;
     private Button kickOfflineButton;
     private Button createPartyButton;
     private Button leavePartyButton;
@@ -38,8 +42,8 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
     private int totalWidth = 344;
     private int xStart = totalWidth / 2;
 
-    private final List<String> partyMembers = new ArrayList<>();
-    private final List<String> offlineMembers = new ArrayList<>();
+    private final Set<String> partyMembers = new HashSet<>();
+    private final Set<String> offlineMembers = new HashSet<>();
     private final List<String> suggestedPlayers = new ArrayList<>();
     private Pair<HashSet<String>, String> unsortedPartyMembers = new Pair<>(new HashSet<>(), "");
     private boolean partyLeaveSent = false;
@@ -71,7 +75,7 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
 
         // region Management button row
         this.addRenderableWidget(
-                refreshButton = new Button.Builder(
+                new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.refreshButton").withStyle(ChatFormatting.GREEN),
                 (button) -> refreshParty())
                         .pos(this.width / 2 - xStart, this.height / 2 - 176)
@@ -100,7 +104,13 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
                         .build());
         // endregion
 
-
+        if (Models.PlayerRelations.isPartying()) {
+            createPartyButton.active = false;
+            leavePartyButton.active = true;
+            if (offlineMembers.isEmpty()) {
+                kickOfflineButton.active = false;
+            }
+        }
     }
 
     @Override
@@ -109,13 +119,13 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
         super.render(poseStack, mouseX, mouseY, partialTick);
 
         updateSuggestionsList();
-
         FontRenderer fr = FontRenderer.getInstance();
+
         // region Party list headers
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - xStart, this.height / 2 - 140, 0, totalWidth, 1);
         fr.renderText(
                 poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.headers.head"),
+                I18n.get("screens.wynntils.partyManagementGui.head"),
                 this.width / 2 - xStart,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
@@ -124,7 +134,7 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.headers.name"),
+                I18n.get("screens.wynntils.partyManagementGui.name"),
                 this.width / 2 - xStart + 50,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
@@ -133,7 +143,7 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.headers.promote"),
+                I18n.get("screens.wynntils.partyManagementGui.promote"),
                 this.width / 2 - xStart + 260,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
@@ -142,19 +152,72 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.headers.kick"),
+                I18n.get("screens.wynntils.partyManagementGui.kick"),
                 this.width / 2 - xStart + 322, // starts at 300-ish?, center 322, ends at 344-ish?
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Center,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
+        // endregion
+
+        // region Suggestion list headers
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 50, this.height / 2 - 140, 0, totalWidth / 2, 1);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.head"),
+                this.width / 2 + 50,
+                this.height / 2 - 144,
+                CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.suggestions"),
+                this.width / 2 + 150,
+                this.height / 2 - 144,
+                CommonColors.WHITE,
+                HorizontalAlignment.Center,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.invite"),
+                this.width / 2 + 200,
+                this.height / 2 - 144,
+                CommonColors.WHITE,
+                HorizontalAlignment.Center,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        // endregion
+
+        // region Legend
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 200, this.height / 2 - 140, 0, totalWidth / 3, 1);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.legend"),
+                this.width / 2 - 200,
+                this.height / 2 - 144,
+                CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.self"),
+                this.width / 2 - 200,
+                this.height / 2 - 140,
+                CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
     }
 
     private void inviteFromField() {
         // Remove all except commas, semicolons, whitespaces, and characters possible in name
-        String fieldText = inviteInput.getTextBoxInput().replaceAll("[^\\w,; ]+", "");
-        fieldText = fieldText.replaceAll("[,; ]+", ","); // semicolons and spaces to comma
+        String fieldText = INVITE_REPLACER.matcher(inviteInput.getTextBoxInput()).replaceAll("");
+        fieldText = COMMA_REPLACER.matcher(fieldText).replaceAll(","); // semicolons and spaces to comma
         if (fieldText.isBlank()) return;
 
         if (!Models.PlayerRelations.isPartying()) {
@@ -169,10 +232,20 @@ public class PartyManagementScreen extends Screen implements TextboxScreen {
     }
 
     private void refreshParty() {
+        Models.PlayerRelations.updateWorldPlayers();
 
+        Models.PlayerRelations.requestPartyListUpdate();
+        if (!Models.PlayerRelations.isPartying()) {
+            partyMembers.clear();
+        } else {
+            partyMembers.addAll(Models.PlayerRelations.getPartyMembers());
+        }
     }
 
     private void kickOffline() {
+        Models.PlayerRelations.updateWorldPlayers();
+        offlineMembers.addAll(Models.PlayerRelations.getPartyMembers());
+        offlineMembers.removeAll(Models.PlayerRelations.getWorldPlayers());
 
     }
 
