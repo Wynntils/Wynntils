@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.entities;
+package com.wynntils.mc.extension;
 
 import com.wynntils.utils.colors.CustomColor;
 
-public interface WynntilsCustomGlowEntityProperty {
+public interface EntityExtension {
     CustomColor getGlowColor();
 
     void setGlowColor(CustomColor color);

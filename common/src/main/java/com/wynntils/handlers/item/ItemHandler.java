@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -36,7 +37,7 @@ public class ItemHandler extends Handler {
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
         if (item == null) return Optional.empty();
 
-        ItemAnnotation annotation = ((AnnotatedItemStack) item).getAnnotation();
+        ItemAnnotation annotation = ((ItemStackExtension) item).getAnnotation();
         return Optional.ofNullable(annotation);
     }
 
@@ -72,7 +73,7 @@ public class ItemHandler extends Handler {
     }
 
     private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
-        ItemAnnotation annotation = ((AnnotatedItemStack) existingItem).getAnnotation();
+        ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
             annotate(newItem);
             return;
@@ -94,7 +95,7 @@ public class ItemHandler extends Handler {
         }
 
         // We consider it to be the same item, so copy existing annotation
-        ((AnnotatedItemStack) newItem).setAnnotation(annotation);
+        ((ItemStackExtension) newItem).setAnnotation(annotation);
 
         // Name might have changed for Wynn to use this functionality to
         // signal info like spells etc.
@@ -156,7 +157,7 @@ public class ItemHandler extends Handler {
         // Measure performance
         logProfilingData(startTime, annotation);
 
-        ((AnnotatedItemStack) item).setAnnotation(annotation);
+        ((ItemStackExtension) item).setAnnotation(annotation);
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {

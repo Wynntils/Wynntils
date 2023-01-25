@@ -4,14 +4,14 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements WynntilsCustomGlowEntityProperty {
+public abstract class EntityMixin implements EntityExtension {
     @Unique
     private CustomColor wynntilsGlowColor = CustomColor.NONE;
 
