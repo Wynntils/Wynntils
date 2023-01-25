@@ -49,6 +49,7 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
         return requirements;
     }
 
+    @Override
     public CappedValue getDurability() {
         return durability;
     }
