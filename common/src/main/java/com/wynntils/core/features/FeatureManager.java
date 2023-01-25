@@ -58,7 +58,7 @@ import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.MythicBoxScalerFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
-import com.wynntils.features.user.SpellCastInfoFeature;
+import com.wynntils.features.user.SpellCastRenderFeature;
 import com.wynntils.features.user.TerritoryDefenseMessageFeature;
 import com.wynntils.features.user.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.user.TradeMarketPriceConversionFeature;
@@ -202,7 +202,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());
-        registerFeature(new SpellCastInfoFeature());
+        registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());

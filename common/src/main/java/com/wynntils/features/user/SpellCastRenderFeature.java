@@ -8,22 +8,37 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class SpellCastInfoFeature extends UserFeature {
+public class SpellCastRenderFeature extends UserFeature {
     private static final int SHOW_TICKS = 40;
+    public static final int FADE_TICKS = 4;
+
+    @Config
+    public boolean renderVignette = true;
+
+    @Config
+    public float vignetteIntensity = 1.3f;
+
+    @Config
+    public CustomColor vignetteColor = new CustomColor(0, 0, 255);
 
     private int spellTimer;
     private Component spellMessage;
+    private float intensity;
 
     @SubscribeEvent
     public void onItemRename(ItemRenamedEvent event) {
@@ -34,13 +49,27 @@ public class SpellCastInfoFeature extends UserFeature {
         GearItem gearItem = gearItemOpt.get();
         if (!gearItem.getGearProfile().getGearInfo().getType().isWeapon()) return;
 
-        // Check that we are not just restoring the old name
-        if (event.getNewName().equals(gearItem.getGearProfile().getDisplayName())) return;
-
-        // This really is new info!
+        // Hide vanilla item rename popup
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onSpellCast(SpellEvent.Cast event) {
+        int manaCost = event.getManaCost();
+        String msg = "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]";
+        spellMessage = Component.literal(msg);
+
+        // An relativeCost of 1.0 means we just used all mana we have left
+        float relativeCost = (float) manaCost / Models.Character.getCurrentMana();
+        intensity = vignetteIntensity * relativeCost;
         spellTimer = SHOW_TICKS;
-        spellMessage = Component.literal(event.getNewName());
+    }
+
+    @SubscribeEvent
+    public void onSpellFailed(SpellEvent.Failed event) {
+        spellMessage = Component.literal(event.getFailureReason().getMessage());
+        intensity = 0f;
+        spellTimer = SHOW_TICKS;
     }
 
     @SubscribeEvent
@@ -53,6 +82,15 @@ public class SpellCastInfoFeature extends UserFeature {
     @SubscribeEvent
     public void onRender(RenderEvent.Post event) {
         if (spellTimer <= 0) return;
+
+        if (renderVignette && intensity > 0f) {
+            int shownTicks = SHOW_TICKS - spellTimer;
+            int fade = FADE_TICKS - shownTicks;
+            if (fade > 0) {
+                float alpha = intensity * ((float) fade / FADE_TICKS);
+                RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor, alpha);
+            }
+        }
 
         // Render it the same way vanilla renders item changes
         int alpha = (int) Math.min((float) spellTimer * 256.0F / 10.0F, 255.0F);
