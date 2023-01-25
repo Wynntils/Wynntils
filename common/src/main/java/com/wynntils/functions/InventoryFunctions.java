@@ -126,18 +126,18 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
+    public static class HeldItemCurrentDurabilityFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
-                return durableItem.getDurability().getCurrent();
+                return String.valueOf(durableItem.getDurability().getCurrent());
             }
 
-            return -1;
+            return "";
         }
 
         @Override
@@ -146,18 +146,18 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
+    public static class HeldItemMaxDurabilityFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
-                return durableItem.getDurability().getMax();
+                return String.valueOf(durableItem.getDurability().getMax());
             }
 
-            return -1;
+            return "";
         }
 
         @Override
