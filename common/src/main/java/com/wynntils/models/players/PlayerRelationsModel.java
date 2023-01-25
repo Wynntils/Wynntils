@@ -273,4 +273,12 @@ public final class PlayerRelationsModel extends Model {
         McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
+
+    public Set<String> getFriends() {
+        return friends;
+    }
+
+    public Set<String> getPartyMembers() {
+        return partyMembers;
+    }
 }
