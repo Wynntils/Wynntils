@@ -1,9 +1,21 @@
+## [0.0.2-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.149...v0.0.2-alpha.150) (2023-01-25)
+
+
+### Bug Fixes
+
+* Fix function aliases ([c6742f3](https://github.com/Wynntils/Artemis/commit/c6742f3ff365bbfdfafefc84004c70a685c77399))
+
 ## [0.0.2-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.148...v0.0.2-alpha.149) (2023-01-25)
 
 
 ### New Features
 
 * Add time held to GuildMapScreen ([#1093](https://github.com/Wynntils/Artemis/issues/1093)) ([d892967](https://github.com/Wynntils/Artemis/commit/d8929678dd37d95f7543f4eedc640db12a92639a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.149 [skip ci] ([c906992](https://github.com/Wynntils/Artemis/commit/c906992987fbbadde0417338c3d89e4b96af6f51))
 
 ## [0.0.2-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.147...v0.0.2-alpha.148) (2023-01-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.146 [skip ci] ([4a67176](https://github.com/Wynntils/Artemis/commit/4a67176a1d2e98a178e7505b3c6c6dabb1fdccc2))
-
-## [0.0.2-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.144...v0.0.2-alpha.145) (2023-01-24)
-
-
-### New Features
-
-* Add a bunch of new functions ([#1080](https://github.com/Wynntils/Artemis/issues/1080)) ([a4dff07](https://github.com/Wynntils/Artemis/commit/a4dff079a1490de7d5f3adc6505b46b691770bb1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.145 [skip ci] ([c38a96b](https://github.com/Wynntils/Artemis/commit/c38a96bdbfaea81ec11b15210696a3ba8f1978e7))
 
