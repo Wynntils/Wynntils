@@ -142,7 +142,7 @@ public class InventoryFunctions {
 
         @Override
         public List<String> getAliases() {
-            return List.of("held_durability");
+            return List.of("current_held_durability");
         }
     }
 
@@ -162,7 +162,7 @@ public class InventoryFunctions {
 
         @Override
         public List<String> getAliases() {
-            return List.of("held_durability");
+            return List.of("max_held_durability");
         }
     }
 }
