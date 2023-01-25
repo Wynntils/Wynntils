@@ -7,7 +7,7 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
-public abstract class ScreenMixin implements TextboxScreen {
+public abstract class ScreenMixin implements ScreenExtension {
     @Unique
     private TextInputBoxWidget focusedTextInput;
 

@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -64,9 +64,9 @@ public abstract class LevelRendererMixin {
             method = "renderLevel",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"))
     private int modifyOutlineColor(int original, @Local Entity entity) {
-        WynntilsCustomGlowEntityProperty property = (WynntilsCustomGlowEntityProperty) entity;
+        EntityExtension entityExt = (EntityExtension) entity;
 
-        if (property.getGlowColor() != CustomColor.NONE) {
+        if (entityExt.getGlowColor() != CustomColor.NONE) {
             return property.getGlowColorInt();
         }
 
