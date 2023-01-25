@@ -13,10 +13,10 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -54,8 +54,6 @@ public class ContainerSearchFeature extends UserFeature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-
-        assert screen instanceof TextboxScreen; // done by mixin
 
         String title = ComponentUtils.getCoded(screen.getTitle());
 
@@ -159,7 +157,7 @@ public class ContainerSearchFeature extends UserFeature {
 
     private void addSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
         SearchWidget searchWidget = new SearchWidget(
-                renderX + screen.imageWidth - 100, renderY - 20, 100, 20, s -> matchItems(s, screen), (TextboxScreen)
+                renderX + screen.imageWidth - 100, renderY - 20, 100, 20, s -> matchItems(s, screen), (ScreenExtension)
                         screen);
 
         if (lastSearchWidget != null) {

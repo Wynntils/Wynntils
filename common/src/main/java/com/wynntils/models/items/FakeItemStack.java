@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items;
 
-import com.wynntils.handlers.item.AnnotatedItemStack;
+import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.wynn.GearTooltipBuilder;
 import com.wynntils.utils.wynn.WynnItemUtils;
@@ -22,7 +22,7 @@ public class FakeItemStack extends ItemStack {
     private FakeItemStack(GearItem gearItem, ItemStack itemStack, String source) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        ((AnnotatedItemStack) this).setAnnotation(gearItem);
+        ((ItemStackExtension) this).setAnnotation(gearItem);
 
         this.gearItem = gearItem;
         this.source = source;

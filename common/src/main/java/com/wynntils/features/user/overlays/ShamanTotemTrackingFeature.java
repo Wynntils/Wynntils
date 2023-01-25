@@ -18,9 +18,9 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.ShamanTotem;
 import com.wynntils.models.abilities.event.TotemEvent;
-import com.wynntils.models.entities.WynntilsCustomGlowEntityProperty;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -72,7 +72,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                             "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
 
-        ((WynntilsCustomGlowEntityProperty) totemAS).setGlowColor(color);
+        ((EntityExtension) totemAS).setGlowColor(color);
 
         totemAS.setGlowingTag(true);
         totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);

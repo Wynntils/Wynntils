@@ -18,6 +18,7 @@ import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearItemModel;
 import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.horse.HorseModel;
+import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
@@ -49,6 +50,7 @@ public final class Models {
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();
     public static final HorseModel Horse = new HorseModel();
+    public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
