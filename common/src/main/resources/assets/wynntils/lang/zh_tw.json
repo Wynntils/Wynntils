@@ -611,6 +611,7 @@
   "feature.wynntils.shamanTotemTracking.overlay.shamanTotemTimer.textShadow.name": "文本陰影",
   "feature.wynntils.soulPointTimer.lore": "時間直到下個靈魂點: %s",
   "feature.wynntils.soulPointTimer.name": "靈魂點定時器",
+  "feature.wynntils.spellCastRender.vignetteColor.name": "暈影的顔色",
   "feature.wynntils.statusOverlay.name": "效果",
   "feature.wynntils.statusOverlay.overlay.status.name": "效果疊加層",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.description": "文本陰影要如何顯示？",
