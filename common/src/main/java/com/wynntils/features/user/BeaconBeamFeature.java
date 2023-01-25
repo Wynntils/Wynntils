@@ -49,6 +49,12 @@ public class BeaconBeamFeature extends UserFeature {
             dz *= scale;
         }
 
+        float textureScale = 1f;
+
+        if (distance <= 5) {
+            textureScale = MathUtils.map((float) distance, 0f, 5f, 0f, 1f);
+        }
+
         poseStack.pushPose();
         poseStack.translate(dx, dy, dz);
 
@@ -57,13 +63,13 @@ public class BeaconBeamFeature extends UserFeature {
                 bufferSource,
                 BeaconRenderer.BEAM_LOCATION,
                 event.getPartialTick(),
-                1f,
+                textureScale,
                 McUtils.player().level.getGameTime(),
                 0,
                 1024,
                 waypointBeamColor.asFloatArray(),
-                0.166f,
-                0.33f);
+                0.166f * textureScale,
+                0.33f * textureScale);
 
         poseStack.popPose();
 
