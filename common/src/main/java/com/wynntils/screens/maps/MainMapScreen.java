@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -242,6 +243,13 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (McUtils.mc().player.isShiftKeyDown()
                     && Models.Compass.getCompassLocation().isPresent()) {
@@ -277,8 +285,6 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
                 return true;
             }
-
-            super.mouseClicked(mouseX, mouseY, button);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
@@ -299,7 +305,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return true;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
