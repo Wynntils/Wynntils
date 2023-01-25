@@ -10,14 +10,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.colors.CustomColor;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class TerritoryProfile {
+    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
 
     private final String name;
@@ -127,6 +130,21 @@ public class TerritoryProfile {
 
     public boolean insideArea(int playerX, int playerZ) {
         return startX <= playerX && endX >= playerX && startZ <= playerZ && endZ >= playerZ;
+    }
+
+    private long getTimeHeldInMillis() {
+        return Calendar.getInstance()
+                .getTimeZone()
+                .getOffset(new Date().getTime() - this.getAcquired().getTime());
+    }
+
+    public boolean isOnCooldown() {
+        return getTimeHeldInMillis() < 10 * 60 * 1000;
+    }
+
+    public String getReadableRelativeTimeAcquired() {
+        long difference = getTimeHeldInMillis();
+        return DATE_FORMATTER.format(difference);
     }
 
     public static class TerritoryDeserializer implements JsonDeserializer<TerritoryProfile> {
