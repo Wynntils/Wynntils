@@ -1,9 +1,21 @@
+## [0.0.2-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.145...v0.0.2-alpha.146) (2023-01-25)
+
+
+### Bug Fixes
+
+* Fix Forge compatibility of LevelRendererMixin ([#1087](https://github.com/Wynntils/Artemis/issues/1087)) ([c5f8461](https://github.com/Wynntils/Artemis/commit/c5f84612b43cf407473c7b6ccecfc8b738d9f92f))
+
 ## [0.0.2-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.144...v0.0.2-alpha.145) (2023-01-24)
 
 
 ### New Features
 
 * Add a bunch of new functions ([#1080](https://github.com/Wynntils/Artemis/issues/1080)) ([a4dff07](https://github.com/Wynntils/Artemis/commit/a4dff079a1490de7d5f3adc6505b46b691770bb1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.145 [skip ci] ([c38a96b](https://github.com/Wynntils/Artemis/commit/c38a96bdbfaea81ec11b15210696a3ba8f1978e7))
 
 ## [0.0.2-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.143...v0.0.2-alpha.144) (2023-01-24)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.142 [skip ci] ([62b5a51](https://github.com/Wynntils/Artemis/commit/62b5a5147a75542bfa568bc2a0805ae1af1701aa))
-
-## [0.0.2-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.140...v0.0.2-alpha.141) (2023-01-24)
-
-
-### New Features
-
-* ItemHandler can now detect item renames ([#1077](https://github.com/Wynntils/Artemis/issues/1077)) ([0401a62](https://github.com/Wynntils/Artemis/commit/0401a629041a65181b3faed4c95939a4ca1e839c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.141 [skip ci] ([1e0ee84](https://github.com/Wynntils/Artemis/commit/1e0ee8428260131580924dc9a2cf54a20a91da45))
 
