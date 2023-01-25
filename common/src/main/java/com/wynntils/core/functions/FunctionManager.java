@@ -6,15 +6,16 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
+import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
-import com.wynntils.functions.WorldFunction;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.EmeraldSymbols;
+import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.WorldFunctions;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,18 +41,6 @@ public final class FunctionManager extends Manager {
     public FunctionManager() {
         super(List.of());
         registerAllFunctions();
-    }
-
-    /**
-     * This needs to be called after Models are setup, to associate all
-     * functions with the proper models.
-     */
-    public void activateAllFunctions() {
-        for (Function<?> function : functions) {
-            if (function instanceof DependantFunction<?> dependantFunction) {
-                ModelRegistry.addAllDependencies(dependantFunction);
-            }
-        }
     }
 
     public List<Function<?>> getFunctions() {
@@ -281,9 +270,9 @@ public final class FunctionManager extends Manager {
             case "n" -> "\n";
             case "%" -> "%";
             case "§" -> "&";
-            case "E" -> EmeraldSymbols.E_STRING;
-            case "B" -> EmeraldSymbols.B_STRING;
-            case "L" -> EmeraldSymbols.L_STRING;
+            case "E" -> EmeraldUnits.EMERALD.getSymbol();
+            case "B" -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
+            case "L" -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
             case "M" -> "✺";
             case "H" -> "❤";
             default -> null;
@@ -296,7 +285,8 @@ public final class FunctionManager extends Manager {
     }
 
     private void registerAllFunctions() {
-        registerFunction(new WorldFunction());
+        registerFunction(new WorldFunctions.CurrentWorldFunction());
+        registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
 
         registerFunction(new CharacterFunctions.AlchemismLevelFunction());
         registerFunction(new CharacterFunctions.ArmouringLevelFunction());
@@ -304,23 +294,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CookingLevelFunction());
-        registerFunction(new CharacterFunctions.EmeraldBlockFunction());
-        registerFunction(new CharacterFunctions.EmeraldsFunction());
         registerFunction(new CharacterFunctions.FarmingLevelFunction());
         registerFunction(new CharacterFunctions.FishingLevelFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
-        registerFunction(new CharacterFunctions.InventoryFreeFunction());
-        registerFunction(new CharacterFunctions.InventoryUsedFunction());
         registerFunction(new CharacterFunctions.JewelingLevelFunction());
         registerFunction(new CharacterFunctions.LevelFunction());
-        registerFunction(new CharacterFunctions.LiquidEmeraldFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
         registerFunction(new CharacterFunctions.MiningLevelFunction());
-        registerFunction(new CharacterFunctions.MoneyFunction());
         registerFunction(new CharacterFunctions.ScribingLevelFunction());
         registerFunction(new CharacterFunctions.SoulpointFunction());
         registerFunction(new CharacterFunctions.SoulpointMaxFunction());
@@ -343,6 +327,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.EmeraldBlockFunction());
+        registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
+        registerFunction(new InventoryFunctions.InventoryFreeFunction());
+        registerFunction(new InventoryFunctions.InventoryUsedFunction());
+        registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
+        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.MoneyFunction());
+
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
@@ -357,5 +352,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.XFunction());
         registerFunction(new MinecraftFunctions.YFunction());
         registerFunction(new MinecraftFunctions.ZFunction());
+
+        registerFunction(new SocialFunctions.OnlineFriendsFunction());
+        registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
     }
 }

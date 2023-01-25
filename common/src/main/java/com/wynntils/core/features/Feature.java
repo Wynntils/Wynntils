@@ -9,14 +9,12 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
-import com.wynntils.core.components.ModelRegistry;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +27,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature extends AbstractConfigurable
-        implements Translatable, Comparable<Feature>, ModelDependant {
+public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
@@ -140,8 +137,6 @@ public abstract class Feature extends AbstractConfigurable
         onEnable();
         state = FeatureState.ENABLED;
 
-        ModelRegistry.addAllDependencies(this);
-
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
@@ -151,7 +146,7 @@ public abstract class Feature extends AbstractConfigurable
         }
 
         // Reload configs to load new keybinds
-        if (!keyBinds.isEmpty() && FeatureRegistry.isInitCompleted()) {
+        if (!keyBinds.isEmpty()) {
             synchronized (McUtils.options()) {
                 McUtils.mc().options.load();
             }
@@ -167,8 +162,6 @@ public abstract class Feature extends AbstractConfigurable
         onDisable();
 
         state = FeatureState.DISABLED;
-
-        ModelRegistry.removeAllDependencies(this);
 
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
@@ -197,11 +190,6 @@ public abstract class Feature extends AbstractConfigurable
         }
 
         return true;
-    }
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of();
     }
 
     /** Used to react to config option updates */

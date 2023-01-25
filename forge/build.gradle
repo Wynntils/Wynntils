@@ -35,6 +35,8 @@ dependencies {
 
     // Hades Protocol
     include(forgeRuntimeLibrary("com.wynntils.hades:hades:${rootProject.hades_version}"))
+
+    include(forgeRuntimeLibrary("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}"))
 }
 
 processResources {
@@ -49,6 +51,7 @@ shadowJar {
     exclude "fabric.mod.json"
 
     configurations = [project.configurations.shadowCommon]
+
     classifier "dev-shadow"
 }
 

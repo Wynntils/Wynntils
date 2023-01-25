@@ -11,8 +11,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -126,10 +126,6 @@ public final class WynntilsAccountManager extends Manager {
 
     public void onLoginRun(Runnable runnable) {
         onLogin.add(runnable);
-    }
-
-    public void removeOnLogin(Runnable runnable) {
-        onLogin.remove(runnable);
     }
 
     private String parseAndJoinPublicKey(String key) {

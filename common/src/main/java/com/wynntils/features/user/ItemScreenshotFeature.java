@@ -8,22 +8,21 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.RenderUtils;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Utils;
-import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.utils.WynnItemUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.SystemUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.wynn.WynnItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -61,7 +60,7 @@ public class ItemScreenshotFeature extends UserFeature {
     // All other features (besides scaling) must be able to update the tooltip first
     @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
         Screen screen = McUtils.mc().screen;
@@ -116,7 +115,7 @@ public class ItemScreenshotFeature extends UserFeature {
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
-        BufferedImage bi = RenderUtils.createScreenshot(fb);
+        BufferedImage bi = SystemUtils.createScreenshot(fb);
 
         // First try to save it to disk
         String itemNameForFile = WynnUtils.normalizeBadString(
@@ -144,14 +143,14 @@ public class ItemScreenshotFeature extends UserFeature {
         }
 
         // Then try to send a copy to the clipboard
-        if (Utils.isMac()) {
+        if (SystemUtils.isMac()) {
             McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
                     .withStyle(ChatFormatting.GRAY));
             return;
         }
 
         try {
-            RenderUtils.copyImageToClipboard(bi);
+            SystemUtils.copyImageToClipboard(bi);
             McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
                     .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
@@ -166,7 +165,7 @@ public class ItemScreenshotFeature extends UserFeature {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        String encoded = Managers.GearItem.toEncodedString(gearItemOpt.get());
+        String encoded = Models.GearItem.toEncodedString(gearItemOpt.get());
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)

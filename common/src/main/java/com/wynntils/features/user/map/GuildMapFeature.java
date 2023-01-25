@@ -10,9 +10,9 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.screens.maps.GuildMapScreen;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.screens.maps.GuildMapScreen;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)

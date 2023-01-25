@@ -6,7 +6,6 @@ package com.wynntils.features.user.map;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
@@ -15,18 +14,18 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.screens.maps.MainMapScreen;
+import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.models.map.PoiLocation;
+import com.wynntils.models.map.pois.CustomPoi;
+import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.model.map.poi.CustomPoi;
-import com.wynntils.wynn.model.map.poi.PoiLocation;
-import com.wynntils.wynn.objects.HealthTexture;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,28 +50,34 @@ public class MapFeature extends UserFeature {
     private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
 
     @Config
-    public float poiFadeDistance = 0.6f;
+    public float poiFadeAdjustment = 0.4f;
 
     @Config
-    public float combatPoiMinZoom = 0.1f;
+    public float combatPoiMinZoom = 0.166f;
 
     @Config
-    public float servicePoiMinZoom = 1f;
+    public float cavePoiMinZoom = 0.28f;
 
     @Config
-    public float customPoiMinZoom = 0.1f;
+    public float servicePoiMinZoom = 0.8f;
 
     @Config
-    public float lootChestTier1PoiMinZoom = 1f;
+    public float fastTravelPoiMinZoom = 0.166f;
 
     @Config
-    public float lootChestTier2PoiMinZoom = 1f;
+    public float customPoiMinZoom = 0.28f;
 
     @Config
-    public float lootChestTier3PoiMinZoom = 0.1f;
+    public float lootChestTier1PoiMinZoom = 0.8f;
 
     @Config
-    public float lootChestTier4PoiMinZoom = 0.1f;
+    public float lootChestTier2PoiMinZoom = 0.8f;
+
+    @Config
+    public float lootChestTier3PoiMinZoom = 0.28f;
+
+    @Config
+    public float lootChestTier4PoiMinZoom = 0.28f;
 
     @Config
     public PointerType pointerType = PointerType.Arrow;
@@ -105,7 +110,7 @@ public class MapFeature extends UserFeature {
     //    public boolean renderRemoteGuildPlayers = true;
 
     @Config(subcategory = "Remote Players")
-    public HealthTexture remotePlayerHealthTexture = HealthTexture.a;
+    public CustomBarsOverlayFeature.HealthTexture remotePlayerHealthTexture = CustomBarsOverlayFeature.HealthTexture.a;
 
     @Config(subcategory = "Remote Players")
     public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
@@ -126,11 +131,6 @@ public class MapFeature extends UserFeature {
         McUtils.mc().setScreen(MainMapScreen.create());
     }
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
-    }
-
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (!autoWaypointChests) return;
@@ -147,7 +147,7 @@ public class MapFeature extends UserFeature {
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
-        Matcher matcher = Managers.Container.lootChestMatcher(event.getScreen());
+        Matcher matcher = Models.Container.lootChestMatcher(event.getScreen());
         if (!matcher.matches()) return;
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));

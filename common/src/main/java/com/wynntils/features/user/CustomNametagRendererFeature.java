@@ -4,21 +4,19 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.screens.GearViewerScreen;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.account.AccountType;
-import com.wynntils.wynn.objects.account.WynntilsUser;
-import com.wynntils.wynn.objects.profiles.item.GearProfile;
-import com.wynntils.wynn.utils.RaycastUtils;
-import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.players.WynntilsUser;
+import com.wynntils.models.players.type.AccountType;
+import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.wynn.RaycastUtils;
+import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,11 +45,6 @@ public class CustomNametagRendererFeature extends UserFeature {
     public float customNametagScale = 0.5f;
 
     private Player hitPlayerCache = null;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Player);
-    }
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
@@ -113,7 +106,7 @@ public class CustomNametagRendererFeature extends UserFeature {
             return Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA);
         }
 
-        GearProfile gearProfile = Managers.GearProfiles.getItemsProfile(itemName);
+        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
         if (gearProfile == null) return null;
 
         // this solves an unidentified item showcase exploit

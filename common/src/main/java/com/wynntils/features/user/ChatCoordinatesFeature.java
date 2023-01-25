@@ -4,15 +4,13 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.LocationUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -27,14 +25,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatCoordinatesFeature extends UserFeature {
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Compass);
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         Component message = e.getMessage();
 
@@ -43,7 +37,7 @@ public class ChatCoordinatesFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientsideMessage(ClientsideMessageEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         Component message = e.getComponent();
 

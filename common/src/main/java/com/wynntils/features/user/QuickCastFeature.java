@@ -5,19 +5,18 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.actionbar.event.SpellSegmentUpdateEvent;
-import com.wynntils.wynn.utils.WynnItemMatchers;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.models.spells.type.SpellDirection;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +28,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,13 +47,10 @@ public class QuickCastFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
-    private static final Pattern SPELL_TITLE_PATTERN =
-            StringUtils.compileCCRegex("§([LR]|Right|Left)§-§([LR?]|Right|Left)§-§([LR?]|Right|Left)§");
-    private static final Pattern INCORRECT_CLASS_PATTERN = StringUtils.compileCCRegex("§✖§ Class Req: (.+)");
-    private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = StringUtils.compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
-    private static final SpellDirection[] NO_SPELL = new SpellDirection[0];
+    private static final Pattern INCORRECT_CLASS_PATTERN = compileCCRegex("§✖§ Class Req: (.+)");
+    private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
-    private SpellDirection[] spellInProgress = NO_SPELL;
+    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
     private static final Queue<Runnable> SPELL_PACKET_QUEUE = new LinkedList<>();
 
@@ -65,47 +59,19 @@ public class QuickCastFeature extends UserFeature {
     private int lastSelectedSlot = 0;
 
     @SubscribeEvent
-    public void onSubtitleUpdate(SubtitleSetTextEvent e) {
-        // only actually used when player is still low-level
-        if (!WynnUtils.onWorld()) return;
-
-        Matcher matcher = SPELL_TITLE_PATTERN.matcher(e.getComponent().getString());
-        if (!matcher.matches()) return;
-
-        SpellDirection[] spell = getSpellFromMatcher(matcher);
-
-        updateSpell(spell);
-    }
-
-    @SubscribeEvent
-    public void updateSpellFromActionBar(SpellSegmentUpdateEvent event) {
-        SpellDirection[] spell = getSpellFromMatcher(event.getMatcher());
-        updateSpell(spell);
+    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
+        updateSpell(e.getSpellDirectionArray());
     }
 
     private void updateSpell(SpellDirection[] spell) {
         if (Arrays.equals(spellInProgress, spell)) return;
         if (spell.length == 3) {
-            spellInProgress = NO_SPELL;
+            spellInProgress = SpellDirection.NO_SPELL;
             spellCountdown = 0;
         } else {
             spellInProgress = spell;
             spellCountdown = 40;
         }
-    }
-
-    private static SpellDirection[] getSpellFromMatcher(Matcher spellMatcher) {
-        int size = 1;
-        for (; size < 3; ++size) {
-            if (spellMatcher.group(size + 1).equals("?")) break;
-        }
-
-        SpellDirection[] spell = new SpellDirection[size];
-        for (int i = 0; i < size; ++i) {
-            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R' ? SpellDirection.RIGHT : SpellDirection.LEFT;
-        }
-
-        return spell;
     }
 
     private void castFirstSpell() {
@@ -137,7 +103,7 @@ public class QuickCastFeature extends UserFeature {
             return;
         }
 
-        List<String> loreLines = ItemUtils.getLore(heldItem);
+        List<String> loreLines = LoreUtils.getLore(heldItem);
 
         boolean isArcher = false;
         for (String lore : loreLines) {
@@ -174,10 +140,10 @@ public class QuickCastFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = NO_SPELL;
+        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = SpellDirection.NO_SPELL;
 
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
@@ -196,30 +162,19 @@ public class QuickCastFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         SPELL_PACKET_QUEUE.clear();
-        spellInProgress = NO_SPELL;
+        spellInProgress = SpellDirection.NO_SPELL;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
         Managers.Notification.queueMessage(reason.withStyle(ChatFormatting.RED));
     }
 
+    private static Pattern compileCCRegex(String regex) {
+        return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
+    }
+
     public enum SpellUnit {
         PRIMARY,
         SECONDARY
-    }
-
-    private enum SpellDirection {
-        RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id))),
-        LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
-
-        private final Runnable sendPacketRunnable;
-
-        SpellDirection(Runnable sendPacketRunnable) {
-            this.sendPacketRunnable = sendPacketRunnable;
-        }
-
-        private Runnable getSendPacketRunnable() {
-            return sendPacketRunnable;
-        }
     }
 }

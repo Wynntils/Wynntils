@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -17,14 +16,14 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.event.StatusEffectsChangedEvent;
+import com.wynntils.models.character.event.StatusEffectsChangedEvent;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,18 +35,13 @@ public class StatusOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final StatusOverlay statusOverlay = new StatusOverlay();
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Tab);
-    }
-
     @SubscribeEvent
     public void onStatusChange(StatusEffectsChangedEvent event) {
         recalculateRenderCache();
     }
 
     private void recalculateRenderCache() {
-        renderCache = Models.Tab.getTimers().stream()
+        renderCache = Models.Character.getStatusEffects().stream()
                 .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
                 .toList();
     }

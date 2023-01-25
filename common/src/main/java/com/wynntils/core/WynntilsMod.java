@@ -6,15 +6,17 @@ package com.wynntils.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.ModelRegistry;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureRegistry;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,7 @@ public final class WynntilsMod {
     private static boolean developmentEnvironment;
     private static IEventBus eventBus;
     private static File modJar;
+    private static boolean initCompleted = false;
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -80,7 +84,12 @@ public final class WynntilsMod {
         }
 
         String featureClassName = crashingFeatureName.substring(crashingFeatureName.lastIndexOf('.') + 1);
-        Optional<Feature> featureOptional = FeatureRegistry.getFeatureFromString(featureClassName);
+        if (Managers.Feature == null) {
+            WynntilsMod.warn("Cannot lookup feature name: " + featureClassName, t);
+            return;
+        }
+
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureClassName);
         if (featureOptional.isEmpty()) {
             WynntilsMod.error(
                     "Exception in event listener in feature that cannot be located: " + crashingFeatureName, t);
@@ -165,7 +174,7 @@ public final class WynntilsMod {
 
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
-        if (FeatureRegistry.isInitCompleted()) return;
+        if (initCompleted) return;
 
         try {
             initFeatures();
@@ -193,10 +202,26 @@ public final class WynntilsMod {
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
-        Managers.init();
-        Handlers.init();
-        ModelRegistry.init();
+        registerComponents(Managers.class, Manager.class);
+        registerComponents(Handlers.class, Handler.class);
+        registerComponents(Models.class, Model.class);
+
         addCrashCallbacks();
+    }
+
+    private static void registerComponents(Class<?> registryClass, Class<?> componentClass) {
+        // Register all handler singletons as event listeners
+
+        FieldUtils.getAllFieldsList(registryClass).stream()
+                .filter(field -> componentClass.isAssignableFrom(field.getType()))
+                .forEach(field -> {
+                    try {
+                        WynntilsMod.registerEventListener(field.get(null));
+                    } catch (IllegalAccessException e) {
+                        WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     private static void parseVersion(String modVersion) {
@@ -211,10 +236,11 @@ public final class WynntilsMod {
 
     private static void initFeatures() {
         // Init all features. Now resources (i.e I18n) are available.
-        FeatureRegistry.init();
+        Managers.Feature.init();
         LOGGER.info(
                 "Wynntils: {} features are now loaded and ready",
-                FeatureRegistry.getFeatures().size());
+                Managers.Feature.getFeatures().size());
+        initCompleted = true;
     }
 
     private static void addCrashCallbacks() {

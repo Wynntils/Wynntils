@@ -4,13 +4,12 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.handleditems.items.gui.ServerItem;
-import com.wynntils.wynn.objects.profiles.ServerProfile;
+import com.wynntils.models.items.items.gui.ServerItem;
+import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,17 +18,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LobbyUptimeFeature extends UserFeature {
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ServerList);
-    }
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);
         if (serverItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = ItemUtils.appendTooltip(
+        List<Component> tooltips = LoreUtils.appendTooltip(
                 event.getItemStack(), event.getTooltips(), getTooltipAddon(serverItemOpt.get()));
         event.setTooltips(tooltips);
     }

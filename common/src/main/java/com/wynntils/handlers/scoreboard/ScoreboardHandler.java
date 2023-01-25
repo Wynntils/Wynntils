@@ -6,15 +6,14 @@ package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.Pair;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
-import com.wynntils.wynn.objects.WorldState;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -47,19 +46,20 @@ public final class ScoreboardHandler extends Handler {
 
     private List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
 
-    private List<Segment> segments = new ArrayList<>();
+    private List<ScoreboardSegment> segments = new ArrayList<>();
 
     private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
 
-    private final List<Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>>> scoreboardListeners =
-            new ArrayList<>();
+    private final List<Pair<ScoreboardPart, Set<SegmentMatcher>>> scoreboardParts = new ArrayList<>();
+    private List<SegmentMatcher> segmentMatchers = List.of();
 
     private ScheduledExecutorService executor = null;
 
     private boolean firstExecution = false;
 
     private void periodicTask() {
-        if (!WynnUtils.onWorld() || McUtils.player() == null) return;
+        // FIXME: Reverse dependency
+        if (!Models.WorldState.onWorld() || McUtils.player() == null) return;
 
         if (queuedChanges.isEmpty()) {
             handleScoreboardReconstruction();
@@ -99,7 +99,7 @@ public final class ScoreboardHandler extends Handler {
                 .sorted(Comparator.comparing(ScoreboardLine::index).reversed())
                 .collect(Collectors.toList());
 
-        List<Segment> parsedSegments = calculateSegments(scoreboardCopy);
+        List<ScoreboardSegment> parsedSegments = calculateSegments(scoreboardCopy);
 
         for (String changedString : changedLines) {
             int changedLine =
@@ -109,7 +109,7 @@ public final class ScoreboardHandler extends Handler {
                 continue;
             }
 
-            Optional<Segment> foundSegment = parsedSegments.stream()
+            Optional<ScoreboardSegment> foundSegment = parsedSegments.stream()
                     .filter(segment -> segment.getStartIndex() <= changedLine
                             && segment.getEndIndex() >= changedLine
                             && !segment.isChanged())
@@ -121,8 +121,9 @@ public final class ScoreboardHandler extends Handler {
 
             // Prevent bugs where content was not changed, but rather replaced to prepare room for other segment updates
             //  (Objective -> Daily Objective update)
-            Optional<Segment> oldMatchingSegment = segments.stream()
-                    .filter(segment -> segment.getType() == foundSegment.get().getType())
+            Optional<ScoreboardSegment> oldMatchingSegment = segments.stream()
+                    .filter(segment ->
+                            segment.getMatcher() == foundSegment.get().getMatcher())
                     .findFirst();
 
             if (oldMatchingSegment.isEmpty()) {
@@ -138,34 +139,36 @@ public final class ScoreboardHandler extends Handler {
             }
         }
 
-        List<Segment> removedSegments = segments.stream()
-                .filter(segment -> parsedSegments.stream().noneMatch(parsed -> parsed.getType() == segment.getType()))
+        List<ScoreboardSegment> removedSegments = segments.stream()
+                .filter(segment ->
+                        parsedSegments.stream().noneMatch(parsed -> parsed.getMatcher() == segment.getMatcher()))
                 .toList();
 
         reconstructedScoreboard = scoreboardCopy;
         segments = parsedSegments;
 
-        for (Segment segment : removedSegments) {
-            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
-                if (scoreboardListener.b().contains(segment.getType())) {
-                    scoreboardListener.a().onSegmentRemove(segment, segment.getType());
+        for (ScoreboardSegment segment : removedSegments) {
+            for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
+                if (scoreboardPart.b().contains(segment.getMatcher())) {
+                    scoreboardPart.a().onSegmentRemove(segment, segment.getMatcher());
                 }
             }
         }
 
-        List<Segment> changedSegments;
+        List<ScoreboardSegment> changedSegments;
 
         if (firstExecution) {
             firstExecution = false;
             changedSegments = parsedSegments.stream().toList();
         } else {
-            changedSegments = parsedSegments.stream().filter(Segment::isChanged).toList();
+            changedSegments =
+                    parsedSegments.stream().filter(ScoreboardSegment::isChanged).toList();
         }
 
-        for (Segment segment : changedSegments) {
-            for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
-                if (scoreboardListener.b().contains(segment.getType())) {
-                    scoreboardListener.a().onSegmentChange(segment, segment.getType());
+        for (ScoreboardSegment segment : changedSegments) {
+            for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
+                if (scoreboardPart.b().contains(segment.getMatcher())) {
+                    scoreboardPart.a().onSegmentChange(segment, segment.getMatcher());
                 }
             }
         }
@@ -179,7 +182,7 @@ public final class ScoreboardHandler extends Handler {
 
             List<String> skipped = new ArrayList<>();
 
-            for (Segment parsedSegment : segments) {
+            for (ScoreboardSegment parsedSegment : segments) {
                 boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));
 
                 if (cancelled) {
@@ -238,10 +241,10 @@ public final class ScoreboardHandler extends Handler {
         });
     }
 
-    private List<Segment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
-        List<Segment> segments = new ArrayList<>();
+    private List<ScoreboardSegment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
+        List<ScoreboardSegment> segments = new ArrayList<>();
 
-        Segment currentSegment = null;
+        ScoreboardSegment currentSegment = null;
 
         for (int i = 0; i < scoreboardCopy.size(); i++) {
             String strippedLine =
@@ -266,18 +269,19 @@ public final class ScoreboardHandler extends Handler {
                 continue;
             }
 
-            for (ScoreboardModel.SegmentType value : ScoreboardModel.SegmentType.values()) {
-                if (!value.getHeaderPattern().matcher(strippedLine).matches()) continue;
+            for (SegmentMatcher value : segmentMatchers) {
+                if (!value.headerPattern().matcher(strippedLine).matches()) continue;
 
                 if (currentSegment != null) {
-                    if (currentSegment.getType() != value) {
+                    if (currentSegment.getMatcher() != value) {
                         WynntilsMod.error(
-                                "ScoreboardModel: currentSegment was not null and SegmentType was mismatched. We might have skipped a scoreboard category.");
+                                "ScoreboardModel: currentSegment was not null and SegmentMatcher was mismatched. We might have skipped a scoreboard category.");
                     }
                     continue;
                 }
 
-                currentSegment = new Segment(value, scoreboardCopy.get(i).line(), i);
+                currentSegment =
+                        new ScoreboardSegment(value, scoreboardCopy.get(i).line(), i);
                 break;
             }
         }
@@ -300,15 +304,13 @@ public final class ScoreboardHandler extends Handler {
 
     public void disable() {
         resetState();
-        scoreboardListeners.clear();
+        scoreboardParts.clear();
+        updateSegmentMatchers();
     }
 
-    public void registerListener(ScoreboardListener listener, ScoreboardModel.SegmentType segmentType) {
-        scoreboardListeners.add(new Pair<>(listener, Set.of(segmentType)));
-    }
-
-    public void registerListener(ScoreboardListener listener, Set<ScoreboardModel.SegmentType> segmentTypes) {
-        scoreboardListeners.add(new Pair<>(listener, segmentTypes));
+    public void addPart(ScoreboardPart scoreboardPart) {
+        scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
+        updateSegmentMatchers();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -342,8 +344,17 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.clear();
         segments.clear();
 
-        for (Pair<ScoreboardListener, Set<ScoreboardModel.SegmentType>> scoreboardListener : scoreboardListeners) {
-            scoreboardListener.a().reset();
+        for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
+            scoreboardPart.a().reset();
         }
+    }
+
+    private void updateSegmentMatchers() {
+        segmentMatchers =
+                scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
+    }
+
+    public void removePart(ScoreboardPart scoreboardPart) {
+        // FIXME: Implement
     }
 }

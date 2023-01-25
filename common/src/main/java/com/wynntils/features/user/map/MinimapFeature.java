@@ -7,7 +7,6 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -18,27 +17,26 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.MapRenderer;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.BoundingBox;
+import com.wynntils.models.map.MapTexture;
+import com.wynntils.models.map.pois.PlayerMiniMapPoi;
+import com.wynntils.models.map.pois.Poi;
+import com.wynntils.models.map.pois.WaypointPoi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.model.map.MapTexture;
-import com.wynntils.wynn.model.map.poi.PlayerMiniMapPoi;
-import com.wynntils.wynn.model.map.poi.Poi;
-import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.BoundingBox;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -51,11 +49,6 @@ public class MinimapFeature extends UserFeature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Map);
-    }
 
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
@@ -115,7 +108,7 @@ public class MinimapFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!Models.WorldState.onWorld()) return;
 
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -240,12 +233,13 @@ public class MinimapFeature extends UserFeature {
 
             poisToRender = Stream.concat(
                     poisToRender,
-                    Models.HadesUser.getHadesUserMap().values().stream()
+                    Models.Hades.getHadesUsers()
                             .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers)
                                     || (user.isMutualFriend() && renderRemoteFriendPlayers))
                             .map(PlayerMiniMapPoi::new));
 
             poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
+            poisToRender = Stream.concat(poisToRender, MapFeature.INSTANCE.customPois.stream());
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();

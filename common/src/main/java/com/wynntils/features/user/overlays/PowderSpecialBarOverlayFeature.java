@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -17,30 +16,24 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
-import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.objects.Powder;
-import com.wynntils.wynn.utils.InventoryUtils;
-import java.util.List;
+import com.wynntils.models.concepts.Powder;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class PowderSpecialBarOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar);
-    }
 
     public static class PowderSpecialBarOverlay extends Overlay {
         @Config
@@ -69,8 +62,8 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            float powderSpecialCharge = Models.ActionBar.getPowderSpecialCharge();
-            Powder powderSpecialType = Models.ActionBar.getPowderSpecialType();
+            float powderSpecialCharge = Models.Character.getPowderSpecialCharge();
+            Powder powderSpecialType = Models.Character.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;

@@ -19,12 +19,14 @@ import java.util.function.Consumer;
 
 public abstract class NetResult {
     private static final Consumer<Throwable> DEFAULT_ERROR_HANDLER =
-            (exception) -> WynntilsMod.warn("Error while processing network request", exception);
+            (exception) -> WynntilsMod.error("Error while processing network request; ignored");
 
     protected final HttpRequest request;
+    private final String desc;
 
-    protected NetResult(HttpRequest request) {
+    protected NetResult(String desc, HttpRequest request) {
         this.request = request;
+        this.desc = desc;
     }
 
     public void handleInputStream(Consumer<InputStream> handler, Consumer<Throwable> onError) {
@@ -44,7 +46,16 @@ public abstract class NetResult {
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonObject()), onError);
+        handleReader(
+                reader -> {
+                    try {
+                        handler.accept(JsonParser.parseReader(reader).getAsJsonObject());
+                    } catch (Throwable t) {
+                        WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc, t);
+                        onError.accept(t);
+                    }
+                },
+                onError);
     }
 
     public void handleJsonObject(Consumer<JsonObject> handler) {
@@ -52,7 +63,16 @@ public abstract class NetResult {
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler, Consumer<Throwable> onError) {
-        handleReader(reader -> handler.accept(JsonParser.parseReader(reader).getAsJsonArray()), onError);
+        handleReader(
+                reader -> {
+                    try {
+                        handler.accept(JsonParser.parseReader(reader).getAsJsonArray());
+                    } catch (Throwable t) {
+                        WynntilsMod.warn("Failure in net manager [handleJsonArray], processing " + desc, t);
+                        onError.accept(t);
+                    }
+                },
+                onError);
     }
 
     public void handleJsonArray(Consumer<JsonArray> handler) {
@@ -60,23 +80,24 @@ public abstract class NetResult {
     }
 
     private void doHandle(Consumer<InputStream> onCompletion, Consumer<Throwable> onError) {
+        // The wrappingHandler will make sure we close the input stream
         CompletableFuture<Void> future = getInputStreamFuture()
-                .thenAccept(wrappingHandler(onCompletion))
-                .exceptionally(e -> {
-                    // FIXME: Error handling
-                    onError.accept(e);
+                .thenAccept(wrappingHandler(onCompletion, onError))
+                .exceptionally(t -> {
+                    WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc, t);
+                    onError.accept(t);
                     return null;
                 });
     }
 
-    private Consumer<InputStream> wrappingHandler(Consumer<InputStream> c) {
+    private Consumer<InputStream> wrappingHandler(Consumer<InputStream> handler, Consumer<Throwable> onError) {
         return (inputStream) -> {
             try {
-                c.accept(inputStream);
+                handler.accept(inputStream);
             } catch (Throwable t) {
                 // Something went wrong in our handlers, perhaps an NPE?
-                // FIXME: Improve error handling
-                WynntilsMod.error("Failure in net resource processing", t);
+                WynntilsMod.warn("Failure in net manager [wrappingHandler], processing " + desc, t);
+                onError.accept(t);
             } finally {
                 try {
                     // We must always close the input stream

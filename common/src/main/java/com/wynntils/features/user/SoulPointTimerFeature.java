@@ -4,14 +4,13 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.handleditems.items.gui.SoulPointItem;
+import com.wynntils.models.items.items.gui.SoulPointItem;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class SoulPointTimerFeature extends UserFeature {
         if (soulPointItemOpt.isEmpty()) return;
 
         List<Component> tooltips =
-                ItemUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon());
+                LoreUtils.appendTooltip(event.getItemStack(), event.getTooltips(), getTooltipAddon());
         event.setTooltips(tooltips);
     }
 
@@ -36,7 +35,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
         addon.add(Component.literal(" "));
 
-        int rawSecondsUntilSoulPoint = Managers.Character.getTicksToNextSoulPoint() / 20;
+        int rawSecondsUntilSoulPoint = Models.Character.getTicksToNextSoulPoint() / 20;
         int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
         int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 

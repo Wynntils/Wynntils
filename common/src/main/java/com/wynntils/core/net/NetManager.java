@@ -41,7 +41,7 @@ public final class NetManager extends Manager {
 
     public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
-        return createApiResponse(urlInfo, arguments);
+        return createApiResponse(urlId, urlInfo, arguments);
     }
 
     public ApiResponse callApi(UrlId urlId) {
@@ -49,12 +49,12 @@ public final class NetManager extends Manager {
     }
 
     public Download download(URI uri, File file) {
-        return new Download(file, createGetRequest(uri));
+        return new Download(file.getName(), file, createGetRequest(uri));
     }
 
     public Download download(URI uri, File file, String expectedHash) {
         if (checkLocalHash(file, expectedHash)) {
-            return new Download(file);
+            return new Download(file.getName(), file);
         }
 
         return download(uri, file);
@@ -116,11 +116,11 @@ public final class NetManager extends Manager {
                 .build();
     }
 
-    private ApiResponse createApiResponse(UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
+    private ApiResponse createApiResponse(UrlId urlId, UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
-            return new ApiResponse(request);
+            return new ApiResponse(urlId.toString(), request);
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
@@ -129,7 +129,7 @@ public final class NetManager extends Manager {
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);
-            return new ApiResponse(request);
+            return new ApiResponse(urlId.toString(), request);
         }
     }
 

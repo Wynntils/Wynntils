@@ -4,28 +4,28 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.gui.screens.CharacterSelectorScreen;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.objects.WorldState;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.characterselector.CharacterSelectorScreen;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomCharacterSelectionScreenFeature extends UserFeature {
     @Config
-    public boolean onlyOpenOnce = true;
+    public boolean onlyOpenOnce = false;
 
     private boolean openedInThisCharacterSelectionState = false;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpen(ScreenOpenedEvent event) {
         if ((onlyOpenOnce && openedInThisCharacterSelectionState)
-                || Managers.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
+                || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals("§8§lSelect a Character")) {
             return;

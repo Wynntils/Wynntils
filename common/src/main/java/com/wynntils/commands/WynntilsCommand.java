@@ -8,7 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -26,17 +26,17 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public class WynntilsCommand extends CommandBase {
+public class WynntilsCommand extends Command {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         throw new UnsupportedOperationException("WynntilsCommand need special treatment");
     }
 
-    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, Set<CommandBase> commands) {
+    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, Set<Command> commands) {
         LiteralArgumentBuilder<CommandSourceStack> builder = getBaseCommandBuilder();
 
         // Register all commands under the wynntils command as subcommands
-        for (CommandBase commandInstance : commands) {
+        for (Command commandInstance : commands) {
             if (commandInstance == this) continue;
 
             builder.then(commandInstance.getBaseCommandBuilder());
@@ -139,6 +139,8 @@ public class WynntilsCommand extends CommandBase {
 
         Models.Hades.tryDisconnect();
         Managers.WynntilsAccount.reauth();
+        Models.Player.reset();
+        Models.Territory.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
         return 1;
@@ -189,8 +191,8 @@ public class WynntilsCommand extends CommandBase {
                         false);
 
         Managers.Url.reloadUrls();
-        Managers.GearProfiles.reloadData();
-        Managers.Discovery.reloadData();
+        Models.GearProfiles.reloadData();
+        Models.Discovery.reloadData();
         Models.Map.reloadData();
 
         return 1;

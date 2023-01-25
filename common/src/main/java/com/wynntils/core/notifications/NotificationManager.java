@@ -6,15 +6,15 @@ package com.wynntils.core.notifications;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.TimedSet;
-import com.wynntils.wynn.event.WorldStateEvent;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
@@ -42,7 +42,7 @@ public final class NotificationManager extends Manager {
     }
 
     public MessageContainer queueMessage(TextRenderTask message) {
-        if (!WynnUtils.onWorld()) return null;
+        if (!Managers.Connection.onServer()) return null;
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);

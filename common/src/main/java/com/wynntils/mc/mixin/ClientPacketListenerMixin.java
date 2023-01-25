@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
@@ -11,7 +12,8 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
+import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -24,9 +26,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.network.chat.RemoteChatSession;
-import net.minecraft.network.chat.SignedMessageBody;
-import net.minecraft.network.chat.SignedMessageLink;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -37,9 +37,11 @@ import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -301,7 +303,11 @@ public abstract class ClientPacketListenerMixin {
                             target =
                                     "Lnet/minecraft/client/multiplayer/chat/ChatListener;handlePlayerChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/network/chat/ChatType$Bound;)V"),
             cancellable = true)
-    private void handlePlayerChat(ClientboundPlayerChatPacket packet, CallbackInfo ci) {
+    private void handlePlayerChat(
+            ClientboundPlayerChatPacket packet,
+            CallbackInfo ci,
+            @Local PlayerChatMessage playerChatMessage,
+            @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
@@ -309,31 +315,11 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!result.getMessage().equals(packet.unsignedContent())) {
-            // Because of the injection point, we know these optionals are present
-            SignedMessageBody signedMessageBody =
-                    packet.body().unpack(this.messageSignatureCache).get();
+        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+            // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
                     .get();
-
-            UUID uuid = packet.sender();
-            PlayerInfo playerInfo = this.getPlayerInfo(uuid);
-            RemoteChatSession remoteChatSession = playerInfo.getChatSession();
-
-            SignedMessageLink signedMessageLink;
-            if (remoteChatSession != null) {
-                signedMessageLink = new SignedMessageLink(packet.index(), uuid, remoteChatSession.sessionId());
-            } else {
-                signedMessageLink = SignedMessageLink.unsigned(uuid);
-            }
-
-            PlayerChatMessage playerChatMessage = new PlayerChatMessage(
-                    signedMessageLink,
-                    packet.signature(),
-                    signedMessageBody,
-                    packet.unsignedContent(),
-                    packet.filterMask());
 
             this.minecraft.getChatListener().handlePlayerChatMessage(playerChatMessage, playerInfo.getProfile(), bound);
             this.messageSignatureCache.push(playerChatMessage);
@@ -358,8 +344,7 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!result.getMessage().equals(packet.content())) {
-
+        if (!Objects.equals(result.getMessage(), packet.content())) {
             this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
             ci.cancel();
         }
@@ -405,5 +390,29 @@ public abstract class ClientPacketListenerMixin {
     private void handleRemoveMobEffectPost(ClientboundRemoveMobEffectPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         EventFactory.onRemoveMobEffect(packet);
+    }
+
+    @Inject(
+            method = "handleAddEntity(Lnet/minecraft/network/protocol/game/ClientboundAddEntityPacket;)V",
+            at = @At("RETURN"))
+    private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onAddEntity(packet);
+    }
+
+    @Inject(
+            method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPacket;)V",
+            at = @At("RETURN"))
+    private void handleSetEntityData(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onSetEntityData(packet);
+    }
+
+    @Inject(
+            method = "handleRemoveEntities(Lnet/minecraft/network/protocol/game/ClientboundRemoveEntitiesPacket;)V",
+            at = @At("RETURN"))
+    private void handleRemoveEntities(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        EventFactory.onRemoveEntities(packet);
     }
 }

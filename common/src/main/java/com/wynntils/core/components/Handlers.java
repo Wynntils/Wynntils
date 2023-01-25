@@ -4,14 +4,12 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarHandler;
 import com.wynntils.handlers.bossbar.BossBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.container.ContainerQueryHandler;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.handlers.scoreboard.ScoreboardHandler;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class Handlers {
     public static final ActionBarHandler ActionBar = new ActionBarHandler();
@@ -20,19 +18,4 @@ public final class Handlers {
     public static final ContainerQueryHandler ContainerQuery = new ContainerQueryHandler();
     public static final ItemHandler Item = new ItemHandler();
     public static final ScoreboardHandler Scoreboard = new ScoreboardHandler();
-
-    public static void init() {
-        // Register all handler singletons as event listeners
-
-        FieldUtils.getAllFieldsList(Handlers.class).stream()
-                .filter(field -> Handler.class.isAssignableFrom(field.getType()))
-                .forEach(field -> {
-                    try {
-                        WynntilsMod.registerEventListener(field.get(null));
-                    } catch (IllegalAccessException e) {
-                        WynntilsMod.error("Internal error in Handlers", e);
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
 }

@@ -8,10 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.wynn.objects.BombInfo;
-import com.wynntils.wynn.objects.BombType;
+import com.wynntils.models.worlds.BombInfo;
+import com.wynntils.models.worlds.type.BombType;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
@@ -23,7 +23,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class BombBellCommand extends CommandBase {
+public class BombBellCommand extends Command {
     private final SuggestionProvider<CommandSourceStack> bombTypeSuggestionProvider = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
 

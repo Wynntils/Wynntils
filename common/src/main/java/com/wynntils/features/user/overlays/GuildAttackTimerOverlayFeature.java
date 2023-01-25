@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -17,18 +16,16 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.wynn.model.guild.TerritoryAttackTimer;
-import com.wynntils.wynn.model.scoreboard.ScoreboardModel;
+import com.wynntils.models.territories.TerritoryAttackTimer;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Comparator;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -42,15 +39,10 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     @Config
     public boolean disableAttackTimersOnScoreboard = true;
 
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Scoreboard, Models.GuildAttackTimer);
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableAttackTimersOnScoreboard) {
-            if (event.getSegment().getType() == ScoreboardModel.SegmentType.GuildAttackTimer
+            if (Models.GuildAttackTimer.isGuildAttackSegment(event.getSegment())
                     && territoryAttackTimerOverlay.isEnabled()) {
                 event.setCanceled(true);
             }

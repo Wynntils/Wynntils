@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.client.resources.DownloadedPackSource;
@@ -28,8 +28,6 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
-        if (!Managers.WorldState.onServer()) return;
-
         if (Objects.equals(event.getHash(), appliedHash)) {
             event.setCanceled(true);
             return;

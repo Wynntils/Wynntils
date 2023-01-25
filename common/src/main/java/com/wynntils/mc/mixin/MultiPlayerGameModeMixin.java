@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -89,5 +89,18 @@ public abstract class MultiPlayerGameModeMixin {
         if (EventFactory.onAttack(player, target).isCanceled()) {
             ci.cancel();
         }
+    }
+
+    // As of 1.19.3, this seems to be the only method which sends carried item update packets to the server.
+    // Please look into this and confirm this is still the case, in future versions.
+    @Inject(
+            method = "ensureHasSentCarriedItem",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void ensureHasSentCarriedItem(CallbackInfo ci) {
+        EventFactory.onChangeCarriedItemEvent();
     }
 }

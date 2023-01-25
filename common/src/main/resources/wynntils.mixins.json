@@ -1,5 +1,6 @@
 {
   "client": [
+    "EntityMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "ChatScreenMixin",
@@ -37,23 +38,18 @@
     "accessors.ChatScreenAccessor",
     "accessors.ClientboundBossEventPacketAccessor",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
-    "accessors.GuiAccessor",
     "accessors.ItemStackInfoAccessor",
     "accessors.MinecraftAccessor",
     "accessors.OptionsAccessor",
     "invokers.ChatScreenInvoker"
   ],
   "compatibilityLevel": "JAVA_17",
-  "injected_interfaces": {
-    "net/minecraft/class_437": [
-      "com/wynntils/gui/widgets/TextInputBoxWidget"
-    ]
-  },
   "injectors": {
     "defaultRequire": 1
   },
   "minVersion": "0.8.5",
   "mixins": [],
   "package": "com.wynntils.mc.mixin",
+  "plugin": "com.wynntils.core.mod.WynntilsMixinPlugin",
   "required": true
 }

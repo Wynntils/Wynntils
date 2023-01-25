@@ -11,13 +11,12 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.render.TextRenderSetting;
-import com.wynntils.gui.render.TextRenderTask;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.items.game.EmeraldPouchItem;
-import com.wynntils.wynn.utils.InventoryUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -35,7 +34,7 @@ public class EmeraldPouchHotkeyFeature extends UserFeature {
             new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
 
     private void onOpenPouchKeyPress() {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         int slotNumber = getEmeraldPouchSlot();
 

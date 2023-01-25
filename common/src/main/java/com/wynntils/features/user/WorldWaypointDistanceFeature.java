@@ -8,25 +8,23 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.render.VerticalAlignment;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.mc.objects.Location;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.model.map.poi.WaypointPoi;
-import java.util.List;
+import com.wynntils.models.map.pois.WaypointPoi;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -66,11 +64,6 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
     private String distanceText;
     private Vec3 screenCoord;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.Compass);
-    }
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {

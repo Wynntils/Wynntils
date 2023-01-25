@@ -7,6 +7,7 @@ package com.wynntils.features.user.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
@@ -17,14 +18,13 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.functions.Function;
-import com.wynntils.gui.render.FontRenderer;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -106,7 +106,7 @@ public class InfoBoxFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!Models.WorldState.onWorld()) return;
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
@@ -138,7 +138,7 @@ public class InfoBoxFeature extends UserFeature {
         @Override
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld()) return;
+            if (!Models.WorldState.onWorld()) return;
 
             // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
             //        architectural changes at the moment

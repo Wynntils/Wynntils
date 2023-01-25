@@ -4,13 +4,18 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,6 +58,19 @@ public abstract class LevelRendererMixin {
             CallbackInfo ci) {
         EventFactory.onRenderLevelPre(
                 this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+    }
+
+    @ModifyExpressionValue(
+            method = "renderLevel",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"))
+    private int modifyOutlineColor(int original, @Local Entity entity) {
+        EntityExtension entityExt = (EntityExtension) entity;
+
+        if (entityExt.getGlowColor() != CustomColor.NONE) {
+            return entityExt.getGlowColorInt();
+        }
+
+        return original;
     }
 
     @Inject(

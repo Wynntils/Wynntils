@@ -6,9 +6,9 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.mc.utils.ComponentUtils;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class TerritoryDefenseMessageFeature extends UserFeature {
 
         ItemStack item = event.getHoveredSlot().getItem();
 
-        for (Component tooltipLine : ItemUtils.getTooltipLines(item)) {
+        for (Component tooltipLine : LoreUtils.getTooltipLines(item)) {
             String unformatted = ComponentUtils.getUnformatted(tooltipLine);
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {

@@ -6,8 +6,8 @@ package com.wynntils.handlers.actionbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.wynn.utils.WynnUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,7 +49,8 @@ public final class ActionBarHandler extends Handler {
 
     @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
-        if (!WynnUtils.onWorld()) return;
+        // FIXME: Reverse dependency!
+        if (!Models.WorldState.onWorld()) return;
 
         String content = event.getMessage().getString();
         if (content.equals(previousRawContent)) {

@@ -12,14 +12,14 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.utils.ColorUtils;
-import com.wynntils.utils.KeyboardUtils;
+import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.wynn.handleditems.WynnItemCache;
-import com.wynntils.wynn.handleditems.items.game.GearItem;
-import com.wynntils.wynn.utils.GearTooltipBuilder;
-import com.wynntils.wynn.utils.WynnItemUtils;
+import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ColorScaleUtils;
+import com.wynntils.utils.wynn.GearTooltipBuilder;
+import com.wynntils.utils.wynn.WynnItemUtils;
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -126,7 +126,7 @@ public class ItemStatInfoFeature extends UserFeature {
     }
 
     private MutableComponent getPercentageTextComponent(float percentage) {
-        return ColorUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
+        return ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
     }
 
     private MutableComponent getPerfectName(String itemName) {

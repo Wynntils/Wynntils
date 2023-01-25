@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -18,38 +17,29 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.Texture;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
-import com.wynntils.gui.render.buffered.BufferedRenderUtils;
 import com.wynntils.handlers.bossbar.BossBarProgress;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CommonColors;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.model.bossbar.AwakenedBar;
-import com.wynntils.wynn.model.bossbar.BloodPoolBar;
-import com.wynntils.wynn.model.bossbar.CorruptedBar;
-import com.wynntils.wynn.model.bossbar.FocusBar;
-import com.wynntils.wynn.model.bossbar.ManaBankBar;
-import com.wynntils.wynn.objects.HealthTexture;
-import com.wynntils.wynn.objects.ManaTexture;
-import com.wynntils.wynn.utils.WynnUtils;
-import java.util.List;
+import com.wynntils.models.abilities.bossbars.AwakenedBar;
+import com.wynntils.models.abilities.bossbars.BloodPoolBar;
+import com.wynntils.models.abilities.bossbars.CorruptedBar;
+import com.wynntils.models.abilities.bossbars.FocusBar;
+import com.wynntils.models.abilities.bossbars.ManaBankBar;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ActionBar, Models.BossBar);
-    }
 
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
@@ -129,7 +119,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!WynnUtils.onWorld() || !isActive()) return;
+            if (!Models.WorldState.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
             float renderY = getModifiedRenderY(barHeight + 10);
@@ -232,13 +222,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.ActionBar.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.ActionBar.getCurrentHealth();
-            int max = Models.ActionBar.getMaxHealth();
+            int current = Models.Character.getCurrentHealth();
+            int max = Models.Character.getMaxHealth();
             return new BossBarProgress(current, max, current / (float) max);
         }
 
@@ -373,8 +363,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.ActionBar.getCurrentMana();
-            int max = Models.ActionBar.getMaxMana();
+            int current = Models.Character.getCurrentMana();
+            int max = Models.Character.getMaxMana();
             return new BossBarProgress(current, max, current / (float) max);
         }
 
@@ -390,7 +380,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.ActionBar.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
@@ -582,6 +572,71 @@ public class CustomBarsOverlayFeature extends UserFeature {
         @Override
         public boolean isActive() {
             return Models.BossBar.corruptedBar.isActive();
+        }
+    }
+
+    public enum ManaTexture {
+        Wynn(0, 17, 8),
+        Brune(83, 100, 8),
+        Aether(116, 131, 7),
+        Skull(143, 147, 8),
+        Inverse(100, 115, 7),
+        Skyrim(148, 163, 8),
+        Rune(164, 179, 8),
+        a(18, 33, 7),
+        b(34, 51, 8),
+        c(52, 67, 7),
+        d(83, 100, 8);
+        private final int textureY1, textureY2, height;
+
+        ManaTexture(int textureY1, int textureY2, int height) {
+            this.textureY1 = textureY1;
+            this.textureY2 = textureY2;
+            this.height = height;
+        }
+
+        public int getTextureY1() {
+            return textureY1;
+        }
+
+        public int getTextureY2() {
+            return textureY2;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+    }
+
+    public enum HealthTexture {
+        Wynn(0, 17, 8),
+        Grune(84, 99, 7),
+        Aether(100, 115, 7),
+        Skull(116, 131, 8),
+        Skyrim(132, 147, 8),
+        Rune(148, 163, 8),
+        a(18, 33, 7),
+        b(34, 51, 8),
+        c(52, 67, 7),
+        d(68, 83, 7);
+        private final int textureY1, textureY2, height;
+
+        HealthTexture(int textureY1, int textureY2, int height) {
+            this.textureY1 = textureY1;
+            this.textureY2 = textureY2;
+            this.height = height;
+        }
+
+        public int getTextureY1() {
+            return textureY1;
+        }
+
+        public int getTextureY2() {
+            return textureY2;
+        }
+
+        public int getHeight() {
+            return height;
         }
     }
 }

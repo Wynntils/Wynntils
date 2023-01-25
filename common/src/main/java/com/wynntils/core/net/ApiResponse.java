@@ -11,8 +11,8 @@ import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class ApiResponse extends NetResult {
-    public ApiResponse(HttpRequest request) {
-        super(request);
+    public ApiResponse(String desc, HttpRequest request) {
+        super("API:" + desc, request);
     }
 
     @Override

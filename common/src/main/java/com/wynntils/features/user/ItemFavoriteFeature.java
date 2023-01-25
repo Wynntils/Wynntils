@@ -6,20 +6,18 @@ package com.wynntils.features.user;
 
 import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.gui.render.RenderUtils;
-import com.wynntils.gui.render.Texture;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.utils.McUtils;
-import com.wynntils.wynn.handleditems.WynnItem;
-import com.wynntils.wynn.handleditems.WynnItemCache;
-import com.wynntils.wynn.utils.ContainerUtils;
-import com.wynntils.wynn.utils.WynnUtils;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Optional;
@@ -42,8 +40,8 @@ public class ItemFavoriteFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
-        if (!WynnUtils.onWorld()) return;
-        if (!Managers.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!Models.WorldState.onWorld()) return;
+        if (!Models.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
@@ -72,7 +70,7 @@ public class ItemFavoriteFeature extends UserFeature {
         if (wynnItemOpt.isEmpty()) return false;
 
         WynnItem wynnItem = wynnItemOpt.get();
-        int currentRevision = Managers.Favorites.getRevision();
+        int currentRevision = Models.Favorites.getRevision();
         Integer revision = wynnItem.getCache().get(WynnItemCache.FAVORITE_KEY);
         if (revision != null && (revision == currentRevision || revision == -currentRevision)) {
             // The cache is up to date; positive value means it is a favorite
@@ -80,7 +78,7 @@ public class ItemFavoriteFeature extends UserFeature {
         }
 
         // Cache is missing or outdated
-        boolean isFavorite = Managers.Favorites.calculateFavorite(itemStack, wynnItem);
+        boolean isFavorite = Models.Favorites.calculateFavorite(itemStack, wynnItem);
         wynnItem.getCache().store(WynnItemCache.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
         return isFavorite;
     }

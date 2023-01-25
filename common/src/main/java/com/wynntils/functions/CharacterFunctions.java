@@ -4,14 +4,11 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.DependantFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.mc.utils.McUtils;
+import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.wynn.objects.profiles.ingredient.ProfessionType;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 
@@ -19,7 +16,7 @@ public class CharacterFunctions {
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getSoulPoints();
+            return Models.Character.getSoulPoints();
         }
 
         @Override
@@ -31,7 +28,7 @@ public class CharacterFunctions {
     public static class SoulpointMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getMaxSoulPoints();
+            return Models.Character.getMaxSoulPoints();
         }
 
         @Override
@@ -64,7 +61,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.Character.getTicksToNextSoulPoint() / 20;
 
             int seconds = totalSeconds % 60;
             int minutes = totalSeconds / 60;
@@ -80,7 +77,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerMFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.Character.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds / 60;
         }
@@ -94,7 +91,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerSFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int totalSeconds = Managers.Character.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.Character.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds % 60;
         }
@@ -109,189 +106,60 @@ public class CharacterFunctions {
         // FIXME: original had upper/lower case versions. Make a upper/lower function instead.
         @Override
         public String getValue(String argument) {
-            return Managers.Character.getActualName();
+            return Models.Character.getActualName();
         }
     }
 
-    public static class LiquidEmeraldFunction extends DependantFunction<Integer> {
+    public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Managers.Emerald.getAmountInInventory();
-            return ems / 4096;
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("le");
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return Models.Character.getCurrentMana();
         }
     }
 
-    public static class EmeraldBlockFunction extends DependantFunction<Integer> {
+    public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            int ems = Managers.Emerald.getAmountInInventory();
-            return (ems % 4096) / 64;
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("eb");
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return Models.Character.getMaxMana();
         }
     }
 
-    public static class EmeraldsFunction extends DependantFunction<Integer> {
+    public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Emerald.getAmountInInventory() % 64;
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("em");
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return Models.Character.getCurrentHealth();
         }
     }
 
-    public static class MoneyFunction extends DependantFunction<Integer> {
+    public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Emerald.getAmountInInventory();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
+            return Models.Character.getMaxHealth();
         }
     }
 
-    public static class InventoryFreeFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.PlayerInventory.getOpenInvSlots();
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("inv_free");
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
-    }
-
-    public static class InventoryUsedFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.PlayerInventory.getUsedInvSlots();
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("inv_used");
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.PlayerInventory);
-        }
-    }
-
-    public static class ManaFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.ActionBar.getCurrentMana();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
-    }
-
-    public static class ManaMaxFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.ActionBar.getMaxMana();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
-    }
-
-    public static class HealthFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.ActionBar.getCurrentHealth();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
-    }
-
-    public static class HealthMaxFunction extends DependantFunction<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.ActionBar.getMaxHealth();
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
-    }
-
-    public static class HealthPctFunction extends DependantFunction<Float> {
+    public static class HealthPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            int currentHealth = Models.ActionBar.getCurrentHealth();
-            int maxHealth = Models.ActionBar.getMaxHealth();
+            int currentHealth = Models.Character.getCurrentHealth();
+            int maxHealth = Models.Character.getMaxHealth();
             return ((float) currentHealth / maxHealth * 100.0f);
         }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
-        }
     }
 
-    public static class ManaPctFunction extends DependantFunction<Float> {
+    public static class ManaPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            int currentMana = Models.ActionBar.getCurrentMana();
-            int maxMana = Models.ActionBar.getMaxMana();
+            int currentMana = Models.Character.getCurrentMana();
+            int maxMana = Models.Character.getMaxMana();
             return ((float) currentMana / maxMana * 100.0f);
-        }
-
-        @Override
-        public List<Model> getModelDependencies() {
-            return List.of(Models.ActionBar);
         }
     }
 
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getXpLevel();
+            return Models.Character.getXpLevel();
         }
 
         @Override
@@ -303,42 +171,42 @@ public class CharacterFunctions {
     public static class XpFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString((int) Managers.Character.getCurrentXp());
+            return StringUtils.integerToShortString((int) Models.Character.getCurrentXp());
         }
     }
 
     public static class XpRawFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.Character.getCurrentXp();
+            return Models.Character.getCurrentXp();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString(Managers.Character.getXpPointsNeededToLevelUp());
+            return StringUtils.integerToShortString(Models.Character.getXpPointsNeededToLevelUp());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getXpPointsNeededToLevelUp();
+            return Models.Character.getXpPointsNeededToLevelUp();
         }
     }
 
     public static class XpPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Managers.Character.getXpProgress() * 100.0f;
+            return Models.Character.getXpProgress() * 100.0f;
         }
     }
 
     public static class WoodcuttingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
         }
 
         @Override
@@ -350,7 +218,7 @@ public class CharacterFunctions {
     public static class MiningLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.MINING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.MINING);
         }
 
         @Override
@@ -362,7 +230,7 @@ public class CharacterFunctions {
     public static class FishingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.FISHING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.FISHING);
         }
 
         @Override
@@ -374,7 +242,7 @@ public class CharacterFunctions {
     public static class FarmingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.FARMING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.FARMING);
         }
 
         @Override
@@ -386,7 +254,7 @@ public class CharacterFunctions {
     public static class AlchemismLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
         }
 
         @Override
@@ -398,7 +266,7 @@ public class CharacterFunctions {
     public static class ArmouringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.ARMOURING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.ARMOURING);
         }
 
         @Override
@@ -410,7 +278,7 @@ public class CharacterFunctions {
     public static class CookingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.COOKING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.COOKING);
         }
 
         @Override
@@ -422,7 +290,7 @@ public class CharacterFunctions {
     public static class JewelingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.JEWELING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.JEWELING);
         }
 
         @Override
@@ -434,7 +302,7 @@ public class CharacterFunctions {
     public static class ScribingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.SCRIBING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.SCRIBING);
         }
 
         @Override
@@ -446,7 +314,7 @@ public class CharacterFunctions {
     public static class TailoringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.TAILORING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.TAILORING);
         }
 
         @Override
@@ -458,7 +326,7 @@ public class CharacterFunctions {
     public static class WeaponsmithingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
         }
 
         @Override
@@ -470,7 +338,7 @@ public class CharacterFunctions {
     public static class WoodworkingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Managers.Character.getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
+            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
         }
 
         @Override

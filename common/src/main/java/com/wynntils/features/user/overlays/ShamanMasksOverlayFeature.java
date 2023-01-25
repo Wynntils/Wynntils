@@ -6,7 +6,6 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
@@ -15,15 +14,14 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.gui.render.HorizontalAlignment;
-import com.wynntils.gui.render.TextShadow;
-import com.wynntils.gui.render.VerticalAlignment;
-import com.wynntils.gui.render.buffered.BufferedFontRenderer;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.objects.CustomColor;
-import com.wynntils.wynn.event.ShamanMaskTitlePacketEvent;
-import com.wynntils.wynn.objects.ShamanMaskType;
-import java.util.List;
+import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
+import com.wynntils.models.abilities.type.ShamanMaskType;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -33,11 +31,6 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
     @Config
     public boolean hideMaskTitles = true;
-
-    @Override
-    public List<Model> getModelDependencies() {
-        return List.of(Models.ShamanMask);
-    }
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.tooltips;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -12,11 +11,11 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.utils.ItemUtils;
-import com.wynntils.wynn.handleditems.items.game.GearBoxItem;
-import com.wynntils.wynn.objects.EmeraldSymbols;
-import com.wynntils.wynn.objects.profiles.item.GearProfile;
-import com.wynntils.wynn.objects.profiles.item.GearTier;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class ItemGuessFeature extends UserFeature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
-        List<Component> tooltips = ItemUtils.appendTooltip(
+        List<Component> tooltips = LoreUtils.appendTooltip(
                 event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
     }
@@ -57,13 +56,13 @@ public class ItemGuessFeature extends UserFeature {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String itemName : itemPossibilities) {
-            GearProfile profile = Managers.GearProfiles.getItemsProfile(itemName);
+            GearProfile profile = Models.GearProfiles.getItemsProfile(itemName);
 
             int level = (profile != null) ? profile.getLevelRequirement() : -1;
 
             MutableComponent itemDesc = Component.literal(itemName).withStyle(gearTier.getChatFormatting());
 
-            if (Managers.Favorites.isFavorite(itemName)) {
+            if (Models.Favorites.isFavorite(itemName)) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
             }
 
@@ -83,8 +82,8 @@ public class ItemGuessFeature extends UserFeature {
 
             if (showGuessesPrice && level != -1) {
                 guesses.append(Component.literal(" [")
-                        .append(Component.literal(
-                                        (gearTier.getGearIdentificationCost(level) + " " + EmeraldSymbols.E_STRING))
+                        .append(Component.literal((gearTier.getGearIdentificationCost(level) + " "
+                                        + EmeraldUnits.EMERALD.getSymbol()))
                                 .withStyle(ChatFormatting.GREEN))
                         .append(Component.literal("]"))
                         .withStyle(ChatFormatting.GRAY));
