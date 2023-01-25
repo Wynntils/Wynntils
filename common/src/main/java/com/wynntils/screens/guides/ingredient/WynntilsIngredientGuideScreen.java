@@ -177,7 +177,7 @@ public final class WynntilsIngredientGuideScreen
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {
         if (allIngredientItems.isEmpty()) {
-            allIngredientItems = Models.GearProfiles.getIngredientsCollection().stream()
+            allIngredientItems = Models.IngredientProfiles.getIngredientsCollection().stream()
                     .map(GuideIngredientItemStack::new)
                     .toList();
         }

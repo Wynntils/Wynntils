@@ -91,7 +91,7 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            String ingredientHeadTexture = Models.GearProfiles.getIngredientHeadTexture(name);
+            String ingredientHeadTexture = Models.IngredientProfiles.getIngredientHeadTexture(name);
             if (ingredientHeadTexture == null) {
                 // This will look bad, but if we don't have the data, then what should we do?
                 WynntilsMod.warn("Missing head texture for "
