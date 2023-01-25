@@ -6,13 +6,18 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -21,10 +26,12 @@ import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE)
-public class MountHorseHotkeyFeature extends UserFeature {
+public class HorseMountFeature extends UserFeature {
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
@@ -33,10 +40,27 @@ public class MountHorseHotkeyFeature extends UserFeature {
     private static boolean alreadySetPrevItem = false;
 
     @RegisterKeyBind
-    private final KeyBind mountHorseKeyBind =
-            new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::onMountHorseKeyPress);
+    private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    private void onMountHorseKeyPress() {
+    @Config
+    public boolean guaranteedMount = true;
+
+    @SubscribeEvent
+    public void onUseItem(UseItemEvent event) {
+        if (!guaranteedMount) return;
+
+        ItemStack item = McUtils.player().getMainHandItem();
+
+        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(item);
+
+        if (wynnItem.isPresent() && wynnItem.get() instanceof HorseItem) {
+            mountHorse();
+
+            event.setCanceled(true);
+        }
+    }
+
+    private void mountHorse() {
         if (!Models.WorldState.onWorld()) return;
 
         if (McUtils.player().getVehicle() != null) {
@@ -100,8 +124,8 @@ public class MountHorseHotkeyFeature extends UserFeature {
     }
 
     private enum MountHorseStatus {
-        NO_HORSE("feature.wynntils.mountHorseHotkey.noHorse"),
-        ALREADY_RIDING("feature.wynntils.mountHorseHotkey.alreadyRiding");
+        NO_HORSE("feature.wynntils.horseMount.noHorse"),
+        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding");
 
         private final String tcString;
 
