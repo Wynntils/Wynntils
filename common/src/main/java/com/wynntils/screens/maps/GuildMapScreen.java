@@ -242,7 +242,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
-        final float centerHeight = 55
+        final float centerHeight = 75
                 + (territoryInfo.getStorage().values().size()
                                 + territoryInfo.getGenerators().size())
                         * 10
@@ -357,6 +357,20 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             VerticalAlignment.Top,
                             TextShadow.OUTLINE);
         }
+
+        renderYOffset += 20;
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                                + territoryProfile.getReadableRelativeTimeAcquired(),
+                        10,
+                        10 + renderYOffset,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        TextShadow.OUTLINE);
 
         // Territory name
         FontRenderer.getInstance()
