@@ -22,6 +22,7 @@ public class GatheringToolItem extends GameItem implements NumberedTierItemPrope
         return toolProfile;
     }
 
+    @Override
     public CappedValue getDurability() {
         return durability;
     }
