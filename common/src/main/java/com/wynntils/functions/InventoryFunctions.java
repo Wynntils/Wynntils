@@ -7,8 +7,8 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
+import com.wynntils.models.items.properties.DurabilityItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
@@ -133,8 +133,8 @@ public class InventoryFunctions {
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
-                return craftedGearItem.getDurability().getCurrent();
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
+                return durableItem.getDurability().getCurrent();
             }
 
             return -1;
@@ -153,8 +153,8 @@ public class InventoryFunctions {
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
-                return craftedGearItem.getDurability().getMax();
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurabilityItemProperty durableItem) {
+                return durableItem.getDurability().getMax();
             }
 
             return -1;
