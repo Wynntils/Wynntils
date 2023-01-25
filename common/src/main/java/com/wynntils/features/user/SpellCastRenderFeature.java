@@ -97,8 +97,8 @@ public class SpellCastRenderFeature extends UserFeature {
         if (alpha <= 0) return;
 
         Window window = McUtils.mc().getWindow();
-        var screenWidth = window.getGuiScaledWidth();
-        var screenHeight = window.getGuiScaledHeight();
+        int screenWidth = window.getGuiScaledWidth();
+        int screenHeight = window.getGuiScaledHeight();
 
         int width = McUtils.mc().gui.getFont().width(spellMessage);
         int x = (screenWidth - width) / 2;
