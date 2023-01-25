@@ -6,6 +6,7 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -41,8 +42,13 @@ public class HorseMountFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
+    @Config
+    public boolean guaranteedMount = true;
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        if (!guaranteedMount) return;
+
         ItemStack item = McUtils.player().getMainHandItem();
 
         Optional<WynnItem> wynnItem = Models.Item.getWynnItem(item);
