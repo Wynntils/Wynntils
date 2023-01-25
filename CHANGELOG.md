@@ -1,9 +1,21 @@
+## [0.0.2-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.146...v0.0.2-alpha.147) (2023-01-25)
+
+
+### Bug Fixes
+
+* Fix party sharing ([#1090](https://github.com/Wynntils/Artemis/issues/1090)) ([8e0eb43](https://github.com/Wynntils/Artemis/commit/8e0eb43727bfa4922f0d7f846a96b3a5a3622f71))
+
 ## [0.0.2-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.145...v0.0.2-alpha.146) (2023-01-25)
 
 
 ### Bug Fixes
 
 * Fix Forge compatibility of LevelRendererMixin ([#1087](https://github.com/Wynntils/Artemis/issues/1087)) ([c5f8461](https://github.com/Wynntils/Artemis/commit/c5f84612b43cf407473c7b6ccecfc8b738d9f92f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.146 [skip ci] ([4a67176](https://github.com/Wynntils/Artemis/commit/4a67176a1d2e98a178e7505b3c6c6dabb1fdccc2))
 
 ## [0.0.2-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.144...v0.0.2-alpha.145) (2023-01-24)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.143 [skip ci] ([e9d4616](https://github.com/Wynntils/Artemis/commit/e9d46168c346bf91402b72dc7f6d94ec3fae18ea))
-
-## [0.0.2-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.141...v0.0.2-alpha.142) (2023-01-24)
-
-
-### New Features
-
-* Add custom totem highlight color support ([#1075](https://github.com/Wynntils/Artemis/issues/1075)) ([c475186](https://github.com/Wynntils/Artemis/commit/c475186d327badede173f2a4d8c67ad3f412d9ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.142 [skip ci] ([62b5a51](https://github.com/Wynntils/Artemis/commit/62b5a5147a75542bfa568bc2a0805ae1af1701aa))
 
