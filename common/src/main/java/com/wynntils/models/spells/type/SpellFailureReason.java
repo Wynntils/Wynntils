@@ -8,16 +8,20 @@ public enum SpellFailureReason {
     NOT_ENOUGH_MANA("§4You don't have enough mana to cast that spell!"),
     NOT_UNLOCKED("§4You have not unlocked this spell!");
 
-    private final String msg;
+    private final String message;
 
-    SpellFailureReason(String msg) {
-        this.msg = msg;
+    SpellFailureReason(String message) {
+        this.message = message;
     }
 
     public static SpellFailureReason fromMsg(String msg) {
         for (SpellFailureReason failureReason : values()) {
-            if (failureReason.msg.equals(msg)) return failureReason;
+            if (failureReason.message.equals(msg)) return failureReason;
         }
         return null;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
