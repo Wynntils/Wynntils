@@ -38,9 +38,9 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
             int count = Integer.parseInt(loreMatcher.group(1));
             String ingredientName = loreMatcher.group(2);
             String tierColor = loreMatcher.group(3);
-            int tier = Models.GearProfiles.getTierFromColorCode(tierColor);
+            int tier = Models.IngredientProfiles.getTierFromColorCode(tierColor);
 
-            IngredientProfile ingredientProfile = Models.GearProfiles.getIngredient(ingredientName);
+            IngredientProfile ingredientProfile = Models.IngredientProfiles.getIngredient(ingredientName);
             if (ingredientProfile == null) return null;
             if (ingredientProfile.getTier().getTierInt() != tier) {
                 WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);

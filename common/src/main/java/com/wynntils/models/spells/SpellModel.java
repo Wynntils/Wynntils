@@ -11,10 +11,10 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
-import com.wynntils.models.spells.event.SpellProgressEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
-import com.wynntils.models.spells.event.TrySpellCastEvent;
+import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
+import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.Arrays;
 import java.util.regex.MatchResult;
@@ -29,8 +29,6 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
-    private static final String NOT_ENOUGH_MANA = "§4You don't have enough mana to cast that spell!";
-    private static final String SPELL_NOT_UNLOCKED = "§4You have not unlocked this spell!";
 
     private final SpellSegment spellSegment = new SpellSegment();
 
@@ -43,20 +41,17 @@ public class SpellModel extends Model {
     @SubscribeEvent
     public void onItemRenamed(ItemRenamedEvent event) {
         String msg = event.getNewName();
-        if (msg.equals(NOT_ENOUGH_MANA)) {
-            // send SpellFailedEvent(Reason.NOT_ENOUGH_MANA)
-            return;
-        }
-        if (msg.equals(SPELL_NOT_UNLOCKED)) {
-            // send SpellFailedEvent(Reason.SPELL_NOT_UNLOCKED)
+        SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);
+        if (failureReason != null) {
+            WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
             return;
         }
 
         Matcher spellMatcher = SPELL_CAST.matcher(event.getNewName());
         if (spellMatcher.matches()) {
-            String spellType = spellMatcher.group(1);
+            SpellType spellType = SpellType.fromName(spellMatcher.group(1));
             int manaCost = Integer.parseInt(spellMatcher.group(2));
-            // send SpellCastEvent(spellType, manaCost)
+            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost));
         }
     }
 
@@ -69,11 +64,11 @@ public class SpellModel extends Model {
         if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
         lastSpell = spell;
 
-        WynntilsMod.postEvent(new SpellProgressEvent(spell, SpellEvent.Source.HOTBAR));
+        WynntilsMod.postEvent(new SpellEvent.Partial(spell, PartialSpellSource.HOTBAR));
 
         if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(
-                    new TrySpellCastEvent(spell, SpellEvent.Source.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
+            WynntilsMod.postEvent(new SpellEvent.Completed(
+                    spell, PartialSpellSource.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 
@@ -87,13 +82,14 @@ public class SpellModel extends Model {
         lastSpell = spell;
 
         // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
-        SpellEvent.Source source =
-                (matcher.group(1).endsWith("t")) ? SpellEvent.Source.TITLE_FULL : SpellEvent.Source.TITLE_LETTER;
+        PartialSpellSource partialSpellSource =
+                (matcher.group(1).endsWith("t")) ? PartialSpellSource.TITLE_FULL : PartialSpellSource.TITLE_LETTER;
 
-        WynntilsMod.postEvent(new SpellProgressEvent(spell, source));
+        WynntilsMod.postEvent(new SpellEvent.Partial(spell, partialSpellSource));
 
         if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(new TrySpellCastEvent(spell, source, SpellType.fromSpellDirectionArray(spell)));
+            WynntilsMod.postEvent(
+                    new SpellEvent.Completed(spell, partialSpellSource, SpellType.fromSpellDirectionArray(spell)));
         }
     }
 
