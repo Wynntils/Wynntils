@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w,; ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
+
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget inviteInput;
@@ -39,14 +40,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private Button createPartyButton;
     private Button leavePartyButton;
 
-    private int totalWidth = 344;
-    private int xStart = totalWidth / 2;
+    private final int totalWidth = 344;
+    private final int xStart = totalWidth / 2;
 
     private final Set<String> partyMembers = new HashSet<>();
     private final Set<String> offlineMembers = new HashSet<>();
     private final List<String> suggestedPlayers = new ArrayList<>();
-    private Pair<HashSet<String>, String> unsortedPartyMembers = new Pair<>(new HashSet<>(), "");
-    private boolean partyLeaveSent = false;
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
@@ -69,8 +68,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         .pos(this.width / 2 - (xStart - totalWidth + 40), this.height / 2 - 200)
                         .size(40, 20)
                         .build());
-
-        inviteButton.active = false;
         // endregion
 
         // region Management button row
@@ -104,19 +101,19 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         .build());
         // endregion
 
-        if (Models.PlayerRelations.isPartying()) {
-            createPartyButton.active = false;
-            leavePartyButton.active = true;
-            if (offlineMembers.isEmpty()) {
-                kickOfflineButton.active = false;
-            }
-        }
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
+
+        boolean partying = Models.PlayerRelations.isPartying();
+
+        createPartyButton.active = !partying;
+        leavePartyButton.active = partying;
+        kickOfflineButton.active = partying && !offlineMembers.isEmpty();
+        inviteButton.active = !inviteInput.getTextBoxInput().isBlank(); // partying check not required as button automatically makes new party if not in one
 
         updateSuggestionsList();
         FontRenderer fr = FontRenderer.getInstance();
@@ -193,11 +190,11 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Legend
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 400, this.height / 2 - 140, 0, totalWidth / 3, 1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 300, this.height / 2 - 140, 0, 50, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.legend"),
-                this.width / 2 - 400,
+                this.width / 2 - 300,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -205,10 +202,37 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.self"),
-                this.width / 2 - 400,
+                "§l" + I18n.get("screens.wynntils.partyManagementGui.self"),
+                this.width / 2 - 300,
                 this.height / 2 - 132,
                 CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.leader"),
+                this.width / 2 - 300,
+                this.height / 2 - 120,
+                CommonColors.YELLOW,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                "§m" + I18n.get("screens.wynntils.partyManagementGui.offline"),
+                this.width / 2 - 300,
+                this.height / 2 - 108,
+                CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.friend"),
+                this.width / 2 - 300,
+                this.height / 2 - 96,
+                CommonColors.GREEN,
                 HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
@@ -278,7 +302,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        inviteButton.active = (!inviteInput.getTextBoxInput().isEmpty());
         return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers)) || super.charTyped(codePoint, modifiers);
     }
 
