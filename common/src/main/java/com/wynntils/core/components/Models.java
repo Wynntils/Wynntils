@@ -4,69 +4,68 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.ChatTabModel;
-import com.wynntils.core.net.hades.model.HadesModel;
-import com.wynntils.core.net.hades.model.HadesUserModel;
-import com.wynntils.core.net.translation.TranslationModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
+import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
-import com.wynntils.models.character.statuseffects.TabModel;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.discoveries.DiscoveryModel;
+import com.wynntils.models.emeralds.EmeraldModel;
+import com.wynntils.models.favorites.FavoritesModel;
+import com.wynntils.models.gear.GearItemModel;
+import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.gearinfo.GearInfoModel;
+import com.wynntils.models.horse.HorseModel;
+import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
+import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.PlayerRelationsModel;
+import com.wynntils.models.players.hades.HadesModel;
+import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
+import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
-import com.wynntils.wynn.model.actionbar.ActionBarModel;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import com.wynntils.models.worlds.WorldStateModel;
 
 public final class Models {
-    public static final ActionBarModel ActionBar = new ActionBarModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
-    public static final ChatTabModel ChatTab = new ChatTabModel();
+    public static final CharacterModel Character = new CharacterModel();
+    public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
+    public static final ContainerModel Container = new ContainerModel();
+    public static final DiscoveryModel Discovery = new DiscoveryModel();
+    public static final EmeraldModel Emerald = new EmeraldModel();
+    public static final FavoritesModel Favorites = new FavoritesModel();
+    public static final GearItemModel GearItem = new GearItemModel();
+    public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final HadesModel Hades = new HadesModel();
-    public static final HadesUserModel HadesUser = new HadesUserModel();
+    public static final HorseModel Horse = new HorseModel();
+    public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
     public static final MapModel Map = new MapModel();
+    public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
-    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
     public static final PlayerModel Player = new PlayerModel();
+    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
+    public static final QuestModel Quest = new QuestModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final SpellModel Spell = new SpellModel();
-    public static final TabModel Tab = new TabModel();
-    public static final TranslationModel Translation = new TranslationModel();
+    public static final TerritoryModel Territory = new TerritoryModel();
+    public static final WorldStateModel WorldState = new WorldStateModel();
     public static final GearInfoModel GearInfo = new GearInfoModel();
-
-    public static void init() {
-        // Register all model singletons as event listeners
-
-        FieldUtils.getAllFieldsList(Models.class).stream()
-                .filter(field -> Model.class.isAssignableFrom(field.getType()))
-                .forEach(field -> {
-                    try {
-                        Model model = (Model) field.get(null);
-                        WynntilsMod.registerEventListener(model);
-                        model.init();
-                    } catch (IllegalAccessException e) {
-                        WynntilsMod.error("Internal error in Models", e);
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
 }

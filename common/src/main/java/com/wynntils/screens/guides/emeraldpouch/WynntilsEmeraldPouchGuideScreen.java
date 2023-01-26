@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.emeraldpouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.WynntilsMenuListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -132,7 +132,7 @@ public final class WynntilsEmeraldPouchGuideScreen
 
             List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
             tooltipLines.add(Component.empty());
-            if (Managers.Favorites.isFavorite(itemStack)) {
+            if (Models.Favorites.isFavorite(itemStack)) {
                 tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {

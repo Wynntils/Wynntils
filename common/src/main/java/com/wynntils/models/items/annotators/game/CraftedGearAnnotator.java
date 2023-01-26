@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -61,7 +60,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
             // Look for identifications
             String formatId = ComponentUtils.getCoded(loreLine);
-            Matcher statMatcher = Managers.GearItem.ID_NEW_PATTERN.matcher(formatId);
+            Matcher statMatcher = Models.GearItem.ID_NEW_PATTERN.matcher(formatId);
             if (statMatcher.matches()) {
                 int value = Integer.parseInt(statMatcher.group(2));
                 String unit = statMatcher.group(3);

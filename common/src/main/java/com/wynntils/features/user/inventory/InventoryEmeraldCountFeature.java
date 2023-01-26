@@ -5,13 +5,12 @@
 package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ContainerRenderEvent;
-import com.wynntils.models.emeralds.type.EmeraldSymbols;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -58,12 +57,12 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int topEmeralds;
         if (isInventory) {
             if (!showInventoryEmeraldCount) return;
-            topEmeralds = Managers.Emerald.getAmountInInventory();
+            topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount) topEmeralds += Managers.Emerald.getAmountInContainer();
+            if (showContainerEmeraldCount) topEmeralds += Models.Emerald.getAmountInContainer();
             if (combineInventoryAndContainer && showInventoryEmeraldCount) {
-                topEmeralds += Managers.Emerald.getAmountInInventory();
+                topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
 
@@ -77,7 +76,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         }
 
         if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
-            int bottomEmeralds = Managers.Emerald.getAmountInInventory();
+            int bottomEmeralds = Models.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType) {
@@ -94,7 +93,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
         String emeraldText;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            emeraldText = String.valueOf(emeralds) + EmeraldSymbols.E;
+            emeraldText = String.valueOf(emeralds) + EmeraldUnits.EMERALD.getSymbol();
         } else {
             int[] emeraldAmounts = calculateEmeraldAmounts(emeralds);
             StringBuilder builder = new StringBuilder();

@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.SegmentMatcher;
@@ -46,16 +46,16 @@ public class QuestScoreboardPart implements ScoreboardPart {
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
         String fixedNextTask = WynnUtils.normalizeBadString(nextTask.toString().trim());
-        Managers.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
+        Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
-        Managers.Quest.clearTrackedQuestFromScoreBoard();
+        Models.Quest.clearTrackedQuestFromScoreBoard();
     }
 
     @Override
     public void reset() {
-        Managers.Quest.clearTrackedQuestFromScoreBoard();
+        Models.Quest.clearTrackedQuestFromScoreBoard();
     }
 }

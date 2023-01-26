@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Managers;
 import org.apache.commons.lang3.StringUtils;
 
 public final class WynnUtils {
@@ -20,13 +19,5 @@ public final class WynnUtils {
         return StringUtils.replaceEach(
                         input, new String[] {"ÀÀÀ", "À", "\u058e", "\u2019"}, new String[] {" ", "", "", "'"})
                 .trim();
-    }
-
-    public static boolean onServer() {
-        return Managers.WorldState.onServer();
-    }
-
-    public static boolean onWorld() {
-        return Managers.WorldState.onWorld();
     }
 }

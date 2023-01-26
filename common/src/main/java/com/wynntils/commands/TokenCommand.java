@@ -6,7 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import java.util.Map;
@@ -19,7 +19,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public class TokenCommand extends CommandBase {
+public class TokenCommand extends Command {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("token").executes(this::token);

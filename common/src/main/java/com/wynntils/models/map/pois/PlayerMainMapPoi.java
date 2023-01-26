@@ -5,9 +5,9 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.net.hades.objects.HadesUser;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
+import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.PlayerInfoUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;

@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.emeralds.type.EmeraldSymbols;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.Items;
 public final class EmeraldPouchAnnotator implements ItemAnnotator {
     private static final Pattern EMERALD_POUCH_PATTERN = Pattern.compile("^§aEmerald Pouch§2 \\[Tier ([IVX]{1,4})\\]$");
     private static final Pattern EMERALD_POUCH_LORE_PATTERN =
-            Pattern.compile("§6§l([\\d\\s]+)" + EmeraldSymbols.E_STRING + ".*");
+            Pattern.compile("§6§l([\\d\\s]+)" + EmeraldUnits.EMERALD.getSymbol() + ".*");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {

@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.DamageType;
 import com.wynntils.models.concepts.Element;
@@ -371,7 +370,7 @@ public class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        String prefix = gearItem != null && gearItem.isUnidentified() ? Managers.GearItem.UNIDENTIFIED_PREFIX : "";
+        String prefix = gearItem != null && gearItem.isUnidentified() ? Models.GearItem.UNIDENTIFIED_PREFIX : "";
 
         return Component.literal(prefix + gearProfile.getDisplayName())
                 .withStyle(gearProfile.getTier().getChatFormatting());
@@ -415,7 +414,7 @@ public class GearTooltipBuilder {
                 };
 
         if (style.reorder()) {
-            return Managers.GearProfiles.orderComponents(map, style.group());
+            return Models.GearProfiles.orderComponents(map, style.group());
         } else {
             return new ArrayList<>(map.values());
         }

@@ -5,7 +5,7 @@
 package com.wynntils.models.gear.profile;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class IdentificationProfile {
     }
 
     public void calculateMinMax(String shortId) {
-        isInverted = Managers.GearProfiles.isInverted(shortId);
+        isInverted = Models.GearProfiles.isInverted(shortId);
 
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;

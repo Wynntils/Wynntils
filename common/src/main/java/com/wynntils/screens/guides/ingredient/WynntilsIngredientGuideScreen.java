@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.WynntilsMenuListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -125,7 +125,7 @@ public final class WynntilsIngredientGuideScreen
             tooltipLines.add(Component.empty());
 
             String unformattedName = itemStack.getIngredientProfile().getDisplayName();
-            if (Managers.Favorites.isFavorite(unformattedName)) {
+            if (Models.Favorites.isFavorite(unformattedName)) {
                 tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                         .withStyle(ChatFormatting.YELLOW));
             } else {
@@ -177,7 +177,7 @@ public final class WynntilsIngredientGuideScreen
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {
         if (allIngredientItems.isEmpty()) {
-            allIngredientItems = Managers.GearProfiles.getIngredientsCollection().stream()
+            allIngredientItems = Models.IngredientProfiles.getIngredientsCollection().stream()
                     .map(GuideIngredientItemStack::new)
                     .toList();
         }

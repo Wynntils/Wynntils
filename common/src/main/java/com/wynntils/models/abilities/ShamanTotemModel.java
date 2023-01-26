@@ -7,17 +7,17 @@ package com.wynntils.models.abilities;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.spells.event.TrySpellCastEvent;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +51,7 @@ public class ShamanTotemModel extends Model {
     private static final int CAST_DELAY_MAX_MS = 450;
 
     @SubscribeEvent
-    public void onTotemSpellCast(TrySpellCastEvent e) {
+    public void onTotemSpellCast(SpellEvent.Completed e) {
         if (e.getSpell() != SpellType.TOTEM) return;
 
         totemCastTimestamp = System.currentTimeMillis() - 40; // 40 == 2 ticks
@@ -168,7 +168,7 @@ public class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onTotemRename(SetEntityDataEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         int entityId = e.getId();
         Entity entity = getBufferedEntity(entityId);
@@ -201,7 +201,7 @@ public class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onTotemDestroy(RemoveEntitiesEvent e) {
-        if (!WynnUtils.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         List<Integer> destroyedEntities = e.getEntityIds();
 

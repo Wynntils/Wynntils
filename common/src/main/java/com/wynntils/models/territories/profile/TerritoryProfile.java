@@ -10,14 +10,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.colors.CustomColor;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 
 public class TerritoryProfile {
+    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
 
     private final String name;
@@ -127,6 +130,38 @@ public class TerritoryProfile {
 
     public boolean insideArea(int playerX, int playerZ) {
         return startX <= playerX && endX >= playerX && startZ <= playerZ && endZ >= playerZ;
+    }
+
+    private long getTimeHeldInMillis() {
+        return new Date().getTime() - this.getAcquired().getTime() + getTimezoneOffset();
+    }
+
+    private long getTimezoneOffset() {
+        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
+    }
+
+    public boolean isOnCooldown() {
+        return getTimeHeldInMillis() < 10 * 60 * 1000;
+    }
+
+    public String getReadableRelativeTimeAcquired() {
+        long difference = getTimeHeldInMillis();
+        return DATE_FORMATTER.format(difference);
+    }
+
+    public ChatFormatting getTimeAcquiredColor() {
+        // 0 - 1 hours > Green
+        // 1 hour - 1 day > Yellow
+        // 1 day - > Red
+
+        long difference = getTimeHeldInMillis();
+        if (difference < 60 * 60 * 1000) {
+            return ChatFormatting.GREEN;
+        } else if (difference < 24 * 60 * 60 * 1000) {
+            return ChatFormatting.YELLOW;
+        } else {
+            return ChatFormatting.RED;
+        }
     }
 
     public static class TerritoryDeserializer implements JsonDeserializer<TerritoryProfile> {

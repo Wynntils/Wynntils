@@ -9,7 +9,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.StringUtils;
@@ -22,7 +22,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class ServerCommand extends CommandBase {
+public class ServerCommand extends Command {
     private static final int UPDATE_TIME_OUT_MS = 3000;
 
     @Override

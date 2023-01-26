@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.quests;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -163,7 +163,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((Managers.Character.getXpLevel() >= questInfo.getLevel()
+            tooltipLines.add((Models.Character.getXpLevel() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
                     .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -172,11 +172,11 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base = Managers.Character.getProfessionInfo()
-                                    .getLevel(ProfessionType.fromString(additionalRequirement.a()))
-                            >= additionalRequirement.b()
-                    ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
-                    : Component.literal("✖ ").withStyle(ChatFormatting.RED);
+            MutableComponent base =
+                    Models.Character.getProfessionInfo().getLevel(ProfessionType.fromString(additionalRequirement.a()))
+                                    >= additionalRequirement.b()
+                            ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
+                            : Component.literal("✖ ").withStyle(ChatFormatting.RED);
 
             tooltipLines.add(base.append(Component.literal(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)

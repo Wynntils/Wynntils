@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.CharmProfile;
@@ -27,6 +27,6 @@ public final class CharmAnnotator implements ItemAnnotator {
         // TODO: replace with API lookup
         CharmProfile charmProfile = new CharmProfile(matcher.group(1), tier, type);
 
-        return Managers.GearItem.fromCharmItemStack(itemStack, charmProfile);
+        return Models.GearItem.fromCharmItemStack(itemStack, charmProfile);
     }
 }

@@ -6,7 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -187,7 +188,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = Managers.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
+                TerritoryPoi routePoi = Models.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
                 // Only render connection if the other poi is also in the filtered pois
                 if (routePoi != null && filteredPois.contains(routePoi)) {
                     float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
@@ -216,6 +217,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+
         // Manage on shift right click
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
@@ -234,7 +242,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
-        final float centerHeight = 55
+        final float centerHeight = 75
                 + (territoryInfo.getStorage().values().size()
                                 + territoryInfo.getGenerators().size())
                         * 10
@@ -350,6 +358,20 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             TextShadow.OUTLINE);
         }
 
+        renderYOffset += 20;
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                                + territoryProfile.getReadableRelativeTimeAcquired(),
+                        10,
+                        10 + renderYOffset,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        TextShadow.OUTLINE);
+
         // Territory name
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -370,9 +392,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
         List<Poi> pois = territoryDefenseFilterEnabled
-                ? Managers.Territory.getFilteredTerritoryPoisFromAdvancement(
+                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
                         territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Managers.Territory.getTerritoryPoisFromAdvancement();
+                : Models.Territory.getTerritoryPoisFromAdvancement();
 
         renderPois(
                 pois,

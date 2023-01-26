@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -38,14 +37,14 @@ public class LowHealthVignetteFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
-        if (!Managers.WorldState.onWorld()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         RenderUtils.renderVignetteOverlay(event.getPoseStack(), color, value);
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        float healthPercent = (float) Models.ActionBar.getCurrentHealth() / Models.ActionBar.getMaxHealth();
+        float healthPercent = (float) Models.Character.getCurrentHealth() / Models.Character.getMaxHealth();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;
 

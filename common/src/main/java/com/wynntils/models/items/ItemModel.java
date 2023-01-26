@@ -40,8 +40,7 @@ import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
-    @Override
-    public void init() {
+    public ItemModel() {
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());

@@ -6,7 +6,7 @@ package com.wynntils.models.ingredients.profile;
 
 import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredients.type.IngredientTier;
 import java.util.List;
@@ -91,7 +91,7 @@ public class IngredientProfile {
         ItemStack itemStack = ingredientInfo.asItemStack();
 
         if (itemStack.getItem() == Items.PLAYER_HEAD) {
-            String ingredientHeadTexture = Managers.GearProfiles.getIngredientHeadTexture(name);
+            String ingredientHeadTexture = Models.IngredientProfiles.getIngredientHeadTexture(name);
             if (ingredientHeadTexture == null) {
                 // This will look bad, but if we don't have the data, then what should we do?
                 WynntilsMod.warn("Missing head texture for "

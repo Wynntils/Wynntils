@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.commands.CommandBase;
+import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
-public class FunctionCommand extends CommandBase {
+public class FunctionCommand extends Command {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
         return Commands.literal("function")
