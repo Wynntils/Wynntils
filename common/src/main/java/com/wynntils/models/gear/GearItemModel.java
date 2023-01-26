@@ -138,16 +138,16 @@ public final class GearItemModel extends Model {
                 identifications.add(new GearIdentification(type, value));
             }
 
-            GearIdentificationContainer idContainer = null;
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
             if (identificationMatcher.find()) {
-                String idName = WynnItemMatchers.getShortIdentificationName(
+                String shortIdName = WynnItemMatchers.getShortIdentificationName(
                         identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
                 int value = Integer.parseInt(identificationMatcher.group("Value"));
-                int stars = identificationMatcher.group("Stars").length();
+                String idName = identificationMatcher.group("ID");
+                int starCount = identificationMatcher.group("Stars").length();
+                GearIdentificationContainer idContainer =
+                        identificationFromValue(loreLine, gearProfile, idName, shortIdName, value, starCount);
 
-                // This is partially overlapping with GearIdentification, sort this out later
-                idContainer = identificationFromLore(loreLine, gearProfile);
                 if (idContainer == null) continue;
                 idContainers.add(idContainer);
             }
@@ -255,44 +255,26 @@ public final class GearItemModel extends Model {
     }
 
     /**
-     * Parse the item ID lore line from a given item, and convert it into an ItemIdentificationContainer
-     * Returns null if the given lore line is not a valid ID
-     *
-     * @param lore the ID lore line component
-     * @param item the GearProfile of the given item
-     * @return the parsed ItemIdentificationContainer, or null if invalid lore line
-     */
-    private GearIdentificationContainer identificationFromLore(Component lore, GearProfile item) {
-        String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
-        Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-        if (!identificationMatcher.find()) return null; // not a valid id line
-
-        String idName = identificationMatcher.group("ID");
-        boolean isRaw = identificationMatcher.group("Suffix") == null;
-        int starCount = identificationMatcher.group("Stars").length();
-        int value = Integer.parseInt(identificationMatcher.group("Value"));
-
-        String shortIdName = WynnItemMatchers.getShortIdentificationName(idName, isRaw);
-
-        return identificationFromValue(lore, item, idName, shortIdName, value, starCount);
-    }
-
-    /**
      * Creates an ItemIdentificationContainer from the given item, ID names, ID value, and star count
      * Returns null if the given ID is not valid
      *
      * @param lore the ID lore line component - can be null if ID isn't being created from lore
-     * @param item the GearProfile of the given item
-     * @param idName the in-game name of the given ID
+     * @param gearProfile the GearProfile of the given item
+     * @param inGameIdName the in-game name of the given ID
      * @param shortIdName the internal wynntils name of the given ID
      * @param value the raw value of the given ID
      * @param starCount the number of stars on the given ID
      * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
      */
     private GearIdentificationContainer identificationFromValue(
-            Component lore, GearProfile item, String idName, String shortIdName, int value, int starCount) {
-        IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
-        // FIXME: This is kind of an inverse dependency! Need to fix!
+            Component lore,
+            GearProfile gearProfile,
+            String inGameIdName,
+            String shortIdName,
+            int value,
+            int starCount) {
+        IdentificationProfile idProfile = gearProfile.getStatuses().get(shortIdName);
+
         boolean isInverted = idProfile != null
                 ? idProfile.isInverted()
                 : Models.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
@@ -300,27 +282,15 @@ public final class GearItemModel extends Model {
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
 
-        MutableComponent percentLine = Component.literal("");
+        String unit = type.getInGame(shortIdName);
+        MutableComponent baseComponent = getBaseComponent(inGameIdName, value, starCount, isInverted, unit);
 
-        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + type.getInGame(shortIdName));
-        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        percentLine.append(statInfo);
-
-        if (ItemStatInfoFeature.INSTANCE.showStars)
-            percentLine.append(Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
-
-        percentLine.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
-
-        boolean isNew = idProfile == null || idProfile.isInvalidValue(value);
-
-        if (isNew) percentLine.append(Component.literal(" [NEW]").withStyle(ChatFormatting.GOLD));
-
-        MutableComponent rangeLine = percentLine.copy();
-        MutableComponent rerollLine = percentLine.copy();
+        MutableComponent percentLine = baseComponent.copy();
+        MutableComponent rangeLine = baseComponent.copy();
+        MutableComponent rerollLine = baseComponent.copy();
 
         float percentage = -1;
-        if (!isNew && !idProfile.hasConstantValue()) {
+        if (!idProfile.hasConstantValue()) {
             // calculate percent/range/reroll chances, append to lines
             int min = idProfile.getMin();
             int max = idProfile.getMax();
@@ -344,7 +314,8 @@ public final class GearItemModel extends Model {
 
         // create container
         return new GearIdentificationContainer(
-                item,
+                inGameIdName,
+                gearProfile,
                 idProfile,
                 type,
                 shortIdName,
@@ -355,6 +326,23 @@ public final class GearItemModel extends Model {
                 percentLine,
                 rangeLine,
                 rerollLine);
+    }
+
+    private MutableComponent getBaseComponent(
+            String idName, int value, int starCount, boolean isInverted, String unit) {
+        MutableComponent baseComponent = Component.literal("");
+
+        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
+        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+
+        baseComponent.append(statInfo);
+
+        if (ItemStatInfoFeature.INSTANCE.showStars)
+            baseComponent.append(
+                    Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
+
+        baseComponent.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
+        return baseComponent;
     }
 
     private MutableComponent getPercentageTextComponent(float percentage) {
@@ -595,10 +583,10 @@ public final class GearItemModel extends Model {
 
         // ids
         for (GearIdentificationContainer id : sortedIds) {
-            if (id.identification().isFixed()) continue; // don't care about these
+            if (id.idProfile().isFixed()) continue; // don't care about these
 
             int idValue = id.value();
-            IdentificationProfile idProfile = id.identification();
+            IdentificationProfile idProfile = id.idProfile();
 
             int translatedValue;
             if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent

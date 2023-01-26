@@ -10,8 +10,9 @@ import com.wynntils.models.gear.type.IdentificationModifier;
 import net.minecraft.network.chat.Component;
 
 public record GearIdentificationContainer(
-        GearProfile item,
-        IdentificationProfile identification,
+        String inGameIdName,
+        GearProfile gearProfile,
+        IdentificationProfile idProfile,
         IdentificationModifier modifier,
         String shortIdName,
         int value,
@@ -23,10 +24,10 @@ public record GearIdentificationContainer(
         Component rerollLoreLine) {
 
     public boolean isNew() {
-        return (identification == null || identification.isInvalidValue(value));
+        return (idProfile == null || idProfile.isInvalidValue(value));
     }
 
     public boolean isFixed() {
-        return !isNew() && identification.hasConstantValue();
+        return !isNew() && idProfile.hasConstantValue();
     }
 }

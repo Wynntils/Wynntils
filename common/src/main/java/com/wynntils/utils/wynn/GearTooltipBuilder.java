@@ -4,7 +4,9 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.DamageType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
@@ -13,11 +15,13 @@ import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.profile.MajorIdentification;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.GearStatsFixed;
 import com.wynntils.models.gearinfo.types.GearDamageType;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
@@ -27,6 +31,7 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -36,6 +41,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
 public class GearTooltipBuilder {
@@ -401,22 +407,190 @@ public class GearTooltipBuilder {
                 switch (style.decorations()) {
                     case PERCENT -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName,
-                                    GearIdentificationContainer::percentLoreLine));
+                                    GearIdentificationContainer::shortIdName, this::buildPercentLoreLine));
                     case RANGE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName,
-                                    GearIdentificationContainer::rangeLoreLine));
+                                    GearIdentificationContainer::shortIdName, this::buildRangeLoreLine));
                     case REROLL_CHANCE -> idContainers.stream()
                             .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName,
-                                    GearIdentificationContainer::rerollLoreLine));
+                                    GearIdentificationContainer::shortIdName, this::buildRerollLoreLine));
                 };
 
         if (style.reorder()) {
             return Models.GearProfiles.orderComponents(map, style.group());
         } else {
             return new ArrayList<>(map.values());
+        }
+    }
+
+    private Component buildRerollLoreLine(GearIdentificationContainer idContainer) {
+        MutableComponent rerollLine = buildBaseComponent(idContainer);
+        IdentificationProfile idProfile = idContainer.idProfile();
+        if (!idProfile.hasConstantValue()) {
+            ReidentificationChances chances = getChances(idProfile, idContainer.value(), idContainer.stars());
+
+            rerollLine.append(
+                    getRerollChancesComponent(idProfile.getPerfectChance(), chances.increase(), chances.decrease()));
+        }
+
+        return rerollLine;
+    }
+
+    public ReidentificationChances getChances(IdentificationProfile idProfile, int currentValue, int starCount) {
+        boolean isInverted = idProfile.isInverted();
+        int baseValue = idProfile.getBaseValue();
+        // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
+        // that some items that have had its stats shifted from positive to negative to
+        // break the bounds
+        if (currentValue > idProfile.getMax()) {
+            return new ReidentificationChances(1d, 0d, 0d).flipIf(isInverted);
+        } else if (currentValue < idProfile.getMin()) {
+            return new ReidentificationChances(0d, 0d, 1d).flipIf(isInverted);
+        }
+
+        if (idProfile.hasConstantValue()) {
+            return new ReidentificationChances(0d, 1d, 0d).flipIf(isInverted);
+        }
+
+        // This code finds the lowest possible and highest possible rolls that achieve the correct
+        // result (inclusive). Then, it finds the average decrease and increase afterwards
+
+        // Note that due to rounding, a bound may not actually be a possible roll
+        // if it results in a value that is exactly .5, which then rounds up/down
+
+        double lowerRawRollBound = (currentValue * 100 - 50) / ((double) baseValue);
+        double higherRawRollBound = (currentValue * 100 + 50) / ((double) baseValue);
+
+        if (baseValue > 0) {
+            // We can further bound the possible rolls using the star count
+            int starMin = 30;
+            int starMax = 130;
+
+            switch (starCount) {
+                case 0:
+                    starMin = 30;
+                    starMax = 100;
+                    break;
+                case 1:
+                    starMin = 101;
+                    starMax = 124;
+                    break;
+                case 2:
+                    starMin = 125;
+                    starMax = 129;
+                    break;
+                case 3:
+                    return new ReidentificationChances(100 / 101d, 1 / 101d, 0d);
+                default:
+                    WynntilsMod.warn("Invalid star count of " + starCount);
+            }
+
+            double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
+            double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
+
+            double avg = (lowerRollBound + higherRollBound) / 2d;
+
+            return new ReidentificationChances((avg - 30) / 101d, 1 / 101d, (130 - avg) / 101d).flipIf(isInverted);
+        } else {
+            double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
+            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
+
+            double avg = (lowerRollBound + higherRollBound) / 2d;
+
+            return new ReidentificationChances((130 - avg) / 61d, 1 / 61d, (avg - 70) / 61d).flipIf(isInverted);
+        }
+    }
+
+    private static MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
+        return Component.literal(String.format(Locale.ROOT, " \u2605%.2f%%", perfect * 100))
+                .withStyle(ChatFormatting.AQUA)
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", increase * 100))
+                        .withStyle(ChatFormatting.GREEN))
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", decrease * 100))
+                        .withStyle(ChatFormatting.RED));
+    }
+
+    private Component buildRangeLoreLine(GearIdentificationContainer idContainer) {
+        MutableComponent rangeLine = buildBaseComponent(idContainer);
+        IdentificationProfile idProfile = idContainer.idProfile();
+        if (!idProfile.hasConstantValue()) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = idProfile.getMin();
+            int max = idProfile.getMax();
+
+            rangeLine.append(getRangeTextComponent(min, max));
+        }
+
+        return rangeLine;
+    }
+
+    private static MutableComponent getRangeTextComponent(int min, int max) {
+        return Component.literal(" [")
+                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
+                .append("]")
+                .withStyle(ChatFormatting.DARK_GREEN);
+    }
+
+    private Component buildPercentLoreLine(GearIdentificationContainer idContainer) {
+        MutableComponent percentLine = buildBaseComponent(idContainer);
+        IdentificationProfile idProfile = idContainer.idProfile();
+        if (!idProfile.hasConstantValue()) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = idProfile.getMin();
+            int max = idProfile.getMax();
+
+            float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
+            percentLine.append(getPercentageTextComponent(percentage));
+        }
+        return percentLine;
+    }
+
+    private static MutableComponent getPercentageTextComponent(float percentage) {
+        return ColorScaleUtils.getPercentageTextComponent(
+                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
+    }
+
+    private MutableComponent buildBaseComponent(GearIdentificationContainer idContainer) {
+        boolean isInverted = idContainer.idProfile() != null
+                ? idContainer.idProfile().isInverted()
+                : Models.GearProfiles.getIdentificationOrderer().isInverted(idContainer.shortIdName());
+
+        IdentificationModifier type = idContainer.idProfile() != null
+                ? idContainer.idProfile().getType()
+                : IdentificationProfile.getTypeFromName(idContainer.shortIdName());
+        if (type == null) return null; // not a valid id
+
+        String unit = type.getInGame(idContainer.shortIdName());
+
+        MutableComponent baseComponent = getBaseComponent(
+                idContainer.inGameIdName(), idContainer.value(), idContainer.stars(), isInverted, unit);
+
+        return baseComponent;
+    }
+
+    private static MutableComponent getBaseComponent(
+            String idName, int value, int starCount, boolean isInverted, String unit) {
+        MutableComponent baseComponent = Component.literal("");
+
+        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
+        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+
+        baseComponent.append(statInfo);
+
+        if (ItemStatInfoFeature.INSTANCE.showStars)
+            baseComponent.append(
+                    Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
+
+        baseComponent.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
+        return baseComponent;
+    }
+
+    public record ReidentificationChances(double decrease, double remain, double increase) {
+
+        private ReidentificationChances flipIf(boolean flip) {
+            if (flip) return new ReidentificationChances(increase, remain, decrease);
+
+            return this;
         }
     }
 

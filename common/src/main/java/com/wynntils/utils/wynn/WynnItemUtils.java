@@ -58,8 +58,9 @@ public final class WynnItemUtils {
             line.append(Component.literal(" " + IdentificationProfile.getAsLongName(idName))
                     .withStyle(ChatFormatting.GRAY));
 
-            GearIdentificationContainer id =
-                    new GearIdentificationContainer(item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
+            // FIXME: maybe first argument is not correct?
+            GearIdentificationContainer id = new GearIdentificationContainer(
+                    item.getDisplayName(), item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
             ids.add(id);
         }
 
