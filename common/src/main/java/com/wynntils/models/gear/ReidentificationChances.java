@@ -20,7 +20,8 @@ public class ReidentificationChances {
         this.perfect = getPerfectChance(idProfile);
     }
 
-    public static ReidentificationChances calculateChances(IdentificationProfile idProfile, int currentValue, int starCount) {
+    public static ReidentificationChances calculateChances(
+            IdentificationProfile idProfile, int currentValue, int starCount) {
         boolean isInverted = idProfile.isInverted();
         int baseValue = idProfile.getBaseValue();
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
