@@ -1,9 +1,22 @@
+## [0.0.2-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.151...v0.0.2-alpha.152) (2023-01-26)
+
+
+### Miscellaneous Chores
+
+* Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c2076e5](https://github.com/Wynntils/Artemis/commit/c2076e5e2900a1e04110a512e8c2ef3fcfdb2757))
+* Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c3fd809](https://github.com/Wynntils/Artemis/commit/c3fd809d5722e7c7e20b830e130b56326c69dfda))
+
 ## [0.0.2-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.150...v0.0.2-alpha.151) (2023-01-25)
 
 
 ### New Features
 
 * Always mount horse when using saddle ([#1094](https://github.com/Wynntils/Artemis/issues/1094)) ([8280fe0](https://github.com/Wynntils/Artemis/commit/8280fe0f0a2d60101ed9684ca1511ead449ff3c6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.151 [skip ci] ([66d173d](https://github.com/Wynntils/Artemis/commit/66d173da15033c51f897736762147dc2abca7f8e))
 
 ## [0.0.2-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.149...v0.0.2-alpha.150) (2023-01-25)
 
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.148 [skip ci] ([9d99c63](https://github.com/Wynntils/Artemis/commit/9d99c63e107ff8500a0eb8baebae670d5733bc11))
-
-## [0.0.2-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.146...v0.0.2-alpha.147) (2023-01-25)
-
-
-### Bug Fixes
-
-* Fix party sharing ([#1090](https://github.com/Wynntils/Artemis/issues/1090)) ([8e0eb43](https://github.com/Wynntils/Artemis/commit/8e0eb43727bfa4922f0d7f846a96b3a5a3622f71))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.147 [skip ci] ([b22ff32](https://github.com/Wynntils/Artemis/commit/b22ff32e0f7a4185660b4b90a9dd138f1291040a))
 
