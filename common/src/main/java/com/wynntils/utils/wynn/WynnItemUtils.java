@@ -59,8 +59,8 @@ public final class WynnItemUtils {
                     .withStyle(ChatFormatting.GRAY));
 
             // FIXME: maybe first argument is not correct?
-            GearIdentificationContainer id = new GearIdentificationContainer(
-                    item.getDisplayName(), item, idProfile, type, idName, 0, 0, -1, line, line, line, line);
+            GearIdentificationContainer id =
+                    new GearIdentificationContainer(item.getDisplayName(), item, idProfile, type, idName, 0, 0, -1);
             ids.add(id);
         }
 

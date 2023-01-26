@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.type.IdentificationModifier;
-import net.minecraft.network.chat.Component;
 
 public record GearIdentificationContainer(
         String inGameIdName,
@@ -17,11 +16,7 @@ public record GearIdentificationContainer(
         String shortIdName,
         int value,
         int stars,
-        float percent,
-        Component rawLoreLine,
-        Component percentLoreLine,
-        Component rangeLoreLine,
-        Component rerollLoreLine) {
+        float percent) {
 
     public boolean isNew() {
         return (idProfile == null || idProfile.isInvalidValue(value));

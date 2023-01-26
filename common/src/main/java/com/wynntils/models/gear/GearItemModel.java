@@ -10,7 +10,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
@@ -29,7 +28,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.wynn.ColorScaleUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.math.BigDecimal;
@@ -234,6 +232,7 @@ public final class GearItemModel extends Model {
         return Optional.of(rerolls);
     }
 
+    // FIXME: this is a remnant, used by tome/charms...
     private Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
@@ -282,13 +281,6 @@ public final class GearItemModel extends Model {
                 idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
         if (type == null) return null; // not a valid id
 
-        String unit = type.getInGame(shortIdName);
-        MutableComponent baseComponent = getBaseComponent(inGameIdName, value, starCount, isInverted, unit);
-
-        MutableComponent percentLine = baseComponent.copy();
-        MutableComponent rangeLine = baseComponent.copy();
-        MutableComponent rerollLine = baseComponent.copy();
-
         float percentage = -1;
         if (!idProfile.hasConstantValue()) {
             // calculate percent/range/reroll chances, append to lines
@@ -296,89 +288,13 @@ public final class GearItemModel extends Model {
             int max = idProfile.getMax();
 
             percentage = MathUtils.inverseLerp(min, max, value) * 100;
-
-            IdentificationProfile.ReidentificationChances chances = idProfile.getChances(value, starCount);
-
-            percentLine.append(getPercentageTextComponent(percentage));
-
-            rangeLine.append(getRangeTextComponent(min, max));
-
-            rerollLine.append(
-                    getRerollChancesComponent(idProfile.getPerfectChance(), chances.increase(), chances.decrease()));
         }
 
         // lore might be null if this ID is not being created from a lore line
-        if (lore == null) {
-            lore = percentLine;
-        }
 
         // create container
         return new GearIdentificationContainer(
-                inGameIdName,
-                gearProfile,
-                idProfile,
-                type,
-                shortIdName,
-                value,
-                starCount,
-                percentage,
-                lore,
-                percentLine,
-                rangeLine,
-                rerollLine);
-    }
-
-    private MutableComponent getBaseComponent(
-            String idName, int value, int starCount, boolean isInverted, String unit) {
-        MutableComponent baseComponent = Component.literal("");
-
-        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
-        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        baseComponent.append(statInfo);
-
-        if (ItemStatInfoFeature.INSTANCE.showStars)
-            baseComponent.append(
-                    Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
-
-        baseComponent.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
-        return baseComponent;
-    }
-
-    private MutableComponent getPercentageTextComponent(float percentage) {
-        return ColorScaleUtils.getPercentageTextComponent(
-                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
-    }
-
-    /**
-     * Create the colored reroll chance component for an item ID
-     *
-     * @param perfect the chance of a perfect roll
-     * @param increase the chance of an increased roll
-     * @param decrease the chance of a decreased roll
-     * @return the styled reroll chance text component
-     */
-    private MutableComponent getRerollChancesComponent(double perfect, double increase, double decrease) {
-        return Component.literal(String.format(Locale.ROOT, " \u2605%.2f%%", perfect * 100))
-                .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", increase * 100))
-                        .withStyle(ChatFormatting.GREEN))
-                .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", decrease * 100))
-                        .withStyle(ChatFormatting.RED));
-    }
-
-    /**
-     * Create the colored value range component for an item ID
-     *
-     * @param min the minimum stat roll
-     * @param max the maximum stat roll
-     * @return the styled ID range text component
-     */
-    private MutableComponent getRangeTextComponent(int min, int max) {
-        return Component.literal(" [")
-                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
-                .append("]")
-                .withStyle(ChatFormatting.DARK_GREEN);
+                inGameIdName, gearProfile, idProfile, type, shortIdName, value, starCount, percentage);
     }
 
     public GearItem fromUnidentified(GearProfile gearProfile) {
