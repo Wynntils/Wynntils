@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
@@ -194,6 +195,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     VerticalAlignment.Middle,
                     TextShadow.NORMAL);
         }
+        // endregion
 
         // region Suggestion list headers
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, totalWidth / 2, 1);
