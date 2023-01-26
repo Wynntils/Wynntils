@@ -84,7 +84,7 @@ public final class GearInfoModel extends Model {
             majorIds = GEAR_INFO_GSON.fromJson(majorIdsReader, type);
 
             // Now we can do the gear DB
-            Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEARS);
+            Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
             dl.handleReader(reader -> {
                 WynncraftGearInfoResponse gearInfoResponse =
                         GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);

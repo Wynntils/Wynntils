@@ -37,7 +37,7 @@ public enum UrlId {
     DATA_STATIC_SERVICES("dataStaticServices"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_URLS("dataStaticUrls"),
-    DATA_STATIC_GEARS("dataStaticGears"),
+    DATA_STATIC_GEAR("dataStaticGear"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
     LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),
