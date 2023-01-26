@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -57,6 +56,7 @@ public final class PlayerRelationsModel extends Model {
 
     private Set<String> friends;
     private Set<String> partyMembers;
+    private String partyLeader;
     private Set<String> worldPlayers;
     private boolean isPartying = false;
 
@@ -128,6 +128,8 @@ public final class PlayerRelationsModel extends Model {
 
             isPartying = true;
             partyMembers = Set.of();
+            partyLeader = McUtils.player().getName().getString();
+            System.out.println(partyLeader);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
             return true;
@@ -139,6 +141,7 @@ public final class PlayerRelationsModel extends Model {
 
             isPartying = false;
             partyMembers = Set.of();
+            partyLeader = null;
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
             return true;
@@ -210,6 +213,7 @@ public final class PlayerRelationsModel extends Model {
 
         String[] partyList = matcher.group(1).split(", ");
 
+        partyLeader = partyList[0];
         partyMembers = Arrays.stream(partyList).collect(Collectors.toSet());
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
 
@@ -311,6 +315,10 @@ public final class PlayerRelationsModel extends Model {
 
     public Set<String> getPartyMembers() {
         return partyMembers;
+    }
+
+    public String getPartyLeader() {
+        return partyLeader;
     }
 
     public Set<String> getWorldPlayers() {

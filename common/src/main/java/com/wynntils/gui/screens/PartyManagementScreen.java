@@ -1,10 +1,12 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.sun.source.tree.Tree;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
@@ -43,7 +46,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private final int totalWidth = 344;
     private final int xStart = totalWidth / 2;
 
-    private final Set<String> partyMembers = new HashSet<>();
     private final Set<String> offlineMembers = new HashSet<>();
     private final List<String> suggestedPlayers = new ArrayList<>();
 
@@ -157,6 +159,41 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
         // endregion
+        // region Party list
+        List<String> partyMembers = new ArrayList<>(Models.PlayerRelations.getPartyMembers());
+        for (int i = 0; i < partyMembers.size(); i++) {
+            String playerName = partyMembers.get(i);
+            if (playerName == null) continue;
+
+            CustomColor color;
+            String prefix = "";
+
+            if (playerName.equals(Models.PlayerRelations.getPartyLeader())) {
+                color = CommonColors.YELLOW;
+            } else if (Models.PlayerRelations.getFriends().contains(playerName)) {
+                color = CommonColors.GREEN;
+            } else {
+                color = CommonColors.WHITE;
+            }
+
+            if (offlineMembers.contains(playerName)) {
+                prefix = "§m";
+            } else if (playerName.equals(McUtils.player().getName().getString())) {
+                prefix = "§l";
+            }
+
+            String formattedPlayerName = prefix + playerName;
+
+            fr.renderText(
+                    poseStack,
+                    formattedPlayerName,
+                    this.width / 2 - xStart + 50,
+                    this.height / 2 - 120 + i * 20,
+                    color,
+                    HorizontalAlignment.Left,
+                    VerticalAlignment.Middle,
+                    TextShadow.NORMAL);
+        }
 
         // region Suggestion list headers
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, totalWidth / 2, 1);
@@ -236,6 +273,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
+        // endregion
     }
 
     private void inviteFromField() {
@@ -257,20 +295,14 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void refreshParty() {
         Models.PlayerRelations.updateWorldPlayers();
-
         Models.PlayerRelations.requestPartyListUpdate();
-        if (!Models.PlayerRelations.isPartying()) {
-            partyMembers.clear();
-        } else {
-            partyMembers.addAll(Models.PlayerRelations.getPartyMembers());
-        }
     }
 
     private void kickOffline() {
-        Models.PlayerRelations.updateWorldPlayers();
+        refreshParty();
         offlineMembers.addAll(Models.PlayerRelations.getPartyMembers());
         offlineMembers.removeAll(Models.PlayerRelations.getWorldPlayers());
-
+        offlineMembers.forEach(member -> McUtils.sendCommand("party kick " + member));
     }
 
     private void createParty() {
@@ -290,7 +322,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         onlineUsers.retainAll(Models.PlayerRelations.getFriends());
 
         suggestedPlayers.addAll(onlineUsers);
-        suggestedPlayers.removeAll(partyMembers); // No need to suggest party members
+        suggestedPlayers.removeAll(Models.PlayerRelations.getPartyMembers()); // No need to suggest party members
         suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
     }
 
