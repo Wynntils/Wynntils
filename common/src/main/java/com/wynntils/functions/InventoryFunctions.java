@@ -7,8 +7,8 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
+import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
@@ -126,43 +126,43 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
+    public static class HeldItemCurrentDurabilityFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
-                return craftedGearItem.getDurability().getCurrent();
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
+                return String.valueOf(durableItem.getDurability().getCurrent());
             }
 
-            return -1;
+            return "";
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("held_durability");
+            return List.of("current_held_durability");
         }
     }
 
-    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
+    public static class HeldItemMaxDurabilityFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
-            if (wynnItem.isPresent() && wynnItem.get() instanceof CraftedGearItem craftedGearItem) {
-                return craftedGearItem.getDurability().getMax();
+            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
+                return String.valueOf(durableItem.getDurability().getMax());
             }
 
-            return -1;
+            return "";
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("held_durability");
+            return List.of("max_held_durability");
         }
     }
 }

@@ -38,7 +38,7 @@ public class SpellModel extends Model {
         Handlers.ActionBar.registerSegment(spellSegment);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     public void onItemRenamed(ItemRenamedEvent event) {
         String msg = event.getNewName();
         SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);

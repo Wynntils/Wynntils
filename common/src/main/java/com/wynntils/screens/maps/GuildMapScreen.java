@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -216,6 +217,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+
         // Manage on shift right click
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
@@ -234,7 +242,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
-        final float centerHeight = 55
+        final float centerHeight = 75
                 + (territoryInfo.getStorage().values().size()
                                 + territoryInfo.getGenerators().size())
                         * 10
@@ -349,6 +357,20 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             VerticalAlignment.Top,
                             TextShadow.OUTLINE);
         }
+
+        renderYOffset += 20;
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                                + territoryProfile.getReadableRelativeTimeAcquired(),
+                        10,
+                        10 + renderYOffset,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        TextShadow.OUTLINE);
 
         // Territory name
         FontRenderer.getInstance()
