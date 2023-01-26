@@ -79,6 +79,11 @@
     "md5": "f85efa2a19d9b84e1a8c3761ba50866a"
   },
   {
+    "id": "dataStaticGear",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json",
+    "md5": "959bf4ef2cab8aa23b7666fea0315e64"
+  },
+  {
     "id": "dataStaticItemGuesses",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/item_guesses.json",
     "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8"
@@ -110,10 +115,6 @@
   {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
-  },
-  {
-    "id": "dataWynncraftGears",
-    "url": "https://api.wynncraft.com/public_api.php?action=itemDB&category=all"
   },
   {
     "id": "linkWikiLookup",

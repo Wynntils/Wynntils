@@ -77,13 +77,14 @@ public final class GearInfoModel extends Model {
     }
 
     private void loadGearInfoRegistry() {
+        // We must download and parse Major IDs before attempting to parse the gear DB
         Download majorIdsDl = Managers.Net.download(UrlId.DATA_STATIC_MAJOR_IDS);
         majorIdsDl.handleReader(majorIdsReader -> {
             Type type = new TypeToken<List<GearMajorId>>() {}.getType();
             majorIds = GEAR_INFO_GSON.fromJson(majorIdsReader, type);
 
-            // We must download and parse Major IDs before attempting to parse the gear DB
-            Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_GEARS);
+            // Now we can do the gear DB
+            Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEARS);
             dl.handleReader(reader -> {
                 WynncraftGearInfoResponse gearInfoResponse =
                         GEAR_INFO_GSON.fromJson(reader, WynncraftGearInfoResponse.class);
