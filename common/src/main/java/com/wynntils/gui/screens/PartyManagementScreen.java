@@ -110,7 +110,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
-        boolean partying = Models.PlayerRelations.isPartying();
+        boolean partying = Models.Party.isPartying();
 
         createPartyButton.active = !partying;
         leavePartyButton.active = partying;
@@ -160,7 +160,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Party list
-        List<String> partyMembers = new ArrayList<>(Models.PlayerRelations.getPartyMembers());
+        List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
         for (int i = 0; i < partyMembers.size(); i++) {
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
@@ -168,9 +168,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             CustomColor color;
             String prefix = "";
 
-            if (playerName.equals(Models.PlayerRelations.getPartyLeader())) {
+            if (playerName.equals(Models.Party.getPartyLeader())) {
                 color = CommonColors.YELLOW;
-            } else if (Models.PlayerRelations.getFriends().contains(playerName)) {
+            } else if (Models.Friends.getFriends().contains(playerName)) {
                 color = CommonColors.GREEN;
             } else {
                 color = CommonColors.WHITE;
@@ -282,26 +282,25 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fieldText = COMMA_REPLACER.matcher(fieldText).replaceAll(","); // semicolons and spaces to comma
         if (fieldText.isBlank()) return;
 
-        if (!Models.PlayerRelations.isPartying()) {
+        if (!Models.Party.isPartying()) {
             McUtils.sendCommand("party create");
         }
 
         Set<String> toInvite = new HashSet<>(List.of(fieldText.split(",")));
-        toInvite.removeAll(Models.PlayerRelations.getPartyMembers());
+        toInvite.removeAll(Models.Party.getPartyMembers());
         toInvite.forEach(member -> McUtils.sendCommand("party invite " + member));
 
         inviteInput.setTextBoxInput("");
     }
 
     private void refreshParty() {
-        Models.PlayerRelations.updateWorldPlayers();
-        Models.PlayerRelations.requestPartyListUpdate();
+        Models.Party.requestPartyListUpdate();
     }
 
     private void kickOffline() {
         refreshParty();
-        offlineMembers.addAll(Models.PlayerRelations.getPartyMembers());
-        offlineMembers.removeAll(Models.PlayerRelations.getWorldPlayers());
+        offlineMembers.addAll(Models.Party.getPartyMembers());
+        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
         offlineMembers.forEach(member -> McUtils.sendCommand("party kick " + member));
     }
 
@@ -319,10 +318,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
         Set<String> onlineUsers = new HashSet<>(scoreboard.getTeamNames());
-        onlineUsers.retainAll(Models.PlayerRelations.getFriends());
+        onlineUsers.retainAll(Models.Friends.getFriends());
 
         suggestedPlayers.addAll(onlineUsers);
-        suggestedPlayers.removeAll(Models.PlayerRelations.getPartyMembers()); // No need to suggest party members
+        suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
         suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
     }
 
