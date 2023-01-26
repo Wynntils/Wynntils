@@ -415,8 +415,7 @@ public class GearTooltipBuilder {
         }
     }
 
-    private Component buildIdLoreLine(
-            IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
+    private Component buildIdLoreLine(IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
         MutableComponent baseComponent = buildBaseComponent(idContainer);
 
         return switch (decorations) {
@@ -424,6 +423,73 @@ public class GearTooltipBuilder {
             case RANGE -> appendRangeLoreLine(baseComponent, idContainer);
             case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, idContainer);
         };
+    }
+
+    private MutableComponent buildBaseComponent(GearIdentificationContainer idContainer) {
+        boolean isInverted = idContainer.idProfile() != null
+                ? idContainer.idProfile().isInverted()
+                : Models.GearProfiles.getIdentificationOrderer().isInverted(idContainer.shortIdName());
+
+        IdentificationModifier type = idContainer.idProfile() != null
+                ? idContainer.idProfile().getType()
+                : IdentificationProfile.getTypeFromName(idContainer.shortIdName());
+        if (type == null) return null; // not a valid id
+
+        String unit = type.getInGame(idContainer.shortIdName());
+
+        int value = idContainer.value();
+        MutableComponent baseComponent = Component.literal("");
+
+        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
+        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+
+        baseComponent.append(statInfo);
+
+        if (ItemStatInfoFeature.INSTANCE.showStars)
+            baseComponent.append(
+                    Component.literal("***".substring(3 - idContainer.stars())).withStyle(ChatFormatting.DARK_GREEN));
+
+        baseComponent.append(Component.literal(" " + idContainer.inGameIdName()).withStyle(ChatFormatting.GRAY));
+
+        return baseComponent;
+    }
+
+    private Component appendPercentLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
+        IdentificationProfile idProfile = idContainer.idProfile();
+        if (!idProfile.hasConstantValue()) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = idProfile.getMin();
+            int max = idProfile.getMax();
+
+            float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
+            baseComponent.append(getPercentageTextComponent(percentage));
+        }
+        return baseComponent;
+    }
+
+    private static MutableComponent getPercentageTextComponent(float percentage) {
+        return ColorScaleUtils.getPercentageTextComponent(
+                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
+    }
+
+    private Component appendRangeLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
+        IdentificationProfile idProfile = idContainer.idProfile();
+        if (!idProfile.hasConstantValue()) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = idProfile.getMin();
+            int max = idProfile.getMax();
+
+            baseComponent.append(getRangeTextComponent(min, max));
+        }
+
+        return baseComponent;
+    }
+
+    private static MutableComponent getRangeTextComponent(int min, int max) {
+        return Component.literal(" [")
+                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
+                .append("]")
+                .withStyle(ChatFormatting.DARK_GREEN);
     }
 
     private Component appendRerollLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
@@ -510,73 +576,6 @@ public class GearTooltipBuilder {
                         .withStyle(ChatFormatting.GREEN))
                 .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", decrease * 100))
                         .withStyle(ChatFormatting.RED));
-    }
-
-    private Component appendRangeLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
-        IdentificationProfile idProfile = idContainer.idProfile();
-        if (!idProfile.hasConstantValue()) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = idProfile.getMin();
-            int max = idProfile.getMax();
-
-            baseComponent.append(getRangeTextComponent(min, max));
-        }
-
-        return baseComponent;
-    }
-
-    private static MutableComponent getRangeTextComponent(int min, int max) {
-        return Component.literal(" [")
-                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
-                .append("]")
-                .withStyle(ChatFormatting.DARK_GREEN);
-    }
-
-    private Component appendPercentLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
-        IdentificationProfile idProfile = idContainer.idProfile();
-        if (!idProfile.hasConstantValue()) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = idProfile.getMin();
-            int max = idProfile.getMax();
-
-            float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
-            baseComponent.append(getPercentageTextComponent(percentage));
-        }
-        return baseComponent;
-    }
-
-    private static MutableComponent getPercentageTextComponent(float percentage) {
-        return ColorScaleUtils.getPercentageTextComponent(
-                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
-    }
-
-    private MutableComponent buildBaseComponent(GearIdentificationContainer idContainer) {
-        boolean isInverted = idContainer.idProfile() != null
-                ? idContainer.idProfile().isInverted()
-                : Models.GearProfiles.getIdentificationOrderer().isInverted(idContainer.shortIdName());
-
-        IdentificationModifier type = idContainer.idProfile() != null
-                ? idContainer.idProfile().getType()
-                : IdentificationProfile.getTypeFromName(idContainer.shortIdName());
-        if (type == null) return null; // not a valid id
-
-        String unit = type.getInGame(idContainer.shortIdName());
-
-        int value = idContainer.value();
-        MutableComponent baseComponent = Component.literal("");
-
-        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
-        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        baseComponent.append(statInfo);
-
-        if (ItemStatInfoFeature.INSTANCE.showStars)
-            baseComponent.append(
-                    Component.literal("***".substring(3 - idContainer.stars())).withStyle(ChatFormatting.DARK_GREEN));
-
-        baseComponent.append(Component.literal(" " + idContainer.inGameIdName()).withStyle(ChatFormatting.GRAY));
-
-        return baseComponent;
     }
 
     public record ReidentificationChances(double decrease, double remain, double increase) {
