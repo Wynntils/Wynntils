@@ -91,9 +91,8 @@ public final class PartyModel extends Model {
             WynntilsMod.info("Player created a new party.");
 
             isPartying = true;
-            partyMembers = Set.of();
             partyLeader = McUtils.player().getName().getString();
-            System.out.println(partyLeader);
+            partyMembers = Set.of(partyLeader);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
             return true;
