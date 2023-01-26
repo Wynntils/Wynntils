@@ -417,6 +417,7 @@ public class GearTooltipBuilder {
 
     private Component buildIdLoreLine(IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
         MutableComponent baseComponent = buildBaseComponent(idContainer);
+        if (idContainer.idProfile().hasConstantValue()) return baseComponent;
 
         return switch (decorations) {
             case PERCENT -> appendPercentLoreLine(baseComponent, idContainer);
@@ -456,55 +457,51 @@ public class GearTooltipBuilder {
 
     private Component appendPercentLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
-        if (!idProfile.hasConstantValue()) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = idProfile.getMin();
-            int max = idProfile.getMax();
 
-            float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
-            MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
-                    percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
+        // calculate percent/range/reroll chances, append to lines
+        int min = idProfile.getMin();
+        int max = idProfile.getMax();
 
-            baseComponent.append(percentageTextComponent);
-        }
+        float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
+        MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
+                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
+
+        baseComponent.append(percentageTextComponent);
         return baseComponent;
     }
 
     private Component appendRangeLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
-        if (!idProfile.hasConstantValue()) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = idProfile.getMin();
-            int max = idProfile.getMax();
 
-            MutableComponent rangeTextComponent = Component.literal(" [")
-                    .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
-                    .append("]")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+        // calculate percent/range/reroll chances, append to lines
+        int min = idProfile.getMin();
+        int max = idProfile.getMax();
 
-            baseComponent.append(rangeTextComponent);
-        }
+        MutableComponent rangeTextComponent = Component.literal(" [")
+                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
+                .append("]")
+                .withStyle(ChatFormatting.DARK_GREEN);
+
+        baseComponent.append(rangeTextComponent);
 
         return baseComponent;
     }
 
     private Component appendRerollLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
-        if (!idProfile.hasConstantValue()) {
-            ReidentificationChances chances =
-                    ReidentificationChances.getChances(idProfile, idContainer.value(), idContainer.stars());
 
-            double perfect = idProfile.getPerfectChance();
-            MutableComponent rerollChancesComponent = Component.literal(
-                            String.format(Locale.ROOT, " \u2605%.2f%%", perfect * 100))
-                    .withStyle(ChatFormatting.AQUA)
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", chances.increase() * 100))
-                            .withStyle(ChatFormatting.GREEN))
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.decrease() * 100))
-                            .withStyle(ChatFormatting.RED));
+        ReidentificationChances chances =
+                ReidentificationChances.calculateChances(idProfile, idContainer.value(), idContainer.stars());
 
-            baseComponent.append(rerollChancesComponent);
-        }
+        MutableComponent rerollChancesComponent = Component.literal(
+                        String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))
+                .withStyle(ChatFormatting.AQUA)
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", chances.getIncrease() * 100))
+                        .withStyle(ChatFormatting.GREEN))
+                .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.getDecrease() * 100))
+                        .withStyle(ChatFormatting.RED));
+
+        baseComponent.append(rerollChancesComponent);
 
         return baseComponent;
     }

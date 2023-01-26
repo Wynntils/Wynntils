@@ -82,11 +82,6 @@ public class IdentificationProfile {
         return typeMap.get(name);
     }
 
-    /** @return The chance for this identification to become perfect (From 0 to 1) */
-    public double getPerfectChance() {
-        return 1 / (baseValue > 0 ? 101d : 61d);
-    }
-
     /**
      * @param currentValue Current value of this identification
      * @return true if this is a valid value (If false, the API is probably wrong)
