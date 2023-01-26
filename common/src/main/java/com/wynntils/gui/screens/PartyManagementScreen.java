@@ -138,7 +138,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 this.width / 2 - xStart + 50,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
-                HorizontalAlignment.Center,
+                HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
         fr.renderText(
@@ -147,7 +147,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 this.width / 2 - xStart + 260,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
-                HorizontalAlignment.Center,
+                HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
         fr.renderText(
@@ -156,17 +156,17 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 this.width / 2 - xStart + 322, // starts at 300-ish?, center 322, ends at 344-ish?
                 this.height / 2 - 144,
                 CommonColors.WHITE,
-                HorizontalAlignment.Center,
+                HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
         // endregion
 
         // region Suggestion list headers
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 50, this.height / 2 - 140, 0, totalWidth / 2, 1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, totalWidth / 2, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.head"),
-                this.width / 2 + 50,
+                this.width / 2 + 200,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -175,7 +175,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                this.width / 2 + 150,
+                this.width / 2 + 280,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Center,
@@ -184,7 +184,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.invite"),
-                this.width / 2 + 200,
+                this.width / 2 + 350,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Center,
@@ -193,11 +193,11 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Legend
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 200, this.height / 2 - 140, 0, totalWidth / 3, 1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 400, this.height / 2 - 140, 0, totalWidth / 3, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.legend"),
-                this.width / 2 - 200,
+                this.width / 2 - 400,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -206,8 +206,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.self"),
-                this.width / 2 - 200,
-                this.height / 2 - 140,
+                this.width / 2 - 400,
+                this.height / 2 - 132,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
