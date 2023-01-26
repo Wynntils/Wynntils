@@ -403,18 +403,10 @@ public class GearTooltipBuilder {
             return List.of();
         }
 
-        Map<String, Component> map =
-                switch (style.decorations()) {
-                    case PERCENT -> idContainers.stream()
-                            .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName, this::buildPercentLoreLine));
-                    case RANGE -> idContainers.stream()
-                            .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName, this::buildRangeLoreLine));
-                    case REROLL_CHANCE -> idContainers.stream()
-                            .collect(Collectors.toMap(
-                                    GearIdentificationContainer::shortIdName, this::buildRerollLoreLine));
-                };
+        Map<String, Component> map = idContainers.stream()
+                .collect(Collectors.toMap(
+                        GearIdentificationContainer::shortIdName,
+                        idContainer -> buildIdLoreLine(style.decorations(), idContainer)));
 
         if (style.reorder()) {
             return Models.GearProfiles.orderComponents(map, style.group());
@@ -423,17 +415,27 @@ public class GearTooltipBuilder {
         }
     }
 
-    private Component buildRerollLoreLine(GearIdentificationContainer idContainer) {
-        MutableComponent rerollLine = buildBaseComponent(idContainer);
+    private Component buildIdLoreLine(
+            IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
+        MutableComponent baseComponent = buildBaseComponent(idContainer);
+
+        return switch (decorations) {
+            case PERCENT -> appendPercentLoreLine(baseComponent, idContainer);
+            case RANGE -> appendRangeLoreLine(baseComponent, idContainer);
+            case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, idContainer);
+        };
+    }
+
+    private Component appendRerollLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
         if (!idProfile.hasConstantValue()) {
             ReidentificationChances chances = getChances(idProfile, idContainer.value(), idContainer.stars());
 
-            rerollLine.append(
+            baseComponent.append(
                     getRerollChancesComponent(idProfile.getPerfectChance(), chances.increase(), chances.decrease()));
         }
 
-        return rerollLine;
+        return baseComponent;
     }
 
     public ReidentificationChances getChances(IdentificationProfile idProfile, int currentValue, int starCount) {
@@ -510,18 +512,17 @@ public class GearTooltipBuilder {
                         .withStyle(ChatFormatting.RED));
     }
 
-    private Component buildRangeLoreLine(GearIdentificationContainer idContainer) {
-        MutableComponent rangeLine = buildBaseComponent(idContainer);
+    private Component appendRangeLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
         if (!idProfile.hasConstantValue()) {
             // calculate percent/range/reroll chances, append to lines
             int min = idProfile.getMin();
             int max = idProfile.getMax();
 
-            rangeLine.append(getRangeTextComponent(min, max));
+            baseComponent.append(getRangeTextComponent(min, max));
         }
 
-        return rangeLine;
+        return baseComponent;
     }
 
     private static MutableComponent getRangeTextComponent(int min, int max) {
@@ -531,8 +532,7 @@ public class GearTooltipBuilder {
                 .withStyle(ChatFormatting.DARK_GREEN);
     }
 
-    private Component buildPercentLoreLine(GearIdentificationContainer idContainer) {
-        MutableComponent percentLine = buildBaseComponent(idContainer);
+    private Component appendPercentLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
         IdentificationProfile idProfile = idContainer.idProfile();
         if (!idProfile.hasConstantValue()) {
             // calculate percent/range/reroll chances, append to lines
@@ -540,9 +540,9 @@ public class GearTooltipBuilder {
             int max = idProfile.getMax();
 
             float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
-            percentLine.append(getPercentageTextComponent(percentage));
+            baseComponent.append(getPercentageTextComponent(percentage));
         }
-        return percentLine;
+        return baseComponent;
     }
 
     private static MutableComponent getPercentageTextComponent(float percentage) {
@@ -562,14 +562,7 @@ public class GearTooltipBuilder {
 
         String unit = type.getInGame(idContainer.shortIdName());
 
-        MutableComponent baseComponent = getBaseComponent(
-                idContainer.inGameIdName(), idContainer.value(), idContainer.stars(), isInverted, unit);
-
-        return baseComponent;
-    }
-
-    private static MutableComponent getBaseComponent(
-            String idName, int value, int starCount, boolean isInverted, String unit) {
+        int value = idContainer.value();
         MutableComponent baseComponent = Component.literal("");
 
         MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
@@ -579,9 +572,10 @@ public class GearTooltipBuilder {
 
         if (ItemStatInfoFeature.INSTANCE.showStars)
             baseComponent.append(
-                    Component.literal("***".substring(3 - starCount)).withStyle(ChatFormatting.DARK_GREEN));
+                    Component.literal("***".substring(3 - idContainer.stars())).withStyle(ChatFormatting.DARK_GREEN));
 
-        baseComponent.append(Component.literal(" " + idName).withStyle(ChatFormatting.GRAY));
+        baseComponent.append(Component.literal(" " + idContainer.inGameIdName()).withStyle(ChatFormatting.GRAY));
+
         return baseComponent;
     }
 
