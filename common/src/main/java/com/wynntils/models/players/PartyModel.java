@@ -175,7 +175,6 @@ public final class PartyModel extends Model {
 
             isPartying = true;
             partyLeader = McUtils.player().getName().getString();
-            System.out.println(partyLeader);
             return true;
         }
 

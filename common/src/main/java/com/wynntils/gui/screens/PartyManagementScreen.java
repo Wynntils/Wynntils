@@ -39,6 +39,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private Button leavePartyButton;
     private final List<Button> promoteButtons = new ArrayList<>();
     private final List<Button> kickButtons = new ArrayList<>();
+    private final List<Button> inviteButtons = new ArrayList<>();
 
     private final int totalWidth = 344;
     private final int xStart = totalWidth / 2;
@@ -252,21 +253,51 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                this.width / 2 + 280,
+                this.width / 2 + 250,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
-                HorizontalAlignment.Center,
+                HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.invite"),
-                this.width / 2 + 350,
+                this.width / 2 + 340,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
-                HorizontalAlignment.Center,
+                HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
                 TextShadow.NORMAL);
+        // endregion
+        // region Suggestion list
+        this.renderables.removeAll(inviteButtons);
+        this.children.removeAll(inviteButtons);
+        inviteButtons.clear();
+        for (int i = 0; i < suggestedPlayers.size(); i++) {
+            String playerName = suggestedPlayers.get(i);
+            if (playerName == null) continue;
+
+            // name rendering
+            fr.renderText(
+                    poseStack,
+                    playerName,
+                    this.width / 2 + 250,
+                    this.height / 2 - 125 + i * 20,
+                    CommonColors.GREEN,
+                    HorizontalAlignment.Left,
+                    VerticalAlignment.Middle,
+                    TextShadow.NORMAL);
+
+            // Invite button
+            inviteButtons.add(new Button.Builder(
+                    Component.translatable("screens.wynntils.partyManagementGui.invite"),
+                    (button) -> inviteToParty(playerName))
+                    .pos(this.width / 2 + 334, this.height / 2 - 125 + i * 20 - 10)
+                    .size(40, 20)
+                    .build());
+        }
+        this.renderables.addAll(inviteButtons);
+        this.children.addAll(inviteButtons);
         // endregion
 
         // region Legend
@@ -331,7 +362,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         Set<String> toInvite = new HashSet<>(List.of(fieldText.split(",")));
         toInvite.removeAll(Models.Party.getPartyMembers());
-        toInvite.forEach(member -> McUtils.sendCommand("party invite " + member));
+        toInvite.forEach(this::inviteToParty);
 
         inviteInput.setTextBoxInput("");
     }
@@ -365,6 +396,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void kickFromParty(String playerName) {
         McUtils.sendCommand("party kick " + playerName);
+    }
+
+    private void inviteToParty(String playerName) {
+        McUtils.sendCommand("party invite " + playerName);
     }
 
     private void updateSuggestionsList() {
