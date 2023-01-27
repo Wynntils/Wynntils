@@ -4,7 +4,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.gui.screens.PartyManagementScreen;
+import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import org.lwjgl.glfw.GLFW;
 
