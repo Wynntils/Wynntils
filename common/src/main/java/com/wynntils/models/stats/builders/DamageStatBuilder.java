@@ -59,12 +59,6 @@ public final class DamageStatBuilder extends StatBuilder {
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
 
-            case "airDamageBonus" -> "AIRDAMAGEBONUS";
-            case "earthDamageBonus" -> "EARTHDAMAGEBONUS";
-            case "fireDamageBonus" -> "FIREDAMAGEBONUS";
-            case "thunderDamageBonus" -> "THUNDERDAMAGEBONUS";
-            case "waterDamageBonus" -> "WATERDAMAGEBONUS";
-
             default -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, apiName);
         };
     }
