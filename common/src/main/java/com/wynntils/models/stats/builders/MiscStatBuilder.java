@@ -6,18 +6,29 @@ package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.StatType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-public final class MiscStatBuilder extends StatBuilder {
+public final class MiscStatBuilder extends StatBuilder<MiscStatType> {
+    public static List<MiscStatType> createStats() {
+        List<MiscStatType> statList = new ArrayList<>();
+
+        MiscStatBuilder builder = new MiscStatBuilder();
+        builder.buildStats(statList::add);
+        return statList;
+    }
+
     @Override
-    public void buildStats(Consumer<StatType> callback) {
-        for (MiscStatKind statType : MiscStatKind.values()) {
-            StatType gearStat = new MiscStatType(
-                    "MISC_" + statType.name(),
-                    statType.getDisplayName(),
-                    statType.getApiName(),
-                    statType.getLoreName(),
-                    statType.getUnit());
+    public void buildStats(Consumer<MiscStatType> callback) {
+        for (MiscStatKind kind : MiscStatKind.values()) {
+            MiscStatType gearStat = new MiscStatType(
+                    "MISC_" + kind.name(),
+                    kind.getDisplayName(),
+                    kind.getApiName(),
+                    kind.getLoreName(),
+                    kind.getUnit(),
+                    kind);
             callback.accept(gearStat);
         }
     }

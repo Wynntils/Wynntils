@@ -38,12 +38,14 @@ public class StatOrderAthena {
                 "spellFireDamageBonus",
                 "spellAirDamageBonusRaw",
                 "spellAirDamageBonus",
+                // group
                 "healthBonus",
                 "healthRegenRaw",
                 "healthRegen",
                 "lifeSteal",
                 "manaRegen",
                 "manaSteal",
+                // group
                 "damageBonusRaw",
                 "damageBonus",
                 "neutralDamageBonusRaw",
@@ -60,19 +62,23 @@ public class StatOrderAthena {
                 "fireDamageBonus",
                 "airDamageBonusRaw",
                 "airDamageBonus",
+                // group
                 "bonusEarthDefense",
                 "bonusThunderDefense",
                 "bonusWaterDefense",
                 "bonusFireDefense",
                 "bonusAirDefense",
+                // group
                 "exploding",
                 "poison",
                 "thorns",
                 "reflection",
+                // group
                 "speed",
                 "sprint",
                 "sprintRegen",
                 "jumpHeight",
+                // group
                 "soulPoints",
                 "lootBonus",
                 "lootQuality",
@@ -80,6 +86,7 @@ public class StatOrderAthena {
                 "xpBonus",
                 "gatherXpBonus",
                 "gatherSpeed",
+                // group
                 "spellCostRaw1",
                 "spellCostPct1",
                 "spellCostRaw2",

@@ -8,14 +8,24 @@ import com.wynntils.models.concepts.Element;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-public final class DefenceStatBuilder extends StatBuilder {
+public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
+    public static List<DefenceStatType> createStats() {
+        List<DefenceStatType> statList = new ArrayList<>();
+
+        DefenceStatBuilder builder = new DefenceStatBuilder();
+        builder.buildStats(statList::add);
+        return statList;
+    }
+
     @Override
-    public void buildStats(Consumer<StatType> callback) {
+    public void buildStats(Consumer<DefenceStatType> callback) {
         for (Element element : Element.values()) {
             // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
-            StatType statType = new DefenceStatType(
+            DefenceStatType statType = new DefenceStatType(
                     "DEFENCE_" + element.name(),
                     element.getDisplayName() + " Defence",
                     "bonus" + element.getDisplayName() + "Defense",

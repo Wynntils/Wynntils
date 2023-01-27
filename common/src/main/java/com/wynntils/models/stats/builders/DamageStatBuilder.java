@@ -10,23 +10,33 @@ import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-public final class DamageStatBuilder extends StatBuilder {
+public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
+    public static List<DamageStatType> createStats() {
+        List<DamageStatType> statList = new ArrayList<>();
+
+        DamageStatBuilder builder = new DamageStatBuilder();
+        builder.buildStats(statList::add);
+        return statList;
+    }
+
     @Override
-    public void buildStats(Consumer<StatType> callback) {
+    public void buildStats(Consumer<DamageStatType> callback) {
         for (AttackType attackType : AttackType.values()) {
             for (DamageType damageType : DamageType.values()) {
-                StatType rawType = buildDamageStat(attackType, damageType, StatUnit.RAW);
-                callback.accept(rawType);
-
-                StatType percentType = buildDamageStat(attackType, damageType, StatUnit.PERCENT);
+                DamageStatType percentType = buildDamageStat(attackType, damageType, StatUnit.PERCENT);
                 callback.accept(percentType);
+
+                DamageStatType rawType = buildDamageStat(attackType, damageType, StatUnit.RAW);
+                callback.accept(rawType);
             }
         }
     }
 
-    private static StatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {
+    private static DamageStatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {
         String apiName = buildApiName(attackType, damageType, unit);
         return new DamageStatType(
                 buildKey(attackType, damageType, unit),
