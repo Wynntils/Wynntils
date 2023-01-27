@@ -12,29 +12,26 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.Map;
 
 public class GearUtils {
-    // For reference, uncommonly used item types:
-    // stick: Breaker Bar, Cracked Oak Wand, Sharpened Stylus, Valix
-    // bone: Wybel Paw
-    // pumpkin: Pumpkin Helmet
     private static final Map<Integer, String> KNOWN_USED_ITEM_CODES = Map.of(
             256,
-            "iron_shovel",
+            "iron_shovel", // Spear
             259,
-            "flint_and_steel",
+            "flint_and_steel", // Accessories
             261,
-            "bow",
+            "bow", // Bow
             269,
-            "wooden_shovel",
+            "wooden_shovel", // Wand
             273,
-            "stone_shovel",
+            "stone_shovel", // Relik
             359,
-            "shears",
+            "shears", // Dagger
             280,
-            "stick",
+            "stick", // Special items: Breaker Bar, Cracked Oak Wand, Sharpened Stylus, Valix
             352,
-            "bone",
+            "bone", // Special items: Wybel Paw
             86,
-            "pumpkin");
+            "pumpkin" // Special items: Pumpkin Helmet
+            );
 
     public static RangedValue calculateRange(int baseValue, boolean preIdentified) {
         // FIXME: How does this work for stats where a negative value is good? (like spell cost)
