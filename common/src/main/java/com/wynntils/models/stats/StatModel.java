@@ -14,7 +14,7 @@ import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.SpellStatType;
-import com.wynntils.models.stats.type.StatListSeparator;
+import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatType;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,26 +75,36 @@ public final class StatModel extends Model {
         // Then create ordered lists for sorting
 
         // Default ordering is a lightly curated version of the Wynncraft vanilla ordering
-        defaultOrder.addAll(defenceStats);
-        defaultOrder.add(new StatListSeparator());
         defaultOrder.addAll(miscStats);
-        defaultOrder.add(new StatListSeparator());
+        defaultOrder.add(new StatListDelimiter());
+        defaultOrder.addAll(defenceStats);
+        defaultOrder.add(new StatListDelimiter());
         defaultOrder.addAll(damageStats);
-        defaultOrder.add(new StatListSeparator());
+        defaultOrder.add(new StatListDelimiter());
         defaultOrder.addAll(spellStats);
 
         // Wynncraft order seem to have grown a bit haphazardly
         addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_1);
-        defaultOrder.add(new StatListSeparator());
+        wynntilsOrder.add(new StatListDelimiter());
         wynntilsOrder.addAll(damageStats);
-        defaultOrder.add(new StatListSeparator());
+        wynntilsOrder.add(new StatListDelimiter());
         wynntilsOrder.addAll(defenceStats);
-        defaultOrder.add(new StatListSeparator());
+        wynntilsOrder.add(new StatListDelimiter());
         addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_2);
-        defaultOrder.add(new StatListSeparator());
+        wynntilsOrder.add(new StatListDelimiter());
         wynntilsOrder.addAll(spellStats);
-        defaultOrder.add(new StatListSeparator());
+        wynntilsOrder.add(new StatListDelimiter());
         addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_3);
+
+        // Legacy order was defined by Athena as a fixed list. This was missing several stat types; I have
+        // tried filling them in into "logical" places
+        for (String apiName : LegacyStatListOrder.getAthenaOrder()) {
+            if (apiName.isEmpty()) {
+                legacyOrder.add(new StatListDelimiter());
+            } else {
+                legacyOrder.addAll(fromApiName(apiName));
+            }
+        }
     }
 
     private void addMiscStats(List<StatType> targetList, List<MiscStatType> miscStats, List<MiscStatKind> miscOrder) {

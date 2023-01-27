@@ -9,7 +9,8 @@ import com.wynntils.models.stats.builders.MiscStatKind;
 public final class MiscStatType extends StatType {
     private final MiscStatKind kind;
 
-    public MiscStatType(String key, String displayName, String apiName, String loreName, StatUnit unit, MiscStatKind kind) {
+    public MiscStatType(
+            String key, String displayName, String apiName, String loreName, StatUnit unit, MiscStatKind kind) {
         super(key, displayName, apiName, loreName, unit);
         this.kind = kind;
     }

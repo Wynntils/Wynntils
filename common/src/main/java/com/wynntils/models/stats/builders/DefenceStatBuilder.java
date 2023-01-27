@@ -6,7 +6,6 @@ package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.stats.type.DefenceStatType;
-import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.List;

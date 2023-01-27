@@ -8,7 +8,6 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.models.stats.type.AttackType;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DamageType;
-import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.List;

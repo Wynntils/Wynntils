@@ -4,9 +4,10 @@
  */
 package com.wynntils.models.stats.type;
 
-public final class StatListSeparator extends StatType {
+public final class StatListDelimiter extends StatType {
     private static int count = 1;
-    public StatListSeparator() {
-        super("SEPARATOR_" + count++, "<N/A>", "<N/A>", "<N/A>", StatUnit.RAW);
+
+    public StatListDelimiter() {
+        super("DELIMITER_" + count++, "<N/A>", "<N/A>", "<N/A>", StatUnit.RAW);
     }
 }

@@ -6,7 +6,7 @@ package com.wynntils.models.stats;
 
 import java.util.List;
 
-public class StatOrderAthena {
+public class LegacyStatListOrder {
     public static List<String> getAthenaOrder() {
         return List.of(
                 "attackSpeedBonus",
@@ -38,14 +38,14 @@ public class StatOrderAthena {
                 "spellFireDamageBonus",
                 "spellAirDamageBonusRaw",
                 "spellAirDamageBonus",
-                // group
+                "", // delimiter
                 "healthBonus",
                 "healthRegenRaw",
                 "healthRegen",
                 "lifeSteal",
                 "manaRegen",
                 "manaSteal",
-                // group
+                "", // delimiter
                 "damageBonusRaw",
                 "damageBonus",
                 "neutralDamageBonusRaw",
@@ -62,23 +62,23 @@ public class StatOrderAthena {
                 "fireDamageBonus",
                 "airDamageBonusRaw",
                 "airDamageBonus",
-                // group
+                "", // delimiter
                 "bonusEarthDefense",
                 "bonusThunderDefense",
                 "bonusWaterDefense",
                 "bonusFireDefense",
                 "bonusAirDefense",
-                // group
+                "", // delimiter
                 "exploding",
                 "poison",
                 "thorns",
                 "reflection",
-                // group
+                "", // delimiter
                 "speed",
                 "sprint",
                 "sprintRegen",
                 "jumpHeight",
-                // group
+                "", // delimiter
                 "soulPoints",
                 "lootBonus",
                 "lootQuality",
@@ -86,7 +86,7 @@ public class StatOrderAthena {
                 "xpBonus",
                 "gatherXpBonus",
                 "gatherSpeed",
-                // group
+                "", // delimiter
                 "spellCostRaw1",
                 "spellCostPct1",
                 "spellCostRaw2",
@@ -96,16 +96,4 @@ public class StatOrderAthena {
                 "spellCostRaw4",
                 "spellCostPct4");
     }
-
-    /*
-    start new groups at:
-    attackSpeedBonus - "attack stuff"
-    healthBonus - "health/mana stuff"
-    damageBonusRaw - "damage stuff"
-    bonusEarthDefense - "defence stuff"
-    exploding - "passive damage"
-    speed - "movement stuff"
-    soulPoints - "XP/Gathering stuff"
-    spellCostRaw1 - "spell stuff"
-     */
 }

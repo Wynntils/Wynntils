@@ -21,9 +21,9 @@ import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.FixedStats;
-import com.wynntils.models.stats.StatOrder;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.MathUtils;
@@ -422,15 +422,26 @@ public class GearTooltipBuilder {
             allStatLines.add(Component.literal(""));
         }
 
-        for (String apiName : StatOrder.getWynncraftOrder()) {
-            List<StatType> statKinds = Models.Stat.fromApiName(apiName);
-            for (StatType statKind : statKinds) {
-                StatActualValue statActualValue = getStatOfKind(statKind, stats);
-                if (statActualValue == null) continue;
-
-                Component line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
-                allStatLines.add(line);
+        List<StatType> order;
+        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
+            order = Models.Stat.defaultOrder;
+        } else {
+            order = Models.Stat.legacyOrder;
+        }
+        boolean delimiterNeeded = false;
+        for (StatType statType : order) {
+            if (ItemStatInfoFeature.INSTANCE.groupIdentifications && statType instanceof StatListDelimiter) {
+                if (delimiterNeeded) {
+                    allStatLines.add(Component.literal(""));
+                    delimiterNeeded = false;
+                }
             }
+            StatActualValue statActualValue = getStatOfKind(statType, stats);
+            if (statActualValue == null) continue;
+
+            Component line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
+            allStatLines.add(line);
+            delimiterNeeded = true;
         }
 
         return allStatLines;

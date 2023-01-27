@@ -5,7 +5,6 @@
 package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.stats.type.MiscStatType;
-import com.wynntils.models.stats.type.StatType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

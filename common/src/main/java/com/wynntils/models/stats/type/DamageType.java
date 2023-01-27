@@ -10,11 +10,11 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     ALL(""),
-    AIR(Element.AIR),
-    EARTH(Element.EARTH),
     FIRE(Element.FIRE),
-    THUNDER(Element.THUNDER),
     WATER(Element.WATER),
+    AIR(Element.AIR),
+    THUNDER(Element.THUNDER),
+    EARTH(Element.EARTH),
     RAINBOW("Elemental"),
     NEUTRAL("Neutral", "✣", ChatFormatting.GOLD); // NEUTRAL is only used once, for "Violet-Shift".
 
