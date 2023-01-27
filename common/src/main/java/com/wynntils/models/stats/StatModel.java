@@ -96,9 +96,7 @@ public final class StatModel extends Model {
         wynntilsOrder.add(new StatListDelimiter());
         addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_3);
 
-        // Legacy order was defined by Athena as a fixed list. This was missing several stat types; I have
-        // tried filling them in into "logical" places
-        for (String apiName : LegacyStatListOrder.getAthenaOrder()) {
+        for (String apiName : LegacyStatListOrder.LEGACY_ORDER) {
             if (apiName.isEmpty()) {
                 legacyOrder.add(new StatListDelimiter());
             } else {
