@@ -422,15 +422,12 @@ public class GearTooltipBuilder {
             allStatLines.add(Component.literal(""));
         }
 
-        List<StatType> order;
-        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
-            order = Models.Stat.defaultOrder;
-        } else {
-            order = Models.Stat.legacyOrder;
-        }
+        List<StatType> ordering = getStatListOrdering();
+        boolean useDelimiter = ItemStatInfoFeature.INSTANCE.groupIdentifications;
+
         boolean delimiterNeeded = false;
-        for (StatType statType : order) {
-            if (ItemStatInfoFeature.INSTANCE.groupIdentifications && statType instanceof StatListDelimiter) {
+        for (StatType statType : ordering) {
+            if (useDelimiter && statType instanceof StatListDelimiter) {
                 if (delimiterNeeded) {
                     allStatLines.add(Component.literal(""));
                     delimiterNeeded = false;
@@ -445,6 +442,16 @@ public class GearTooltipBuilder {
         }
 
         return allStatLines;
+    }
+
+    private static List<StatType> getStatListOrdering() {
+        List<StatType> order;
+        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
+            order = Models.Stat.defaultOrder;
+        } else {
+            order = Models.Stat.legacyOrder;
+        }
+        return order;
     }
 
     private List<Skill> getSkillOrder() {
