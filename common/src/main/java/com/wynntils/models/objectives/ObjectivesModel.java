@@ -20,6 +20,8 @@ public class ObjectivesModel extends Model {
     private WynnObjective guildObjective = null;
 
     public ObjectivesModel() {
+        super(List.of());
+
         Handlers.Scoreboard.addPart(OBJECTIVES_SCOREBOARD_PART);
     }
 

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.ComponentUtils;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -20,6 +21,10 @@ public final class BombBellModel extends Model {
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
     private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
+
+    public BombBellModel() {
+        super(List.of());
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {

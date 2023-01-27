@@ -15,6 +15,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +37,10 @@ public final class WorldStateModel extends Model {
     private String currentWorldName = "";
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
+
+    public WorldStateModel() {
+        super(List.of());
+    }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
 

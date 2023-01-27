@@ -16,6 +16,7 @@ import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.ServicePoi;
 import com.wynntils.models.map.type.CombatKind;
 import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.utils.type.BoundingBox;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -31,7 +32,9 @@ public final class MapModel extends Model {
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
 
-    public MapModel() {
+    public MapModel(GuildAttackTimerModel guildAttackTimerModel) {
+        super(List.of(guildAttackTimerModel));
+
         loadData();
     }
 
