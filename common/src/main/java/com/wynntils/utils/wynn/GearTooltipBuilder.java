@@ -9,7 +9,9 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.DamageType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.GearIdentificationContainer;
+import com.wynntils.models.gear.GearInstance;
 import com.wynntils.models.gear.ReidentificationChances;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
@@ -19,7 +21,11 @@ import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.GearStatsFixed;
+import com.wynntils.models.gearinfo.StatOrder;
 import com.wynntils.models.gearinfo.types.GearDamageType;
+import com.wynntils.models.gearinfo.types.GearIdentification;
+import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.types.GearStatUnit;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -230,17 +236,7 @@ public class GearTooltipBuilder {
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
         if (!identificationMatcher.find()) return false; // not a valid id line
 
-        String idName = identificationMatcher.group("ID");
-        boolean isRaw = identificationMatcher.group("Suffix") == null;
-
-        String shortIdName = WynnItemMatchers.getShortIdentificationName(idName, isRaw);
-
-        IdentificationProfile idProfile = item.getStatuses().get(shortIdName);
-        if (idProfile != null) {
-            return idProfile.getType() != null;
-        } else {
-            return IdentificationProfile.getTypeFromName(shortIdName) != null;
-        }
+        return true;
     }
 
     private List<Component> buildTopTooltip() {
@@ -383,12 +379,96 @@ public class GearTooltipBuilder {
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
-        List<Component> tooltips = middleTooltipCache.get(style);
-        if (tooltips != null) return tooltips;
+        //     List<Component> tooltips = middleTooltipCache.get(style);
+        //        if (tooltips != null) return tooltips;
 
-        tooltips = buildMiddleTooltip(style);
-        middleTooltipCache.put(style, tooltips);
+        List<Component> tooltips;
+        tooltips = buildMiddleTooltipNew(style);
+        //     middleTooltipCache.put(style, tooltips);
         return tooltips;
+    }
+
+    private List<Component> buildTopTooltipNew(IdentificationPresentationStyle style) {
+        List<Component> allStatLines = new ArrayList<>();
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
+
+        List<Pair<Element, Integer>> defences = gearInfo.statsFixed().defences();
+        for (Element element : Element.values()) {
+            Pair<Element, Integer> defenceValue = getElementDefence(element, defences);
+            if (defenceValue == null) continue;
+
+            Component line = buildIdLoreLineDefenceNew(style.decorations(), defenceValue);
+            allStatLines.add(line);
+        }
+
+        return allStatLines;
+    }
+
+    private List<Component> buildMiddleTooltipNew(IdentificationPresentationStyle style) {
+        List<Component> allStatLines = new ArrayList<>();
+        GearInstance gearInstance = gearItem.getGearInstance();
+        List<GearIdentification> stats = gearInstance.getIdentifications();
+
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
+
+        List<Pair<Skill, Integer>> skillBuffs = gearInfo.statsFixed().skillBuffs();
+        for (Skill skill : getSkillOrder()) {
+            Pair<Skill, Integer> skillBuffValue = getSkillBuffs(skill, skillBuffs);
+            if (skillBuffValue == null) continue;
+
+            Component line = buildIdLoreLineSkillBuffNew(style.decorations(), skillBuffValue);
+            allStatLines.add(line);
+        }
+        if (!skillBuffs.isEmpty()) {
+            allStatLines.add(Component.literal(""));
+        }
+
+        for (String apiName : StatOrder.getWynncraftOrder()) {
+            List<GearStat> statKinds = Models.GearInfo.getGearStatsFromApi(apiName);
+            for (GearStat statKind : statKinds) {
+                GearIdentification gearIdentification = getStatOfKind(statKind, stats);
+                if (gearIdentification == null) continue;
+
+                Component line = buildIdLoreLineNew(gearInfo, style.decorations(), gearIdentification);
+                allStatLines.add(line);
+            }
+        }
+
+        return allStatLines;
+    }
+
+    private List<Skill> getSkillOrder() {
+        return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
+    }
+
+    private Pair<Skill, Integer> getSkillBuffs(Skill skill, List<Pair<Skill, Integer>> skillBuffs) {
+        for (Pair<Skill, Integer> skillBuffValue : skillBuffs) {
+            if (skillBuffValue.key().equals(skill)) {
+                return skillBuffValue;
+            }
+        }
+
+        return null;
+    }
+
+    private Pair<Element, Integer> getElementDefence(Element element, List<Pair<Element, Integer>> defences) {
+        for (Pair<Element, Integer> defenceValue : defences) {
+            if (defenceValue.key().equals(element)) {
+                return defenceValue;
+            }
+        }
+
+        return null;
+    }
+
+    private GearIdentification getStatOfKind(GearStat statKind, List<GearIdentification> stats) {
+        for (GearIdentification stat : stats) {
+            if (stat.stat().equals(statKind)) {
+                return stat;
+            }
+        }
+
+        return null;
     }
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
@@ -415,6 +495,47 @@ public class GearTooltipBuilder {
         }
     }
 
+    private Component buildIdLoreLineSkillBuffNew(
+            IdentificationDecorations decorations, Pair<Skill, Integer> skillBuff) {
+        String inGameName = skillBuff.key().getDisplayName();
+        int value = skillBuff.value();
+        GearStatUnit unitType = GearStatUnit.RAW;
+        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
+
+        return baseComponent;
+    }
+
+    private Component buildIdLoreLineDefenceNew(
+            IdentificationDecorations decorations, Pair<Element, Integer> gearIdentification) {
+        String inGameName = gearIdentification.key().getDisplayName() + " Defence";
+        int value = gearIdentification.value();
+        GearStatUnit unitType = GearStatUnit.RAW;
+        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
+        // FIXME: for now, just do baseComponent
+        return baseComponent;
+    }
+
+    private Component buildIdLoreLineNew(
+            GearInfo gearInfo, IdentificationDecorations decorations, GearIdentification gearIdentification) {
+        String inGameName = gearIdentification.stat().displayName();
+        int value = gearIdentification.value();
+        GearStatUnit unitType = gearIdentification.stat().unit();
+        boolean invert = Models.GearInfo.isSpellStat(gearIdentification.stat());
+
+        int stars = getStarCount(gearInfo, gearIdentification);
+        String starString;
+        if (ItemStatInfoFeature.INSTANCE.showStars) {
+            starString = "***".substring(3 - stars);
+        } else {
+            starString = "";
+        }
+
+        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType, invert, starString);
+        baseComponent.append(" #");
+        // FIXME: for now, just do baseComponent
+        return baseComponent;
+    }
+
     private Component buildIdLoreLine(IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
         MutableComponent baseComponent = buildBaseComponent(idContainer);
         if (idContainer.idProfile().hasConstantValue()) return baseComponent;
@@ -424,6 +545,95 @@ public class GearTooltipBuilder {
             case RANGE -> appendRangeLoreLine(baseComponent, idContainer);
             case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, idContainer);
         };
+    }
+
+    private MutableComponent buildBaseComponentNew(
+            String inGameName, int value, GearStatUnit unitType, boolean invert, String stars) {
+        String unit = unitType.getDisplayName();
+
+        MutableComponent baseComponent = Component.literal("");
+
+        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
+        boolean isGood = invert ? (value < 0) : (value > 0);
+        statInfo.setStyle(Style.EMPTY.withColor(isGood ? ChatFormatting.GREEN : ChatFormatting.RED));
+
+        baseComponent.append(statInfo);
+
+        if (!stars.isEmpty()) {
+            baseComponent.append(Component.literal(stars).withStyle(ChatFormatting.DARK_GREEN));
+        }
+
+        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+
+        return baseComponent;
+    }
+
+    private int getStarCount(GearInfo gearInfo, GearIdentification gearIdentification) {
+        RangedValue range = gearInfo.statsIdentified().stream()
+                .filter(p -> p.key().equals(gearIdentification.stat()))
+                .findFirst().map(pair -> pair.value())
+                .orElse(null);
+        int value = gearIdentification.value();
+
+        int stars = calculateStars(value, range);
+        return stars;
+
+    }
+
+    private int calculateStars(int value, RangedValue range) {
+        // FIXME: The premise for this method is wrong. We cannot
+        // calculate stars exactly, we can at most guess
+        /*
+        Reference for star calculation, from salted:
+        https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
+        Stars have values like this:
+        * = 101% - 124%
+        ** = 125% - 129%
+        *** = 130%
+
+        This leaves some room for vagueness between e.g. 124% and 125%. Below is my interpretation:
+        <= 100% == no stars
+        <= 125% == one star
+        perfect: 3 stars
+
+        Remember, low is 30% and high is 130%
+
+        low = 0,3*BASE
+        high = 1,3*BASE == 0,3*BASE + BASE
+        high = low + BASE  => BASE = high - low (fast +1???)
+
+        BASE=low/0.3 or BASE= high/1.3
+
+        This also won't work for negative values...
+         */
+
+        /*
+        example from my jag:
+        {"identification_rolls":1,"identifications":[{"type":"THORNS","percent":124},{"type":"DAMAGEBONUSRAW","percent":128}]}
+thorns: 124%
+damage: 128%
+         */
+        int base = range.high() - range.low();
+        if (value < base) return 0;
+
+        float tier_2_limit = 1.25f*base;
+        if (value < (int) tier_2_limit) return 1;
+
+        if (value == range.high()) return 3;
+
+        return 2;
+
+        /*
+        Positive ID has 30%-130% range,
+        No Star = 30%-100%
+        * = 101% - 124%
+        ** = 125% - 129%
+        *** = 130%
+         */
+    }
+
+    private MutableComponent buildBaseComponentNew(String inGameName, int value, GearStatUnit unitType) {
+        return buildBaseComponentNew(inGameName, value, unitType, false, "");
     }
 
     private MutableComponent buildBaseComponent(GearIdentificationContainer idContainer) {
