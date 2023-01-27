@@ -9,7 +9,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {
-    UNSPECIFIED(""), // This really means "neutral"
+    ALL(""),
     AIR(Element.AIR),
     EARTH(Element.EARTH),
     FIRE(Element.FIRE),
