@@ -1,9 +1,21 @@
+## [0.0.2-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.153...v0.0.2-alpha.154) (2023-01-27)
+
+
+### Code Refactoring
+
+* Models need intra-model dependencies ([#1096](https://github.com/Wynntils/Artemis/issues/1096)) ([8aeea80](https://github.com/Wynntils/Artemis/commit/8aeea80af6870872910c61e6c1cb3c85b90828d9))
+
 ## [0.0.2-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.152...v0.0.2-alpha.153) (2023-01-27)
 
 
 ### New Features
 
 * Fade the beacon beam if we are close to the target ([#1092](https://github.com/Wynntils/Artemis/issues/1092)) ([f28711c](https://github.com/Wynntils/Artemis/commit/f28711c001df7e63cc71fa264cee03772bd146cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.153 [skip ci] ([e1e7b11](https://github.com/Wynntils/Artemis/commit/e1e7b11738dafc7b5b3c926133ad7abe225f6582))
 
 ## [0.0.2-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.151...v0.0.2-alpha.152) (2023-01-26)
 
@@ -37,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.150 [skip ci] ([df59492](https://github.com/Wynntils/Artemis/commit/df5949247e3d4fe4eed3e58dcc8d1572ea4643a5))
-
-## [0.0.2-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.148...v0.0.2-alpha.149) (2023-01-25)
-
-
-### New Features
-
-* Add time held to GuildMapScreen ([#1093](https://github.com/Wynntils/Artemis/issues/1093)) ([d892967](https://github.com/Wynntils/Artemis/commit/d8929678dd37d95f7543f4eedc640db12a92639a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.149 [skip ci] ([c906992](https://github.com/Wynntils/Artemis/commit/c906992987fbbadde0417338c3d89e4b96af6f51))
 
