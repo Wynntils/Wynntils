@@ -5,12 +5,14 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +23,8 @@ public final class GuildModel extends Model {
     private boolean expectingGuildMessage = false;
     private Set<String> guildMembers = new HashSet<>();
 
-    public GuildModel() {
+    public GuildModel(WorldStateModel worldStateModel) {
+        super(List.of(worldStateModel));
         resetRelations();
     }
 
