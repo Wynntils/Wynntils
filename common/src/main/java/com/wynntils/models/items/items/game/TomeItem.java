@@ -6,16 +6,16 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.TomeProfile;
-import com.wynntils.models.gearinfo.types.GearIdentification;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
 public class TomeItem extends GameItem implements GearTierItemProperty {
     private final TomeProfile tomeProfile;
-    private final List<GearIdentification> identifications;
+    private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public TomeItem(TomeProfile tomeProfile, List<GearIdentification> identifications, int rerolls) {
+    public TomeItem(TomeProfile tomeProfile, List<StatActualValue> identifications, int rerolls) {
         this.tomeProfile = tomeProfile;
         this.identifications = identifications;
         this.rerolls = rerolls;
@@ -25,7 +25,7 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
         return tomeProfile;
     }
 
-    public List<GearIdentification> getIdentifications() {
+    public List<StatActualValue> getIdentifications() {
         return identifications;
     }
 

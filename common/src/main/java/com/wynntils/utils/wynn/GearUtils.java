@@ -6,8 +6,8 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.models.gearinfo.types.GearIdentification;
-import com.wynntils.models.gearinfo.types.GearMaterial;
+import com.wynntils.models.gearinfo.type.GearMaterial;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.utils.type.RangedValue;
 import java.util.Map;
 
@@ -89,12 +89,12 @@ public class GearUtils {
         return stars;
     }
 
-    public RangedValue getInternalRoll(GearInfo gearInfo, GearIdentification gearIdentification) {
+    public RangedValue getInternalRoll(GearInfo gearInfo, StatActualValue statActualValue) {
         // FIXME
         return RangedValue.NONE;
     }
 
-    private RangedValue calculateStarCountRange(GearInfo gearInfo, GearIdentification gearIdentification) {
+    private RangedValue calculateStarCountRange(GearInfo gearInfo, StatActualValue statActualValue) {
         // FIXME
         /*
         Note: negative values will never show stars!

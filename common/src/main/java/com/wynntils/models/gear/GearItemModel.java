@@ -18,12 +18,12 @@ import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.type.CharmProfile;
 import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.TomeProfile;
-import com.wynntils.models.gearinfo.types.GearIdentification;
-import com.wynntils.models.gearinfo.types.GearStat;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -79,7 +79,7 @@ public final class GearItemModel extends Model {
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
     public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
         List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
@@ -130,13 +130,13 @@ public final class GearItemModel extends Model {
                 String starString = statMatcher.group(4);
                 int stars = starString == null ? 0 : starString.length();
 
-                GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
+                StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;
                 }
 
-                identifications.add(new GearIdentification(type, value, stars));
+                identifications.add(new StatActualValue(type, value, stars));
             }
 
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
@@ -163,7 +163,7 @@ public final class GearItemModel extends Model {
                 String unitMatch = id3Matcher.group(4);
                 String unit = unitMatch == null ? "" : unitMatch;
 
-                GearStat type = Models.GearInfo.getGearStat(idName, unit);
+                StatType type = Models.GearInfo.getGearStat(idName, unit);
                 if (type == null && Skill.isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle
@@ -175,7 +175,7 @@ public final class GearItemModel extends Model {
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
         int rerolls = 0;
 
         // Parse lore for identifications and rerolls
@@ -191,7 +191,7 @@ public final class GearItemModel extends Model {
             }
 
             // Look for identifications
-            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            Optional<StatActualValue> gearIdOpt = gearIdentificationFromLore(loreLine);
             if (gearIdOpt.isEmpty()) continue;
             identifications.add(gearIdOpt.get());
         }
@@ -200,7 +200,7 @@ public final class GearItemModel extends Model {
     }
 
     public CharmItem fromCharmItemStack(ItemStack itemStack, CharmProfile charmProfile) {
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
         int rerolls = 0;
 
         // Parse lore for identifications and rerolls
@@ -216,7 +216,7 @@ public final class GearItemModel extends Model {
             }
 
             // Look for identifications
-            Optional<GearIdentification> gearIdOpt = gearIdentificationFromLore(loreLine);
+            Optional<StatActualValue> gearIdOpt = gearIdentificationFromLore(loreLine);
             if (gearIdOpt.isEmpty()) continue;
             identifications.add(gearIdOpt.get());
         }
@@ -236,7 +236,7 @@ public final class GearItemModel extends Model {
     }
 
     // FIXME: this is a remnant, used by tome/charms...
-    private Optional<GearIdentification> gearIdentificationFromLore(Component lore) {
+    private Optional<StatActualValue> gearIdentificationFromLore(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
         // Look for identifications
@@ -247,14 +247,14 @@ public final class GearItemModel extends Model {
         String unit = statMatcher.group(3);
         String statDisplayName = statMatcher.group(5);
 
-        GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
+        StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
         if (type == null && Skill.isSkill(statDisplayName)) {
             // Skill point buff looks like stats when parsing
             return Optional.empty();
         }
 
         // FIXME: stars are not fixed here. align with normal parsing
-        return Optional.of(new GearIdentification(type, value, -1));
+        return Optional.of(new StatActualValue(type, value, -1));
     }
 
     /**
@@ -325,7 +325,7 @@ public final class GearItemModel extends Model {
         }
 
         List<GearIdentificationContainer> idContainers = new ArrayList<>();
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
 
         // Lore lines is: type: "LORETYPE", percent: <number>, where 100 is baseline, so can be > 100 and < 100.
         if (itemData.has("identifications")) {
@@ -354,13 +354,13 @@ public final class GearItemModel extends Model {
                 idContainers.add(identificationFromValue(
                         null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
 
-                GearStat stat = Models.GearInfo.getGearStatFromLore(id);
+                StatType stat = Models.GearInfo.getGearStatFromLore(id);
                 if (stat == null) continue;
 
                 int stars = GearUtils.getStarsFromPercent(intPercent);
                 // FIXME: Negative values should never show stars!
 
-                identifications.add(new GearIdentification(stat, value, stars));
+                identifications.add(new StatActualValue(stat, value, stars));
             }
         }
 
@@ -398,7 +398,7 @@ public final class GearItemModel extends Model {
 
         // ids
         List<GearIdentificationContainer> idContainers = new ArrayList<>();
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
 
         List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
         sortedIds.sort(Comparator.comparingInt(Models.GearProfiles::getOrder));
@@ -441,7 +441,7 @@ public final class GearItemModel extends Model {
             GearIdentificationContainer idContainer =
                     identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
-            identifications.add(new GearIdentification(null, value, stars));
+            identifications.add(new StatActualValue(null, value, stars));
         }
 
         // powders

@@ -16,13 +16,13 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gearinfo.stats.DamageStatBuilder;
-import com.wynntils.models.gearinfo.stats.DefenceStatBuilder;
-import com.wynntils.models.gearinfo.stats.MiscStatBuilder;
-import com.wynntils.models.gearinfo.stats.SpellStatBuilder;
-import com.wynntils.models.gearinfo.stats.StatBuilder;
-import com.wynntils.models.gearinfo.types.GearMajorId;
-import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.stats.builders.DamageStatBuilder;
+import com.wynntils.models.stats.builders.DefenceStatBuilder;
+import com.wynntils.models.stats.builders.MiscStatBuilder;
+import com.wynntils.models.stats.builders.SpellStatBuilder;
+import com.wynntils.models.stats.builders.StatBuilder;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,19 +39,19 @@ public final class GearInfoModel extends Model {
     private static final List<StatBuilder> STAT_BUILDERS =
             List.of(new MiscStatBuilder(), new DefenceStatBuilder(), new SpellStatBuilder(), new DamageStatBuilder());
 
-    public final List<GearStat> gearStatRegistry = new ArrayList<>();
-    public final Map<String, GearStat> gearStatLookup = new HashMap<>();
+    public final List<StatType> statTypeRegistry = new ArrayList<>();
+    public final Map<String, StatType> gearStatLookup = new HashMap<>();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
     private List<GearMajorId> majorIds;
 
     public GearInfoModel() {
         for (StatBuilder builder : STAT_BUILDERS) {
-            builder.buildStats(gearStatRegistry::add);
+            builder.buildStats(statTypeRegistry::add);
         }
 
         // Create a fast lookup map
-        for (GearStat stat : gearStatRegistry) {
+        for (StatType stat : statTypeRegistry) {
             String lookupName = stat.displayName() + stat.unit().getDisplayName();
             gearStatLookup.put(lookupName, stat);
         }
@@ -59,12 +59,12 @@ public final class GearInfoModel extends Model {
         loadGearInfoRegistry();
     }
 
-    public boolean isSpellStat(GearStat stat) {
+    public boolean isSpellStat(StatType stat) {
         // FIXME: Not very elegant...
         return stat.apiName().startsWith("spellCost");
     }
 
-    public GearStat getGearStat(String displayName, String unit) {
+    public StatType getGearStat(String displayName, String unit) {
         String lookupName = displayName + (unit == null ? "" : unit);
         return gearStatLookup.get(lookupName);
     }
@@ -112,17 +112,17 @@ public final class GearInfoModel extends Model {
         });
     }
 
-    public GearStat getGearStatFromLore(String id) {
-        for (GearStat stat : gearStatRegistry) {
+    public StatType getGearStatFromLore(String id) {
+        for (StatType stat : statTypeRegistry) {
             if (stat.loreName().equals(id)) return stat;
         }
         return null;
     }
 
-    public List<GearStat> getGearStatsFromApi(String apiName) {
-        List<GearStat> stats = new ArrayList<>();
+    public List<StatType> getGearStatsFromApi(String apiName) {
+        List<StatType> stats = new ArrayList<>();
         // We might have many stats matching the same name (for spell cost stats)
-        for (GearStat stat : gearStatRegistry) {
+        for (StatType stat : statTypeRegistry) {
             if (stat.apiName().equals(apiName)) {
                 stats.add(stat);
             }

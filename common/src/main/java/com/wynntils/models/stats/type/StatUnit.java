@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.types;
+package com.wynntils.models.stats.type;
 
-public enum GearStatUnit {
+public enum StatUnit {
     RAW(""),
     PERCENT("%"),
     PER_3_S("/3s"),
@@ -13,7 +13,7 @@ public enum GearStatUnit {
 
     private final String displayName;
 
-    GearStatUnit(String displayName) {
+    StatUnit(String displayName) {
         this.displayName = displayName;
     }
 

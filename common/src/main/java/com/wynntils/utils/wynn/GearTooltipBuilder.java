@@ -20,13 +20,13 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.models.gearinfo.GearStatsFixed;
-import com.wynntils.models.gearinfo.StatOrder;
-import com.wynntils.models.gearinfo.types.GearDamageType;
-import com.wynntils.models.gearinfo.types.GearIdentification;
-import com.wynntils.models.gearinfo.types.GearStat;
-import com.wynntils.models.gearinfo.types.GearStatUnit;
+import com.wynntils.models.gearinfo.type.GearDamageType;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.StatOrder;
+import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -98,7 +98,7 @@ public class GearTooltipBuilder {
 
         // FIXED STATS
         // Attack speed
-        GearStatsFixed fixedStats = gearInfo.statsFixed();
+        FixedStats fixedStats = gearInfo.fixedStats();
         Optional<GearAttackSpeed> attackSpeed = fixedStats.attackSpeed();
         if (attackSpeed.isPresent()) {
             tooltips.add(Component.literal(attackSpeed.get().getName()));
@@ -392,7 +392,7 @@ public class GearTooltipBuilder {
         List<Component> allStatLines = new ArrayList<>();
         GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
 
-        List<Pair<Element, Integer>> defences = gearInfo.statsFixed().defences();
+        List<Pair<Element, Integer>> defences = gearInfo.fixedStats().defences();
         for (Element element : Element.values()) {
             Pair<Element, Integer> defenceValue = getElementDefence(element, defences);
             if (defenceValue == null) continue;
@@ -407,11 +407,11 @@ public class GearTooltipBuilder {
     private List<Component> buildMiddleTooltipNew(IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
         GearInstance gearInstance = gearItem.getGearInstance();
-        List<GearIdentification> stats = gearInstance.getIdentifications();
+        List<StatActualValue> stats = gearInstance.getIdentifications();
 
         GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
 
-        List<Pair<Skill, Integer>> skillBuffs = gearInfo.statsFixed().skillBuffs();
+        List<Pair<Skill, Integer>> skillBuffs = gearInfo.fixedStats().skillBuffs();
         for (Skill skill : getSkillOrder()) {
             Pair<Skill, Integer> skillBuffValue = getSkillBuffs(skill, skillBuffs);
             if (skillBuffValue == null) continue;
@@ -424,12 +424,12 @@ public class GearTooltipBuilder {
         }
 
         for (String apiName : StatOrder.getWynncraftOrder()) {
-            List<GearStat> statKinds = Models.GearInfo.getGearStatsFromApi(apiName);
-            for (GearStat statKind : statKinds) {
-                GearIdentification gearIdentification = getStatOfKind(statKind, stats);
-                if (gearIdentification == null) continue;
+            List<StatType> statKinds = Models.GearInfo.getGearStatsFromApi(apiName);
+            for (StatType statKind : statKinds) {
+                StatActualValue statActualValue = getStatOfKind(statKind, stats);
+                if (statActualValue == null) continue;
 
-                Component line = buildIdLoreLineNew(gearInfo, style.decorations(), gearIdentification);
+                Component line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
                 allStatLines.add(line);
             }
         }
@@ -461,8 +461,8 @@ public class GearTooltipBuilder {
         return null;
     }
 
-    private GearIdentification getStatOfKind(GearStat statKind, List<GearIdentification> stats) {
-        for (GearIdentification stat : stats) {
+    private StatActualValue getStatOfKind(StatType statKind, List<StatActualValue> stats) {
+        for (StatActualValue stat : stats) {
             if (stat.stat().equals(statKind)) {
                 return stat;
             }
@@ -499,7 +499,7 @@ public class GearTooltipBuilder {
             IdentificationDecorations decorations, Pair<Skill, Integer> skillBuff) {
         String inGameName = skillBuff.key().getDisplayName();
         int value = skillBuff.value();
-        GearStatUnit unitType = GearStatUnit.RAW;
+        StatUnit unitType = StatUnit.RAW;
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
 
         return baseComponent;
@@ -509,21 +509,20 @@ public class GearTooltipBuilder {
             IdentificationDecorations decorations, Pair<Element, Integer> gearIdentification) {
         String inGameName = gearIdentification.key().getDisplayName() + " Defence";
         int value = gearIdentification.value();
-        GearStatUnit unitType = GearStatUnit.RAW;
+        StatUnit unitType = StatUnit.RAW;
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
         // FIXME: for now, just do baseComponent
         return baseComponent;
     }
 
     private Component buildIdLoreLineNew(
-            GearInfo gearInfo, IdentificationDecorations decorations, GearIdentification gearIdentification) {
-        String inGameName = gearIdentification.stat().displayName();
-        int value = gearIdentification.value();
-        GearStatUnit unitType = gearIdentification.stat().unit();
-        boolean invert = Models.GearInfo.isSpellStat(gearIdentification.stat());
+            GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue statActualValue) {
+        String inGameName = statActualValue.stat().displayName();
+        int value = statActualValue.value();
+        StatUnit unitType = statActualValue.stat().unit();
+        boolean invert = Models.GearInfo.isSpellStat(statActualValue.stat());
 
-        String starString =
-                ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - gearIdentification.stars()) : "";
+        String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - statActualValue.stars()) : "";
 
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType, invert, starString);
         baseComponent.append(" #");
@@ -543,7 +542,7 @@ public class GearTooltipBuilder {
     }
 
     private MutableComponent buildBaseComponentNew(
-            String inGameName, int value, GearStatUnit unitType, boolean invert, String stars) {
+            String inGameName, int value, StatUnit unitType, boolean invert, String stars) {
         String unit = unitType.getDisplayName();
 
         MutableComponent baseComponent = Component.literal("");
@@ -563,7 +562,7 @@ public class GearTooltipBuilder {
         return baseComponent;
     }
 
-    private MutableComponent buildBaseComponentNew(String inGameName, int value, GearStatUnit unitType) {
+    private MutableComponent buildBaseComponentNew(String inGameName, int value, StatUnit unitType) {
         return buildBaseComponentNew(inGameName, value, unitType, false, "");
     }
 

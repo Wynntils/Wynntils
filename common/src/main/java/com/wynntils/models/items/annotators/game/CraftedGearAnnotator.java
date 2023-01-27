@@ -9,9 +9,9 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.types.GearIdentification;
-import com.wynntils.models.gearinfo.types.GearStat;
 import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -37,7 +37,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
         CappedValue durability = WynnItemMatchers.getDurability(itemStack);
 
-        List<GearIdentification> identifications = new ArrayList<>();
+        List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = List.of();
 
         // Parse lore for identifications and powders
@@ -66,7 +66,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
                 String unit = statMatcher.group(3);
                 String statDisplayName = statMatcher.group(5);
 
-                GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
+                StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;
@@ -78,7 +78,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
                 // Also, the order of stats is completely arbitrary
                 // So we need a better design to fit this
 
-                identifications.add(new GearIdentification(type, value, -1));
+                identifications.add(new StatActualValue(type, value, -1));
             }
         }
 

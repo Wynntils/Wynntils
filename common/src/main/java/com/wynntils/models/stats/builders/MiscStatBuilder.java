@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.stats;
+package com.wynntils.models.stats.builders;
 
-import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.stats.type.StatType;
 import java.util.function.Consumer;
 
 public final class MiscStatBuilder extends StatBuilder {
     @Override
-    public void buildStats(Consumer<GearStat> callback) {
+    public void buildStats(Consumer<StatType> callback) {
         for (GearMiscStatType statType : GearMiscStatType.values()) {
-            GearStat gearStat = new GearStat(
+            StatType gearStat = new StatType(
                     "MISC_" + statType.name(),
                     statType.getDisplayName(),
                     statType.getApiName(),

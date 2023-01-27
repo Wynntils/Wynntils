@@ -6,9 +6,9 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gearinfo.types.GearIdentification;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
@@ -16,14 +16,14 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
     // FIXME: Better types than strings...
     private final List<String> damages;
     private final List<String> requirements;
-    private final List<GearIdentification> identifications;
+    private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final CappedValue durability;
 
     public CraftedGearItem(
             List<String> damages,
             List<String> requirements,
-            List<GearIdentification> identifications,
+            List<StatActualValue> identifications,
             List<Powder> powders,
             CappedValue durability) {
         this.damages = damages;
@@ -33,7 +33,7 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
         this.durability = durability;
     }
 
-    public List<GearIdentification> getIdentifications() {
+    public List<StatActualValue> getIdentifications() {
         return identifications;
     }
 

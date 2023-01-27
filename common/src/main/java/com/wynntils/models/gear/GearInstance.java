@@ -5,14 +5,14 @@
 package com.wynntils.models.gear;
 
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gearinfo.types.GearIdentification;
+import com.wynntils.models.stats.type.StatActualValue;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearInstance {
-    private final List<GearIdentification> identifications;
+    private final List<StatActualValue> identifications;
     private final List<GearIdentificationContainer> idContainers;
     private final List<Powder> powders;
     private final int rerolls;
@@ -23,7 +23,7 @@ public class GearInstance {
     private final boolean hasVariableIds;
 
     public GearInstance(
-            List<GearIdentification> identifications,
+            List<StatActualValue> identifications,
             List<GearIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,
@@ -52,7 +52,7 @@ public class GearInstance {
         }
     }
 
-    public List<GearIdentification> getIdentifications() {
+    public List<StatActualValue> getIdentifications() {
         return identifications;
     }
 

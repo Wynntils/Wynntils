@@ -5,8 +5,8 @@
 package com.wynntils.models.gearinfo;
 
 import com.wynntils.models.gear.type.GearDropType;
-import com.wynntils.models.gearinfo.types.GearMaterial;
-import com.wynntils.models.gearinfo.types.GearRestrictions;
+import com.wynntils.models.gearinfo.type.GearMaterial;
+import com.wynntils.models.gearinfo.type.GearRestrictions;
 import java.util.Optional;
 
 public record GearMetaInfo(

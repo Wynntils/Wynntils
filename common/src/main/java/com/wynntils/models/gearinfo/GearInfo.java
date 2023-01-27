@@ -6,8 +6,9 @@ package com.wynntils.models.gearinfo;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gearinfo.types.GearStat;
-import com.wynntils.models.gearinfo.types.GearStatPossibleValues;
+import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 
@@ -18,5 +19,5 @@ public record GearInfo(
         int powderSlots,
         GearMetaInfo metaInfo,
         GearRequirements requirements,
-        GearStatsFixed statsFixed,
-        List<Pair<GearStat, GearStatPossibleValues>> statsIdentified) {}
+        FixedStats fixedStats,
+        List<Pair<StatType, StatPossibleValues>> statsIdentified) {}

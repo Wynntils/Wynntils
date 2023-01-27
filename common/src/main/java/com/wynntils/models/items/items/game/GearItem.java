@@ -9,8 +9,8 @@ import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.GearInstance;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gearinfo.types.GearIdentification;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
@@ -20,7 +20,7 @@ public class GearItem extends GameItem implements GearTierItemProperty {
 
     public GearItem(
             GearProfile gearProfile,
-            List<GearIdentification> identifications,
+            List<StatActualValue> identifications,
             List<GearIdentificationContainer> idContainers,
             List<Powder> powders,
             int rerolls,

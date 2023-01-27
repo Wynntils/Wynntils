@@ -17,12 +17,13 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gearinfo.types.GearDamageType;
-import com.wynntils.models.gearinfo.types.GearMajorId;
-import com.wynntils.models.gearinfo.types.GearMaterial;
-import com.wynntils.models.gearinfo.types.GearRestrictions;
-import com.wynntils.models.gearinfo.types.GearStat;
-import com.wynntils.models.gearinfo.types.GearStatPossibleValues;
+import com.wynntils.models.gearinfo.type.GearDamageType;
+import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.gearinfo.type.GearMaterial;
+import com.wynntils.models.gearinfo.type.GearRestrictions;
+import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
@@ -37,7 +38,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
-
     @Override
     public GearInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
             throws JsonParseException {
@@ -56,10 +56,10 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         String altName = (secondaryName == null ? null : primaryName.getAsString());
         GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
         GearRequirements requirements = parseRequirements(json, type);
-        GearStatsFixed statsFixed = parseStatsFixed(json);
-        List<Pair<GearStat, GearStatPossibleValues>> statsIdentified = parseStatsIdentified(json);
+        FixedStats fixedStats = parseStatsFixed(json);
+        List<Pair<StatType, StatPossibleValues>> statsIdentified = parseStatsIdentified(json);
 
-        return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, statsFixed, statsIdentified);
+        return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, fixedStats, statsIdentified);
     }
 
     private GearType parseType(JsonObject json) {
@@ -193,7 +193,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return Optional.of(questName.replace("֎", ""));
     }
 
-    private GearStatsFixed parseStatsFixed(JsonObject json) {
+    private FixedStats parseStatsFixed(JsonObject json) {
         JsonElement healthJson = json.get("health");
         int healthBuff = healthJson == null ? 0 : healthJson.getAsInt();
         List<Pair<Skill, Integer>> skillBuffs = parseSkillBuffs(json);
@@ -206,7 +206,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         List<Pair<GearDamageType, RangedValue>> damages = parseDamages(json);
         List<Pair<Element, Integer>> defences = parseDefences(json);
 
-        return new GearStatsFixed(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
+        return new FixedStats(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
     }
 
     private List<GearMajorId> parseMajorIds(JsonObject json) {
@@ -282,12 +282,12 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return List.copyOf(list);
     }
 
-    private List<Pair<GearStat, GearStatPossibleValues>> parseStatsIdentified(JsonObject json) {
-        List<Pair<GearStat, GearStatPossibleValues>> list = new ArrayList<>();
+    private List<Pair<StatType, StatPossibleValues>> parseStatsIdentified(JsonObject json) {
+        List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
         JsonElement identifiedJson = json.get("identified");
         boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
-        for (GearStat stat : Models.GearInfo.gearStatRegistry) {
+        for (StatType stat : Models.GearInfo.statTypeRegistry) {
             JsonElement statJson = json.get(stat.apiName());
             if (statJson == null) continue;
 
@@ -295,7 +295,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             if (baseValue == 0) continue;
 
             RangedValue range = GearUtils.calculateRange(baseValue, preIdentified);
-            GearStatPossibleValues possibleValues = new GearStatPossibleValues(stat, range, baseValue, preIdentified);
+            StatPossibleValues possibleValues = new StatPossibleValues(stat, range, baseValue, preIdentified);
             list.add(Pair.of(stat, possibleValues));
         }
 
