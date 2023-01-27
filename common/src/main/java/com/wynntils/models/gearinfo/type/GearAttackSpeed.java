@@ -2,9 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.type;
-
-import net.minecraft.ChatFormatting;
+package com.wynntils.models.gearinfo.type;
 
 public enum GearAttackSpeed {
     SUPER_FAST("Super Fast Attack Speed", 3),
@@ -29,9 +27,5 @@ public enum GearAttackSpeed {
 
     public int getOffset() {
         return offset;
-    }
-
-    public String asLore() {
-        return ChatFormatting.GRAY + name;
     }
 }

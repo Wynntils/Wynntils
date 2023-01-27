@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.type;
+package com.wynntils.models.gearinfo.type;
 
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
@@ -28,10 +28,6 @@ public enum GearTier {
         this.chatFormatting = chatFormatting;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
-    }
-
-    public ChatFormatting getChatFormatting() {
-        return chatFormatting;
     }
 
     public static GearTier fromString(String typeStr) {
@@ -72,16 +68,20 @@ public enum GearTier {
         return GearTier.values()[damage];
     }
 
+    public ChatFormatting getChatFormatting() {
+        return chatFormatting;
+    }
+
     public int getGearIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
     }
 
-    public Component asLore() {
-        return Component.literal(this + " Item").withStyle(chatFormatting);
+    public String getName() {
+        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
     }
 
     @Override
     public String toString() {
-        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+        return getName();
     }
 }

@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.models.gearinfo.type.GearTier;
+
 public record CharmProfile(String displayName, GearTier tier, String type) {
 
     @Override

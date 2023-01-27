@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.models.gearinfo.type.GearTier;
+
 public record TomeProfile(String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {
 
     @Override

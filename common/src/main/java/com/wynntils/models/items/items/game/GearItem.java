@@ -8,7 +8,7 @@ import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.GearInstance;
 import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;

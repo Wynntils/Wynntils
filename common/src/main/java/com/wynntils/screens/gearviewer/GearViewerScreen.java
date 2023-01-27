@@ -7,7 +7,7 @@ package com.wynntils.screens.gearviewer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsScreen;

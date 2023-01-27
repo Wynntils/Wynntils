@@ -10,7 +10,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.EnumMap;
 import java.util.regex.Matcher;

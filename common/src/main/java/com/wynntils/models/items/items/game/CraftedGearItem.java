@@ -5,7 +5,7 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;

@@ -6,9 +6,9 @@ package com.wynntils.models.gear.profile;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.DamageType;
-import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.RequirementType;
+import com.wynntils.models.gearinfo.type.GearAttackSpeed;
+import com.wynntils.models.gearinfo.type.GearTier;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;

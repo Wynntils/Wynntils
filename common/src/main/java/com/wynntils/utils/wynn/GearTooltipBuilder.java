@@ -15,10 +15,11 @@ import com.wynntils.models.gear.ReidentificationChances;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.profile.MajorIdentification;
-import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearAttackSpeed;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.type.DamageType;
@@ -243,7 +244,8 @@ public class GearTooltipBuilder {
 
         // attack speed
         if (gearProfile.getAttackSpeed() != null)
-            baseTooltip.add(Component.literal(gearProfile.getAttackSpeed().asLore()));
+            baseTooltip.add(Component.literal(
+                    ChatFormatting.GRAY + gearProfile.getAttackSpeed().getName()));
 
         baseTooltip.add(Component.literal(""));
 
@@ -349,7 +351,8 @@ public class GearTooltipBuilder {
         }
 
         // tier & rerolls
-        MutableComponent tier = gearProfile.getTier().asLore().copy();
+        GearTier gearTier = gearProfile.getTier();
+        MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
         if (gearItem != null && gearItem.getRerolls() > 1) {
             tier.append(" [" + gearItem.getRerolls() + "]");
         }

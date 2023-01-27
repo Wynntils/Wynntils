@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.gearinfo;
 
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
