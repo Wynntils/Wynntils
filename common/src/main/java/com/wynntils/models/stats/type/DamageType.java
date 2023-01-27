@@ -9,14 +9,14 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {
-    ANY(""),
+    UNSPECIFIED(""), // This really means "neutral"
     AIR(Element.AIR),
     EARTH(Element.EARTH),
     FIRE(Element.FIRE),
     THUNDER(Element.THUNDER),
     WATER(Element.WATER),
     RAINBOW("Elemental"),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD);
+    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD); // NEUTRAL is only used once, for "Violet-Shift".
 
     private final Element element;
     private final String displayName;

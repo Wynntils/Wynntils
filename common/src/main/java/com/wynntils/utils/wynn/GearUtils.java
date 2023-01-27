@@ -5,9 +5,9 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.type.GearMaterial;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.utils.type.RangedValue;
 import java.util.Map;
 
@@ -37,6 +37,7 @@ public class GearUtils {
             "pumpkin");
 
     public static RangedValue calculateRange(int baseValue, boolean preIdentified) {
+        // FIXME: How does this work for stats where a negative value is good? (like spell cost)
         if (preIdentified) {
             // This is actually a single, fixed value
             return RangedValue.of(baseValue, baseValue);
@@ -54,6 +55,12 @@ public class GearUtils {
                 return RangedValue.of(min, max);
             }
         }
+    }
+
+    // Calculate the range of possible values for the internal roll for this stat
+    public RangedValue calculateInternalRoll(StatPossibleValues possibleValues, StatActualValue actualValue) {
+        // FIXME
+        return RangedValue.NONE;
     }
 
     public static GearMaterial getItemFromCodeAndDamage(int itemTypeCode, int damageCode) {
@@ -87,19 +94,5 @@ public class GearUtils {
             stars = 3;
         }
         return stars;
-    }
-
-    public RangedValue getInternalRoll(GearInfo gearInfo, StatActualValue statActualValue) {
-        // FIXME
-        return RangedValue.NONE;
-    }
-
-    private RangedValue calculateStarCountRange(GearInfo gearInfo, StatActualValue statActualValue) {
-        // FIXME
-        /*
-        Note: negative values will never show stars!
-        See https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
-                 */
-        return RangedValue.NONE;
     }
 }

@@ -521,6 +521,10 @@ public class GearTooltipBuilder {
         StatUnit unitType = statActualValue.stat().getUnit();
         boolean invert = Models.Stat.isSpellStat(statActualValue.stat());
 
+        /*
+        Note: negative values will never show stars!
+        See https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
+                 */
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - statActualValue.stars()) : "";
 
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType, invert, starString);
