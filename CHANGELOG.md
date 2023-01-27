@@ -1,9 +1,21 @@
+## [0.0.2-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.154...v0.0.2-alpha.155) (2023-01-27)
+
+
+### Bug Fixes
+
+* Match treasury color with Wynn ([#1097](https://github.com/Wynntils/Artemis/issues/1097)) ([b19c6b8](https://github.com/Wynntils/Artemis/commit/b19c6b8d7e67f75f9f832ba5656143a85666e456))
+
 ## [0.0.2-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.153...v0.0.2-alpha.154) (2023-01-27)
 
 
 ### Code Refactoring
 
 * Models need intra-model dependencies ([#1096](https://github.com/Wynntils/Artemis/issues/1096)) ([8aeea80](https://github.com/Wynntils/Artemis/commit/8aeea80af6870872910c61e6c1cb3c85b90828d9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.154 [skip ci] ([856b1b4](https://github.com/Wynntils/Artemis/commit/856b1b440739d032dbac44bdbf32e96718e64474))
 
 ## [0.0.2-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.152...v0.0.2-alpha.153) (2023-01-27)
 
@@ -37,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.151 [skip ci] ([66d173d](https://github.com/Wynntils/Artemis/commit/66d173da15033c51f897736762147dc2abca7f8e))
-
-## [0.0.2-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.149...v0.0.2-alpha.150) (2023-01-25)
-
-
-### Bug Fixes
-
-* Fix function aliases ([c6742f3](https://github.com/Wynntils/Artemis/commit/c6742f3ff365bbfdfafefc84004c70a685c77399))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.150 [skip ci] ([df59492](https://github.com/Wynntils/Artemis/commit/df5949247e3d4fe4eed3e58dcc8d1572ea4643a5))
 
