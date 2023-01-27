@@ -53,7 +53,6 @@ public final class Models {
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
 
-
     // Models with dependencies, ordered alphabetically as far as possible
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
