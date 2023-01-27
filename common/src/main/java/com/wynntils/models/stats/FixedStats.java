@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public record FixedStats(
         int healthBuff,
-        List<Pair<Skill, Integer>> skillBuffs,
+        List<Pair<Skill, Integer>> skillBonuses,
         Optional<GearAttackSpeed> attackSpeed,
         List<GearMajorId> majorIds,
         List<Pair<DamageType, RangedValue>> damages,

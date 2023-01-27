@@ -410,15 +410,15 @@ public class GearTooltipBuilder {
 
         GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
 
-        List<Pair<Skill, Integer>> skillBuffs = gearInfo.fixedStats().skillBuffs();
+        List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
         for (Skill skill : getSkillOrder()) {
-            Pair<Skill, Integer> skillBuffValue = getSkillBuffs(skill, skillBuffs);
-            if (skillBuffValue == null) continue;
+            Pair<Skill, Integer> skillBonusValue = getSkillBonuses(skill, skillBonuses);
+            if (skillBonusValue == null) continue;
 
-            Component line = buildIdLoreLineSkillBuffNew(style.decorations(), skillBuffValue);
+            Component line = buildIdLoreLineSkillBonusNew(style.decorations(), skillBonusValue);
             allStatLines.add(line);
         }
-        if (!skillBuffs.isEmpty()) {
+        if (!skillBonuses.isEmpty()) {
             allStatLines.add(Component.literal(""));
         }
 
@@ -440,10 +440,10 @@ public class GearTooltipBuilder {
         return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
     }
 
-    private Pair<Skill, Integer> getSkillBuffs(Skill skill, List<Pair<Skill, Integer>> skillBuffs) {
-        for (Pair<Skill, Integer> skillBuffValue : skillBuffs) {
-            if (skillBuffValue.key().equals(skill)) {
-                return skillBuffValue;
+    private Pair<Skill, Integer> getSkillBonuses(Skill skill, List<Pair<Skill, Integer>> skillBonuses) {
+        for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
+            if (skillBonusValue.key().equals(skill)) {
+                return skillBonusValue;
             }
         }
 
@@ -494,10 +494,10 @@ public class GearTooltipBuilder {
         }
     }
 
-    private Component buildIdLoreLineSkillBuffNew(
-            IdentificationDecorations decorations, Pair<Skill, Integer> skillBuff) {
-        String inGameName = skillBuff.key().getDisplayName();
-        int value = skillBuff.value();
+    private Component buildIdLoreLineSkillBonusNew(
+            IdentificationDecorations decorations, Pair<Skill, Integer> skillBonus) {
+        String inGameName = skillBonus.key().getDisplayName();
+        int value = skillBonus.value();
         StatUnit unitType = StatUnit.RAW;
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
 

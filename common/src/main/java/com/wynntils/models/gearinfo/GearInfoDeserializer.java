@@ -196,7 +196,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
     private FixedStats parseFixedStats(JsonObject json) {
         JsonElement healthJson = json.get("health");
         int healthBuff = healthJson == null ? 0 : healthJson.getAsInt();
-        List<Pair<Skill, Integer>> skillBuffs = parseSkillBuffs(json);
+        List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(json);
         JsonElement attackSpeedJson = json.get("attackSpeed");
         Optional<GearAttackSpeed> attackSpeed = (attackSpeedJson == null)
                 ? Optional.empty()
@@ -206,7 +206,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         List<Pair<DamageType, RangedValue>> damages = parseDamages(json);
         List<Pair<Element, Integer>> defences = parseDefences(json);
 
-        return new FixedStats(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
+        return new FixedStats(healthBuff, skillBonuses, attackSpeed, majorIds, damages, defences);
     }
 
     private List<GearMajorId> parseMajorIds(JsonObject json) {
@@ -219,7 +219,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
                 .toList();
     }
 
-    private List<Pair<Skill, Integer>> parseSkillBuffs(JsonObject json) {
+    private List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {
         List<Pair<Skill, Integer>> list = new ArrayList<>();
         for (Skill skill : Skill.values()) {
             String skillJsonName = skill.getApiName() + "Points";
