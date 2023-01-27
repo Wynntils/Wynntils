@@ -156,7 +156,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.name"),
-                this.width / 2 - xStart + 50,
+                this.width / 2 - xStart + 40,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -197,7 +197,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             RenderUtils.drawTexturedRect(
                     poseStack,
                     McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation(),
-                    this.width / 2 - 144,
+                    this.width / 2 - xStart + 4,
                     this.height / 2 - 125 + i * 20 - 10,
                     8,
                     16,
@@ -218,7 +218,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             fr.renderText(
                     poseStack,
                     formattedPlayerName,
-                    this.width / 2 - xStart + 50,
+                    this.width / 2 - xStart + 40,
                     this.height / 2 - 125 + i * 20,
                     color,
                     HorizontalAlignment.Left,
@@ -273,7 +273,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                this.width / 2 + 250,
+                this.width / 2 + 240,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -301,7 +301,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             RenderUtils.drawTexturedRect(
                     poseStack,
                     McUtils.mc().getSkinManager().getInsecureSkinLocation(McUtils.mc().getConnection().getPlayerInfo(playerName).getProfile()),
-                    this.width / 2 + 200,
+                    this.width / 2 + 204,
                     this.height / 2 - 125 + i * 20 - 10,
                     8,
                     16,
@@ -317,7 +317,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             fr.renderText(
                     poseStack,
                     playerName,
-                    this.width / 2 + 250,
+                    this.width / 2 + 240,
                     this.height / 2 - 125 + i * 20,
                     CommonColors.GREEN,
                     HorizontalAlignment.Left,
