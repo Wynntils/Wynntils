@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.partymanagement.widgets.PartyPlayer;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayer;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -190,6 +191,16 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         for (int i = 0; i < partyMembers.size(); i++) {
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
+
+            this.addRenderableWidget(new PartyPlayer(
+                    this.width / 2 - xStart + 4,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    200,
+                    20,
+                    playerName,
+                    i,
+                    offlineMembers.contains(playerName)
+                    ));
 
             ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
             // head rendering
