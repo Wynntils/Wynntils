@@ -193,16 +193,32 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
 
+            ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
             // head rendering
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation(),
+                    skin,
                     this.width / 2 - xStart + 4,
                     this.height / 2 - 125 + i * 20 - 10,
                     8,
                     16,
                     16,
                     8,
+                    8,
+                    8,
+                    8,
+                    64,
+                    64);
+            // hat rendering
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    skin,
+                    this.width / 2 - xStart + 4,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    1,
+                    16,
+                    16,
+                    40,
                     8,
                     8,
                     8,
@@ -297,16 +313,31 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
 
+            ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
             // head rendering
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    McUtils.mc().getSkinManager().getInsecureSkinLocation(McUtils.mc().getConnection().getPlayerInfo(playerName).getProfile()),
+                    skin,
                     this.width / 2 + 204,
                     this.height / 2 - 125 + i * 20 - 10,
                     8,
                     16,
                     16,
                     8,
+                    8,
+                    8,
+                    8,
+                    64,
+                    64);
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    skin,
+                    this.width / 2 + 204,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    8,
+                    16,
+                    16,
+                    40,
                     8,
                     8,
                     8,
