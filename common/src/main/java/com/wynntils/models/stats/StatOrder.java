@@ -9,7 +9,7 @@ import java.util.List;
 public class StatOrder {
 
     public static final List<String> WYNNCRAFT_ORDER = List.of(
-            // dynamic stats
+            // misc1, confirmed
             "healthRegen",
             "manaRegen",
             "lifeSteal",
