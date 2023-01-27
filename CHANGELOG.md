@@ -1,8 +1,16 @@
+## [0.0.2-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.152...v0.0.2-alpha.153) (2023-01-27)
+
+
+### New Features
+
+* Fade the beacon beam if we are close to the target ([#1092](https://github.com/Wynntils/Artemis/issues/1092)) ([f28711c](https://github.com/Wynntils/Artemis/commit/f28711c001df7e63cc71fa264cee03772bd146cc))
+
 ## [0.0.2-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.151...v0.0.2-alpha.152) (2023-01-26)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.152 [skip ci] ([f52a8c7](https://github.com/Wynntils/Artemis/commit/f52a8c702ad0281aa65402f95fd47dced42f23f7))
 * Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c2076e5](https://github.com/Wynntils/Artemis/commit/c2076e5e2900a1e04110a512e8c2ef3fcfdb2757))
 * Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c3fd809](https://github.com/Wynntils/Artemis/commit/c3fd809d5722e7c7e20b830e130b56326c69dfda))
 
@@ -41,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.149 [skip ci] ([c906992](https://github.com/Wynntils/Artemis/commit/c906992987fbbadde0417338c3d89e4b96af6f51))
-
-## [0.0.2-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.147...v0.0.2-alpha.148) (2023-01-25)
-
-
-### New Features
-
-* Make the durability functions work with gathering tools ([#1091](https://github.com/Wynntils/Artemis/issues/1091)) ([052df25](https://github.com/Wynntils/Artemis/commit/052df251f6f5afd6caaa9038719c5d1c80de450c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.148 [skip ci] ([9d99c63](https://github.com/Wynntils/Artemis/commit/9d99c63e107ff8500a0eb8baebae670d5733bc11))
 
