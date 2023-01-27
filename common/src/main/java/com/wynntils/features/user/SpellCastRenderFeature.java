@@ -28,7 +28,7 @@ public class SpellCastRenderFeature extends UserFeature {
     public static final int FADE_TICKS = 4;
 
     @Config
-    public boolean renderVignette = true;
+    public boolean renderVignette = false;
 
     @Config
     public float vignetteIntensity = 1.3f;
