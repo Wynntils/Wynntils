@@ -1,7 +1,6 @@
 package com.wynntils.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.sun.source.tree.Tree;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -10,25 +9,21 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.TextRenderSetting;
-import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
@@ -43,6 +38,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private Button kickOfflineButton;
     private Button createPartyButton;
     private Button leavePartyButton;
+    private final HashMap<Button, String> promoteButtons = new HashMap<>();
+    private final HashMap<Button, String> kickButtons = new HashMap<>();
 
     private final int totalWidth = 344;
     private final int xStart = totalWidth / 2;
@@ -194,6 +191,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle,
                     TextShadow.NORMAL);
+            
         }
         // endregion
 
