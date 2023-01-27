@@ -39,8 +39,8 @@ public abstract class RelationsUpdateEvent extends Event {
         }
     }
 
-    public static class UserList extends RelationsUpdateEvent {
-        public UserList(Set<String> changedPlayers, ChangeType changeType) {
+    public static class GuildList extends RelationsUpdateEvent {
+        public GuildList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }
