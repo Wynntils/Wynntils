@@ -96,7 +96,7 @@ public class PartyPlayer extends WynntilsButton {
             new Button.Builder(
                     Component.translatable("screens.wynntils.partyManagementGui.disband"),
                     (button) -> disbandParty())
-                    .pos(this.getX(), this.getY())
+                    .pos(this.getX() + 292, this.getY())
                     .size(50, 20)
                     .build().renderButton(poseStack, mouseX, mouseY, partialTick);
         } else {

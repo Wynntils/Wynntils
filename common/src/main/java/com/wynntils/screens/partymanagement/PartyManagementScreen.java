@@ -59,7 +59,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     @Override
-    protected void init() {
+    public void init() {
         // region Invite input and button
         this.addRenderableWidget(
                 inviteInput = new TextInputBoxWidget(this.width / 2 - xStart, this.height / 2 - 200, 300, 20, null, this, inviteInput));
@@ -181,12 +181,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Party list
-        this.renderables.removeAll(promoteButtons);
-        this.renderables.removeAll(kickButtons);
-        this.children.removeAll(promoteButtons);
-        this.children.removeAll(kickButtons);
-        promoteButtons.clear();
-        kickButtons.clear();
         List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
         for (int i = 0; i < partyMembers.size(); i++) {
             String playerName = partyMembers.get(i);
@@ -201,87 +195,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     i,
                     offlineMembers.contains(playerName)
                     ));
-
-            ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
-            // head rendering
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    this.width / 2 - xStart + 4,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    8,
-                    16,
-                    16,
-                    8,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-            // hat rendering
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    this.width / 2 - xStart + 4,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    1,
-                    16,
-                    16,
-                    40,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-
-            // name rendering
-            CustomColor color = playerName.equals(Models.Party.getPartyLeader()) ? CommonColors.YELLOW : (Models.Friends.getFriends().contains(playerName) ? CommonColors.GREEN : CommonColors.WHITE);
-            String prefix = offlineMembers.contains(playerName) ? "§m" : (playerName.equals(McUtils.player().getName().getString()) ? "§l" : "");
-
-            String formattedPlayerName = prefix + playerName;
-
-            fr.renderText(
-                    poseStack,
-                    formattedPlayerName,
-                    this.width / 2 - xStart + 40,
-                    this.height / 2 - 125 + i * 20,
-                    color,
-                    HorizontalAlignment.Left,
-                    VerticalAlignment.Middle,
-                    TextShadow.NORMAL);
-
-            if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) continue; // only leader can promote/kick
-
-            if (playerName.equals(Models.Party.getPartyLeader())) {
-                kickButtons.add(new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.disband"),
-                        (button) -> disbandParty())
-                        .pos(this.width / 2 - xStart + 296, this.height / 2 - 125 + i * 20 - 10)
-                        .size(50, 20)
-                        .build());
-                continue;
-            }
-
-            // Promote button
-            promoteButtons.add(new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.promote"),
-                    (button) -> promoteToLeader(playerName))
-                    .pos(this.width / 2 - xStart + 244, this.height / 2 - 125 + i * 20 - 10)
-                    .size(50, 20)
-                    .build());
-
-            // Kick button
-            kickButtons.add(new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.kick"),
-                    (button) -> kickFromParty(playerName))
-                    .pos(this.width / 2 - xStart + 296, this.height / 2 - 125 + i * 20 - 10)
-                    .size(50, 20)
-                    .build());
         }
-        this.renderables.addAll(promoteButtons);
-        this.renderables.addAll(kickButtons);
-        this.children.addAll(promoteButtons);
-        this.children.addAll(kickButtons);
         // endregion
 
         // region Suggestion list headers
@@ -315,67 +229,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Suggestion list
-        this.renderables.removeAll(inviteButtons);
-        this.children.removeAll(inviteButtons);
-        inviteButtons.clear();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
 
             this.addRenderableWidget(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName, i));
-
-            ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
-            // head rendering
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    this.width / 2 + 204,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    8,
-                    16,
-                    16,
-                    8,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    skin,
-                    this.width / 2 + 204,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    8,
-                    16,
-                    16,
-                    40,
-                    8,
-                    8,
-                    8,
-                    64,
-                    64);
-
-            // name rendering
-            fr.renderText(
-                    poseStack,
-                    playerName,
-                    this.width / 2 + 240,
-                    this.height / 2 - 125 + i * 20,
-                    CommonColors.GREEN,
-                    HorizontalAlignment.Left,
-                    VerticalAlignment.Middle,
-                    TextShadow.NORMAL);
-
-            // Invite button
-            inviteButtons.add(new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                    (button) -> inviteToParty(playerName))
-                    .pos(this.width / 2 + 334, this.height / 2 - 125 + i * 20 - 10)
-                    .size(40, 20)
-                    .build());
         }
-        this.renderables.addAll(inviteButtons);
-        this.children.addAll(inviteButtons);
         // endregion
 
         // region Legend

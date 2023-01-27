@@ -73,7 +73,7 @@ public class SuggestionPlayer extends WynntilsButton {
         new Button.Builder(
                 Component.translatable("screens.wynntils.partyManagementGui.invite"),
                 (button) -> inviteToParty(playerName))
-                .pos(this.getX(), this.getY())
+                .pos(this.getX() + 130, this.getY())
                 .size(40, 20)
                 .build().render(poseStack, mouseX, mouseY, partialTick);
     }
