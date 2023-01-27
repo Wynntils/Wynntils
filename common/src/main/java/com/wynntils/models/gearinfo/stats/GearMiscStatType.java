@@ -33,9 +33,9 @@ public enum GearMiscStatType {
     XP_BONUS("XP Bonus", GearStatUnit.PERCENT, "xpBonus"),
 
     // These are only found on crafted gear
-    LOOT_QUALITY("Loot Quality", GearStatUnit.PERCENT, "<unknown1>"),
-    GATHER_XP_BONUS("Gather XP Bonus", GearStatUnit.PERCENT, "<unknown2>"),
-    GATHER_SPEED("Gather Speed", GearStatUnit.PERCENT, "<unknown3>");
+    LOOT_QUALITY("Loot Quality", GearStatUnit.PERCENT, "lootQuality"),
+    GATHER_XP_BONUS("Gather XP Bonus", GearStatUnit.PERCENT, "gatherXpBonus"),
+    GATHER_SPEED("Gather Speed", GearStatUnit.PERCENT, "gatherSpeed");
 
     private final String displayName;
     private final String apiName;
