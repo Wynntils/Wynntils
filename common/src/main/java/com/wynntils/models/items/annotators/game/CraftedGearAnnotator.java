@@ -66,7 +66,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
                 String unit = statMatcher.group(3);
                 String statDisplayName = statMatcher.group(5);
 
-                StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
+                StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;

@@ -130,7 +130,7 @@ public final class GearItemModel extends Model {
                 String starString = statMatcher.group(4);
                 int stars = starString == null ? 0 : starString.length();
 
-                StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
+                StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
                     // Skill point buff looks like stats when parsing
                     continue;
@@ -163,7 +163,7 @@ public final class GearItemModel extends Model {
                 String unitMatch = id3Matcher.group(4);
                 String unit = unitMatch == null ? "" : unitMatch;
 
-                StatType type = Models.GearInfo.getGearStat(idName, unit);
+                StatType type = Models.Stat.fromDisplayName(idName, unit);
                 if (type == null && Skill.isSkill(idName)) {
                     // Skill point buff looks like stats when parsing
                     // FIXME: Handle
@@ -247,7 +247,7 @@ public final class GearItemModel extends Model {
         String unit = statMatcher.group(3);
         String statDisplayName = statMatcher.group(5);
 
-        StatType type = Models.GearInfo.getGearStat(statDisplayName, unit);
+        StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
         if (type == null && Skill.isSkill(statDisplayName)) {
             // Skill point buff looks like stats when parsing
             return Optional.empty();
@@ -354,7 +354,7 @@ public final class GearItemModel extends Model {
                 idContainers.add(identificationFromValue(
                         null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
 
-                StatType stat = Models.GearInfo.getGearStatFromLore(id);
+                StatType stat = Models.Stat.fromLoreId(id);
                 if (stat == null) continue;
 
                 int stars = GearUtils.getStarsFromPercent(intPercent);

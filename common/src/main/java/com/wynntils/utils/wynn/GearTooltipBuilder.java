@@ -424,7 +424,7 @@ public class GearTooltipBuilder {
         }
 
         for (String apiName : StatOrder.getWynncraftOrder()) {
-            List<StatType> statKinds = Models.GearInfo.getGearStatsFromApi(apiName);
+            List<StatType> statKinds = Models.Stat.fromApiName(apiName);
             for (StatType statKind : statKinds) {
                 StatActualValue statActualValue = getStatOfKind(statKind, stats);
                 if (statActualValue == null) continue;
@@ -520,7 +520,7 @@ public class GearTooltipBuilder {
         String inGameName = statActualValue.stat().displayName();
         int value = statActualValue.value();
         StatUnit unitType = statActualValue.stat().unit();
-        boolean invert = Models.GearInfo.isSpellStat(statActualValue.stat());
+        boolean invert = Models.Stat.isSpellStat(statActualValue.stat());
 
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - statActualValue.stars()) : "";
 

@@ -30,6 +30,7 @@ import com.wynntils.models.players.PlayerRelationsModel;
 import com.wynntils.models.players.hades.HadesModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.spells.SpellModel;
+import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
@@ -46,6 +47,7 @@ public final class Models {
     public static final DiscoveryModel Discovery = new DiscoveryModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
+    public static final GearInfoModel GearInfo = new GearInfoModel();
     public static final GearItemModel GearItem = new GearItemModel();
     public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
@@ -65,7 +67,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final SpellModel Spell = new SpellModel();
+    public static final StatModel Stat = new StatModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
-    public static final GearInfoModel GearInfo = new GearInfoModel();
 }
