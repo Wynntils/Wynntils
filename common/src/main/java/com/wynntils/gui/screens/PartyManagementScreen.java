@@ -20,14 +20,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
-    private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w,; ]+");
+    private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
     private TextInputBoxWidget focusedTextInput;
@@ -38,8 +37,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private Button kickOfflineButton;
     private Button createPartyButton;
     private Button leavePartyButton;
-    private final HashMap<Button, String> promoteButtons = new HashMap<>();
-    private final HashMap<Button, String> kickButtons = new HashMap<>();
+    private final List<Button> promoteButtons = new ArrayList<>();
+    private final List<Button> kickButtons = new ArrayList<>();
 
     private final int totalWidth = 344;
     private final int xStart = totalWidth / 2;
@@ -100,7 +99,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         .size(83, 20)
                         .build());
         // endregion
-
     }
 
     @Override
@@ -117,6 +115,27 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         updateSuggestionsList();
         FontRenderer fr = FontRenderer.getInstance();
+
+        // region Invite field header
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1"),
+                this.width / 2 - xStart,
+                this.height / 2 - 206,
+                CommonColors.WHITE,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        fr.renderText(
+                poseStack,
+                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                this.width / 2 - xStart + 77,
+                this.height / 2 - 206,
+                CommonColors.LIGHT_GRAY,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle,
+                TextShadow.NORMAL);
+        // endregion
 
         // region Party list headers
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - xStart, this.height / 2 - 140, 0, totalWidth, 1);
@@ -141,7 +160,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.promote"),
-                this.width / 2 - xStart + 260,
+                this.width / 2 - xStart + 249,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -150,7 +169,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.kick"),
-                this.width / 2 - xStart + 322, // starts at 300-ish?, center 322, ends at 344-ish?
+                this.width / 2 - xStart + 312,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -158,27 +177,20 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Party list
+        this.renderables.removeAll(promoteButtons);
+        this.renderables.removeAll(kickButtons);
+        this.children.removeAll(promoteButtons);
+        this.children.removeAll(kickButtons);
+        promoteButtons.clear();
+        kickButtons.clear();
         List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
         for (int i = 0; i < partyMembers.size(); i++) {
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
 
-            CustomColor color;
-            String prefix = "";
-
-            if (playerName.equals(Models.Party.getPartyLeader())) {
-                color = CommonColors.YELLOW;
-            } else if (Models.Friends.getFriends().contains(playerName)) {
-                color = CommonColors.GREEN;
-            } else {
-                color = CommonColors.WHITE;
-            }
-
-            if (offlineMembers.contains(playerName)) {
-                prefix = "§m";
-            } else if (playerName.equals(McUtils.player().getName().getString())) {
-                prefix = "§l";
-            }
+            // name rendering
+            CustomColor color = playerName.equals(Models.Party.getPartyLeader()) ? CommonColors.YELLOW : (Models.Friends.getFriends().contains(playerName) ? CommonColors.GREEN : CommonColors.WHITE);
+            String prefix = offlineMembers.contains(playerName) ? "§m" : (playerName.equals(McUtils.player().getName().getString()) ? "§l" : "");
 
             String formattedPlayerName = prefix + playerName;
 
@@ -186,13 +198,44 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     poseStack,
                     formattedPlayerName,
                     this.width / 2 - xStart + 50,
-                    this.height / 2 - 120 + i * 20,
+                    this.height / 2 - 125 + i * 20,
                     color,
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle,
                     TextShadow.NORMAL);
-            
+
+            if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) continue; // only leader can promote/kick
+
+            if (playerName.equals(Models.Party.getPartyLeader())) {
+                kickButtons.add(new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.disband"),
+                        (button) -> disbandParty())
+                        .pos(this.width / 2 - xStart + 296, this.height / 2 - 125 + i * 20 - 10)
+                        .size(50, 20)
+                        .build());
+                continue;
+            }
+
+            // Promote button
+            promoteButtons.add(new Button.Builder(
+                    Component.translatable("screens.wynntils.partyManagementGui.promote"),
+                    (button) -> promoteToLeader(playerName))
+                    .pos(this.width / 2 - xStart + 244, this.height / 2 - 125 + i * 20 - 10)
+                    .size(50, 20)
+                    .build());
+
+            // Kick button
+            kickButtons.add(new Button.Builder(
+                    Component.translatable("screens.wynntils.partyManagementGui.kick"),
+                    (button) -> kickFromParty(playerName))
+                    .pos(this.width / 2 - xStart + 296, this.height / 2 - 125 + i * 20 - 10)
+                    .size(50, 20)
+                    .build());
         }
+        this.renderables.addAll(promoteButtons);
+        this.renderables.addAll(kickButtons);
+        this.children.addAll(promoteButtons);
+        this.children.addAll(kickButtons);
         // endregion
 
         // region Suggestion list headers
@@ -301,7 +344,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         refreshParty();
         offlineMembers.addAll(Models.Party.getPartyMembers());
         offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
-        offlineMembers.forEach(member -> McUtils.sendCommand("party kick " + member));
+        offlineMembers.forEach(this::kickFromParty);
     }
 
     private void createParty() {
@@ -310,6 +353,18 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void leaveParty() {
         McUtils.sendCommand("party leave");
+    }
+
+    private void disbandParty() {
+        McUtils.sendCommand("party disband");
+    }
+
+    private void promoteToLeader(String playerName) {
+        McUtils.sendCommand("party promote " + playerName);
+    }
+
+    private void kickFromParty(String playerName) {
+        McUtils.sendCommand("party kick " + playerName);
     }
 
     private void updateSuggestionsList() {
