@@ -17,6 +17,7 @@ import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearItemModel;
 import com.wynntils.models.gear.GearProfilesModel;
+import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
@@ -52,6 +53,7 @@ public final class Models {
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
 
+
     // Models with dependencies, ordered alphabetically as far as possible
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
@@ -66,4 +68,5 @@ public final class Models {
     public static final SpellModel Spell = new SpellModel(Character);
     public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
+    public static final HorseModel Horse = new HorseModel(Item);
 }
