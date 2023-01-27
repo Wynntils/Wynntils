@@ -38,6 +38,8 @@ public final class GearProfilesModel extends Model {
     private Map<GearType, String[]> materialTypes = Map.of();
 
     public GearProfilesModel() {
+        super(List.of());
+
         loadData();
     }
 
