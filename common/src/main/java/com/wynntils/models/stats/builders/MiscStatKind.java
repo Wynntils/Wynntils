@@ -7,7 +7,7 @@ package com.wynntils.models.stats.builders;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.Locale;
 
-public enum GearMiscStatType {
+public enum MiscStatKind {
     HEALTH("Health", StatUnit.RAW, "healthBonus"),
     HEALTH_REGEN_PERCENT("Health Regen", StatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", StatUnit.RAW, "healthRegenRaw"),
@@ -42,14 +42,14 @@ public enum GearMiscStatType {
     private final StatUnit unit;
     private final String loreName;
 
-    GearMiscStatType(String displayName, StatUnit unit, String apiName, String loreName) {
+    MiscStatKind(String displayName, StatUnit unit, String apiName, String loreName) {
         this.displayName = displayName;
         this.apiName = apiName;
         this.unit = unit;
         this.loreName = loreName;
     }
 
-    GearMiscStatType(String displayName, StatUnit unit, String apiName) {
+    MiscStatKind(String displayName, StatUnit unit, String apiName) {
         this(displayName, unit, apiName, apiName.toUpperCase(Locale.ROOT));
     }
 

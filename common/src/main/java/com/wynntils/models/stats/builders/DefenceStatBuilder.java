@@ -5,6 +5,7 @@
 package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.concepts.Element;
+import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.function.Consumer;
@@ -14,7 +15,7 @@ public final class DefenceStatBuilder extends StatBuilder {
     public void buildStats(Consumer<StatType> callback) {
         for (Element element : Element.values()) {
             // The difference in spelling (defence/defense) is due to Wynncraft. Do not change.
-            StatType statType = new StatType(
+            StatType statType = new DefenceStatType(
                     "DEFENCE_" + element.name(),
                     element.getDisplayName() + " Defence",
                     "bonus" + element.getDisplayName() + "Defense",

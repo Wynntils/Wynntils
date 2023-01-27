@@ -7,6 +7,7 @@ package com.wynntils.models.stats.builders;
 import com.google.common.base.CaseFormat;
 import com.wynntils.models.gearinfo.type.GearAttackType;
 import com.wynntils.models.gearinfo.type.GearDamageType;
+import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.function.Consumer;
@@ -27,7 +28,7 @@ public final class DamageStatBuilder extends StatBuilder {
 
     private static StatType buildDamageStat(GearAttackType attackType, GearDamageType damageType, StatUnit unit) {
         String apiName = buildApiName(attackType, damageType, unit);
-        return new StatType(
+        return new DamageStatType(
                 buildKey(attackType, damageType, unit),
                 buildDisplayName(attackType, damageType),
                 apiName,

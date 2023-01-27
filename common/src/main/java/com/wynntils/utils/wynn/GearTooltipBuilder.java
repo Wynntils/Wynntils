@@ -517,9 +517,9 @@ public class GearTooltipBuilder {
 
     private Component buildIdLoreLineNew(
             GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue statActualValue) {
-        String inGameName = statActualValue.stat().displayName();
+        String inGameName = statActualValue.stat().getDisplayName();
         int value = statActualValue.value();
-        StatUnit unitType = statActualValue.stat().unit();
+        StatUnit unitType = statActualValue.stat().getUnit();
         boolean invert = Models.Stat.isSpellStat(statActualValue.stat());
 
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - statActualValue.stars()) : "";

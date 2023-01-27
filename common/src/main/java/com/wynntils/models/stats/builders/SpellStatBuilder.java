@@ -6,6 +6,7 @@ package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.Locale;
@@ -42,7 +43,7 @@ public final class SpellStatBuilder extends StatBuilder {
         String apiUnit = (unit == StatUnit.RAW) ? "Raw" : "Pct";
         String loreUnit = apiUnit.toUpperCase(Locale.ROOT);
 
-        return new StatType(
+        return new SpellStatType(
                 "SPELL_" + spellType.name() + "_COST_" + unit.name() + postfix,
                 displayName,
                 "spellCost" + apiUnit + spellNumber,

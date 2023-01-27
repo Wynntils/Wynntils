@@ -4,14 +4,15 @@
  */
 package com.wynntils.models.stats.builders;
 
+import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.StatType;
 import java.util.function.Consumer;
 
 public final class MiscStatBuilder extends StatBuilder {
     @Override
     public void buildStats(Consumer<StatType> callback) {
-        for (GearMiscStatType statType : GearMiscStatType.values()) {
-            StatType gearStat = new StatType(
+        for (MiscStatKind statType : MiscStatKind.values()) {
+            StatType gearStat = new MiscStatType(
                     "MISC_" + statType.name(),
                     statType.getDisplayName(),
                     statType.getApiName(),

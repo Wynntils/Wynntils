@@ -30,7 +30,7 @@ public final class StatModel extends Model {
 
         // Create a fast lookup map
         for (StatType stat : statTypeRegistry) {
-            String lookupName = stat.displayName() + stat.unit().getDisplayName();
+            String lookupName = stat.getDisplayName() + stat.getUnit().getDisplayName();
             statLookup.put(lookupName, stat);
         }
     }
@@ -42,7 +42,7 @@ public final class StatModel extends Model {
 
     public boolean isSpellStat(StatType stat) {
         // FIXME: Not very elegant...
-        return stat.apiName().startsWith("spellCost");
+        return stat.getApiName().startsWith("spellCost");
     }
 
     public StatType fromDisplayName(String displayName, String unit) {
@@ -52,7 +52,7 @@ public final class StatModel extends Model {
 
     public StatType fromLoreId(String id) {
         for (StatType stat : statTypeRegistry) {
-            if (stat.loreName().equals(id)) return stat;
+            if (stat.getLoreName().equals(id)) return stat;
         }
         return null;
     }
@@ -61,7 +61,7 @@ public final class StatModel extends Model {
         List<StatType> stats = new ArrayList<>();
         // We might have many stats matching the same name (for spell cost stats)
         for (StatType stat : statTypeRegistry) {
-            if (stat.apiName().equals(apiName)) {
+            if (stat.getApiName().equals(apiName)) {
                 stats.add(stat);
             }
         }
