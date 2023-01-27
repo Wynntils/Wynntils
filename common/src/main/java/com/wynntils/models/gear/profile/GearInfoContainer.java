@@ -5,8 +5,8 @@
 package com.wynntils.models.gear.profile;
 
 import com.google.gson.annotations.SerializedName;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gearinfo.type.GearDropType;
+import com.wynntils.models.gearinfo.type.GearType;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

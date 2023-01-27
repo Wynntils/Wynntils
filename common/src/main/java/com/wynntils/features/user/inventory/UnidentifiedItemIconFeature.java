@@ -12,16 +12,34 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.type.Pair;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class UnidentifiedItemIconFeature extends UserFeature {
+    private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS = Map.ofEntries(
+            Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),
+            Map.entry(GearType.WAND, Pair.of(16 * 0, 16 * 1)),
+            Map.entry(GearType.DAGGER, Pair.of(16 * 2, 16 * 1)),
+            Map.entry(GearType.BOW, Pair.of(16 * 3, 16 * 1)),
+            Map.entry(GearType.RELIK, Pair.of(16 * 0, 16 * 2)),
+            Map.entry(GearType.RING, Pair.of(16 * 1, 16 * 2)),
+            Map.entry(GearType.BRACELET, Pair.of(16 * 2, 16 * 2)),
+            Map.entry(GearType.NECKLACE, Pair.of(16 * 3, 16 * 2)),
+            Map.entry(GearType.HELMET, Pair.of(16 * 0, 16 * 0)),
+            Map.entry(GearType.CHESTPLATE, Pair.of(16 * 1, 16 * 0)),
+            Map.entry(GearType.LEGGINGS, Pair.of(16 * 2, 16 * 0)),
+            Map.entry(GearType.BOOTS, Pair.of(16 * 3, 16 * 0)),
+            Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
+            Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
+
     @Config
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
@@ -41,6 +59,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
 
         GearType gearType = gearBoxItemOpt.get().getGearType();
 
+        int textureX = TEXTURE_COORDS.get(gearType).a();
+        int textureY = TEXTURE_COORDS.get(gearType).b();
         RenderUtils.drawTexturedRect(
                 new PoseStack(),
                 Texture.GEAR_ICONS.resource(),
@@ -49,8 +69,8 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 400,
                 12,
                 12,
-                gearType.getIconTextureX(),
-                gearType.getIconTextureY() + texture.getTextureYOffset(),
+                textureX,
+                textureY + texture.getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),

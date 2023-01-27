@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.gearinfo.type;
 
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
 
 public class GearMaterial {

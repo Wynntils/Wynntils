@@ -16,7 +16,7 @@ import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationOrderer;
 import com.wynntils.models.gear.profile.ItemGuessProfile;
 import com.wynntils.models.gear.profile.MajorIdentification;
-import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gearinfo.type.GearType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
