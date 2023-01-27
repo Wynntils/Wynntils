@@ -42,7 +42,6 @@ public class StatOrder {
             "earthDamageBonus",
             "elementalDamageBonus", // only aleph null, confirmed before spell damage
             "neutralDamageBonus", // never used
-
             "damageBonusRaw", // never used
             "fireDamageBonusRaw", // not used
             "waterDamageBonusRaw", // checked expeditions end, only one, cant really say
@@ -62,7 +61,6 @@ public class StatOrder {
             "spellAirDamageBonus", // confirmed before spellWaterDamageBonusRaw in Soul Ink
             "spellElementalDamageBonus", // only in violet-shift
             "spellNeutralDamageBonus", // never seend
-
             "spellDamageBonusRaw", // confirmed before mainAttackDamageBonus
             "spellFireDamageBonusRaw", // cant confirm, only "the nothing"
             "spellWaterDamageBonusRaw", // soul ink, cant say much
@@ -103,10 +101,8 @@ public class StatOrder {
             "bonusAirDefense",
             "bonusThunderDefense",
             "bonusEarthDefense",
-
             "sprint", // order confirmed: sprint, spell cost, jumpheight.
             "sprintRegen",
-
             "spellCostPct1",
             "spellCostRaw1",
             "spellCostPct2",
@@ -115,7 +111,6 @@ public class StatOrder {
             "spellCostRaw3",
             "spellCostPct4",
             "spellCostRaw4",
-
             "jumpHeight",
 
             // not used except crafted, which does not have an order...

@@ -522,13 +522,8 @@ public class GearTooltipBuilder {
         GearStatUnit unitType = gearIdentification.stat().unit();
         boolean invert = Models.GearInfo.isSpellStat(gearIdentification.stat());
 
-        int stars = getStarCount(gearInfo, gearIdentification);
-        String starString;
-        if (ItemStatInfoFeature.INSTANCE.showStars) {
-            starString = "***".substring(3 - stars);
-        } else {
-            starString = "";
-        }
+        String starString =
+                ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - gearIdentification.stars()) : "";
 
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType, invert, starString);
         baseComponent.append(" #");
@@ -566,70 +561,6 @@ public class GearTooltipBuilder {
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
 
         return baseComponent;
-    }
-
-    private int getStarCount(GearInfo gearInfo, GearIdentification gearIdentification) {
-        RangedValue range = gearInfo.statsIdentified().stream()
-                .filter(p -> p.key().equals(gearIdentification.stat()))
-                .findFirst().map(pair -> pair.value())
-                .orElse(null);
-        int value = gearIdentification.value();
-
-        int stars = calculateStars(value, range);
-        return stars;
-
-    }
-
-    private int calculateStars(int value, RangedValue range) {
-        // FIXME: The premise for this method is wrong. We cannot
-        // calculate stars exactly, we can at most guess
-        /*
-        Reference for star calculation, from salted:
-        https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
-        Stars have values like this:
-        * = 101% - 124%
-        ** = 125% - 129%
-        *** = 130%
-
-        This leaves some room for vagueness between e.g. 124% and 125%. Below is my interpretation:
-        <= 100% == no stars
-        <= 125% == one star
-        perfect: 3 stars
-
-        Remember, low is 30% and high is 130%
-
-        low = 0,3*BASE
-        high = 1,3*BASE == 0,3*BASE + BASE
-        high = low + BASE  => BASE = high - low (fast +1???)
-
-        BASE=low/0.3 or BASE= high/1.3
-
-        This also won't work for negative values...
-         */
-
-        /*
-        example from my jag:
-        {"identification_rolls":1,"identifications":[{"type":"THORNS","percent":124},{"type":"DAMAGEBONUSRAW","percent":128}]}
-thorns: 124%
-damage: 128%
-         */
-        int base = range.high() - range.low();
-        if (value < base) return 0;
-
-        float tier_2_limit = 1.25f*base;
-        if (value < (int) tier_2_limit) return 1;
-
-        if (value == range.high()) return 3;
-
-        return 2;
-
-        /*
-        Positive ID has 30%-130% range,
-        No Star = 30%-100%
-        * = 101% - 124%
-        ** = 125% - 129%
-        *** = 130%
-         */
     }
 
     private MutableComponent buildBaseComponentNew(String inGameName, int value, GearStatUnit unitType) {

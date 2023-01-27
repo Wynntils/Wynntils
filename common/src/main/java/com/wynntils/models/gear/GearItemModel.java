@@ -28,6 +28,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.wynn.GearUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.math.BigDecimal;
@@ -126,6 +127,8 @@ public final class GearItemModel extends Model {
                 int value = Integer.parseInt(statMatcher.group(2));
                 String unit = statMatcher.group(3);
                 String statDisplayName = statMatcher.group(5);
+                String starString = statMatcher.group(4);
+                int stars = starString == null ? 0 : starString.length();
 
                 GearStat type = Models.GearInfo.getGearStat(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
@@ -133,7 +136,7 @@ public final class GearItemModel extends Model {
                     continue;
                 }
 
-                identifications.add(new GearIdentification(type, value));
+                identifications.add(new GearIdentification(type, value, stars));
             }
 
             Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
@@ -250,7 +253,8 @@ public final class GearItemModel extends Model {
             return Optional.empty();
         }
 
-        return Optional.of(new GearIdentification(type, value));
+        // FIXME: stars are not fixed here. align with normal parsing
+        return Optional.of(new GearIdentification(type, value, -1));
     }
 
     /**
@@ -329,7 +333,8 @@ public final class GearItemModel extends Model {
             for (int i = 0; i < ids.size(); i++) {
                 JsonObject idInfo = ids.get(i).getAsJsonObject();
                 String id = idInfo.get("type").getAsString();
-                float percent = idInfo.get("percent").getAsInt() / 100f;
+                int intPercent = idInfo.get("percent").getAsInt();
+                float percent = intPercent / 100f;
 
                 // get wynntils name from internal wynncraft name
                 String translatedId = Models.GearProfiles.getInternalIdentification(id);
@@ -352,7 +357,10 @@ public final class GearItemModel extends Model {
                 GearStat stat = Models.GearInfo.getGearStatFromLore(id);
                 if (stat == null) continue;
 
-                identifications.add(new GearIdentification(stat, value));
+                int stars = GearUtils.getStarsFromPercent(intPercent);
+                // FIXME: Negative values should never show stars!
+
+                identifications.add(new GearIdentification(stat, value, stars));
             }
         }
 
@@ -433,7 +441,7 @@ public final class GearItemModel extends Model {
             GearIdentificationContainer idContainer =
                     identificationFromValue(null, item, longIdName, shortIdName, value, stars);
             if (idContainer != null) idContainers.add(idContainer);
-            identifications.add(new GearIdentification(null, value));
+            identifications.add(new GearIdentification(null, value, stars));
         }
 
         // powders

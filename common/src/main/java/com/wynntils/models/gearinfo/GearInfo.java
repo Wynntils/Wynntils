@@ -7,8 +7,8 @@ package com.wynntils.models.gearinfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.types.GearStatPossibleValues;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 public record GearInfo(
@@ -19,4 +19,4 @@ public record GearInfo(
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         GearStatsFixed statsFixed,
-        List<Pair<GearStat, RangedValue>> statsIdentified) {}
+        List<Pair<GearStat, GearStatPossibleValues>> statsIdentified) {}

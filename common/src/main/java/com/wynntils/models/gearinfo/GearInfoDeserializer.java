@@ -9,7 +9,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
@@ -23,43 +22,21 @@ import com.wynntils.models.gearinfo.types.GearMajorId;
 import com.wynntils.models.gearinfo.types.GearMaterial;
 import com.wynntils.models.gearinfo.types.GearRestrictions;
 import com.wynntils.models.gearinfo.types.GearStat;
+import com.wynntils.models.gearinfo.types.GearStatPossibleValues;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.GearUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
-    // For reference, uncommonly used item types:
-    // stick: Breaker Bar, Cracked Oak Wand, Sharpened Stylus, Valix
-    // bone: Wybel Paw
-    // pumpkin: Pumpkin Helmet
-    private static final Map<Integer, String> KNOWN_USED_ITEM_CODES = Map.of(
-            256,
-            "iron_shovel",
-            259,
-            "flint_and_steel",
-            261,
-            "bow",
-            269,
-            "wooden_shovel",
-            273,
-            "stone_shovel",
-            359,
-            "shears",
-            280,
-            "stick",
-            352,
-            "bone",
-            86,
-            "pumpkin");
 
     @Override
     public GearInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
@@ -80,7 +57,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
         GearRequirements requirements = parseRequirements(json, type);
         GearStatsFixed statsFixed = parseStatsFixed(json);
-        List<Pair<GearStat, RangedValue>> statsIdentified = parseStatsIdentified(json);
+        List<Pair<GearStat, GearStatPossibleValues>> statsIdentified = parseStatsIdentified(json);
 
         return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, statsFixed, statsIdentified);
     }
@@ -168,24 +145,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         String[] materialArray = material.split(":");
         int itemTypeCode = Integer.parseInt(materialArray[0]);
         int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-        return getItemFromCodeAndDamage(itemTypeCode, damageCode);
-    }
-
-    private GearMaterial getItemFromCodeAndDamage(int itemTypeCode, int damageCode) {
-        String itemId;
-        if (itemTypeCode == 392 && damageCode == 2) {
-            // Special case for Mama Zomble's memory
-            itemId = "zombie_head";
-        } else {
-            // This is not ideal, but in practice just a subset of all mincraft items are used
-            itemId = KNOWN_USED_ITEM_CODES.get(itemTypeCode);
-            if (itemId == null) {
-                WynntilsMod.warn(
-                        "Could not convert item id: " + itemTypeCode + ":" + damageCode + " from gear database");
-                itemId = "bedrock"; // whatever...
-            }
-        }
-        return new GearMaterial(itemId, damageCode);
+        return GearUtils.getItemFromCodeAndDamage(itemTypeCode, damageCode);
     }
 
     private GearRequirements parseRequirements(JsonObject json, GearType type) {
@@ -322,8 +282,8 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return List.copyOf(list);
     }
 
-    private List<Pair<GearStat, RangedValue>> parseStatsIdentified(JsonObject json) {
-        List<Pair<GearStat, RangedValue>> list = new ArrayList<>();
+    private List<Pair<GearStat, GearStatPossibleValues>> parseStatsIdentified(JsonObject json) {
+        List<Pair<GearStat, GearStatPossibleValues>> list = new ArrayList<>();
         JsonElement identifiedJson = json.get("identified");
         boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
@@ -334,31 +294,12 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             int baseValue = statJson.getAsInt();
             if (baseValue == 0) continue;
 
-            RangedValue range = calculateRange(baseValue, preIdentified);
-            list.add(Pair.of(stat, range));
+            RangedValue range = GearUtils.calculateRange(baseValue, preIdentified);
+            GearStatPossibleValues possibleValues = new GearStatPossibleValues(stat, range, baseValue, preIdentified);
+            list.add(Pair.of(stat, possibleValues));
         }
 
         // Return an immutable list
         return List.copyOf(list);
-    }
-
-    private RangedValue calculateRange(int baseValue, boolean preIdentified) {
-        if (preIdentified) {
-            // This is actually a single, fixed value
-            return RangedValue.of(baseValue, baseValue);
-        } else {
-            if (baseValue > 0) {
-                // Between 30% and 130% of base value, always at least 1
-                int min = Math.max((int) Math.round(baseValue * 0.3), 1);
-                int max = (int) Math.round(baseValue * 1.3);
-                return RangedValue.of(min, max);
-            } else {
-                // Between 70% and 130% of base value, always at most -1
-                // Round ties towards positive infinity (confirmed on Wynncraft)
-                int min = (int) Math.round(baseValue * 1.3);
-                int max = Math.min((int) Math.round(baseValue * 0.7), -1);
-                return RangedValue.of(min, max);
-            }
-        }
     }
 }

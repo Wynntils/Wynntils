@@ -21,11 +21,9 @@ import com.wynntils.models.gearinfo.stats.DefenceStatBuilder;
 import com.wynntils.models.gearinfo.stats.MiscStatBuilder;
 import com.wynntils.models.gearinfo.stats.SpellStatBuilder;
 import com.wynntils.models.gearinfo.stats.StatBuilder;
-import com.wynntils.models.gearinfo.types.GearIdentification;
 import com.wynntils.models.gearinfo.types.GearMajorId;
 import com.wynntils.models.gearinfo.types.GearStat;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.type.RangedValue;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,11 +57,6 @@ public final class GearInfoModel extends Model {
         }
 
         loadGearInfoRegistry();
-    }
-
-    public RangedValue getInternalRoll(GearInfo gearInfo, GearIdentification gearIdentification) {
-        // FIXME
-        return RangedValue.NONE;
     }
 
     public boolean isSpellStat(GearStat stat) {
@@ -126,14 +119,13 @@ public final class GearInfoModel extends Model {
         return null;
     }
 
-
     public List<GearStat> getGearStatsFromApi(String apiName) {
         List<GearStat> stats = new ArrayList<>();
         // We might have many stats matching the same name (for spell cost stats)
         for (GearStat stat : gearStatRegistry) {
             if (stat.apiName().equals(apiName)) {
                 stats.add(stat);
-            };
+            }
         }
         return stats;
     }

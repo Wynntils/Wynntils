@@ -72,7 +72,13 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
                     continue;
                 }
 
-                identifications.add(new GearIdentification(type, value));
+                // FIXME: crafted gear do not have stars, ever
+                // Instead, they have <current value><unit>/<max value><unit>
+                // Also, "fixed" stats can become changing here...
+                // Also, the order of stats is completely arbitrary
+                // So we need a better design to fit this
+
+                identifications.add(new GearIdentification(type, value, -1));
             }
         }
 

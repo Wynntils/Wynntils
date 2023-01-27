@@ -4,4 +4,4 @@
  */
 package com.wynntils.models.gearinfo.types;
 
-public record GearIdentification(GearStat stat, int value) {}
+public record GearIdentification(GearStat stat, int value, int stars) {}
