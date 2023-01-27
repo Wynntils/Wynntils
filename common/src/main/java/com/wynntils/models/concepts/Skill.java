@@ -9,27 +9,24 @@ import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
 public enum Skill {
-    STRENGTH("✤", ChatFormatting.DARK_GREEN),
-    DEXTERITY("✦", ChatFormatting.YELLOW),
-    INTELLIGENCE("✽", ChatFormatting.AQUA),
-    DEFENCE("✹", ChatFormatting.RED, "defense"), // Note! Must be spelled with "C" to match in-game
-    AGILITY("❋", ChatFormatting.WHITE);
+    STRENGTH(Element.EARTH),
+    DEXTERITY(Element.THUNDER),
+    INTELLIGENCE(Element.WATER),
+    DEFENCE(Element.FIRE, "defense"), // Note! Must be spelled with "C" to match in-game
+    AGILITY(Element.AIR);
 
-    private final String symbol;
-    private final ChatFormatting color;
+    private final Element associatedElement;
     private final String apiName;
     private final String displayName;
 
-    Skill(String symbol, ChatFormatting color, String apiName) {
-        this.symbol = symbol;
-        this.color = color;
+    Skill(Element associatedElement, String apiName) {
+        this.associatedElement = associatedElement;
         this.apiName = apiName;
         this.displayName = StringUtils.capitalized(this.name());
     }
 
-    Skill(String symbol, ChatFormatting color) {
-        this.symbol = symbol;
-        this.color = color;
+    Skill(Element associatedElement) {
+        this.associatedElement = associatedElement;
         this.apiName = this.name().toLowerCase(Locale.ROOT);
         this.displayName = StringUtils.capitalized(this.name());
     }
@@ -51,12 +48,8 @@ public enum Skill {
         return false;
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public ChatFormatting getColor() {
-        return color;
+    public Element getAssociatedElement() {
+        return associatedElement;
     }
 
     public String getDisplayName() {
@@ -65,5 +58,13 @@ public enum Skill {
 
     public String getApiName() {
         return apiName;
+    }
+
+    public String getSymbol() {
+        return associatedElement.getSymbol();
+    }
+
+    public ChatFormatting getColorCode() {
+        return associatedElement.getColorCode();
     }
 }

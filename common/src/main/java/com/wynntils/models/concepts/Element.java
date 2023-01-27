@@ -24,6 +24,15 @@ public enum Element {
         this.displayName = StringUtils.capitalized(this.name());
     }
 
+    public static Element fromSymbol(String symbol) {
+        for (Element element : Element.values()) {
+            if (element.symbol.equals(symbol)) {
+                return element;
+            }
+        }
+        return null;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

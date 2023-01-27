@@ -14,36 +14,38 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH('✤', Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN),
-    THUNDER('✦', Items.YELLOW_DYE, Items.ORANGE_DYE, ChatFormatting.YELLOW, ChatFormatting.GOLD),
-    WATER('❉', Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA),
-    FIRE('✹', Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED),
-    AIR('❋', Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY);
+    EARTH(Element.EARTH, Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN),
+    THUNDER(Element.THUNDER, Items.YELLOW_DYE, Items.ORANGE_DYE, ChatFormatting.YELLOW, ChatFormatting.GOLD),
+    WATER(Element.WATER, Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA),
+    FIRE(Element.FIRE, Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED),
+    AIR(Element.AIR, Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY);
 
-    private final char symbol;
+    private final Element element;
     private final Item lowTierItem;
     private final Item highTierItem;
     private final ChatFormatting lightColor;
     private final ChatFormatting darkColor;
 
-    Powder(char symbol, Item lowTierItem, Item highTierItem, ChatFormatting lightColor, ChatFormatting darkColor) {
-        this.symbol = symbol;
+    Powder(Element element, Item lowTierItem, Item highTierItem, ChatFormatting lightColor, ChatFormatting darkColor) {
+        this.element = element;
         this.lowTierItem = lowTierItem;
         this.highTierItem = highTierItem;
         this.lightColor = lightColor;
         this.darkColor = darkColor;
     }
 
-    public char getSymbol() {
-        return symbol;
+    public static Powder fromElement(Element element) {
+        for (Powder powder : Powder.values()) {
+            if (powder.element.equals(element)) {
+                return powder;
+            }
+        }
+        return null;
     }
 
-    public CustomColor getColor() {
-        return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
-    }
-
-    public String getColoredSymbol() {
-        return lightColor.toString() + symbol;
+    public static Powder getFromSymbol(String symbol) {
+        Element element = Element.fromSymbol(symbol);
+        return fromElement(element);
     }
 
     public static List<Powder> findPowders(String input) {
@@ -57,6 +59,22 @@ public enum Powder {
         });
 
         return foundPowders;
+    }
+
+    public Element getElement() {
+        return element;
+    }
+
+    public char getSymbol() {
+        return element.getSymbol().charAt(0);
+    }
+
+    public CustomColor getColor() {
+        return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
+    }
+
+    public String getColoredSymbol() {
+        return lightColor.toString() + getSymbol();
     }
 
     public Item getLowTierItem() {
@@ -86,17 +104,6 @@ public enum Powder {
             case WATER -> Powder.THUNDER;
             case FIRE -> Powder.WATER;
             case AIR -> Powder.FIRE;
-        };
-    }
-
-    public static Powder getFromSymbol(char symbol) {
-        return switch (symbol) {
-            case '✤' -> EARTH;
-            case '✦' -> THUNDER;
-            case '❉' -> WATER;
-            case '✹' -> FIRE;
-            case '❋' -> AIR;
-            default -> null;
         };
     }
 }
