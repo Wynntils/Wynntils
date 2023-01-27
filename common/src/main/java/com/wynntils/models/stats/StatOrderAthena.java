@@ -7,19 +7,13 @@ package com.wynntils.models.stats;
 import java.util.List;
 
 public class StatOrderAthena {
-
     public static List<String> getAthenaOrder() {
         return List.of(
-                "strengthPoints",
-                "dexterityPoints",
-                "intelligencePoints",
-                "defensePoints",
-                "agilityPoints",
                 "attackSpeedBonus",
-                "damageBonusRaw",
-                "damageBonus",
-                "spellDamageRaw",
-                "spellDamage",
+                "mainAttackDamageBonusRaw",
+                "mainAttackDamageBonus",
+                "spellDamageBonusRaw",
+                "spellDamageBonus",
                 "spellThunderDamageBonusRaw",
                 "spellFireDamageBonusRaw",
                 "spellAirDamageBonusRaw",
@@ -31,11 +25,11 @@ public class StatOrderAthena {
                 "lifeSteal",
                 "manaRegen",
                 "manaSteal",
-                "bonusEarthDamage",
-                "bonusThunderDamage",
-                "bonusWaterDamage",
-                "bonusFireDamage",
-                "bonusAirDamage",
+                "earthDamageBonus",
+                "thunderDamageBonus",
+                "waterDamageBonus",
+                "fireDamageBonus",
+                "airDamageBonus",
                 "bonusEarthDefense",
                 "bonusThunderDefense",
                 "bonusWaterDefense",
@@ -68,7 +62,6 @@ public class StatOrderAthena {
 
     /*
     start new groups at:
-    START: skill bonuses -- "skill stuff"
     attackSpeedBonus - "attack stuff"
     healthBonus - "health/mana stuff"
     bonusEarthDamage - "damage stuff"
