@@ -6,8 +6,8 @@ package com.wynntils.models.stats.type;
 
 public enum AttackType {
     ANY(""),
-    MAIN_ATTACK("Main Attack"),
-    SPELL("Spell");
+    SPELL("Spell"),
+    MAIN_ATTACK("Main Attack");
 
     private final String displayName;
     private final String apiName;
