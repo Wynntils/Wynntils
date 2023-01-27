@@ -31,6 +31,8 @@ public final class ServerListModel extends Model {
     private Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public ServerListModel() {
+        super(List.of());
+
         updateServerList();
     }
 

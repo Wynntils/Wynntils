@@ -58,6 +58,8 @@ public final class TerritoryModel extends Model {
     private int errorCount = 0;
 
     public TerritoryModel() {
+        super(List.of());
+
         timerFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }

@@ -38,7 +38,7 @@ public final class Managers {
     public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
     public static final TranslationManager Translation = new TranslationManager();
 
-    // Managers with dependencies, ordered by dependency and then alphabetically
+    // Managers with dependencies, ordered alphabetically as far as possible
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer);
     public static final FeatureManager Feature = new FeatureManager(Config, CrashReport);
     public static final NetManager Net = new NetManager(Url);

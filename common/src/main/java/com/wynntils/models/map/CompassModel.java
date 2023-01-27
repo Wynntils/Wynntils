@@ -12,6 +12,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,10 @@ public final class CompassModel extends Model {
     private Location compassLocation = null; // this field acts as a cache for the supplier
     private Texture targetIcon = null;
     private CustomColor targetColor = null;
+
+    public CompassModel() {
+        super(List.of());
+    }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
