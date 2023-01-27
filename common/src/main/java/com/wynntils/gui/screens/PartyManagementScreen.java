@@ -7,16 +7,20 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PlayerInfoUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
@@ -189,6 +193,22 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
 
+            // head rendering
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation(),
+                    this.width / 2 - 144,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    8,
+                    16,
+                    16,
+                    8,
+                    8,
+                    8,
+                    8,
+                    64,
+                    64);
+
             // name rendering
             CustomColor color = playerName.equals(Models.Party.getPartyLeader()) ? CommonColors.YELLOW : (Models.Friends.getFriends().contains(playerName) ? CommonColors.GREEN : CommonColors.WHITE);
             String prefix = offlineMembers.contains(playerName) ? "§m" : (playerName.equals(McUtils.player().getName().getString()) ? "§l" : "");
@@ -276,6 +296,22 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
+
+            // head rendering
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    McUtils.mc().getSkinManager().getInsecureSkinLocation(McUtils.mc().getConnection().getPlayerInfo(playerName).getProfile()),
+                    this.width / 2 + 200,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    8,
+                    16,
+                    16,
+                    8,
+                    8,
+                    8,
+                    8,
+                    64,
+                    64);
 
             // name rendering
             fr.renderText(
