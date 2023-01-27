@@ -104,6 +104,8 @@ public final class CharacterModel extends Model {
     private ProfessionInfo professionInfo;
 
     public CharacterModel() {
+        super(List.of());
+
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);
         Handlers.ActionBar.registerSegment(manaSegment);

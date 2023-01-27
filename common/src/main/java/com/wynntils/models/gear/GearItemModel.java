@@ -70,6 +70,10 @@ public final class GearItemModel extends Model {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
+    public GearItemModel(GearProfilesModel gearProfilesModel) {
+        super(List.of(gearProfilesModel));
+    }
+
     public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
         List<GearIdentificationContainer> idContainers = new ArrayList<>();

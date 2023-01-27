@@ -9,8 +9,10 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +21,10 @@ public final class ShamanMaskModel extends Model {
     private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
+
+    public ShamanMaskModel(WorldStateModel worldStateModel) {
+        super(List.of(worldStateModel));
+    }
 
     @SubscribeEvent
     public void onTitle(SubtitleSetTextEvent event) {

@@ -16,6 +16,7 @@ import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public class ShamanTotemModel extends Model {
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
     private static final double TOTEM_SEARCH_RADIUS = 1.0;
     private static final int CAST_DELAY_MAX_MS = 450;
+
+    public ShamanTotemModel(WorldStateModel worldStateModel) {
+        super(List.of(worldStateModel));
+    }
 
     @SubscribeEvent
     public void onTotemSpellCast(SpellEvent.Completed e) {
