@@ -60,6 +60,45 @@ public class StatOrderAthena {
                 "spellCostPct4");
     }
 
+    /**
+     STATS THAT ARE MISSED BY ATHENA:
+     "airDamageBonusRaw",
+     "damageBonus",
+     "damageBonusRaw",
+     "earthDamageBonusRaw",
+     "elementalDamageBonus",
+     "elementalDamageBonusRaw",
+     "fireDamageBonusRaw",
+     "mainAttackAirDamageBonus",
+     "mainAttackAirDamageBonusRaw",
+     "mainAttackEarthDamageBonus",
+     "mainAttackEarthDamageBonusRaw",
+     "mainAttackElementalDamageBonus",
+     "mainAttackElementalDamageBonusRaw",
+     "mainAttackFireDamageBonus",
+     "mainAttackFireDamageBonusRaw",
+     "mainAttackNeutralDamageBonus",
+     "mainAttackNeutralDamageBonusRaw",
+     "mainAttackThunderDamageBonus",
+     "mainAttackThunderDamageBonusRaw",
+     "mainAttackWaterDamageBonus",
+     "mainAttackWaterDamageBonusRaw",
+     "neutralDamageBonus",
+     "neutralDamageBonusRaw",
+     "spellAirDamageBonus",
+     "spellEarthDamageBonus",
+     "spellElementalDamageBonus",
+     "spellElementalDamageBonusRaw",
+     "spellFireDamageBonus",
+     "spellNeutralDamageBonus",
+     "spellNeutralDamageBonusRaw",
+     "spellThunderDamageBonus",
+     "spellWaterDamageBonus",
+     "thunderDamageBonusRaw",
+     "waterDamageBonusRaw",
+
+     */
+
     /*
     start new groups at:
     attackSpeedBonus - "attack stuff"
