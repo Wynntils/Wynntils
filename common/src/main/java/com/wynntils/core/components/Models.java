@@ -61,7 +61,8 @@ public final class Models {
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
-    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel(WorldState);
+    public static final PartyModel Party = new PartyModel(WorldState);
+    public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final QuestModel Quest = new QuestModel(Character);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
