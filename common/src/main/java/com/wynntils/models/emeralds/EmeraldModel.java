@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
@@ -40,6 +41,10 @@ public final class EmeraldModel extends Model {
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
+
+    public EmeraldModel(ItemModel itemModel) {
+        super(List.of(itemModel));
+    }
 
     public boolean isEmeraldPouch(ItemStack itemStack) {
         Optional<EmeraldPouchItem> itemOpt = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);

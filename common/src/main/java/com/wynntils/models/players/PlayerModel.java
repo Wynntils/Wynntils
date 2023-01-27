@@ -16,6 +16,7 @@ import com.wynntils.models.players.type.AccountType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -37,6 +38,8 @@ public final class PlayerModel extends Model {
     private int errorCount;
 
     public PlayerModel() {
+        super(List.of());
+
         errorCount = 0;
     }
 

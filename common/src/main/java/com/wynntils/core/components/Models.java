@@ -42,28 +42,30 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
-    public static final DiscoveryModel Discovery = new DiscoveryModel();
-    public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
-    public static final GearItemModel GearItem = new GearItemModel();
     public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final HadesModel Hades = new HadesModel();
-    public static final HorseModel Horse = new HorseModel();
     public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
-    public static final ItemModel Item = new ItemModel();
-    public static final LootChestModel LootChest = new LootChestModel();
-    public static final LootrunModel Lootrun = new LootrunModel();
-    public static final MapModel Map = new MapModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
-    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel();
-    public static final QuestModel Quest = new QuestModel();
     public static final ServerListModel ServerList = new ServerListModel();
-    public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
-    public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
-    public static final SpellModel Spell = new SpellModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
+
+    // Models with dependencies, ordered alphabetically as far as possible
+    public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
+    public static final HadesModel Hades = new HadesModel(Character, WorldState);
+    public static final ItemModel Item = new ItemModel(GearItem, GearProfiles, IngredientProfiles);
+    public static final LootChestModel LootChest = new LootChestModel(Container);
+    public static final LootrunModel Lootrun = new LootrunModel(Container);
+    public static final MapModel Map = new MapModel(GuildAttackTimer);
+    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel(WorldState);
+    public static final QuestModel Quest = new QuestModel(Character);
+    public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
+    public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
+    public static final SpellModel Spell = new SpellModel(Character);
+    public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
+    public static final EmeraldModel Emerald = new EmeraldModel(Item);
+    public static final HorseModel Horse = new HorseModel(Item);
 }

@@ -14,12 +14,17 @@ import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class FavoritesModel extends Model {
     private int revision = 1;
+
+    public FavoritesModel() {
+        super(List.of());
+    }
 
     public boolean isFavorite(String unformattedName) {
         return getFavoriteItems().contains(unformattedName);

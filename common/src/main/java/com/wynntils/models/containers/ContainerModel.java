@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,6 +19,10 @@ public final class ContainerModel extends Model {
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
+
+    public ContainerModel() {
+        super(List.of());
+    }
 
     public boolean isAbilityTreeScreen(Screen screen) {
         return ABILITY_TREE_PATTERN.matcher(screen.getTitle().getString()).matches();
