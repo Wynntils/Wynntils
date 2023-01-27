@@ -17,11 +17,11 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gearinfo.type.GearDamageType;
 import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.models.gearinfo.type.GearMaterial;
 import com.wynntils.models.gearinfo.type.GearRestrictions;
 import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
@@ -203,7 +203,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
                 : Optional.of(GearAttackSpeed.valueOf(attackSpeedJson.getAsString()));
 
         List<GearMajorId> majorIds = parseMajorIds(json);
-        List<Pair<GearDamageType, RangedValue>> damages = parseDamages(json);
+        List<Pair<DamageType, RangedValue>> damages = parseDamages(json);
         List<Pair<Element, Integer>> defences = parseDefences(json);
 
         return new FixedStats(healthBuff, skillBuffs, attackSpeed, majorIds, damages, defences);
@@ -236,15 +236,15 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return List.copyOf(list);
     }
 
-    private List<Pair<GearDamageType, RangedValue>> parseDamages(JsonObject json) {
-        List<Pair<GearDamageType, RangedValue>> list = new ArrayList<>();
+    private List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
+        List<Pair<DamageType, RangedValue>> list = new ArrayList<>();
         // First look for neutral damage, which has a non-standard name
         JsonElement neutralDamageJson = json.get("damage");
         if (neutralDamageJson != null) {
             String rangeString = neutralDamageJson.getAsString();
             RangedValue range = RangedValue.fromString(rangeString);
             if (!range.equals(RangedValue.NONE)) {
-                list.add(Pair.of(GearDamageType.NEUTRAL, range));
+                list.add(Pair.of(DamageType.NEUTRAL, range));
             }
         }
 
@@ -258,7 +258,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             RangedValue range = RangedValue.fromString(rangeString);
             if (range.equals(RangedValue.NONE)) continue;
 
-            list.add(Pair.of(GearDamageType.fromElement(element), range));
+            list.add(Pair.of(DamageType.fromElement(element), range));
         }
 
         // Return an immutable list

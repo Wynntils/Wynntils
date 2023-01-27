@@ -7,8 +7,8 @@ package com.wynntils.models.stats;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gearinfo.type.GearDamageType;
 import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
@@ -19,5 +19,5 @@ public record FixedStats(
         List<Pair<Skill, Integer>> skillBuffs,
         Optional<GearAttackSpeed> attackSpeed,
         List<GearMajorId> majorIds,
-        List<Pair<GearDamageType, RangedValue>> damages,
+        List<Pair<DamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences) {}

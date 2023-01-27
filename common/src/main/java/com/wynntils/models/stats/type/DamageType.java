@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.type;
+package com.wynntils.models.stats.type;
 
 import com.wynntils.models.concepts.Element;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
-public enum GearDamageType {
+public enum DamageType {
     ANY(""),
     NEUTRAL("Neutral", "✣", ChatFormatting.GOLD),
     RAINBOW("Elemental"),
@@ -24,7 +24,7 @@ public enum GearDamageType {
     private final String symbol;
     private final ChatFormatting colorCode;
 
-    GearDamageType(String name) {
+    DamageType(String name) {
         this.element = null;
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
@@ -33,7 +33,7 @@ public enum GearDamageType {
         this.colorCode = null;
     }
 
-    GearDamageType(String name, String symbol, ChatFormatting colorCode) {
+    DamageType(String name, String symbol, ChatFormatting colorCode) {
         this.element = null;
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
@@ -43,7 +43,7 @@ public enum GearDamageType {
         this.colorCode = colorCode;
     }
 
-    GearDamageType(Element element) {
+    DamageType(Element element) {
         this.element = element;
         // displayName needs padding
         this.displayName = element.getDisplayName() + " ";
@@ -52,8 +52,8 @@ public enum GearDamageType {
         this.colorCode = element.getColorCode();
     }
 
-    public static GearDamageType fromElement(Element element) {
-        for (GearDamageType type : values()) {
+    public static DamageType fromElement(Element element) {
+        for (DamageType type : values()) {
             if (type.element == element) return type;
         }
         return null;

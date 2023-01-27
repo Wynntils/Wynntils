@@ -6,7 +6,6 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
-import com.wynntils.models.concepts.DamageType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
@@ -20,10 +19,10 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.models.gearinfo.type.GearDamageType;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatOrder;
+import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
@@ -122,8 +121,8 @@ public class GearTooltipBuilder {
         }
 
         // Damages
-        for (Pair<GearDamageType, RangedValue> damageValue : fixedStats.damages()) {
-            GearDamageType damageType = damageValue.key();
+        for (Pair<DamageType, RangedValue> damageValue : fixedStats.damages()) {
+            DamageType damageType = damageValue.key();
             tooltips.add(Component.literal(damageType.getSymbol() + " " + damageType.getDisplayName())
                     .withStyle(damageType.getColorCode())
                     .append(Component.literal(" Damage: " + damageValue.value().asString())
@@ -250,14 +249,14 @@ public class GearTooltipBuilder {
 
         // elemental damages
         if (!gearProfile.getDamageTypes().isEmpty()) {
-            Map<DamageType, String> damages = gearProfile.getDamages();
-            for (Map.Entry<DamageType, String> entry : damages.entrySet()) {
-                DamageType type = entry.getKey();
+            Map<com.wynntils.models.concepts.DamageType, String> damages = gearProfile.getDamages();
+            for (Map.Entry<com.wynntils.models.concepts.DamageType, String> entry : damages.entrySet()) {
+                com.wynntils.models.concepts.DamageType type = entry.getKey();
                 MutableComponent damage =
                         Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
                 damage.append(Component.literal(" Damage: " + entry.getValue())
                         .withStyle(
-                                type == DamageType.NEUTRAL
+                                type == com.wynntils.models.concepts.DamageType.NEUTRAL
                                         ? type.getColor()
                                         : ChatFormatting.GRAY)); // neutral is all gold
                 baseTooltip.add(damage);
@@ -275,9 +274,9 @@ public class GearTooltipBuilder {
                 baseTooltip.add(healthComp);
             }
 
-            Map<DamageType, Integer> defenses = gearProfile.getElementalDefenses();
-            for (Map.Entry<DamageType, Integer> entry : defenses.entrySet()) {
-                DamageType type = entry.getKey();
+            Map<com.wynntils.models.concepts.DamageType, Integer> defenses = gearProfile.getElementalDefenses();
+            for (Map.Entry<com.wynntils.models.concepts.DamageType, Integer> entry : defenses.entrySet()) {
+                com.wynntils.models.concepts.DamageType type = entry.getKey();
                 MutableComponent defense =
                         Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
                 defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(entry.getValue()))

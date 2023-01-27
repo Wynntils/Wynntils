@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.type;
+package com.wynntils.models.stats.type;
 
-public enum GearAttackType {
+public enum AttackType {
     ANY(""),
     MAIN_ATTACK("Main Attack"),
     SPELL("Spell");
@@ -12,7 +12,7 @@ public enum GearAttackType {
     private final String displayName;
     private final String apiName;
 
-    GearAttackType(String name) {
+    AttackType(String name) {
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
         this.apiName = name.replace(" ", "");
