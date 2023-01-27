@@ -20,4 +20,4 @@ public record GearInfo(
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         FixedStats fixedStats,
-        List<Pair<StatType, StatPossibleValues>> statsIdentified) {}
+        List<Pair<StatType, StatPossibleValues>> variableStats) {}

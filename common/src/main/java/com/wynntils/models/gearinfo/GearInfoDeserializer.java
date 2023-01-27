@@ -56,10 +56,10 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         String altName = (secondaryName == null ? null : primaryName.getAsString());
         GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
         GearRequirements requirements = parseRequirements(json, type);
-        FixedStats fixedStats = parseStatsFixed(json);
-        List<Pair<StatType, StatPossibleValues>> statsIdentified = parseStatsIdentified(json);
+        FixedStats fixedStats = parseFixedStats(json);
+        List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
 
-        return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, fixedStats, statsIdentified);
+        return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
     }
 
     private GearType parseType(JsonObject json) {
@@ -193,7 +193,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return Optional.of(questName.replace("֎", ""));
     }
 
-    private FixedStats parseStatsFixed(JsonObject json) {
+    private FixedStats parseFixedStats(JsonObject json) {
         JsonElement healthJson = json.get("health");
         int healthBuff = healthJson == null ? 0 : healthJson.getAsInt();
         List<Pair<Skill, Integer>> skillBuffs = parseSkillBuffs(json);
@@ -282,7 +282,7 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         return List.copyOf(list);
     }
 
-    private List<Pair<StatType, StatPossibleValues>> parseStatsIdentified(JsonObject json) {
+    private List<Pair<StatType, StatPossibleValues>> parseVariableStats(JsonObject json) {
         List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
         JsonElement identifiedJson = json.get("identified");
         boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
