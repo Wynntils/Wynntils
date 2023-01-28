@@ -25,6 +25,18 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Gear and stats are complex, have lots of corner cases and suffer from a general
+ * lack of comprehensible, exhaustive, correct and authoritive documentation. :-(
+ *
+ * Here is a collection of generally helpful links:
+ *
+ * 2016 Guide: https://forums.wynncraft.com/threads/how-identifications-are-calculated.128923/
+ * 2019 Guide: https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
+ * The Damage Bible: https://docs.google.com/document/d/1BXdLrMWj-BakPcAWnuqvSFbwiz7oGTOMcEEdC5vCWs4
+ * WynnBuilder "Wynnfo": https://hppeng-wynn.github.io/wynnfo/, especially
+ * Damage Calculations: https://hppeng-wynn.github.io/wynnfo/pdfs/Damage_calculation.pdf
+ */
 public final class GearInfoModel extends Model {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
