@@ -57,7 +57,6 @@ public final class GearInfoModel extends Model {
 
     public GearInfoModel(StatModel statModel) {
         super(List.of(statModel));
-        // FIXME: We are dependent on Stats model!!!!
 
         loadGearInfoRegistry();
     }
