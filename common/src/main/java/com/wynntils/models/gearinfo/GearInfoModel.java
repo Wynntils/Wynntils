@@ -5,8 +5,6 @@
 package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gearinfo.parsing.GearItemStackParser;
-import com.wynntils.models.gearinfo.parsing.GearJsonLoreParser;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
@@ -30,8 +28,7 @@ import net.minecraft.world.item.ItemStack;
 public final class GearInfoModel extends Model {
     private GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
-    private GearItemStackParser gearItemStackParser = new GearItemStackParser();
-    private GearJsonLoreParser gearJsonLoreParser = new GearJsonLoreParser();
+    private GearParser gearParser = new GearParser();
     private GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
     public GearInfoModel(StatModel statModel) {
@@ -39,11 +36,11 @@ public final class GearInfoModel extends Model {
     }
 
     public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
-        return gearItemStackParser.fromItemStack(gearInfo, itemStack);
+        return gearParser.fromItemStack(gearInfo, itemStack);
     }
 
     public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
-        return gearJsonLoreParser.fromJsonLore(itemStack, gearInfo);
+        return gearParser.fromJsonLore(itemStack, gearInfo);
     }
 
     public GearItem fromEncodedString(String encoded) {
