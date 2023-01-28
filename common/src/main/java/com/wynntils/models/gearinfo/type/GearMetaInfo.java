@@ -2,11 +2,8 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gearinfo.type;
 
-import com.wynntils.models.gearinfo.type.GearDropType;
-import com.wynntils.models.gearinfo.type.GearMaterial;
-import com.wynntils.models.gearinfo.type.GearRestrictions;
 import java.util.Optional;
 
 public record GearMetaInfo(

@@ -7,7 +7,7 @@ package com.wynntils.models.gearinfo.parsing;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatType;

@@ -6,6 +6,7 @@ package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -20,6 +21,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.ArrayUtils;
 
+/**
+ * Encodes and decodes an item, as long as it is a standard gear item, into the following format
+ *
+ * START character (U+F5FF0)
+ * Item name (optionally encoded)
+ * SEPARATOR character (U+F5FF2)
+ * Identifications/stars (encoded)
+ * SEPARATOR (only if powdered)
+ * Powders (encoded) (only if powdered)
+ * Rerolls (encoded)
+ * END character (U+F5FF1)
+ *
+ * Any encoded "value" is added to the OFFSET character value U+F5000 and then converted into the corresponding Unicode character:
+ *
+ * The name is encoded based on the ASCII value of each character minus 32
+ *
+ * Identifications are encoded either as the raw value minus the minimum value of that ID, or if the range is larger than 100,
+ * the percent value 0 to 100 of the given roll.
+ * Regardless of either case, this number is multiplied by 4, and the number of stars present on that ID is added.
+ * This ensures that the value and star count can be encoded into a single character and be decoded later.
+ *
+ * Powders are encoded as numerical values 1-5. Up to 4 powders are encoded into a single character - for each new powder,
+ * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
+ *
+ * Rerolls are simply encoded as a raw number.
+ *
+ * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
+ * modified without also changing the encoding in legacy.
+ */
 public class GearChatEncoding {
     // private-use unicode chars
     private static final String START = new String(Character.toChars(0xF5FF0));
@@ -32,36 +62,6 @@ public class GearChatEncoding {
     private static final int OFFSET = 0xF5000;
     private static final boolean ENCODE_NAME = false;
 
-    /**
-     * Encodes the given item, as long as it is a standard gear item, into the following format
-     *
-     * START character (U+F5FF0)
-     * Item name (optionally encoded)
-     * SEPARATOR character (U+F5FF2)
-     * Identifications/stars (encoded)
-     * SEPARATOR (only if powdered)
-     * Powders (encoded) (only if powdered)
-     * Rerolls (encoded)
-     * END character (U+F5FF1)
-     *
-     * Any encoded "value" is added to the OFFSET character value U+F5000 and then converted into the corresponding Unicode character:
-     *
-     * The name is encoded based on the ASCII value of each character minus 32
-     *
-     * Identifications are encoded either as the raw value minus the minimum value of that ID, or if the range is larger than 100,
-     * the percent value 0 to 100 of the given roll.
-     * Regardless of either case, this number is multiplied by 4, and the number of stars present on that ID is added.
-     * This ensures that the value and star count can be encoded into a single character and be decoded later.
-     *
-     * Powders are encoded as numerical values 1-5. Up to 4 powders are encoded into a single character - for each new powder,
-     * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
-     *
-     * Rerolls are simply encoded as a raw number.
-     *
-     * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
-     * modified without also changing the encoding in legacy.
-     *
-     */
     public String toEncodedString(GearItem gearItem) {
         String itemName = gearItem.getGearInfo().name();
         GearInstance gearInstance = gearItem.getGearInstance();

@@ -7,7 +7,7 @@ package com.wynntils.models.gearinfo.tooltip;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.stats.type.StatActualValue;

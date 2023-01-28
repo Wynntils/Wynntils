@@ -5,7 +5,7 @@
 package com.wynntils.models.stats;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;

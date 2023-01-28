@@ -6,8 +6,8 @@ package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.models.gearinfo.GearRequirements;
+import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gearinfo.type.GearRequirements;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;

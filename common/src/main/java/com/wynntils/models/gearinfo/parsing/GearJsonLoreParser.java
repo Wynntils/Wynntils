@@ -11,7 +11,7 @@ import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatActualValue;

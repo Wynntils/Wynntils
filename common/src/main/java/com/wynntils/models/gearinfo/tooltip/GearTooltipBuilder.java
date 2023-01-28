@@ -5,7 +5,7 @@
 package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.ComponentUtils;
