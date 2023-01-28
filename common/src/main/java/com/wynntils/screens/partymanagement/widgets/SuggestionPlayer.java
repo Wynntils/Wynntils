@@ -62,8 +62,8 @@ public class SuggestionPlayer extends WynntilsButton {
                 .renderText(
                 poseStack,
                 playerName,
-                this.getX(),
-                this.getY(),
+                this.getX() + 36,
+                this.getY() + 8,
                 CommonColors.GREEN,
                 HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
