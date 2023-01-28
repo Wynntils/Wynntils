@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.regex.Matcher;
@@ -33,6 +34,9 @@ public final class GearAnnotator implements ItemAnnotator {
         GearInstance gearInstance =
                 matcher.group(1) != null ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
 
-        return new GearItem(gearInfo, gearInstance);
+        GearItem gearItem = new GearItem(gearInfo, gearInstance);
+        // FIXME: debug code!
+        var b = GearTooltipBuilder.fromItemStack(itemStack, gearItem);
+        return gearItem;
     }
 }

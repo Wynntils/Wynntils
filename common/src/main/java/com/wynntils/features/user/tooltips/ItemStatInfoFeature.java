@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.models.gearinfo.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;

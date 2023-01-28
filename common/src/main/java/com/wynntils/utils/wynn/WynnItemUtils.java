@@ -10,7 +10,7 @@ import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.type.IdentificationModifier;
-import com.wynntils.models.gearinfo.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.ArrayList;
@@ -89,17 +89,17 @@ public final class WynnItemUtils {
         return Models.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
     }
 
-    public static GearTooltipBuilder.IdentificationPresentationStyle getCurrentIdentificationStyle() {
-        GearTooltipBuilder.IdentificationDecorations decorations;
+    public static GearTooltipVariableStats.IdentificationPresentationStyle getCurrentIdentificationStyle() {
+        GearTooltipVariableStats.IdentificationDecorations decorations;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            decorations = GearTooltipBuilder.IdentificationDecorations.RANGE;
+            decorations = GearTooltipVariableStats.IdentificationDecorations.RANGE;
         } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            decorations = GearTooltipBuilder.IdentificationDecorations.REROLL_CHANCE;
+            decorations = GearTooltipVariableStats.IdentificationDecorations.REROLL_CHANCE;
         } else {
-            decorations = GearTooltipBuilder.IdentificationDecorations.PERCENT;
+            decorations = GearTooltipVariableStats.IdentificationDecorations.PERCENT;
         }
 
-        return new GearTooltipBuilder.IdentificationPresentationStyle(
+        return new GearTooltipVariableStats.IdentificationPresentationStyle(
                 decorations,
                 ItemStatInfoFeature.INSTANCE.reorderIdentifications,
                 ItemStatInfoFeature.INSTANCE.groupIdentifications);
