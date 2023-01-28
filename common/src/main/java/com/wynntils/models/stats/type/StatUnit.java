@@ -4,6 +4,9 @@
  */
 package com.wynntils.models.stats.type;
 
+// A note on percent vs raw numbers and how they combine.
+// From HeyZeer0:
+// base = base + (base * percentage1) + (base * percentage2) + rawValue
 public enum StatUnit {
     RAW(""),
     PERCENT("%"),
