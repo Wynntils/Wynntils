@@ -83,7 +83,7 @@ public class ItemStatInfoFeature extends UserFeature {
                     .getOrCalculate(
                             WynnItemCache.TOOLTIP_KEY,
                             () -> GearTooltipBuilder.fromItemStack(
-                                    event.getItemStack(), gearItem.getGearProfile(), gearItem));
+                                    event.getItemStack(), gearItem.getGearInfo(), gearItem));
             if (builder == null) return;
 
             LinkedList<Component> tooltips =
@@ -92,10 +92,10 @@ public class ItemStatInfoFeature extends UserFeature {
             if (gearItem.hasVariableIds()) {
                 if (perfect && gearItem.isPerfect()) {
                     tooltips.removeFirst();
-                    tooltips.addFirst(getPerfectName(gearItem.getGearProfile().getDisplayName()));
+                    tooltips.addFirst(getPerfectName(gearItem.getGearInfo().name()));
                 } else if (defective && gearItem.isDefective()) {
                     tooltips.removeFirst();
-                    tooltips.addFirst(getDefectiveName(gearItem.getGearProfile().getDisplayName()));
+                    tooltips.addFirst(getDefectiveName(gearItem.getGearInfo().name()));
                 } else if (overallPercentageInName) {
                     MutableComponent name = Component.literal(
                                     tooltips.getFirst().getString())
@@ -111,11 +111,11 @@ public class ItemStatInfoFeature extends UserFeature {
             brokenItems.add(gearItem);
             WynntilsMod.error(
                     "Exception when creating tooltips for item "
-                            + gearItem.getGearProfile().getDisplayName(),
+                            + gearItem.getGearInfo().name(),
                     e);
             WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + gearItem);
             McUtils.sendMessageToClient(Component.literal("Wynntils error: Problem showing tooltip for item "
-                            + gearItem.getGearProfile().getDisplayName())
+                            + gearItem.getGearInfo().name())
                     .withStyle(ChatFormatting.RED));
 
             if (brokenItems.size() > 10) {

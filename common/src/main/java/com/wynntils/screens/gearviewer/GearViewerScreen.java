@@ -6,7 +6,7 @@ package com.wynntils.screens.gearviewer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
@@ -80,12 +80,12 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
-        if (gearProfile == null) {
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
+        if (gearInfo == null) {
             return itemStack;
         }
 
-        GearItem gearItem = Models.GearItem.fromJsonLore(itemStack, gearProfile);
+        GearItem gearItem = Models.GearItem.fromJsonLore(itemStack, gearInfo);
         return new FakeItemStack(gearItem, "From " + playerName.getString());
     }
 

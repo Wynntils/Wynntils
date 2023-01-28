@@ -10,21 +10,23 @@ import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.GearIdentificationContainer;
-import com.wynntils.models.gear.GearInstance;
 import com.wynntils.models.gear.ReidentificationChances;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.models.gear.profile.MajorIdentification;
 import com.wynntils.models.gear.type.IdentificationModifier;
-import com.wynntils.models.gear.type.RequirementType;
 import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.GearRequirements;
 import com.wynntils.models.gearinfo.type.GearAttackSpeed;
+import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.gearinfo.type.GearRestrictions;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.MathUtils;
@@ -42,7 +44,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -57,7 +58,8 @@ public class GearTooltipBuilder {
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
 
-    private GearProfile gearProfile;
+    private GearInfo gearInfo;
+    private GearInstance gearInstance;
     private GearItem gearItem;
 
     private List<Component> topTooltip;
@@ -67,8 +69,8 @@ public class GearTooltipBuilder {
 
     public GearTooltipBuilder() {}
 
-    private GearTooltipBuilder(GearProfile gearProfile, GearItem gearItem) {
-        this.gearProfile = gearProfile;
+    private GearTooltipBuilder(GearInfo gearInfo, GearItem gearItem) {
+        this.gearInfo = gearInfo;
         this.gearItem = gearItem;
 
         topTooltip = buildTopTooltip();
@@ -76,20 +78,20 @@ public class GearTooltipBuilder {
     }
 
     private GearTooltipBuilder(
-            GearProfile gearProfile, GearItem gearItem, List<Component> topTooltip, List<Component> bottomTooltip) {
-        this.gearProfile = gearProfile;
+            GearInfo gearInfo, GearItem gearItem, List<Component> topTooltip, List<Component> bottomTooltip) {
+        this.gearInfo = gearInfo;
         this.gearItem = gearItem;
 
         this.topTooltip = topTooltip;
         this.bottomTooltip = bottomTooltip;
     }
 
-    public static GearTooltipBuilder fromGearProfile(GearProfile gearProfile) {
+    public static GearTooltipBuilder fromGearInfo(GearInfo gearProfile) {
         return new GearTooltipBuilder(gearProfile, null);
     }
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
-        return new GearTooltipBuilder(gearItem.getGearProfile(), gearItem);
+        return new GearTooltipBuilder(gearItem.getGearInfo(), gearItem);
     }
 
     public static GearTooltipBuilder fromItemStackNew(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
@@ -153,14 +155,13 @@ public class GearTooltipBuilder {
         }
     }
 
-    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
+    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearInfo gearInfo, GearItem gearItem) {
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
-        Pair<List<Component>, List<Component>> splittedLore =
-                splitLore(tooltips.subList(1, tooltips.size()), gearProfile);
+        Pair<List<Component>, List<Component>> splittedLore = splitLore(tooltips.subList(1, tooltips.size()), gearInfo);
 
-        return new GearTooltipBuilder(gearProfile, gearItem, splittedLore.a(), splittedLore.b());
+        return new GearTooltipBuilder(gearInfo, gearItem, splittedLore.a(), splittedLore.b());
     }
 
     public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
@@ -179,7 +180,7 @@ public class GearTooltipBuilder {
         return ComponentUtils.stripDuplicateBlank(tooltip);
     }
 
-    private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, GearProfile gearProfile) {
+    private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, GearInfo gearInfo) {
         List<Component> topTooltip = new ArrayList<>();
         List<Component> bottomTooltip = new ArrayList<>();
 
@@ -214,7 +215,7 @@ public class GearTooltipBuilder {
                 continue;
             }
 
-            if (!isIdLine(loreLine, gearProfile)) {
+            if (!isIdLine(loreLine, gearInfo)) {
                 baseTooltip.add(loreLine);
                 continue;
             }
@@ -229,7 +230,7 @@ public class GearTooltipBuilder {
         return Pair.of(topTooltip, bottomTooltip);
     }
 
-    private static boolean isIdLine(Component lore, GearProfile item) {
+    private static boolean isIdLine(Component lore, GearInfo item) {
         // This looks quite messy, but is in effect what we did before
         // FIXME: Clean up?
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
@@ -243,23 +244,23 @@ public class GearTooltipBuilder {
         List<Component> baseTooltip = new ArrayList<>();
 
         // attack speed
-        if (gearProfile.getAttackSpeed() != null)
-            baseTooltip.add(Component.literal(
-                    ChatFormatting.GRAY + gearProfile.getAttackSpeed().getName()));
+        if (gearInfo.fixedStats().attackSpeed().isPresent())
+            baseTooltip.add(Component.literal(ChatFormatting.GRAY
+                    + gearInfo.fixedStats().attackSpeed().get().getName()));
 
         baseTooltip.add(Component.literal(""));
 
         // elemental damages
-        if (!gearProfile.getDamageTypes().isEmpty()) {
-            Map<com.wynntils.models.concepts.DamageType, String> damages = gearProfile.getDamages();
-            for (Map.Entry<com.wynntils.models.concepts.DamageType, String> entry : damages.entrySet()) {
-                com.wynntils.models.concepts.DamageType type = entry.getKey();
-                MutableComponent damage =
-                        Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
-                damage.append(Component.literal(" Damage: " + entry.getValue())
+        if (!gearInfo.fixedStats().damages().isEmpty()) {
+            List<Pair<DamageType, RangedValue>> damages = gearInfo.fixedStats().damages();
+            for (Pair<DamageType, RangedValue> damageStat : damages) {
+                DamageType type = damageStat.key();
+                MutableComponent damage = Component.literal(type.getSymbol() + " " + type.getDisplayName())
+                        .withStyle(type.getColorCode());
+                damage.append(Component.literal("Damage: " + damageStat.value().asString())
                         .withStyle(
-                                type == com.wynntils.models.concepts.DamageType.NEUTRAL
-                                        ? type.getColor()
+                                type == DamageType.NEUTRAL
+                                        ? type.getColorCode()
                                         : ChatFormatting.GRAY)); // neutral is all gold
                 baseTooltip.add(damage);
             }
@@ -267,21 +268,21 @@ public class GearTooltipBuilder {
             baseTooltip.add(Component.literal(""));
         }
 
-        // elemental defenses
-        if (!gearProfile.getDefenseTypes().isEmpty()) {
-            int health = gearProfile.getHealth();
-            if (health != 0) {
-                MutableComponent healthComp = Component.literal("❤ Health: " + StringUtils.toSignedString(health))
-                        .withStyle(ChatFormatting.DARK_RED);
-                baseTooltip.add(healthComp);
-            }
+        int health = gearInfo.fixedStats().healthBuff();
+        if (health != 0) {
+            MutableComponent healthComp = Component.literal("❤ Health: " + StringUtils.toSignedString(health))
+                    .withStyle(ChatFormatting.DARK_RED);
+            baseTooltip.add(healthComp);
+        }
 
-            Map<com.wynntils.models.concepts.DamageType, Integer> defenses = gearProfile.getElementalDefenses();
-            for (Map.Entry<com.wynntils.models.concepts.DamageType, Integer> entry : defenses.entrySet()) {
-                com.wynntils.models.concepts.DamageType type = entry.getKey();
-                MutableComponent defense =
-                        Component.literal(type.getSymbol() + " " + type).withStyle(type.getColor());
-                defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(entry.getValue()))
+        // elemental defenses
+        if (!gearInfo.fixedStats().defences().isEmpty()) {
+            List<Pair<Element, Integer>> defenses = gearInfo.fixedStats().defences();
+            for (Pair<Element, Integer> defenceStat : defenses) {
+                Element element = defenceStat.key();
+                MutableComponent defense = Component.literal(element.getSymbol() + " " + element.getDisplayName())
+                        .withStyle(element.getColorCode());
+                defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(defenceStat.value()))
                         .withStyle(ChatFormatting.GRAY));
                 baseTooltip.add(defense);
             }
@@ -290,51 +291,63 @@ public class GearTooltipBuilder {
         }
 
         // requirements
-        if (gearProfile.hasRequirements()) {
-            Map<RequirementType, String> requirements = gearProfile.getRequirements();
-            // fire, water, air, thunder, earth
-            for (Map.Entry<RequirementType, String> entry : requirements.entrySet()) {
-                RequirementType type = entry.getKey();
-                MutableComponent requirement;
-
-                requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
-                requirement.append(
-                        Component.literal(type.asLore() + entry.getValue()).withStyle(ChatFormatting.GRAY));
-                baseTooltip.add(requirement);
+        GearRequirements requirements = gearInfo.requirements();
+        if (requirements.quest().isPresent()) {
+            baseTooltip.add(getRequirement("Quest Req: " + requirements.quest().get()));
+        }
+        if (requirements.classType().isPresent()) {
+            baseTooltip.add(getRequirement(
+                    "Class Req: " + requirements.classType().get().getFullName()));
+        }
+        if (requirements.level() != 0) {
+            baseTooltip.add(getRequirement("Combat Lv. Min: " + requirements.level()));
+        }
+        if (!requirements.skills().isEmpty()) {
+            for (Pair<Skill, Integer> skillRequirement : requirements.skills()) {
+                baseTooltip.add(
+                        getRequirement(skillRequirement.key().getDisplayName() + " Min: " + skillRequirement.value()));
             }
-
-            baseTooltip.add(Component.literal(""));
         }
 
-        // ids
-        if (!gearProfile.getStatuses().isEmpty()) {
+        // FIXME: Only add if we had requirements
+        baseTooltip.add(Component.literal(""));
+
+        // Add delimiter if variables stats will follow
+        if (!gearInfo.variableStats().isEmpty()) {
             baseTooltip.add(Component.literal(""));
         }
 
         return baseTooltip;
     }
 
+    private static MutableComponent getRequirement(String requirementName) {
+        MutableComponent requirement;
+        requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
+        requirement.append(Component.literal(requirementName).withStyle(ChatFormatting.GRAY));
+        return requirement;
+    }
+
     private List<Component> buildBottomTooltip() {
         List<Component> baseTooltip = new ArrayList<>();
 
         // major ids
-        if (gearProfile.getMajorIds() != null && !gearProfile.getMajorIds().isEmpty()) {
-            for (MajorIdentification majorId : gearProfile.getMajorIds()) {
-                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.asLore(), 150))
+        // FIXME: Missing "<+Entropy: >Meteor falls..." which should be in AQUA.
+        if (!gearInfo.fixedStats().majorIds().isEmpty()) {
+            for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
+                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), 150))
                         .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
             baseTooltip.add(Component.literal(""));
         }
 
         // powder slots
-        if (gearProfile.getPowderAmount() > 0) {
+        if (gearInfo.powderSlots() > 0) {
             if (gearItem == null) {
-                baseTooltip.add(Component.literal("[" + gearProfile.getPowderAmount() + " Powder Slots]")
+                baseTooltip.add(Component.literal("[" + gearInfo.powderSlots() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 MutableComponent powderLine = Component.literal(
-                                "[" + gearItem.getPowders().size() + "/" + gearProfile.getPowderAmount()
-                                        + "] Powder Slots ")
+                                "[" + gearItem.getPowders().size() + "/" + gearInfo.powderSlots() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
                 if (!gearItem.getPowders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
@@ -351,7 +364,7 @@ public class GearTooltipBuilder {
         }
 
         // tier & rerolls
-        GearTier gearTier = gearProfile.getTier();
+        GearTier gearTier = gearInfo.tier();
         MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
         if (gearItem != null && gearItem.getRerolls() > 1) {
             tier.append(" [" + gearItem.getRerolls() + "]");
@@ -359,14 +372,15 @@ public class GearTooltipBuilder {
         baseTooltip.add(tier);
 
         // untradable
-        if (gearProfile.getRestriction() != null) {
-            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(gearProfile.getRestriction() + " Item"))
+        if (gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
+            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(
+                            gearInfo.metaInfo().restrictions().getDescription() + " Item"))
                     .withStyle(ChatFormatting.RED));
         }
 
-        String lore = gearProfile.getLore();
-        if (lore != null) {
-            Stream.of(RenderedStringUtils.wrapTextBySize(lore, 150))
+        Optional<String> lore = gearInfo.metaInfo().lore();
+        if (lore.isPresent()) {
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), 150))
                     .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
         }
 
@@ -376,8 +390,8 @@ public class GearTooltipBuilder {
     private Component getHoverName() {
         String prefix = gearItem != null && gearItem.isUnidentified() ? Models.GearItem.UNIDENTIFIED_PREFIX : "";
 
-        return Component.literal(prefix + gearProfile.getDisplayName())
-                .withStyle(gearProfile.getTier().getChatFormatting());
+        return Component.literal(prefix + gearInfo.name())
+                .withStyle(gearInfo.tier().getChatFormatting());
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
@@ -392,7 +406,7 @@ public class GearTooltipBuilder {
 
     private List<Component> buildTopTooltipNew(IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(this.gearInfo.name());
 
         List<Pair<Element, Integer>> defences = gearInfo.fixedStats().defences();
         for (Element element : Element.values()) {
@@ -408,10 +422,10 @@ public class GearTooltipBuilder {
 
     private List<Component> buildMiddleTooltipNew(IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
-        GearInstance gearInstance = gearItem.getGearInstance();
-        List<StatActualValue> stats = gearInstance.getIdentifications();
+        GearInstance gearInstance = gearItem == null ? null : gearItem.getGearInstance();
+        List<StatActualValue> stats = gearInstance != null ? gearInstance.getIdentifications() : List.of();
 
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(this.gearInfo.name());
 
         List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
         for (Skill skill : getSkillOrder()) {
@@ -425,21 +439,32 @@ public class GearTooltipBuilder {
             allStatLines.add(Component.literal(""));
         }
 
-        List<StatType> ordering = getStatListOrdering();
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearInfo, getStatListOrdering());
         boolean useDelimiter = ItemStatInfoFeature.INSTANCE.groupIdentifications;
 
         boolean delimiterNeeded = false;
-        for (StatType statType : ordering) {
+        for (StatType statType : sortedStats) {
             if (useDelimiter && statType instanceof StatListDelimiter) {
                 if (delimiterNeeded) {
                     allStatLines.add(Component.literal(""));
                     delimiterNeeded = false;
                 }
             }
-            StatActualValue statActualValue = getStatOfKind(statType, stats);
-            if (statActualValue == null) continue;
+            Component line;
+            if (gearInstance != null) {
+                // Put in actual value
+                StatActualValue statActualValue = getStatOfKind(statType, stats);
+                if (statActualValue == null) continue;
 
-            Component line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
+                line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
+            } else {
+                // Put in range of possible values
+                StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+                if (possibleValues == null) {
+                    System.out.println("wtf");
+                }
+                line = buildIdLoreLineRangedNew(gearInfo, style.decorations(), possibleValues);
+            }
             allStatLines.add(line);
             delimiterNeeded = true;
         }
@@ -463,7 +488,7 @@ public class GearTooltipBuilder {
 
     private Pair<Skill, Integer> getSkillBonuses(Skill skill, List<Pair<Skill, Integer>> skillBonuses) {
         for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
-            if (skillBonusValue.key().equals(skill)) {
+            if (skillBonusValue.key() == skill) {
                 return skillBonusValue;
             }
         }
@@ -473,7 +498,7 @@ public class GearTooltipBuilder {
 
     private Pair<Element, Integer> getElementDefence(Element element, List<Pair<Element, Integer>> defences) {
         for (Pair<Element, Integer> defenceValue : defences) {
-            if (defenceValue.key().equals(element)) {
+            if (defenceValue.key() == element) {
                 return defenceValue;
             }
         }
@@ -489,30 +514,6 @@ public class GearTooltipBuilder {
         }
 
         return null;
-    }
-
-    private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
-        List<GearIdentificationContainer> idContainers;
-        if (gearItem == null || gearItem.isUnidentified()) {
-            idContainers = WynnItemUtils.identificationsFromProfile(gearProfile);
-        } else {
-            idContainers = gearItem.getIdContainers();
-        }
-
-        if (idContainers.isEmpty()) {
-            return List.of();
-        }
-
-        Map<String, Component> map = idContainers.stream()
-                .collect(Collectors.toMap(
-                        GearIdentificationContainer::shortIdName,
-                        idContainer -> buildIdLoreLine(style.decorations(), idContainer)));
-
-        if (style.reorder()) {
-            return Models.GearProfiles.orderComponents(map, style.group());
-        } else {
-            return new ArrayList<>(map.values());
-        }
     }
 
     private Component buildIdLoreLineSkillBonusNew(
@@ -531,6 +532,19 @@ public class GearTooltipBuilder {
         int value = gearIdentification.value();
         StatUnit unitType = StatUnit.RAW;
         MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
+        // FIXME: for now, just do baseComponent
+        return baseComponent;
+    }
+
+    private Component buildIdLoreLineRangedNew(
+            GearInfo gearInfo, IdentificationDecorations decorations, StatPossibleValues possibleValues) {
+        String inGameName = possibleValues.stat().getDisplayName();
+        StatUnit unitType = possibleValues.stat().getUnit();
+        boolean invert = possibleValues.stat().isInverted();
+
+        MutableComponent baseComponent =
+                buildBaseComponentRangedNew(inGameName, possibleValues.range(), unitType, invert);
+        baseComponent.append(" #");
         // FIXME: for now, just do baseComponent
         return baseComponent;
     }
@@ -563,6 +577,24 @@ public class GearTooltipBuilder {
             case RANGE -> appendRangeLoreLine(baseComponent, idContainer);
             case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, idContainer);
         };
+    }
+
+    private MutableComponent buildBaseComponentRangedNew(
+            String inGameName, RangedValue value, StatUnit unitType, boolean invert) {
+        String unit = unitType.getDisplayName();
+        // Use value.low as representative; assume both high and low are either < or > 0.
+        boolean isGood = invert ? (value.low() < 0) : (value.low() > 0);
+        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
+
+        MutableComponent baseComponent = Component.literal("");
+
+        baseComponent.append(Component.literal(value.low() + unit).withStyle(colorCode));
+        baseComponent.append(Component.literal(" to ").withStyle(ChatFormatting.GRAY));
+        baseComponent.append(Component.literal(value.high() + unit).withStyle(colorCode));
+
+        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+
+        return baseComponent;
     }
 
     private MutableComponent buildBaseComponentNew(

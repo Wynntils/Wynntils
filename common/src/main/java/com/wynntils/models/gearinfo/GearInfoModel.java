@@ -16,12 +16,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.world.item.ItemStack;
 
 public final class GearInfoModel extends Model {
     private static final Gson GEAR_INFO_GSON = new GsonBuilder()
@@ -32,11 +34,20 @@ public final class GearInfoModel extends Model {
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
     private List<GearMajorId> majorIds;
+    private GearParser gearParser = new GearParser();
 
     public GearInfoModel() {
         // FIXME: We are dependent on Stats model!!!!
 
         loadGearInfoRegistry();
+    }
+
+    public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
+        return gearParser.fromItemStack(gearInfo, itemStack);
+    }
+
+    public List<GearInfo> getGearInfoRegistry() {
+        return gearInfoRegistry;
     }
 
     public GearInfo getGearInfo(String gearName) {

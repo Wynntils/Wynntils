@@ -8,4 +8,9 @@ public final class SpellStatType extends StatType {
     public SpellStatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
         super(key, displayName, apiName, loreName, unit);
     }
+
+    @Override
+    public boolean isInverted() {
+        return true;
+    }
 }

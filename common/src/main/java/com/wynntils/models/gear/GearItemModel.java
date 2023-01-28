@@ -8,33 +8,31 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.type.CharmProfile;
-import com.wynntils.models.gear.type.IdentificationModifier;
 import com.wynntils.models.gear.type.TomeProfile;
+import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.GearUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -77,102 +75,6 @@ public final class GearItemModel extends Model {
 
     private static final Pattern RANGE_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
-
-    public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
-        List<StatActualValue> identifications = new ArrayList<>();
-        List<GearIdentificationContainer> idContainers = new ArrayList<>();
-        List<Powder> powders = List.of();
-        int rerolls = 0;
-        List<Component> setBonus = new ArrayList<>();
-
-        // Parse lore for identifications, powders and rerolls
-        List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
-        lore.remove(0); // remove item name
-
-        boolean collectingSetBonus = false;
-        for (Component loreLine : lore) {
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
-
-            // Look for Set Bonus
-            if (unformattedLoreLine.equals("Set Bonus:")) {
-                collectingSetBonus = true;
-                continue;
-            }
-            if (collectingSetBonus) {
-                setBonus.add(loreLine);
-
-                if (unformattedLoreLine.isBlank()) {
-                    collectingSetBonus = false;
-                }
-                continue;
-            }
-
-            // Look for Powder
-            if (unformattedLoreLine.contains("] Powder Slots")) {
-                powders = Powder.findPowders(unformattedLoreLine);
-                continue;
-            }
-
-            // Look for Rerolls
-            Optional<Integer> rerollOpt = rerollsFromLore(loreLine);
-            if (rerollOpt.isPresent()) {
-                rerolls = rerollOpt.get();
-                continue;
-            }
-
-            // Look for identifications
-            String formatId = ComponentUtils.getCoded(loreLine);
-            Matcher statMatcher = ID_NEW_PATTERN.matcher(formatId);
-            if (statMatcher.matches()) {
-                int value = Integer.parseInt(statMatcher.group(2));
-                String unit = statMatcher.group(3);
-                String statDisplayName = statMatcher.group(5);
-                String starString = statMatcher.group(4);
-                int stars = starString == null ? 0 : starString.length();
-
-                StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
-                if (type == null && Skill.isSkill(statDisplayName)) {
-                    // Skill point buff looks like stats when parsing
-                    continue;
-                }
-
-                identifications.add(new StatActualValue(type, value, stars));
-            }
-
-            Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-            if (identificationMatcher.find()) {
-                String shortIdName = WynnItemMatchers.getShortIdentificationName(
-                        identificationMatcher.group("ID"), identificationMatcher.group("Suffix") == null);
-                int value = Integer.parseInt(identificationMatcher.group("Value"));
-                String idName = identificationMatcher.group("ID");
-                int starCount = identificationMatcher.group("Stars").length();
-                GearIdentificationContainer idContainer =
-                        identificationFromValue(loreLine, gearProfile, idName, shortIdName, value, starCount);
-
-                if (idContainer == null) continue;
-                idContainers.add(idContainer);
-            }
-
-            // Range pattern will normally not happen...
-            Matcher id3Matcher = RANGE_PATTERN.matcher(formatId);
-            if (id3Matcher.matches()) {
-                boolean isNegative = id3Matcher.group(1).charAt(0) == 'c';
-                int value = Integer.parseInt(id3Matcher.group(2));
-                int valueMax = Integer.parseInt(id3Matcher.group(3));
-                String idName = id3Matcher.group(5);
-                String unitMatch = id3Matcher.group(4);
-                String unit = unitMatch == null ? "" : unitMatch;
-
-                StatType type = Models.Stat.fromDisplayName(idName, unit);
-                if (type == null && Skill.isSkill(idName)) {
-                    // Skill point buff looks like stats when parsing
-                    // FIXME: Handle
-                }
-            }
-        }
-
-        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, setBonus);
-    }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
         List<StatActualValue> identifications = new ArrayList<>();
@@ -257,54 +159,6 @@ public final class GearItemModel extends Model {
         return Optional.of(new StatActualValue(type, value, -1));
     }
 
-    /**
-     * Creates an ItemIdentificationContainer from the given item, ID names, ID value, and star count
-     * Returns null if the given ID is not valid
-     *
-     * @param lore the ID lore line component - can be null if ID isn't being created from lore
-     * @param gearProfile the GearProfile of the given item
-     * @param inGameIdName the in-game name of the given ID
-     * @param shortIdName the internal wynntils name of the given ID
-     * @param value the raw value of the given ID
-     * @param starCount the number of stars on the given ID
-     * @return the parsed ItemIdentificationContainer, or null if the ID is invalid
-     */
-    private GearIdentificationContainer identificationFromValue(
-            Component lore,
-            GearProfile gearProfile,
-            String inGameIdName,
-            String shortIdName,
-            int value,
-            int starCount) {
-        IdentificationProfile idProfile = gearProfile.getStatuses().get(shortIdName);
-
-        boolean isInverted = idProfile != null
-                ? idProfile.isInverted()
-                : Models.GearProfiles.getIdentificationOrderer().isInverted(shortIdName);
-        IdentificationModifier type =
-                idProfile != null ? idProfile.getType() : IdentificationProfile.getTypeFromName(shortIdName);
-        if (type == null) return null; // not a valid id
-
-        float percentage = -1;
-        if (!idProfile.hasConstantValue()) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = idProfile.getMin();
-            int max = idProfile.getMax();
-
-            percentage = MathUtils.inverseLerp(min, max, value) * 100;
-        }
-
-        // lore might be null if this ID is not being created from a lore line
-
-        // create container
-        return new GearIdentificationContainer(
-                inGameIdName, gearProfile, idProfile, type, shortIdName, value, starCount, percentage);
-    }
-
-    public GearItem fromUnidentified(GearProfile gearProfile) {
-        return new GearItem(gearProfile, null);
-    }
-
     public boolean isUnidentified(String itemName) {
         return itemName.startsWith(UNIDENTIFIED_PREFIX);
     }
@@ -313,7 +167,7 @@ public final class GearItemModel extends Model {
         return itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
     }
 
-    public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {
+    public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
         // attempt to parse item itemData
         JsonObject itemData;
         String rawLore = StringUtils.substringBeforeLast(LoreUtils.getStringLore(itemStack), "}")
@@ -324,7 +178,6 @@ public final class GearItemModel extends Model {
             itemData = new JsonObject(); // invalid or empty itemData on item
         }
 
-        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<StatActualValue> identifications = new ArrayList<>();
 
         // Lore lines is: type: "LORETYPE", percent: <number>, where 100 is baseline, so can be > 100 and < 100.
@@ -334,33 +187,27 @@ public final class GearItemModel extends Model {
                 JsonObject idInfo = ids.get(i).getAsJsonObject();
                 String id = idInfo.get("type").getAsString();
                 int intPercent = idInfo.get("percent").getAsInt();
-                float percent = intPercent / 100f;
 
-                // get wynntils name from internal wynncraft name
-                String translatedId = Models.GearProfiles.getInternalIdentification(id);
-                if (translatedId == null || !gearProfile.getStatuses().containsKey(translatedId)) continue;
+                // Convert e.g. DAMAGEBONUS to our StatTypes
+                StatType statType = Models.Stat.fromLoreId(id);
+                if (statType == null) continue;
 
-                // calculate value
-                IdentificationProfile idContainer = gearProfile.getStatuses().get(translatedId);
-                int value = idContainer.isFixed()
-                        ? idContainer.getBaseValue()
-                        : Math.round(idContainer.getBaseValue() * percent);
+                StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
+                if (possibleValue == null) {
+                    WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+                    continue;
+                }
+                int value = Math.round(possibleValue.baseValue() * (intPercent / 100f));
 
                 // account for mistaken rounding
                 if (value == 0) {
                     value = 1;
                 }
 
-                idContainers.add(identificationFromValue(
-                        null, gearProfile, IdentificationProfile.getAsLongName(translatedId), translatedId, value, 0));
-
-                StatType stat = Models.Stat.fromLoreId(id);
-                if (stat == null) continue;
-
                 int stars = GearUtils.getStarsFromPercent(intPercent);
                 // FIXME: Negative values should never show stars!
 
-                identifications.add(new StatActualValue(stat, value, stars));
+                identifications.add(new StatActualValue(statType, value, stars));
             }
         }
 
@@ -381,7 +228,8 @@ public final class GearItemModel extends Model {
             rerolls = itemData.get("identification_rolls").getAsInt();
         }
 
-        return new GearItem(gearProfile, identifications, idContainers, powders, rerolls, List.of());
+        GearInstance gearInstance = new GearInstance(identifications, powders, rerolls, List.of());
+        return new GearItem(gearInfo, gearInstance);
     }
 
     private GearItem fromEncodedString(String encoded) {
@@ -393,39 +241,39 @@ public final class GearItemModel extends Model {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        GearProfile item = Models.GearProfiles.getItemsProfile(name);
-        if (item == null) return null;
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(name);
+        if (gearInfo == null) return null;
 
         // ids
-        List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<StatActualValue> identifications = new ArrayList<>();
 
-        List<String> sortedIds = new ArrayList<>(item.getStatuses().keySet());
-        sortedIds.sort(Comparator.comparingInt(Models.GearProfiles::getOrder));
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearInfo, Models.Stat.wynntilsOrder);
 
         int counter = 0; // for id value array
-        for (String shortIdName : sortedIds) {
-            IdentificationProfile status = item.getStatuses().get(shortIdName);
+        for (StatType statType : sortedStats) {
+            StatPossibleValues status = gearInfo.getPossibleValues(statType);
 
             int value;
             int stars = 0;
-            if (status.isFixed()) {
-                value = status.getBaseValue();
+            if (status.isPreIdentified()) {
+                value = status.baseValue();
             } else {
                 if (counter >= ids.length) return null; // some kind of mismatch, abort
 
                 // id value
                 int encodedValue = ids[counter] / 4;
-                if (Math.abs(status.getBaseValue()) > 100) {
+                if (Math.abs(status.baseValue()) > 100) {
                     // using bigdecimal here for precision when rounding
                     value = new BigDecimal(encodedValue + 30)
                             .movePointLeft(2)
-                            .multiply(new BigDecimal(status.getBaseValue()))
+                            .multiply(new BigDecimal(status.baseValue()))
                             .setScale(0, RoundingMode.HALF_UP)
                             .intValue();
                 } else {
                     // min/max must be flipped for inverted IDs due to encoding
-                    value = status.isInverted() ? encodedValue + status.getMax() : encodedValue + status.getMin();
+                    value = statType.isInverted()
+                            ? encodedValue + status.range().high()
+                            : encodedValue + status.range().low();
                 }
 
                 // stars
@@ -434,19 +282,13 @@ public final class GearItemModel extends Model {
                 counter++;
             }
 
-            // name
-            String longIdName = IdentificationProfile.getAsLongName(shortIdName);
-
             // create ID and append to list
-            GearIdentificationContainer idContainer =
-                    identificationFromValue(null, item, longIdName, shortIdName, value, stars);
-            if (idContainer != null) idContainers.add(idContainer);
-            identifications.add(new StatActualValue(null, value, stars));
+            identifications.add(new StatActualValue(statType, value, stars));
         }
 
         // powders
         List<Powder> powderList = new ArrayList<>();
-        if (item.getPowderAmount() > 0 && powders.length > 0) {
+        if (gearInfo.powderSlots() > 0 && powders.length > 0) {
             ArrayUtils.reverse(powders); // must reverse powders so they are read in reverse order
             for (int powderNum : powders) {
                 // once powderNum is 0, all the powders have been read
@@ -460,7 +302,8 @@ public final class GearItemModel extends Model {
         }
 
         // create chat gear stack
-        return new GearItem(item, identifications, idContainers, powderList, rerolls, List.of());
+        GearInstance gearInstance = new GearInstance(identifications, powderList, rerolls, List.of());
+        return new GearItem(gearInfo, gearInstance);
     }
 
     /**
@@ -494,11 +337,11 @@ public final class GearItemModel extends Model {
      *
      */
     public String toEncodedString(GearItem gearItem) {
-        String itemName = gearItem.getGearProfile().getDisplayName();
+        String itemName = gearItem.getGearInfo().name();
+        GearInstance gearInstance = gearItem.getGearInstance();
 
-        // get identification data - ordered for consistency
-        List<GearIdentificationContainer> sortedIds =
-                Models.GearProfiles.orderIdentifications(gearItem.getIdContainers());
+        // We must use Legacy ordering for compatibility reasons
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getGearInfo(), Models.Stat.wynntilsOrder);
 
         // name
         StringBuilder encoded = new StringBuilder(START);
@@ -506,25 +349,22 @@ public final class GearItemModel extends Model {
         encoded.append(SEPARATOR);
 
         // ids
-        for (GearIdentificationContainer id : sortedIds) {
-            if (id.idProfile().isFixed()) continue; // don't care about these
+        for (StatType statType : sortedStats) {
+            StatActualValue actualValue = gearInstance.getActualValue(statType);
+            StatPossibleValues possibleValues = gearItem.getGearInfo().getPossibleValues(statType);
 
-            int idValue = id.value();
-            IdentificationProfile idProfile = id.idProfile();
+            int shiftedValue;
 
-            int translatedValue;
-            if (Math.abs(idProfile.getBaseValue()) > 100) { // calculate percent
-                translatedValue = (int) Math.round((idValue * 100.0 / idProfile.getBaseValue()) - 30);
-            } else { // raw value
-                // min/max must be flipped for inverted IDs to avoid negative values
-                translatedValue = idProfile.isInverted() ? idValue - idProfile.getMax() : idValue - idProfile.getMin();
-            }
+            // min/max must be flipped for inverted IDs to avoid negative values
+            shiftedValue = statType.isInverted()
+                    ? actualValue.value() - possibleValues.range().high()
+                    : actualValue.value() - possibleValues.range().low();
 
             // stars
-            int stars = id.stars();
+            int stars = actualValue.stars();
 
             // encode value + stars in one character
-            encoded.append(encodeNumber(translatedValue * 4 + stars));
+            encoded.append(encodeNumber(shiftedValue * 4 + stars));
         }
 
         // powders
@@ -609,9 +449,9 @@ public final class GearItemModel extends Model {
 
     private Component createItemComponent(GearItem gearItem) {
         MutableComponent itemComponent = Component.literal(
-                        gearItem.getGearProfile().getDisplayName())
+                        gearItem.getGearInfo().name())
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(gearItem.getGearProfile().getTier().getChatFormatting());
+                .withStyle(gearItem.getGearInfo().tier().getChatFormatting());
 
         ItemStack itemStack = new FakeItemStack(gearItem, "From chat");
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);

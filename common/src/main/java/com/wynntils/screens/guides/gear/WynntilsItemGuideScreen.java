@@ -153,7 +153,7 @@ public final class WynntilsItemGuideScreen
     private List<GuideGearItemStack> getAllGearItems() {
         if (allGearItems.isEmpty()) {
             // Populate list
-            allGearItems = Models.GearProfiles.getItemsCollection().stream()
+            allGearItems = Models.GearInfo.getGearInfoRegistry().stream()
                     .map(GuideGearItemStack::new)
                     .toList();
         }

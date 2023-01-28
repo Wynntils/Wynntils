@@ -31,8 +31,8 @@ public class GuideGearItemStackButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = CustomColor.fromChatFormatting(
-                itemStack.getGearProfile().getTier().getChatFormatting());
+        CustomColor color =
+                CustomColor.fromChatFormatting(itemStack.getGearInfo().tier().getChatFormatting());
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();

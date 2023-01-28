@@ -5,6 +5,7 @@
 package com.wynntils.models.stats;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;
@@ -17,6 +18,7 @@ import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatType;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +107,12 @@ public final class StatModel extends Model {
         }
     }
 
+    public List<StatType> getSortedStats(GearInfo gearInfo, List<StatType> ordering) {
+        List<StatType> sortedStats = new ArrayList<>(gearInfo.getVariableStats());
+        sortedStats.sort(Comparator.comparingInt(s -> ordering.indexOf(s)));
+        return sortedStats;
+    }
+
     private void addMiscStats(List<StatType> targetList, List<MiscStatType> miscStats, List<MiscStatKind> miscOrder) {
         for (MiscStatKind kind : miscOrder) {
             StatType stat = getMiscStat(kind, miscStats);
@@ -137,6 +145,9 @@ public final class StatModel extends Model {
     }
 
     public StatType fromLoreId(String id) {
+        // FIXME: If this is a SpellStatType, we need to check the GearInfo. If it is a weapon,
+        // return the proper type, otherwise return generic "3rd Spell". We cannot just return
+        // the first value found.
         for (StatType stat : statTypeRegistry) {
             if (stat.getLoreName().equals(id)) return stat;
         }

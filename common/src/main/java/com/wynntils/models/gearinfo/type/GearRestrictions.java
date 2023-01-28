@@ -7,9 +7,15 @@ package com.wynntils.models.gearinfo.type;
 import java.util.Locale;
 
 public enum GearRestrictions {
-    NONE,
-    UNTRADABLE,
-    QUEST_ITEM;
+    NONE(""),
+    UNTRADABLE("Untradable"),
+    QUEST_ITEM("Quest Item");
+
+    private final String description;
+
+    GearRestrictions(String description) {
+        this.description = description;
+    }
 
     public static GearRestrictions fromString(String typeStr) {
         try {
@@ -17,5 +23,9 @@ public enum GearRestrictions {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

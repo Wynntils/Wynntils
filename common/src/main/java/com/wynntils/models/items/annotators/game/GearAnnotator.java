@@ -7,13 +7,16 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gearinfo.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.items.items.game.GearItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](.+)$");
+    public static final String UNIDENTIFIED_PREFIX = "Unidentified ";
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -22,18 +25,15 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String itemName = matcher.group(1);
-        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(Models.GearItem.getLookupName(itemName));
-        if (gearProfile == null) return null;
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
+        if (gearInfo == null) return null;
 
         // Verify that rarity matches
-        if (!name.startsWith(gearProfile.getTier().getChatFormatting().toString())) return null;
+        if (!name.startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
 
-        if (Models.GearItem.isUnidentified(itemName)) {
-            // FIXME
-            return Models.GearItem.fromItemStack(itemStack, gearProfile);
-            //            return Models.GearItem.fromUnidentified(gearProfile);
-        } else {
-            return Models.GearItem.fromItemStack(itemStack, gearProfile);
-        }
+        GearInstance gearInstance =
+                itemName.startsWith(UNIDENTIFIED_PREFIX) ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
+
+        return new GearItem(gearInfo, gearInstance);
     }
 }

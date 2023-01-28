@@ -2,18 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear;
+package com.wynntils.models.gearinfo.type;
 
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.stats.type.StatActualValue;
-import java.util.DoubleSummaryStatistics;
+import com.wynntils.models.stats.type.StatType;
 import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 
 public class GearInstance {
     private final List<StatActualValue> identifications;
-    private final List<GearIdentificationContainer> idContainers;
     private final List<Powder> powders;
     private final int rerolls;
     private final List<Component> setBonus;
@@ -23,23 +21,18 @@ public class GearInstance {
     private final boolean hasVariableIds;
 
     public GearInstance(
-            List<StatActualValue> identifications,
-            List<GearIdentificationContainer> idContainers,
-            List<Powder> powders,
-            int rerolls,
-            List<Component> setBonus) {
+            List<StatActualValue> identifications, List<Powder> powders, int rerolls, List<Component> setBonus) {
         this.identifications = identifications;
-        this.idContainers = idContainers;
         this.powders = powders;
         this.rerolls = rerolls;
         this.setBonus = setBonus;
 
-        DoubleSummaryStatistics percents = idContainers.stream()
+        /*
+        DoubleSummaryStatistics percents = identifications.stream()
                 .filter(Predicate.not(GearIdentificationContainer::isFixed))
                 .mapToDouble(GearIdentificationContainer::percent)
                 .summaryStatistics();
         overallPercentage = (float) percents.getAverage();
-
         if (percents.getCount() > 0) {
             // Only claim it is perfect/defective if we do have some non-fixed identifications
             isPerfect = overallPercentage >= 100f;
@@ -50,14 +43,17 @@ public class GearInstance {
             isDefective = false;
             hasVariableIds = false;
         }
+
+         */
+
+        isPerfect = false;
+        isDefective = false;
+        hasVariableIds = true;
+        overallPercentage = 33.1f;
     }
 
     public List<StatActualValue> getIdentifications() {
         return identifications;
-    }
-
-    public List<GearIdentificationContainer> getIdContainers() {
-        return idContainers;
     }
 
     public List<Powder> getPowders() {
@@ -95,5 +91,12 @@ public class GearInstance {
 
     public boolean isDefective() {
         return isDefective;
+    }
+
+    public StatActualValue getActualValue(StatType statType) {
+        return identifications.stream()
+                .filter(s -> s.stat().equals(statType))
+                .findFirst()
+                .orElse(null);
     }
 }

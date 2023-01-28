@@ -43,6 +43,10 @@ public abstract class StatType {
         return unit;
     }
 
+    public boolean isInverted() {
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

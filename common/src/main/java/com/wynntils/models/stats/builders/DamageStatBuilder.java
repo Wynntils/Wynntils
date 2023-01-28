@@ -11,6 +11,7 @@ import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
@@ -68,7 +69,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
 
-            default -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, apiName);
+            default -> apiName.toUpperCase(Locale.ROOT);
         };
     }
 }
