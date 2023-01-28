@@ -18,7 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-import com.wynntils.utils.wynn.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.GearTooltipBuilder;
 import com.wynntils.utils.wynn.WynnItemUtils;
 import java.awt.Color;
 import java.util.HashSet;

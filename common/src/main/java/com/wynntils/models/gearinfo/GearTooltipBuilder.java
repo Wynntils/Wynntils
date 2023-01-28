@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils.wynn;
+package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -10,8 +10,6 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.models.gearinfo.GearRequirements;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.models.gearinfo.type.GearRestrictions;
@@ -31,6 +29,8 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.ColorScaleUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
