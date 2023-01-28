@@ -12,13 +12,13 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gearinfo.GearTooltipBuilder;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-import com.wynntils.models.gearinfo.GearTooltipBuilder;
 import com.wynntils.utils.wynn.WynnItemUtils;
 import java.awt.Color;
 import java.util.HashSet;
@@ -82,8 +82,7 @@ public class ItemStatInfoFeature extends UserFeature {
             GearTooltipBuilder builder = gearItem.getCache()
                     .getOrCalculate(
                             WynnItemCache.TOOLTIP_KEY,
-                            () -> GearTooltipBuilder.fromItemStack(
-                                    event.getItemStack(), gearItem.getGearInfo(), gearItem));
+                            () -> GearTooltipBuilder.fromItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
             LinkedList<Component> tooltips =

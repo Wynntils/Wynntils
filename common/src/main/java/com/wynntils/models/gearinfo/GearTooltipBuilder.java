@@ -55,49 +55,48 @@ public final class GearTooltipBuilder {
     private static final Pattern RANGE_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
-    private GearInfo gearInfo;
-    private GearInstance gearInstance;
-    private GearItem gearItem;
+    private final GearInfo gearInfo;
+    private final GearInstance gearInstance;
 
     private List<Component> topTooltip;
     private List<Component> bottomTooltip;
 
     private final Map<IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
-    public GearTooltipBuilder() {}
-
-    private GearTooltipBuilder(GearInfo gearInfo, GearItem gearItem) {
+    private GearTooltipBuilder(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
-        this.gearItem = gearItem;
+        this.gearInstance = gearInstance;
 
         topTooltip = buildTopTooltip();
         bottomTooltip = buildBottomTooltip();
     }
 
     private GearTooltipBuilder(
-            GearInfo gearInfo, GearItem gearItem, List<Component> topTooltip, List<Component> bottomTooltip) {
+            GearInfo gearInfo, GearInstance gearInstance, List<Component> topTooltip, List<Component> bottomTooltip) {
         this.gearInfo = gearInfo;
-        this.gearItem = gearItem;
+        this.gearInstance = gearInstance;
 
         this.topTooltip = topTooltip;
         this.bottomTooltip = bottomTooltip;
     }
 
-    public static GearTooltipBuilder fromGearInfo(GearInfo gearProfile) {
-        return new GearTooltipBuilder(gearProfile, null);
+    public static GearTooltipBuilder fromGearInfo(GearInfo gearInfo) {
+        return new GearTooltipBuilder(gearInfo, null);
     }
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
-        return new GearTooltipBuilder(gearItem.getGearInfo(), gearItem);
+        return new GearTooltipBuilder(gearItem.getGearInfo(), gearItem.getGearInstance());
     }
 
-    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearInfo gearInfo, GearItem gearItem) {
+    public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearItem gearItem) {
+        GearInfo gearInfo = gearItem.getGearInfo();
+        GearInstance gearInstance = gearItem.getGearInstance();
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore = splitLore(tooltips.subList(1, tooltips.size()), gearInfo);
 
-        return new GearTooltipBuilder(gearInfo, gearItem, splittedLore.a(), splittedLore.b());
+        return new GearTooltipBuilder(gearInfo, gearInstance, splittedLore.a(), splittedLore.b());
     }
 
     public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
@@ -281,16 +280,16 @@ public final class GearTooltipBuilder {
 
         // powder slots
         if (gearInfo.powderSlots() > 0) {
-            if (gearItem == null) {
+            if (gearInstance == null) {
                 baseTooltip.add(Component.literal("[" + gearInfo.powderSlots() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
-                MutableComponent powderLine = Component.literal(
-                                "[" + gearItem.getPowders().size() + "/" + gearInfo.powderSlots() + "] Powder Slots ")
+                MutableComponent powderLine = Component.literal("["
+                                + gearInstance.getPowders().size() + "/" + gearInfo.powderSlots() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
-                if (!gearItem.getPowders().isEmpty()) {
+                if (!gearInstance.getPowders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
-                    for (Powder p : gearItem.getPowders()) {
+                    for (Powder p : gearInstance.getPowders()) {
                         String symbol = p.getColoredSymbol();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(Component.literal(symbol));
@@ -305,8 +304,8 @@ public final class GearTooltipBuilder {
         // tier & rerolls
         GearTier gearTier = gearInfo.tier();
         MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
-        if (gearItem != null && gearItem.getRerolls() > 1) {
-            tier.append(" [" + gearItem.getRerolls() + "]");
+        if (gearInstance != null && gearInstance.getRerolls() > 1) {
+            tier.append(" [" + gearInstance.getRerolls() + "]");
         }
         baseTooltip.add(tier);
 
@@ -327,7 +326,7 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        String prefix = gearItem != null && gearItem.isUnidentified() ? Models.GearItem.UNIDENTIFIED_PREFIX : "";
+        String prefix = gearInstance == null ? Models.GearItem.UNIDENTIFIED_PREFIX : "";
 
         return Component.literal(prefix + gearInfo.name())
                 .withStyle(gearInfo.tier().getChatFormatting());
@@ -345,8 +344,6 @@ public final class GearTooltipBuilder {
 
     private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
-        GearInstance gearInstance = gearItem == null ? null : gearItem.getGearInstance();
-        List<StatActualValue> stats = gearInstance != null ? gearInstance.getIdentifications() : List.of();
 
         GearInfo gearInfo = Models.GearInfo.getGearInfo(this.gearInfo.name());
 
@@ -485,7 +482,11 @@ public final class GearTooltipBuilder {
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - actualValue.stars()) : "";
 
         MutableComponent baseComponent = buildBaseComponent(
-                statType.getDisplayName(), actualValue.value(), statType.getUnit(), statType.showAsInverted(), starString);
+                statType.getDisplayName(),
+                actualValue.value(),
+                statType.getUnit(),
+                statType.showAsInverted(),
+                starString);
 
         StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
         if (possibleValues.range().isFixed()) return baseComponent;

@@ -5,8 +5,8 @@
 package com.wynntils.screens.guides.gear;
 
 import com.wynntils.models.gearinfo.GearInfo;
-import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.models.gearinfo.GearTooltipBuilder;
+import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;

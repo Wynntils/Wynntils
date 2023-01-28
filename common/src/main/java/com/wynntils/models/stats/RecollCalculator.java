@@ -22,8 +22,7 @@ public class RecollCalculator {
         this.perfect = getPerfectChance(possibleValues);
     }
 
-    public static RecollCalculator calculateChances(
-            StatPossibleValues possibleValues, StatActualValue actualValue) {
+    public static RecollCalculator calculateChances(StatPossibleValues possibleValues, StatActualValue actualValue) {
         boolean isInverted = possibleValues.stat().showAsInverted();
         int baseValue = possibleValues.baseValue();
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
