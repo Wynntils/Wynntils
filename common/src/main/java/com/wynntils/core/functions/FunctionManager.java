@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
+import com.wynntils.functions.ExperienceFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
@@ -326,6 +327,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
+
+        registerFunction(new ExperienceFunctions.XpPerMinuteFunction());
+        registerFunction(new ExperienceFunctions.XpPerMinuteRawFunction());
+        registerFunction(new ExperienceFunctions.XpPercentagePerMinuteFunction());
 
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
