@@ -192,7 +192,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     200,
                     20,
                     playerName,
-                    i,
                     offlineMembers.contains(playerName)
                     ));
         }
@@ -233,7 +232,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
 
-            this.addRenderableWidget(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName, i));
+            this.addRenderableWidget(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
         }
         // endregion
 

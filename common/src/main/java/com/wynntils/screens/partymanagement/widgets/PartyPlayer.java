@@ -11,21 +11,42 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class PartyPlayer extends WynntilsButton {
+public class PartyPlayer extends AbstractWidget {
 
     private final String playerName;
-    private final int index;
     private final boolean isOffline;
+    private final Button promoteButton;
+    private final Button kickButton;
+    private final Button disbandButton;
 
-    public PartyPlayer(int x, int y, int width, int height, String playerName, int index, boolean isOffline) {
+    public PartyPlayer(int x, int y, int width, int height, String playerName, boolean isOffline) {
         super(x, y, width, height, Component.literal(playerName));
         this.playerName = playerName;
-        this.index = index;
         this.isOffline = isOffline;
+        this.promoteButton = new Button.Builder(
+                Component.translatable("screens.wynntils.partyManagementGui.promote"),
+                (button) -> promoteToLeader(playerName))
+                .pos(this.getX() + 240, this.getY())
+                .size(50, 20)
+                .build();
+        this.kickButton = new Button.Builder(
+                Component.translatable("screens.wynntils.partyManagementGui.kick"),
+                (button) -> kickFromParty(playerName))
+                .pos(this.getX() + 292, this.getY())
+                .size(50, 20)
+                .build();
+        this.disbandButton = new Button.Builder(
+                Component.translatable("screens.wynntils.partyManagementGui.disband"),
+                (button) -> disbandParty())
+                .pos(this.getX() + 292, this.getY())
+                .size(50, 20)
+                .build();
     }
 
     @Override
@@ -93,28 +114,10 @@ public class PartyPlayer extends WynntilsButton {
         if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return;
 
         if (playerName.equals(Models.Party.getPartyLeader())) {
-            new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.disband"),
-                    (button) -> disbandParty())
-                    .pos(this.getX() + 292, this.getY())
-                    .size(50, 20)
-                    .build().renderButton(poseStack, mouseX, mouseY, partialTick);
+            disbandButton.render(poseStack, mouseX, mouseY, partialTick);
         } else {
-            // Promote button
-            new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.promote"),
-                    (button) -> promoteToLeader(playerName))
-                    .pos(this.getX() + 240, this.getY())
-                    .size(50, 20)
-                    .build().render(poseStack, mouseX, mouseY, partialTick);
-
-            // Kick button
-            new Button.Builder(
-                    Component.translatable("screens.wynntils.partyManagementGui.kick"),
-                    (button) -> kickFromParty(playerName))
-                    .pos(this.getX() + 292, this.getY())
-                    .size(50, 20)
-                    .build().renderButton(poseStack, mouseX, mouseY, partialTick);
+            promoteButton.render(poseStack, mouseX, mouseY, partialTick);
+            kickButton.render(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
@@ -131,7 +134,12 @@ public class PartyPlayer extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
-        // do nothing
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return promoteButton.mouseClicked(mouseX, mouseY, button) || kickButton.mouseClicked(mouseX, mouseY, button) || disbandButton.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+
     }
 }
