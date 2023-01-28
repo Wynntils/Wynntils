@@ -9,13 +9,12 @@ import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;
-import com.wynntils.models.stats.builders.MiscStatKind;
 import com.wynntils.models.stats.builders.SpellStatBuilder;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.SpellStatType;
-import com.wynntils.models.stats.type.StatListDelimiter;
+import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatType;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,119 +23,28 @@ import java.util.List;
 import java.util.Map;
 
 public final class StatModel extends Model {
-    public static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_1 = List.of(
-            MiscStatKind.HEALTH_REGEN_PERCENT,
-            MiscStatKind.MANA_REGEN,
-            MiscStatKind.LIFE_STEAL,
-            MiscStatKind.MANA_STEAL,
-            MiscStatKind.XP_BONUS,
-            MiscStatKind.LOOT_BONUS,
-            MiscStatKind.REFLECTION,
-            MiscStatKind.THORNS,
-            MiscStatKind.EXPLODING,
-            MiscStatKind.WALK_SPEED,
-            MiscStatKind.ATTACK_SPEED,
-            MiscStatKind.POISON,
-            MiscStatKind.HEALTH,
-            MiscStatKind.SOUL_POINT_REGEN,
-            MiscStatKind.STEALING,
-            MiscStatKind.HEALTH_REGEN_RAW);
-    public static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_2 =
-            List.of(MiscStatKind.SPRINT, MiscStatKind.SPRINT_REGEN);
-    public static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_3 = List.of(
-            MiscStatKind.JUMP_HEIGHT,
-            MiscStatKind.GATHER_XP_BONUS,
-            MiscStatKind.GATHER_SPEED,
-            MiscStatKind.LOOT_QUALITY);
-
     private final List<StatType> statTypeRegistry = new ArrayList<>();
-    private final Map<String, StatType> statLookup = new HashMap<>();
+    private final Map<String, StatType> statTypeLookup = new HashMap<>();
 
-    public final List<StatType> defaultOrder = new ArrayList<>();
-    public final List<StatType> wynntilsOrder = new ArrayList<>();
-    public final List<StatType> legacyOrder = new ArrayList<>();
+    private final Map<StatListOrdering, List<StatType>> orderingLists;
 
     public StatModel() {
-        List<DefenceStatType> defenceStats = DefenceStatBuilder.createStats();
+        // First build stats of all kinds
         List<MiscStatType> miscStats = MiscStatBuilder.createStats();
+        List<DefenceStatType> defenceStats = DefenceStatBuilder.createStats();
         List<DamageStatType> damageStats = DamageStatBuilder.createStats();
         List<SpellStatType> spellStats = SpellStatBuilder.createStats();
 
-        // First build the complete registry
-        statTypeRegistry.addAll(miscStats);
-        statTypeRegistry.addAll(defenceStats);
-        statTypeRegistry.addAll(damageStats);
-        statTypeRegistry.addAll(spellStats);
+        // Then put them all in the registry
+        initRegistry(miscStats, defenceStats, damageStats, spellStats);
 
-        // Create a fast lookup map
-        for (StatType stat : statTypeRegistry) {
-            String lookupName = stat.getDisplayName() + stat.getUnit().getDisplayName();
-            statLookup.put(lookupName, stat);
-        }
-
-        // Then create ordered lists for sorting
-
-        // Default ordering is a lightly curated version of the Wynncraft vanilla ordering
-        defaultOrder.addAll(miscStats);
-        defaultOrder.add(new StatListDelimiter());
-        defaultOrder.addAll(defenceStats);
-        defaultOrder.add(new StatListDelimiter());
-        defaultOrder.addAll(damageStats);
-        defaultOrder.add(new StatListDelimiter());
-        defaultOrder.addAll(spellStats);
-
-        // Wynncraft order seem to have grown a bit haphazardly
-        addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_1);
-        wynntilsOrder.add(new StatListDelimiter());
-        wynntilsOrder.addAll(damageStats);
-        wynntilsOrder.add(new StatListDelimiter());
-        wynntilsOrder.addAll(defenceStats);
-        wynntilsOrder.add(new StatListDelimiter());
-        addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_2);
-        wynntilsOrder.add(new StatListDelimiter());
-        wynntilsOrder.addAll(spellStats);
-        wynntilsOrder.add(new StatListDelimiter());
-        addMiscStats(wynntilsOrder, miscStats, WYNNCRAFT_MISC_ORDER_3);
-
-        for (String apiName : LegacyStatListOrder.LEGACY_ORDER) {
-            if (apiName.isEmpty()) {
-                legacyOrder.add(new StatListDelimiter());
-            } else {
-                legacyOrder.addAll(fromApiName(apiName));
-            }
-        }
-    }
-
-    public List<StatType> getSortedStats(GearInfo gearInfo, List<StatType> ordering) {
-        List<StatType> sortedStats = new ArrayList<>(gearInfo.getVariableStats());
-        sortedStats.sort(Comparator.comparingInt(s -> ordering.indexOf(s)));
-        return sortedStats;
-    }
-
-    private void addMiscStats(List<StatType> targetList, List<MiscStatType> miscStats, List<MiscStatKind> miscOrder) {
-        for (MiscStatKind kind : miscOrder) {
-            StatType stat = getMiscStat(kind, miscStats);
-            targetList.add(stat);
-        }
-    }
-
-    private StatType getMiscStat(MiscStatKind kind, List<MiscStatType> miscStats) {
-        for (MiscStatType stat : miscStats) {
-            if (stat.getKind() == kind) {
-                return stat;
-            }
-        }
-        return null;
-    }
-
-    // FIXME: No ideal design, used by deserialization
-    public List<StatType> getStatTypeRegistry() {
-        return statTypeRegistry;
+        // Finally create ordered lists for sorting
+        orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {
         String lookupName = displayName + (unit == null ? "" : unit);
-        return statLookup.get(lookupName);
+        return statTypeLookup.get(lookupName);
     }
 
     public StatType fromLoreId(String id) {
@@ -149,14 +57,38 @@ public final class StatModel extends Model {
         return null;
     }
 
-    public List<StatType> fromApiName(String apiName) {
-        List<StatType> stats = new ArrayList<>();
-        // We might have many stats matching the same name (for spell cost stats)
+    public List<StatType> getOrderingList(StatListOrdering ordering) {
+        return orderingLists.get(ordering);
+    }
+
+    public List<StatType> getSortedStats(GearInfo gearInfo, StatListOrdering ordering) {
+        List<StatType> orderingList = orderingLists.get(ordering);
+
+        List<StatType> sortedStats = new ArrayList<>(gearInfo.getVariableStats());
+        sortedStats.sort(Comparator.comparingInt(orderingList::indexOf));
+
+        return sortedStats;
+    }
+
+    public List<StatType> getAllStatTypes() {
+        return statTypeRegistry;
+    }
+
+    private void initRegistry(
+            List<MiscStatType> miscStats,
+            List<DefenceStatType> defenceStats,
+            List<DamageStatType> damageStats,
+            List<SpellStatType> spellStats) {
+
+        statTypeRegistry.addAll(miscStats);
+        statTypeRegistry.addAll(defenceStats);
+        statTypeRegistry.addAll(damageStats);
+        statTypeRegistry.addAll(spellStats);
+
+        // Create a fast lookup map
         for (StatType stat : statTypeRegistry) {
-            if (stat.getApiName().equals(apiName)) {
-                stats.add(stat);
-            }
+            String lookupName = stat.getDisplayName() + stat.getUnit().getDisplayName();
+            statTypeLookup.put(lookupName, stat);
         }
-        return stats;
     }
 }

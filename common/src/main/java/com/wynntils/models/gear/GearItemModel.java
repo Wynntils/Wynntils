@@ -23,6 +23,7 @@ import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
@@ -243,7 +244,7 @@ public final class GearItemModel extends Model {
         // ids
         List<StatActualValue> identifications = new ArrayList<>();
 
-        List<StatType> sortedStats = Models.Stat.getSortedStats(gearInfo, Models.Stat.wynntilsOrder);
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearInfo, StatListOrdering.LEGACY);
 
         int counter = 0; // for id value array
         for (StatType statType : sortedStats) {
@@ -338,7 +339,7 @@ public final class GearItemModel extends Model {
         GearInstance gearInstance = gearItem.getGearInstance();
 
         // We must use Legacy ordering for compatibility reasons
-        List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getGearInfo(), Models.Stat.wynntilsOrder);
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getGearInfo(), StatListOrdering.LEGACY);
 
         // name
         StringBuilder encoded = new StringBuilder(START);

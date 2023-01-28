@@ -36,7 +36,8 @@ public final class GearTooltipBuilder {
     private List<Component> topTooltip;
     private List<Component> bottomTooltip;
 
-    private final Map<GearTooltipVariableStats.IdentificationPresentationStyle, List<Component>> middleTooltipCache = new HashMap<>();
+    private final Map<GearTooltipVariableStats.IdentificationPresentationStyle, List<Component>> middleTooltipCache =
+            new HashMap<>();
 
     private GearTooltipBuilder(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;

@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -60,7 +61,7 @@ public class ItemStatInfoFeature extends UserFeature {
     public float obfuscationChanceEnd = 0.04f;
 
     @Config
-    public boolean reorderIdentifications = true;
+    public StatListOrdering identificationsOrdering = StatListOrdering.DEFAULT;
 
     @Config
     public boolean groupIdentifications = true;

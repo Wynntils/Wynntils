@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
@@ -25,12 +29,13 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class GearTooltipVariableStats {
-    public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, IdentificationPresentationStyle style) {
+    public static List<Component> buildTooltip(
+            GearInfo gearInfo, GearInstance gearInstance, IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
 
-        addSkillBonuses(gearInfo, allStatLines);
+        appendSkillBonuses(gearInfo, allStatLines);
 
-        List<StatType> listOrdering = getStatListOrdering();
+        List<StatType> listOrdering = Models.Stat.getOrderingList(ItemStatInfoFeature.INSTANCE.identificationsOrdering);
         List<StatType> allStats = gearInfo.getVariableStats();
 
         boolean useDelimiter = ItemStatInfoFeature.INSTANCE.groupIdentifications;
@@ -54,15 +59,15 @@ public final class GearTooltipVariableStats {
                 StatActualValue statActualValue = gearInstance.getActualValue(statType);
                 if (statActualValue == null) {
                     // FIXME: spell cost cause this to explode...
-              //      WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
+                    //      WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
                     continue;
                 }
 
-                line = buildIdLoreLine(gearInfo, style.decorations(), statActualValue);
+                line = buildIdentifiedLine(gearInfo, style.decorations(), statActualValue);
             } else {
                 // Put in range of possible values
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                line = buildIdLoreLineRanged(gearInfo, style.decorations(), possibleValues);
+                line = buildUnidentifiedLine(gearInfo, style.decorations(), possibleValues);
             }
             allStatLines.add(line);
             delimiterNeeded = true;
@@ -73,7 +78,7 @@ public final class GearTooltipVariableStats {
 
     // FIXME: This should really be part of PreVariable tooltip, but we need a better
     // split for that.
-    private static void addSkillBonuses(GearInfo gearInfo, List<Component> allStatLines) {
+    private static void appendSkillBonuses(GearInfo gearInfo, List<Component> allStatLines) {
         List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
         for (Skill skill : Skill.getGearSkillOrder()) {
             Pair<Skill, Integer> skillBonusValue = getSkillBonuses(skill, skillBonuses);
@@ -88,17 +93,6 @@ public final class GearTooltipVariableStats {
         }
     }
 
-    private static List<StatType> getStatListOrdering() {
-        // FIXME: introduce enum to select order!
-        List<StatType> order;
-        if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
-            order = Models.Stat.defaultOrder;
-        } else {
-            order = Models.Stat.wynntilsOrder;
-        }
-        return order;
-    }
-
     private static Pair<Skill, Integer> getSkillBonuses(Skill skill, List<Pair<Skill, Integer>> skillBonuses) {
         for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
             if (skillBonusValue.key() == skill) {
@@ -109,7 +103,7 @@ public final class GearTooltipVariableStats {
         return null;
     }
 
-    private static Component buildIdLoreLineRanged(
+    private static Component buildUnidentifiedLine(
             GearInfo gearInfo, IdentificationDecorations decorations, StatPossibleValues possibleValues) {
         String inGameName = possibleValues.stat().getDisplayName();
         StatUnit unitType = possibleValues.stat().getUnit();
@@ -122,7 +116,7 @@ public final class GearTooltipVariableStats {
         ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
         ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
-        MutableComponent baseComponent1 = Component.literal("");
+        MutableComponent baseComponent = Component.literal("");
 
         // FIXME: make config
         boolean showBestValueAlwaysLast = true; // false is vanilla behavior
@@ -147,19 +141,17 @@ public final class GearTooltipVariableStats {
             first = -first;
             last = -last;
         }
-        baseComponent1.append(
+        baseComponent.append(
                 Component.literal(StringUtils.toSignedString(first)).withStyle(colorCode));
-        baseComponent1.append(Component.literal(" to ").withStyle(colorCodeDark));
-        baseComponent1.append(Component.literal(last + unit).withStyle(colorCode));
+        baseComponent.append(Component.literal(" to ").withStyle(colorCodeDark));
+        baseComponent.append(Component.literal(last + unit).withStyle(colorCode));
 
-        baseComponent1.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
 
-        MutableComponent baseComponent = baseComponent1;
-        baseComponent.append(" #");
         return baseComponent;
     }
 
-    private static Component buildIdLoreLine(
+    private static Component buildIdentifiedLine(
             GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue actualValue) {
         StatType statType = actualValue.stat();
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - actualValue.stars()) : "";
@@ -179,9 +171,6 @@ public final class GearTooltipVariableStats {
             case RANGE -> appendRangeLoreLine(baseComponent, actualValue, possibleValues);
             case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, actualValue, possibleValues);
         }
-
-        // FIXME: at some point, remove marker
-        baseComponent.append(" #");
 
         return baseComponent;
     }
