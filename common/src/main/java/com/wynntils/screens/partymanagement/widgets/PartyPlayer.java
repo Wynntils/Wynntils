@@ -82,8 +82,8 @@ public class PartyPlayer extends WynntilsButton {
                 .renderText(
                 poseStack,
                 formattedPlayerName,
-                this.getX(),
-                this.getY(),
+                this.getX() + 36,
+                this.getY() + 8,
                 color,
                 HorizontalAlignment.Left,
                 VerticalAlignment.Middle,
@@ -104,7 +104,7 @@ public class PartyPlayer extends WynntilsButton {
             new Button.Builder(
                     Component.translatable("screens.wynntils.partyManagementGui.promote"),
                     (button) -> promoteToLeader(playerName))
-                    .pos(this.getX(), this.getY())
+                    .pos(this.getX() + 240, this.getY())
                     .size(50, 20)
                     .build().render(poseStack, mouseX, mouseY, partialTick);
 
@@ -112,7 +112,7 @@ public class PartyPlayer extends WynntilsButton {
             new Button.Builder(
                     Component.translatable("screens.wynntils.partyManagementGui.kick"),
                     (button) -> kickFromParty(playerName))
-                    .pos(this.getX(), this.getY())
+                    .pos(this.getX() + 292, this.getY())
                     .size(50, 20)
                     .build().renderButton(poseStack, mouseX, mouseY, partialTick);
         }
