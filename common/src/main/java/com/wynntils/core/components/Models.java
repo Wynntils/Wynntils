@@ -14,6 +14,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
+import com.wynntils.models.experience.ExperienceModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearItemModel;
 import com.wynntils.models.gear.GearProfilesModel;
@@ -68,4 +69,5 @@ public final class Models {
     public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final HorseModel Horse = new HorseModel(Item);
+    public static final ExperienceModel Experience = new ExperienceModel(Character);
 }
