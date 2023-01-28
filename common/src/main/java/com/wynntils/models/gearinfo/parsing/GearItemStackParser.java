@@ -2,11 +2,12 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gearinfo.parsing;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatType;
@@ -21,8 +22,7 @@ import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class GearParser {
-
+public class GearItemStackParser {
     private static final Pattern REROLL_PATTERN =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) "
                     + "(Raid Reward|Item)(?: \\[(?<Rolls>\\d+)])?");

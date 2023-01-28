@@ -165,7 +165,7 @@ public class ItemScreenshotFeature extends UserFeature {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        String encoded = Models.GearItem.toEncodedString(gearItemOpt.get());
+        String encoded = Models.GearInfo.toEncodedString(gearItemOpt.get());
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)

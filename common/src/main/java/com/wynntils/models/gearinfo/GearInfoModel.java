@@ -16,13 +16,17 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gearinfo.parsing.GearItemStackParser;
+import com.wynntils.models.gearinfo.parsing.GearJsonLoreParser;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -46,7 +50,9 @@ public final class GearInfoModel extends Model {
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = new HashMap<>();
     private List<GearMajorId> majorIds;
-    private GearParser gearParser = new GearParser();
+    private GearItemStackParser gearItemStackParser = new GearItemStackParser();
+    private GearJsonLoreParser gearJsonLoreParser = new GearJsonLoreParser();
+    private GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
     public GearInfoModel() {
         // FIXME: We are dependent on Stats model!!!!
@@ -55,7 +61,7 @@ public final class GearInfoModel extends Model {
     }
 
     public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
-        return gearParser.fromItemStack(gearInfo, itemStack);
+        return gearItemStackParser.fromItemStack(gearInfo, itemStack);
     }
 
     public List<GearInfo> getGearInfoRegistry() {
@@ -103,6 +109,22 @@ public final class GearInfoModel extends Model {
                 gearInfoLookup = lookupMap;
             });
         });
+    }
+
+    public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
+        return gearJsonLoreParser.fromJsonLore(itemStack, gearInfo);
+    }
+
+    public String toEncodedString(GearItem gearItem) {
+        return gearChatEncoding.toEncodedString(gearItem);
+    }
+
+    public GearItem fromEncodedString(String encoded) {
+        return gearChatEncoding.fromEncodedString(encoded);
+    }
+
+    public Matcher gearChatEncodingMatcher(String text) {
+        return gearChatEncoding.gearChatEncodingMatcher(text);
     }
 
     private static class WynncraftGearInfoResponse {
