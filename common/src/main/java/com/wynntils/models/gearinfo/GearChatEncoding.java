@@ -193,7 +193,7 @@ public class GearChatEncoding {
         }
 
         // create chat gear stack
-        GearInstance gearInstance = new GearInstance(identifications, powderList, rerolls, List.of());
+        GearInstance gearInstance = new GearInstance(identifications, powderList, rerolls);
         return new GearItem(gearInfo, gearInstance);
     }
 

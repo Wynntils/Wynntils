@@ -40,12 +40,12 @@ public final class GearTooltipPostVariable {
                 baseTooltip.add(Component.literal("[" + gearInfo.powderSlots() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
-                MutableComponent powderLine = Component.literal("["
-                                + gearInstance.getPowders().size() + "/" + gearInfo.powderSlots() + "] Powder Slots ")
+                MutableComponent powderLine = Component.literal(
+                                "[" + gearInstance.powders().size() + "/" + gearInfo.powderSlots() + "] Powder Slots ")
                         .withStyle(ChatFormatting.GRAY);
-                if (!gearInstance.getPowders().isEmpty()) {
+                if (!gearInstance.powders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
-                    for (Powder p : gearInstance.getPowders()) {
+                    for (Powder p : gearInstance.powders()) {
                         String symbol = p.getColoredSymbol();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(Component.literal(symbol));
@@ -60,8 +60,8 @@ public final class GearTooltipPostVariable {
         // tier & rerolls
         GearTier gearTier = gearInfo.tier();
         MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
-        if (gearInstance != null && gearInstance.getRerolls() > 1) {
-            tier.append(" [" + gearInstance.getRerolls() + "]");
+        if (gearInstance != null && gearInstance.rerolls() > 1) {
+            tier.append(" [" + gearInstance.rerolls() + "]");
         }
         baseTooltip.add(tier);
 

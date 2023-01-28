@@ -35,13 +35,13 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     public List<Powder> getPowders() {
         if (gearInstance == null) return List.of();
 
-        return gearInstance.getPowders();
+        return gearInstance.powders();
     }
 
     public int getRerolls() {
         if (gearInstance == null) return 0;
 
-        return gearInstance.getRerolls();
+        return gearInstance.rerolls();
     }
 
     @Override

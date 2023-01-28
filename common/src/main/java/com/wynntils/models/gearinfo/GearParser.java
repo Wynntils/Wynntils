@@ -44,29 +44,13 @@ public class GearParser {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
-        List<Component> setBonus = new ArrayList<>();
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
         lore.remove(0); // remove item name
 
-        boolean collectingSetBonus = false;
         for (Component loreLine : lore) {
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
-
-            // Look for Set Bonus
-            if (unformattedLoreLine.equals("Set Bonus:")) {
-                collectingSetBonus = true;
-                continue;
-            }
-            if (collectingSetBonus) {
-                setBonus.add(loreLine);
-
-                if (unformattedLoreLine.isBlank()) {
-                    collectingSetBonus = false;
-                }
-                continue;
-            }
 
             // Look for Powder
             if (unformattedLoreLine.contains("] Powder Slots")) {
@@ -105,7 +89,7 @@ public class GearParser {
             }
         }
 
-        return new GearInstance(identifications, powders, rerolls, setBonus);
+        return new GearInstance(identifications, powders, rerolls);
     }
 
     private Optional<Integer> getRerollCount(Component lore) {
@@ -205,8 +189,7 @@ public class GearParser {
             rerolls = itemData.get("identification_rolls").getAsInt();
         }
 
-        GearInstance gearInstance = new GearInstance(identifications, powders, rerolls, List.of());
+        GearInstance gearInstance = new GearInstance(identifications, powders, rerolls);
         return new GearItem(gearInfo, gearInstance);
     }
-
 }
