@@ -29,6 +29,8 @@ public final class StatModel extends Model {
     private final Map<StatListOrdering, List<StatType>> orderingLists;
 
     public StatModel() {
+        super(List.of());
+
         // First build stats of all kinds
         List<MiscStatType> miscStats = MiscStatBuilder.createStats();
         List<DefenceStatType> defenceStats = DefenceStatBuilder.createStats();

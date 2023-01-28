@@ -19,11 +19,13 @@ import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.players.hades.objects.PlayerStatus;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -52,7 +54,9 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    public HadesModel() {
+    public HadesModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
+        super(List.of(characterModel, worldStateModel));
+
         if (Managers.WynntilsAccount.isLoggedIn()) {
             tryCreateConnection();
         }

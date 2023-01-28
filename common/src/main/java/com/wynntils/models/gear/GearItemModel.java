@@ -41,6 +41,10 @@ public final class GearItemModel extends Model {
     private static final Pattern RANGE_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
+    public GearItemModel(GearProfilesModel gearProfilesModel) {
+        super(List.of(gearProfilesModel));
+    }
+
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeProfile tomeProfile) {
         List<StatActualValue> identifications = new ArrayList<>();
         int rerolls = 0;

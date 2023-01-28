@@ -21,6 +21,7 @@ import com.wynntils.models.gearinfo.parsing.GearJsonLoreParser;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.StatModel;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -54,7 +55,8 @@ public final class GearInfoModel extends Model {
     private GearJsonLoreParser gearJsonLoreParser = new GearJsonLoreParser();
     private GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
-    public GearInfoModel() {
+    public GearInfoModel(StatModel statModel) {
+        super(List.of(statModel));
         // FIXME: We are dependent on Stats model!!!!
 
         loadGearInfoRegistry();

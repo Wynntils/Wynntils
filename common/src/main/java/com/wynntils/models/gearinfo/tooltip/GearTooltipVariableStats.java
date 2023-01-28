@@ -257,5 +257,7 @@ public final class GearTooltipVariableStats {
     }
 
     public record IdentificationPresentationStyle(
-            IdentificationDecorations decorations, boolean reorder, boolean group) {}
+            IdentificationDecorations decorations,
+            com.wynntils.models.stats.type.StatListOrdering reorder,
+            boolean group) {}
 }

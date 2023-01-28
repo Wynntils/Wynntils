@@ -11,7 +11,7 @@ public enum GuildResourceValues {
     Low("Low", ChatFormatting.GREEN, 2),
     Medium("Medium", ChatFormatting.YELLOW, 3),
     High("High", ChatFormatting.RED, 4),
-    VeryHigh("Very High", ChatFormatting.DARK_RED, 5);
+    VeryHigh("Very High", ChatFormatting.AQUA, 5);
 
     private final String asString;
     private final ChatFormatting color;

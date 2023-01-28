@@ -14,6 +14,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
+import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,6 +22,10 @@ public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     private int nextExpectedLootContainerId = -2;
+
+    public LootChestModel(ContainerModel containerModel) {
+        super(List.of(containerModel));
+    }
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {

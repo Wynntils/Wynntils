@@ -101,7 +101,7 @@ public final class WynnItemUtils {
 
         return new GearTooltipVariableStats.IdentificationPresentationStyle(
                 decorations,
-                ItemStatInfoFeature.INSTANCE.reorderIdentifications,
+                ItemStatInfoFeature.INSTANCE.identificationsOrdering,
                 ItemStatInfoFeature.INSTANCE.groupIdentifications);
     }
 }
