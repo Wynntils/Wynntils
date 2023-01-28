@@ -15,8 +15,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearAnnotator implements ItemAnnotator {
-    private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](.+)$");
-    public static final String UNIDENTIFIED_PREFIX = "Unidentified ";
+    private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](Unidentified )?(.+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -24,7 +23,7 @@ public final class GearAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         // Lookup Gear Profile
-        String itemName = matcher.group(1);
+        String itemName = matcher.group(2);
         GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
         if (gearInfo == null) return null;
 
@@ -32,7 +31,7 @@ public final class GearAnnotator implements ItemAnnotator {
         if (!name.startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
 
         GearInstance gearInstance =
-                itemName.startsWith(UNIDENTIFIED_PREFIX) ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
+                matcher.group(1) != null ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
 
         return new GearItem(gearInfo, gearInstance);
     }

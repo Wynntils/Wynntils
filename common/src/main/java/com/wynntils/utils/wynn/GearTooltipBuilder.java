@@ -51,6 +51,9 @@ public final class GearTooltipBuilder {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
+    private static final Pattern RANGE_PATTERN =
+            Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
+
 
     private GearInfo gearInfo;
     private GearInstance gearInstance;
@@ -168,9 +171,12 @@ public final class GearTooltipBuilder {
         // FIXME: Clean up?
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
         Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-        if (!identificationMatcher.find()) return false; // not a valid id line
+        if (identificationMatcher.find()) return true;
 
-        return true;
+        Matcher unidentifiedMatcher = RANGE_PATTERN.matcher(unformattedLoreLine);
+        if (unidentifiedMatcher.matches()) return true;
+
+        return false;
     }
 
     private List<Component> buildTopTooltip() {
@@ -328,11 +334,11 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
-        List<Component> tooltips = middleTooltipCache.get(style);
-        if (tooltips != null) return tooltips;
-
+//        List<Component> tooltips = middleTooltipCache.get(style);
+ //       if (tooltips != null) return tooltips;
+        List<Component> tooltips;
         tooltips = buildMiddleTooltipNew(style);
-        middleTooltipCache.put(style, tooltips);
+     //   middleTooltipCache.put(style, tooltips);
         return tooltips;
     }
 
@@ -355,17 +361,24 @@ public final class GearTooltipBuilder {
             allStatLines.add(Component.literal(""));
         }
 
-        List<StatType> sortedStats = Models.Stat.getSortedStats(gearInfo, getStatListOrdering());
+        List<StatType> listOrdering = getStatListOrdering();
+        List<StatType> allStats = gearInfo.getVariableStats();
+
         boolean useDelimiter = ItemStatInfoFeature.INSTANCE.groupIdentifications;
 
         boolean delimiterNeeded = false;
-        for (StatType statType : sortedStats) {
+        // We need to iterate over all possible stats in order, to be able
+        // to inject delimiters, instead of just using Models.Stat.getSortedStats
+        for (StatType statType : listOrdering) {
             if (useDelimiter && statType instanceof StatListDelimiter) {
                 if (delimiterNeeded) {
                     allStatLines.add(Component.literal(""));
                     delimiterNeeded = false;
                 }
             }
+            // Most stat types are probably not valid for this gear
+            if (!allStats.contains(statType)) continue;
+
             Component line;
             if (gearInstance != null) {
                 // Put in actual value
@@ -386,11 +399,12 @@ public final class GearTooltipBuilder {
     }
 
     private static List<StatType> getStatListOrdering() {
+        // FIXME: introduce enum to select order!
         List<StatType> order;
         if (ItemStatInfoFeature.INSTANCE.reorderIdentifications) {
             order = Models.Stat.defaultOrder;
         } else {
-            order = Models.Stat.legacyOrder;
+            order = Models.Stat.wynntilsOrder;
         }
         return order;
     }
@@ -461,11 +475,35 @@ public final class GearTooltipBuilder {
         // Use value.low as representative; assume both high and low are either < or > 0.
         boolean isGood = invert ? (value.low() < 0) : (value.low() > 0);
         ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         MutableComponent baseComponent = Component.literal("");
 
-        baseComponent.append(Component.literal(value.low() + unit).withStyle(colorCode));
-        baseComponent.append(Component.literal(" to ").withStyle(ChatFormatting.GRAY));
+        // FIXME: make config
+        // FIXME: check with spell cost
+        // FIXME: Range should always be "low" is worst and "high" is best.
+        boolean showBestValueLast = true; // false is vanilla behavior
+        if (showBestValueLast) {
+            if (invert) {
+                int first = value.high();
+                int last = value.low();
+            } else {
+                int first = value.low();
+                int last = value.high();
+            }
+        } else {
+            // Emulate Wynncraft behavior
+            if (value.low() < 0) {
+                // Show the value closest to zero first
+                int first = value.high();
+                int last = value.low();
+            } else {
+                int first = value.low();
+                int last = value.high();
+            }
+        }
+        baseComponent.append(Component.literal(StringUtils.toSignedString(value.low())).withStyle(colorCode));
+        baseComponent.append(Component.literal(" to ").withStyle(colorCodeDark));
         baseComponent.append(Component.literal(value.high() + unit).withStyle(colorCode));
 
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
