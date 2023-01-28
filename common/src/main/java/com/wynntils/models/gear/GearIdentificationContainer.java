@@ -16,13 +16,4 @@ public record GearIdentificationContainer(
         String shortIdName,
         int value,
         int stars,
-        float percent) {
-
-    public boolean isNew() {
-        return (idProfile == null || idProfile.isInvalidValue(value));
-    }
-
-    public boolean isFixed() {
-        return !isNew() && idProfile.hasConstantValue();
-    }
-}
+        float percent) {}

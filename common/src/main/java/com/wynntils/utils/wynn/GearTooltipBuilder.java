@@ -9,20 +9,14 @@ import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gear.GearIdentificationContainer;
-import com.wynntils.models.gear.ReidentificationChances;
-import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.models.gear.type.IdentificationModifier;
+import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.GearRequirements;
-import com.wynntils.models.gearinfo.type.GearAttackSpeed;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.models.gearinfo.type.GearRestrictions;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -51,7 +45,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
-public class GearTooltipBuilder {
+public final class GearTooltipBuilder {
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
@@ -92,67 +86,6 @@ public class GearTooltipBuilder {
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
         return new GearTooltipBuilder(gearItem.getGearInfo(), gearItem);
-    }
-
-    public static GearTooltipBuilder fromItemStackNew(ItemStack itemStack, GearProfile gearProfile, GearItem gearItem) {
-        List<Component> tooltips = new ArrayList<>();
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(gearProfile.getDisplayName());
-
-        // FIXED STATS
-        // Attack speed
-        FixedStats fixedStats = gearInfo.fixedStats();
-        Optional<GearAttackSpeed> attackSpeed = fixedStats.attackSpeed();
-        if (attackSpeed.isPresent()) {
-            tooltips.add(Component.literal(attackSpeed.get().getName()));
-        }
-        tooltips.add(Component.literal(""));
-
-        // Health
-        if (fixedStats.healthBuff() != 0) {
-            tooltips.add(Component.literal("❤ Health: " + StringUtils.toSignedString(fixedStats.healthBuff()))
-                    .withStyle(ChatFormatting.DARK_RED));
-            tooltips.add(Component.literal(""));
-        }
-
-        // Defences
-        for (Pair<Element, Integer> defenseValue : fixedStats.defences()) {
-            tooltips.add(Component.literal(defenseValue.key().getSymbol() + " "
-                            + defenseValue.key().getDisplayName())
-                    .withStyle(defenseValue.key().getColorCode())
-                    .append(Component.literal(" Defence: " + StringUtils.toSignedString(defenseValue.value()))
-                            .withStyle(ChatFormatting.GRAY)));
-        }
-
-        // Damages
-        for (Pair<DamageType, RangedValue> damageValue : fixedStats.damages()) {
-            DamageType damageType = damageValue.key();
-            tooltips.add(Component.literal(damageType.getSymbol() + " " + damageType.getDisplayName())
-                    .withStyle(damageType.getColorCode())
-                    .append(Component.literal(" Damage: " + damageValue.value().asString())
-                            .withStyle(damageType.getColorCode())));
-
-            // : ChatFormatting.GRAY)); // neutral is all gold ???
-        }
-
-        if (!fixedStats.damages().isEmpty()) {
-            tooltips.add(Component.literal("Average DPS: ???"));
-        }
-        tooltips.add(Component.literal(""));
-
-        return new FixedTB(tooltips);
-    }
-
-    public static class FixedTB extends GearTooltipBuilder {
-        private List<Component> tooltip;
-
-        public FixedTB(List<Component> tooltip) {
-            this.tooltip = tooltip;
-        }
-
-        @Override
-        public List<Component> getTooltipLines(IdentificationPresentationStyle style) {
-            return tooltip;
-        }
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearInfo gearInfo, GearItem gearItem) {
@@ -395,29 +328,12 @@ public class GearTooltipBuilder {
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
-        //     List<Component> tooltips = middleTooltipCache.get(style);
-        //        if (tooltips != null) return tooltips;
+        List<Component> tooltips = middleTooltipCache.get(style);
+        if (tooltips != null) return tooltips;
 
-        List<Component> tooltips;
         tooltips = buildMiddleTooltipNew(style);
-        //     middleTooltipCache.put(style, tooltips);
+        middleTooltipCache.put(style, tooltips);
         return tooltips;
-    }
-
-    private List<Component> buildTopTooltipNew(IdentificationPresentationStyle style) {
-        List<Component> allStatLines = new ArrayList<>();
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(this.gearInfo.name());
-
-        List<Pair<Element, Integer>> defences = gearInfo.fixedStats().defences();
-        for (Element element : Element.values()) {
-            Pair<Element, Integer> defenceValue = getElementDefence(element, defences);
-            if (defenceValue == null) continue;
-
-            Component line = buildIdLoreLineDefenceNew(style.decorations(), defenceValue);
-            allStatLines.add(line);
-        }
-
-        return allStatLines;
     }
 
     private List<Component> buildMiddleTooltipNew(IdentificationPresentationStyle style) {
@@ -428,7 +344,7 @@ public class GearTooltipBuilder {
         GearInfo gearInfo = Models.GearInfo.getGearInfo(this.gearInfo.name());
 
         List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
-        for (Skill skill : getSkillOrder()) {
+        for (Skill skill : Skill.getGearSkillOrder()) {
             Pair<Skill, Integer> skillBonusValue = getSkillBonuses(skill, skillBonuses);
             if (skillBonusValue == null) continue;
 
@@ -453,16 +369,13 @@ public class GearTooltipBuilder {
             Component line;
             if (gearInstance != null) {
                 // Put in actual value
-                StatActualValue statActualValue = getStatOfKind(statType, stats);
+                StatActualValue statActualValue = gearInstance.getActualValue(statType);
                 if (statActualValue == null) continue;
 
                 line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
             } else {
                 // Put in range of possible values
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                if (possibleValues == null) {
-                    System.out.println("wtf");
-                }
                 line = buildIdLoreLineRangedNew(gearInfo, style.decorations(), possibleValues);
             }
             allStatLines.add(line);
@@ -482,34 +395,10 @@ public class GearTooltipBuilder {
         return order;
     }
 
-    private List<Skill> getSkillOrder() {
-        return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
-    }
-
     private Pair<Skill, Integer> getSkillBonuses(Skill skill, List<Pair<Skill, Integer>> skillBonuses) {
         for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
             if (skillBonusValue.key() == skill) {
                 return skillBonusValue;
-            }
-        }
-
-        return null;
-    }
-
-    private Pair<Element, Integer> getElementDefence(Element element, List<Pair<Element, Integer>> defences) {
-        for (Pair<Element, Integer> defenceValue : defences) {
-            if (defenceValue.key() == element) {
-                return defenceValue;
-            }
-        }
-
-        return null;
-    }
-
-    private StatActualValue getStatOfKind(StatType statKind, List<StatActualValue> stats) {
-        for (StatActualValue stat : stats) {
-            if (stat.stat().equals(statKind)) {
-                return stat;
             }
         }
 
@@ -526,16 +415,6 @@ public class GearTooltipBuilder {
         return baseComponent;
     }
 
-    private Component buildIdLoreLineDefenceNew(
-            IdentificationDecorations decorations, Pair<Element, Integer> gearIdentification) {
-        String inGameName = gearIdentification.key().getDisplayName() + " Defence";
-        int value = gearIdentification.value();
-        StatUnit unitType = StatUnit.RAW;
-        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
-        // FIXME: for now, just do baseComponent
-        return baseComponent;
-    }
-
     private Component buildIdLoreLineRangedNew(
             GearInfo gearInfo, IdentificationDecorations decorations, StatPossibleValues possibleValues) {
         String inGameName = possibleValues.stat().getDisplayName();
@@ -545,38 +424,35 @@ public class GearTooltipBuilder {
         MutableComponent baseComponent =
                 buildBaseComponentRangedNew(inGameName, possibleValues.range(), unitType, invert);
         baseComponent.append(" #");
-        // FIXME: for now, just do baseComponent
         return baseComponent;
     }
 
     private Component buildIdLoreLineNew(
-            GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue statActualValue) {
-        String inGameName = statActualValue.stat().getDisplayName();
-        int value = statActualValue.value();
-        StatUnit unitType = statActualValue.stat().getUnit();
-        boolean invert = Models.Stat.isSpellStat(statActualValue.stat());
+            GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue actualValue) {
+        StatType statType = actualValue.stat();
+        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
         /*
         Note: negative values will never show stars!
         See https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
                  */
-        String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - statActualValue.stars()) : "";
+        String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - actualValue.stars()) : "";
 
-        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType, invert, starString);
+        MutableComponent baseComponent = buildBaseComponentNew(
+                statType.getDisplayName(), actualValue.value(), statType.getUnit(), statType.isInverted(), starString);
+
+        if (possibleValues.range().isFixed()) return baseComponent;
+
+        switch (decorations) {
+            case PERCENT -> appendPercentLoreLine(baseComponent, actualValue, possibleValues);
+            case RANGE -> appendRangeLoreLine(baseComponent, actualValue, possibleValues);
+            case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, actualValue, possibleValues);
+        }
+
+        // FIXME: at some point, remove marker
         baseComponent.append(" #");
-        // FIXME: for now, just do baseComponent
+
         return baseComponent;
-    }
-
-    private Component buildIdLoreLine(IdentificationDecorations decorations, GearIdentificationContainer idContainer) {
-        MutableComponent baseComponent = buildBaseComponent(idContainer);
-        if (idContainer.idProfile().hasConstantValue()) return baseComponent;
-
-        return switch (decorations) {
-            case PERCENT -> appendPercentLoreLine(baseComponent, idContainer);
-            case RANGE -> appendRangeLoreLine(baseComponent, idContainer);
-            case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, idContainer);
-        };
     }
 
     private MutableComponent buildBaseComponentRangedNew(
@@ -622,43 +498,13 @@ public class GearTooltipBuilder {
         return buildBaseComponentNew(inGameName, value, unitType, false, "");
     }
 
-    private MutableComponent buildBaseComponent(GearIdentificationContainer idContainer) {
-        boolean isInverted = idContainer.idProfile() != null
-                ? idContainer.idProfile().isInverted()
-                : Models.GearProfiles.getIdentificationOrderer().isInverted(idContainer.shortIdName());
-
-        IdentificationModifier type = idContainer.idProfile() != null
-                ? idContainer.idProfile().getType()
-                : IdentificationProfile.getTypeFromName(idContainer.shortIdName());
-        if (type == null) return null; // not a valid id
-
-        String unit = type.getInGame(idContainer.shortIdName());
-
-        int value = idContainer.value();
-        MutableComponent baseComponent = Component.literal("");
-
-        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
-        statInfo.setStyle(Style.EMPTY.withColor(isInverted ^ (value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        baseComponent.append(statInfo);
-
-        if (ItemStatInfoFeature.INSTANCE.showStars)
-            baseComponent.append(
-                    Component.literal("***".substring(3 - idContainer.stars())).withStyle(ChatFormatting.DARK_GREEN));
-
-        baseComponent.append(Component.literal(" " + idContainer.inGameIdName()).withStyle(ChatFormatting.GRAY));
-
-        return baseComponent;
-    }
-
-    private Component appendPercentLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
-        IdentificationProfile idProfile = idContainer.idProfile();
-
+    private Component appendPercentLoreLine(
+            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
         // calculate percent/range/reroll chances, append to lines
-        int min = idProfile.getMin();
-        int max = idProfile.getMax();
+        int min = possibleValues.range().low();
+        int max = possibleValues.range().high();
 
-        float percentage = MathUtils.inverseLerp(min, max, idContainer.value()) * 100;
+        float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
         MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
                 percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
 
@@ -666,12 +512,11 @@ public class GearTooltipBuilder {
         return baseComponent;
     }
 
-    private Component appendRangeLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
-        IdentificationProfile idProfile = idContainer.idProfile();
-
+    private Component appendRangeLoreLine(
+            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
         // calculate percent/range/reroll chances, append to lines
-        int min = idProfile.getMin();
-        int max = idProfile.getMax();
+        int min = possibleValues.range().low();
+        int max = possibleValues.range().high();
 
         MutableComponent rangeTextComponent = Component.literal(" [")
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
@@ -683,11 +528,9 @@ public class GearTooltipBuilder {
         return baseComponent;
     }
 
-    private Component appendRerollLoreLine(MutableComponent baseComponent, GearIdentificationContainer idContainer) {
-        IdentificationProfile idProfile = idContainer.idProfile();
-
-        ReidentificationChances chances =
-                ReidentificationChances.calculateChances(idProfile, idContainer.value(), idContainer.stars());
+    private Component appendRerollLoreLine(
+            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
+        RecollCalculator chances = RecollCalculator.calculateChances(possibleValues, actualValue);
 
         MutableComponent rerollChancesComponent = Component.literal(
                         String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))

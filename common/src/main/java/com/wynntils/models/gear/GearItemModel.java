@@ -163,10 +163,6 @@ public final class GearItemModel extends Model {
         return itemName.startsWith(UNIDENTIFIED_PREFIX);
     }
 
-    public String getLookupName(String itemName) {
-        return itemName.startsWith(UNIDENTIFIED_PREFIX) ? itemName.substring(UNIDENTIFIED_PREFIX.length()) : itemName;
-    }
-
     public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
         // attempt to parse item itemData
         JsonObject itemData;

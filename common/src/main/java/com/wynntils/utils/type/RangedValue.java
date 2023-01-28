@@ -19,4 +19,8 @@ public record RangedValue(int low, int high) {
     public String asString() {
         return low + "-" + high;
     }
+
+    public boolean isFixed() {
+        return low == high;
+    }
 }

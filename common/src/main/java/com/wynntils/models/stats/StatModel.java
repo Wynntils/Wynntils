@@ -134,11 +134,6 @@ public final class StatModel extends Model {
         return statTypeRegistry;
     }
 
-    public boolean isSpellStat(StatType stat) {
-        // FIXME: Not very elegant...
-        return stat.getApiName().startsWith("spellCost");
-    }
-
     public StatType fromDisplayName(String displayName, String unit) {
         String lookupName = displayName + (unit == null ? "" : unit);
         return statLookup.get(lookupName);
