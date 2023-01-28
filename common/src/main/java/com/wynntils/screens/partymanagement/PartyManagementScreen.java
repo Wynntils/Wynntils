@@ -7,7 +7,6 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.PartyPlayer;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayer;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -19,7 +18,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
@@ -32,6 +30,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
+    private static final int TOTAL_WIDTH = 344;
+    private static final int X_START = TOTAL_WIDTH / 2;
+
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget inviteInput;
@@ -43,9 +44,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private final List<Button> promoteButtons = new ArrayList<>();
     private final List<Button> kickButtons = new ArrayList<>();
     private final List<Button> inviteButtons = new ArrayList<>();
-
-    private final int totalWidth = 344;
-    private final int xStart = totalWidth / 2;
 
     private final Set<String> offlineMembers = new HashSet<>();
     private final List<String> suggestedPlayers = new ArrayList<>();
@@ -62,13 +60,13 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     public void init() {
         // region Invite input and button
         this.addRenderableWidget(
-                inviteInput = new TextInputBoxWidget(this.width / 2 - xStart, this.height / 2 - 200, 300, 20, null, this, inviteInput));
+                inviteInput = new TextInputBoxWidget(this.width / 2 - X_START, this.height / 2 - 200, 300, 20, null, this, inviteInput));
 
         this.addRenderableWidget(
                 inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                 (button) -> inviteFromField())
-                        .pos(this.width / 2 - (xStart - totalWidth + 40), this.height / 2 - 200)
+                        .pos(this.width / 2 - (X_START - TOTAL_WIDTH + 40), this.height / 2 - 200)
                         .size(40, 20)
                         .build());
         // endregion
@@ -78,28 +76,28 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.refreshButton").withStyle(ChatFormatting.GREEN),
                 (button) -> refreshParty())
-                        .pos(this.width / 2 - xStart, this.height / 2 - 176)
+                        .pos(this.width / 2 - X_START, this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         this.addRenderableWidget(
                 kickOfflineButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton").withStyle(ChatFormatting.RED),
                 (button) -> kickOffline())
-                        .pos(this.width / 2 - (xStart - 87), this.height / 2 - 176)
+                        .pos(this.width / 2 - (X_START - 87), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         this.addRenderableWidget(
                 createPartyButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.createPartyButton"),
                 (button) -> createParty())
-                        .pos(this.width / 2 - (xStart - 174), this.height / 2 - 176)
+                        .pos(this.width / 2 - (X_START - 174), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         this.addRenderableWidget(
                 leavePartyButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.leavePartyButton").withStyle(ChatFormatting.RED),
                 (button) -> leaveParty())
-                        .pos(this.width / 2 - (xStart - 261), this.height / 2 - 176)
+                        .pos(this.width / 2 - (X_START - 261), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         // endregion
@@ -124,7 +122,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1"),
-                this.width / 2 - xStart,
+                this.width / 2 - X_START,
                 this.height / 2 - 206,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -133,7 +131,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
-                this.width / 2 - xStart + 77,
+                this.width / 2 - X_START + 77,
                 this.height / 2 - 206,
                 CommonColors.LIGHT_GRAY,
                 HorizontalAlignment.Left,
@@ -142,11 +140,11 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Party list headers
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - xStart, this.height / 2 - 140, 0, totalWidth, 1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - X_START, this.height / 2 - 140, 0, TOTAL_WIDTH, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.head"),
-                this.width / 2 - xStart,
+                this.width / 2 - X_START,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -155,7 +153,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.name"),
-                this.width / 2 - xStart + 40,
+                this.width / 2 - X_START + 40,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -164,7 +162,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.promote"),
-                this.width / 2 - xStart + 249,
+                this.width / 2 - X_START + 249,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -173,7 +171,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.kick"),
-                this.width / 2 - xStart + 312,
+                this.width / 2 - X_START + 312,
                 this.height / 2 - 144,
                 CommonColors.WHITE,
                 HorizontalAlignment.Left,
@@ -187,7 +185,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             if (playerName == null) continue;
 
             this.addRenderableWidget(new PartyPlayer(
-                    this.width / 2 - xStart + 4,
+                    this.width / 2 - X_START + 4,
                     this.height / 2 - 125 + i * 20 - 10,
                     200,
                     20,
@@ -198,7 +196,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Suggestion list headers
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, totalWidth / 2, 1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, TOTAL_WIDTH / 2, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.head"),
