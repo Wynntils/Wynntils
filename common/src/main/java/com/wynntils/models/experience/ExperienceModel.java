@@ -10,6 +10,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.experience.event.ExperienceGainEvent;
+import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,12 +21,38 @@ public class ExperienceModel extends Model {
     private float lastTickXp = 0;
     private int trackedLevel = 0;
 
-    public ExperienceModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    private boolean firstJoinHappened = false;
+
+    public ExperienceModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
+        super(List.of(characterModel, worldStateModel));
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() != WorldState.WORLD) {
+            firstJoinHappened = false;
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onXpChange(SetXpEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
+        // We don't want to track XP before we've even got a packet to set our level
+        if (Models.Character.getXpLevel() == 0) return;
+
+        // On first world join, we get all our current XP points (the currently gained amount for the next level), but
+        // we only care about actual gains
+        if (!firstJoinHappened) {
+            lastTickXp = Models.Character.getCurrentXp();
+            firstJoinHappened = true;
+            return;
+        }
+
+        float newTickXp = Models.Character.getCurrentXp();
+
+        if (newTickXp == lastTickXp) return;
+
         int newLevel = Models.Character.getXpLevel();
 
         if (trackedLevel == 0) {
@@ -35,10 +64,6 @@ public class ExperienceModel extends Model {
             trackedLevel = newLevel;
             lastTickXp = 0;
         }
-
-        float newTickXp = Models.Character.getCurrentXp();
-
-        if (newTickXp == lastTickXp) return;
 
         int neededXp = Models.Character.getXpPointsNeededToLevelUp();
 

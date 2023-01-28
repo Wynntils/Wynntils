@@ -69,5 +69,5 @@ public final class Models {
     public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final HorseModel Horse = new HorseModel(Item);
-    public static final ExperienceModel Experience = new ExperienceModel(Character);
+    public static final ExperienceModel Experience = new ExperienceModel(Character, WorldState);
 }
