@@ -24,11 +24,12 @@ public class RecollCalculator {
 
     public static RecollCalculator calculateChances(
             StatPossibleValues possibleValues, StatActualValue actualValue) {
-        boolean isInverted = possibleValues.stat().isInverted();
+        boolean isInverted = possibleValues.stat().showAsInverted();
         int baseValue = possibleValues.baseValue();
         // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
         // that some items that have had its stats shifted from positive to negative to
         // break the bounds
+        // FIXME: This is probably completely broken. Rewrite!!!
         if (actualValue.value() > possibleValues.range().high()) {
             return new RecollCalculator(possibleValues, 1d, 0d, 0d).flipIf(isInverted, possibleValues);
         } else if (actualValue.value() < possibleValues.range().low()) {

@@ -43,7 +43,7 @@ public abstract class StatType {
         return unit;
     }
 
-    public boolean isInverted() {
+    public boolean showAsInverted() {
         return false;
     }
 

@@ -41,15 +41,15 @@ public class GearUtils {
         } else {
             if (baseValue > 0) {
                 // Between 30% and 130% of base value, always at least 1
-                int min = Math.max((int) Math.round(baseValue * 0.3), 1);
-                int max = (int) Math.round(baseValue * 1.3);
-                return RangedValue.of(min, max);
+                int low = Math.max((int) Math.round(baseValue * 0.3), 1);
+                int high = (int) Math.round(baseValue * 1.3);
+                return RangedValue.of(low, high);
             } else {
                 // Between 70% and 130% of base value, always at most -1
                 // Round ties towards positive infinity (confirmed on Wynncraft)
-                int min = (int) Math.round(baseValue * 1.3);
-                int max = Math.min((int) Math.round(baseValue * 0.7), -1);
-                return RangedValue.of(min, max);
+                int low = (int) Math.round(baseValue * 1.3);
+                int high = Math.min((int) Math.round(baseValue * 0.7), -1);
+                return RangedValue.of(low, high);
             }
         }
     }
@@ -62,7 +62,7 @@ public class GearUtils {
 
     public static GearMaterial getItemFromCodeAndDamage(int itemTypeCode, int damageCode) {
         String itemId;
-        if (itemTypeCode == 392 && damageCode == 2) {
+        if (itemTypeCode == 397 && damageCode == 2) {
             // Special case for Mama Zomble's memory
             itemId = "zombie_head";
         } else {

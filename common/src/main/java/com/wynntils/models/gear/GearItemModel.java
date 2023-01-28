@@ -258,6 +258,7 @@ public final class GearItemModel extends Model {
 
                 // id value
                 int encodedValue = ids[counter] / 4;
+                // FIXME: I have probably broken the protocol...
                 if (Math.abs(status.baseValue()) > 100) {
                     // using bigdecimal here for precision when rounding
                     value = new BigDecimal(encodedValue + 30)
@@ -267,7 +268,7 @@ public final class GearItemModel extends Model {
                             .intValue();
                 } else {
                     // min/max must be flipped for inverted IDs due to encoding
-                    value = statType.isInverted()
+                    value = statType.showAsInverted()
                             ? encodedValue + status.range().high()
                             : encodedValue + status.range().low();
                 }
@@ -351,8 +352,9 @@ public final class GearItemModel extends Model {
 
             int shiftedValue;
 
+            // FIXME: I have probably broken the protocol...
             // min/max must be flipped for inverted IDs to avoid negative values
-            shiftedValue = statType.isInverted()
+            shiftedValue = statType.showAsInverted()
                     ? actualValue.value() - possibleValues.range().high()
                     : actualValue.value() - possibleValues.range().low();
 

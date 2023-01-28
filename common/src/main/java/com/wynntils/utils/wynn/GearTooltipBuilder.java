@@ -4,12 +4,12 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.gearinfo.GearInfo;
 import com.wynntils.models.gearinfo.GearRequirements;
 import com.wynntils.models.gearinfo.type.GearInstance;
@@ -17,6 +17,7 @@ import com.wynntils.models.gearinfo.type.GearMajorId;
 import com.wynntils.models.gearinfo.type.GearRestrictions;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -53,7 +54,6 @@ public final class GearTooltipBuilder {
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
     private static final Pattern RANGE_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
-
 
     private GearInfo gearInfo;
     private GearInstance gearInstance;
@@ -334,15 +334,16 @@ public final class GearTooltipBuilder {
     }
 
     private List<Component> getMiddleTooltip(IdentificationPresentationStyle style) {
-//        List<Component> tooltips = middleTooltipCache.get(style);
- //       if (tooltips != null) return tooltips;
+        // FIXME: This is removed for testing.
+        //        List<Component> tooltips = middleTooltipCache.get(style);
+        //       if (tooltips != null) return tooltips;
         List<Component> tooltips;
-        tooltips = buildMiddleTooltipNew(style);
-     //   middleTooltipCache.put(style, tooltips);
+        tooltips = buildMiddleTooltip(style);
+        //   middleTooltipCache.put(style, tooltips);
         return tooltips;
     }
 
-    private List<Component> buildMiddleTooltipNew(IdentificationPresentationStyle style) {
+    private List<Component> buildMiddleTooltip(IdentificationPresentationStyle style) {
         List<Component> allStatLines = new ArrayList<>();
         GearInstance gearInstance = gearItem == null ? null : gearItem.getGearInstance();
         List<StatActualValue> stats = gearInstance != null ? gearInstance.getIdentifications() : List.of();
@@ -354,7 +355,8 @@ public final class GearTooltipBuilder {
             Pair<Skill, Integer> skillBonusValue = getSkillBonuses(skill, skillBonuses);
             if (skillBonusValue == null) continue;
 
-            Component line = buildIdLoreLineSkillBonusNew(style.decorations(), skillBonusValue);
+            Component line = buildBaseComponent(
+                    skillBonusValue.key().getDisplayName(), skillBonusValue.value(), StatUnit.RAW, false, "");
             allStatLines.add(line);
         }
         if (!skillBonuses.isEmpty()) {
@@ -383,13 +385,16 @@ public final class GearTooltipBuilder {
             if (gearInstance != null) {
                 // Put in actual value
                 StatActualValue statActualValue = gearInstance.getActualValue(statType);
-                if (statActualValue == null) continue;
+                if (statActualValue == null) {
+                    WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
+                    continue;
+                }
 
-                line = buildIdLoreLineNew(gearInfo, style.decorations(), statActualValue);
+                line = buildIdLoreLine(gearInfo, style.decorations(), statActualValue);
             } else {
                 // Put in range of possible values
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                line = buildIdLoreLineRangedNew(gearInfo, style.decorations(), possibleValues);
+                line = buildIdLoreLineRanged(gearInfo, style.decorations(), possibleValues);
             }
             allStatLines.add(line);
             delimiterNeeded = true;
@@ -419,42 +424,70 @@ public final class GearTooltipBuilder {
         return null;
     }
 
-    private Component buildIdLoreLineSkillBonusNew(
-            IdentificationDecorations decorations, Pair<Skill, Integer> skillBonus) {
-        String inGameName = skillBonus.key().getDisplayName();
-        int value = skillBonus.value();
-        StatUnit unitType = StatUnit.RAW;
-        MutableComponent baseComponent = buildBaseComponentNew(inGameName, value, unitType);
-
-        return baseComponent;
-    }
-
-    private Component buildIdLoreLineRangedNew(
+    private Component buildIdLoreLineRanged(
             GearInfo gearInfo, IdentificationDecorations decorations, StatPossibleValues possibleValues) {
         String inGameName = possibleValues.stat().getDisplayName();
         StatUnit unitType = possibleValues.stat().getUnit();
-        boolean invert = possibleValues.stat().isInverted();
+        boolean invert = possibleValues.stat().showAsInverted();
 
-        MutableComponent baseComponent =
-                buildBaseComponentRangedNew(inGameName, possibleValues.range(), unitType, invert);
+        RangedValue value = possibleValues.range();
+        String unit = unitType.getDisplayName();
+        // Use value.low as representative; assume both high and low are either < or > 0.
+        boolean isGood = value.low() > 0;
+        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+
+        MutableComponent baseComponent1 = Component.literal("");
+
+        // FIXME: make config
+        boolean showBestValueAlwaysLast = true; // false is vanilla behavior
+
+        int first;
+        int last;
+        if (showBestValueAlwaysLast) {
+            first = value.low();
+            last = value.high();
+        } else {
+            // Emulate Wynncraft behavior
+            if (isGood) {
+                first = value.low();
+                last = value.high();
+            } else {
+                // Show the value closest to zero first
+                first = value.high();
+                last = value.low();
+            }
+        }
+        if (possibleValues.stat().showAsInverted()) {
+            first = -first;
+            last = -last;
+        }
+        baseComponent1.append(
+                Component.literal(StringUtils.toSignedString(first)).withStyle(colorCode));
+        baseComponent1.append(Component.literal(" to ").withStyle(colorCodeDark));
+        baseComponent1.append(Component.literal(last + unit).withStyle(colorCode));
+
+        baseComponent1.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+
+        MutableComponent baseComponent = baseComponent1;
         baseComponent.append(" #");
         return baseComponent;
     }
 
-    private Component buildIdLoreLineNew(
+    /*
+    Note: negative values will never show stars!
+    See https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
+             */
+
+    private Component buildIdLoreLine(
             GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue actualValue) {
         StatType statType = actualValue.stat();
-        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-
-        /*
-        Note: negative values will never show stars!
-        See https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
-                 */
         String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - actualValue.stars()) : "";
 
-        MutableComponent baseComponent = buildBaseComponentNew(
-                statType.getDisplayName(), actualValue.value(), statType.getUnit(), statType.isInverted(), starString);
+        MutableComponent baseComponent = buildBaseComponent(
+                statType.getDisplayName(), actualValue.value(), statType.getUnit(), statType.showAsInverted(), starString);
 
+        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
         if (possibleValues.range().isFixed()) return baseComponent;
 
         switch (decorations) {
@@ -469,56 +502,16 @@ public final class GearTooltipBuilder {
         return baseComponent;
     }
 
-    private MutableComponent buildBaseComponentRangedNew(
-            String inGameName, RangedValue value, StatUnit unitType, boolean invert) {
-        String unit = unitType.getDisplayName();
-        // Use value.low as representative; assume both high and low are either < or > 0.
-        boolean isGood = invert ? (value.low() < 0) : (value.low() > 0);
-        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-
-        MutableComponent baseComponent = Component.literal("");
-
-        // FIXME: make config
-        // FIXME: check with spell cost
-        // FIXME: Range should always be "low" is worst and "high" is best.
-        boolean showBestValueLast = true; // false is vanilla behavior
-        if (showBestValueLast) {
-            if (invert) {
-                int first = value.high();
-                int last = value.low();
-            } else {
-                int first = value.low();
-                int last = value.high();
-            }
-        } else {
-            // Emulate Wynncraft behavior
-            if (value.low() < 0) {
-                // Show the value closest to zero first
-                int first = value.high();
-                int last = value.low();
-            } else {
-                int first = value.low();
-                int last = value.high();
-            }
-        }
-        baseComponent.append(Component.literal(StringUtils.toSignedString(value.low())).withStyle(colorCode));
-        baseComponent.append(Component.literal(" to ").withStyle(colorCodeDark));
-        baseComponent.append(Component.literal(value.high() + unit).withStyle(colorCode));
-
-        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
-
-        return baseComponent;
-    }
-
-    private MutableComponent buildBaseComponentNew(
+    private MutableComponent buildBaseComponent(
             String inGameName, int value, StatUnit unitType, boolean invert, String stars) {
         String unit = unitType.getDisplayName();
 
         MutableComponent baseComponent = Component.literal("");
 
-        MutableComponent statInfo = Component.literal((value > 0 ? "+" : "") + value + unit);
-        boolean isGood = invert ? (value < 0) : (value > 0);
+        int valueToShow = invert ? -value : value;
+
+        MutableComponent statInfo = Component.literal(StringUtils.toSignedString(valueToShow) + unit);
+        boolean isGood = (value > 0);
         statInfo.setStyle(Style.EMPTY.withColor(isGood ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         baseComponent.append(statInfo);
@@ -530,10 +523,6 @@ public final class GearTooltipBuilder {
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
 
         return baseComponent;
-    }
-
-    private MutableComponent buildBaseComponentNew(String inGameName, int value, StatUnit unitType) {
-        return buildBaseComponentNew(inGameName, value, unitType, false, "");
     }
 
     private Component appendPercentLoreLine(
@@ -556,6 +545,11 @@ public final class GearTooltipBuilder {
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
+        if (possibleValues.stat().showAsInverted()) {
+            // Show values as negative
+            min = -min;
+            max = -max;
+        }
         MutableComponent rangeTextComponent = Component.literal(" [")
                 .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
                 .append("]")

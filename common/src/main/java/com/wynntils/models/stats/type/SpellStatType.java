@@ -4,13 +4,18 @@
  */
 package com.wynntils.models.stats.type;
 
+// FIXME: I need a better way to think about Spell Stats!!!
+// Can've have them multiply all over the place. They need aliases?
+// And a way to present themselves differently depending on item type.
 public final class SpellStatType extends StatType {
     public SpellStatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
         super(key, displayName, apiName, loreName, unit);
     }
 
     @Override
-    public boolean isInverted() {
+    public boolean showAsInverted() {
+        // Note that this is used only when displaying; internally the value is
+        // represented as positive (> 0).
         return true;
     }
 }

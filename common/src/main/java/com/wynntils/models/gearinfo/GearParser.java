@@ -86,6 +86,10 @@ public class GearParser {
                     // Skill point buff looks like stats when parsing
                     continue;
                 }
+                if (type.showAsInverted()) {
+                    // Spell Cost stats are shown as negative, but we store them as positive
+                    value = -value;
+                }
 
                 identifications.add(new StatActualValue(type, value, stars));
             }

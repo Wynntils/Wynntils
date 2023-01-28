@@ -294,6 +294,13 @@ class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
             int baseValue = statJson.getAsInt();
             if (baseValue == 0) continue;
 
+            // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
+            // and only converted to negative at display time.
+            if (stat.showAsInverted()) {
+                baseValue = -baseValue;
+            }
+            // Range will always be stored such as "low" means "worst possible value" and
+            // "high" means "best possible value".
             RangedValue range = GearUtils.calculateRange(baseValue, preIdentified);
             StatPossibleValues possibleValues = new StatPossibleValues(stat, range, baseValue, preIdentified);
             list.add(Pair.of(stat, possibleValues));

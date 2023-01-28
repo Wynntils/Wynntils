@@ -28,6 +28,9 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
             int spellNumber = spellType.getSpellNumber();
             String displayName = spellType.getName() + " Cost";
 
+            // FIXME
+            // THIS ORDER IS NOT THE SAME AS IN WYNNCRAFT!
+            // For spell costs, they have RAW, then PERCENT... *sigh*
             SpellStatType percentType = buildSpellStat(spellType, spellNumber, displayName, StatUnit.PERCENT, "");
             callback.accept(percentType);
 
