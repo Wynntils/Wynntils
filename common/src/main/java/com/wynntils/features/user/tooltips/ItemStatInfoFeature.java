@@ -13,6 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -89,18 +90,22 @@ public class ItemStatInfoFeature extends UserFeature {
             LinkedList<Component> tooltips =
                     new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle()));
 
-            if (gearItem.hasVariableIds()) {
-                if (perfect && gearItem.isPerfect()) {
-                    tooltips.removeFirst();
-                    tooltips.addFirst(getPerfectName(gearItem.getGearInfo().name()));
-                } else if (defective && gearItem.isDefective()) {
-                    tooltips.removeFirst();
-                    tooltips.addFirst(getDefectiveName(gearItem.getGearInfo().name()));
-                } else if (overallPercentageInName) {
-                    MutableComponent name = Component.literal(
-                                    tooltips.getFirst().getString())
-                            .withStyle(tooltips.getFirst().getStyle());
-                    name.append(getPercentageTextComponent(gearItem.getOverallPercentage()));
+            Optional<GearInstance> optionalGearInstance = gearItem.getGearInstance();
+            if (optionalGearInstance.isPresent()) {
+                GearInstance gearInstance = optionalGearInstance.get();
+
+                // Update name depending on overall percentage; this needs to be done every rendering
+                // for rainbow/defective effects
+                if (overallPercentageInName && gearInstance.hasVariableIds()) {
+                    MutableComponent name;
+                    if (perfect && gearInstance.isPerfect()) {
+                        name = getPerfectName(gearItem.getGearInfo().name());
+                    } else if (defective && gearInstance.isDefective()) {
+                        name = getDefectiveName(gearItem.getGearInfo().name());
+                    } else {
+                        name = tooltips.getFirst().copy();
+                        name.append(getPercentageTextComponent(gearInstance.getOverallPercentage()));
+                    }
                     tooltips.removeFirst();
                     tooltips.addFirst(name);
                 }

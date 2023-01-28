@@ -61,12 +61,13 @@ public final class GearTooltipBuilder {
     }
 
     public static GearTooltipBuilder fromGearItem(GearItem gearItem) {
-        return new GearTooltipBuilder(gearItem.getGearInfo(), gearItem.getGearInstance());
+        return new GearTooltipBuilder(
+                gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null));
     }
 
     public static GearTooltipBuilder fromItemStack(ItemStack itemStack, GearItem gearItem) {
         GearInfo gearInfo = gearItem.getGearInfo();
-        GearInstance gearInstance = gearItem.getGearInstance();
+        GearInstance gearInstance = gearItem.getGearInstance().orElse(null);
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         // Skip first line which contains name

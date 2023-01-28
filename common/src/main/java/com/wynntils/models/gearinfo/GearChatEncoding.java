@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gearinfo.type.GearInfo;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.ArrayUtils;
@@ -64,7 +66,12 @@ public class GearChatEncoding {
 
     public String toEncodedString(GearItem gearItem) {
         String itemName = gearItem.getGearInfo().name();
-        GearInstance gearInstance = gearItem.getGearInstance();
+        Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
+        if (gearInstanceOpt.isEmpty()) {
+            WynntilsMod.error("Internal error: toEncodedString called with unidentified gear");
+            return "";
+        }
+        GearInstance gearInstance = gearInstanceOpt.get();
 
         // We must use Legacy ordering for compatibility reasons
         List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getGearInfo(), StatListOrdering.LEGACY);
@@ -95,7 +102,7 @@ public class GearChatEncoding {
         }
 
         // powders
-        List<Powder> powders = gearItem.getPowders();
+        List<Powder> powders = gearInstance.powders();
         if (powders != null && !powders.isEmpty()) {
             encoded.append(SEPARATOR);
 
@@ -116,7 +123,7 @@ public class GearChatEncoding {
         }
 
         // rerolls
-        encoded.append(encodeNumber(gearItem.getRerolls()));
+        encoded.append(encodeNumber(gearInstance.rerolls()));
 
         encoded.append(END);
         return encoded.toString();
