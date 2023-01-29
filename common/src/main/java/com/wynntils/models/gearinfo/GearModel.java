@@ -23,10 +23,7 @@ Remaining issues:
 * GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
 *  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
 
-* TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
-* Move the reroll calculations and other calculations from util class into the model, perhaps
-*   a new GearCalculations utility class? instad of GearUtils
 
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!

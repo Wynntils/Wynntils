@@ -398,7 +398,7 @@ public class GearInfoRegistry {
                 }
                 // Range will always be stored such as "low" means "worst possible value" and
                 // "high" means "best possible value".
-                RangedValue range = GearUtils.calculateRange(baseValue, preIdentified);
+                RangedValue range = GearCalculator.calculateRange(baseValue, preIdentified);
                 StatPossibleValues possibleValues = new StatPossibleValues(stat, range, baseValue, preIdentified);
                 list.add(Pair.of(stat, possibleValues));
             }

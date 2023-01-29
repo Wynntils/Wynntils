@@ -6,9 +6,9 @@ package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
-import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -232,7 +232,8 @@ public final class GearTooltipVariableStats {
 
     private static MutableComponent getRerollSuffix(
             GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-        RecollCalculator chances = RecollCalculator.calculateChances(possibleValues, actualValue);
+        GearCalculator.RecollCalculator chances =
+                GearCalculator.RecollCalculator.calculateChances(possibleValues, actualValue);
 
         MutableComponent rerollChancesComponent = Component.literal(
                         String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))

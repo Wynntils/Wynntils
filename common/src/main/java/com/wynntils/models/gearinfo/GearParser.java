@@ -19,7 +19,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.wynn.GearUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -161,7 +160,7 @@ public class GearParser {
                     value = 1;
                 }
 
-                int stars = GearUtils.getStarsFromPercent(intPercent);
+                int stars = GearCalculator.getStarsFromPercent(intPercent);
                 // FIXME: Negative values should never show stars!
 
                 identifications.add(new StatActualValue(statType, value, stars));

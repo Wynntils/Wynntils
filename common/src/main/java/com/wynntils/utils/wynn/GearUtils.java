@@ -6,9 +6,6 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.gearinfo.type.GearMaterial;
-import com.wynntils.models.stats.type.StatActualValue;
-import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.utils.type.RangedValue;
 import java.util.Map;
 
 public class GearUtils {
@@ -33,33 +30,6 @@ public class GearUtils {
             "pumpkin" // Special items: Pumpkin Helmet
             );
 
-    public static RangedValue calculateRange(int baseValue, boolean preIdentified) {
-        // FIXME: How does this work for stats where a negative value is good? (like spell cost)
-        if (preIdentified) {
-            // This is actually a single, fixed value
-            return RangedValue.of(baseValue, baseValue);
-        } else {
-            if (baseValue > 0) {
-                // Between 30% and 130% of base value, always at least 1
-                int low = Math.max((int) Math.round(baseValue * 0.3), 1);
-                int high = (int) Math.round(baseValue * 1.3);
-                return RangedValue.of(low, high);
-            } else {
-                // Between 70% and 130% of base value, always at most -1
-                // Round ties towards positive infinity (confirmed on Wynncraft)
-                int low = (int) Math.round(baseValue * 1.3);
-                int high = Math.min((int) Math.round(baseValue * 0.7), -1);
-                return RangedValue.of(low, high);
-            }
-        }
-    }
-
-    // Calculate the range of possible values for the internal roll for this stat
-    public RangedValue calculateInternalRoll(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        // FIXME
-        return RangedValue.NONE;
-    }
-
     public static GearMaterial getItemFromCodeAndDamage(int itemTypeCode, int damageCode) {
         String itemId;
         if (itemTypeCode == 397 && damageCode == 2) {
@@ -75,21 +45,5 @@ public class GearUtils {
             }
         }
         return new GearMaterial(itemId, damageCode);
-    }
-
-    public static int getStarsFromPercent(int intPercent) {
-        // Star calculation reference, from salted:
-        // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
-        int stars;
-        if (intPercent < 101) {
-            stars = 0;
-        } else if (intPercent < 125) {
-            stars = 1;
-        } else if (intPercent < 130) {
-            stars = 2;
-        } else {
-            stars = 3;
-        }
-        return stars;
     }
 }
