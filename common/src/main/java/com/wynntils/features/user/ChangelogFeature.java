@@ -18,23 +18,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ChangelogFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        // if (event.isFirstJoinWorld()) {
-        //            ApiResponse response = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHANGELOG, Map.of("version",
-        // WynntilsMod.getVersion()));
-        ApiResponse response =
-                Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHANGELOG, Map.of("version", "v0.0.2-alpha.152"));
+        if (event.isFirstJoinWorld()) {
+            ApiResponse response = Managers.Net.callApi(
+                    UrlId.API_ATHENA_UPDATE_CHANGELOG, Map.of("version", WynntilsMod.getVersion()));
 
-        response.handleJsonObject(
-                jsonObject -> {
-                    String changelog = jsonObject.get("changelog").getAsString();
+            response.handleJsonObject(
+                    jsonObject -> {
+                        String changelog = jsonObject.get("changelog").getAsString();
 
-                    Managers.TickScheduler.scheduleNextTick(
-                            () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
-                },
-                throwable -> {
-                    WynntilsMod.warn("Could not get update changelog: ", throwable);
-                });
-
-        // }
+                        Managers.TickScheduler.scheduleNextTick(
+                                () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
+                    },
+                    throwable -> {
+                        WynntilsMod.warn("Could not get update changelog: ", throwable);
+                    });
+        }
     }
 }
