@@ -33,7 +33,7 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
     public ChangelogScreen(String changelog) {
         super(Component.translatable("screens.wynntils.changelog.name"));
 
-        this.changelog = changelog + "\n" + changelog + "\n" + changelog + "\n" + changelog;
+        this.changelog = changelog;
     }
 
     public static Screen create(String changelog) {
