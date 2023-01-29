@@ -133,6 +133,6 @@ public final class StringUtils {
     }
 
     public static String convertMarkdownToColorCode(String input) {
-        return ChatFormatting.RESET + input.replaceFirst("[# ]*", String.valueOf(ChatFormatting.BOLD));
+        return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
     }
 }
