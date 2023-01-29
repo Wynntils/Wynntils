@@ -5,14 +5,11 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.gear.GearIdentificationContainer;
 import com.wynntils.models.gear.profile.GearProfile;
 import com.wynntils.models.gear.profile.IdentificationProfile;
 import com.wynntils.models.gear.type.IdentificationModifier;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 public final class WynnItemUtils {
     /**
@@ -87,25 +83,5 @@ public final class WynnItemUtils {
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         return Models.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
-    }
-
-    public static GearTooltipVariableStats.IdentificationPresentationStyle getCurrentIdentificationStyle() {
-        GearTooltipVariableStats.IdentificationDecorations decorations;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.RANGE;
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.REROLL_CHANCE;
-        } else {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.PERCENT;
-        }
-
-        return new GearTooltipVariableStats.IdentificationPresentationStyle(
-                decorations,
-                ItemStatInfoFeature.INSTANCE.identificationsOrdering,
-                ItemStatInfoFeature.INSTANCE.groupIdentifications,
-                ItemStatInfoFeature.INSTANCE.showBestValueLastAlways,
-                ItemStatInfoFeature.INSTANCE.showStars,
-                ItemStatInfoFeature.INSTANCE.colorLerp,
-                ItemStatInfoFeature.INSTANCE.decimalPlaces);
     }
 }

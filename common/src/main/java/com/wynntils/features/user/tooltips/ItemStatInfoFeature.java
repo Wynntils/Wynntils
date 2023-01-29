@@ -13,6 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
@@ -21,7 +22,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -73,6 +73,26 @@ public class ItemStatInfoFeature extends UserFeature {
     @Config
     public boolean showBestValueLastAlways = true;
 
+    public static GearTooltipVariableStats.IdentificationPresentationStyle getCurrentIdentificationStyle() {
+        GearTooltipVariableStats.IdentificationDecorations decorations;
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            decorations = GearTooltipVariableStats.IdentificationDecorations.RANGE;
+        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+            decorations = GearTooltipVariableStats.IdentificationDecorations.REROLL_CHANCE;
+        } else {
+            decorations = GearTooltipVariableStats.IdentificationDecorations.PERCENT;
+        }
+
+        return new GearTooltipVariableStats.IdentificationPresentationStyle(
+                decorations,
+                INSTANCE.identificationsOrdering,
+                INSTANCE.groupIdentifications,
+                INSTANCE.showBestValueLastAlways,
+                INSTANCE.showStars,
+                INSTANCE.colorLerp,
+                INSTANCE.decimalPlaces);
+    }
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
@@ -90,8 +110,7 @@ public class ItemStatInfoFeature extends UserFeature {
                             () -> GearTooltipBuilder.fromItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
-            LinkedList<Component> tooltips =
-                    new LinkedList<>(builder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle()));
+            LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(getCurrentIdentificationStyle()));
 
             Optional<GearInstance> optionalGearInstance = gearItem.getGearInstance();
             if (optionalGearInstance.isPresent()) {

@@ -5,7 +5,6 @@
 package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
@@ -246,6 +245,11 @@ public final class GearTooltipVariableStats {
                         .withStyle(ChatFormatting.RED));
 
         return rerollChancesComponent;
+    }
+
+    public static IdentificationPresentationStyle getDefaulIdentificationStyle() {
+        return new IdentificationPresentationStyle(
+                IdentificationDecorations.PERCENT, StatListOrdering.DEFAULT, true, true, true, true, 1);
     }
 
     public enum IdentificationDecorations {

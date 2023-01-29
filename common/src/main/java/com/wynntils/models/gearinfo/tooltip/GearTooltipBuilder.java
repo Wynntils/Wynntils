@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.gearinfo.tooltip;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipBuilder {
+    private static final String UNIDENTIFIED_PREFIX = "Unidentified ";
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
@@ -32,6 +33,7 @@ public final class GearTooltipBuilder {
 
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
+    private final boolean hideUnidentified;
 
     private List<Component> topTooltip;
     private List<Component> bottomTooltip;
@@ -42,15 +44,21 @@ public final class GearTooltipBuilder {
     private GearTooltipBuilder(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
+        this.hideUnidentified = false;
 
         topTooltip = GearTooltipPreVariable.buildTooltip(gearInfo);
         bottomTooltip = GearTooltipPostVariable.buildTooltip(gearInfo, gearInstance);
     }
 
     private GearTooltipBuilder(
-            GearInfo gearInfo, GearInstance gearInstance, List<Component> topTooltip, List<Component> bottomTooltip) {
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            List<Component> topTooltip,
+            List<Component> bottomTooltip,
+            boolean hideUnidentified) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
+        this.hideUnidentified = hideUnidentified;
 
         this.topTooltip = topTooltip;
         this.bottomTooltip = bottomTooltip;
@@ -73,7 +81,8 @@ public final class GearTooltipBuilder {
         // Skip first line which contains name
         Pair<List<Component>, List<Component>> splittedLore = splitLore(tooltips.subList(1, tooltips.size()), gearInfo);
 
-        return new GearTooltipBuilder(gearInfo, gearInstance, splittedLore.a(), splittedLore.b());
+        boolean hideUnidentified = itemStack instanceof GuideItemStack;
+        return new GearTooltipBuilder(gearInfo, gearInstance, splittedLore.a(), splittedLore.b(), hideUnidentified);
     }
 
     public List<Component> getTooltipLines(GearTooltipVariableStats.IdentificationPresentationStyle style) {
@@ -166,7 +175,7 @@ public final class GearTooltipBuilder {
     }
 
     private Component getHoverName() {
-        String prefix = gearInstance == null ? Models.GearItem.UNIDENTIFIED_PREFIX : "";
+        String prefix = gearInstance == null && !hideUnidentified ? UNIDENTIFIED_PREFIX : "";
 
         return Component.literal(prefix + gearInfo.name())
                 .withStyle(gearInfo.tier().getChatFormatting());

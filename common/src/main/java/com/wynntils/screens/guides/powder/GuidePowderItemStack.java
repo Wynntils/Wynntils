@@ -6,6 +6,7 @@ package com.wynntils.screens.guides.powder;
 
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -25,12 +26,12 @@ public final class GuidePowderItemStack extends GuideItemStack {
 
     private final List<Component> generatedTooltip;
 
-    public GuidePowderItemStack(PowderProfile profile) {
-        super(getItemStack(profile));
+    public GuidePowderItemStack(PowderProfile powderProfile) {
+        super(getItemStack(powderProfile), new PowderItem(powderProfile));
 
-        this.element = profile.element();
-        this.tier = profile.tier();
-        this.powderProfile = profile;
+        this.element = powderProfile.element();
+        this.tier = powderProfile.tier();
+        this.powderProfile = powderProfile;
         this.generatedTooltip = generateLore();
     }
 

@@ -4,12 +4,15 @@
  */
 package com.wynntils.screens.guides.gear;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,7 +26,8 @@ public final class GuideGearItemStack extends GuideItemStack {
     private final GearInfo gearInfo;
 
     public GuideGearItemStack(GearInfo gearInfo) {
-        super(gearInfo.metaInfo().material().asItemStack());
+        super(gearInfo.metaInfo().material().asItemStack(), new GearItem(gearInfo, null));
+
         this.gearInfo = gearInfo;
         ItemStack itemStack = gearInfo.metaInfo().material().asItemStack();
 
@@ -37,7 +41,7 @@ public final class GuideGearItemStack extends GuideItemStack {
         name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
 
         this.generatedTooltip = GearTooltipBuilder.fromGearInfo(gearInfo)
-                .getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
+                .getTooltipLines(GearTooltipVariableStats.getDefaulIdentificationStyle());
     }
 
     @Override
@@ -47,7 +51,20 @@ public final class GuideGearItemStack extends GuideItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
-        return new ArrayList<>(generatedTooltip);
+        ArrayList<Component> tooltipLines = new ArrayList<>(generatedTooltip);
+
+        tooltipLines.add(Component.empty());
+        if (Models.Favorites.isFavorite(this)) {
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
+        tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
+                .withStyle(ChatFormatting.RED));
+
+        return tooltipLines;
     }
 
     public GearInfo getGearInfo() {

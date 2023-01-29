@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.emeraldpouch;
 
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
 
     public GuideEmeraldPouchItemStack(int tier) {
-        super(new ItemStack(Items.DIAMOND_AXE));
+        super(new ItemStack(Items.DIAMOND_AXE), new EmeraldPouchItem(tier, 0));
         this.setDamageValue(97);
 
         this.tier = tier;
