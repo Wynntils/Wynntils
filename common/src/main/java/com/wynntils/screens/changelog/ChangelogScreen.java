@@ -111,7 +111,7 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
                 .withTextShadow(TextShadow.OUTLINE);
 
         List<TextRenderTask> textRenderTasks = Arrays.stream(changelog.split("\n"))
-                .map(StringUtils::stripMarkdownStyling)
+                .map(StringUtils::convertMarkdownToColorCode)
                 .map(s -> new TextRenderTask(s, setting))
                 .toList();
 
