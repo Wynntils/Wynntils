@@ -20,6 +20,7 @@ public enum UrlId {
     API_ATHENA_AUTH_PUBLIC_KEY("apiAthenaAuthPublicKey"),
     API_ATHENA_AUTH_RESPONSE("apiAthenaAuthResponse"),
     API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
+    API_ATHENA_UPDATE_CHANGELOG("apiAthenaUpdateChangelog"),
     API_ATHENA_USER_INFO("apiAthenaUserInfo"),
     API_GOOGLE_TRANSLATION("apiGoogleTranslation"),
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),

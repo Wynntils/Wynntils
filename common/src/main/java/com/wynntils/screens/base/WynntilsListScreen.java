@@ -23,8 +23,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extends WynntilsMenuPagedScreenBase
-        implements TextboxScreen {
+public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends WynntilsMenuScreenBase
+        implements WynntilsPagedScreen, TextboxScreen {
     private double currentScroll = 0;
 
     protected int currentPage = 0;
@@ -42,7 +42,7 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
         this.addRenderableWidget(searchWidget);
     }
 
-    protected WynntilsMenuListScreen(Component component) {
+    protected WynntilsListScreen(Component component) {
         super(component);
 
         // Do not lose search info on re-init
@@ -70,6 +70,20 @@ public abstract class WynntilsMenuListScreen<E, B extends WynntilsButton> extend
                 }
             }
         }
+    }
+
+    protected void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        (currentPage) + " / " + (maxPage),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                        Texture.QUEST_BOOK_BACKGROUND.width(),
+                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        0,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.Center,
+                        TextShadow.NONE);
     }
 
     protected void renderNoElementsHelper(PoseStack poseStack, String key) {

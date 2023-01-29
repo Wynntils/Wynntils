@@ -12,7 +12,7 @@ import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.quests.type.QuestStatus;
-import com.wynntils.screens.base.WynntilsMenuListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -40,7 +40,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsQuestBookScreen extends WynntilsMenuListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton> {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),

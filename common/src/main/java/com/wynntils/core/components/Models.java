@@ -14,6 +14,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
+import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gearinfo.GearModel;
 import com.wynntils.models.horse.HorseModel;
@@ -39,7 +40,6 @@ import com.wynntils.models.worlds.WorldStateModel;
 public final class Models {
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
-    public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
@@ -56,6 +56,8 @@ public final class Models {
     public static final WorldStateModel WorldState = new WorldStateModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
+    public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
+    public static final CharacterModel Character = new CharacterModel(CombatXp);
     public static final GearModel Gear = new GearModel(Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
@@ -63,11 +65,11 @@ public final class Models {
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
     public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel(WorldState);
-    public static final QuestModel Quest = new QuestModel(Character);
+    public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);
-    public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
+    public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final HorseModel Horse = new HorseModel(Item);
 }

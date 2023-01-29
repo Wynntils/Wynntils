@@ -15,11 +15,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
-    private void setScreenPostPost(Screen screen, CallbackInfo ci) {
+    private void setScreenPost(Screen screen, CallbackInfo ci) {
         if (screen == null) {
             EventFactory.onScreenClose();
         } else {
-            EventFactory.onScreenOpened(screen);
+            EventFactory.onScreenOpenedPost(screen);
+        }
+    }
+
+    @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
+    private void setScreenPre(Screen screen, CallbackInfo ci) {
+        if (screen != null) {
+            if (EventFactory.onScreenOpenedPre(screen).isCanceled()) {
+                ci.cancel();
+            }
         }
     }
 
