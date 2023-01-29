@@ -39,7 +39,6 @@ import com.wynntils.models.worlds.WorldStateModel;
 public final class Models {
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
-    public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
@@ -55,6 +54,8 @@ public final class Models {
     public static final WorldStateModel WorldState = new WorldStateModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
+    public static final ExperienceModel Experience = new ExperienceModel(WorldState);
+    public static final CharacterModel Character = new CharacterModel(Experience);
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final ItemModel Item = new ItemModel(GearItem, GearProfiles, IngredientProfiles);
@@ -69,5 +70,4 @@ public final class Models {
     public static final DiscoveryModel Discovery = new DiscoveryModel(Character, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final HorseModel Horse = new HorseModel(Item);
-    public static final ExperienceModel Experience = new ExperienceModel(Character, WorldState);
 }

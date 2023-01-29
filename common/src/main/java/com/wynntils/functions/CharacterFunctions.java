@@ -159,7 +159,7 @@ public class CharacterFunctions {
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getXpLevel();
+            return Models.Experience.getXpLevel();
         }
 
         @Override
@@ -171,35 +171,35 @@ public class CharacterFunctions {
     public static class XpFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString((int) Models.Character.getCurrentXp());
+            return StringUtils.integerToShortString((int) Models.Experience.getCurrentXp());
         }
     }
 
     public static class XpRawFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Models.Character.getCurrentXp();
+            return Models.Experience.getCurrentXp();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString(Models.Character.getXpPointsNeededToLevelUp());
+            return StringUtils.integerToShortString(Models.Experience.getXpPointsNeededToLevelUp());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getXpPointsNeededToLevelUp();
+            return Models.Experience.getXpPointsNeededToLevelUp();
         }
     }
 
     public static class XpPctFunction extends Function<Float> {
         @Override
         public Float getValue(String argument) {
-            return Models.Character.getXpProgress() * 100.0f;
+            return Models.Experience.getXpProgress() * 100.0f;
         }
     }
 
