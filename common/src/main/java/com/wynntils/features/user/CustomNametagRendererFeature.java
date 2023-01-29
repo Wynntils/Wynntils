@@ -9,14 +9,13 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -100,14 +99,14 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static MutableComponent getItemComponent(ItemStack itemStack) {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
+        String itemName = Models.GearInfo.getTranslatedName(itemStack);
 
         if (itemName.contains("Crafted")) {
             return Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA);
         }
 
-        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
-        if (gearProfile == null) return null;
+        GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
+        if (gearInfo == null) return null;
 
         // this solves an unidentified item showcase exploit
         // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
@@ -115,11 +114,10 @@ public class CustomNametagRendererFeature extends UserFeature {
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6) {
             return Component.literal("Unidentified Item")
-                    .withStyle(gearProfile.getTier().getChatFormatting());
+                    .withStyle(gearInfo.tier().getChatFormatting());
         }
 
-        return Component.literal(gearProfile.getDisplayName())
-                .withStyle(gearProfile.getTier().getChatFormatting());
+        return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
     }
 
     private void addAccountTypeNametag(NametagRenderEvent event, List<CustomNametag> nametags) {

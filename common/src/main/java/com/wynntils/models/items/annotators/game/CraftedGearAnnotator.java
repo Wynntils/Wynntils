@@ -29,6 +29,8 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
+    public static final Pattern ID_NEW_PATTERN =
+            Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -60,7 +62,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
             // Look for identifications
             String formatId = ComponentUtils.getCoded(loreLine);
-            Matcher statMatcher = Models.GearItem.ID_NEW_PATTERN.matcher(formatId);
+            Matcher statMatcher = ID_NEW_PATTERN.matcher(formatId);
             if (statMatcher.matches()) {
                 int value = Integer.parseInt(statMatcher.group(2));
                 String unit = statMatcher.group(3);

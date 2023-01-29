@@ -18,7 +18,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +61,7 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
+        String itemName = Models.GearInfo.getTranslatedName(itemStack);
 
         // can't create lore on crafted items
         if (itemName.startsWith("Crafted")) {
