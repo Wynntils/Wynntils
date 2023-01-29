@@ -78,8 +78,8 @@ public final class IngredientProfilesModel extends Model {
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
 
-            invertedList =
-                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
+            invertedList = WynntilsMod.GSON.fromJson(
+                    json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
         });
     }
 

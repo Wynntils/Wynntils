@@ -38,6 +38,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.GearUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,10 @@ public class GearInfoRegistry {
     Map<String, GearInfo> gearInfoLookup = new HashMap<>();
 
     public GearInfoRegistry() {
+        loadRegistry();
+    }
+
+    public void reloadData() {
         loadRegistry();
     }
 
@@ -119,17 +124,22 @@ public class GearInfoRegistry {
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            JsonElement primaryName = json.get("name");
-            JsonElement secondaryName = json.get("displayName");
-            // Some names apparently has a random ֎ in them...
-            String name = (secondaryName == null ? primaryName : secondaryName)
-                    .getAsString()
-                    .replace("֎", "");
+            String primaryName = WynnUtils.normalizeBadString(json.get("name").getAsString());
+            String secondaryName = WynnUtils.normalizeBadString(JsonUtils.getNullableJsonString(json, "displayName"));
+
+            // After normalization, we can end up with the same name. Don't treat this as an altName
+            if (primaryName.equals(secondaryName)) {
+                secondaryName = "";
+            }
+
+            // The real name is the secondaryName if it exists. If so, the primary name is the altName
+            String name = secondaryName.isEmpty() ? primaryName : secondaryName;
+            String altName = secondaryName.isEmpty() ? null : primaryName;
+
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = json.get("sockets").getAsInt();
 
-            String altName = (secondaryName == null ? null : primaryName.getAsString());
             GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
@@ -266,8 +276,7 @@ public class GearInfoRegistry {
             String questName = JsonUtils.getNullableJsonString(json, "quest");
             if (questName == null) return Optional.empty();
 
-            // Apparently some quests got an extra "֎" added to the name
-            return Optional.of(questName.replace("֎", ""));
+            return Optional.of(WynnUtils.normalizeBadString(questName));
         }
 
         private FixedStats parseFixedStats(JsonObject json) {

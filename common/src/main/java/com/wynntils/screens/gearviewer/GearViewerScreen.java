@@ -18,6 +18,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,14 +62,14 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
             return itemStack;
         }
 
-        GearInfo gearInfo = Models.Gear.getGearInfoFromInternalName(gearName);
+        GearInfo gearInfo = Models.Gear.fromIngameName(gearName);
         if (gearInfo == null) {
             return itemStack;
         }

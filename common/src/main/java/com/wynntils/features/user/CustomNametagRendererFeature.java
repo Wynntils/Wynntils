@@ -18,6 +18,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,11 +100,11 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static MutableComponent getItemComponent(ItemStack itemStack) {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
-        GearInfo gearInfo = Models.Gear.getGearInfoFromInternalName(gearName);
+        GearInfo gearInfo = Models.Gear.fromIngameName(gearName);
         if (gearInfo == null) return null;
 
         return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());

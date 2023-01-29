@@ -50,6 +50,10 @@ public class ItemGuessProfile {
         tryLoadItemGuesses();
     }
 
+    public static ItemGuessProfile getItemGuess(String levelRange) {
+        return itemGuesses.get(levelRange);
+    }
+
     private static void tryLoadItemGuesses() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_GUESSES);
         dl.handleReader(reader -> {

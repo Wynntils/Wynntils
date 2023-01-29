@@ -19,10 +19,8 @@ import net.minecraft.world.item.ItemStack;
 /*
 FIXME list:
 Remaining issues:
-* Tome and Charm in GearItemModel...
 
-* GearInfoModel.getGearInfoFromInternalName! - we should strip "֎" earlier. "ingame"
-* Registry, items like "Coconut֎" have the same displayName after cleaning, fix this
+* GearInfoModel.getGearInfoFromInternalName! . "ingame"
 * TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
 * Tooltip -- split lore must be simplified!
 * -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
@@ -45,7 +43,7 @@ Remaining issues:
 * tooltip variable needs cleaning in how we build identified/unidentified lines
 * GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
 *  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
-* ItemModel has bad dependencies:GearItem for tome and charm, GearProfiles for gear box possibilities
+* ItemModel has bad dependencies: GearProfiles for gear box possibilities
 * Can we get a better name for ingame-id than "lore"? "ingameId" perhaps!!!
 * All other Guide stacks should also use the vanilla tooltip rendering!
 
@@ -89,6 +87,10 @@ public final class GearModel extends Model {
         ItemGuessProfile.init();
     }
 
+    public void reloadData() {
+        gearInfoRegistry.reloadData();
+    }
+
     public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
         return gearParser.fromItemStack(gearInfo, itemStack);
     }
@@ -121,13 +123,13 @@ public final class GearModel extends Model {
         return gearInfoRegistry.gearInfoLookup.get(gearName);
     }
 
-    public GearInfo getGearInfoFromInternalName(String gearName) {
+    public GearInfo fromIngameName(String gearName) {
         // FIXME!!! Also check alternative name...
-        String itemName = Models.GearProfiles.getTranslatedReference(gearName).replace("֎", "");
+        String itemName = Models.GearProfiles.getTranslatedReference(gearName);
         return gearInfoRegistry.gearInfoLookup.get(itemName);
     }
 
     public ItemGuessProfile getItemGuess(String levelRange) {
-        return Models.GearProfiles.getItemGuess(levelRange);
+        return ItemGuessProfile.getItemGuess(levelRange);
     }
 }
