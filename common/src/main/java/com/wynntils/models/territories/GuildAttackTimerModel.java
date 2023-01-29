@@ -30,6 +30,8 @@ public final class GuildAttackTimerModel extends Model {
     private List<TerritoryAttackTimer> attackTimers = List.of();
 
     public GuildAttackTimerModel() {
+        super(List.of());
+
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
     }
 

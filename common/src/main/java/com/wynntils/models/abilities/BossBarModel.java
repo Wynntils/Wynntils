@@ -30,6 +30,8 @@ public final class BossBarModel extends Model {
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
 
     public BossBarModel() {
+        super(List.of());
+
         ALL_BARS.forEach(Handlers.BossBar::registerBar);
     }
 }

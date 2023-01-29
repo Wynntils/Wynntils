@@ -14,6 +14,7 @@ import com.wynntils.models.ingredients.profile.IngredientProfile;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 
@@ -28,6 +29,8 @@ public final class IngredientProfilesModel extends Model {
     private Map<String, String> ingredientHeadTextures = Map.of();
 
     public IngredientProfilesModel() {
+        super(List.of());
+
         loadData();
     }
 

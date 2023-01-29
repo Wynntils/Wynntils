@@ -11,12 +11,14 @@ import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +55,9 @@ public final class PlayerRelationsModel extends Model {
     private Set<String> friends;
     private Set<String> partyMembers;
 
-    public PlayerRelationsModel() {
+    public PlayerRelationsModel(WorldStateModel worldStateModel) {
+        super(List.of(worldStateModel));
+
         resetRelations();
     }
 
