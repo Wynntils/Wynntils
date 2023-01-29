@@ -22,9 +22,10 @@
   },
   {
     "id": "apiAthenaUpdateChangelog",
-    "url": "https://athena.wynntils.com/version/changelog/%{version}",
+    "url": "https://athena.wynntils.com/version/changelog/%{old_version}/%{new_version}",
     "arguments": [
-      "version"
+      "old_version",
+      "new_version"
     ]
   },
   {
