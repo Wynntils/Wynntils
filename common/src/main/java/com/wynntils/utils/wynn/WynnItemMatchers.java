@@ -140,7 +140,8 @@ public final class WynnItemMatchers {
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6) {
             return Component.literal("Unidentified Item")
-                    .withStyle(GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
+                    .withStyle(
+                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
         }
         return null;
     }

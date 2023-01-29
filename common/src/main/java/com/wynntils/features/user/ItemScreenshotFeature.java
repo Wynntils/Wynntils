@@ -167,8 +167,9 @@ public class ItemScreenshotFeature extends UserFeature {
 
         GearItem gearItem = gearItemOpt.get();
         if (gearItem.isUnidentified()) {
-            // FIXME!!!
+            // FIXME: better error to user
             WynntilsMod.warn("Cannot take screenshot of unidentified gear!");
+            return;
         }
         String encoded = Models.GearInfo.toEncodedString(gearItem);
 

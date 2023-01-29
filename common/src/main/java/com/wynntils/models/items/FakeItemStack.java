@@ -6,7 +6,6 @@ package com.wynntils.models.items;
 
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -35,8 +34,7 @@ public class FakeItemStack extends ItemStack {
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         GearTooltipBuilder tooltipBuilder = GearTooltipBuilder.fromGearItem(gearItem);
-        List<Component> tooltip =
-                tooltipBuilder.getTooltipLines(GearTooltipVariableStats.getDefaulIdentificationStyle());
+        List<Component> tooltip = tooltipBuilder.getTooltipLines();
         // Add a line describing the source of this fake stack
         tooltip.add(
                 1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));

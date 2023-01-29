@@ -13,7 +13,8 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipStyle;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipSuffixType;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
@@ -36,8 +37,6 @@ import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
-    public static ItemStatInfoFeature INSTANCE;
-
     private final Set<GearItem> brokenItems = new HashSet<>();
 
     @Config
@@ -72,26 +71,6 @@ public class ItemStatInfoFeature extends UserFeature {
 
     @Config
     public boolean showBestValueLastAlways = true;
-
-    public static GearTooltipVariableStats.IdentificationPresentationStyle getCurrentIdentificationStyle() {
-        GearTooltipVariableStats.IdentificationDecorations decorations;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.RANGE;
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.REROLL_CHANCE;
-        } else {
-            decorations = GearTooltipVariableStats.IdentificationDecorations.PERCENT;
-        }
-
-        return new GearTooltipVariableStats.IdentificationPresentationStyle(
-                decorations,
-                INSTANCE.identificationsOrdering,
-                INSTANCE.groupIdentifications,
-                INSTANCE.showBestValueLastAlways,
-                INSTANCE.showStars,
-                INSTANCE.colorLerp,
-                INSTANCE.decimalPlaces);
-    }
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -150,6 +129,26 @@ public class ItemStatInfoFeature extends UserFeature {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private GearTooltipStyle getCurrentIdentificationStyle() {
+        GearTooltipSuffixType decorations;
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            decorations = GearTooltipSuffixType.RANGE;
+        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+            decorations = GearTooltipSuffixType.REROLL_CHANCE;
+        } else {
+            decorations = GearTooltipSuffixType.PERCENT;
+        }
+
+        return new GearTooltipStyle(
+                decorations,
+                identificationsOrdering,
+                groupIdentifications,
+                showBestValueLastAlways,
+                showStars,
+                colorLerp,
+                decimalPlaces);
     }
 
     private MutableComponent getPercentageTextComponent(float percentage) {

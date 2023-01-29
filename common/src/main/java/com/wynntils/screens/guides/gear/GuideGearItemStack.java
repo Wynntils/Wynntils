@@ -6,7 +6,6 @@ package com.wynntils.screens.guides.gear;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipVariableStats;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
@@ -40,8 +39,7 @@ public final class GuideGearItemStack extends GuideItemStack {
 
         name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
 
-        this.generatedTooltip = GearTooltipBuilder.fromGearInfo(gearInfo)
-                .getTooltipLines(GearTooltipVariableStats.getDefaulIdentificationStyle());
+        this.generatedTooltip = GearTooltipBuilder.fromGearInfo(gearInfo).getTooltipLines();
     }
 
     @Override

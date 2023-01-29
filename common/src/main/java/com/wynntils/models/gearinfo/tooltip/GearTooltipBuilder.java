@@ -7,6 +7,7 @@ package com.wynntils.models.gearinfo.tooltip;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
@@ -31,6 +32,9 @@ public final class GearTooltipBuilder {
     private static final Pattern RANGE_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
+    private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
+            new GearTooltipStyle(GearTooltipSuffixType.PERCENT, StatListOrdering.DEFAULT, true, true, true, true, 1);
+
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final boolean hideUnidentified;
@@ -38,8 +42,7 @@ public final class GearTooltipBuilder {
     private List<Component> topTooltip;
     private List<Component> bottomTooltip;
 
-    private final Map<GearTooltipVariableStats.IdentificationPresentationStyle, List<Component>> middleTooltipCache =
-            new HashMap<>();
+    private final Map<GearTooltipStyle, List<Component>> middleTooltipCache = new HashMap<>();
 
     private GearTooltipBuilder(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
@@ -85,7 +88,7 @@ public final class GearTooltipBuilder {
         return new GearTooltipBuilder(gearInfo, gearInstance, splittedLore.a(), splittedLore.b(), hideUnidentified);
     }
 
-    public List<Component> getTooltipLines(GearTooltipVariableStats.IdentificationPresentationStyle style) {
+    public List<Component> getTooltipLines(GearTooltipStyle style) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
 
@@ -106,6 +109,10 @@ public final class GearTooltipBuilder {
 
         // FIXME: Can we get rid of this?
         return ComponentUtils.stripDuplicateBlank(tooltip);
+    }
+
+    public List<Component> getTooltipLines() {
+        return getTooltipLines(DEFAULT_TOOLTIP_STYLE);
     }
 
     private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, GearInfo gearInfo) {
