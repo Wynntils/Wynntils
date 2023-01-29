@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.profile;
+package com.wynntils.models.ingredients.profile;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.type.IdentificationModifier;
+import com.wynntils.models.ingredients.type.IdentificationModifier;
 import com.wynntils.utils.StringUtils;
 import java.util.HashMap;
 import java.util.Locale;
@@ -32,7 +32,7 @@ public class IdentificationProfile {
     }
 
     public void calculateMinMax(String shortId) {
-        isInverted = Models.GearProfiles.isInverted(shortId);
+        isInverted = Models.IngredientProfiles.isInverted(shortId);
 
         if (isFixed || (-1 <= baseValue && baseValue <= 1)) {
             min = baseValue;

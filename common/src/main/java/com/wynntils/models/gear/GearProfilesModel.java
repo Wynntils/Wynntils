@@ -13,7 +13,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.profile.IdentificationOrderer;
 import com.wynntils.models.gear.profile.MajorIdentification;
 import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.type.GearType;
@@ -22,14 +21,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.network.chat.Component;
 
 public final class GearProfilesModel extends Model {
     private static final Gson ITEM_GUESS_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(HashMap.class, new ItemGuessProfile.ItemGuessDeserializer())
             .create();
 
-    private IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
     private Map<String, GearProfile> items = Map.of();
     private Map<String, ItemGuessProfile> itemGuesses = Map.of();
     private Map<String, String> translatedReferences = Map.of();
@@ -41,26 +38,6 @@ public final class GearProfilesModel extends Model {
         super(List.of());
 
         loadData();
-    }
-
-    public IdentificationOrderer getIdentificationOrderer() {
-        return identificationOrderer;
-    }
-
-    public boolean isInverted(String id) {
-        return identificationOrderer.isInverted(id);
-    }
-
-    public List<Component> orderComponents(Map<String, Component> holder, boolean groups) {
-        return identificationOrderer.orderComponents(holder, groups);
-    }
-
-    public List<GearIdentificationContainer> orderIdentifications(List<GearIdentificationContainer> ids) {
-        return identificationOrderer.orderIdentifications(ids);
-    }
-
-    public int getOrder(String id) {
-        return identificationOrderer.getOrder(id);
     }
 
     public void reloadData() {
@@ -100,9 +77,6 @@ public final class GearProfilesModel extends Model {
 
             Type materialTypesType = new TypeToken<HashMap<GearType, String[]>>() {}.getType();
             materialTypes = WynntilsMod.GSON.fromJson(json.getAsJsonObject("materialTypes"), materialTypesType);
-
-            identificationOrderer =
-                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
 
             GearProfile[] jsonItems = WynntilsMod.GSON.fromJson(json.getAsJsonArray("items"), GearProfile[].class);
             Map<String, GearProfile> newItems = new HashMap<>();

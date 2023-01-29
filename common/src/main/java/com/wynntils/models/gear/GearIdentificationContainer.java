@@ -5,8 +5,8 @@
 package com.wynntils.models.gear;
 
 import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.models.gear.type.IdentificationModifier;
+import com.wynntils.models.ingredients.profile.IdentificationProfile;
+import com.wynntils.models.ingredients.type.IdentificationModifier;
 
 public record GearIdentificationContainer(
         String inGameIdName,
