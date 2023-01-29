@@ -5,46 +5,52 @@
 package com.wynntils.models.gearinfo.type;
 
 import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
 
-public record GearInstance(List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
-    // FIXME
-
-    /*
-    DoubleSummaryStatistics percents = identifications.stream()
-            .filter(Predicate.not(GearIdentificationContainer::isFixed))
-            .mapToDouble(GearIdentificationContainer::percent)
-            .summaryStatistics();
-    overallPercentage = (float) percents.getAverage();
-    if (percents.getCount() > 0) {
-        // Only claim it is perfect/defective if we do have some non-fixed identifications
-        isPerfect = overallPercentage >= 100f;
-        isDefective = overallPercentage <= 0f;
-        hasVariableIds = true;
-    } else {
-        isPerfect = false;
-        isDefective = false;
-        hasVariableIds = false;
+public record GearInstance(
+        List<StatActualValue> identifications, List<Powder> powders, int rerolls, Optional<Float> overallQuality) {
+    public static GearInstance create(
+            GearInfo gearInfo, List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
+        return new GearInstance(identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications));
     }
 
-     */
+    private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {
+        DoubleSummaryStatistics percents = identifications.stream()
+                .filter(actualValue -> {
+                    // We do not include values that cannot possibly change
+                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
+                    return !possibleValues.range().isFixed();
+                })
+                .mapToDouble(actualValue -> {
+                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
+                    return GearCalculator.getPercent(actualValue, possibleValues);
+                })
+                .summaryStatistics();
+        if (percents.getCount() == 0) return Optional.empty();
 
-    public boolean hasVariableIds() {
-        return true;
+        return Optional.of((float) percents.getAverage());
+    }
+
+    public boolean hasOverallValue() {
+        return overallQuality.isPresent();
     }
 
     public float getOverallPercentage() {
-        return 33.3f;
+        return overallQuality.orElse(0.0f);
     }
 
     public boolean isPerfect() {
-        return false;
+        return overallQuality.orElse(0.0f) >= 100.0f;
     }
 
     public boolean isDefective() {
-        return false;
+        return overallQuality.orElse(0.0f) <= 0.0f;
     }
 
     public StatActualValue getActualValue(StatType statType) {

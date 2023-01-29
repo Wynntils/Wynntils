@@ -92,7 +92,7 @@ public class GearParser {
             }
         }
 
-        return new GearInstance(identifications, powders, rerolls);
+        return GearInstance.create(gearInfo, identifications, powders, rerolls);
     }
 
     private Optional<Integer> getRerollCount(Component lore) {
@@ -184,7 +184,7 @@ public class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearInstance(identifications, powders, rerolls);
+        return GearInstance.create(gearInfo, identifications, powders, rerolls);
     }
 
     public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {

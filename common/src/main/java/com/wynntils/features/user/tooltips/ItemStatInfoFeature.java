@@ -98,7 +98,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
                 // Update name depending on overall percentage; this needs to be done every rendering
                 // for rainbow/defective effects
-                if (overallPercentageInName && gearInstance.hasVariableIds()) {
+                if (overallPercentageInName && gearInstance.hasOverallValue()) {
                     updateItemName(gearInfo, gearInstance, tooltips);
                 }
             }

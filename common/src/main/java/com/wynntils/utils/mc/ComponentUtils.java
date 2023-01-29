@@ -239,7 +239,6 @@ public final class ComponentUtils {
     public static MutableComponent makeObfuscated(
             String name, float obfuscationChanceStart, float obfuscationChanceEnd) {
         MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
-        newName.setStyle(newName.getStyle().withItalic(false));
 
         boolean obfuscated = Math.random() < obfuscationChanceStart;
         StringBuilder current = new StringBuilder();
@@ -251,13 +250,12 @@ public final class ComponentUtils {
                     MathUtils.lerp(obfuscationChanceStart, obfuscationChanceEnd, (i + 1) / (float) (name.length() - 1));
 
             if (!obfuscated && Math.random() < chance) {
-                newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+                newName.append(Component.literal(current.toString()));
                 current = new StringBuilder();
 
                 obfuscated = true;
             } else if (obfuscated && Math.random() > chance) {
-                newName.append(Component.literal(current.toString())
-                        .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
+                newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withObfuscated(true)));
                 current = new StringBuilder();
 
                 obfuscated = false;
@@ -267,10 +265,9 @@ public final class ComponentUtils {
         current.append(name.charAt(name.length() - 1));
 
         if (obfuscated) {
-            newName.append(Component.literal(current.toString())
-                    .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
+            newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withObfuscated(true)));
         } else {
-            newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+            newName.append(Component.literal(current.toString()));
         }
         return newName;
     }
