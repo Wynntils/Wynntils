@@ -4,15 +4,17 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.ActiveFunction;
-import com.wynntils.models.experience.event.ExperienceGainEvent;
+import com.wynntils.core.functions.Function;
+import com.wynntils.models.experience.event.CombatXpGainEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ExperienceFunctions {
+public class CombatXpFunctions {
     public static class XpPerMinuteRawFunction extends ActiveFunction<Integer> {
         private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
 
@@ -22,7 +24,7 @@ public class ExperienceFunctions {
         }
 
         @SubscribeEvent
-        public void onExperienceGain(ExperienceGainEvent event) {
+        public void onExperienceGain(CombatXpGainEvent event) {
             timedXpSet.put((double) event.getGainedXpRaw());
         }
 
@@ -42,7 +44,7 @@ public class ExperienceFunctions {
         }
 
         @SubscribeEvent
-        public void onExperienceGain(ExperienceGainEvent event) {
+        public void onExperienceGain(CombatXpGainEvent event) {
             timedXpSet.put((double) event.getGainedXpRaw());
         }
 
@@ -64,13 +66,60 @@ public class ExperienceFunctions {
         }
 
         @SubscribeEvent
-        public void onExperienceGain(ExperienceGainEvent event) {
+        public void onExperienceGain(CombatXpGainEvent event) {
             timedXpSet.put((double) event.getGainedXpPercentage());
         }
 
         @Override
         public List<String> getAliases() {
             return List.of("xppm");
+        }
+    }
+
+    public static class LevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            return Models.CombatXp.getXpLevel();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("lvl");
+        }
+    }
+
+    public static class XpFunction extends Function<String> {
+        @Override
+        public String getValue(String argument) {
+            return StringUtils.integerToShortString((int) Models.CombatXp.getCurrentXp());
+        }
+    }
+
+    public static class XpRawFunction extends Function<Float> {
+        @Override
+        public Float getValue(String argument) {
+            return Models.CombatXp.getCurrentXp();
+        }
+    }
+
+    public static class XpReqFunction extends Function<String> {
+        @Override
+        public String getValue(String argument) {
+            return StringUtils.integerToShortString(Models.CombatXp.getXpPointsNeededToLevelUp());
+        }
+    }
+
+    public static class XpReqRawFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(String argument) {
+            return Models.CombatXp.getXpPointsNeededToLevelUp();
+        }
+    }
+
+    public static class XpPctFunction extends Function<Float> {
+        @Override
+        public Float getValue(String argument) {
+            return Models.CombatXp.getXpProgress() * 100.0f;
         }
     }
 }

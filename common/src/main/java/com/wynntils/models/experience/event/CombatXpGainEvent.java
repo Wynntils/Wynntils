@@ -6,11 +6,11 @@ package com.wynntils.models.experience.event;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class ExperienceGainEvent extends Event {
+public class CombatXpGainEvent extends Event {
     private final float gainedXpRaw;
     private final float gainedXpPercentage;
 
-    public ExperienceGainEvent(float gainedXpRaw, float gainedXpPercentage) {
+    public CombatXpGainEvent(float gainedXpRaw, float gainedXpPercentage) {
         this.gainedXpRaw = gainedXpRaw;
         this.gainedXpPercentage = gainedXpPercentage;
     }

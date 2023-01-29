@@ -8,7 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.models.experience.event.ExperienceGainEvent;
+import com.wynntils.models.experience.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -24,7 +24,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onExperienceGain(ExperienceGainEvent event) {
+    public void onExperienceGain(CombatXpGainEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay * 1000) return;
 

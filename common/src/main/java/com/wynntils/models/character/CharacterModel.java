@@ -24,7 +24,7 @@ import com.wynntils.models.character.type.StatusEffect;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.ProfessionInfo;
 import com.wynntils.models.concepts.ProfessionType;
-import com.wynntils.models.experience.ExperienceModel;
+import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -90,8 +90,8 @@ public final class CharacterModel extends Model {
     private List<StatusEffect> statusEffects = new ArrayList<>();
     private ProfessionInfo professionInfo;
 
-    public CharacterModel(ExperienceModel experienceModel) {
-        super(List.of(experienceModel));
+    public CharacterModel(CombatXpModel combatXpModel) {
+        super(List.of(combatXpModel));
 
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);
@@ -141,7 +141,7 @@ public final class CharacterModel extends Model {
      */
     public int getMaxSoulPoints() {
         // FIXME: If player is veteran, we should always return 15
-        int maxIfNotVeteran = 10 + MathUtils.clamp(Models.Experience.getXpLevel() / 15, 0, 5);
+        int maxIfNotVeteran = 10 + MathUtils.clamp(Models.CombatXp.getXpLevel() / 15, 0, 5);
         if (getSoulPoints() > maxIfNotVeteran) {
             return 15;
         }

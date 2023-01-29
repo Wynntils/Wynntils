@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.SetXpEvent;
-import com.wynntils.models.experience.event.ExperienceGainEvent;
+import com.wynntils.models.experience.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -17,7 +17,7 @@ import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ExperienceModel extends Model {
+public class CombatXpModel extends Model {
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
      * which points to the data at https://pastebin.com/fCTfEkaC
      * Note that the last value is the sum of all preceding values
@@ -38,7 +38,7 @@ public class ExperienceModel extends Model {
 
     private boolean firstJoinHappened = false;
 
-    public ExperienceModel(WorldStateModel worldStateModel) {
+    public CombatXpModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
     }
 
@@ -116,7 +116,7 @@ public class ExperienceModel extends Model {
 
         lastTickXp = newTickXp;
 
-        WynntilsMod.postEvent(new ExperienceGainEvent(gainedXP, percentChange));
+        WynntilsMod.postEvent(new CombatXpGainEvent(gainedXP, percentChange));
     }
 
     public float getCurrentXp() {

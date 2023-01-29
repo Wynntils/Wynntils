@@ -15,7 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
-import com.wynntils.models.experience.ExperienceModel;
+import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.territories.TerritoryModel;
@@ -45,11 +45,11 @@ public final class DiscoveryModel extends Model {
     private List<Component> secretDiscoveriesTooltip = List.of();
 
     public DiscoveryModel(
-            ExperienceModel experienceModel,
+            CombatXpModel combatXpModel,
             CompassModel compassModel,
             QuestModel questModel,
             TerritoryModel territoryModel) {
-        super(List.of(experienceModel, compassModel, questModel, territoryModel));
+        super(List.of(combatXpModel, compassModel, questModel, territoryModel));
     }
 
     public void reloadData() {
