@@ -37,7 +37,6 @@ import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.GearUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -203,25 +202,25 @@ public class GearInfoRegistry {
                 return parseOtherMaterial(json, gearType);
             }
 
-            String armorType =
-                    JsonUtils.getNullableJsonString(json, "armorType").toUpperCase(Locale.ROOT);
+            String materialType =
+                    JsonUtils.getNullableJsonString(json, "armorType").toLowerCase(Locale.ROOT);
 
             CustomColor color = null;
-            if (armorType.equals("LEATHER")) {
+            if (materialType.equals("leather")) {
                 String colorStr = JsonUtils.getNullableJsonString(json, "armorColor");
                 // Oddly enough a lot of items has a "dummy" color value of "160,101,64"; ignore them
                 if (colorStr != null && !colorStr.equals("160,101,64")) {
                     String[] colorArray = colorStr.split("[, ]");
                     if (colorArray.length == 3) {
                         int r = Integer.parseInt(colorArray[0]);
-                        int g = Integer.parseInt(colorArray[0]);
-                        int b = Integer.parseInt(colorArray[0]);
+                        int g = Integer.parseInt(colorArray[1]);
+                        int b = Integer.parseInt(colorArray[2]);
                         color = new CustomColor(r, g, b);
                     }
                 }
             }
 
-            return new GearMaterial(armorType, gearType, color);
+            return GearMaterial.fromArmorType(materialType, gearType, color);
         }
 
         private GearMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
@@ -229,13 +228,13 @@ public class GearInfoRegistry {
             if (material == null) {
                 // We're screwed. The best we can do is to give a generic default representation
                 // for this gear type
-                return new GearMaterial(gearType);
+                return GearMaterial.fromGearType(gearType);
             }
 
             String[] materialArray = material.split(":");
             int itemTypeCode = Integer.parseInt(materialArray[0]);
             int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-            return GearUtils.getItemFromCodeAndDamage(itemTypeCode, damageCode);
+            return GearMaterial.fromItemTypeCode(itemTypeCode, damageCode);
         }
 
         private GearRequirements parseRequirements(JsonObject json, GearType type) {

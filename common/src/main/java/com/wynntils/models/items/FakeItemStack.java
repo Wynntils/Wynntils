@@ -28,7 +28,7 @@ public class FakeItemStack extends ItemStack {
     }
 
     public FakeItemStack(GearItem gearItem, String source) {
-        this(gearItem, gearItem.getGearInfo().metaInfo().material().asItemStack(), source);
+        this(gearItem, gearItem.getGearInfo().metaInfo().material().getItemStack(), source);
     }
 
     @Override

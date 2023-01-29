@@ -20,13 +20,12 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
-* GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
-*  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
-
-* RerollCalculator: flip() is probably broken. Make this into a method instead.
+* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
 
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
+
+* RerollCalculator: flip() is probably broken. Make this into a method instead.
 
 * Tooltip -- split lore must be simplified!
 * -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
@@ -37,7 +36,6 @@ Remaining issues:
 * tooltip variable needs cleaning in how we build identified/unidentified lines
 * All other Guide stacks should also use the vanilla tooltip rendering!
 
-* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
 * SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
 *  -- then remove fixme in tooltip variable.
 

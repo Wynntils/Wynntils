@@ -12,33 +12,21 @@ import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GuideGearItemStack extends GuideItemStack {
-    private final List<Component> generatedTooltip;
-    private final MutableComponent name;
     private final GearInfo gearInfo;
+    private final MutableComponent name;
+    private final List<Component> generatedTooltip;
 
     public GuideGearItemStack(GearInfo gearInfo) {
-        super(gearInfo.metaInfo().material().asItemStack(), new GearItem(gearInfo, null));
+        super(gearInfo.metaInfo().material().getItemStack(), new GearItem(gearInfo, null));
 
         this.gearInfo = gearInfo;
-        ItemStack itemStack = gearInfo.metaInfo().material().asItemStack();
-
-        CompoundTag tag = this.getOrCreateTag();
-        tag.putBoolean("Unbreakable", true);
-        if (gearInfo.metaInfo().material().hasColorCode()) {
-            tag.putInt("color", gearInfo.metaInfo().material().getColorCode());
-        }
-        this.setTag(tag);
-
-        name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
-
+        this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
         this.generatedTooltip = GearTooltipBuilder.fromGearInfo(gearInfo).getTooltipLines();
     }
 
