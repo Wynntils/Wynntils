@@ -12,6 +12,7 @@ import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.ListUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +186,10 @@ public final class StatListOrderer {
         wynncraftOrdering.add(new StatListDelimiter());
         addMiscStats(wynncraftOrdering, miscStats, WYNNCRAFT_MISC_ORDER_2);
         wynncraftOrdering.add(new StatListDelimiter());
-        wynncraftOrdering.addAll(spellStats);
+        // Spell stats are swapped in Wynncraft, so in this case they have raw before percent
+        ArrayList<SpellStatType> swappedSpellStats = new ArrayList<>(spellStats);
+        ListUtils.swapPairwise(swappedSpellStats);
+        wynncraftOrdering.addAll(swappedSpellStats);
         wynncraftOrdering.add(new StatListDelimiter());
         addMiscStats(wynncraftOrdering, miscStats, WYNNCRAFT_MISC_ORDER_3);
 

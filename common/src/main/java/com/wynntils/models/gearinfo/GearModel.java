@@ -20,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
-* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
-
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
 
@@ -53,6 +51,7 @@ NEW IDEAS:
 * Also fix Ingredients
 * Correctly show requirements as missing or fulfilled in custom tooltip
 * Just copy to chat should be separate hotkey
+* Option to turn "Spell Cost" into "Spell Cost Reduction" (invert value)
 
  */
 
