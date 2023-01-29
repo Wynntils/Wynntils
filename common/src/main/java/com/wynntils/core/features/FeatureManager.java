@@ -25,6 +25,7 @@ import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.BombBellTrackingFeature;
+import com.wynntils.features.user.ChangelogFeature;
 import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
 import com.wynntils.features.user.ChatTabsFeature;
@@ -142,6 +143,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
         registerFeature(new BombBellTrackingFeature());
+        registerFeature(new ChangelogFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatRedirectFeature());

@@ -40,7 +40,7 @@ public class TradeMarketAutoOpenChatFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onScreenOpen(ScreenOpenedEvent event) {
+    public void onScreenOpen(ScreenOpenedEvent.Post event) {
         openChatWhenContainerClosed = false;
     }
 }

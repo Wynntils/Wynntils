@@ -10,7 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.base.WynntilsMenuListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -37,7 +37,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsDiscoveriesScreen extends WynntilsMenuListScreen<DiscoveryInfo, DiscoveryButton> {
+public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton> {
     private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
 
     // Filters
