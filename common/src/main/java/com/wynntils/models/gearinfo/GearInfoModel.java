@@ -6,6 +6,7 @@ package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -56,6 +57,7 @@ NEW IDEAS:
 * Rename the item tooltip feature...
 * Rename WynnItemMatcher to WynnItemUtil
 * Also fix Ingredients
+* Correctly show requirements as missing or fulfilled in custom tooltip
 
  */
 
@@ -82,6 +84,9 @@ public final class GearInfoModel extends Model {
 
     public GearInfoModel(StatModel statModel) {
         super(List.of(statModel));
+
+        // FIXME
+        ItemGuessProfile.init();
     }
 
     public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
@@ -120,5 +125,9 @@ public final class GearInfoModel extends Model {
         // FIXME!!! Also check alternative name...
         String itemName = Models.GearProfiles.getTranslatedReference(gearName).replace("֎", "");
         return gearInfoRegistry.gearInfoLookup.get(itemName);
+    }
+
+    public ItemGuessProfile getItemGuess(String levelRange) {
+        return Models.GearProfiles.getItemGuess(levelRange);
     }
 }

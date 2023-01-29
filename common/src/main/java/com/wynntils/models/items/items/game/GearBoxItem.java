@@ -5,7 +5,7 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.profile.ItemGuessProfile;
+import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
@@ -32,7 +32,7 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
     }
 
     public List<String> getItemPossibilities() {
-        ItemGuessProfile guessProfile = Models.GearProfiles.getItemGuess(levelRange);
+        ItemGuessProfile guessProfile = Models.GearInfo.getItemGuess(levelRange);
         if (guessProfile == null) return List.of();
 
         Map<GearTier, List<String>> rarityMap = guessProfile.getItems().get(gearType);
