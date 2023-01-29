@@ -4,25 +4,25 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.gear.type.TomeProfile;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
 public class TomeItem extends GameItem implements GearTierItemProperty {
-    private final TomeProfile tomeProfile;
+    private final TomeInfo tomeInfo;
     private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public TomeItem(TomeProfile tomeProfile, List<StatActualValue> identifications, int rerolls) {
-        this.tomeProfile = tomeProfile;
+    public TomeItem(TomeInfo tomeInfo, List<StatActualValue> identifications, int rerolls) {
+        this.tomeInfo = tomeInfo;
         this.identifications = identifications;
         this.rerolls = rerolls;
     }
 
-    public TomeProfile getTomeProfile() {
-        return tomeProfile;
+    public TomeInfo getTomeProfile() {
+        return tomeInfo;
     }
 
     public List<StatActualValue> getIdentifications() {
@@ -35,13 +35,13 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public GearTier getGearTier() {
-        return tomeProfile.gearTier();
+        return tomeInfo.gearTier();
     }
 
     @Override
     public String toString() {
         return "TomeItem{" + "tomeProfile="
-                + tomeProfile + ", identifications="
+                + tomeInfo + ", identifications="
                 + identifications + ", rerolls="
                 + rerolls + '}';
     }

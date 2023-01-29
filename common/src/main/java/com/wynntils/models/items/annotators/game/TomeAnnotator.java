@@ -7,9 +7,9 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gear.type.TomeProfile;
-import com.wynntils.models.gear.type.TomeType;
 import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.rewards.type.TomeInfo;
+import com.wynntils.models.rewards.type.TomeType;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,9 +34,7 @@ public final class TomeAnnotator implements ItemAnnotator {
         String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
         String tier = tomeType.isTiered() ? matcher.group("Tier") : null;
 
-        // TODO: replace with API lookup
-        TomeProfile tomeProfile = new TomeProfile(matcher.group(1), gearTier, variant, tomeType, tier);
-
-        return Models.GearItem.fromTomeItemStack(itemStack, tomeProfile);
+        TomeInfo tomeInfo = Models.Rewards.getTomeInfo(matcher, tomeType, gearTier, variant, tier);
+        return Models.Rewards.fromTomeItemStack(itemStack, tomeInfo);
     }
 }

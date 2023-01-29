@@ -15,7 +15,6 @@ import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.favorites.FavoritesModel;
-import com.wynntils.models.gear.GearItemModel;
 import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.gearinfo.GearInfoModel;
 import com.wynntils.models.horse.HorseModel;
@@ -29,6 +28,7 @@ import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.PlayerRelationsModel;
 import com.wynntils.models.players.hades.HadesModel;
 import com.wynntils.models.quests.QuestModel;
+import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -51,6 +51,7 @@ public final class Models {
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
+    public static final RewardsModel Rewards = new RewardsModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
     public static final TerritoryModel Territory = new TerritoryModel();
@@ -58,9 +59,8 @@ public final class Models {
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final GearInfoModel GearInfo = new GearInfoModel(Stat);
-    public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
-    public static final ItemModel Item = new ItemModel(GearInfo, GearItem, GearProfiles, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(GearInfo, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);

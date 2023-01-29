@@ -4,25 +4,25 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.gear.type.CharmProfile;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
 public class CharmItem extends GameItem implements GearTierItemProperty {
-    private final CharmProfile charmProfile;
+    private final CharmInfo charmInfo;
     private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public CharmItem(CharmProfile charmProfile, List<StatActualValue> identifications, int rerolls) {
-        this.charmProfile = charmProfile;
+    public CharmItem(CharmInfo charmInfo, List<StatActualValue> identifications, int rerolls) {
+        this.charmInfo = charmInfo;
         this.identifications = identifications;
         this.rerolls = rerolls;
     }
 
-    public CharmProfile getCharmProfile() {
-        return charmProfile;
+    public CharmInfo getCharmProfile() {
+        return charmInfo;
     }
 
     public List<StatActualValue> getIdentifications() {
@@ -35,13 +35,13 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public GearTier getGearTier() {
-        return charmProfile.tier();
+        return charmInfo.tier();
     }
 
     @Override
     public String toString() {
         return "CharmItem{" + "charmProfile="
-                + charmProfile + ", identifications="
+                + charmInfo + ", identifications="
                 + identifications + ", rerolls="
                 + rerolls + '}';
     }

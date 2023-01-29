@@ -9,8 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
-import com.wynntils.models.gear.GearItemModel;
-import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.gearinfo.GearInfoModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
@@ -45,15 +43,9 @@ import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
-    public ItemModel(
-            GearInfoModel gearInfoModel,
-            GearItemModel gearItemModel,
-            GearProfilesModel gearProfilesModel,
-            IngredientProfilesModel ingredientProfilesModel) {
+    public ItemModel(GearInfoModel gearInfoModel, IngredientProfilesModel ingredientProfilesModel) {
         // GearInfo for gear and crafted gear
-        // GearItem for tome and charm
-        // GearProfiles for gear box possibilities
-        super(List.of(gearInfoModel, gearItemModel, gearProfilesModel, ingredientProfilesModel));
+        super(List.of(gearInfoModel, ingredientProfilesModel));
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());

@@ -19,9 +19,10 @@ import net.minecraft.world.item.ItemStack;
 /*
 FIXME list:
 Remaining issues:
+* Tome and Charm in GearItemModel...
+
 * GearInfoModel.getGearInfoFromInternalName! - we should strip "֎" earlier. "ingame"
 * Registry, items like "Coconut֎" have the same displayName after cleaning, fix this
-* We need to at least pick out the possible gear stuff and move it to us
 * TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
 * Tooltip -- split lore must be simplified!
 * -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
@@ -30,7 +31,6 @@ Remaining issues:
 *   a new GearCalculations utility class? instad of GearUtils
 * Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
 * ItemScreenshotFeature error on copy
-* Tome and Charm in GearItemModel...
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
 * GearParser needs cleaning
