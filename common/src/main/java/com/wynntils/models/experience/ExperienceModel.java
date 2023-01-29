@@ -54,21 +54,21 @@ public class ExperienceModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         // We don't want to track XP before we've even got a packet to set our level
-        if (Models.Experience.getXpLevel() == 0) return;
+        if (getXpLevel() == 0) return;
 
         // On first world join, we get all our current XP points (the currently gained amount for the next level), but
         // we only care about actual gains
         if (!firstJoinHappened) {
-            lastTickXp = Models.Experience.getCurrentXp();
+            lastTickXp = getCurrentXp();
             firstJoinHappened = true;
             return;
         }
 
-        float newTickXp = Models.Experience.getCurrentXp();
+        float newTickXp = getCurrentXp();
 
         if (newTickXp == lastTickXp) return;
 
-        int newLevel = Models.Experience.getXpLevel();
+        int newLevel = getXpLevel();
 
         if (trackedLevel == 0) {
             trackedLevel = newLevel;
@@ -80,7 +80,7 @@ public class ExperienceModel extends Model {
             lastTickXp = 0;
         }
 
-        int neededXp = Models.Experience.getXpPointsNeededToLevelUp();
+        int neededXp = getXpPointsNeededToLevelUp();
 
         // Something went wrong, or you're at the level cap.
         if (neededXp == 0) return;
