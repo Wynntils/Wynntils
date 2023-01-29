@@ -2,6 +2,7 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.PartyPlayer;
@@ -14,11 +15,13 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Scoreboard;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,9 +44,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private Button kickOfflineButton;
     private Button createPartyButton;
     private Button leavePartyButton;
-    private final List<Button> promoteButtons = new ArrayList<>();
-    private final List<Button> kickButtons = new ArrayList<>();
-    private final List<Button> inviteButtons = new ArrayList<>();
+    private final List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
+    private final List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
 
     private final Set<String> offlineMembers = new HashSet<>();
     private final List<String> suggestedPlayers = new ArrayList<>();
@@ -179,20 +181,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Party list
-        List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
-        for (int i = 0; i < partyMembers.size(); i++) {
-            String playerName = partyMembers.get(i);
-            if (playerName == null) continue;
-
-            this.addRenderableWidget(new PartyPlayer(
-                    this.width / 2 - X_START + 4,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    200,
-                    20,
-                    playerName,
-                    offlineMembers.contains(playerName)
-                    ));
-        }
+        partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         // endregion
 
         // region Suggestion list headers
@@ -226,12 +215,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         // endregion
         // region Suggestion list
-        for (int i = 0; i < suggestedPlayers.size(); i++) {
-            String playerName = suggestedPlayers.get(i);
-            if (playerName == null) continue;
-
-            this.addRenderableWidget(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
-        }
+        suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         // endregion
 
         // region Legend
@@ -284,6 +268,32 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
     }
 
+    private void reloadSuggestedPlayersWidgets() {
+        suggestedPlayersWidgets.clear();
+        for (int i = 0; i < suggestedPlayers.size(); i++) {
+            String playerName = suggestedPlayers.get(i);
+            if (playerName == null) continue;
+
+            suggestedPlayersWidgets.add(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
+        }
+    }
+
+    private void reloadMembersWidgets() {
+        partyMembersWidgets.clear();
+        List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
+        for (int i = 0; i < partyMembers.size(); i++) {
+            String playerName = partyMembers.get(i);
+            if (playerName == null) continue;
+
+            partyMembersWidgets.add(new PartyPlayer(this.width / 2 - X_START + 4, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName, offlineMembers.contains(playerName)));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
+        reloadMembersWidgets();
+    }
+
     private void inviteFromField() {
         // Remove all except commas, semicolons, whitespaces, and characters possible in name
         String fieldText = INVITE_REPLACER.matcher(inviteInput.getTextBoxInput()).replaceAll("");
@@ -303,6 +313,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void refreshParty() {
         Models.Party.requestPartyListUpdate();
+        reloadSuggestedPlayersWidgets();
+        reloadMembersWidgets();
     }
 
     private void kickOffline() {
@@ -318,14 +330,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void leaveParty() {
         McUtils.sendCommand("party leave");
-    }
-
-    private void disbandParty() {
-        McUtils.sendCommand("party disband");
-    }
-
-    private void promoteToLeader(String playerName) {
-        McUtils.sendCommand("party promote " + playerName);
     }
 
     private void kickFromParty(String playerName) {
@@ -352,6 +356,13 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
+
+        // For some reason the (widget.isMouseOver) check does not work for partyMembersWidgets
+        partyMembersWidgets.forEach(widget -> widget.mouseClicked(mouseX, mouseY, button));
+        suggestedPlayersWidgets.forEach(widget -> {
+            if (widget.isMouseOver(mouseX, mouseY)) widget.mouseClicked(mouseX, mouseY, button);
+        });
+
         return true;
     }
 
