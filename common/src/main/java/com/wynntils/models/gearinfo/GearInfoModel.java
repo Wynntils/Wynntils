@@ -11,7 +11,6 @@ import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
@@ -70,9 +69,9 @@ public final class GearInfoModel extends Model {
         return gearInfoRegistry.gearInfoLookup.get(gearName);
     }
 
-    public String getTranslatedName(ItemStack itemStack) {
-        // FIXME!!!
-        String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
-        return Models.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");
+    public GearInfo getGearInfoFromInternalName(String gearName) {
+        // FIXME!!! Also check alternative name...
+        String itemName = Models.GearProfiles.getTranslatedReference(gearName).replace("֎", "");
+        return gearInfoRegistry.gearInfoLookup.get(itemName);
     }
 }

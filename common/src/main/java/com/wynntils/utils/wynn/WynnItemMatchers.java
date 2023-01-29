@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -14,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
@@ -125,5 +127,21 @@ public final class WynnItemMatchers {
         }
 
         return CappedValue.EMPTY;
+    }
+
+    public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
+        if (gearName.contains("Crafted")) {
+            return Component.literal(gearName).withStyle(ChatFormatting.DARK_AQUA);
+        }
+
+        // this solves an unidentified item showcase exploit
+        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
+        if (itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6) {
+            return Component.literal("Unidentified Item")
+                    .withStyle(GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
+        }
+        return null;
     }
 }
