@@ -281,7 +281,7 @@ public final class LootrunModel extends Model {
     }
 
     @SubscribeEvent
-    public void onOpen(ScreenOpenedEvent event) {
+    public void onOpen(ScreenOpenedEvent.Post event) {
         if (state != LootrunState.RECORDING) return;
         if (recordingInformation.getLastChest() == null) return;
         if (!Models.Container.isLootChest(event.getScreen())) return;

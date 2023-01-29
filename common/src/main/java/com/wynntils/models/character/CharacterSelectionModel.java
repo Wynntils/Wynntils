@@ -47,7 +47,7 @@ public final class CharacterSelectionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
         if (event.getScreen() instanceof CharacterSelectorScreen characterSelectorScreen) {
             currentScreen = characterSelectorScreen;
 

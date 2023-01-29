@@ -142,7 +142,7 @@ public class MapFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
         if (!autoWaypointChests) return;
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;

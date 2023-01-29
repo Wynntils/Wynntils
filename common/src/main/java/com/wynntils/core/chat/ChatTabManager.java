@@ -41,7 +41,7 @@ public final class ChatTabManager extends Manager {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
         if (focusedTab == null
                 || focusedTab.getAutoCommand() == null

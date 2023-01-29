@@ -31,7 +31,7 @@ public final class ConnectionManager extends Manager {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent e) {
+    public void onScreenOpened(ScreenOpenedEvent.Post e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
             disconnect();
         }
