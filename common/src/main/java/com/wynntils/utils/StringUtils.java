@@ -130,4 +130,8 @@ public final class StringUtils {
             return Integer.toString(value);
         }
     }
+
+    public static String stripMarkdownStyling(String input) {
+        return input.replaceFirst("[# ]*", "");
+    }
 }
