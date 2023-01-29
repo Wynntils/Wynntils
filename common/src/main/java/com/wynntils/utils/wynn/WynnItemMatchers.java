@@ -4,8 +4,6 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -127,14 +125,5 @@ public final class WynnItemMatchers {
         }
 
         return CappedValue.EMPTY;
-    }
-
-    public static String getShortIdentificationName(String fullIdName, boolean isRaw) {
-        SpellType spell = SpellType.fromName(fullIdName);
-        if (spell != null) {
-            return spell.getShortIdName(isRaw);
-        }
-
-        return IdentificationProfile.getAsShortName(fullIdName, isRaw);
     }
 }

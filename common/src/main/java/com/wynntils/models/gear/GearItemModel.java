@@ -25,20 +25,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GearItemModel extends Model {
-
     private static final Pattern ITEM_TIER =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) "
                     + "(Raid Reward|Item)(?: \\[(?<Rolls>\\d+)])?");
 
-    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
-            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
-                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
-
     public static final Pattern ID_NEW_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
-
-    private static final Pattern RANGE_PATTERN =
-            Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
     public GearItemModel(GearProfilesModel gearProfilesModel) {
         super(List.of(gearProfilesModel));

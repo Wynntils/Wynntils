@@ -60,7 +60,7 @@ public final class Models {
     public static final GearInfoModel GearInfo = new GearInfoModel(Stat);
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
-    public static final ItemModel Item = new ItemModel(GearItem, GearProfiles, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(GearInfo, GearItem, GearProfiles, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);

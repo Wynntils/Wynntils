@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -43,6 +44,10 @@ public final class GearInfoModel extends Model {
 
     public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
         return gearParser.fromJsonLore(itemStack, gearInfo);
+    }
+
+    public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
+        return gearParser.getCraftedGearItem(itemStack);
     }
 
     public GearItem fromEncodedString(String encoded) {
