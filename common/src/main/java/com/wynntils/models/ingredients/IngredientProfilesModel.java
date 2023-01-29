@@ -12,6 +12,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +96,13 @@ public final class IngredientProfilesModel extends Model {
     }
 
     public boolean isInverted(String id) {
-        return invertedList.isInverted(id);
+        return invertedList.inverted.contains(id);
+    }
+
+    public static class IdentificationInvertedList {
+        public final List<String> inverted = new ArrayList<>();
+
+        public IdentificationInvertedList(
+                Map<String, Integer> idOrders, ArrayList<String> groupRanges, ArrayList<String> inverted) {}
     }
 }
