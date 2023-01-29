@@ -129,8 +129,7 @@ public final class WynntilsMod {
     }
 
     public static String getVersion() {
-        return "v0.0.2-alpha.152";
-        // return version;
+        return version;
     }
 
     public static boolean isDevelopmentBuild() {
