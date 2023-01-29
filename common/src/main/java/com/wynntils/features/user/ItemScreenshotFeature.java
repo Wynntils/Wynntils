@@ -167,8 +167,10 @@ public class ItemScreenshotFeature extends UserFeature {
 
         GearItem gearItem = gearItemOpt.get();
         if (gearItem.isUnidentified()) {
-            // FIXME: better error to user
-            WynntilsMod.warn("Cannot take screenshot of unidentified gear!");
+            // We can only send chat encoded gear of identified gear
+            WynntilsMod.warn("Cannot make chat link of unidentified gear");
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemError")
+                    .withStyle(ChatFormatting.RED));
             return;
         }
         String encoded = Models.Gear.toEncodedString(gearItem);

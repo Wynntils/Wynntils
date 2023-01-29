@@ -350,6 +350,7 @@
   "feature.wynntils.itemLock.blockAllActionsOnLockedItems.description": "Should any click types be blocked on locked items?",
   "feature.wynntils.itemLock.blockAllActionsOnLockedItems.name": "Block All Actions on Locked Items",
   "feature.wynntils.itemLock.name": "Item Lock",
+  "feature.wynntils.itemScreenshot.chatItemError": "Cannot make chat link of unidentified gear!",
   "feature.wynntils.itemScreenshot.chatItemMessage": "Click here to copy the item for chat!",
   "feature.wynntils.itemScreenshot.chatItemTooltip": "Paste this text in chat to display your item to other Wynntils users",
   "feature.wynntils.itemScreenshot.copy.error": "Error while copying screenshot to clipboard",

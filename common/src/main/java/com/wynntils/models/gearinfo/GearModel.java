@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 /*
 FIXME list:
 Remaining issues:
-* ItemScreenshotFeature error on copy
 
 * GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
 *  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
@@ -58,6 +57,7 @@ NEW IDEAS:
 * Rename WynnItemMatcher to WynnItemUtil
 * Also fix Ingredients
 * Correctly show requirements as missing or fulfilled in custom tooltip
+* Just copy to chat should be separate hotkey
 
  */
 
