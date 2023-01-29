@@ -38,14 +38,14 @@ import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
+import com.wynntils.models.rewards.RewardsModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
-    public ItemModel(GearInfoModel gearInfoModel, IngredientProfilesModel ingredientProfilesModel) {
-        // GearInfo for gear and crafted gear
-        super(List.of(gearInfoModel, ingredientProfilesModel));
+    public ItemModel(GearInfoModel gearInfoModel, RewardsModel rewardsModel, IngredientProfilesModel ingredientProfilesModel) {
+        super(List.of(gearInfoModel, rewardsModel, ingredientProfilesModel));
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
