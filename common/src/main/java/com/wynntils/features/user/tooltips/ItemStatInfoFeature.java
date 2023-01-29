@@ -70,6 +70,9 @@ public class ItemStatInfoFeature extends UserFeature {
     @Config
     public boolean overallPercentageInName = true;
 
+    @Config
+    public boolean showBestValueLastAlways = true;
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;

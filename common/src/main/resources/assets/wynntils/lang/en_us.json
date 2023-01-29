@@ -377,6 +377,8 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Overall Percentage in Name",
   "feature.wynntils.itemStatInfo.perfect.description": "Should the names of perfect (100%) items be rainbow colored?",
   "feature.wynntils.itemStatInfo.perfect.name": "Rainbow Perfect Items",
+  "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "Should we consistently keep the order [worst, best] in identification ranges?",
+  "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Always Show Best Value Last",
   "feature.wynntils.itemStatInfo.showStars.description": "Should IDs have stars (*, ** or ***) printed?",
   "feature.wynntils.itemStatInfo.showStars.name": "Show Stars",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Should we draw an item overlay showing corkian amplifier tier?",

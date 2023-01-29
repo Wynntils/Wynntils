@@ -118,25 +118,18 @@ public final class GearTooltipVariableStats {
 
         MutableComponent baseComponent = Component.literal("");
 
-        // FIXME: make config
-        boolean showBestValueAlwaysLast = true; // false is vanilla behavior
-
         int first;
         int last;
-        if (showBestValueAlwaysLast) {
+        if (ItemStatInfoFeature.INSTANCE.showBestValueLastAlways || isGood) {
             first = value.low();
             last = value.high();
         } else {
-            // Emulate Wynncraft behavior
-            if (isGood) {
-                first = value.low();
-                last = value.high();
-            } else {
-                // Show the value closest to zero first
-                first = value.high();
-                last = value.low();
-            }
+            // Emulate Wynncraft behavior by showing the value closest to zero first
+            first = value.high();
+            last = value.low();
         }
+        // We store "inverted" stats (spell costs) as positive numbers internally,
+        // but need to display them as negative numbers
         if (possibleValues.stat().showAsInverted()) {
             first = -first;
             last = -last;
