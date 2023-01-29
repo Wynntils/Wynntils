@@ -13,7 +13,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
@@ -42,8 +42,8 @@ public final class QuestModel extends Model {
     private String afterRescanName;
     private String afterRescanTask;
 
-    public QuestModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    public QuestModel(CombatXpModel combatXpModel) {
+        super(List.of(combatXpModel));
 
         Handlers.Scoreboard.addPart(QUEST_SCOREBOARD_PART);
     }
