@@ -19,31 +19,35 @@ import net.minecraft.world.item.ItemStack;
 /*
 FIXME list:
 Remaining issues:
+* ItemScreenshotFeature error on copy
+
+* GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
+*  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
 
 * TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
-* Tooltip -- split lore must be simplified!
-* -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
 * Move the reroll calculations and other calculations from util class into the model, perhaps
 *   a new GearCalculations utility class? instad of GearUtils
-* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
-* ItemScreenshotFeature error on copy
+
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
-* GearParser needs cleaning
-* Crafted gear needs some thinking
+
+* Tooltip -- split lore must be simplified!
+* -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
 * GearTooltipBuilder -- only cache middle segment if style is the same, otherwise
 *   invalidate the cache. Also check for names like "top" and "middle", fix that.
 * tooltip Post: major IDs are incorrectly formatted
 * tooltip Pre: did the old code correctly set our requirements?
-* MODELLING: A GearInstance should have powder specials as well!!!!
+* tooltip variable needs cleaning in how we build identified/unidentified lines
+* All other Guide stacks should also use the vanilla tooltip rendering!
+
+* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
 * SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
 *  -- then remove fixme in tooltip variable.
-* tooltip variable needs cleaning in how we build identified/unidentified lines
-* GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
-*  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
-* Can we get a better name for ingame-id than "lore"? "ingameId" perhaps!!!
-* All other Guide stacks should also use the vanilla tooltip rendering!
+
+* GearParser needs cleaning
+* Crafted gear needs some thinking
+* MODELLING: A GearInstance should have powder specials as well!!!!
 
 
 NEW IDEAS:
