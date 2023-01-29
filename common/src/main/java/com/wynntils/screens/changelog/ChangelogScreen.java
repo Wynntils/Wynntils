@@ -11,6 +11,7 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 
 public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
     private final String changelog;
@@ -33,6 +35,14 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
         super(Component.translatable("screens.wynntils.changelog.name"));
 
         this.changelog = changelog;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+
+        // Send this to the server to request a re-sent class menu
+        McUtils.sendPacket(new ServerboundContainerClosePacket(0));
     }
 
     public static Screen create(String changelog) {

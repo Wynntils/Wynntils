@@ -22,8 +22,8 @@ public class CustomCharacterSelectionScreenFeature extends UserFeature {
 
     private boolean openedInThisCharacterSelectionState = false;
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScreenOpen(ScreenOpenedEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onScreenOpen(ScreenOpenedEvent.Post event) {
         if ((onlyOpenOnce && openedInThisCharacterSelectionState)
                 || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 

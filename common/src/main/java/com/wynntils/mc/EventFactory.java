@@ -297,8 +297,12 @@ public final class EventFactory {
         }
     }
 
-    public static void onScreenOpened(Screen screen) {
-        post(new ScreenOpenedEvent(screen));
+    public static void onScreenOpenedPost(Screen screen) {
+        post(new ScreenOpenedEvent.Post(screen));
+    }
+
+    public static ScreenOpenedEvent.Pre onScreenOpenedPre(Screen screen) {
+        return post(new ScreenOpenedEvent.Pre(screen));
     }
 
     public static void onScreenClose() {

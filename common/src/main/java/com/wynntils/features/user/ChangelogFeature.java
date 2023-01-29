@@ -10,16 +10,24 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.changelog.ChangelogScreen;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Map;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChangelogFeature extends UserFeature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
     @Config(visible = false)
     public String lastShownVersion = "v0.0.2-alpha.2";
+
+    @Config
+    public boolean autoClassMenu = true;
+
+    private boolean waitForScreen = false;
+    private String changelogData = "";
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -39,11 +47,33 @@ public class ChangelogFeature extends UserFeature {
                     lastShownVersion = WynntilsMod.getVersion();
                     // FIXME: Save config here
 
-                    Managers.TickScheduler.scheduleNextTick(
-                            () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
+                    if (autoClassMenu) {
+                        McUtils.sendCommand("class");
+                        waitForScreen = true;
+                        changelogData = changelog;
+                    } else {
+                        Managers.TickScheduler.scheduleNextTick(
+                                () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
+                    }
                 },
                 throwable -> {
                     WynntilsMod.warn("Could not get update changelog: ", throwable);
                 });
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScreenOpenedPost(ScreenOpenedEvent.Post event) {
+        if (!waitForScreen) return;
+
+        event.setCanceled(true);
+        waitForScreen = false;
+        McUtils.mc().setScreen(ChangelogScreen.create(changelogData));
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScreenOpenedPre(ScreenOpenedEvent.Pre event) {
+        if (!(McUtils.mc().screen instanceof ChangelogScreen)) return;
+
+        event.setCanceled(true);
     }
 }
