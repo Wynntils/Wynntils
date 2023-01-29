@@ -10,7 +10,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.profile.IdentificationOrderer;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -26,7 +25,7 @@ public final class IngredientProfilesModel extends Model {
             ChatFormatting.LIGHT_PURPLE, 2,
             ChatFormatting.AQUA, 3);
 
-    private IdentificationOrderer identificationOrderer = new IdentificationOrderer(null, null, null);
+    private IdentificationInvertedList invertedList = new IdentificationInvertedList(null, null, null);
 
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
@@ -47,7 +46,7 @@ public final class IngredientProfilesModel extends Model {
 
     private void loadData() {
         tryLoadIngredientList();
-        tryLoadOrderer();
+        tryLoadInvertedList();
     }
 
     private void tryLoadIngredientList() {
@@ -73,13 +72,13 @@ public final class IngredientProfilesModel extends Model {
         });
     }
 
-    private void tryLoadOrderer() {
+    private void tryLoadInvertedList() {
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_ITEM_LIST);
         dl.handleJsonObject(json -> {
             Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
 
-            identificationOrderer =
-                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationOrderer.class);
+            invertedList =
+                    WynntilsMod.GSON.fromJson(json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
         });
     }
 
@@ -96,6 +95,6 @@ public final class IngredientProfilesModel extends Model {
     }
 
     public boolean isInverted(String id) {
-        return identificationOrderer.isInverted(id);
+        return invertedList.isInverted(id);
     }
 }

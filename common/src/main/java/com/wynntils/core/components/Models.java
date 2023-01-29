@@ -15,7 +15,6 @@ import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.favorites.FavoritesModel;
-import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.gearinfo.GearModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
@@ -45,7 +44,6 @@ public final class Models {
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
-    public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
