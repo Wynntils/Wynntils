@@ -11,7 +11,6 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -106,7 +105,7 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
 
     private void calculateRenderTasks() {
         TextRenderSetting setting = TextRenderSetting.DEFAULT
-                .withMaxWidth(Texture.CHANGELOG_BACKGROUND.width() - 50)
+                .withMaxWidth(Texture.CHANGELOG_BACKGROUND.width() - 85)
                 .withCustomColor(CommonColors.WHITE)
                 .withTextShadow(TextShadow.OUTLINE);
 
@@ -117,7 +116,7 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
 
         this.changelogTasks = new ArrayList<>();
 
-        final int maxHeight = (int) ((Texture.CHANGELOG_BACKGROUND.height() - 17) / McUtils.guiScale());
+        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 35;
 
         float currentHeight = 0;
         List<TextRenderTask> currentPage = new ArrayList<>();
@@ -125,7 +124,7 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
         for (TextRenderTask textRenderTask : textRenderTasks) {
             float height = FontRenderer.getInstance().calculateRenderHeight(List.of(textRenderTask));
 
-            if (currentHeight + height >= maxHeight) {
+            if (currentHeight + height > maxHeight) {
                 this.changelogTasks.add(currentPage);
                 currentPage = new ArrayList<>();
                 currentHeight = 0;

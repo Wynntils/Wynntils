@@ -37,6 +37,7 @@ public class ChangelogFeature extends UserFeature {
                     String changelog = jsonObject.get("changelog").getAsString();
 
                     lastShownVersion = WynntilsMod.getVersion();
+                    // FIXME: Save config here
 
                     Managers.TickScheduler.scheduleNextTick(
                             () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
