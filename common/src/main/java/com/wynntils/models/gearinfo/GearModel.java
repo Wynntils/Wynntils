@@ -5,7 +5,6 @@
 package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
@@ -20,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
-* GearInfoModel.getGearInfoFromInternalName! . "ingame"
 * TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
 * Tooltip -- split lore must be simplified!
 * -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
@@ -121,12 +119,6 @@ public final class GearModel extends Model {
 
     public GearInfo getGearInfo(String gearName) {
         return gearInfoRegistry.gearInfoLookup.get(gearName);
-    }
-
-    public GearInfo fromIngameName(String gearName) {
-        // FIXME!!! Also check alternative name...
-        String itemName = Models.GearProfiles.getTranslatedReference(gearName);
-        return gearInfoRegistry.gearInfoLookup.get(itemName);
     }
 
     public ItemGuessProfile getItemGuess(String levelRange) {

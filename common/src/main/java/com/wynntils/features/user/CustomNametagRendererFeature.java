@@ -104,7 +104,7 @@ public class CustomNametagRendererFeature extends UserFeature {
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
-        GearInfo gearInfo = Models.Gear.fromIngameName(gearName);
+        GearInfo gearInfo = Models.Gear.getGearInfo(gearName);
         if (gearInfo == null) return null;
 
         return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());

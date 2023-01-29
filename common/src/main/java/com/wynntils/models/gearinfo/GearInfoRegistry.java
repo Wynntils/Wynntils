@@ -52,7 +52,7 @@ import org.apache.commons.lang3.StringUtils;
 public class GearInfoRegistry {
     List<GearMajorId> majorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
-    Map<String, GearInfo> gearInfoLookup = new HashMap<>();
+    Map<String, GearInfo> gearInfoLookup = Map.of();
 
     public GearInfoRegistry() {
         loadRegistry();
@@ -90,6 +90,9 @@ public class GearInfoRegistry {
                 Map<String, GearInfo> lookupMap = new HashMap<>();
                 for (GearInfo gearInfo : registry) {
                     lookupMap.put(gearInfo.name(), gearInfo);
+                    if (gearInfo.metaInfo().altName().isPresent()) {
+                        lookupMap.put(gearInfo.metaInfo().altName().get(), gearInfo);
+                    }
                 }
 
                 // Make it visisble to the world

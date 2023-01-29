@@ -16,8 +16,7 @@ public final class WynnUtils {
      */
     public static String normalizeBadString(String input) {
         if (input == null) return "";
-        return StringUtils.replaceEach(
-                        input, new String[] {"ÀÀÀ", "À", "֎", "’"}, new String[] {" ", "", "", "'"})
+        return StringUtils.replaceEach(input, new String[] {"ÀÀÀ", "À", "֎", "’"}, new String[] {" ", "", "", "'"})
                 .trim();
     }
 }
