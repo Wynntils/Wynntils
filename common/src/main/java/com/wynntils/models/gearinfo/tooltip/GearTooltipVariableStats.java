@@ -12,6 +12,7 @@ import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.RecollCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
+import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
@@ -35,10 +36,10 @@ public final class GearTooltipVariableStats {
 
         appendSkillBonuses(gearInfo, allStatLines);
 
-        List<StatType> listOrdering = Models.Stat.getOrderingList(ItemStatInfoFeature.INSTANCE.identificationsOrdering);
+        List<StatType> listOrdering = Models.Stat.getOrderingList(style.reorder);
         List<StatType> allStats = gearInfo.getVariableStats();
 
-        boolean useDelimiter = ItemStatInfoFeature.INSTANCE.groupIdentifications;
+        boolean useDelimiter = style.group;
 
         boolean delimiterNeeded = false;
         // We need to iterate over all possible stats in order, to be able
@@ -53,7 +54,7 @@ public final class GearTooltipVariableStats {
             // Most stat types are probably not valid for this gear
             if (!allStats.contains(statType)) continue;
 
-            Component line;
+            MutableComponent line;
             if (gearInstance != null) {
                 // Put in actual value
                 StatActualValue statActualValue = gearInstance.getActualValue(statType);
@@ -63,11 +64,17 @@ public final class GearTooltipVariableStats {
                     continue;
                 }
 
-                line = buildIdentifiedLine(gearInfo, style.decorations(), statActualValue);
+                line = buildIdentifiedLine(gearInfo, style, statActualValue);
+                StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+                if (!possibleValues.range().isFixed()) {
+                    MutableComponent suffix = getSuffix(style, statActualValue, possibleValues);
+                    line.append(suffix);
+                }
+
             } else {
                 // Put in range of possible values
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                line = buildUnidentifiedLine(gearInfo, style.decorations(), possibleValues);
+                line = buildUnidentifiedLine(gearInfo, style, possibleValues);
             }
             allStatLines.add(line);
             delimiterNeeded = true;
@@ -103,8 +110,8 @@ public final class GearTooltipVariableStats {
         return null;
     }
 
-    private static Component buildUnidentifiedLine(
-            GearInfo gearInfo, IdentificationDecorations decorations, StatPossibleValues possibleValues) {
+    private static MutableComponent buildUnidentifiedLine(
+            GearInfo gearInfo, IdentificationPresentationStyle style, StatPossibleValues possibleValues) {
         String inGameName = possibleValues.stat().getDisplayName();
         StatUnit unitType = possibleValues.stat().getUnit();
         boolean invert = possibleValues.stat().showAsInverted();
@@ -120,7 +127,7 @@ public final class GearTooltipVariableStats {
 
         int first;
         int last;
-        if (ItemStatInfoFeature.INSTANCE.showBestValueLastAlways || isGood) {
+        if (style.showBestValueLastAlways || isGood) {
             first = value.low();
             last = value.high();
         } else {
@@ -144,10 +151,10 @@ public final class GearTooltipVariableStats {
         return baseComponent;
     }
 
-    private static Component buildIdentifiedLine(
-            GearInfo gearInfo, IdentificationDecorations decorations, StatActualValue actualValue) {
+    private static MutableComponent buildIdentifiedLine(
+            GearInfo gearInfo, IdentificationPresentationStyle style, StatActualValue actualValue) {
         StatType statType = actualValue.stat();
-        String starString = ItemStatInfoFeature.INSTANCE.showStars ? "***".substring(3 - actualValue.stars()) : "";
+        String starString = style.showStars ? "***".substring(3 - actualValue.stars()) : "";
 
         MutableComponent baseComponent = buildBaseComponent(
                 statType.getDisplayName(),
@@ -158,12 +165,6 @@ public final class GearTooltipVariableStats {
 
         StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
         if (possibleValues.range().isFixed()) return baseComponent;
-
-        switch (decorations) {
-            case PERCENT -> appendPercentLoreLine(baseComponent, actualValue, possibleValues);
-            case RANGE -> appendRangeLoreLine(baseComponent, actualValue, possibleValues);
-            case REROLL_CHANCE -> appendRerollLoreLine(baseComponent, actualValue, possibleValues);
-        }
 
         return baseComponent;
     }
@@ -191,22 +192,30 @@ public final class GearTooltipVariableStats {
         return baseComponent;
     }
 
-    private static Component appendPercentLoreLine(
-            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
+    public static MutableComponent getSuffix(
+            IdentificationPresentationStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
+        return switch (style.decorations()) {
+            case PERCENT -> getPercentSuffix(style, statActualValue, possibleValues);
+            case RANGE -> getRangeSuffix(style, statActualValue, possibleValues);
+            case REROLL_CHANCE -> getRerollSuffix(style, statActualValue, possibleValues);
+        };
+    }
+
+    private static MutableComponent getPercentSuffix(
+            IdentificationPresentationStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
         // calculate percent/range/reroll chances, append to lines
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
         float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
-        MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
-                percentage, ItemStatInfoFeature.INSTANCE.colorLerp, ItemStatInfoFeature.INSTANCE.decimalPlaces);
+        MutableComponent percentageTextComponent =
+                ColorScaleUtils.getPercentageTextComponent(percentage, style.colorLerp(), style.decimalPlaces());
 
-        baseComponent.append(percentageTextComponent);
-        return baseComponent;
+        return percentageTextComponent;
     }
 
-    private static Component appendRangeLoreLine(
-            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
+    private static MutableComponent getRangeSuffix(
+            IdentificationPresentationStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
         // calculate percent/range/reroll chances, append to lines
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
@@ -221,13 +230,11 @@ public final class GearTooltipVariableStats {
                 .append("]")
                 .withStyle(ChatFormatting.DARK_GREEN);
 
-        baseComponent.append(rangeTextComponent);
-
-        return baseComponent;
+        return rangeTextComponent;
     }
 
-    private static Component appendRerollLoreLine(
-            MutableComponent baseComponent, StatActualValue actualValue, StatPossibleValues possibleValues) {
+    private static MutableComponent getRerollSuffix(
+            IdentificationPresentationStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
         RecollCalculator chances = RecollCalculator.calculateChances(possibleValues, actualValue);
 
         MutableComponent rerollChancesComponent = Component.literal(
@@ -238,9 +245,7 @@ public final class GearTooltipVariableStats {
                 .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.getDecrease() * 100))
                         .withStyle(ChatFormatting.RED));
 
-        baseComponent.append(rerollChancesComponent);
-
-        return baseComponent;
+        return rerollChancesComponent;
     }
 
     public enum IdentificationDecorations {
@@ -251,6 +256,10 @@ public final class GearTooltipVariableStats {
 
     public record IdentificationPresentationStyle(
             IdentificationDecorations decorations,
-            com.wynntils.models.stats.type.StatListOrdering reorder,
-            boolean group) {}
+            StatListOrdering reorder,
+            boolean group,
+            boolean showBestValueLastAlways,
+            boolean showStars,
+            boolean colorLerp,
+            int decimalPlaces) {}
 }

@@ -102,6 +102,10 @@ public final class WynnItemUtils {
         return new GearTooltipVariableStats.IdentificationPresentationStyle(
                 decorations,
                 ItemStatInfoFeature.INSTANCE.identificationsOrdering,
-                ItemStatInfoFeature.INSTANCE.groupIdentifications);
+                ItemStatInfoFeature.INSTANCE.groupIdentifications,
+                ItemStatInfoFeature.INSTANCE.showBestValueLastAlways,
+                ItemStatInfoFeature.INSTANCE.showStars,
+                ItemStatInfoFeature.INSTANCE.colorLerp,
+                ItemStatInfoFeature.INSTANCE.decimalPlaces);
     }
 }
