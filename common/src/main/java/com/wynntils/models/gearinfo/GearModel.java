@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo;
 
+import com.google.gson.JsonObject;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.type.GearInfo;
@@ -41,7 +42,6 @@ Remaining issues:
 * tooltip variable needs cleaning in how we build identified/unidentified lines
 * GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
 *  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
-* ItemModel has bad dependencies: GearProfiles for gear box possibilities
 * Can we get a better name for ingame-id than "lore"? "ingameId" perhaps!!!
 * All other Guide stacks should also use the vanilla tooltip rendering!
 
@@ -89,12 +89,12 @@ public final class GearModel extends Model {
         gearInfoRegistry.reloadData();
     }
 
-    public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
+    public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
         return gearParser.fromItemStack(gearInfo, itemStack);
     }
 
-    public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
-        return gearParser.fromJsonLore(itemStack, gearInfo);
+    public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
+        return gearParser.fromIngameItemData(gearInfo, itemData);
     }
 
     public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {

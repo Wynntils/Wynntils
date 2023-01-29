@@ -38,10 +38,6 @@ public class ItemGuessProfile {
         this.range = range;
     }
 
-    public String getRange() {
-        return range;
-    }
-
     public Map<GearType, Map<GearTier, List<String>>> getItems() {
         return items;
     }

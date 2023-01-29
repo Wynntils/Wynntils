@@ -4,15 +4,18 @@
  */
 package com.wynntils.screens.gearviewer;
 
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.gearviewer.widgets.GearItemButton;
 import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -74,8 +77,9 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearItem gearItem = Models.Gear.fromJsonLore(itemStack, gearInfo);
-        return new FakeItemStack(gearItem, "From " + playerName.getString());
+        JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
+        GearInstance gearInstance = Models.Gear.parseInstance(gearInfo, itemData);
+        return new FakeItemStack(new GearItem(gearInfo, gearInstance), "From " + playerName.getString());
     }
 
     @Override

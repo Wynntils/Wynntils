@@ -6,8 +6,6 @@ package com.wynntils.models.gearinfo;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
@@ -15,11 +13,9 @@ import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -135,17 +131,7 @@ public class GearParser {
 
      */
 
-    public GearItem fromJsonLore(ItemStack itemStack, GearInfo gearInfo) {
-        // attempt to parse item itemData
-        JsonObject itemData;
-        String rawLore = StringUtils.substringBeforeLast(LoreUtils.getStringLore(itemStack), "}")
-                + "}"; // remove extra unnecessary info
-        try {
-            itemData = JsonParser.parseString(rawLore).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            itemData = new JsonObject(); // invalid or empty itemData on item
-        }
-
+    public GearInstance fromIngameItemData(GearInfo gearInfo, JsonObject itemData) {
         List<StatActualValue> identifications = new ArrayList<>();
 
         // Lore lines is: type: "LORETYPE", percent: <number>, where 100 is baseline, so can be > 100 and < 100.
@@ -158,7 +144,10 @@ public class GearParser {
 
                 // Convert e.g. DAMAGEBONUS to our StatTypes
                 StatType statType = Models.Stat.fromLoreId(id);
-                if (statType == null) continue;
+                if (statType == null) {
+                    WynntilsMod.warn("Remote player's " + gearInfo.name() + " contains unknown stat type " + id);
+                    continue;
+                }
 
                 StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
                 if (possibleValue == null) {
@@ -191,13 +180,11 @@ public class GearParser {
             }
         }
 
-        int rerolls = 0;
-        if (itemData.has("identification_rolls")) {
-            rerolls = itemData.get("identification_rolls").getAsInt();
-        }
+        int rerolls = itemData.has("identification_rolls")
+                ? itemData.get("identification_rolls").getAsInt()
+                : 0;
 
-        GearInstance gearInstance = new GearInstance(identifications, powders, rerolls);
-        return new GearItem(gearInfo, gearInstance);
+        return new GearInstance(identifications, powders, rerolls);
     }
 
     public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
