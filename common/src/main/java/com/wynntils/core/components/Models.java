@@ -16,7 +16,7 @@ import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearProfilesModel;
-import com.wynntils.models.gearinfo.GearInfoModel;
+import com.wynntils.models.gearinfo.GearModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
@@ -58,9 +58,9 @@ public final class Models {
     public static final WorldStateModel WorldState = new WorldStateModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
-    public static final GearInfoModel GearInfo = new GearInfoModel(Stat);
+    public static final GearModel Gear = new GearModel(Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
-    public static final ItemModel Item = new ItemModel(GearInfo, Rewards, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);

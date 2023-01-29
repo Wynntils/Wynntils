@@ -51,7 +51,7 @@ public class ChatItemFeature extends UserFeature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.GearInfo.gearChatEncodingMatcher(chatInput.getValue());
+        Matcher m = Models.Gear.gearChatEncodingMatcher(chatInput.getValue());
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -70,7 +70,7 @@ public class ChatItemFeature extends UserFeature {
 
         Component message = e.getMessage();
 
-        if (!Models.GearInfo.gearChatEncodingMatcher(ComponentUtils.getCoded(message))
+        if (!Models.Gear.gearChatEncodingMatcher(ComponentUtils.getCoded(message))
                 .find()) return;
 
         e.setMessage(decodeMessage(message));
@@ -85,7 +85,7 @@ public class ChatItemFeature extends UserFeature {
         MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
-            Matcher m = Models.GearInfo.gearChatEncodingMatcher(ComponentUtils.getCoded(comp));
+            Matcher m = Models.Gear.gearChatEncodingMatcher(ComponentUtils.getCoded(comp));
             if (!m.find()) {
                 Component newComponent = comp.copy();
                 temp.append(newComponent);
@@ -96,7 +96,7 @@ public class ChatItemFeature extends UserFeature {
                 String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
-                GearItem item = Models.GearInfo.fromEncodedString(m.group());
+                GearItem item = Models.Gear.fromEncodedString(m.group());
                 if (item == null) { // couldn't decode, skip
                     comp = comp.copy();
                     continue;
@@ -113,7 +113,7 @@ public class ChatItemFeature extends UserFeature {
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
                                 + text.substring(m.end()))
                         .withStyle(style);
-                m = Models.GearInfo.gearChatEncodingMatcher(
+                m = Models.Gear.gearChatEncodingMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring
             } while (m.find()); // search for multiple items in the same message
 

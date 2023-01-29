@@ -68,12 +68,12 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearInfo gearInfo = Models.GearInfo.getGearInfoFromInternalName(gearName);
+        GearInfo gearInfo = Models.Gear.getGearInfoFromInternalName(gearName);
         if (gearInfo == null) {
             return itemStack;
         }
 
-        GearItem gearItem = Models.GearInfo.fromJsonLore(itemStack, gearInfo);
+        GearItem gearItem = Models.Gear.fromJsonLore(itemStack, gearInfo);
         return new FakeItemStack(gearItem, "From " + playerName.getString());
     }
 

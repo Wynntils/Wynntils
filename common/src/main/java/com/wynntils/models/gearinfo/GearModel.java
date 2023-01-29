@@ -76,13 +76,13 @@ NEW IDEAS:
  * A note on percent vs raw numbers and how they combine, from HeyZeer0:
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
-public final class GearInfoModel extends Model {
+public final class GearModel extends Model {
     private GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private GearParser gearParser = new GearParser();
     private GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
-    public GearInfoModel(StatModel statModel) {
+    public GearModel(StatModel statModel) {
         super(List.of(statModel));
 
         // FIXME

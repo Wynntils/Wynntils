@@ -56,7 +56,7 @@ public class ItemGuessFeature extends UserFeature {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String itemName : itemPossibilities) {
-            GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
+            GearInfo gearInfo = Models.Gear.getGearInfo(itemName);
 
             int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 

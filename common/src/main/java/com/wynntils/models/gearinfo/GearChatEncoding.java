@@ -138,7 +138,7 @@ public class GearChatEncoding {
         int[] powders = m.group("Powders") != null ? decodeNumbers(m.group("Powders")) : new int[0];
         int rerolls = decodeNumbers(m.group("Rerolls"))[0];
 
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(name);
+        GearInfo gearInfo = Models.Gear.getGearInfo(name);
         if (gearInfo == null) return null;
 
         // ids

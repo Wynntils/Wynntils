@@ -24,14 +24,14 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String itemName = matcher.group(2);
-        GearInfo gearInfo = Models.GearInfo.getGearInfo(itemName);
+        GearInfo gearInfo = Models.Gear.getGearInfo(itemName);
         if (gearInfo == null) return null;
 
         // Verify that rarity matches
         if (!name.startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
 
         GearInstance gearInstance =
-                matcher.group(1) != null ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
+                matcher.group(1) != null ? null : Models.Gear.fromItemStack(gearInfo, itemStack);
 
         return new GearItem(gearInfo, gearInstance);
     }

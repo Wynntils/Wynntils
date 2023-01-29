@@ -171,7 +171,7 @@ public class ItemScreenshotFeature extends UserFeature {
             WynntilsMod.warn("Cannot take screenshot of unidentified gear!");
             return;
         }
-        String encoded = Models.GearInfo.toEncodedString(gearItem);
+        String encoded = Models.Gear.toEncodedString(gearItem);
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
