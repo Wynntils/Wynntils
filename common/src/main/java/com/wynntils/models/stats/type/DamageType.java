@@ -16,7 +16,7 @@ public enum DamageType {
     THUNDER(Element.THUNDER),
     EARTH(Element.EARTH),
     RAINBOW("Elemental"),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD); // NEUTRAL is only used once, for "Violet-Shift".
+    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD);
 
     private final Element element;
     private final String displayName;

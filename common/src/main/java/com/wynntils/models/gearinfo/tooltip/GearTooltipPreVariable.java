@@ -91,8 +91,6 @@ public final class GearTooltipPreVariable {
         // FIXME: Only add if we had requirements
         baseTooltip.add(Component.literal(""));
 
-        // FIXME: I think we're missing Powder Specials here...
-
         // Add delimiter if variables stats will follow
         if (!gearInfo.variableStats().isEmpty()) {
             baseTooltip.add(Component.literal(""));

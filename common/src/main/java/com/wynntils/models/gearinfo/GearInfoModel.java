@@ -15,6 +15,50 @@ import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
 
+/*
+FIXME list:
+Remaining issues:
+* GearInfoModel.getGearInfoFromInternalName! - we should strip "֎" earlier. "ingame"
+* Registry, items like "Coconut֎" have the same displayName after cleaning, fix this
+* We need to at least pick out the possible gear stuff and move it to us
+* TOTAL GEAR QUALITY: GearInstance calculations are removed! Should be done by Model instead.
+* Tooltip -- split lore must be simplified!
+* -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
+* RerollCalculator: flip() is probably broken. Make this into a method instead.
+* Move the reroll calculations and other calculations from util class into the model, perhaps
+*   a new GearCalculations utility class? instad of GearUtils
+* Wynncraft order is WRONG wrt spell costs! Need to write a "swapPairwise" for the list.
+* ItemScreenshotFeature error on copy
+* Tome and Charm in GearItemModel...
+* GearChatEncoding -- did I break the protocol wrt inverse/negative values?
+* -- Also, large values should have been encoded as percent, I *did* break this!
+* GearParser needs cleaning
+* Crafted gear needs some thinking
+* GearTooltipBuilder -- only cache middle segment if style is the same, otherwise
+*   invalidate the cache. Also check for names like "top" and "middle", fix that.
+* tooltip Post: major IDs are incorrectly formatted
+* tooltip Pre: did the old code correctly set our requirements?
+* MODELLING: A GearInstance should have powder specials as well!!!!
+* SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
+*  -- then remove fixme in tooltip variable.
+* tooltip variable needs cleaning in how we build identified/unidentified lines
+* GEAR MATERIAL!!!! needs 3 factory method, and only return one thing:a ItemStack.
+*  -- should probablt have a MaterialHandler thingy, also move in method from GearUtils
+* ItemModel has bad dependencies:GearItem for tome and charm, GearProfiles for gear box possibilities
+* Can we get a better name for ingame-id than "lore"? "ingameId" perhaps!!!
+* All other Guide stacks should also use the vanilla tooltip rendering!
+
+
+NEW IDEAS:
+* Custom ordering
+* Show range of actual internal roll on ctrl+shift
+* Calculate possible gear on the fly (and then cache it)
+* Rename the item tooltip feature...
+* Rename WynnItemMatcher to WynnItemUtil
+* Also fix Ingredients
+
+ */
+
 /**
  * Gear and stats are complex, have lots of corner cases and suffer from a general
  * lack of comprehensible, exhaustive, correct and authoritive documentation. :-(
@@ -26,6 +70,9 @@ import net.minecraft.world.item.ItemStack;
  * The Damage Bible: https://docs.google.com/document/d/1BXdLrMWj-BakPcAWnuqvSFbwiz7oGTOMcEEdC5vCWs4
  * WynnBuilder "Wynnfo": https://hppeng-wynn.github.io/wynnfo/, especially
  * Damage Calculations: https://hppeng-wynn.github.io/wynnfo/pdfs/Damage_calculation.pdf
+ *
+ * A note on percent vs raw numbers and how they combine, from HeyZeer0:
+ * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearInfoModel extends Model {
     private GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();

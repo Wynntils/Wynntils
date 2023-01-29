@@ -34,9 +34,6 @@ public final class GearAnnotator implements ItemAnnotator {
         GearInstance gearInstance =
                 matcher.group(1) != null ? null : Models.GearInfo.fromItemStack(gearInfo, itemStack);
 
-        GearItem gearItem = new GearItem(gearInfo, gearInstance);
-        // FIXME: debug code!
-        var b = GearTooltipBuilder.fromItemStack(itemStack, gearItem);
-        return gearItem;
+        return new GearItem(gearInfo, gearInstance);
     }
 }
