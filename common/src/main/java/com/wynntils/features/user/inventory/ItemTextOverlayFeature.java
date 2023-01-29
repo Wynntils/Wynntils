@@ -310,7 +310,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
             String text = skill.getSymbol();
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColor()))
+                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
@@ -335,7 +335,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
             String text = skill.getSymbol();
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColor()))
+                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);

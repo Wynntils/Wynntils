@@ -21,7 +21,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.wynn.WynnItemUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
@@ -75,7 +75,7 @@ public class ItemScreenshotFeature extends UserFeature {
     private static void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = new ArrayList<>(itemTooltip);
-        WynnItemUtils.removeLoreTooltipLines(tooltip);
+        removeLoreTooltipLines(tooltip);
 
         Font font = FontRenderer.getInstance().getFont();
 
@@ -165,7 +165,15 @@ public class ItemScreenshotFeature extends UserFeature {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isEmpty()) return;
 
-        String encoded = Models.GearItem.toEncodedString(gearItemOpt.get());
+        GearItem gearItem = gearItemOpt.get();
+        if (gearItem.isUnidentified()) {
+            // We can only send chat encoded gear of identified gear
+            WynntilsMod.warn("Cannot make chat link of unidentified gear");
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemError")
+                    .withStyle(ChatFormatting.RED));
+            return;
+        }
+        String encoded = Models.GearItem.toEncodedString(gearItem);
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -175,5 +183,27 @@ public class ItemScreenshotFeature extends UserFeature {
                         HoverEvent.Action.SHOW_TEXT,
                         Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
+    }
+
+    /**
+     * Create a list of ItemIdentificationContainer corresponding to the given GearProfile, formatted for item guide items
+     *
+     * @param item the profile of the item
+     * @return a list of appropriately formatted ItemIdentificationContainer
+     */
+    private static void removeLoreTooltipLines(List<Component> tooltip) {
+        int loreStart = -1;
+        for (int i = 0; i < tooltip.size(); i++) {
+            // only remove text after the item type indicator
+            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
+                loreStart = i + 1;
+                break;
+            }
+        }
+
+        // type indicator was found
+        if (loreStart != -1) {
+            tooltip.subList(loreStart, tooltip.size()).clear();
+        }
     }
 }
