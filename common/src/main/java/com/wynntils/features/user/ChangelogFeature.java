@@ -45,7 +45,7 @@ public class ChangelogFeature extends UserFeature {
                     String changelog = jsonObject.get("changelog").getAsString();
 
                     lastShownVersion = WynntilsMod.getVersion();
-                    // FIXME: Save config here
+                    Managers.Config.saveConfig();
 
                     if (autoClassMenu) {
                         McUtils.sendCommand("class");
