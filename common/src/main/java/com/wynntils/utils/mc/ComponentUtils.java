@@ -4,7 +4,9 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +22,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ComponentUtils {
+    public static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
     // Text with formatting codes "§cTest §1Text"
@@ -212,6 +215,64 @@ public final class ComponentUtils {
                 .collect(Collectors.toList());
         if (split.isEmpty()) split.add(Component.literal(""));
         return split;
+    }
+
+    public static MutableComponent makeRainbowStyle(String name) {
+        MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD);
+
+        // This math was originally based off Avaritia code.
+        // Special thanks for Morpheus1101 and SpitefulFox
+        // Avaritia Repo: https://github.com/Morpheus1101/Avaritia
+        int time = (int) (System.currentTimeMillis() % RAINBOW_CYCLE_TIME);
+        for (int i = 0; i < name.length(); i++) {
+            int hue = (time + i * RAINBOW_CYCLE_TIME / 7) % RAINBOW_CYCLE_TIME;
+            Style color = Style.EMPTY
+                    .withColor(Color.HSBtoRGB((hue / (float) RAINBOW_CYCLE_TIME), 0.8F, 0.8F))
+                    .withItalic(false);
+
+            newName.append(Component.literal(String.valueOf(name.charAt(i))).setStyle(color));
+        }
+
+        return newName;
+    }
+
+    public static MutableComponent makeObfuscated(
+            String name, float obfuscationChanceStart, float obfuscationChanceEnd) {
+        MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
+        newName.setStyle(newName.getStyle().withItalic(false));
+
+        boolean obfuscated = Math.random() < obfuscationChanceStart;
+        StringBuilder current = new StringBuilder();
+
+        for (int i = 0; i < name.length() - 1; i++) {
+            current.append(name.charAt(i));
+
+            float chance =
+                    MathUtils.lerp(obfuscationChanceStart, obfuscationChanceEnd, (i + 1) / (float) (name.length() - 1));
+
+            if (!obfuscated && Math.random() < chance) {
+                newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+                current = new StringBuilder();
+
+                obfuscated = true;
+            } else if (obfuscated && Math.random() > chance) {
+                newName.append(Component.literal(current.toString())
+                        .withStyle(Style.EMPTY.withObfuscated(true).withItalic(false)));
+                current = new StringBuilder();
+
+                obfuscated = false;
+            }
+        }
+
+        current.append(name.charAt(name.length() - 1));
+
+        if (obfuscated) {
+            newName.append(Component.literal(current.toString())
+                    .withStyle(Style.EMPTY.withItalic(false).withObfuscated(true)));
+        } else {
+            newName.append(Component.literal(current.toString()).withStyle(Style.EMPTY.withItalic(false)));
+        }
+        return newName;
     }
 
     private static class ComponentListBuilder {
