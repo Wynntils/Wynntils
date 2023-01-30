@@ -1,9 +1,21 @@
+## [0.0.2-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.158...v0.0.2-alpha.159) (2023-01-30)
+
+
+### Bug Fixes
+
+* Fix status effect constructor order ([#1103](https://github.com/Wynntils/Artemis/issues/1103)) ([c3a753e](https://github.com/Wynntils/Artemis/commit/c3a753ed1fb893708731d08505fe420746e0d790))
+
 ## [0.0.2-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.157...v0.0.2-alpha.158) (2023-01-30)
 
 
 ### Bug Fixes
 
 * Make Hades Ping Scheduler run correctly, fixing Hades disconnects before even joining Wynncraft ([#1102](https://github.com/Wynntils/Artemis/issues/1102)) ([d5c4fe0](https://github.com/Wynntils/Artemis/commit/d5c4fe088066187dad9bd9fb91648a4fbb373ae5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.158 [skip ci] ([34de95f](https://github.com/Wynntils/Artemis/commit/34de95f7402f38799db3b6542c031f2bd51d5dbd))
 
 ## [0.0.2-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.156...v0.0.2-alpha.157) (2023-01-30)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.155 [skip ci] ([8fb4c41](https://github.com/Wynntils/Artemis/commit/8fb4c41c939560d38e2ca93cb96746cdd5171a9a))
-
-## [0.0.2-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.153...v0.0.2-alpha.154) (2023-01-27)
-
-
-### Code Refactoring
-
-* Models need intra-model dependencies ([#1096](https://github.com/Wynntils/Artemis/issues/1096)) ([8aeea80](https://github.com/Wynntils/Artemis/commit/8aeea80af6870872910c61e6c1cb3c85b90828d9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.154 [skip ci] ([856b1b4](https://github.com/Wynntils/Artemis/commit/856b1b440739d032dbac44bdbf32e96718e64474))
 
