@@ -27,7 +27,8 @@ public final class GuideGearItemStack extends GuideItemStack {
 
         this.gearInfo = gearInfo;
         this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
-        this.generatedTooltip = GearTooltipBuilder.fromGearInfo(gearInfo).getTooltipLines();
+        GearTooltipBuilder gearTooltipBuilder = GearTooltipBuilder.buildNew(gearInfo, null, true);
+        this.generatedTooltip = gearTooltipBuilder.getTooltipLines();
     }
 
     @Override

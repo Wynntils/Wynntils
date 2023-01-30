@@ -29,9 +29,9 @@ import net.minecraft.network.chat.Style;
 
 public final class GearTooltipIdentifications {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, GearTooltipStyle style) {
-        List<Component> allStatLines = new ArrayList<>();
+        List<Component> identifications = new ArrayList<>();
 
-        appendSkillBonuses(gearInfo, allStatLines);
+        appendSkillBonuses(gearInfo, identifications);
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.reorder());
         List<StatType> allStats = gearInfo.getVariableStats();
@@ -44,7 +44,7 @@ public final class GearTooltipIdentifications {
         for (StatType statType : listOrdering) {
             if (useDelimiter && statType instanceof StatListDelimiter) {
                 if (delimiterNeeded) {
-                    allStatLines.add(Component.literal(""));
+                    identifications.add(Component.literal(""));
                     delimiterNeeded = false;
                 }
             }
@@ -73,11 +73,11 @@ public final class GearTooltipIdentifications {
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
                 line = buildUnidentifiedLine(gearInfo, style, possibleValues);
             }
-            allStatLines.add(line);
+            identifications.add(line);
             delimiterNeeded = true;
         }
 
-        return allStatLines;
+        return identifications;
     }
 
     // FIXME: This should really be part of PreVariable tooltip, but we need a better

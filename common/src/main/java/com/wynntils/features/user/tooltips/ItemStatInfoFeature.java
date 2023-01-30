@@ -87,7 +87,7 @@ public class ItemStatInfoFeature extends UserFeature {
             GearTooltipBuilder builder = gearItem.getCache()
                     .getOrCalculate(
                             WynnItemCache.TOOLTIP_KEY,
-                            () -> GearTooltipBuilder.fromItemStack(event.getItemStack(), gearItem));
+                            () -> GearTooltipBuilder.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
             LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(getCurrentIdentificationStyle()));

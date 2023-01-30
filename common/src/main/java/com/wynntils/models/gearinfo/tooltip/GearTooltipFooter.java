@@ -22,22 +22,22 @@ import net.minecraft.network.chat.MutableComponent;
 
 public final class GearTooltipFooter {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance) {
-        List<Component> baseTooltip = new ArrayList<>();
+        List<Component> footer = new ArrayList<>();
 
         // major ids
         // FIXME: Missing "<+Entropy: >Meteor falls..." which should be in AQUA.
         if (!gearInfo.fixedStats().majorIds().isEmpty()) {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
                 Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), 150))
-                        .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
+                        .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
-            baseTooltip.add(Component.literal(""));
+            footer.add(Component.literal(""));
         }
 
         // powder slots
         if (gearInfo.powderSlots() > 0) {
             if (gearInstance == null) {
-                baseTooltip.add(Component.literal("[" + gearInfo.powderSlots() + " Powder Slots]")
+                footer.add(Component.literal("[" + gearInfo.powderSlots() + " Powder Slots]")
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 MutableComponent powderLine = Component.literal(
@@ -53,7 +53,7 @@ public final class GearTooltipFooter {
                     powderList.append(Component.literal("]"));
                     powderLine.append(powderList);
                 }
-                baseTooltip.add(powderLine);
+                footer.add(powderLine);
             }
         }
 
@@ -63,11 +63,11 @@ public final class GearTooltipFooter {
         if (gearInstance != null && gearInstance.rerolls() > 1) {
             tier.append(" [" + gearInstance.rerolls() + "]");
         }
-        baseTooltip.add(tier);
+        footer.add(tier);
 
         // untradable
         if (gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
-            baseTooltip.add(Component.literal(StringUtils.capitalizeFirst(
+            footer.add(Component.literal(StringUtils.capitalizeFirst(
                             gearInfo.metaInfo().restrictions().getDescription() + " Item"))
                     .withStyle(ChatFormatting.RED));
         }
@@ -75,9 +75,9 @@ public final class GearTooltipFooter {
         Optional<String> lore = gearInfo.metaInfo().lore();
         if (lore.isPresent()) {
             Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), 150))
-                    .forEach(c -> baseTooltip.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
+                    .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
         }
 
-        return baseTooltip;
+        return footer;
     }
 }
