@@ -31,8 +31,6 @@ public final class GearTooltipIdentifications {
             GearTooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
 
-        appendSkillBonuses(gearInfo, identifications);
-
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
         List<StatType> allStats = gearInfo.getVariableStats();
 
@@ -77,34 +75,9 @@ public final class GearTooltipIdentifications {
             delimiterNeeded = true;
         }
 
+        identifications.add(Component.literal(""));
+
         return identifications;
-    }
-
-    // FIXME: This should really be part of PreVariable tooltip, but we need a better
-    // split for that.
-    private static void appendSkillBonuses(GearInfo gearInfo, List<Component> allStatLines) {
-        List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
-        for (Skill skill : Skill.getGearSkillOrder()) {
-            Pair<Skill, Integer> skillBonusValue = getSkillBonuses(skill, skillBonuses);
-            if (skillBonusValue == null) continue;
-
-            Component line = buildBaseComponent(
-                    skillBonusValue.key().getDisplayName(), skillBonusValue.value(), StatUnit.RAW, false, "");
-            allStatLines.add(line);
-        }
-        if (!skillBonuses.isEmpty()) {
-            allStatLines.add(Component.literal(""));
-        }
-    }
-
-    private static Pair<Skill, Integer> getSkillBonuses(Skill skill, List<Pair<Skill, Integer>> skillBonuses) {
-        for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
-            if (skillBonusValue.key() == skill) {
-                return skillBonusValue;
-            }
-        }
-
-        return null;
     }
 
     private static MutableComponent buildUnidentifiedLine(

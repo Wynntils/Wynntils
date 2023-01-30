@@ -69,6 +69,9 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
 
+            case "damageBonus" -> "UNKNOWN_1"; // Have not been able to confirm this
+            case "damageBonusRaw" -> "UNKNOWN_2"; // Have not been able to confirm this
+
             default -> apiName.toUpperCase(Locale.ROOT);
         };
     }

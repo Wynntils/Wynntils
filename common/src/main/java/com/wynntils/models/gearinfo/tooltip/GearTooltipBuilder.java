@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo.tooltip;
 
+import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
@@ -23,14 +24,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipBuilder {
-    private static final Pattern ITEM_IDENTIFICATION_PATTERN =
-            Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
-                    + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9{}]+))");
-    private static final Pattern RANGE_PATTERN =
-            Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
+    // Test suite: regexr.com/776qt
+    private static final Pattern IDENTIFICATION_STAT_PATTERN =
+            Pattern.compile("^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new GearTooltipStyle(StatListOrdering.DEFAULT, true, true, true);
+            new GearTooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
 
     private final Map<GearTooltipStyle, List<Component>> identificationsCache = new HashMap<>();
 
@@ -111,10 +110,18 @@ public final class GearTooltipBuilder {
             String normalizedCoded = WynnUtils.normalizeBadString(coded);
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLineString);
 
-            if (!footerStarted && isIdentification(loreLine, unformattedLoreLine)) {
-                headerEnded = true;
-                // Don't keep identifications lines at all
-                continue;
+            if (!footerStarted) {
+                Matcher matcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
+                if (matcher.matches()) {
+                    // Skill points counts to the header since they are fixed (but look like
+                    // identified stats), so ignore those
+                    String statName = matcher.group(5);
+                    if (!Skill.isSkill(statName)) {
+                        headerEnded = true;
+                        // Don't keep identifications lines at all
+                        continue;
+                    }
+                }
             }
 
             if (!headerEnded) {
@@ -127,22 +134,5 @@ public final class GearTooltipBuilder {
         }
 
         return Pair.of(header, footer);
-    }
-
-    private static boolean isIdentification(Component lore, String unformattedLoreLine) {
-        // This looks quite messy, but is in effect what we did before
-        // FIXME: Clean up?
-        String loreString = lore.getString();
-        Matcher identificationMatcher = ITEM_IDENTIFICATION_PATTERN.matcher(unformattedLoreLine);
-        if (identificationMatcher.find()) {
-            return true;
-        }
-
-        Matcher unidentifiedMatcher = RANGE_PATTERN.matcher(unformattedLoreLine);
-        if (unidentifiedMatcher.matches()) {
-            return true;
-        }
-
-        return false;
     }
 }

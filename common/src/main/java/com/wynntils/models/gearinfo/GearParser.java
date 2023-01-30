@@ -144,8 +144,10 @@ public class GearParser {
                 // Convert e.g. DAMAGEBONUS to our StatTypes
                 StatType statType = Models.Stat.fromLoreId(id);
                 if (statType == null) {
-                    // FIXME: do not warn if this is skill point
                     // This can happen for skill point bonus, which used to be variable...
+                    Skill skill = Skill.fromApiId(id.replace("POINTS", ""));
+                    if (skill != null) continue;
+
                     WynntilsMod.warn("Remote player's " + gearInfo.name() + " contains unknown stat type " + id);
                     continue;
                 }

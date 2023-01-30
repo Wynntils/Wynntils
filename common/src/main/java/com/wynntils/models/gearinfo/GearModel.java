@@ -39,6 +39,8 @@ Remaining issues:
 * Crafted gear needs some thinking
 * MODELLING: A GearInstance should have powder specials as well!!!!
 
+stats should have Range internalRoll
+
 
 NEW IDEAS:
 * Custom ordering
