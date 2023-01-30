@@ -32,7 +32,7 @@ public class SkillPointItem extends GuiItem implements CountedItemProperty {
 
     @Override
     public CustomColor getCountColor() {
-        return CustomColor.fromChatFormatting(skill.getColor());
+        return CustomColor.fromChatFormatting(skill.getColorCode());
     }
 
     @Override
