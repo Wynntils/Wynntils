@@ -1,15 +1,23 @@
+## [0.0.2-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.156...v0.0.2-alpha.157) (2023-01-30)
+
+
+### Bug Fixes
+
+* Mixed bag of fixes ([#1100](https://github.com/Wynntils/Artemis/issues/1100)) ([0fe3be5](https://github.com/Wynntils/Artemis/commit/0fe3be518abb4a3081e18e2f1b24c921537ebc44))
+
 ## [0.0.2-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.155...v0.0.2-alpha.156) (2023-01-30)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.156 [skip ci] ([f1c0034](https://github.com/Wynntils/Artemis/commit/f1c003489cca56d41fa7351a5a5cbad094df6efe))
 
 
 ### New Features
 
 * Add Changelog Screen ([#1099](https://github.com/Wynntils/Artemis/issues/1099)) ([0962e1a](https://github.com/Wynntils/Artemis/commit/0962e1a0341797efc8082bf18746eef78fec1c68))
 * Add Experience Functions (xpm_raw, xpm, xppm) ([#1098](https://github.com/Wynntils/Artemis/issues/1098)) ([6fac180](https://github.com/Wynntils/Artemis/commit/6fac180e76157847c309fac709966f6942ed6a3f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.156 [skip ci] ([f858e92](https://github.com/Wynntils/Artemis/commit/f858e92b4bd7ea6e4b251ecd3f342a78eb0e7585))
+* **release:** v0.0.2-alpha.156 [skip ci] ([f1c0034](https://github.com/Wynntils/Artemis/commit/f1c003489cca56d41fa7351a5a5cbad094df6efe))
 
 ## [0.0.2-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.154...v0.0.2-alpha.155) (2023-01-27)
 
@@ -46,13 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.153 [skip ci] ([e1e7b11](https://github.com/Wynntils/Artemis/commit/e1e7b11738dafc7b5b3c926133ad7abe225f6582))
-
-## [0.0.2-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.151...v0.0.2-alpha.152) (2023-01-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.152 [skip ci] ([f52a8c7](https://github.com/Wynntils/Artemis/commit/f52a8c702ad0281aa65402f95fd47dced42f23f7))
-* Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c2076e5](https://github.com/Wynntils/Artemis/commit/c2076e5e2900a1e04110a512e8c2ef3fcfdb2757))
-* Turn spell cast vignette off by default ([#1095](https://github.com/Wynntils/Artemis/issues/1095)) ([c3fd809](https://github.com/Wynntils/Artemis/commit/c3fd809d5722e7c7e20b830e130b56326c69dfda))
 
