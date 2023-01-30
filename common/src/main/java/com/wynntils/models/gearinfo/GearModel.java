@@ -27,8 +27,6 @@ Remaining issues:
 
 * Tooltip -- split lore must be simplified!
 * -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
-* GearTooltipBuilder -- only cache middle segment if style is the same, otherwise
-*   invalidate the cache. Also check for names like "top" and "middle", fix that.
 * tooltip Post: major IDs are incorrectly formatted
 * tooltip Pre: did the old code correctly set our requirements?
 * tooltip variable needs cleaning in how we build identified/unidentified lines

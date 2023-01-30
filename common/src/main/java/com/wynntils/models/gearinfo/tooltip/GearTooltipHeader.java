@@ -18,7 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class GearTooltipPreVariable {
+public final class GearTooltipHeader {
     public static List<Component> buildTooltip(GearInfo gearInfo) {
         List<Component> baseTooltip = new ArrayList<>();
 

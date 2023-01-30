@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class GearTooltipPostVariable {
+public final class GearTooltipFooter {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance) {
         List<Component> baseTooltip = new ArrayList<>();
 

@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipBuilder {
     private static final String UNIDENTIFIED_PREFIX = "Unidentified ";
-    private static final Pattern ITEM_TIER =
+    private static final Pattern REROLL_PATTERN =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) Item(?: \\[(?<Rolls>\\d+)])?");
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
@@ -39,32 +39,32 @@ public final class GearTooltipBuilder {
     private final GearInstance gearInstance;
     private final boolean hideUnidentified;
 
-    private List<Component> topTooltip;
-    private List<Component> bottomTooltip;
+    private List<Component> header;
+    private List<Component> footer;
 
-    private final Map<GearTooltipStyle, List<Component>> middleTooltipCache = new HashMap<>();
+    private final Map<GearTooltipStyle, List<Component>> identificationsCache = new HashMap<>();
 
     private GearTooltipBuilder(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
         this.hideUnidentified = false;
 
-        topTooltip = GearTooltipPreVariable.buildTooltip(gearInfo);
-        bottomTooltip = GearTooltipPostVariable.buildTooltip(gearInfo, gearInstance);
+        header = GearTooltipHeader.buildTooltip(gearInfo);
+        footer = GearTooltipFooter.buildTooltip(gearInfo, gearInstance);
     }
 
     private GearTooltipBuilder(
             GearInfo gearInfo,
             GearInstance gearInstance,
-            List<Component> topTooltip,
-            List<Component> bottomTooltip,
+            List<Component> header,
+            List<Component> footer,
             boolean hideUnidentified) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
         this.hideUnidentified = hideUnidentified;
 
-        this.topTooltip = topTooltip;
-        this.bottomTooltip = bottomTooltip;
+        this.header = header;
+        this.footer = footer;
     }
 
     public static GearTooltipBuilder fromGearInfo(GearInfo gearInfo) {
@@ -92,20 +92,20 @@ public final class GearTooltipBuilder {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
 
-        // Top and bottom are always constant
-        tooltip.addAll(topTooltip);
+        // Header and footer are always constant
+        tooltip.addAll(header);
 
-        // In the middle we have the list of identifications, which is different
+        // Between header and footer we have the list of identifications, which is different
         // depending on which decorations are requested
-        List<Component> middleTooltip = middleTooltipCache.get(style);
-        if (middleTooltip == null) {
-            middleTooltip = GearTooltipVariableStats.buildTooltip(gearInfo, gearInstance, style);
-            middleTooltipCache.put(style, middleTooltip);
+        List<Component> identificationsTooltip = identificationsCache.get(style);
+        if (identificationsTooltip == null) {
+            identificationsTooltip = GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, style);
+            identificationsCache.put(style, identificationsTooltip);
         }
 
-        tooltip.addAll(middleTooltip);
+        tooltip.addAll(identificationsTooltip);
 
-        tooltip.addAll(bottomTooltip);
+        tooltip.addAll(footer);
 
         // FIXME: Can we get rid of this?
         return ComponentUtils.stripDuplicateBlank(tooltip);
@@ -116,10 +116,10 @@ public final class GearTooltipBuilder {
     }
 
     private static Pair<List<Component>, List<Component>> splitLore(List<Component> lore, GearInfo gearInfo) {
-        List<Component> topTooltip = new ArrayList<>();
-        List<Component> bottomTooltip = new ArrayList<>();
+        List<Component> header = new ArrayList<>();
+        List<Component> footer = new ArrayList<>();
 
-        List<Component> baseTooltip = topTooltip;
+        List<Component> baseTooltip = header;
 
         boolean setBonusIDs = false;
         for (Component loreLine : lore) {
@@ -147,7 +147,7 @@ public final class GearTooltipBuilder {
                 continue;
             }
 
-            Matcher rerollMatcher = ITEM_TIER.matcher(unformattedLoreLine);
+            Matcher rerollMatcher = REROLL_PATTERN.matcher(unformattedLoreLine);
             if (rerollMatcher.find()) {
                 baseTooltip.add(loreLine);
                 continue;
@@ -159,13 +159,13 @@ public final class GearTooltipBuilder {
             }
 
             // if we've reached this point, we have an id. It should not be stored anywhere
-            if (baseTooltip == topTooltip) {
-                // switch to bottom part
-                baseTooltip = bottomTooltip;
+            if (baseTooltip == header) {
+                // switch to footer
+                baseTooltip = footer;
             }
         }
 
-        return Pair.of(topTooltip, bottomTooltip);
+        return Pair.of(header, footer);
     }
 
     private static boolean isIdLine(Component lore, GearInfo item, String unformattedLoreLine) {

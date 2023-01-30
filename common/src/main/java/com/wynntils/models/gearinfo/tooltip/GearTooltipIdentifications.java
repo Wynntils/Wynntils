@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class GearTooltipVariableStats {
+public final class GearTooltipIdentifications {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, GearTooltipStyle style) {
         List<Component> allStatLines = new ArrayList<>();
 
