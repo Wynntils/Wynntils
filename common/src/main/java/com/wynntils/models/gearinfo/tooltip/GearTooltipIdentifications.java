@@ -33,16 +33,16 @@ public final class GearTooltipIdentifications {
 
         appendSkillBonuses(gearInfo, identifications);
 
-        List<StatType> listOrdering = Models.Stat.getOrderingList(style.reorder());
+        List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
         List<StatType> allStats = gearInfo.getVariableStats();
 
-        boolean useDelimiter = style.group();
+        boolean useDelimiters = style.useDelimiters();
 
         boolean delimiterNeeded = false;
         // We need to iterate over all possible stats in order, to be able
         // to inject delimiters, instead of just using Models.Stat.getSortedStats
         for (StatType statType : listOrdering) {
-            if (useDelimiter && statType instanceof StatListDelimiter) {
+            if (useDelimiters && statType instanceof StatListDelimiter) {
                 if (delimiterNeeded) {
                     identifications.add(Component.literal(""));
                     delimiterNeeded = false;
