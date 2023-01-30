@@ -4,22 +4,32 @@
  */
 package com.wynntils.models.concepts;
 
+import com.wynntils.utils.StringUtils;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
 public enum Skill {
-    STRENGTH("✤", ChatFormatting.DARK_GREEN),
-    DEXTERITY("✦", ChatFormatting.YELLOW),
-    INTELLIGENCE("✽", ChatFormatting.AQUA),
-    DEFENCE("✹", ChatFormatting.RED), // Note! Must be spelled with "C" to match in-game
-    AGILITY("❋", ChatFormatting.WHITE);
+    STRENGTH(Element.EARTH),
+    DEXTERITY(Element.THUNDER),
+    INTELLIGENCE(Element.WATER),
+    DEFENCE(Element.FIRE, "defense"), // Note! Must be spelled with "C" to match in-game
+    AGILITY(Element.AIR);
 
-    private final String symbol;
-    private final ChatFormatting color;
+    private final Element associatedElement;
+    private final String apiName;
+    private final String displayName;
 
-    Skill(String symbol, ChatFormatting color) {
-        this.symbol = symbol;
-        this.color = color;
+    Skill(Element associatedElement, String apiName) {
+        this.associatedElement = associatedElement;
+        this.apiName = apiName;
+        this.displayName = StringUtils.capitalized(this.name());
+    }
+
+    Skill(Element associatedElement) {
+        this.associatedElement = associatedElement;
+        this.apiName = this.name().toLowerCase(Locale.ROOT);
+        this.displayName = StringUtils.capitalized(this.name());
     }
 
     public static Skill fromString(String str) {
@@ -30,11 +40,36 @@ public enum Skill {
         }
     }
 
-    public String getSymbol() {
-        return symbol;
+    public static boolean isSkill(String idName) {
+        for (Skill skill : values()) {
+            if (idName.equals(skill.getDisplayName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public ChatFormatting getColor() {
-        return color;
+    public static List<Skill> getGearSkillOrder() {
+        return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
+    }
+
+    public Element getAssociatedElement() {
+        return associatedElement;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getApiName() {
+        return apiName;
+    }
+
+    public String getSymbol() {
+        return associatedElement.getSymbol();
+    }
+
+    public ChatFormatting getColorCode() {
+        return associatedElement.getColorCode();
     }
 }

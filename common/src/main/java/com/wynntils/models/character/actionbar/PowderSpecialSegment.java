@@ -34,7 +34,7 @@ public class PowderSpecialSegment implements ActionBarSegment {
     }
 
     private void updatePowderSpecial(Matcher matcher) {
-        powderSpecialType = Powder.getFromSymbol(matcher.group(1).charAt(0));
+        powderSpecialType = Powder.getFromSymbol(matcher.group(1));
         powderSpecialCharge = Integer.parseInt(matcher.group(2));
     }
 
