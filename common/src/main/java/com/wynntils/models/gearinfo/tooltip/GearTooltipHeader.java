@@ -75,6 +75,8 @@ public final class GearTooltipHeader {
             header.add(Component.literal(""));
         }
 
+        // FIXME: Is requirements in the correct order? Also add checks if the requirements
+        // are fulfilled...
         // requirements
         GearRequirements requirements = gearInfo.requirements();
         if (requirements.quest().isPresent()) {

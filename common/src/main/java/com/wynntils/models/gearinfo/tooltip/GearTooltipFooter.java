@@ -21,6 +21,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public final class GearTooltipFooter {
+    public static final int PIXEL_WIDTH = 150;
+
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance) {
         List<Component> footer = new ArrayList<>();
 
@@ -28,7 +30,7 @@ public final class GearTooltipFooter {
         // FIXME: Missing "<+Entropy: >Meteor falls..." which should be in AQUA.
         if (!gearInfo.fixedStats().majorIds().isEmpty()) {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
-                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), 150))
+                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
                         .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
             footer.add(Component.literal(""));
@@ -74,7 +76,7 @@ public final class GearTooltipFooter {
 
         Optional<String> lore = gearInfo.metaInfo().lore();
         if (lore.isPresent()) {
-            Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), 150))
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), PIXEL_WIDTH))
                     .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
         }
 
