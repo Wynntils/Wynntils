@@ -1,8 +1,14 @@
-## [0.0.2-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.155...v0.0.2-alpha.156) (2023-01-29)
+## [0.0.2-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.155...v0.0.2-alpha.156) (2023-01-30)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.156 [skip ci] ([f1c0034](https://github.com/Wynntils/Artemis/commit/f1c003489cca56d41fa7351a5a5cbad094df6efe))
 
 
 ### New Features
 
+* Add Changelog Screen ([#1099](https://github.com/Wynntils/Artemis/issues/1099)) ([0962e1a](https://github.com/Wynntils/Artemis/commit/0962e1a0341797efc8082bf18746eef78fec1c68))
 * Add Experience Functions (xpm_raw, xpm, xppm) ([#1098](https://github.com/Wynntils/Artemis/issues/1098)) ([6fac180](https://github.com/Wynntils/Artemis/commit/6fac180e76157847c309fac709966f6942ed6a3f))
 
 ## [0.0.2-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.154...v0.0.2-alpha.155) (2023-01-27)
