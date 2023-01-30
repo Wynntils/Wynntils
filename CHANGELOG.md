@@ -1,9 +1,21 @@
+## [0.0.2-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.157...v0.0.2-alpha.158) (2023-01-30)
+
+
+### Bug Fixes
+
+* Make Hades Ping Scheduler run correctly, fixing Hades disconnects before even joining Wynncraft ([#1102](https://github.com/Wynntils/Artemis/issues/1102)) ([d5c4fe0](https://github.com/Wynntils/Artemis/commit/d5c4fe088066187dad9bd9fb91648a4fbb373ae5))
+
 ## [0.0.2-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.156...v0.0.2-alpha.157) (2023-01-30)
 
 
 ### Bug Fixes
 
 * Mixed bag of fixes ([#1100](https://github.com/Wynntils/Artemis/issues/1100)) ([0fe3be5](https://github.com/Wynntils/Artemis/commit/0fe3be518abb4a3081e18e2f1b24c921537ebc44))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.157 [skip ci] ([f6dcb93](https://github.com/Wynntils/Artemis/commit/f6dcb9342a917f47043d35526268e3d0dbc152bf))
 
 ## [0.0.2-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.155...v0.0.2-alpha.156) (2023-01-30)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.154 [skip ci] ([856b1b4](https://github.com/Wynntils/Artemis/commit/856b1b440739d032dbac44bdbf32e96718e64474))
-
-## [0.0.2-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.152...v0.0.2-alpha.153) (2023-01-27)
-
-
-### New Features
-
-* Fade the beacon beam if we are close to the target ([#1092](https://github.com/Wynntils/Artemis/issues/1092)) ([f28711c](https://github.com/Wynntils/Artemis/commit/f28711c001df7e63cc71fa264cee03772bd146cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.153 [skip ci] ([e1e7b11](https://github.com/Wynntils/Artemis/commit/e1e7b11738dafc7b5b3c926133ad7abe225f6582))
 
