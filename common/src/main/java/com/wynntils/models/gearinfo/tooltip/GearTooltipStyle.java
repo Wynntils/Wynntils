@@ -7,9 +7,4 @@ package com.wynntils.models.gearinfo.tooltip;
 import com.wynntils.models.stats.type.StatListOrdering;
 
 public record GearTooltipStyle(
-        StatListOrdering reorder,
-        boolean group,
-        boolean showBestValueLastAlways,
-        boolean showStars,
-        boolean colorLerp,
-        int decimalPlaces) {}
+        StatListOrdering reorder, boolean group, boolean showBestValueLastAlways, boolean showStars) {}

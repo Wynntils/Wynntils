@@ -100,12 +100,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
             IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;
             GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
-                    identificationsOrdering,
-                    groupIdentifications,
-                    showBestValueLastAlways,
-                    showStars,
-                    colorLerp,
-                    decimalPlaces);
+                    identificationsOrdering, groupIdentifications, showBestValueLastAlways, showStars);
             LinkedList<Component> tooltips =
                     new LinkedList<>(builder.getTooltipLines(currentIdentificationStyle, decorator));
 

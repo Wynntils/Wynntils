@@ -30,7 +30,7 @@ public final class GearTooltipBuilder {
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new GearTooltipStyle(StatListOrdering.DEFAULT, true, true, true, true, 1);
+            new GearTooltipStyle(StatListOrdering.DEFAULT, true, true, true);
 
     private final Map<GearTooltipStyle, List<Component>> identificationsCache = new HashMap<>();
 
