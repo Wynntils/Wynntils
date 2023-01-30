@@ -72,7 +72,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent = Component.literal("Successfully connected to HadesServer")
                         .withStyle(ChatFormatting.GREEN);
-                Managers.TickScheduler.scheduleNextTick(() -> WynntilsMod.postEvent(new HadesEvent.Authenticated()));
+                McUtils.mc().doRunTask(() -> WynntilsMod.postEvent(new HadesEvent.Authenticated()));
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
