@@ -30,7 +30,7 @@ public final class GearTooltipBuilder {
             Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
 
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new GearTooltipStyle(GearTooltipSuffixType.PERCENT, StatListOrdering.DEFAULT, true, true, true, true, 1);
+            new GearTooltipStyle(StatListOrdering.DEFAULT, true, true, true, true, 1);
 
     private final Map<GearTooltipStyle, List<Component>> identificationsCache = new HashMap<>();
 
@@ -84,7 +84,9 @@ public final class GearTooltipBuilder {
         // depending on which decorations are requested
         List<Component> identifications = identificationsCache.get(style);
         if (identifications == null) {
-            identifications = GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, style);
+            // FIXME: get right type
+            GearTooltipIdentifications.DefaultDecorator decorator = new GearTooltipIdentifications.DefaultDecorator(GearTooltipSuffixType.PERCENT);
+            identifications = GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, decorator, style);
             identificationsCache.put(style, identifications);
         }
         tooltip.addAll(identifications);

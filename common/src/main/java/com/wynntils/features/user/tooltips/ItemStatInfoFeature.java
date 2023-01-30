@@ -146,7 +146,6 @@ public class ItemStatInfoFeature extends UserFeature {
         }
 
         return new GearTooltipStyle(
-                decorations,
                 identificationsOrdering,
                 groupIdentifications,
                 showBestValueLastAlways,

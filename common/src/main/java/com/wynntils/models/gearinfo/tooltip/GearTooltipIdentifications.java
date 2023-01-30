@@ -28,7 +28,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class GearTooltipIdentifications {
-    public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, GearTooltipStyle style) {
+    public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, IdentificationDecorator decorator, GearTooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
 
         appendSkillBonuses(gearInfo, identifications);
@@ -63,8 +63,8 @@ public final class GearTooltipIdentifications {
 
                 line = buildIdentifiedLine(gearInfo, style, statActualValue);
                 StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                if (!possibleValues.range().isFixed()) {
-                    MutableComponent suffix = getSuffix(style, statActualValue, possibleValues);
+                if (!possibleValues.range().isFixed() && decorator != null) {
+                    MutableComponent suffix = decorator.getSuffix(statActualValue, possibleValues, style);
                     line.append(suffix);
                 }
 
@@ -189,13 +189,21 @@ public final class GearTooltipIdentifications {
         return baseComponent;
     }
 
-    public static MutableComponent getSuffix(
-            GearTooltipStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
-        return switch (style.decorations()) {
-            case PERCENT -> getPercentSuffix(style, statActualValue, possibleValues);
-            case RANGE -> getRangeSuffix(style, statActualValue, possibleValues);
-            case REROLL_CHANCE -> getRerollSuffix(style, statActualValue, possibleValues);
-        };
+    public static class DefaultDecorator implements IdentificationDecorator {
+        private final GearTooltipSuffixType decorations;
+
+        public DefaultDecorator(GearTooltipSuffixType decorations) {
+            this.decorations = decorations;
+        }
+
+        @Override
+        public MutableComponent getSuffix(StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
+            return switch (decorations) {
+                case PERCENT -> getPercentSuffix(style, statActualValue, possibleValues);
+                case RANGE -> getRangeSuffix(style, statActualValue, possibleValues);
+                case REROLL_CHANCE -> getRerollSuffix(style, statActualValue, possibleValues);
+            };
+        }
     }
 
     private static MutableComponent getPercentSuffix(
