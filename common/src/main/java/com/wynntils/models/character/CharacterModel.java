@@ -266,7 +266,7 @@ public final class CharacterModel extends Model {
             String prefix = m.group(1);
             String name = m.group(2);
             String displayedTime = m.group(3);
-            newStatusEffects.add(new StatusEffect(prefix, name, displayedTime));
+            newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 
         statusEffects = newStatusEffects;
