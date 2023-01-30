@@ -12,20 +12,25 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipStyle;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipSuffixType;
+import com.wynntils.models.gearinfo.tooltip.TooltipIdentificationDecorator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -66,6 +71,9 @@ public class ItemStatInfoFeature extends UserFeature {
     public boolean groupIdentifications = true;
 
     @Config
+    public boolean identificationDecorations = true;
+
+    @Config
     public boolean overallPercentageInName = true;
 
     @Config
@@ -90,7 +98,16 @@ public class ItemStatInfoFeature extends UserFeature {
                             () -> GearTooltipBuilder.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
-            LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(getCurrentIdentificationStyle()));
+            IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;
+            GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
+                    identificationsOrdering,
+                    groupIdentifications,
+                    showBestValueLastAlways,
+                    showStars,
+                    colorLerp,
+                    decimalPlaces);
+            LinkedList<Component> tooltips =
+                    new LinkedList<>(builder.getTooltipLines(currentIdentificationStyle, decorator));
 
             Optional<GearInstance> optionalGearInstance = gearItem.getGearInstance();
             if (optionalGearInstance.isPresent()) {
@@ -135,22 +152,65 @@ public class ItemStatInfoFeature extends UserFeature {
         tooltips.addFirst(name);
     }
 
-    private GearTooltipStyle getCurrentIdentificationStyle() {
-        GearTooltipSuffixType decorations;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            decorations = GearTooltipSuffixType.RANGE;
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            decorations = GearTooltipSuffixType.REROLL_CHANCE;
-        } else {
-            decorations = GearTooltipSuffixType.PERCENT;
+    private class IdentificationDecorator implements TooltipIdentificationDecorator {
+        @Override
+        public MutableComponent getSuffix(
+                StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
+            if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+                return getRangeSuffix(style, statActualValue, possibleValues);
+            } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+                return getRerollSuffix(style, statActualValue, possibleValues);
+            } else {
+                return getPercentSuffix(style, statActualValue, possibleValues);
+            }
         }
 
-        return new GearTooltipStyle(
-                identificationsOrdering,
-                groupIdentifications,
-                showBestValueLastAlways,
-                showStars,
-                colorLerp,
-                decimalPlaces);
+        private MutableComponent getRangeSuffix(
+                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = possibleValues.range().low();
+            int max = possibleValues.range().high();
+
+            if (possibleValues.stat().showAsInverted()) {
+                // Show values as negative
+                min = -min;
+                max = -max;
+            }
+            MutableComponent rangeTextComponent = Component.literal(" [")
+                    .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
+                    .append("]")
+                    .withStyle(ChatFormatting.DARK_GREEN);
+
+            return rangeTextComponent;
+        }
+
+        private MutableComponent getRerollSuffix(
+                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+            GearCalculator.RecollCalculator chances =
+                    GearCalculator.RecollCalculator.calculateChances(possibleValues, actualValue);
+
+            MutableComponent rerollChancesComponent = Component.literal(
+                            String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))
+                    .withStyle(ChatFormatting.AQUA)
+                    .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", chances.getIncrease() * 100))
+                            .withStyle(ChatFormatting.GREEN))
+                    .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.getDecrease() * 100))
+                            .withStyle(ChatFormatting.RED));
+
+            return rerollChancesComponent;
+        }
+
+        private MutableComponent getPercentSuffix(
+                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+            // calculate percent/range/reroll chances, append to lines
+            int min = possibleValues.range().low();
+            int max = possibleValues.range().high();
+
+            float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+            MutableComponent percentageTextComponent =
+                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
+
+            return percentageTextComponent;
+        }
     }
 }

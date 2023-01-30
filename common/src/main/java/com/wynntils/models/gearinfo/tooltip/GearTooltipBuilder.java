@@ -74,7 +74,7 @@ public final class GearTooltipBuilder {
         return new GearTooltipBuilder(gearInfo, gearInstance, header, footer);
     }
 
-    public List<Component> getTooltipLines(GearTooltipStyle style) {
+    public List<Component> getTooltipLines(GearTooltipStyle style, TooltipIdentificationDecorator decorator) {
         List<Component> tooltip = new ArrayList<>();
 
         // Header and footer are always constant
@@ -84,8 +84,6 @@ public final class GearTooltipBuilder {
         // depending on which decorations are requested
         List<Component> identifications = identificationsCache.get(style);
         if (identifications == null) {
-            // FIXME: get right type
-            GearTooltipIdentifications.DefaultDecorator decorator = new GearTooltipIdentifications.DefaultDecorator(GearTooltipSuffixType.PERCENT);
             identifications = GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, decorator, style);
             identificationsCache.put(style, identifications);
         }
@@ -98,7 +96,7 @@ public final class GearTooltipBuilder {
     }
 
     public List<Component> getTooltipLines() {
-        return getTooltipLines(DEFAULT_TOOLTIP_STYLE);
+        return getTooltipLines(DEFAULT_TOOLTIP_STYLE, null);
     }
 
     private static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {

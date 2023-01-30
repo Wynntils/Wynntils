@@ -6,7 +6,6 @@ package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -14,21 +13,22 @@ import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class GearTooltipIdentifications {
-    public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, IdentificationDecorator decorator, GearTooltipStyle style) {
+    public static List<Component> buildTooltip(
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            TooltipIdentificationDecorator decorator,
+            GearTooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
 
         appendSkillBonuses(gearInfo, identifications);
@@ -187,70 +187,5 @@ public final class GearTooltipIdentifications {
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
 
         return baseComponent;
-    }
-
-    public static class DefaultDecorator implements IdentificationDecorator {
-        private final GearTooltipSuffixType decorations;
-
-        public DefaultDecorator(GearTooltipSuffixType decorations) {
-            this.decorations = decorations;
-        }
-
-        @Override
-        public MutableComponent getSuffix(StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
-            return switch (decorations) {
-                case PERCENT -> getPercentSuffix(style, statActualValue, possibleValues);
-                case RANGE -> getRangeSuffix(style, statActualValue, possibleValues);
-                case REROLL_CHANCE -> getRerollSuffix(style, statActualValue, possibleValues);
-            };
-        }
-    }
-
-    private static MutableComponent getPercentSuffix(
-            GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // calculate percent/range/reroll chances, append to lines
-        int min = possibleValues.range().low();
-        int max = possibleValues.range().high();
-
-        float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
-        MutableComponent percentageTextComponent =
-                ColorScaleUtils.getPercentageTextComponent(percentage, style.colorLerp(), style.decimalPlaces());
-
-        return percentageTextComponent;
-    }
-
-    private static MutableComponent getRangeSuffix(
-            GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // calculate percent/range/reroll chances, append to lines
-        int min = possibleValues.range().low();
-        int max = possibleValues.range().high();
-
-        if (possibleValues.stat().showAsInverted()) {
-            // Show values as negative
-            min = -min;
-            max = -max;
-        }
-        MutableComponent rangeTextComponent = Component.literal(" [")
-                .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
-                .append("]")
-                .withStyle(ChatFormatting.DARK_GREEN);
-
-        return rangeTextComponent;
-    }
-
-    private static MutableComponent getRerollSuffix(
-            GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-        GearCalculator.RecollCalculator chances =
-                GearCalculator.RecollCalculator.calculateChances(possibleValues, actualValue);
-
-        MutableComponent rerollChancesComponent = Component.literal(
-                        String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))
-                .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", chances.getIncrease() * 100))
-                        .withStyle(ChatFormatting.GREEN))
-                .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.getDecrease() * 100))
-                        .withStyle(ChatFormatting.RED));
-
-        return rerollChancesComponent;
     }
 }

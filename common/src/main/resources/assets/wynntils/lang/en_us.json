@@ -370,6 +370,8 @@
   "feature.wynntils.itemStatInfo.defective.name": "Obfuscated Defective Items",
   "feature.wynntils.itemStatInfo.groupIdentifications.description": "Should different IDs be grouped together depending on type of ID?",
   "feature.wynntils.itemStatInfo.groupIdentifications.name": "Group Identifications",
+  "feature.wynntils.itemStatInfo.identificationDecorations.description": "Should identifications (variable stats) have decorations, showing e.g. percentage of max value?",
+  "feature.wynntils.itemStatInfo.identificationDecorations.name": "Identification Decorations",
   "feature.wynntils.itemStatInfo.identificationsOrdering.description": "Which ordering system should be used to display identifications?",
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Identification Ordering",
   "feature.wynntils.itemStatInfo.name": "Item Statistics Info",
