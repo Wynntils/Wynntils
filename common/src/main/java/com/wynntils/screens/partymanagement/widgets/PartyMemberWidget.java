@@ -14,6 +14,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -70,9 +71,9 @@ public class PartyMemberWidget extends AbstractWidget {
         }
         String prefix = "";
         if (isOffline) {
-            prefix = "§m";
+            prefix = ChatFormatting.STRIKETHROUGH.toString();
         } else if (playerName.equals(McUtils.player().getName().getString())) {
-            prefix = "§l";
+            prefix = ChatFormatting.BOLD.toString();
         }
 
         String formattedPlayerName = prefix + playerName;
