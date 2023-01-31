@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ComponentUtils {
-    public static final int RAINBOW_CYCLE_TIME = 5000;
+    private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
     // Text with formatting codes "§cTest §1Text"
