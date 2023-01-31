@@ -7,6 +7,7 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
@@ -23,6 +24,7 @@ import com.wynntils.models.character.type.StatusEffect;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.ProfessionInfo;
 import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -67,21 +69,6 @@ public final class CharacterModel extends Model {
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
-    /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/new-levels-xp-requirement.261763/
-     * which points to the data at https://pastebin.com/fCTfEkaC
-     * Note that the last value is the sum of all preceding values
-     */
-    private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
-        110, 190, 275, 385, 505, 645, 790, 940, 1100, 1370, 1570, 1800, 2090, 2400, 2720, 3100, 3600, 4150, 4800, 5300,
-        5900, 6750, 7750, 8900, 10200, 11650, 13300, 15200, 17150, 19600, 22100, 24900, 28000, 31500, 35500, 39900,
-        44700, 50000, 55800, 62000, 68800, 76400, 84700, 93800, 103800, 114800, 126800, 140000, 154500, 170300, 187600,
-        206500, 227000, 249500, 274000, 300500, 329500, 361000, 395000, 432200, 472300, 515800, 562800, 613700, 668600,
-        728000, 792000, 860000, 935000, 1040400, 1154400, 1282600, 1414800, 1567500, 1730400, 1837000, 1954800, 2077600,
-        2194400, 2325600, 2455000, 2645000, 2845000, 3141100, 3404710, 3782160, 4151400, 4604100, 5057300, 5533840,
-        6087120, 6685120, 7352800, 8080800, 8725600, 9578400, 10545600, 11585600, 12740000, 14418250, 16280000,
-        21196500, 23315500, 25649000, 249232940
-    };
-
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
     private final HealthSegment healthSegment = new HealthSegment();
     private final ManaSegment manaSegment = new ManaSegment();
@@ -103,8 +90,8 @@ public final class CharacterModel extends Model {
     private List<StatusEffect> statusEffects = new ArrayList<>();
     private ProfessionInfo professionInfo;
 
-    public CharacterModel() {
-        super(List.of());
+    public CharacterModel(CombatXpModel combatXpModel) {
+        super(List.of(combatXpModel));
 
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);
@@ -154,7 +141,7 @@ public final class CharacterModel extends Model {
      */
     public int getMaxSoulPoints() {
         // FIXME: If player is veteran, we should always return 15
-        int maxIfNotVeteran = 10 + MathUtils.clamp(getXpLevel() / 15, 0, 5);
+        int maxIfNotVeteran = 10 + MathUtils.clamp(Models.CombatXp.getXpLevel() / 15, 0, 5);
         if (getSoulPoints() > maxIfNotVeteran) {
             return 15;
         }
@@ -182,31 +169,6 @@ public final class CharacterModel extends Model {
     public int getTicksToNextSoulPoint() {
         if (McUtils.mc().level == null) return -1;
         return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
-    }
-
-    public float getCurrentXp() {
-        // We calculate our level in points by seeing how far we've progress towards our
-        // current XP level's max
-        return getXpProgress() * getXpPointsNeededToLevelUp();
-    }
-
-    public float getXpProgress() {
-        return McUtils.player().experienceProgress;
-    }
-
-    public int getXpLevel() {
-        return McUtils.player().experienceLevel;
-    }
-
-    public int getXpPointsNeededToLevelUp() {
-        int levelIndex = getXpLevel() - 1;
-        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
-            return Integer.MAX_VALUE;
-        }
-        if (levelIndex < 0) {
-            return 0;
-        }
-        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
     }
 
     public ClassType getClassType() {
@@ -304,7 +266,7 @@ public final class CharacterModel extends Model {
             String prefix = m.group(1);
             String name = m.group(2);
             String displayedTime = m.group(3);
-            newStatusEffects.add(new StatusEffect(prefix, name, displayedTime));
+            newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 
         statusEffects = newStatusEffects;

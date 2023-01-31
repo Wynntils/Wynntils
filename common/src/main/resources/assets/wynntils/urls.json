@@ -21,6 +21,14 @@
     "url": "https://athena.wynntils.com/version/latest/ce"
   },
   {
+    "id": "apiAthenaUpdateChangelog",
+    "url": "https://athena.wynntils.com/version/changelog/%{old_version}/%{new_version}",
+    "arguments": [
+      "old_version",
+      "new_version"
+    ]
+  },
+  {
     "id": "apiAthenaUserInfo",
     "url": "https://athena.wynntils.com/user/getInfo",
     "method": "post",

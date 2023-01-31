@@ -118,7 +118,7 @@ public final class WynntilsMod {
                             ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
 
             McUtils.sendMessageToClient(Component.literal("Wynntils error: Feature '" + feature.getTranslatedName()
-                            + "' has crashed and will be disabled.")
+                            + "' has crashed and will be disabled. ")
                     .withStyle(ChatFormatting.RED)
                     .append(enableMessage));
         }

@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.lootruns.event.LootrunCacheRefreshEvent;
-import com.wynntils.screens.base.WynntilsMenuListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -33,7 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsLootrunsScreen extends WynntilsMenuListScreen<LootrunInstance, LootrunButton> {
+public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInstance, LootrunButton> {
     private WynntilsLootrunsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
 

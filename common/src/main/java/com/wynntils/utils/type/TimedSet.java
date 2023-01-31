@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class TimedSet<T> implements Iterable<T> {
     private final Set<TimedEntry> entries = new HashSet<>();
@@ -55,6 +57,10 @@ public class TimedSet<T> implements Iterable<T> {
         if (autoClear) releaseEntries();
 
         return new TimedSetIterator();
+    }
+
+    public Stream<T> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
     }
 
     private class TimedSetIterator implements Iterator<T> {

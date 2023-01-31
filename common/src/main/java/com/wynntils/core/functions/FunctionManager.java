@@ -7,6 +7,7 @@ package com.wynntils.core.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.functions.CharacterFunctions;
+import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
@@ -300,7 +301,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.JewelingLevelFunction());
-        registerFunction(new CharacterFunctions.LevelFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
@@ -315,11 +315,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.WeaponsmithingLevelFunction());
         registerFunction(new CharacterFunctions.WoodcuttingLevelFunction());
         registerFunction(new CharacterFunctions.WoodworkingLevelFunction());
-        registerFunction(new CharacterFunctions.XpFunction());
-        registerFunction(new CharacterFunctions.XpPctFunction());
-        registerFunction(new CharacterFunctions.XpRawFunction());
-        registerFunction(new CharacterFunctions.XpReqFunction());
-        registerFunction(new CharacterFunctions.XpReqRawFunction());
+
+        registerFunction(new CombatXpFunctions.LevelFunction());
+        registerFunction(new CombatXpFunctions.XpFunction());
+        registerFunction(new CombatXpFunctions.XpPctFunction());
+        registerFunction(new CombatXpFunctions.XpPerMinuteFunction());
+        registerFunction(new CombatXpFunctions.XpPerMinuteRawFunction());
+        registerFunction(new CombatXpFunctions.XpPercentagePerMinuteFunction());
+        registerFunction(new CombatXpFunctions.XpRawFunction());
+        registerFunction(new CombatXpFunctions.XpReqFunction());
+        registerFunction(new CombatXpFunctions.XpReqRawFunction());
 
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
