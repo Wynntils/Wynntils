@@ -51,7 +51,9 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onDisconnect() {
-        WynntilsMod.postEvent(new HadesEvent.Disconnected());
+        // FIXME: This is a workaround for https://github.com/MinecraftForge/EventBus/issues/44
+        //        If we are not in a world, we will not tick, and the event will never fire.
+        Managers.TickScheduler.scheduleNextTick(() -> WynntilsMod.postEvent(new HadesEvent.Disconnected()));
 
         if (Managers.Connection.onServer()) {
             McUtils.sendMessageToClient(
@@ -72,7 +74,12 @@ public class HadesClientHandler implements IHadesClientAdapter {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent = Component.literal("Successfully connected to HadesServer")
                         .withStyle(ChatFormatting.GREEN);
-                McUtils.mc().doRunTask(() -> WynntilsMod.postEvent(new HadesEvent.Authenticated()));
+
+                // FIXME: This is a workaround for https://github.com/MinecraftForge/EventBus/issues/44
+                //        If we are not in a world, we will not tick, and the event will never fire.
+                //        The only reason this works is, because we are already in a world, and ticking, when logging
+                //        into Hades.
+                Managers.TickScheduler.scheduleNextTick(() -> WynntilsMod.postEvent(new HadesEvent.Authenticated()));
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());

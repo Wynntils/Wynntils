@@ -56,12 +56,6 @@ public final class HadesModel extends Model {
 
     public HadesModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
         super(List.of(characterModel, worldStateModel));
-
-        if (Managers.WynntilsAccount.isLoggedIn()) {
-            tryCreateConnection();
-        }
-
-        Managers.WynntilsAccount.onLoginRun(this::onLogin);
     }
 
     public Stream<HadesUser> getHadesUsers() {
@@ -94,6 +88,17 @@ public final class HadesModel extends Model {
     public void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
+        }
+    }
+
+    @SubscribeEvent
+    public void onFirstLogin(WorldStateEvent event) {
+        if (event.isFirstJoinWorld()) {
+            if (Managers.WynntilsAccount.isLoggedIn()) {
+                tryCreateConnection();
+            }
+
+            Managers.WynntilsAccount.onLoginRun(this::onLogin);
         }
     }
 
