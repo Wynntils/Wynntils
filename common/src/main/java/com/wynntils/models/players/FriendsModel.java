@@ -5,6 +5,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.models.players.event.FriendConnectionEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
@@ -30,6 +31,10 @@ public final class FriendsModel extends Model {
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =
             Pattern.compile("§e(.+) has been removed from your friends!");
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
+
+    private static final Pattern JOIN_PATTERN = Pattern.compile(
+            "(?:§a|§r§7)(?:§o)?(.+)§r(?:§2|§8(?:§o)?) has logged into server §r(?:§a|§7(?:§o)?)(?<server>.+)§r(?:§2|§8(?:§o)?) as (?:§r§a|§r§7(?:§o)?)an? (?<class>.+)");
+    private static final Pattern LEAVE_PATTERN = Pattern.compile("(?:§a|§r§7)(.+) left the game\\.");
 
     private boolean expectingFriendMessage = false;
 
@@ -62,6 +67,16 @@ public final class FriendsModel extends Model {
 
         String coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
+
+        Matcher joinMatcher = JOIN_PATTERN.matcher(coded);
+        if (joinMatcher.matches()) {
+            WynntilsMod.postEvent(new FriendConnectionEvent.Join(joinMatcher.group(1)));
+        } else {
+            Matcher leaveMatcher = LEAVE_PATTERN.matcher(coded);
+            if (leaveMatcher.matches()) {
+                WynntilsMod.postEvent(new FriendConnectionEvent.Leave(leaveMatcher.group(1)));
+            }
+        }
 
         if (tryParseFriendMessages(coded)) {
             return;

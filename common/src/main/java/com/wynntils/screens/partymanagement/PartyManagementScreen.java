@@ -1,7 +1,10 @@
 package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.players.event.FriendConnectionEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -48,10 +51,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private final List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
 
     private final Set<String> offlineMembers = new HashSet<>();
-    private final List<String> suggestedPlayers = new ArrayList<>();
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
+        WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
@@ -60,6 +63,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public void init() {
+        refreshParty();
         // region Invite input and button
         this.addRenderableWidget(
                 inviteInput = new TextInputBoxWidget(this.width / 2 - X_START, this.height / 2 - 200, 300, 20, null, this, inviteInput));
@@ -117,7 +121,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         kickOfflineButton.active = partying && !offlineMembers.isEmpty();
         inviteButton.active = !inviteInput.getTextBoxInput().isBlank(); // partying check not required as button automatically makes new party if not in one
 
-        updateSuggestionsList();
         FontRenderer fr = FontRenderer.getInstance();
 
         // region Invite field header
@@ -268,7 +271,21 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
     }
 
+    /**
+     * Reloads the suggested players and their widgets
+     * <p>
+     * This should be called when a friend joins/leaves the world or when the refresh button is pressed
+     */
     private void reloadSuggestedPlayersWidgets() {
+        // Add friends that are online in the same world as user
+        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
+        Set<String> onlineUsers = new HashSet<>(scoreboard.getTeamNames());
+        onlineUsers.retainAll(Models.Friends.getFriends());
+
+        List<String> suggestedPlayers = new ArrayList<>(onlineUsers);
+        suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
+        suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
+
         suggestedPlayersWidgets.clear();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
@@ -278,6 +295,22 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         }
     }
 
+    @SubscribeEvent
+    public void onFriendJoin(FriendConnectionEvent.Join e) {
+        reloadSuggestedPlayersWidgets();
+    }
+
+    @SubscribeEvent
+    public void onFriendLeave(FriendConnectionEvent.Leave e) {
+        // Delay the reload to allow the scoreboard to update
+        Managers.TickScheduler.scheduleLater(this::reloadSuggestedPlayersWidgets, 5);
+    }
+
+    /**
+     * Reloads the list of party members widgets
+     * <p>
+     * This should be called when the party list is updated or when the refresh button is pressed
+     */
     private void reloadMembersWidgets() {
         partyMembersWidgets.clear();
         List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
@@ -292,6 +325,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     @SubscribeEvent
     public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
         reloadMembersWidgets();
+        reloadSuggestedPlayersWidgets(); // Reload because we don't want to suggest party members
     }
 
     private void inviteFromField() {
@@ -301,12 +335,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         if (fieldText.isBlank()) return;
 
         if (!Models.Party.isPartying()) {
-            McUtils.sendCommand("party create");
+            createParty();
         }
 
         Set<String> toInvite = new HashSet<>(List.of(fieldText.split(",")));
         toInvite.removeAll(Models.Party.getPartyMembers());
-        toInvite.forEach(this::inviteToParty);
+        toInvite.forEach(playerName -> McUtils.sendCommand("party invite " + playerName));
 
         inviteInput.setTextBoxInput("");
     }
@@ -321,7 +355,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         refreshParty();
         offlineMembers.addAll(Models.Party.getPartyMembers());
         offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
-        offlineMembers.forEach(this::kickFromParty);
+        offlineMembers.forEach(playerName -> McUtils.sendCommand("party kick " + playerName));
     }
 
     private void createParty() {
@@ -330,27 +364,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void leaveParty() {
         McUtils.sendCommand("party leave");
-    }
-
-    private void kickFromParty(String playerName) {
-        McUtils.sendCommand("party kick " + playerName);
-    }
-
-    private void inviteToParty(String playerName) {
-        McUtils.sendCommand("party invite " + playerName);
-    }
-
-    private void updateSuggestionsList() {
-        suggestedPlayers.clear();
-        // Add friends that are online in the same world as user
-
-        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
-        Set<String> onlineUsers = new HashSet<>(scoreboard.getTeamNames());
-        onlineUsers.retainAll(Models.Friends.getFriends());
-
-        suggestedPlayers.addAll(onlineUsers);
-        suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
-        suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
     }
 
     @Override
