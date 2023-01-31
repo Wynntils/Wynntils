@@ -6,6 +6,7 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -21,6 +22,7 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
     private final CappedValue durability;
 
     public CraftedGearItem(
+            GearType gearType,
             List<String> damages,
             List<String> requirements,
             List<StatActualValue> identifications,

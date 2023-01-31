@@ -6,6 +6,7 @@ package com.wynntils.models.rewards;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gearinfo.parsing.GearParseResult;
 import com.wynntils.models.gearinfo.parsing.GearParser;
 import com.wynntils.models.gearinfo.type.GearTier;
@@ -16,9 +17,12 @@ import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeType;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
+    public static final Pattern CHARM_PATTERN = Pattern.compile("^§[5abcdef](Charm of the (?<Type>\\w+))$");
+
     public RewardsModel() {
         super(List.of());
     }
@@ -29,13 +33,14 @@ public class RewardsModel extends Model {
         return tomeInfo;
     }
 
-    public CharmInfo getCharmInfo(Matcher matcher, GearTier tier, String type) {
-        // TODO: replace with API lookup
-        CharmInfo charmInfo = new CharmInfo(matcher.group(1), tier, type);
-        return charmInfo;
-    }
+    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, String name, Matcher matcher) {
+        GearTier tier = GearTier.fromFormattedString(name);
+        String type = matcher.group("Type");
 
-    public CharmItem fromCharmItemStack(ItemStack itemStack, CharmInfo charmInfo) {
+        // TODO: replace with API lookup
+        String displayName = matcher.group(1);
+        CharmInfo charmInfo = new CharmInfo(displayName, tier, type);
+
         GearParseResult result = GearParser.parseItemStack(itemStack);
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());

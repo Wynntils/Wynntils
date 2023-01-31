@@ -15,6 +15,7 @@ import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
@@ -80,6 +81,13 @@ public final class GearModel extends Model {
         ItemGuessProfile.init();
     }
 
+    public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
+        GearParseResult result = GearParser.parseItemStack(itemStack);
+        CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
+        // FIXME: Damages and requirements are not yet parsed
+        return new CraftedGearItem(result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+    }
+
     public void reloadData() {
         gearInfoRegistry.reloadData();
     }
@@ -97,10 +105,6 @@ public final class GearModel extends Model {
         GearParseResult result = GearParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.tierCount());
-    }
-
-    public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
-        return GearParser.getCraftedGearItem(itemStack);
     }
 
     public GearItem fromEncodedString(String encoded) {
