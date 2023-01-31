@@ -86,19 +86,22 @@ public class GearChatEncoding {
             StatActualValue actualValue = gearInstance.getActualValue(statType);
             StatPossibleValues possibleValues = gearItem.getGearInfo().getPossibleValues(statType);
 
-            int shiftedValue;
+            if (possibleValues.isPreIdentified()) continue;
 
-            // FIXME: I have probably broken the protocol...
-            // min/max must be flipped for inverted IDs to avoid negative values
-            shiftedValue = statType.showAsInverted()
-                    ? actualValue.value() - possibleValues.range().high()
-                    : actualValue.value() - possibleValues.range().low();
+            int valueToEncode;
+            if (Math.abs(possibleValues.baseValue()) > 100) {
+                // Express value as percent
+                valueToEncode = (int) Math.round((actualValue.value() * 100.0 / possibleValues.baseValue()) - 30);
+            } else {
+                // Express value as raw value shifted so lowest possible is 0
+                valueToEncode = actualValue.value() - possibleValues.range().low();
+            }
 
             // stars
             int stars = actualValue.stars();
 
             // encode value + stars in one character
-            encoded.append(encodeNumber(shiftedValue * 4 + stars));
+            encoded.append(encodeNumber(valueToEncode * 4 + stars));
         }
 
         // powders
@@ -148,37 +151,32 @@ public class GearChatEncoding {
 
         int counter = 0; // for id value array
         for (StatType statType : sortedStats) {
-            StatPossibleValues status = gearInfo.getPossibleValues(statType);
+            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
+            if (possibleValues.isPreIdentified()) continue;
+
+            if (counter >= ids.length) return null; // some kind of mismatch, abort
+
+            // id value
             int value;
             int stars = 0;
-            if (status.isPreIdentified()) {
-                value = status.baseValue();
+
+            int encodedValue = ids[counter] / 4;
+            if (Math.abs(possibleValues.baseValue()) > 100) {
+                // using bigdecimal here for precision when rounding
+                value = new BigDecimal(encodedValue + 30)
+                        .movePointLeft(2)
+                        .multiply(new BigDecimal(possibleValues.baseValue()))
+                        .setScale(0, RoundingMode.HALF_UP)
+                        .intValue();
             } else {
-                if (counter >= ids.length) return null; // some kind of mismatch, abort
-
-                // id value
-                int encodedValue = ids[counter] / 4;
-                // FIXME: I have probably broken the protocol...
-                if (Math.abs(status.baseValue()) > 100) {
-                    // using bigdecimal here for precision when rounding
-                    value = new BigDecimal(encodedValue + 30)
-                            .movePointLeft(2)
-                            .multiply(new BigDecimal(status.baseValue()))
-                            .setScale(0, RoundingMode.HALF_UP)
-                            .intValue();
-                } else {
-                    // min/max must be flipped for inverted IDs due to encoding
-                    value = statType.showAsInverted()
-                            ? encodedValue + status.range().high()
-                            : encodedValue + status.range().low();
-                }
-
-                // stars
-                stars = ids[counter] % 4;
-
-                counter++;
+                value = encodedValue + possibleValues.range().low();
             }
+
+            // stars
+            stars = ids[counter] % 4;
+
+            counter++;
 
             // create ID and append to list
             identifications.add(new StatActualValue(statType, value, stars));

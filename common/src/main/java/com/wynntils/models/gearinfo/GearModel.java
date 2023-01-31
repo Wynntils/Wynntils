@@ -24,9 +24,6 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
-* GearChatEncoding -- did I break the protocol wrt inverse/negative values?
-* -- Also, large values should have been encoded as percent, I *did* break this!
-
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
 stats should have Range internalRoll
 
