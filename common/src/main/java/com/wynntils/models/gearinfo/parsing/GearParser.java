@@ -168,7 +168,11 @@ public final class GearParser {
             WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
             return null;
         }
-        int value = Math.min(Math.round(possibleValue.baseValue() * (internalRoll / 100f)), 1);
+        int value = Math.round(possibleValue.baseValue() * (internalRoll / 100f));
+        if (value == 0) {
+            // If we get to 0, use 1 or -1 instead
+            value = (int) Math.signum(possibleValue.baseValue());
+        }
 
         // Negative values can never show stars
         int stars = (value > 0) ? GearCalculator.getStarsFromInternalRoll(internalRoll) : 0;
