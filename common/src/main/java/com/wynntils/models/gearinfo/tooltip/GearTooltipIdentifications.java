@@ -31,6 +31,7 @@ public final class GearTooltipIdentifications {
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
         List<StatType> allStats = gearInfo.getVariableStats();
+        if (allStats.isEmpty()) return identifications;
 
         boolean useDelimiters = style.useDelimiters();
 
