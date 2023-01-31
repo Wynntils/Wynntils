@@ -10,13 +10,13 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     ALL(""),
+    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
     AIR(Element.AIR),
     THUNDER(Element.THUNDER),
     EARTH(Element.EARTH),
-    RAINBOW("Elemental"),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD);
+    RAINBOW("Elemental");
 
     private final Element element;
     private final String displayName;
