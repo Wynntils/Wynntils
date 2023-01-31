@@ -36,13 +36,13 @@ public class RewardsModel extends Model {
     }
 
     public CharmItem fromCharmItemStack(ItemStack itemStack, CharmInfo charmInfo) {
-         GearParseResult result = GearParser.fromItemStack(itemStack);
+         GearParseResult result = GearParser.parseItemStack(itemStack);
 
         return new CharmItem(charmInfo, result.identifications(), result.rerolls());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeInfo tomeInfo) {
-        GearParseResult result = GearParser.fromItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack);
 
         return new TomeItem(tomeInfo, result.identifications(), result.rerolls());
     }

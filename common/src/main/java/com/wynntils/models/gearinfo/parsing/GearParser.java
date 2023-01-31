@@ -31,7 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class GearParser {
+public final class GearParser {
     // Test suite: regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
@@ -46,7 +46,7 @@ public class GearParser {
     private static final Pattern VARIABLE_STAT_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
-    public static GearParseResult fromItemStack(ItemStack itemStack) {
+    public static GearParseResult parseItemStack(ItemStack itemStack) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
@@ -111,7 +111,7 @@ public class GearParser {
         }
     }
 
-    public static GearParseResult fromIngameItemData(GearInfo gearInfo, JsonObject itemData) {
+    public static GearParseResult parseIngameItemData(GearInfo gearInfo, JsonObject itemData) {
         List<StatActualValue> identifications = new ArrayList<>();
 
         if (itemData.has("identifications")) {

@@ -85,13 +85,13 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        GearParseResult result = GearParser.fromItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
-        GearParseResult result = GearParser.fromIngameItemData(gearInfo, itemData);
+        GearParseResult result = GearParser.parseIngameItemData(gearInfo, itemData);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
