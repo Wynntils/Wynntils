@@ -27,6 +27,7 @@ import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.players.hades.objects.PlayerStatus;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -54,14 +55,10 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
+    private boolean loggedIn = false;
+
     public HadesModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
         super(List.of(characterModel, worldStateModel));
-
-        if (Managers.WynntilsAccount.isLoggedIn()) {
-            tryCreateConnection();
-        }
-
-        Managers.WynntilsAccount.onLoginRun(this::onLogin);
     }
 
     public Stream<HadesUser> getHadesUsers() {
@@ -142,7 +139,17 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() != WorldState.NOT_CONNECTED && !loggedIn) {
+            loggedIn = true;
+            if (Managers.WynntilsAccount.isLoggedIn()) {
+                tryCreateConnection();
+            }
+
+            Managers.WynntilsAccount.onLoginRun(this::onLogin);
+        }
+
         userRegistry.reset();
+
         if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
                 MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
