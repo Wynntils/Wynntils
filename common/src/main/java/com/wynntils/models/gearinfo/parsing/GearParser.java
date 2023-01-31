@@ -13,6 +13,7 @@ import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -34,7 +35,7 @@ import net.minecraft.world.item.TooltipFlag;
 public final class GearParser {
     // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|/[35]s)?(?:§r§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     // FIXME: Clean up this class!
     private static final Pattern ID_NEW_PATTERN =
@@ -42,7 +43,7 @@ public final class GearParser {
 
     // Test suite: https://regexr.com/778gh
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet) (Raid Reward|Item)(?: \\[(\\d+)\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z ]+)(?:§r§8)?(?: \\[(\\d+)(?:/(\\d+) Durability)?\\])?$");
 
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
@@ -51,8 +52,10 @@ public final class GearParser {
     public static GearParseResult parseItemStack(ItemStack itemStack) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
-        int rerolls = 0;
+        int tierCount = 0;
+        int durabilityMax = 0;
         GearTier tier = null;
+        GearType gearType = null;
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -86,13 +89,24 @@ public final class GearParser {
             }
 
             // Look for tier and rerolls
-            Matcher tiearMatcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
-            if (tiearMatcher.matches()) {
-                String tierString = tiearMatcher.group(1);
+            Matcher tierMatcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
+            if (tierMatcher.matches()) {
+                String tierString = tierMatcher.group(1);
                 tier = GearTier.fromFormattedString(tierString);
+                // group 2 is the type of item, like "Raid Reward" or "Item"
+                // or "Wand" (the latter only for crafted items)
+                String gearTypeString = tierMatcher.group(2);
+                // This will return null for everything but crafted gear
+                gearType = GearType.fromString(gearTypeString);
 
-                String rerollCountString = tiearMatcher.group(3);
-                rerolls = rerollCountString != null ? Integer.parseInt(rerollCountString) : 0;
+                // This is either the rerolls (for re-identified gear), or the
+                // current durability (for crafted gear)
+                String tierCountString = tierMatcher.group(3);
+                tierCount = tierCountString != null ? Integer.parseInt(tierCountString) : 0;
+
+                // If we have a crafted gear, we also have a durability max
+                String durabilityMaxString = tierMatcher.group(4);
+                durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
 
                 continue;
             }
@@ -103,8 +117,9 @@ public final class GearParser {
                 int value = Integer.parseInt(statMatcher.group(1));
                 // group 2 is only present for unidentified gears, as the to-part of the range
                 String unit = statMatcher.group(3);
-                String starString = statMatcher.group(4);
-                String statDisplayName = statMatcher.group(5);
+                // group 4 is only present for crafted gear, as the top value for that stat
+                String starString = statMatcher.group(5);
+                String statDisplayName = statMatcher.group(6);
 
                 StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
@@ -122,7 +137,7 @@ public final class GearParser {
             }
         }
 
-        return new GearParseResult(tier, identifications, powders, rerolls);
+        return new GearParseResult(tier, gearType, identifications, powders, tierCount, durabilityMax);
     }
 
     public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -173,7 +188,7 @@ public final class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearParseResult(gearInfo.tier(), identifications, powders, rerolls);
+        return new GearParseResult(gearInfo.tier(), null, identifications, powders, rerolls, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

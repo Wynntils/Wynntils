@@ -10,6 +10,6 @@ import java.util.List;
 
 public record GearParseResult(
         com.wynntils.models.gearinfo.type.GearTier tier,
-        List<StatActualValue> identifications,
+        com.wynntils.models.gearinfo.type.GearType gearType, List<StatActualValue> identifications,
         List<Powder> powders,
-        int rerolls) {}
+        int tierCount, int durabilityMax) {}

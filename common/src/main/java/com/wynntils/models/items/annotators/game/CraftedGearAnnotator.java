@@ -7,6 +7,9 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.gearinfo.parsing.GearParseResult;
+import com.wynntils.models.gearinfo.parsing.GearParser;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +25,9 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
         Matcher matcher = CRAFTED_GEAR_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        return Models.Gear.getCraftedGearItem(itemStack);
+        CraftedGearItem craftedGearItem = Models.Gear.getCraftedGearItem(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack);
+
+        return craftedGearItem;
     }
 }
