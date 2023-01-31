@@ -70,9 +70,9 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
             case "spellElementalDamageBonusRaw" -> "RAINBOWSPELLDAMAGERAW";
 
-            // These can't possibly have their "proper" name since it conflicts
-            // with the workarounds from above, but since they are not actually present
-            // in the game yet, I have not been able to confirm what they will use.
+                // These can't possibly have their "proper" name since it conflicts
+                // with the workarounds from above, but since they are not actually present
+                // in the game yet, I have not been able to confirm what they will use.
             case "damageBonus" -> "UNKNOWN_1";
             case "damageBonusRaw" -> "UNKNOWN_2";
 
