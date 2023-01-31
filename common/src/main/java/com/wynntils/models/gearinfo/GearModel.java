@@ -20,14 +20,14 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
+* tooltip variable needs cleaning in how we build identified/unidentified lines
+
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
 
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
+stats should have Range internalRoll
 
-* tooltip Post: major IDs are incorrectly formatted
-* tooltip Pre: did the old code correctly set our requirements?
-* tooltip variable needs cleaning in how we build identified/unidentified lines
 * All other Guide stacks should also use the vanilla tooltip rendering!
 
 * SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
@@ -35,9 +35,9 @@ Remaining issues:
 
 * GearParser needs cleaning
 * Crafted gear needs some thinking
+
 * MODELLING: A GearInstance should have powder specials as well!!!!
 
-stats should have Range internalRoll
 
 
 NEW IDEAS:

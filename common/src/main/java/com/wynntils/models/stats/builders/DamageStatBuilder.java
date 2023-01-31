@@ -68,9 +68,13 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
             case "spellDamageBonusRaw" -> "SPELLDAMAGERAW";
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
+            case "spellElementalDamageBonusRaw" -> "RAINBOWSPELLDAMAGERAW";
 
-            case "damageBonus" -> "UNKNOWN_1"; // Have not been able to confirm this
-            case "damageBonusRaw" -> "UNKNOWN_2"; // Have not been able to confirm this
+            // These can't possibly have their "proper" name since it conflicts
+            // with the workarounds from above, but since they are not actually present
+            // in the game yet, I have not been able to confirm what they will use.
+            case "damageBonus" -> "UNKNOWN_1";
+            case "damageBonusRaw" -> "UNKNOWN_2";
 
             default -> apiName.toUpperCase(Locale.ROOT);
         };
