@@ -168,6 +168,7 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (true) return;
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!HadesFeature.INSTANCE.shareWithParty

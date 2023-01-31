@@ -33,8 +33,9 @@ public final class GearTooltipFooter {
                 Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
                         .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }
-            footer.add(Component.literal(""));
         }
+
+        footer.add(Component.literal(""));
 
         // powder slots
         if (gearInfo.powderSlots() > 0) {
@@ -70,7 +71,7 @@ public final class GearTooltipFooter {
         // restrictions (untradable, quest item)
         if (gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
             footer.add(Component.literal(StringUtils.capitalizeFirst(
-                            gearInfo.metaInfo().restrictions().getDescription() + " Item"))
+                            gearInfo.metaInfo().restrictions().getDescription()))
                     .withStyle(ChatFormatting.RED));
         }
 

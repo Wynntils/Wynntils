@@ -27,6 +27,9 @@ public class GuideGearItemStackButton extends WynntilsButton {
         super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
         this.screen = screen;
+        // Things like our current class, or other requirement fulfillments can have changed,
+        // so we need to redo this even if it's already done
+        itemStack.buildTooltip();
     }
 
     @Override

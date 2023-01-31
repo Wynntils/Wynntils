@@ -86,17 +86,17 @@ public final class GearTooltipHeader {
         // requirements
         int requirementsCount = 0;
         GearRequirements requirements = gearInfo.requirements();
+        if (requirements.classType().isPresent()) {
+            ClassType classType = requirements.classType().get();
+            boolean fulfilled = Models.Character.getClassType() == classType;
+            header.add(buildRequirementLine("Class Req: " + classType.getFullName(), fulfilled));
+            requirementsCount++;
+        }
         if (requirements.quest().isPresent()) {
             String questName = requirements.quest().get();
             Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
             boolean fulfilled = quest.isPresent() && quest.get().getStatus() == QuestStatus.COMPLETED;
             header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
-            requirementsCount++;
-        }
-        if (requirements.classType().isPresent()) {
-            ClassType classType = requirements.classType().get();
-            boolean fulfilled = Models.Character.getClassType() == classType;
-            header.add(buildRequirementLine("Class Req: " + classType.getFullName(), fulfilled));
             requirementsCount++;
         }
         int level = requirements.level();

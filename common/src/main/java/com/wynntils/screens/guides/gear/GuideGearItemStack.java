@@ -7,10 +7,12 @@ package com.wynntils.screens.guides.gear;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,15 +22,14 @@ import net.minecraft.world.item.TooltipFlag;
 public final class GuideGearItemStack extends GuideItemStack {
     private final GearInfo gearInfo;
     private final MutableComponent name;
-    private final List<Component> generatedTooltip;
+    private List<Component> generatedTooltip;
 
     public GuideGearItemStack(GearInfo gearInfo) {
         super(gearInfo.metaInfo().material().getItemStack(), new GearItem(gearInfo, null));
 
         this.gearInfo = gearInfo;
         this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
-        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
-        this.generatedTooltip = gearTooltipBuilder.getTooltipLines();
+        this.generatedTooltip = List.of();
     }
 
     @Override
@@ -56,5 +57,15 @@ public final class GuideGearItemStack extends GuideItemStack {
 
     public GearInfo getGearInfo() {
         return gearInfo;
+    }
+
+    public void buildTooltip() {
+        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
+        this.generatedTooltip = gearTooltipBuilder.getTooltipLines();
+
+        // Force ItemStatInfoFeature to recreate its cache
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
+        gearItemOpt.get().getCache().clear(WynnItemCache.TOOLTIP_KEY);
     }
 }
