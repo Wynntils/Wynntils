@@ -63,20 +63,20 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
 
     private static String buildLoreName(String apiName) {
         return switch (apiName) {
-                // A few damage stats do not follow normal rules
+                // A few damage stats do not follow normal rules, but instead has legacy names
+                // This list comes from Wynncraft internals, courtesy of HeyZeer0
             case "spellDamageBonus" -> "SPELLDAMAGE";
             case "spellDamageBonusRaw" -> "SPELLDAMAGERAW";
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";
             case "mainAttackDamageBonusRaw" -> "DAMAGEBONUSRAW";
             case "spellElementalDamageBonusRaw" -> "RAINBOWSPELLDAMAGERAW";
+            case "fireDamageBonus" -> "FIREDAMAGEBONUS";
+            case "waterDamageBonus" -> "WATERDAMAGEBONUS";
+            case "airDamageBonus" -> "AIRDAMAGEBONUS";
+            case "thunderDamageBonus" -> "THUNDERDAMAGEBONUS";
+            case "earthDamageBonus" -> "EARTHDAMAGEBONUS";
 
-                // These can't possibly have their "proper" name since it conflicts
-                // with the workarounds from above, but since they are not actually present
-                // in the game yet, I have not been able to confirm what they will use.
-            case "damageBonus" -> "UNKNOWN_1";
-            case "damageBonusRaw" -> "UNKNOWN_2";
-
-            default -> apiName.toUpperCase(Locale.ROOT);
+            default -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, apiName);
         };
     }
 }
