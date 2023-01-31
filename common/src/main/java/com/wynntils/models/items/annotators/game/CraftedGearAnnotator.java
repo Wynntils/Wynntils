@@ -19,6 +19,6 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
         Matcher matcher = CRAFTED_GEAR_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        return Models.Gear.getCraftedGearItem(itemStack);
+        return Models.Gear.parseCraftedGearItem(itemStack);
     }
 }

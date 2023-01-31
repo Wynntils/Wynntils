@@ -20,29 +20,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
 
-/*
-FIXME list:
-Remaining issues:
-
-* RerollCalculator: flip() is probably broken. Make this into a method instead.
-stats should have Range internalRoll
-
-* SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
-*  -- then remove fixme in tooltip variable.
-
-NEW IDEAS:
-* Custom ordering
-* Show range of actual internal roll on ctrl+shift
-* Calculate possible gear on the fly (and then cache it)
-* Rename the item tooltip feature...
-* Rename WynnItemMatcher to WynnItemUtil
-* Also fix Ingredients
-* Correctly show requirements as missing or fulfilled in custom tooltip
-* Just copy to chat should be separate hotkey
-* Option to turn "Spell Cost" into "Spell Cost Reduction" (invert value)
-
- */
-
 /**
  * Gear and stats are complex, have lots of corner cases and suffer from a general
  * lack of comprehensible, exhaustive, correct and authoritive documentation. :-(
@@ -66,16 +43,7 @@ public final class GearModel extends Model {
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
 
-        // FIXME
         ItemGuessProfile.init();
-    }
-
-    public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack);
-        CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
-        // FIXME: Damages and requirements are not yet parsed
-        return new CraftedGearItem(
-                result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
     }
 
     public void reloadData() {
@@ -97,6 +65,14 @@ public final class GearModel extends Model {
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.tierCount());
     }
 
+    public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
+        GearParseResult result = GearParser.parseItemStack(itemStack);
+        CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
+        // FIXME: Damages and requirements are not yet parsed
+        return new CraftedGearItem(
+                result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+    }
+
     public GearItem fromEncodedString(String encoded) {
         return gearChatEncoding.fromEncodedString(encoded);
     }
@@ -109,10 +85,6 @@ public final class GearModel extends Model {
         return gearChatEncoding.gearChatEncodingMatcher(str);
     }
 
-    public List<GearInfo> getGearInfoRegistry() {
-        return gearInfoRegistry.gearInfoRegistry;
-    }
-
     public GearInfo getGearInfoFromDisplayName(String gearName) {
         return gearInfoRegistry.gearInfoLookup.get(gearName);
     }
@@ -122,6 +94,10 @@ public final class GearModel extends Model {
         if (gearInfo != null) return gearInfo;
 
         return gearInfoRegistry.gearInfoLookup.get(gearName);
+    }
+
+    public List<GearInfo> getGearInfoRegistry() {
+        return gearInfoRegistry.gearInfoRegistry;
     }
 
     public ItemGuessProfile getItemGuess(String levelRange) {
