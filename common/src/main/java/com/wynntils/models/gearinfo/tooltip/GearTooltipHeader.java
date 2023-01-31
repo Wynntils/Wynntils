@@ -90,25 +90,25 @@ public final class GearTooltipHeader {
             String questName = requirements.quest().get();
             Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
             boolean fulfilled = quest.isPresent() && quest.get().getStatus() == QuestStatus.COMPLETED;
-            header.add(getRequirement("Quest Req: " + questName, fulfilled));
+            header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
             requirementsCount++;
         }
         if (requirements.classType().isPresent()) {
             ClassType classType = requirements.classType().get();
             boolean fulfilled = Models.Character.getClassType() == classType;
-            header.add(getRequirement("Class Req: " + classType.getFullName(), fulfilled));
+            header.add(buildRequirementLine("Class Req: " + classType.getFullName(), fulfilled));
             requirementsCount++;
         }
         int level = requirements.level();
         if (level != 0) {
             boolean fulfilled = Models.CombatXp.getXpLevel() >= level;
-            header.add(getRequirement("Combat Lv. Min: " + level, fulfilled));
+            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
             requirementsCount++;
         }
         if (!requirements.skills().isEmpty()) {
             for (Pair<Skill, Integer> skillRequirement : requirements.skills()) {
                 // FIXME: CharacterModel is still missing info about our skill points
-                header.add(getRequirement(
+                header.add(buildRequirementLine(
                         skillRequirement.key().getDisplayName() + " Min: " + skillRequirement.value(), false));
                 requirementsCount++;
             }
@@ -143,9 +143,12 @@ public final class GearTooltipHeader {
         return skillBonusLine;
     }
 
-    private static MutableComponent getRequirement(String requirementName, boolean fulfilled) {
+    private static MutableComponent buildRequirementLine(String requirementName, boolean fulfilled) {
         MutableComponent requirement;
-        requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
+
+        requirement = fulfilled
+                ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
+                : Component.literal("✖ ").withStyle(ChatFormatting.RED);
         requirement.append(Component.literal(requirementName).withStyle(ChatFormatting.GRAY));
         return requirement;
     }
