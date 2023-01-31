@@ -31,6 +31,8 @@ public class HadesClientHandler implements IHadesClientAdapter {
         this.hadesConnection = hadesConnection;
         this.userRegistry = userRegistry;
 
+        // FIXME: This is needed for patching class loading issue with Forge EventBus:
+        //        https://github.com/MinecraftForge/EventBus/issues/44
         Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
     }
 
