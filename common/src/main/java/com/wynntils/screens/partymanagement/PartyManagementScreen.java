@@ -352,13 +352,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         fieldText = COMMA_REPLACER.matcher(fieldText).replaceAll(","); // semicolons and spaces to comma
         if (fieldText.isBlank()) return;
 
-        if (!Models.Party.isPartying()) {
-            Models.Party.createParty();
-        }
-
         Set<String> toInvite = new HashSet<>(List.of(fieldText.split(",")));
         toInvite.removeAll(Models.Party.getPartyMembers());
-        toInvite.forEach(playerName -> McUtils.sendCommand("party invite " + playerName));
+        toInvite.forEach(Models.Party::inviteToParty);
 
         inviteInput.setTextBoxInput("");
     }
@@ -372,7 +368,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void kickOffline() {
         refreshParty();
-        offlineMembers.forEach(playerName -> McUtils.sendCommand("party kick " + playerName));
+        offlineMembers.forEach(Models.Party::kickFromParty);
     }
 
     /**

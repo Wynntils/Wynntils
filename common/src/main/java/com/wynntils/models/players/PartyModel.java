@@ -259,6 +259,10 @@ public final class PartyModel extends Model {
         McUtils.sendCommand("party promote " + player);
     }
 
+    /**
+     * Invites a player to the party. Creates a party if the player is not in one.
+     * @param player The player to invite to the party
+     */
     public void inviteToParty(String player) {
         if (!isPartying()) {
             createParty();
