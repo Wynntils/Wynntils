@@ -20,7 +20,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class PartyPlayer extends AbstractWidget {
+public class PartyMemberWidget extends AbstractWidget {
 
     private final String playerName;
     private final boolean isOffline;
@@ -28,7 +28,7 @@ public class PartyPlayer extends AbstractWidget {
     private final Button kickButton;
     private final Button disbandButton;
 
-    public PartyPlayer(int x, int y, int width, int height, String playerName, boolean isOffline) {
+    public PartyMemberWidget(int x, int y, int width, int height, String playerName, boolean isOffline) {
         super(x, y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;

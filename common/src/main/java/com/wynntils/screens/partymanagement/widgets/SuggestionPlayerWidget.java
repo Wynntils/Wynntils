@@ -19,12 +19,12 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class SuggestionPlayer extends AbstractWidget {
+public class SuggestionPlayerWidget extends AbstractWidget {
 
     private final String playerName;
     private final Button inviteButton;
 
-    public SuggestionPlayer(int x, int y, int width, int height, String playerName) {
+    public SuggestionPlayerWidget(int x, int y, int width, int height, String playerName) {
         super(x, y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.inviteButton = new Button.Builder(

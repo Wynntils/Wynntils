@@ -12,8 +12,8 @@ import com.wynntils.models.players.event.FriendConnectionEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.partymanagement.widgets.PartyPlayer;
-import com.wynntils.screens.partymanagement.widgets.SuggestionPlayer;
+import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
+import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -301,7 +301,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
 
-            suggestedPlayersWidgets.add(new SuggestionPlayer(
+            suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
         }
     }
@@ -329,7 +329,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
 
-            partyMembersWidgets.add(new PartyPlayer(
+            partyMembersWidgets.add(new PartyMemberWidget(
                     this.width / 2 - X_START + 4,
                     this.height / 2 - 125 + i * 20 - 10,
                     200,
