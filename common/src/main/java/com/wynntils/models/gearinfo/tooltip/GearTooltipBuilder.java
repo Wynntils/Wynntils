@@ -5,6 +5,7 @@
 package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.gearinfo.parsing.GearParser;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
@@ -23,10 +24,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipBuilder {
-    // Test suite: regexr.com/776qt
-    private static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
-
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
             new GearTooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
 
@@ -106,7 +103,7 @@ public final class GearTooltipBuilder {
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLineString);
 
             if (!footerStarted) {
-                Matcher matcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
+                Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
                 if (matcher.matches()) {
                     // Skill points counts to the header since they are fixed (but look like
                     // identified stats), so ignore those

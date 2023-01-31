@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gearinfo.parsing;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -10,8 +10,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -32,6 +32,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public class GearParser {
+    // Test suite: regexr.com/776qt
+    public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
+            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+
     // FIXME: Clean up this class!
     private static final Pattern ID_NEW_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
@@ -42,7 +46,7 @@ public class GearParser {
     private static final Pattern VARIABLE_STAT_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
-    public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
+    public static GearParseResult fromItemStack(ItemStack itemStack) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
@@ -91,10 +95,10 @@ public class GearParser {
             }
         }
 
-        return GearInstance.create(gearInfo, identifications, powders, rerolls);
+        return new GearParseResult(identifications, powders, rerolls);
     }
 
-    private Optional<Integer> getRerollCount(Component lore) {
+    private static Optional<Integer> getRerollCount(Component lore) {
         String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
 
         Matcher rerollMatcher = REROLL_PATTERN.matcher(unformattedLoreLine);
@@ -107,41 +111,20 @@ public class GearParser {
         }
     }
 
-    /*
-    private static final Pattern RANGE_PATTERN =
-            Pattern.compile("^§([ac])([-+]\\d+)§r§2 to §r§a(\\d+)(%|/3s|/5s| tier)?§r§7 ?(.*)$");
-
-            // Range pattern will normally not happen...
-            Matcher id3Matcher = RANGE_PATTERN.matcher(formatId);
-            if (id3Matcher.matches()) {
-                boolean isNegative = id3Matcher.group(1).charAt(0) == 'c';
-                int value = Integer.parseInt(id3Matcher.group(2));
-                int valueMax = Integer.parseInt(id3Matcher.group(3));
-                String idName = id3Matcher.group(5);
-                String unitMatch = id3Matcher.group(4);
-                String unit = unitMatch == null ? "" : unitMatch;
-
-                StatType type = Models.Stat.fromDisplayName(idName, unit);
-                if (type == null && Skill.isSkill(idName)) {
-                    // Skill point buff looks like stats when parsing
-                    // FIXME: Handle
-                }
-            }
-
-     */
-
-    public GearInstance fromIngameItemData(GearInfo gearInfo, JsonObject itemData) {
+    public static GearParseResult fromIngameItemData(GearInfo gearInfo, JsonObject itemData) {
         List<StatActualValue> identifications = new ArrayList<>();
 
-        // Lore lines is: type: "LORETYPE", percent: <number>, where 100 is baseline, so can be > 100 and < 100.
         if (itemData.has("identifications")) {
             JsonArray ids = itemData.getAsJsonArray("identifications");
             for (int i = 0; i < ids.size(); i++) {
                 JsonObject idInfo = ids.get(i).getAsJsonObject();
                 String id = idInfo.get("type").getAsString();
-                int intPercent = idInfo.get("percent").getAsInt();
+                int internalRoll = idInfo.get("percent").getAsInt();
 
-                // Convert e.g. DAMAGEBONUS to our StatTypes
+                // Lore line is: {type: "<loretype>", percent: <internal roll>}
+                // <internal roll> is an integer between 30 and 130
+
+                // First convert loretype (e.g. DAMAGEBONUS) to our StatTypes
                 StatType statType = Models.Stat.fromLoreId(id);
                 if (statType == null) {
                     // This can happen for skill point bonus, which used to be variable...
@@ -152,22 +135,11 @@ public class GearParser {
                     continue;
                 }
 
-                StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
-                if (possibleValue == null) {
-                    WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
-                    continue;
-                }
-                int value = Math.round(possibleValue.baseValue() * (intPercent / 100f));
+                // Then convert the internal roll
+                StatActualValue actualValue = getStatActualValue(gearInfo, statType, internalRoll);
+                if (actualValue == null) continue;
 
-                // account for mistaken rounding
-                if (value == 0) {
-                    value = 1;
-                }
-
-                int stars = GearCalculator.getStarsFromPercent(intPercent);
-                // FIXME: Negative values should never show stars!
-
-                identifications.add(new StatActualValue(statType, value, stars));
+                identifications.add(actualValue);
             }
         }
 
@@ -187,10 +159,24 @@ public class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return GearInstance.create(gearInfo, identifications, powders, rerolls);
+        return new GearParseResult(identifications, powders, rerolls);
     }
 
-    public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
+    private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
+        StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
+        if (possibleValue == null) {
+            WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+            return null;
+        }
+        int value = Math.min(Math.round(possibleValue.baseValue() * (internalRoll / 100f)), 1);
+
+        // Negative values can never show stars
+        int stars = (value > 0) ? GearCalculator.getStarsFromInternalRoll(internalRoll) : 0;
+
+        return new StatActualValue(statType, value, stars);
+    }
+
+    public static CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
         CappedValue durability = WynnItemMatchers.getDurability(itemStack);
 
         List<StatActualValue> identifications = new ArrayList<>();

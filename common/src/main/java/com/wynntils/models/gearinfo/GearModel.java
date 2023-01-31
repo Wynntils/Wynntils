@@ -7,6 +7,8 @@ package com.wynntils.models.gearinfo;
 import com.google.gson.JsonObject;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
+import com.wynntils.models.gearinfo.parsing.GearParseResult;
+import com.wynntils.models.gearinfo.parsing.GearParser;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -19,8 +21,6 @@ import net.minecraft.world.item.ItemStack;
 /*
 FIXME list:
 Remaining issues:
-
-* tooltip variable needs cleaning in how we build identified/unidentified lines
 
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
@@ -71,7 +71,6 @@ NEW IDEAS:
 public final class GearModel extends Model {
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
-    private final GearParser gearParser = new GearParser();
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
     public GearModel(StatModel statModel) {
@@ -86,15 +85,19 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        return gearParser.fromItemStack(gearInfo, itemStack);
+        GearParseResult result = GearParser.fromItemStack(itemStack);
+
+        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
-        return gearParser.fromIngameItemData(gearInfo, itemData);
+        GearParseResult result = GearParser.fromIngameItemData(gearInfo, itemData);
+
+        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public CraftedGearItem getCraftedGearItem(ItemStack itemStack) {
-        return gearParser.getCraftedGearItem(itemStack);
+        return GearParser.getCraftedGearItem(itemStack);
     }
 
     public GearItem fromEncodedString(String encoded) {

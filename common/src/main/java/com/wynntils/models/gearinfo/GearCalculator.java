@@ -37,15 +37,15 @@ public final class GearCalculator {
         }
     }
 
-    public static int getStarsFromPercent(int intPercent) {
+    public static int getStarsFromInternalRoll(int internalRoll) {
         // Star calculation reference, from salted:
         // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
         int stars;
-        if (intPercent < 101) {
+        if (internalRoll < 101) {
             stars = 0;
-        } else if (intPercent < 125) {
+        } else if (internalRoll < 125) {
             stars = 1;
-        } else if (intPercent < 130) {
+        } else if (internalRoll < 130) {
             stars = 2;
         } else {
             stars = 3;
