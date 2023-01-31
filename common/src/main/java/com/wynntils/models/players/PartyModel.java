@@ -259,6 +259,13 @@ public final class PartyModel extends Model {
         McUtils.sendCommand("party promote " + player);
     }
 
+    public void inviteToParty(String player) {
+        if (!isPartying()) {
+            createParty();
+        }
+        McUtils.sendCommand("party invite " + player);
+    }
+
     public void leaveParty() {
         McUtils.sendCommand("party leave");
     }

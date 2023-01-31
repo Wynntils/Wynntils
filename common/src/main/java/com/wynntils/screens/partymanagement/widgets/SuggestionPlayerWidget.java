@@ -29,7 +29,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         this.playerName = playerName;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                        (button) -> inviteToParty(playerName))
+                        (button) -> Models.Party.inviteToParty(playerName))
                 .pos(this.getX() + 130, this.getY())
                 .size(40, 20)
                 .build();
@@ -57,13 +57,6 @@ public class SuggestionPlayerWidget extends AbstractWidget {
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
         inviteButton.render(poseStack, mouseX, mouseY, partialTick);
-    }
-
-    private void inviteToParty(String playerName) {
-        if (!Models.Party.isPartying()) {
-            McUtils.sendCommand("party create");
-        }
-        McUtils.sendCommand("party invite " + playerName);
     }
 
     @Override
