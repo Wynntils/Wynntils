@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.ingredient;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredients.profile.IdentificationProfile;
 import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
@@ -44,6 +45,18 @@ public final class GuideIngredientItemStack extends GuideItemStack {
         tooltip.add(getHoverName());
 
         tooltip.addAll(guideTooltip);
+
+        tooltip.add(Component.empty());
+        if (Models.Favorites.isFavorite(ingredientProfile.getDisplayName())) {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
+        tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
+                .withStyle(ChatFormatting.RED));
+
         return tooltip;
     }
 
