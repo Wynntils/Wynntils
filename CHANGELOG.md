@@ -1,9 +1,21 @@
+## [0.0.2-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.159...v0.0.2-alpha.160) (2023-01-31)
+
+
+### Bug Fixes
+
+* Hades events will work now, workaround for Forge EventBus issues ([#1104](https://github.com/Wynntils/Artemis/issues/1104)) ([32f2b5c](https://github.com/Wynntils/Artemis/commit/32f2b5cb95ab025e185d26c91b32ff967525ab0d)), closes [#2](https://github.com/Wynntils/Artemis/issues/2)
+
 ## [0.0.2-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.158...v0.0.2-alpha.159) (2023-01-30)
 
 
 ### Bug Fixes
 
 * Fix status effect constructor order ([#1103](https://github.com/Wynntils/Artemis/issues/1103)) ([c3a753e](https://github.com/Wynntils/Artemis/commit/c3a753ed1fb893708731d08505fe420746e0d790))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.159 [skip ci] ([f37a760](https://github.com/Wynntils/Artemis/commit/f37a760e51a3ace1a6f30cacb7a8e07aa9f641a2))
 
 ## [0.0.2-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.157...v0.0.2-alpha.158) (2023-01-30)
 
@@ -42,16 +54,4 @@
 
 * **release:** v0.0.2-alpha.156 [skip ci] ([f858e92](https://github.com/Wynntils/Artemis/commit/f858e92b4bd7ea6e4b251ecd3f342a78eb0e7585))
 * **release:** v0.0.2-alpha.156 [skip ci] ([f1c0034](https://github.com/Wynntils/Artemis/commit/f1c003489cca56d41fa7351a5a5cbad094df6efe))
-
-## [0.0.2-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.154...v0.0.2-alpha.155) (2023-01-27)
-
-
-### Bug Fixes
-
-* Match treasury color with Wynn ([#1097](https://github.com/Wynntils/Artemis/issues/1097)) ([b19c6b8](https://github.com/Wynntils/Artemis/commit/b19c6b8d7e67f75f9f832ba5656143a85666e456))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.155 [skip ci] ([8fb4c41](https://github.com/Wynntils/Artemis/commit/8fb4c41c939560d38e2ca93cb96746cdd5171a9a))
 
