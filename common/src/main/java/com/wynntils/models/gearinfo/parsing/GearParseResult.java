@@ -10,6 +10,8 @@ import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
+// "tierCount" depends on what item were parsed. For identified items, it is the
+// number of rerolls. For crafted items, it is the current durability
 public record GearParseResult(
         GearTier tier,
         GearType gearType,
