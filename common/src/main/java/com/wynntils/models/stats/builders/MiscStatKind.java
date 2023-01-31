@@ -42,13 +42,13 @@ public enum MiscStatKind {
     private final String displayName;
     private final String apiName;
     private final StatUnit unit;
-    private final String loreName;
+    private final String internalRollName;
 
-    MiscStatKind(String displayName, StatUnit unit, String apiName, String loreName) {
+    MiscStatKind(String displayName, StatUnit unit, String apiName, String internalRollName) {
         this.displayName = displayName;
         this.apiName = apiName;
         this.unit = unit;
-        this.loreName = loreName;
+        this.internalRollName = internalRollName;
     }
 
     MiscStatKind(String displayName, StatUnit unit, String apiName) {
@@ -63,8 +63,8 @@ public enum MiscStatKind {
         return apiName;
     }
 
-    public String getLoreName() {
-        return loreName;
+    public String getInternalRollName() {
+        return internalRollName;
     }
 
     public StatUnit getUnit() {

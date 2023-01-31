@@ -7,19 +7,19 @@ package com.wynntils.models.stats.type;
 import java.util.Objects;
 
 // The key is strictly not necessary, but is internally useful
-// The "loreName" is what is used in the json lore of other player's items
+// The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
     private final String key;
     private final String displayName;
     private final String apiName;
-    private final String loreName;
+    private final String internalRollName;
     private final StatUnit unit;
 
-    protected StatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
+    protected StatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         this.key = key;
         this.displayName = displayName;
         this.apiName = apiName;
-        this.loreName = loreName;
+        this.internalRollName = internalRollName;
         this.unit = unit;
     }
 
@@ -35,8 +35,8 @@ public abstract class StatType {
         return apiName;
     }
 
-    public String getLoreName() {
-        return loreName;
+    public String getInternalRollName() {
+        return internalRollName;
     }
 
     public StatUnit getUnit() {
@@ -55,13 +55,13 @@ public abstract class StatType {
         return Objects.equals(this.key, that.key)
                 && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.apiName, that.apiName)
-                && Objects.equals(this.loreName, that.loreName)
+                && Objects.equals(this.internalRollName, that.internalRollName)
                 && Objects.equals(this.unit, that.unit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, displayName, apiName, loreName, unit);
+        return Objects.hash(key, displayName, apiName, internalRollName, unit);
     }
 
     @Override
@@ -69,8 +69,8 @@ public abstract class StatType {
         return "StatType[" + "key="
                 + key + ", " + "displayName="
                 + displayName + ", " + "apiName="
-                + apiName + ", " + "loreName="
-                + loreName + ", " + "unit="
+                + apiName + ", " + "internalRollName="
+                + internalRollName + ", " + "unit="
                 + unit + ']';
     }
 }

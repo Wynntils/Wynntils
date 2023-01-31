@@ -25,7 +25,7 @@ public final class MiscStatBuilder extends StatBuilder<MiscStatType> {
                     "MISC_" + kind.name(),
                     kind.getDisplayName(),
                     kind.getApiName(),
-                    kind.getLoreName(),
+                    kind.getInternalRollName(),
                     kind.getUnit(),
                     kind);
             callback.accept(gearStat);

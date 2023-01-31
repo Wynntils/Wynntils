@@ -111,7 +111,7 @@ public final class GearParser {
         }
     }
 
-    public static GearParseResult parseIngameItemData(GearInfo gearInfo, JsonObject itemData) {
+    public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
         List<StatActualValue> identifications = new ArrayList<>();
 
         if (itemData.has("identifications")) {
@@ -125,7 +125,7 @@ public final class GearParser {
                 // <internal roll> is an integer between 30 and 130
 
                 // First convert loretype (e.g. DAMAGEBONUS) to our StatTypes
-                StatType statType = Models.Stat.fromLoreId(id);
+                StatType statType = Models.Stat.fromInternalRollId(id);
                 if (statType == null) {
                     // This can happen for skill point bonus, which used to be variable...
                     Skill skill = Skill.fromApiId(id.replace("POINTS", ""));

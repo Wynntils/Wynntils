@@ -91,7 +91,7 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
-        GearParseResult result = GearParser.parseIngameItemData(gearInfo, itemData);
+        GearParseResult result = GearParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }

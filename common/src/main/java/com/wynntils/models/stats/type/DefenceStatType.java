@@ -5,7 +5,7 @@
 package com.wynntils.models.stats.type;
 
 public final class DefenceStatType extends StatType {
-    public DefenceStatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
-        super(key, displayName, apiName, loreName, unit);
+    public DefenceStatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
+        super(key, displayName, apiName, internalRollName, unit);
     }
 }

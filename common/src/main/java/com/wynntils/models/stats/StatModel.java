@@ -49,12 +49,12 @@ public final class StatModel extends Model {
         return statTypeLookup.get(lookupName);
     }
 
-    public StatType fromLoreId(String id) {
+    public StatType fromInternalRollId(String id) {
         // FIXME: If this is a SpellStatType, we need to check the GearInfo. If it is a weapon,
         // return the proper type, otherwise return generic "3rd Spell". We cannot just return
         // the first value found.
         for (StatType stat : statTypeRegistry) {
-            if (stat.getLoreName().equals(id)) return stat;
+            if (stat.getInternalRollName().equals(id)) return stat;
         }
         return null;
     }

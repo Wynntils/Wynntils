@@ -10,8 +10,8 @@ public final class MiscStatType extends StatType {
     private final MiscStatKind kind;
 
     public MiscStatType(
-            String key, String displayName, String apiName, String loreName, StatUnit unit, MiscStatKind kind) {
-        super(key, displayName, apiName, loreName, unit);
+            String key, String displayName, String apiName, String internalRollName, StatUnit unit, MiscStatKind kind) {
+        super(key, displayName, apiName, internalRollName, unit);
         this.kind = kind;
     }
 

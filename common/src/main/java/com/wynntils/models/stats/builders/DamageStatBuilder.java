@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
@@ -42,7 +41,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
                 buildKey(attackType, damageType, unit),
                 buildDisplayName(attackType, damageType),
                 apiName,
-                buildLoreName(apiName),
+                buildInternalRollName(apiName),
                 unit);
     }
 
@@ -61,7 +60,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
         return damageType.getDisplayName() + attackType.getDisplayName() + "Damage";
     }
 
-    private static String buildLoreName(String apiName) {
+    private static String buildInternalRollName(String apiName) {
         return switch (apiName) {
                 // A few damage stats do not follow normal rules, but instead has legacy names
                 // This list comes from Wynncraft internals, courtesy of HeyZeer0
