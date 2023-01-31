@@ -187,7 +187,7 @@ public final class StatListOrderer {
         addMiscStats(wynncraftOrdering, miscStats, WYNNCRAFT_MISC_ORDER_2);
         wynncraftOrdering.add(new StatListDelimiter());
         // Spell stats are swapped in Wynncraft, so in this case they have raw before percent
-        ArrayList<SpellStatType> swappedSpellStats = new ArrayList<>(spellStats);
+        List<SpellStatType> swappedSpellStats = new ArrayList<>(spellStats);
         ListUtils.swapPairwise(swappedSpellStats);
         wynncraftOrdering.addAll(swappedSpellStats);
         wynncraftOrdering.add(new StatListDelimiter());

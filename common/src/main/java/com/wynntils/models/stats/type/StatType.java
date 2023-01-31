@@ -15,7 +15,7 @@ public abstract class StatType {
     private final String loreName;
     private final StatUnit unit;
 
-    public StatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
+    protected StatType(String key, String displayName, String apiName, String loreName, StatUnit unit) {
         this.key = key;
         this.displayName = displayName;
         this.apiName = apiName;
