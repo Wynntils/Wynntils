@@ -7,12 +7,10 @@ package com.wynntils.models.gearinfo;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.RangedValue;
 
 public final class GearCalculator {
     public static float getPercent(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        StatType statType = actualValue.stat();
         int max = possibleValues.range().high() - possibleValues.range().low();
         int current = actualValue.value() - possibleValues.range().low();
 
@@ -67,7 +65,7 @@ public final class GearCalculator {
         private final double increase;
         private final double perfect;
 
-        public RecollCalculator(StatPossibleValues possibleValues, double decrease, double increase) {
+        protected RecollCalculator(StatPossibleValues possibleValues, double decrease, double increase) {
             this.decrease = decrease;
             this.increase = increase;
             this.perfect = getPerfectChance(possibleValues);

@@ -9,7 +9,6 @@ import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
-import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -62,9 +61,6 @@ public final class GearTooltipBuilder {
         GearInfo gearInfo = gearItem.getGearInfo();
         GearInstance gearInstance = gearItem.getGearInstance().orElse(null);
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
-
-        // guide item stacks are technically "unidentified" but should not show as such
-        boolean hideUnidentified = itemStack instanceof GuideItemStack;
 
         Pair<List<Component>, List<Component>> splitLore = extractHeaderAndFooter(tooltips);
         List<Component> header = splitLore.a();

@@ -33,7 +33,7 @@ stats should have Range internalRoll
 * SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
 *  -- then remove fixme in tooltip variable.
 
-* GearParser needs cleaning
+* GearParser needs cleaning -- also fix RewardsModel afterwards!
 * Crafted gear needs some thinking
 
 * MODELLING: A GearInstance should have powder specials as well!!!!
@@ -69,10 +69,10 @@ NEW IDEAS:
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearModel extends Model {
-    private GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
+    private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
-    private GearParser gearParser = new GearParser();
-    private GearChatEncoding gearChatEncoding = new GearChatEncoding();
+    private final GearParser gearParser = new GearParser();
+    private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
 
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
@@ -105,8 +105,8 @@ public final class GearModel extends Model {
         return gearChatEncoding.toEncodedString(gearItem);
     }
 
-    public Matcher gearChatEncodingMatcher(String text) {
-        return gearChatEncoding.gearChatEncodingMatcher(text);
+    public Matcher gearChatEncodingMatcher(String str) {
+        return gearChatEncoding.gearChatEncodingMatcher(str);
     }
 
     public List<GearInfo> getGearInfoRegistry() {

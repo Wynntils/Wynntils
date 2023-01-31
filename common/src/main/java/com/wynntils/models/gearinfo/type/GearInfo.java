@@ -21,15 +21,14 @@ public record GearInfo(
         List<Pair<StatType, StatPossibleValues>> variableStats) {
 
     public StatPossibleValues getPossibleValues(StatType statType) {
-        StatPossibleValues status = variableStats().stream()
+        return this.variableStats().stream()
                 .filter(p -> p.key().equals(statType))
                 .findFirst()
-                .map(p -> p.value())
+                .map(Pair::value)
                 .orElse(null);
-        return status;
     }
 
     public List<StatType> getVariableStats() {
-        return variableStats().stream().map(p -> p.key()).toList();
+        return variableStats().stream().map(Pair::key).toList();
     }
 }

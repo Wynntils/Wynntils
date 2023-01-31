@@ -14,13 +14,7 @@ import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class GearMaterial {
-    private final ItemStack itemStack;
-
-    public GearMaterial(ItemStack itemStack) {
-        this.itemStack = itemStack;
-    }
-
+public record GearMaterial(ItemStack itemStack) {
     public static GearMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
                 + gearType.name().toLowerCase(Locale.ROOT);
@@ -58,10 +52,6 @@ public class GearMaterial {
         ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
 
         return new GearMaterial(itemStack);
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
     }
 
     private static ItemStack createItemStack(Item item, int damageValue) {

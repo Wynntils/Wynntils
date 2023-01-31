@@ -34,7 +34,7 @@ public class ItemGuessProfile {
     private final String range;
     private final Map<GearType, Map<GearTier, List<String>>> items = new EnumMap<>(GearType.class);
 
-    public ItemGuessProfile(String range) {
+    private ItemGuessProfile(String range) {
         this.range = range;
     }
 
@@ -59,7 +59,7 @@ public class ItemGuessProfile {
         });
     }
 
-    public static class ItemGuessDeserializer implements JsonDeserializer<HashMap<?, ?>> {
+    protected static class ItemGuessDeserializer implements JsonDeserializer<HashMap<?, ?>> {
         @Override
         public HashMap<String, ItemGuessProfile> deserialize(
                 JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

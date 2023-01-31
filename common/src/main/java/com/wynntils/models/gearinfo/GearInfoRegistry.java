@@ -49,7 +49,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 public class GearInfoRegistry {
-    List<GearMajorId> majorIds = List.of();
+    private List<GearMajorId> allMajorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
     Map<String, GearInfo> gearInfoLookup = Map.of();
 
@@ -69,13 +69,13 @@ public class GearInfoRegistry {
             Gson majorIdGson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(GearMajorId.class, new GearMajorIdDeserializer())
                     .create();
-            majorIds = majorIdGson.fromJson(majorIdsReader, type);
+            allMajorIds = majorIdGson.fromJson(majorIdsReader, type);
 
             // Now we can do the gear DB
             Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
             dl.handleReader(reader -> {
                 Gson gearInfoGson = new GsonBuilder()
-                        .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(majorIds))
+                        .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds))
                         .create();
                 WynncraftGearInfoResponse gearInfoResponse =
                         gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
@@ -115,10 +115,10 @@ public class GearInfoRegistry {
     }
 
     private static final class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
-        private final List<GearMajorId> majorIds;
+        private final List<GearMajorId> allMajorIds;
 
-        private GearInfoDeserializer(List<GearMajorId> majorIds) {
-            this.majorIds = majorIds;
+        private GearInfoDeserializer(List<GearMajorId> allMajorIds) {
+            this.allMajorIds = allMajorIds;
         }
 
         @Override
@@ -302,15 +302,14 @@ public class GearInfoRegistry {
             if (majorIdsJson == null || majorIdsJson.isJsonNull()) return List.of();
 
             return majorIdsJson.getAsJsonArray().asList().stream()
-                    .map(majorIdName -> getMajorIdFromId(majorIdName.getAsString()))
+                    .map(majorIdName -> getMajorIdFromString(majorIdName.getAsString()))
                     .filter(Objects::nonNull)
                     .toList();
         }
 
-        public GearMajorId getMajorIdFromId(String majorIdId) {
-            // Check the "id" field of the "majorId", hence "majodIdId"
-            return this.majorIds.stream()
-                    .filter(mId -> mId.id().equals(majorIdId))
+        protected GearMajorId getMajorIdFromString(String majorIdString) {
+            return this.allMajorIds.stream()
+                    .filter(mId -> mId.id().equals(majorIdString))
                     .findFirst()
                     .orElse(null);
         }
@@ -407,7 +406,7 @@ public class GearInfoRegistry {
         }
     }
 
-    public static class WynncraftGearInfoResponse {
+    protected static class WynncraftGearInfoResponse {
         List<GearInfo> items;
     }
 }

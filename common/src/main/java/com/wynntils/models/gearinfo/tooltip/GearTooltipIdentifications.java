@@ -86,7 +86,6 @@ public final class GearTooltipIdentifications {
             GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
         String inGameName = possibleValues.stat().getDisplayName();
         StatUnit unitType = possibleValues.stat().getUnit();
-        boolean invert = possibleValues.stat().showAsInverted();
 
         RangedValue value = possibleValues.range();
         String unit = unitType.getDisplayName();
@@ -149,9 +148,6 @@ public final class GearTooltipIdentifications {
         }
 
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
-
-        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-        if (possibleValues.range().isFixed()) return baseComponent;
 
         return baseComponent;
     }

@@ -33,13 +33,13 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class GearParser {
     // FIXME: Clean up this class!
-    public static final Pattern ID_NEW_PATTERN =
+    private static final Pattern ID_NEW_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
     private static final Pattern REROLL_PATTERN =
             Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) "
                     + "(Raid Reward|Item)(?: \\[(?<Rolls>\\d+)])?");
 
-    public static final Pattern VARIABLE_STAT_PATTERN =
+    private static final Pattern VARIABLE_STAT_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     public GearInstance fromItemStack(GearInfo gearInfo, ItemStack itemStack) {
