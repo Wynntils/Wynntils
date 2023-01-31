@@ -244,7 +244,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                "§l" + I18n.get("screens.wynntils.partyManagementGui.self"),
+                ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
                 this.width / 2 - 300,
                 this.height / 2 - 132,
                 CommonColors.WHITE,
@@ -262,7 +262,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 TextShadow.NORMAL);
         fr.renderText(
                 poseStack,
-                "§m" + I18n.get("screens.wynntils.partyManagementGui.offline"),
+                ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
                 this.width / 2 - 300,
                 this.height / 2 - 108,
                 CommonColors.WHITE,
