@@ -24,8 +24,6 @@ import net.minecraft.world.item.ItemStack;
 FIXME list:
 Remaining issues:
 
-* GearParser needs cleaning + Crafted gear needs some thinking
-
 * GearChatEncoding -- did I break the protocol wrt inverse/negative values?
 * -- Also, large values should have been encoded as percent, I *did* break this!
 
