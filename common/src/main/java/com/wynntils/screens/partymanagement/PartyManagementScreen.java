@@ -128,7 +128,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // partying check not required as button automatically makes new party if not in one
-
+        refreshOffline();
         FontRenderer fr = FontRenderer.getInstance();
 
         // region Invite field header
@@ -367,13 +367,18 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         Models.Party.requestPartyListUpdate();
         reloadSuggestedPlayersWidgets();
         reloadMembersWidgets();
+        refreshOffline();
     }
 
     private void kickOffline() {
         refreshParty();
+        offlineMembers.forEach(playerName -> McUtils.sendCommand("party kick " + playerName));
+    }
+
+    private void refreshOffline() {
+        offlineMembers.clear();
         offlineMembers.addAll(Models.Party.getPartyMembers());
         offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
-        offlineMembers.forEach(playerName -> McUtils.sendCommand("party kick " + playerName));
     }
 
     private void createParty() {
