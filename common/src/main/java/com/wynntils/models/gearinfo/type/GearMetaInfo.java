@@ -6,10 +6,12 @@ package com.wynntils.models.gearinfo.type;
 
 import java.util.Optional;
 
+// The api name is normally the same as the name, but if not, the api name is given
+// by apiName
 public record GearMetaInfo(
         GearRestrictions restrictions,
         GearMaterial material,
         GearDropType dropType,
         Optional<String> lore,
-        Optional<String> altName,
+        Optional<String> apiName,
         boolean allowCraftsman) {}

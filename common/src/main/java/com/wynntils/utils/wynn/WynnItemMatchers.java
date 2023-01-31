@@ -22,15 +22,10 @@ import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
-    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-    private static final Pattern POWDER_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
-    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
-    private static final Pattern INGREDIENT_OR_MATERIAL_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
 
     public static boolean isHealingPotion(ItemStack itemStack) {
         if (!isConsumable(itemStack)) return false;

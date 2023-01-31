@@ -82,7 +82,6 @@ public final class GearTooltipHeader {
             header.add(Component.literal(""));
         }
 
-        // FIXME: Add checks if the requirements are fulfilled...
         // requirements
         int requirementsCount = 0;
         GearRequirements requirements = gearInfo.requirements();

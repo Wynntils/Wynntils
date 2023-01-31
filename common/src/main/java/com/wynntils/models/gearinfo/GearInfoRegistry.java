@@ -52,7 +52,7 @@ public class GearInfoRegistry {
     private List<GearMajorId> allMajorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
     Map<String, GearInfo> gearInfoLookup = Map.of();
-    Map<String, GearInfo> gearInfoLookupAltName = Map.of();
+    Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
         loadRegistry();
@@ -91,15 +91,15 @@ public class GearInfoRegistry {
                 Map<String, GearInfo> altLookupMap = new HashMap<>();
                 for (GearInfo gearInfo : registry) {
                     lookupMap.put(gearInfo.name(), gearInfo);
-                    if (gearInfo.metaInfo().altName().isPresent()) {
-                        altLookupMap.put(gearInfo.metaInfo().altName().get(), gearInfo);
+                    if (gearInfo.metaInfo().apiName().isPresent()) {
+                        altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
                     }
                 }
 
                 // Make the result visisble to the world
                 gearInfoRegistry = registry;
                 gearInfoLookup = lookupMap;
-                gearInfoLookupAltName = altLookupMap;
+                gearInfoLookupApiName = altLookupMap;
             });
         });
     }
@@ -132,20 +132,24 @@ public class GearInfoRegistry {
             String primaryName = WynnUtils.normalizeBadString(json.get("name").getAsString());
             String secondaryName = WynnUtils.normalizeBadString(JsonUtils.getNullableJsonString(json, "displayName"));
 
-            // After normalization, we can end up with the same name. Don't treat this as an altName
+            // After normalization, we can end up with the same name. If so, treat this as not having
+            // a secondary name.
             if (primaryName.equals(secondaryName)) {
                 secondaryName = "";
             }
 
-            // The real name is the secondaryName if it exists. If so, the primary name is the altName
+            // The real name (display name) is the secondaryName if it exists, otherwise it is
+            // the primary name.
+            // If the secondary name exists, the primary name is the apiName. If the apiName
+            // does not exist, the api name is the same as the displayName.
             String name = secondaryName.isEmpty() ? primaryName : secondaryName;
-            String altName = secondaryName.isEmpty() ? null : primaryName;
+            String apiName = secondaryName.isEmpty() ? null : primaryName;
 
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = json.get("sockets").getAsInt();
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, altName, type);
+            GearMetaInfo metaInfo = parseMetaInfo(json, apiName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
@@ -164,18 +168,18 @@ public class GearInfoRegistry {
             return GearType.fromString(typeString);
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String altName, GearType type) {
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
             GearMaterial material = parseMaterial(json, type);
             GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
             Optional<String> loreOpt = parseLore(json);
-            Optional<String> altNameOpt = Optional.ofNullable(altName);
+            Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             JsonElement allowCraftsmanJson = json.get("allowCraftsman");
             boolean allowCraftsman = allowCraftsmanJson != null && allowCraftsmanJson.getAsBoolean();
 
-            return new GearMetaInfo(restrictions, material, dropType, loreOpt, altNameOpt, allowCraftsman);
+            return new GearMetaInfo(restrictions, material, dropType, loreOpt, apiNameOpt, allowCraftsman);
         }
 
         private Optional<String> parseLore(JsonObject json) {

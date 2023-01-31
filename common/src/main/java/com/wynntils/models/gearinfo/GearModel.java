@@ -27,14 +27,8 @@ Remaining issues:
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
 stats should have Range internalRoll
 
-* All other Guide stacks should also use the vanilla tooltip rendering!
-
 * SPELL COST STATS: It is a mess. Create aliases instead of multiple stats...
 *  -- then remove fixme in tooltip variable.
-
-* MODELLING: A GearInstance should have powder specials as well!!!!
-
-
 
 NEW IDEAS:
 * Custom ordering
@@ -124,7 +118,7 @@ public final class GearModel extends Model {
     }
 
     public GearInfo getGearInfoFromApiName(String gearName) {
-        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupAltName.get(gearName);
+        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupApiName.get(gearName);
         if (gearInfo != null) return gearInfo;
 
         return gearInfoRegistry.gearInfoLookup.get(gearName);

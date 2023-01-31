@@ -14,6 +14,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 
+// FIXME: GearInstance is missing Powder Specials...
 public record GearInstance(
         List<StatActualValue> identifications, List<Powder> powders, int rerolls, Optional<Float> overallQuality) {
     public static GearInstance create(

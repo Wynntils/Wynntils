@@ -10,6 +10,5 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
 
-// FIXME: quest should be a type, not a string
 public record GearRequirements(
         int level, Optional<ClassType> classType, List<Pair<Skill, Integer>> skills, Optional<String> quest) {}
