@@ -27,7 +27,8 @@ public record GearInstance(
                     // We do not include values that cannot possibly change
                     StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
                     if (possibleValues == null) {
-                        WynntilsMod.warn("Error:" + gearInfo.name() + " claims to have identification " + actualValue.stat());
+                        WynntilsMod.warn(
+                                "Error:" + gearInfo.name() + " claims to have identification " + actualValue.stat());
                         return false;
                     }
                     return !possibleValues.range().isFixed();

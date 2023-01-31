@@ -52,7 +52,7 @@ public class GearInfoRegistry {
     private List<GearMajorId> allMajorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
     Map<String, GearInfo> gearInfoLookup = Map.of();
-    Map<String, GearInfo> gearInfoLookupAltName= Map.of();
+    Map<String, GearInfo> gearInfoLookupAltName = Map.of();
 
     public GearInfoRegistry() {
         loadRegistry();

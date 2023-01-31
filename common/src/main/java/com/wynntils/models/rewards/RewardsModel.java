@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
     public RewardsModel() {
-        // FIXME: Dependency to Models.Gear???
         super(List.of());
     }
 
@@ -37,7 +36,7 @@ public class RewardsModel extends Model {
     }
 
     public CharmItem fromCharmItemStack(ItemStack itemStack, CharmInfo charmInfo) {
-         GearParseResult result = GearParser.parseItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack);
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
         }
