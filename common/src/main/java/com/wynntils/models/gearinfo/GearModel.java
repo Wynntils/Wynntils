@@ -85,7 +85,8 @@ public final class GearModel extends Model {
         GearParseResult result = GearParser.parseItemStack(itemStack);
         CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
-        return new CraftedGearItem(result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+        return new CraftedGearItem(
+                result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
     }
 
     public void reloadData() {

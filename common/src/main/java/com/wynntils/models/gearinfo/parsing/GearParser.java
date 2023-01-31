@@ -14,14 +14,11 @@ import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.gearinfo.type.GearType;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class GearParser {
     // Test suite: https://regexr.com/776qt

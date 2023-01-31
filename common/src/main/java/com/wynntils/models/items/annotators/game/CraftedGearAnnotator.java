@@ -7,7 +7,6 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gearinfo.GearModel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
