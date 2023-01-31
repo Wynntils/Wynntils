@@ -95,7 +95,7 @@ public class ItemStatInfoFeature extends UserFeature {
             GearTooltipBuilder builder = gearItem.getCache()
                     .getOrCalculate(
                             WynnItemCache.TOOLTIP_KEY,
-                            () -> GearTooltipBuilder.fromParsedItemStack(event.getItemStack(), gearItem));
+                            () -> Models.GearTooltip.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
             IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;

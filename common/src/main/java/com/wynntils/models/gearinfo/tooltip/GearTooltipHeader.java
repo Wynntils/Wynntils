@@ -4,17 +4,22 @@
  */
 package com.wynntils.models.gearinfo.tooltip;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.gearinfo.type.GearRequirements;
+import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -77,28 +82,34 @@ public final class GearTooltipHeader {
             header.add(Component.literal(""));
         }
 
-        // FIXME: Is requirements in the correct order? Also add checks if the requirements
-        // are fulfilled...
+        // FIXME: Add checks if the requirements are fulfilled...
         // requirements
         int requirementsCount = 0;
         GearRequirements requirements = gearInfo.requirements();
         if (requirements.quest().isPresent()) {
-            header.add(getRequirement("Quest Req: " + requirements.quest().get()));
+            String questName = requirements.quest().get();
+            Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
+            boolean fulfilled = quest.isPresent() && quest.get().getStatus() == QuestStatus.COMPLETED;
+            header.add(getRequirement("Quest Req: " + questName, fulfilled));
             requirementsCount++;
         }
         if (requirements.classType().isPresent()) {
-            header.add(getRequirement(
-                    "Class Req: " + requirements.classType().get().getFullName()));
+            ClassType classType = requirements.classType().get();
+            boolean fulfilled = Models.Character.getClassType() == classType;
+            header.add(getRequirement("Class Req: " + classType.getFullName(), fulfilled));
             requirementsCount++;
         }
-        if (requirements.level() != 0) {
-            header.add(getRequirement("Combat Lv. Min: " + requirements.level()));
+        int level = requirements.level();
+        if (level != 0) {
+            boolean fulfilled = Models.CombatXp.getXpLevel() >= level;
+            header.add(getRequirement("Combat Lv. Min: " + level, fulfilled));
             requirementsCount++;
         }
         if (!requirements.skills().isEmpty()) {
             for (Pair<Skill, Integer> skillRequirement : requirements.skills()) {
-                header.add(
-                        getRequirement(skillRequirement.key().getDisplayName() + " Min: " + skillRequirement.value()));
+                // FIXME: CharacterModel is still missing info about our skill points
+                header.add(getRequirement(
+                        skillRequirement.key().getDisplayName() + " Min: " + skillRequirement.value(), false));
                 requirementsCount++;
             }
         }
@@ -132,7 +143,7 @@ public final class GearTooltipHeader {
         return skillBonusLine;
     }
 
-    private static MutableComponent getRequirement(String requirementName) {
+    private static MutableComponent getRequirement(String requirementName, boolean fulfilled) {
         MutableComponent requirement;
         requirement = Component.literal("✔ ").withStyle(ChatFormatting.GREEN);
         requirement.append(Component.literal(requirementName).withStyle(ChatFormatting.GRAY));

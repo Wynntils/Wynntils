@@ -17,6 +17,7 @@ import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gearinfo.GearModel;
+import com.wynntils.models.gearinfo.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
@@ -71,5 +72,6 @@ public final class Models {
     public static final SpellModel Spell = new SpellModel(Character);
     public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Compass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
+    public static final GearTooltipModel GearTooltip = new GearTooltipModel(Character, Quest);
     public static final HorseModel Horse = new HorseModel(Item);
 }

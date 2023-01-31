@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
@@ -33,7 +34,7 @@ public class FakeItemStack extends ItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-        GearTooltipBuilder tooltipBuilder = GearTooltipBuilder.buildNew(
+        GearTooltipBuilder tooltipBuilder = Models.GearTooltip.buildNew(
                 gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null), false);
         List<Component> tooltip = tooltipBuilder.getTooltipLines();
         // Add a line describing the source of this fake stack
