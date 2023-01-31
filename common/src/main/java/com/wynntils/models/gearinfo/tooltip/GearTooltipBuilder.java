@@ -97,22 +97,21 @@ public final class GearTooltipBuilder {
         boolean headerEnded = false;
         boolean footerStarted = false;
         for (Component loreLine : lore) {
-            String loreLineString = loreLine.getString();
-            String coded = ComponentUtils.getCoded(loreLine);
-            String normalizedCoded = WynnUtils.normalizeBadString(coded);
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLineString);
+            String codedLine = WynnUtils.normalizeBadString(ComponentUtils.getCoded(loreLine));
 
             if (!footerStarted) {
-                Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
+                Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
                 if (matcher.matches()) {
+                    String statName = matcher.group(5);
+
                     // Skill points counts to the header since they are fixed (but look like
                     // identified stats), so ignore those
-                    String statName = matcher.group(5);
                     if (!Skill.isSkill(statName)) {
                         headerEnded = true;
                         // Don't keep identifications lines at all
                         continue;
                     }
+                    // else fall through with skill lines
                 }
             }
 

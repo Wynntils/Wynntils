@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.rewards;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.gearinfo.parsing.GearParseResult;
 import com.wynntils.models.gearinfo.parsing.GearParser;
@@ -37,12 +38,18 @@ public class RewardsModel extends Model {
 
     public CharmItem fromCharmItemStack(ItemStack itemStack, CharmInfo charmInfo) {
          GearParseResult result = GearParser.parseItemStack(itemStack);
+        if (result.tier() != charmInfo.tier()) {
+            WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
+        }
 
         return new CharmItem(charmInfo, result.identifications(), result.rerolls());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, TomeInfo tomeInfo) {
         GearParseResult result = GearParser.parseItemStack(itemStack);
+        if (result.tier() != tomeInfo.gearTier()) {
+            WynntilsMod.warn("Tier for " + tomeInfo.displayName() + " is reported as " + result.tier());
+        }
 
         return new TomeItem(tomeInfo, result.identifications(), result.rerolls());
     }

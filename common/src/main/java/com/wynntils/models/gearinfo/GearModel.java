@@ -5,6 +5,7 @@
 package com.wynntils.models.gearinfo;
 
 import com.google.gson.JsonObject;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
 import com.wynntils.models.gearinfo.parsing.GearParseResult;
@@ -86,6 +87,9 @@ public final class GearModel extends Model {
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
         GearParseResult result = GearParser.parseItemStack(itemStack);
+        if (result.tier() != gearInfo.tier()) {
+            WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
+        }
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }

@@ -12,6 +12,7 @@ import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -24,7 +25,6 @@ import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -39,9 +39,11 @@ public final class GearParser {
     // FIXME: Clean up this class!
     private static final Pattern ID_NEW_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
-    private static final Pattern REROLL_PATTERN =
-            Pattern.compile("(?<Quality>Normal|Unique|Rare|Legendary|Fabled|Mythic|Set) "
-                    + "(Raid Reward|Item)(?: \\[(?<Rolls>\\d+)])?");
+
+    // Test suite: https://regexr.com/778gh
+    private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet) (Raid Reward|Item)(?: \\[(\\d+)\\])?$");
+    //
 
     private static final Pattern VARIABLE_STAT_PATTERN =
             Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
@@ -50,6 +52,7 @@ public final class GearParser {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = List.of();
         int rerolls = 0;
+        GearTier tier = null;
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -57,17 +60,23 @@ public final class GearParser {
 
         for (Component loreLine : lore) {
             String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
+            String coded = ComponentUtils.getCoded(loreLine);
+            String normalizedCoded = WynnUtils.normalizeBadString(coded);
 
-            // Look for Powder
+            // Look for powder
             if (unformattedLoreLine.contains("] Powder Slots")) {
                 powders = Powder.findPowders(unformattedLoreLine);
                 continue;
             }
 
-            // Look for Rerolls
-            Optional<Integer> rerollOpt = getRerollCount(loreLine);
-            if (rerollOpt.isPresent()) {
-                rerolls = rerollOpt.get();
+            // Look for tier and rerolls
+            Matcher matcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
+            if (matcher.matches()) {
+                String tierString = matcher.group(1);
+                tier = GearTier.fromFormattedString(tierString);
+
+                String rerollCountString = matcher.group(3);
+                rerolls = rerollCountString != null ? Integer.parseInt(rerollCountString) : 0;
                 continue;
             }
 
@@ -95,20 +104,7 @@ public final class GearParser {
             }
         }
 
-        return new GearParseResult(identifications, powders, rerolls);
-    }
-
-    private static Optional<Integer> getRerollCount(Component lore) {
-        String unformattedLoreLine = WynnUtils.normalizeBadString(lore.getString());
-
-        Matcher rerollMatcher = REROLL_PATTERN.matcher(unformattedLoreLine);
-        if (!rerollMatcher.find()) return Optional.empty();
-
-        if (rerollMatcher.group("Rolls") != null) {
-            return Optional.of(Integer.parseInt(rerollMatcher.group("Rolls")));
-        } else {
-            return Optional.of(0);
-        }
+        return new GearParseResult(tier, identifications, powders, rerolls);
     }
 
     public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -159,7 +155,7 @@ public final class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearParseResult(identifications, powders, rerolls);
+        return new GearParseResult(gearInfo.tier(), identifications, powders, rerolls);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
