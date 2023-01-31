@@ -30,6 +30,10 @@ public class HadesClientHandler implements IHadesClientAdapter {
     public HadesClientHandler(HadesConnection hadesConnection, HadesUserRegistry userRegistry) {
         this.hadesConnection = hadesConnection;
         this.userRegistry = userRegistry;
+
+        // FIXME: This is needed for patching class loading issue with Forge EventBus:
+        //        https://github.com/MinecraftForge/EventBus/issues/44
+        Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
     }
 
     @Override
@@ -72,7 +76,8 @@ public class HadesClientHandler implements IHadesClientAdapter {
                 WynntilsMod.info("Successfully connected to HadesServer: " + packet.getMessage());
                 userComponent = Component.literal("Successfully connected to HadesServer")
                         .withStyle(ChatFormatting.GREEN);
-                McUtils.mc().doRunTask(() -> WynntilsMod.postEvent(new HadesEvent.Authenticated()));
+
+                WynntilsMod.postEvent(new HadesEvent.Authenticated());
             }
             case INVALID_TOKEN -> {
                 WynntilsMod.error("Got invalid token when trying to connect to HadesServer: " + packet.getMessage());
