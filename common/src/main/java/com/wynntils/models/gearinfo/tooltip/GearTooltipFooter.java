@@ -67,13 +67,14 @@ public final class GearTooltipFooter {
         }
         footer.add(tier);
 
-        // untradable
+        // restrictions (untradable, quest item)
         if (gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
             footer.add(Component.literal(StringUtils.capitalizeFirst(
                             gearInfo.metaInfo().restrictions().getDescription() + " Item"))
                     .withStyle(ChatFormatting.RED));
         }
 
+        // lore
         Optional<String> lore = gearInfo.metaInfo().lore();
         if (lore.isPresent()) {
             Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), PIXEL_WIDTH))

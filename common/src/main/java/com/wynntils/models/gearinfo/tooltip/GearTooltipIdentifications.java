@@ -5,7 +5,6 @@
 package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -14,7 +13,6 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +73,10 @@ public final class GearTooltipIdentifications {
             delimiterNeeded = true;
         }
 
-        identifications.add(Component.literal(""));
+        if (identifications.get(identifications.size() - 1).getString().isEmpty()) {
+            // Remove last line if it is a delimiter line
+            identifications.remove(identifications.size() - 1);
+        }
 
         return identifications;
     }
@@ -126,21 +127,10 @@ public final class GearTooltipIdentifications {
         StatType statType = actualValue.stat();
         String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
-        MutableComponent baseComponent = buildBaseComponent(
-                statType.getDisplayName(),
-                actualValue.value(),
-                statType.getUnit(),
-                statType.showAsInverted(),
-                starString);
-
-        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-        if (possibleValues.range().isFixed()) return baseComponent;
-
-        return baseComponent;
-    }
-
-    private static MutableComponent buildBaseComponent(
-            String inGameName, int value, StatUnit unitType, boolean invert, String stars) {
+        String inGameName = statType.getDisplayName();
+        int value = actualValue.value();
+        StatUnit unitType = statType.getUnit();
+        boolean invert = statType.showAsInverted();
         String unit = unitType.getDisplayName();
 
         MutableComponent baseComponent = Component.literal("");
@@ -153,11 +143,14 @@ public final class GearTooltipIdentifications {
 
         baseComponent.append(statInfo);
 
-        if (!stars.isEmpty()) {
-            baseComponent.append(Component.literal(stars).withStyle(ChatFormatting.DARK_GREEN));
+        if (!starString.isEmpty()) {
+            baseComponent.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
         baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+
+        StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+        if (possibleValues.range().isFixed()) return baseComponent;
 
         return baseComponent;
     }

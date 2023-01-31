@@ -25,8 +25,6 @@ Remaining issues:
 
 * RerollCalculator: flip() is probably broken. Make this into a method instead.
 
-* Tooltip -- split lore must be simplified!
-* -- then, look at tooltip variable  appendSkillBonuses() if it can be moved
 * tooltip Post: major IDs are incorrectly formatted
 * tooltip Pre: did the old code correctly set our requirements?
 * tooltip variable needs cleaning in how we build identified/unidentified lines

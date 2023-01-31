@@ -25,8 +25,8 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipBuilder {
     // Test suite: regexr.com/776qt
-    private static final Pattern IDENTIFICATION_STAT_PATTERN =
-            Pattern.compile("^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+    private static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
+            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
             new GearTooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
@@ -90,8 +90,7 @@ public final class GearTooltipBuilder {
 
         tooltip.addAll(footer);
 
-        // FIXME: Can we get rid of this?
-        return ComponentUtils.stripDuplicateBlank(tooltip);
+        return tooltip;
     }
 
     public List<Component> getTooltipLines() {

@@ -20,4 +20,15 @@ public record FixedStats(
         Optional<GearAttackSpeed> attackSpeed,
         List<GearMajorId> majorIds,
         List<Pair<DamageType, RangedValue>> damages,
-        List<Pair<Element, Integer>> defences) {}
+        List<Pair<Element, Integer>> defences) {
+
+    public int getSkillBonus(Skill skill) {
+        for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
+            if (skillBonusValue.key() == skill) {
+                return skillBonusValue.value();
+            }
+        }
+
+        return 0;
+    }
+}
