@@ -101,7 +101,7 @@ public final class GearTooltipBuilder {
             if (!footerStarted) {
                 Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
                 if (matcher.matches()) {
-                    String statName = matcher.group(5);
+                    String statName = matcher.group(6);
 
                     // Skill points counts to the header since they are fixed (but look like
                     // identified stats), so ignore those
