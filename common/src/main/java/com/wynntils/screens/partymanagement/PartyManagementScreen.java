@@ -375,6 +375,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         offlineMembers.forEach(playerName -> McUtils.sendCommand("party kick " + playerName));
     }
 
+    /**
+     * Refreshes the list of offline members
+     * <p>
+     * First, all party members are added to the list. Then, all members on the scoreboard are removed.
+     * Only online players will have a scoreboard entry.
+     */
     private void refreshOffline() {
         offlineMembers.clear();
         offlineMembers.addAll(Models.Party.getPartyMembers());
