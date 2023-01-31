@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -48,28 +47,9 @@ public final class GearTooltipIdentifications {
             // Most stat types are probably not valid for this gear
             if (!allStats.contains(statType)) continue;
 
-            MutableComponent line;
-            if (gearInstance != null) {
-                // Put in actual value
-                StatActualValue statActualValue = gearInstance.getActualValue(statType);
-                if (statActualValue == null) {
-                    // FIXME: spell cost cause this to explode...
-                    //      WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
-                    continue;
-                }
+            MutableComponent line = getStatLine(statType, gearInfo, gearInstance, decorator, style);
+            if (line == null) continue;
 
-                line = buildIdentifiedLine(gearInfo, style, statActualValue);
-                StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                if (!possibleValues.range().isFixed() && decorator != null) {
-                    MutableComponent suffix = decorator.getSuffix(statActualValue, possibleValues, style);
-                    line.append(suffix);
-                }
-
-            } else {
-                // Put in range of possible values
-                StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-                line = buildUnidentifiedLine(gearInfo, style, possibleValues);
-            }
             identifications.add(line);
             delimiterNeeded = true;
         }
@@ -82,73 +62,95 @@ public final class GearTooltipIdentifications {
         return identifications;
     }
 
-    private static MutableComponent buildUnidentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
-        String inGameName = possibleValues.stat().getDisplayName();
-        StatUnit unitType = possibleValues.stat().getUnit();
+    private static MutableComponent getStatLine(
+            StatType statType,
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            TooltipIdentificationDecorator decorator,
+            GearTooltipStyle style) {
+        if (gearInstance != null) {
+            // We have an actual value
+            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+            StatActualValue statActualValue = gearInstance.getActualValue(statType);
+            if (statActualValue == null) {
+                // FIXME: spell cost cause this to explode...
+                //      WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
+                return null;
+            }
 
-        RangedValue value = possibleValues.range();
-        String unit = unitType.getDisplayName();
-        // Use value.low as representative; assume both high and low are either < or > 0.
-        boolean isGood = value.low() > 0;
-        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+            MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue);
 
-        MutableComponent baseComponent = Component.literal("");
+            if (possibleValues.range().isFixed() || decorator == null) return line;
 
-        int first;
-        int last;
-        if (style.showBestValueLastAlways() || isGood) {
-            first = value.low();
-            last = value.high();
+            // Append decorations
+            line.append(decorator.getSuffix(statActualValue, possibleValues, style));
+
+            return line;
         } else {
-            // Emulate Wynncraft behavior by showing the value closest to zero first
-            first = value.high();
-            last = value.low();
+            // Can only show range of possible values
+            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+            return buildUnidentifiedLine(gearInfo, style, possibleValues);
         }
-        // We store "inverted" stats (spell costs) as positive numbers internally,
-        // but need to display them as negative numbers
-        if (possibleValues.stat().showAsInverted()) {
-            first = -first;
-            last = -last;
-        }
-        baseComponent.append(
-                Component.literal(StringUtils.toSignedString(first)).withStyle(colorCode));
-        baseComponent.append(Component.literal(" to ").withStyle(colorCodeDark));
-        baseComponent.append(Component.literal(last + unit).withStyle(colorCode));
-
-        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
-
-        return baseComponent;
     }
 
     private static MutableComponent buildIdentifiedLine(
             GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue) {
         StatType statType = actualValue.stat();
+        int value = actualValue.value();
+
+        int valueToShow = statType.showAsInverted() ? -value : value;
         String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
-        String inGameName = statType.getDisplayName();
-        int value = actualValue.value();
-        StatUnit unitType = statType.getUnit();
-        boolean invert = statType.showAsInverted();
-        String unit = unitType.getDisplayName();
-
-        MutableComponent baseComponent = Component.literal("");
-
-        int valueToShow = invert ? -value : value;
-
-        MutableComponent statInfo = Component.literal(StringUtils.toSignedString(valueToShow) + unit);
-        boolean isGood = (value > 0);
-        statInfo.setStyle(Style.EMPTY.withColor(isGood ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        baseComponent.append(statInfo);
+        MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
+                        + statType.getUnit().getDisplayName())
+                .withStyle(Style.EMPTY.withColor((value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
-            baseComponent.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
+            line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        baseComponent.append(Component.literal(" " + inGameName).withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" " + statType.getDisplayName()).withStyle(ChatFormatting.GRAY));
 
-        return baseComponent;
+        return line;
+    }
+
+    private static MutableComponent buildUnidentifiedLine(
+            GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
+        StatType statType = possibleValues.stat();
+        RangedValue valueRange = possibleValues.range();
+
+        // Use value.low as representative; assume both high and low are either < or > 0.
+        boolean isGood = valueRange.low() > 0;
+        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+
+        // Determine which value to show first and which to show last in the "A to B"
+        // range displayed
+        int first;
+        int last;
+        if (style.showBestValueLastAlways() || isGood) {
+            first = valueRange.low();
+            last = valueRange.high();
+        } else {
+            // Emulate Wynncraft behavior by showing the value closest to zero first
+            first = valueRange.high();
+            last = valueRange.low();
+        }
+        // We store "inverted" stats (spell costs) as positive numbers internally,
+        // but need to display them as negative numbers
+        if (statType.showAsInverted()) {
+            first = -first;
+            last = -last;
+        }
+
+        MutableComponent line =
+                Component.literal(StringUtils.toSignedString(first)).withStyle(colorCode);
+        line.append(Component.literal(" to ").withStyle(colorCodeDark));
+        line.append(
+                Component.literal(last + statType.getUnit().getDisplayName()).withStyle(colorCode));
+
+        line.append(Component.literal(" " + statType.getDisplayName()).withStyle(ChatFormatting.GRAY));
+
+        return line;
     }
 }
