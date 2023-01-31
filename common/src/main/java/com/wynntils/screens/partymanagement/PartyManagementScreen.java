@@ -100,7 +100,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         this.addRenderableWidget(
                 createPartyButton = new Button.Builder(
                                 Component.translatable("screens.wynntils.partyManagementGui.createPartyButton"),
-                                (button) -> createParty())
+                                (button) -> Models.Party.createParty())
                         .pos(this.width / 2 - (X_START - 174), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
@@ -108,7 +108,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 leavePartyButton = new Button.Builder(
                                 Component.translatable("screens.wynntils.partyManagementGui.leavePartyButton")
                                         .withStyle(ChatFormatting.RED),
-                                (button) -> leaveParty())
+                                (button) -> Models.Party.leaveParty())
                         .pos(this.width / 2 - (X_START - 261), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
@@ -353,7 +353,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         if (fieldText.isBlank()) return;
 
         if (!Models.Party.isPartying()) {
-            createParty();
+            Models.Party.createParty();
         }
 
         Set<String> toInvite = new HashSet<>(List.of(fieldText.split(",")));
@@ -379,14 +379,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         offlineMembers.clear();
         offlineMembers.addAll(Models.Party.getPartyMembers());
         offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
-    }
-
-    private void createParty() {
-        McUtils.sendCommand("party create");
-    }
-
-    private void leaveParty() {
-        McUtils.sendCommand("party leave");
     }
 
     @Override

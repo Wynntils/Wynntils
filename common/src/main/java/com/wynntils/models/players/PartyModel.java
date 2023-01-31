@@ -250,4 +250,24 @@ public final class PartyModel extends Model {
     public boolean isPartying() {
         return isPartying;
     }
+
+    public void kickFromParty(String player) {
+        McUtils.sendCommand("party kick " + player);
+    }
+
+    public void promoteToLeader(String player) {
+        McUtils.sendCommand("party promote " + player);
+    }
+
+    public void leaveParty() {
+        McUtils.sendCommand("party leave");
+    }
+
+    public void disbandParty() {
+        McUtils.sendCommand("party disband");
+    }
+
+    public void createParty() {
+        McUtils.sendCommand("party create");
+    }
 }

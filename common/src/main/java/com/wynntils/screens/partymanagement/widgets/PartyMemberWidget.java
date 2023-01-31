@@ -35,19 +35,19 @@ public class PartyMemberWidget extends AbstractWidget {
         this.isOffline = isOffline;
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
-                        (button) -> promoteToLeader(playerName))
+                        (button) -> Models.Party.promoteToLeader(playerName))
                 .pos(this.getX() + 240, this.getY())
                 .size(50, 20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
-                        (button) -> kickFromParty(playerName))
+                        (button) -> Models.Party.kickFromParty(playerName))
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
-                        (button) -> disbandParty())
+                        (button) -> Models.Party.disbandParty())
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
@@ -98,18 +98,6 @@ public class PartyMemberWidget extends AbstractWidget {
             promoteButton.render(poseStack, mouseX, mouseY, partialTick);
             kickButton.render(poseStack, mouseX, mouseY, partialTick);
         }
-    }
-
-    private void kickFromParty(String playerName) {
-        McUtils.sendCommand("party kick " + playerName);
-    }
-
-    private void promoteToLeader(String playerName) {
-        McUtils.sendCommand("party promote " + playerName);
-    }
-
-    private void disbandParty() {
-        McUtils.sendCommand("party disband");
     }
 
     @Override
