@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
@@ -9,11 +13,10 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * This model handles the player's guild relations.

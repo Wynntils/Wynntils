@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -25,8 +28,8 @@ public class SuggestionPlayer extends AbstractWidget {
         super(x, y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.inviteButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                (button) -> inviteToParty(playerName))
+                        Component.translatable("screens.wynntils.partyManagementGui.invite"),
+                        (button) -> inviteToParty(playerName))
                 .pos(this.getX() + 130, this.getY())
                 .size(40, 20)
                 .build();
@@ -34,48 +37,23 @@ public class SuggestionPlayer extends AbstractWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
+        ResourceLocation skin =
+                McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX(),
-                this.getY(),
-                8,
-                16,
-                16,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX(),
-                this.getY(),
-                8,
-                16,
-                16,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 40, 8, 8, 8, 64, 64);
 
         // name rendering
         FontRenderer.getInstance()
                 .renderText(
-                poseStack,
-                playerName,
-                this.getX() + 36,
-                this.getY() + 8,
-                CommonColors.GREEN,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+                        poseStack,
+                        playerName,
+                        this.getX() + 36,
+                        this.getY() + 8,
+                        CommonColors.GREEN,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
         inviteButton.render(poseStack, mouseX, mouseY, partialTick);

@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -30,20 +33,20 @@ public class PartyPlayer extends AbstractWidget {
         this.playerName = playerName;
         this.isOffline = isOffline;
         this.promoteButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.promote"),
-                (button) -> promoteToLeader(playerName))
+                        Component.translatable("screens.wynntils.partyManagementGui.promote"),
+                        (button) -> promoteToLeader(playerName))
                 .pos(this.getX() + 240, this.getY())
                 .size(50, 20)
                 .build();
         this.kickButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.kick"),
-                (button) -> kickFromParty(playerName))
+                        Component.translatable("screens.wynntils.partyManagementGui.kick"),
+                        (button) -> kickFromParty(playerName))
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
         this.disbandButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.disband"),
-                (button) -> disbandParty())
+                        Component.translatable("screens.wynntils.partyManagementGui.disband"),
+                        (button) -> disbandParty())
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
@@ -51,37 +54,12 @@ public class PartyPlayer extends AbstractWidget {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation skin = McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
+        ResourceLocation skin =
+                McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX(),
-                this.getY(),
-                8,
-                16,
-                16,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
         // hat rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX(),
-                this.getY(),
-                1,
-                16,
-                16,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 1, 16, 16, 40, 8, 8, 8, 64, 64);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -101,14 +79,14 @@ public class PartyPlayer extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                poseStack,
-                formattedPlayerName,
-                this.getX() + 36,
-                this.getY() + 8,
-                color,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+                        poseStack,
+                        formattedPlayerName,
+                        this.getX() + 36,
+                        this.getY() + 8,
+                        color,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
 
         // only leader can promote/kick
         if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return;
@@ -135,11 +113,11 @@ public class PartyPlayer extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return promoteButton.mouseClicked(mouseX, mouseY, button) || kickButton.mouseClicked(mouseX, mouseY, button) || disbandButton.mouseClicked(mouseX, mouseY, button);
+        return promoteButton.mouseClicked(mouseX, mouseY, button)
+                || kickButton.mouseClicked(mouseX, mouseY, button)
+                || disbandButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
-    }
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

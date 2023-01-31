@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,6 +21,11 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -25,12 +34,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
@@ -66,43 +69,46 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         refreshParty();
         // region Invite input and button
         this.addRenderableWidget(
-                inviteInput = new TextInputBoxWidget(this.width / 2 - X_START, this.height / 2 - 200, 300, 20, null, this, inviteInput));
+                inviteInput = new TextInputBoxWidget(
+                        this.width / 2 - X_START, this.height / 2 - 200, 300, 20, null, this, inviteInput));
 
         this.addRenderableWidget(
                 inviteButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                (button) -> inviteFromField())
+                                Component.translatable("screens.wynntils.partyManagementGui.invite"),
+                                (button) -> inviteFromField())
                         .pos(this.width / 2 - (X_START - TOTAL_WIDTH + 40), this.height / 2 - 200)
                         .size(40, 20)
                         .build());
         // endregion
 
         // region Management button row
-        this.addRenderableWidget(
-                new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.refreshButton").withStyle(ChatFormatting.GREEN),
-                (button) -> refreshParty())
-                        .pos(this.width / 2 - X_START, this.height / 2 - 176)
-                        .size(83, 20)
-                        .build());
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.partyManagementGui.refreshButton")
+                                .withStyle(ChatFormatting.GREEN),
+                        (button) -> refreshParty())
+                .pos(this.width / 2 - X_START, this.height / 2 - 176)
+                .size(83, 20)
+                .build());
         this.addRenderableWidget(
                 kickOfflineButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton").withStyle(ChatFormatting.RED),
-                (button) -> kickOffline())
+                                Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
+                                        .withStyle(ChatFormatting.RED),
+                                (button) -> kickOffline())
                         .pos(this.width / 2 - (X_START - 87), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         this.addRenderableWidget(
                 createPartyButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.createPartyButton"),
-                (button) -> createParty())
+                                Component.translatable("screens.wynntils.partyManagementGui.createPartyButton"),
+                                (button) -> createParty())
                         .pos(this.width / 2 - (X_START - 174), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
         this.addRenderableWidget(
                 leavePartyButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.partyManagementGui.leavePartyButton").withStyle(ChatFormatting.RED),
-                (button) -> leaveParty())
+                                Component.translatable("screens.wynntils.partyManagementGui.leavePartyButton")
+                                        .withStyle(ChatFormatting.RED),
+                                (button) -> leaveParty())
                         .pos(this.width / 2 - (X_START - 261), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
@@ -119,7 +125,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         createPartyButton.active = !partying;
         leavePartyButton.active = partying;
         kickOfflineButton.active = partying && !offlineMembers.isEmpty();
-        inviteButton.active = !inviteInput.getTextBoxInput().isBlank(); // partying check not required as button automatically makes new party if not in one
+        inviteButton.active = !inviteInput
+                .getTextBoxInput()
+                .isBlank(); // partying check not required as button automatically makes new party if not in one
 
         FontRenderer fr = FontRenderer.getInstance();
 
@@ -145,7 +153,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Party list headers
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - X_START, this.height / 2 - 140, 0, TOTAL_WIDTH, 1);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.WHITE, this.width / 2 - X_START, this.height / 2 - 140, 0, TOTAL_WIDTH, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.head"),
@@ -188,7 +197,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Suggestion list headers
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, TOTAL_WIDTH / 2, 1);
+        RenderUtils.drawRect(
+                poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, TOTAL_WIDTH / 2, 1);
         fr.renderText(
                 poseStack,
                 I18n.get("screens.wynntils.partyManagementGui.head"),
@@ -291,7 +301,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
 
-            suggestedPlayersWidgets.add(new SuggestionPlayer(this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
+            suggestedPlayersWidgets.add(new SuggestionPlayer(
+                    this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
         }
     }
 
@@ -318,7 +329,13 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             String playerName = partyMembers.get(i);
             if (playerName == null) continue;
 
-            partyMembersWidgets.add(new PartyPlayer(this.width / 2 - X_START + 4, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName, offlineMembers.contains(playerName)));
+            partyMembersWidgets.add(new PartyPlayer(
+                    this.width / 2 - X_START + 4,
+                    this.height / 2 - 125 + i * 20 - 10,
+                    200,
+                    20,
+                    playerName,
+                    offlineMembers.contains(playerName)));
         }
     }
 
@@ -330,7 +347,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void inviteFromField() {
         // Remove all except commas, semicolons, whitespaces, and characters possible in name
-        String fieldText = INVITE_REPLACER.matcher(inviteInput.getTextBoxInput()).replaceAll("");
+        String fieldText =
+                INVITE_REPLACER.matcher(inviteInput.getTextBoxInput()).replaceAll("");
         fieldText = COMMA_REPLACER.matcher(fieldText).replaceAll(","); // semicolons and spaces to comma
         if (fieldText.isBlank()) return;
 
@@ -381,12 +399,14 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers)) || super.charTyped(codePoint, modifiers);
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers)) || super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

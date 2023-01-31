@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
@@ -13,8 +17,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -22,10 +24,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
     private static final Pattern FRIEND_LIST_MESSAGE_PATTERN = Pattern.compile(".+'s friends \\(.+\\): (.*)");
-    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 = Pattern.compile("§eWe couldn't find any friends\\.");
+    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 =
+            Pattern.compile("§eWe couldn't find any friends\\.");
     private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_2 =
             Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =

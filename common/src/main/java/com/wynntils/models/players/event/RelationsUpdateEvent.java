@@ -7,7 +7,6 @@ package com.wynntils.models.players.event;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.Event;
-import org.apache.commons.compress.utils.CharsetNames;
 
 public abstract class RelationsUpdateEvent extends Event {
     private final Set<String> changedPlayers;
