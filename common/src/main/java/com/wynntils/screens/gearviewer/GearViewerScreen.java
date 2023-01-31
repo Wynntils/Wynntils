@@ -72,7 +72,7 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        GearInfo gearInfo = Models.Gear.getGearInfo(gearName);
+        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) {
             return itemStack;
         }

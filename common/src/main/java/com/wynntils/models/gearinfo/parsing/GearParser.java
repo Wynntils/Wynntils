@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GearParser {
-    // Test suite: regexr.com/776qt
+    // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
@@ -43,14 +43,14 @@ public final class GearParser {
     // Test suite: https://regexr.com/778gh
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
             "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet) (Raid Reward|Item)(?: \\[(\\d+)\\])?$");
-    //
 
-    private static final Pattern VARIABLE_STAT_PATTERN =
-            Pattern.compile("^§([ac])([-+]\\d+)(%|/3s|/5s| tier)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+    // Test suite: https://regexr.com/778gk
+    private static final Pattern POWDER_PATTERN =
+            Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
 
     public static GearParseResult parseItemStack(ItemStack itemStack) {
         List<StatActualValue> identifications = new ArrayList<>();
-        List<Powder> powders = List.of();
+        List<Powder> powders = new ArrayList<>();
         int rerolls = 0;
         GearTier tier = null;
 
@@ -64,41 +64,59 @@ public final class GearParser {
             String normalizedCoded = WynnUtils.normalizeBadString(coded);
 
             // Look for powder
-            if (unformattedLoreLine.contains("] Powder Slots")) {
-                powders = Powder.findPowders(unformattedLoreLine);
+            Matcher powderMatcher = POWDER_PATTERN.matcher(normalizedCoded);
+            if (powderMatcher.matches()) {
+                int usedSlots = Integer.parseInt(powderMatcher.group(1));
+                String codedPowders = powderMatcher.group(3);
+                if (codedPowders == null) continue;
+
+                String powderString = codedPowders.replaceAll("[^✹✦❋❉✤]", "");
+                if (powderString.length() != usedSlots) {
+                    WynntilsMod.warn("Mismatch between powder slot count " + usedSlots + " and actual powder symbols: "
+                            + codedPowders + " for " + itemStack.getHoverName().getString());
+                    // Fall through and use codedPowfers nevertheless
+                }
+
+                codedPowders.chars().forEach(ch -> {
+                    Powder powder = Powder.getFromSymbol(Character.toString(ch));
+                    powders.add(powder);
+                });
+
                 continue;
             }
 
             // Look for tier and rerolls
-            Matcher matcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
-            if (matcher.matches()) {
-                String tierString = matcher.group(1);
+            Matcher tiearMatcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
+            if (tiearMatcher.matches()) {
+                String tierString = tiearMatcher.group(1);
                 tier = GearTier.fromFormattedString(tierString);
 
-                String rerollCountString = matcher.group(3);
+                String rerollCountString = tiearMatcher.group(3);
                 rerolls = rerollCountString != null ? Integer.parseInt(rerollCountString) : 0;
+
                 continue;
             }
 
             // Look for identifications
-            String formatId = ComponentUtils.getCoded(loreLine);
-            Matcher statMatcher = VARIABLE_STAT_PATTERN.matcher(formatId);
+            Matcher statMatcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
             if (statMatcher.matches()) {
-                int value = Integer.parseInt(statMatcher.group(2));
+                int value = Integer.parseInt(statMatcher.group(1));
+                // group 2 is only present for unidentified gears, as the to-part of the range
                 String unit = statMatcher.group(3);
-                String statDisplayName = statMatcher.group(5);
                 String starString = statMatcher.group(4);
-                int stars = starString == null ? 0 : starString.length();
+                String statDisplayName = statMatcher.group(5);
 
                 StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (type == null && Skill.isSkill(statDisplayName)) {
-                    // Skill point buff looks like stats when parsing
+                    // Skill bonuses looks like stats when parsing, ignore them
                     continue;
                 }
                 if (type.showAsInverted()) {
                     // Spell Cost stats are shown as negative, but we store them as positive
                     value = -value;
                 }
+
+                int stars = starString == null ? 0 : starString.length();
 
                 identifications.add(new StatActualValue(type, value, stars));
             }
@@ -196,7 +214,13 @@ public final class GearParser {
 
             // Look for Powder
             if (unformattedLoreLine.contains("] Powder Slots")) {
-                powders = Powder.findPowders(unformattedLoreLine);
+                List<Powder> foundPowders = new ArrayList<>();
+                unformattedLoreLine.chars().forEach(ch -> {
+                    Powder powder = Powder.getFromSymbol(Character.toString(ch));
+                    foundPowders.add(powder);
+                });
+
+                powders = foundPowders;
                 continue;
             }
 

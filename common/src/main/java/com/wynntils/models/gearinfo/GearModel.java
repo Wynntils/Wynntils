@@ -120,7 +120,14 @@ public final class GearModel extends Model {
         return gearInfoRegistry.gearInfoRegistry;
     }
 
-    public GearInfo getGearInfo(String gearName) {
+    public GearInfo getGearInfoFromDisplayName(String gearName) {
+        return gearInfoRegistry.gearInfoLookup.get(gearName);
+    }
+
+    public GearInfo getGearInfoFromApiName(String gearName) {
+        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupAltName.get(gearName);
+        if (gearInfo != null) return gearInfo;
+
         return gearInfoRegistry.gearInfoLookup.get(gearName);
     }
 

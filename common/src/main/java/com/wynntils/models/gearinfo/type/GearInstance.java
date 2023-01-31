@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo.type;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -25,6 +26,10 @@ public record GearInstance(
                 .filter(actualValue -> {
                     // We do not include values that cannot possibly change
                     StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
+                    if (possibleValues == null) {
+                        WynntilsMod.warn("Error:" + gearInfo.name() + " claims to have identification " + actualValue.stat());
+                        return false;
+                    }
                     return !possibleValues.range().isFixed();
                 })
                 .mapToDouble(actualValue -> {

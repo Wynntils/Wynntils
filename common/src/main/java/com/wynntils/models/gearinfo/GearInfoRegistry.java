@@ -52,6 +52,7 @@ public class GearInfoRegistry {
     private List<GearMajorId> allMajorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
     Map<String, GearInfo> gearInfoLookup = Map.of();
+    Map<String, GearInfo> gearInfoLookupAltName= Map.of();
 
     public GearInfoRegistry() {
         loadRegistry();
@@ -85,18 +86,20 @@ public class GearInfoRegistry {
                         .filter(gearInfo -> !gearInfo.name().equals("default"))
                         .toList();
 
-                // Create a fast lookup map
+                // Create fast lookup maps
                 Map<String, GearInfo> lookupMap = new HashMap<>();
+                Map<String, GearInfo> altLookupMap = new HashMap<>();
                 for (GearInfo gearInfo : registry) {
                     lookupMap.put(gearInfo.name(), gearInfo);
                     if (gearInfo.metaInfo().altName().isPresent()) {
-                        lookupMap.put(gearInfo.metaInfo().altName().get(), gearInfo);
+                        altLookupMap.put(gearInfo.metaInfo().altName().get(), gearInfo);
                     }
                 }
 
-                // Make it visisble to the world
+                // Make the result visisble to the world
                 gearInfoRegistry = registry;
                 gearInfoLookup = lookupMap;
+                gearInfoLookupAltName = altLookupMap;
             });
         });
     }

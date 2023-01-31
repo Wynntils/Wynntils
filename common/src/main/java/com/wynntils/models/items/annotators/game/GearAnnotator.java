@@ -24,7 +24,7 @@ public final class GearAnnotator implements ItemAnnotator {
 
         // Lookup Gear Profile
         String itemName = matcher.group(2);
-        GearInfo gearInfo = Models.Gear.getGearInfo(itemName);
+        GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
         if (gearInfo == null) return null;
 
         // Verify that rarity matches
