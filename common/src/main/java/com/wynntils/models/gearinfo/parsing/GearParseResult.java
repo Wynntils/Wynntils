@@ -5,12 +5,14 @@
 package com.wynntils.models.gearinfo.parsing;
 
 import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
 public record GearParseResult(
-        com.wynntils.models.gearinfo.type.GearTier tier,
-        com.wynntils.models.gearinfo.type.GearType gearType,
+        GearTier tier,
+        GearType gearType,
         List<StatActualValue> identifications,
         List<Powder> powders,
         int tierCount,
