@@ -2,10 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.stats;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipStyle;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -13,7 +12,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 
-public final class GearCalculator {
+public final class StatCalculator {
     public static float getPercentage(StatActualValue actualValue, StatPossibleValues possibleValues) {
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
@@ -22,14 +21,15 @@ public final class GearCalculator {
         return percentage;
     }
 
-    public static Pair<Integer, Integer> getDisplayRange(StatPossibleValues possibleValues, GearTooltipStyle style) {
+    public static Pair<Integer, Integer> getDisplayRange(
+            StatPossibleValues possibleValues, boolean showBestValueLastAlways) {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
         boolean isGood = valueRange.low() > 0;
         Pair<Integer, Integer> displayRange;
         int first;
         int last;
-        if (style.showBestValueLastAlways() || isGood) {
+        if (showBestValueLastAlways || isGood) {
             first = valueRange.low();
             last = valueRange.high();
         } else {
@@ -85,8 +85,7 @@ public final class GearCalculator {
 
     // Calculate the range of possible values for the internal roll for this stat
     public static RangedValue calculateInternalRoll(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        // FIXME
-        return RangedValue.NONE;
+        return getInnerRollRange(actualValue, possibleValues.baseValue());
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
@@ -97,7 +96,7 @@ public final class GearCalculator {
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // If we are in any of these situations, our gear has "invalid" values. Maybe it is old?
+        // If we are in any of these situations, our stat has "invalid" values. Maybe it is old?
         // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
         if (actualValue.value() > possibleValues.range().high()) {
             return 1d;
@@ -119,7 +118,7 @@ public final class GearCalculator {
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // If we are in any of these situations, our gear has "invalid" values. Maybe it is old?
+        // If we are in any of these situations, our stat has "invalid" values. Maybe it is old?
         // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
         if (actualValue.value() > possibleValues.range().high()) {
             return 0d;

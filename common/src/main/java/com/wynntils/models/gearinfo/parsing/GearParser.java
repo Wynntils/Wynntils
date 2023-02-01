@@ -10,10 +10,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -200,7 +200,7 @@ public final class GearParser {
         }
 
         // Negative values can never show stars
-        int stars = (value > 0) ? GearCalculator.getStarsFromInternalRoll(internalRoll) : 0;
+        int stars = (value > 0) ? StatCalculator.getStarsFromInternalRoll(internalRoll) : 0;
 
         return new StatActualValue(statType, value, stars);
     }

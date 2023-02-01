@@ -7,9 +7,9 @@ package com.wynntils.models.gearinfo.tooltip;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -133,7 +133,8 @@ public final class GearTooltipIdentifications {
 
         // Determine which value to show first and which to show last in the "A to B"
         // range displayed
-        Pair<Integer, Integer> displayRange = GearCalculator.getDisplayRange(possibleValues, style);
+        Pair<Integer, Integer> displayRange =
+                StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
 
         MutableComponent line =
                 Component.literal(StringUtils.toSignedString(displayRange.a())).withStyle(colorCode);

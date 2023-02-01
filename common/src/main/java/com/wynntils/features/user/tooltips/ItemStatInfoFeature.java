@@ -12,7 +12,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gearinfo.tooltip.GearTooltipStyle;
 import com.wynntils.models.gearinfo.tooltip.TooltipIdentificationDecorator;
@@ -20,6 +19,7 @@ import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -162,7 +162,8 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getRangeSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            Pair<Integer, Integer> displayRange = GearCalculator.getDisplayRange(possibleValues, style);
+            Pair<Integer, Integer> displayRange =
+                    StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
 
             MutableComponent rangeTextComponent = Component.literal(" [")
                     .append(Component.literal(displayRange.a() + ", " + displayRange.b())
@@ -176,17 +177,17 @@ public class ItemStatInfoFeature extends UserFeature {
         private MutableComponent getRerollSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             MutableComponent rerollChancesComponent = Component.literal(String.format(
-                            Locale.ROOT, " \u2605%.2f%%", GearCalculator.getPerfectChance(possibleValues)))
+                            Locale.ROOT, " \u2605%.2f%%", StatCalculator.getPerfectChance(possibleValues)))
                     .withStyle(ChatFormatting.AQUA)
                     .append(Component.literal(String.format(
                                     Locale.ROOT,
                                     " \u21E7%.1f%%",
-                                    GearCalculator.getIncreaseChance(actualValue, possibleValues)))
+                                    StatCalculator.getIncreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.GREEN))
                     .append(Component.literal(String.format(
                                     Locale.ROOT,
                                     " \u21E9%.1f%%",
-                                    GearCalculator.getDecreaseChance(actualValue, possibleValues)))
+                                    StatCalculator.getDecreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.RED));
 
             return rerollChancesComponent;
@@ -194,7 +195,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getPercentSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            float percentage = GearCalculator.getPercentage(actualValue, possibleValues);
+            float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
                     ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
 

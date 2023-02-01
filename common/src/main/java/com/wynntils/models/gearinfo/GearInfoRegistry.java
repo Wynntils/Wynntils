@@ -30,6 +30,7 @@ import com.wynntils.models.gearinfo.type.GearRestrictions;
 import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.gearinfo.type.GearType;
 import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -403,7 +404,7 @@ public class GearInfoRegistry {
                 }
                 // Range will always be stored such as "low" means "worst possible value" and
                 // "high" means "best possible value".
-                RangedValue range = GearCalculator.calculateRange(baseValue, preIdentified);
+                RangedValue range = StatCalculator.calculateRange(baseValue, preIdentified);
                 StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
                 list.add(Pair.of(statType, possibleValues));
             }

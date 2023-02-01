@@ -6,7 +6,7 @@ package com.wynntils.models.gearinfo.type;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gearinfo.GearCalculator;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -36,7 +36,7 @@ public record GearInstance(
                 })
                 .mapToDouble(actualValue -> {
                     StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
-                    return GearCalculator.getPercentage(actualValue, possibleValues);
+                    return StatCalculator.getPercentage(actualValue, possibleValues);
                 })
                 .summaryStatistics();
         if (percents.getCount() == 0) return Optional.empty();
