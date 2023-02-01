@@ -5,6 +5,7 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
@@ -15,6 +16,7 @@ import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -167,5 +169,20 @@ public final class FriendsModel extends Model {
 
     public Set<String> getFriends() {
         return friends;
+    }
+
+    @SubscribeEvent
+    public void onFriendJoin(FriendConnectionEvent.Join e) {
+        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
+            partyManagementScreen.reloadSuggestedPlayersWidgets();
+        }
+    }
+
+    @SubscribeEvent
+    public void onFriendLeave(FriendConnectionEvent.Leave e) {
+        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
+            // Delay the reload to allow the scoreboard to update
+            Managers.TickScheduler.scheduleLater(partyManagementScreen::reloadSuggestedPlayersWidgets, 5);
+        }
     }
 }

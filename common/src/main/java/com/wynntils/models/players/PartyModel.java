@@ -14,6 +14,7 @@ import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.HashSet;
@@ -280,5 +281,14 @@ public final class PartyModel extends Model {
 
     public void createParty() {
         McUtils.sendCommand("party create");
+    }
+
+    @SubscribeEvent
+    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
+        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
+            partyManagementScreen.reloadMembersWidgets();
+            partyManagementScreen
+                    .reloadSuggestedPlayersWidgets(); // Reload because we don't want to suggest party members
+        }
     }
 }

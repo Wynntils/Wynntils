@@ -6,10 +6,7 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.players.event.FriendConnectionEvent;
-import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
@@ -33,7 +30,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Scoreboard;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
@@ -286,7 +282,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
      * <p>
      * This should be called when a friend joins/leaves the world or when the refresh button is pressed
      */
-    private void reloadSuggestedPlayersWidgets() {
+    public void reloadSuggestedPlayersWidgets() {
         // Add friends that are online in the same world as user
         Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
         Set<String> onlineUsers = new HashSet<>(scoreboard.getTeamNames());
@@ -306,23 +302,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         }
     }
 
-    @SubscribeEvent
-    public void onFriendJoin(FriendConnectionEvent.Join e) {
-        reloadSuggestedPlayersWidgets();
-    }
-
-    @SubscribeEvent
-    public void onFriendLeave(FriendConnectionEvent.Leave e) {
-        // Delay the reload to allow the scoreboard to update
-        Managers.TickScheduler.scheduleLater(this::reloadSuggestedPlayersWidgets, 5);
-    }
-
     /**
      * Reloads the list of party members widgets
      * <p>
      * This should be called when the party list is updated or when the refresh button is pressed
      */
-    private void reloadMembersWidgets() {
+    public void reloadMembersWidgets() {
         partyMembersWidgets.clear();
         List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
         for (int i = 0; i < partyMembers.size(); i++) {
@@ -337,12 +322,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     playerName,
                     offlineMembers.contains(playerName)));
         }
-    }
-
-    @SubscribeEvent
-    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
-        reloadMembersWidgets();
-        reloadSuggestedPlayersWidgets(); // Reload because we don't want to suggest party members
     }
 
     private void inviteFromField() {
