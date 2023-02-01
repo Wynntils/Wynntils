@@ -23,10 +23,10 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -162,17 +162,11 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getRangeSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = possibleValues.range().low();
-            int max = possibleValues.range().high();
+            Pair<Integer, Integer> displayRange = GearCalculator.getDisplayRange(possibleValues, style);
 
-            if (possibleValues.statType().showAsInverted()) {
-                // Show values as negative
-                min = -min;
-                max = -max;
-            }
             MutableComponent rangeTextComponent = Component.literal(" [")
-                    .append(Component.literal(min + ", " + max).withStyle(ChatFormatting.GREEN))
+                    .append(Component.literal(displayRange.a() + ", " + displayRange.b())
+                            .withStyle(ChatFormatting.GREEN))
                     .append("]")
                     .withStyle(ChatFormatting.DARK_GREEN);
 
@@ -181,8 +175,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getRerollSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            GearCalculator.RecollCalculator chances =
-                    GearCalculator.RecollCalculator.calculateChances(possibleValues, actualValue);
+            GearCalculator.RecollCalculator chances = GearCalculator.calculateChances(possibleValues, actualValue);
 
             MutableComponent rerollChancesComponent = Component.literal(
                             String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))
@@ -197,11 +190,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getPercentSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            // calculate percent/range/reroll chances, append to lines
-            int min = possibleValues.range().low();
-            int max = possibleValues.range().high();
-
-            float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+            float percentage = GearCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
                     ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
 

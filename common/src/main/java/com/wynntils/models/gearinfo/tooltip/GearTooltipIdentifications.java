@@ -6,6 +6,7 @@ package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -13,6 +14,7 @@ import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,28 +129,13 @@ public final class GearTooltipIdentifications {
 
         // Determine which value to show first and which to show last in the "A to B"
         // range displayed
-        int first;
-        int last;
-        if (style.showBestValueLastAlways() || isGood) {
-            first = valueRange.low();
-            last = valueRange.high();
-        } else {
-            // Emulate Wynncraft behavior by showing the value closest to zero first
-            first = valueRange.high();
-            last = valueRange.low();
-        }
-        // We store "inverted" stats (spell costs) as positive numbers internally,
-        // but need to display them as negative numbers
-        if (statType.showAsInverted()) {
-            first = -first;
-            last = -last;
-        }
+        Pair<Integer, Integer> displayRange = GearCalculator.getDisplayRange(possibleValues, style);
 
         MutableComponent line =
-                Component.literal(StringUtils.toSignedString(first)).withStyle(colorCode);
+                Component.literal(StringUtils.toSignedString(displayRange.a())).withStyle(colorCode);
         line.append(Component.literal(" to ").withStyle(colorCodeDark));
-        line.append(
-                Component.literal(last + statType.getUnit().getDisplayName()).withStyle(colorCode));
+        line.append(Component.literal(displayRange.b() + statType.getUnit().getDisplayName())
+                .withStyle(colorCode));
 
         line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo))
                 .withStyle(ChatFormatting.GRAY));

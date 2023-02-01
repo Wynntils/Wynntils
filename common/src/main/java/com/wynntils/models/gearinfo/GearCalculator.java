@@ -5,16 +5,46 @@
 package com.wynntils.models.gearinfo;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipStyle;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 
 public final class GearCalculator {
-    public static float getPercent(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        int max = possibleValues.range().high() - possibleValues.range().low();
-        int current = actualValue.value() - possibleValues.range().low();
+    public static float getPercentage(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        int min = possibleValues.range().low();
+        int max = possibleValues.range().high();
 
-        return (float) current / max * 100.0f;
+        float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+        return percentage;
+    }
+
+    public static Pair<Integer, Integer> getDisplayRange(StatPossibleValues possibleValues, GearTooltipStyle style) {
+        StatType statType = possibleValues.statType();
+        RangedValue valueRange = possibleValues.range();
+        boolean isGood = valueRange.low() > 0;
+        Pair<Integer, Integer> displayRange;
+        int first;
+        int last;
+        if (style.showBestValueLastAlways() || isGood) {
+            first = valueRange.low();
+            last = valueRange.high();
+        } else {
+            // Emulate Wynncraft behavior by showing the value closest to zero first
+            first = valueRange.high();
+            last = valueRange.low();
+        }
+        // We store "inverted" stats (spell costs) as positive numbers internally,
+        // but need to display them as negative numbers
+        if (statType.showAsInverted()) {
+            first = -first;
+            last = -last;
+        }
+        displayRange = Pair.of(first, last);
+        return displayRange;
     }
 
     public static RangedValue calculateRange(int baseValue, boolean preIdentified) {
@@ -57,6 +87,10 @@ public final class GearCalculator {
     public static RangedValue calculateInternalRoll(StatPossibleValues possibleValues, StatActualValue actualValue) {
         // FIXME
         return RangedValue.NONE;
+    }
+
+    public static RecollCalculator calculateChances(StatPossibleValues possibleValues, StatActualValue actualValue) {
+        return RecollCalculator.calculateChances(possibleValues, actualValue);
     }
 
     // FIXME: This should be a method, not a class...

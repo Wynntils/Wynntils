@@ -36,7 +36,7 @@ public record GearInstance(
                 })
                 .mapToDouble(actualValue -> {
                     StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
-                    return GearCalculator.getPercent(actualValue, possibleValues);
+                    return GearCalculator.getPercentage(actualValue, possibleValues);
                 })
                 .summaryStatistics();
         if (percents.getCount() == 0) return Optional.empty();
