@@ -3,7 +3,7 @@
     "Team Wynntils"
   ],
   "breaks": {
-    "creativecore": ">=2.6.5"
+    "creativecore": "<2.10.4"
   },
   "contact": {
     "homepage": "https://wynntils.com",
