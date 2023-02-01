@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo.tooltip;
 
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gearinfo.parsing.GearParser;
 import com.wynntils.models.gearinfo.type.GearInfo;
@@ -65,7 +66,8 @@ public final class GearTooltipBuilder {
         return new GearTooltipBuilder(gearInfo, gearInstance, header, footer);
     }
 
-    public List<Component> getTooltipLines(GearTooltipStyle style, TooltipIdentificationDecorator decorator) {
+    public List<Component> getTooltipLines(
+            ClassType currentClass, GearTooltipStyle style, TooltipIdentificationDecorator decorator) {
         List<Component> tooltip = new ArrayList<>();
 
         // Header and footer are always constant
@@ -75,7 +77,8 @@ public final class GearTooltipBuilder {
         // depending on which decorations are requested
         List<Component> identifications = identificationsCache.get(style);
         if (identifications == null) {
-            identifications = GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, decorator, style);
+            identifications =
+                    GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, currentClass, decorator, style);
             identificationsCache.put(style, identifications);
         }
         tooltip.addAll(identifications);
@@ -85,8 +88,8 @@ public final class GearTooltipBuilder {
         return tooltip;
     }
 
-    public List<Component> getTooltipLines() {
-        return getTooltipLines(DEFAULT_TOOLTIP_STYLE, null);
+    public List<Component> getTooltipLines(ClassType currentClass) {
+        return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null);
     }
 
     private static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {

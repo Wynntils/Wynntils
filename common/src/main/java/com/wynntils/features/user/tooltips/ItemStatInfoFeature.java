@@ -101,8 +101,8 @@ public class ItemStatInfoFeature extends UserFeature {
             IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;
             GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
                     identificationsOrdering, groupIdentifications, showBestValueLastAlways, showStars);
-            LinkedList<Component> tooltips =
-                    new LinkedList<>(builder.getTooltipLines(currentIdentificationStyle, decorator));
+            LinkedList<Component> tooltips = new LinkedList<>(
+                    builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
 
             Optional<GearInstance> optionalGearInstance = gearItem.getGearInstance();
             if (optionalGearInstance.isPresent()) {
@@ -175,12 +175,18 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getRerollSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            MutableComponent rerollChancesComponent = Component.literal(
-                            String.format(Locale.ROOT, " \u2605%.2f%%", GearCalculator.getPerfectChance(possibleValues)))
+            MutableComponent rerollChancesComponent = Component.literal(String.format(
+                            Locale.ROOT, " \u2605%.2f%%", GearCalculator.getPerfectChance(possibleValues)))
                     .withStyle(ChatFormatting.AQUA)
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", GearCalculator.getIncreaseChance(actualValue, possibleValues)))
+                    .append(Component.literal(String.format(
+                                    Locale.ROOT,
+                                    " \u21E7%.1f%%",
+                                    GearCalculator.getIncreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.GREEN))
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", GearCalculator.getDecreaseChance(actualValue, possibleValues)))
+                    .append(Component.literal(String.format(
+                                    Locale.ROOT,
+                                    " \u21E9%.1f%%",
+                                    GearCalculator.getDecreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.RED));
 
             return rerollChancesComponent;

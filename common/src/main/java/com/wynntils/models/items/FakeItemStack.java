@@ -36,7 +36,7 @@ public class FakeItemStack extends ItemStack {
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         GearTooltipBuilder tooltipBuilder = Models.GearTooltip.buildNew(
                 gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null), false);
-        List<Component> tooltip = tooltipBuilder.getTooltipLines();
+        List<Component> tooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
         // Add a line describing the source of this fake stack
         tooltip.add(
                 1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));

@@ -6,6 +6,7 @@ package com.wynntils.models.gearinfo.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gearinfo.GearCalculator;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
@@ -27,6 +28,7 @@ public final class GearTooltipIdentifications {
     public static List<Component> buildTooltip(
             GearInfo gearInfo,
             GearInstance gearInstance,
+            ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             GearTooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
@@ -50,7 +52,7 @@ public final class GearTooltipIdentifications {
             // Most stat types are probably not valid for this gear
             if (!allStats.contains(statType)) continue;
 
-            MutableComponent line = getStatLine(statType, gearInfo, gearInstance, decorator, style);
+            MutableComponent line = getStatLine(statType, gearInfo, gearInstance, currentClass, decorator, style);
             if (line == null) continue;
 
             identifications.add(line);
@@ -69,6 +71,7 @@ public final class GearTooltipIdentifications {
             StatType statType,
             GearInfo gearInfo,
             GearInstance gearInstance,
+            ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             GearTooltipStyle style) {
         if (gearInstance != null) {
@@ -80,7 +83,7 @@ public final class GearTooltipIdentifications {
                 return null;
             }
 
-            MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue);
+            MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue, currentClass);
 
             if (possibleValues.range().isFixed() || decorator == null) return line;
 
@@ -96,7 +99,7 @@ public final class GearTooltipIdentifications {
     }
 
     private static MutableComponent buildIdentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue) {
+            GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
@@ -111,8 +114,9 @@ public final class GearTooltipIdentifications {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo))
-                .withStyle(ChatFormatting.GRAY));
+        line.append(
+                Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, Models.Character.getClassType()))
+                        .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
@@ -137,8 +141,9 @@ public final class GearTooltipIdentifications {
         line.append(Component.literal(displayRange.b() + statType.getUnit().getDisplayName())
                 .withStyle(colorCode));
 
-        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo))
-                .withStyle(ChatFormatting.GRAY));
+        line.append(
+                Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, Models.Character.getClassType()))
+                        .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
