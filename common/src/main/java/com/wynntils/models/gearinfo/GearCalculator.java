@@ -73,7 +73,7 @@ public final class GearCalculator {
 
         public static RecollCalculator calculateChances(
                 StatPossibleValues possibleValues, StatActualValue actualValue) {
-            boolean isInverted = possibleValues.stat().showAsInverted();
+            boolean isInverted = possibleValues.statType().showAsInverted();
             int baseValue = possibleValues.baseValue();
             // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
             // that some items that have had its stats shifted from positive to negative to

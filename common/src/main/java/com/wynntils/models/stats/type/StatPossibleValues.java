@@ -8,4 +8,4 @@ import com.wynntils.utils.type.RangedValue;
 
 // The range is actually possible derive from the other values, but is so commonly used
 // that we cache it here as well
-public record StatPossibleValues(StatType stat, RangedValue range, int baseValue, boolean isPreIdentified) {}
+public record StatPossibleValues(StatType statType, RangedValue range, int baseValue, boolean isPreIdentified) {}

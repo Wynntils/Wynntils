@@ -389,8 +389,8 @@ public class GearInfoRegistry {
             JsonElement identifiedJson = json.get("identified");
             boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
-            for (StatType stat : Models.Stat.getAllStatTypes()) {
-                JsonElement statJson = json.get(stat.getApiName());
+            for (StatType statType : Models.Stat.getAllStatTypes()) {
+                JsonElement statJson = json.get(statType.getApiName());
                 if (statJson == null) continue;
 
                 int baseValue = statJson.getAsInt();
@@ -398,14 +398,14 @@ public class GearInfoRegistry {
 
                 // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
                 // and only converted to negative at display time.
-                if (stat.showAsInverted()) {
+                if (statType.showAsInverted()) {
                     baseValue = -baseValue;
                 }
                 // Range will always be stored such as "low" means "worst possible value" and
                 // "high" means "best possible value".
                 RangedValue range = GearCalculator.calculateRange(baseValue, preIdentified);
-                StatPossibleValues possibleValues = new StatPossibleValues(stat, range, baseValue, preIdentified);
-                list.add(Pair.of(stat, possibleValues));
+                StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
+                list.add(Pair.of(statType, possibleValues));
             }
 
             // Return an immutable list

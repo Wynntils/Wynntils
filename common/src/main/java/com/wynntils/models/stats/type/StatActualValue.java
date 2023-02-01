@@ -4,4 +4,4 @@
  */
 package com.wynntils.models.stats.type;
 
-public record StatActualValue(StatType stat, int value, int stars) {}
+public record StatActualValue(StatType statType, int value, int stars) {}

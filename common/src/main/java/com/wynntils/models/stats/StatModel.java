@@ -52,11 +52,8 @@ public final class StatModel extends Model {
     }
 
     public StatType fromInternalRollId(String id) {
-        // FIXME: If this is a SpellStatType, we need to check the GearInfo. If it is a weapon,
-        // return the proper type, otherwise return generic "3rd Spell". We cannot just return
-        // the first value found.
-        for (StatType stat : statTypeRegistry) {
-            if (stat.getInternalRollName().equals(id)) return stat;
+        for (StatType statType : statTypeRegistry) {
+            if (statType.getInternalRollName().equals(id)) return statType;
         }
         return null;
     }
@@ -65,7 +62,7 @@ public final class StatModel extends Model {
         ClassType classReq = gearInfo.type().getClassReq();
         if (classReq != null && statType instanceof SpellStatType spellStatType) {
             SpellType spellType = spellStatType.getSpellType().forOtherClass(classReq);
-            return SpellStatBuilder.getStatNameFromSpell(spellType.getName());
+            return SpellStatBuilder.getStatNameForSpell(spellType.getName());
         }
         return statType.getDisplayName();
     }
@@ -106,9 +103,9 @@ public final class StatModel extends Model {
         statTypeRegistry.addAll(spellStats);
 
         // Create a fast lookup map
-        for (StatType stat : statTypeRegistry) {
-            StatUnit unit = stat.getUnit();
-            statTypeLookup.put(stat.getDisplayName(), unit, stat);
+        for (StatType statType : statTypeRegistry) {
+            StatUnit unit = statType.getUnit();
+            statTypeLookup.put(statType.getDisplayName(), unit, statType);
         }
         // Spell Cost stats have a lot of aliases under which they can appear
         for (SpellStatType stat : spellStats) {

@@ -199,8 +199,8 @@ public final class StatListOrderer {
     private static void addMiscStats(
             List<StatType> targetList, List<MiscStatType> miscStats, List<MiscStatKind> miscOrder) {
         for (MiscStatKind kind : miscOrder) {
-            StatType stat = getMiscStat(kind, miscStats);
-            targetList.add(stat);
+            StatType statType = getMiscStat(kind, miscStats);
+            targetList.add(statType);
         }
     }
 
@@ -242,9 +242,9 @@ public final class StatListOrderer {
         List<StatType> stats = new ArrayList<>();
         // We might have many stats matching the same name (for spell cost stats)
         // FIXME: do something about this?
-        for (StatType stat : statTypeRegistry) {
-            if (stat.getApiName().equals(apiName)) {
-                stats.add(stat);
+        for (StatType statType : statTypeRegistry) {
+            if (statType.getApiName().equals(apiName)) {
+                stats.add(statType);
             }
         }
         return stats;

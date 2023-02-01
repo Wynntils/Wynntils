@@ -166,7 +166,7 @@ public class ItemStatInfoFeature extends UserFeature {
             int min = possibleValues.range().low();
             int max = possibleValues.range().high();
 
-            if (possibleValues.stat().showAsInverted()) {
+            if (possibleValues.statType().showAsInverted()) {
                 // Show values as negative
                 min = -min;
                 max = -max;

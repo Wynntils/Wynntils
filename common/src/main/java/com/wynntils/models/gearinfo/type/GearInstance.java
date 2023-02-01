@@ -26,16 +26,16 @@ public record GearInstance(
         DoubleSummaryStatistics percents = identifications.stream()
                 .filter(actualValue -> {
                     // We do not include values that cannot possibly change
-                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
+                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
                     if (possibleValues == null) {
-                        WynntilsMod.warn(
-                                "Error:" + gearInfo.name() + " claims to have identification " + actualValue.stat());
+                        WynntilsMod.warn("Error:" + gearInfo.name() + " claims to have identification "
+                                + actualValue.statType());
                         return false;
                     }
                     return !possibleValues.range().isFixed();
                 })
                 .mapToDouble(actualValue -> {
-                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.stat());
+                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
                     return GearCalculator.getPercent(actualValue, possibleValues);
                 })
                 .summaryStatistics();
@@ -62,7 +62,7 @@ public record GearInstance(
 
     public StatActualValue getActualValue(StatType statType) {
         return identifications.stream()
-                .filter(s -> s.stat().equals(statType))
+                .filter(s -> s.statType().equals(statType))
                 .findFirst()
                 .orElse(null);
     }

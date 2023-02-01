@@ -95,7 +95,7 @@ public final class GearTooltipIdentifications {
 
     private static MutableComponent buildIdentifiedLine(
             GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue) {
-        StatType statType = actualValue.stat();
+        StatType statType = actualValue.statType();
         int value = actualValue.value();
 
         int valueToShow = statType.showAsInverted() ? -value : value;
@@ -117,7 +117,7 @@ public final class GearTooltipIdentifications {
 
     private static MutableComponent buildUnidentifiedLine(
             GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
-        StatType statType = possibleValues.stat();
+        StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 
         // Use value.low as representative; assume both high and low are either < or > 0.

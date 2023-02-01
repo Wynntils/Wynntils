@@ -118,7 +118,8 @@ public final class GearParser {
                     // Skill bonuses looks like stats when parsing, ignore them
                     if (Skill.isSkill(statDisplayName)) continue;
 
-                    WynntilsMod.warn("Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
+                    WynntilsMod.warn(
+                            "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
                 }
                 if (type.showAsInverted()) {
