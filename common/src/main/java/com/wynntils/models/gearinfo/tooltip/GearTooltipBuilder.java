@@ -26,13 +26,16 @@ import net.minecraft.world.item.ItemStack;
 public final class GearTooltipBuilder {
     private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
             new GearTooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
-
-    private final Map<GearTooltipStyle, List<Component>> identificationsCache = new HashMap<>();
-
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final List<Component> header;
     private final List<Component> footer;
+
+    // The identificationsCache is only valid if the cached dependencies matchs
+    private ClassType cachedCurrentClass;
+    private GearTooltipStyle cachedStyle;
+    private TooltipIdentificationDecorator cachedDecorator;
+    private List<Component> identificationsCache;
 
     private GearTooltipBuilder(
             GearInfo gearInfo, GearInstance gearInstance, List<Component> header, List<Component> footer) {
@@ -73,14 +76,21 @@ public final class GearTooltipBuilder {
         // Header and footer are always constant
         tooltip.addAll(header);
 
-        // Between header and footer we have the list of identifications, which is different
-        // depending on which decorations are requested
-        List<Component> identifications = identificationsCache.get(style);
-        if (identifications == null) {
+        List<Component> identifications;
+
+        // Identification lines are rendered differently depending on current class, requested
+        // style and provided decorator. If all match, use cache.
+        if (currentClass != cachedCurrentClass || cachedStyle != style || cachedDecorator != decorator) {
             identifications =
                     GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, currentClass, decorator, style);
-            identificationsCache.put(style, identifications);
+            identificationsCache = identifications;
+            cachedCurrentClass = currentClass;
+            cachedStyle = style;
+            cachedDecorator = decorator;
+        } else {
+            identifications = identificationsCache;
         }
+
         tooltip.addAll(identifications);
 
         tooltip.addAll(footer);
