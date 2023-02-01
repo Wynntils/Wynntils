@@ -89,11 +89,13 @@ public final class GearModel extends Model {
         return gearInfoRegistry.gearInfoLookup.get(gearName);
     }
 
-    public GearInfo getGearInfoFromApiName(String gearName) {
-        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupApiName.get(gearName);
+    public GearInfo getGearInfoFromApiName(String apiName) {
+        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupApiName.get(apiName);
         if (gearInfo != null) return gearInfo;
 
-        return gearInfoRegistry.gearInfoLookup.get(gearName);
+        // The name is only stored in gearInfoLookupApiName if it differs from the display name
+        // Otherwise the api name is the same as the display name
+        return gearInfoRegistry.gearInfoLookup.get(apiName);
     }
 
     public List<GearInfo> getGearInfoRegistry() {
