@@ -27,6 +27,8 @@ public abstract class StatType {
         return key;
     }
 
+    // Most likely, you'll want to use Models.Stat.getDisplayName instead, since it will make
+    // spell cost stats display correctly.
     public String getDisplayName() {
         return displayName;
     }

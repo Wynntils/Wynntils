@@ -26,14 +26,14 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
     }
 
     public static List<String> getAliases(SpellStatType statType) {
-        ArrayList aliases = new ArrayList<>();
-        int spellNumber = statType.getSpellNumber();
+        List aliases = new ArrayList<>();
+        SpellType spellType = statType.getSpellType();
         for (ClassType classType : ClassType.values()) {
-            SpellType spell = SpellType.forClass(classType, spellNumber);
-            aliases.add(getName(spell));
+            SpellType spell = spellType.forOtherClass(classType);
+            aliases.add(getStatNameFromSpell(spell.getName()));
         }
         // Also add an alias of the form "{sp1} Cost" which can appear on unidentified gear
-        String unidentifiedAliasName = "{sp" + spellNumber + "} Cost";
+        String unidentifiedAliasName = getStatNameFromSpell("{sp" + spellType + "}");
         aliases.add(unidentifiedAliasName);
 
         return Collections.unmodifiableList(aliases);
@@ -46,14 +46,14 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
 
         return new SpellStatType(
                 "SPELL_" + spellType.name() + "_COST_" + unit.name(),
-                getName(spellType),
+                getStatNameFromSpell(spellType.getName()),
                 "spellCost" + apiUnit + spellNumber,
                 "SPELL_COST_" + loreUnit + "_" + spellNumber,
                 unit,
-                spellNumber);
+                spellType);
     }
 
-    private static String getName(SpellType spellType) {
-        return spellType.getName() + " Cost";
+    public static String getStatNameFromSpell(String spellName) {
+        return spellName + " Cost";
     }
 }

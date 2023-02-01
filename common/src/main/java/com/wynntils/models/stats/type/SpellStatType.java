@@ -4,20 +4,24 @@
  */
 package com.wynntils.models.stats.type;
 
-// FIXME: I need a better way to think about Spell Stats!!!
-// Can've have them multiply all over the place. They need aliases?
-// And a way to present themselves differently depending on item type.
+import com.wynntils.models.spells.type.SpellType;
+
 public final class SpellStatType extends StatType {
-    private final int spellNumber;
+    private final SpellType spellType;
 
     public SpellStatType(
-            String key, String displayName, String apiName, String internalRollName, StatUnit unit, int spellNumber) {
+            String key,
+            String displayName,
+            String apiName,
+            String internalRollName,
+            StatUnit unit,
+            SpellType spellType) {
         super(key, displayName, apiName, internalRollName, unit);
-        this.spellNumber = spellNumber;
+        this.spellType = spellType;
     }
 
-    public int getSpellNumber() {
-        return spellNumber;
+    public SpellType getSpellType() {
+        return spellType;
     }
 
     @Override
