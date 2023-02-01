@@ -96,203 +96,143 @@ public final class GearCalculator {
         return perfectChance;
     }
 
-
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        DecreaseCalculator chances = DecreaseCalculator.calculateChances(possibleValues, actualValue);
-        double decreaseChance = chances.getDecrease() * 100;
+        double decreaseChance = getDecreaseChance(possibleValues, actualValue) * 100;
         return decreaseChance;
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        IncreaseCalculator chances = IncreaseCalculator.calculateChances(possibleValues, actualValue);
-        double increaseChance = chances.getIncrease() * 100;
+        double increaseChance = getIncreaseChance(possibleValues, actualValue) * 100;
         return increaseChance;
     }
 
-    public static class DecreaseCalculator {
-        private final double decrease;
-        private final double increase;
-
-        protected DecreaseCalculator(StatPossibleValues possibleValues, double decrease, double increase) {
-            this.decrease = decrease;
-            this.increase = increase;
+    private static double getDecreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
+        int baseValue = possibleValues.baseValue();
+        // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
+        // that some items that have had its stats shifted from positive to negative to
+        // break the bounds
+        // FIXME: This is probably completely broken. Rewrite!!!
+        if (actualValue.value() > possibleValues.range().high()) {
+            return 1d;
+        } else if (actualValue.value() < possibleValues.range().low()) {
+            return 0d;
         }
 
-        public static DecreaseCalculator calculateChances(
-                StatPossibleValues possibleValues, StatActualValue actualValue) {
-            boolean isInverted = possibleValues.statType().showAsInverted();
-            int baseValue = possibleValues.baseValue();
-            // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
-            // that some items that have had its stats shifted from positive to negative to
-            // break the bounds
-            // FIXME: This is probably completely broken. Rewrite!!!
-            if (actualValue.value() > possibleValues.range().high()) {
-                return new DecreaseCalculator(possibleValues, 1d, 0d).flipIf(isInverted, possibleValues);
-            } else if (actualValue.value() < possibleValues.range().low()) {
-                return new DecreaseCalculator(possibleValues, 0d, 1d).flipIf(isInverted, possibleValues);
-            }
+        if (possibleValues.range().isFixed()) {
+            return 0d;
+        }
 
-            if (possibleValues.range().isFixed()) {
-                return new DecreaseCalculator(possibleValues, 0d, 0d).flipIf(isInverted, possibleValues);
-            }
+        // This code finds the lowest possible and highest possible rolls that achieve the correct
+        // result (inclusive). Then, it finds the average decrease and increase afterwards
 
-            // This code finds the lowest possible and highest possible rolls that achieve the correct
-            // result (inclusive). Then, it finds the average decrease and increase afterwards
+        // Note that due to rounding, a bound may not actually be a possible roll
+        // if it results in a value that is exactly .5, which then rounds up/down
 
-            // Note that due to rounding, a bound may not actually be a possible roll
-            // if it results in a value that is exactly .5, which then rounds up/down
+        double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
+        double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
 
-            double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
-            double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
+        if (baseValue > 0) {
+            // We can further bound the possible rolls using the star count
+            int starMin = 30;
+            int starMax = 130;
 
-            if (baseValue > 0) {
-                // We can further bound the possible rolls using the star count
-                int starMin = 30;
-                int starMax = 130;
-
-                switch (actualValue.stars()) {
-                    case 0 -> {
-                        starMin = 30;
-                        starMax = 100;
-                    }
-                    case 1 -> {
-                        starMin = 101;
-                        starMax = 124;
-                    }
-                    case 2 -> {
-                        starMin = 125;
-                        starMax = 129;
-                    }
-                    case 3 -> {
-                        return new DecreaseCalculator(possibleValues, 100 / 101d, 0d);
-                    }
-                    default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
+            switch (actualValue.stars()) {
+                case 0 -> {
+                    starMin = 30;
+                    starMax = 100;
                 }
-
-                double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
-                double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
-
-                double avg = (lowerRollBound + higherRollBound) / 2d;
-
-                return new DecreaseCalculator(possibleValues, (avg - 30) / 101d, (130 - avg) / 101d)
-                        .flipIf(isInverted, possibleValues);
-            } else {
-                double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-                double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
-
-                double avg = (lowerRollBound + higherRollBound) / 2d;
-
-                return new DecreaseCalculator(possibleValues, (130 - avg) / 61d, (avg - 70) / 61d)
-                        .flipIf(isInverted, possibleValues);
+                case 1 -> {
+                    starMin = 101;
+                    starMax = 124;
+                }
+                case 2 -> {
+                    starMin = 125;
+                    starMax = 129;
+                }
+                case 3 -> {
+                    return 100 / 101d;
+                }
+                default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
             }
-        }
 
+            double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
+            double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
 
-        private DecreaseCalculator flipIf(boolean flip, StatPossibleValues possibleValues) {
-            if (flip) return new DecreaseCalculator(possibleValues, increase, decrease);
+            double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return this;
-        }
+            return (avg - 30) / 101d;
+        } else {
+            double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
+            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
 
-        public double getDecrease() {
-            return decrease;
-        }
+            double avg = (lowerRollBound + higherRollBound) / 2d;
 
-        public double getIncrease() {
-            return increase;
+            return (130 - avg) / 61d;
         }
     }
-    public static class IncreaseCalculator {
-        private final double decrease;
-        private final double increase;
 
-        protected IncreaseCalculator(StatPossibleValues possibleValues, double decrease, double increase) {
-            this.decrease = decrease;
-            this.increase = increase;
+    private static double getIncreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
+        int baseValue = possibleValues.baseValue();
+        // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
+        // that some items that have had its stats shifted from positive to negative to
+        // break the bounds
+        // FIXME: This is probably completely broken. Rewrite!!!
+        if (actualValue.value() > possibleValues.range().high()) {
+            return 0d;
+        } else if (actualValue.value() < possibleValues.range().low()) {
+            return 1d;
         }
 
-        public static IncreaseCalculator calculateChances(
-                StatPossibleValues possibleValues, StatActualValue actualValue) {
-            boolean isInverted = possibleValues.statType().showAsInverted();
-            int baseValue = possibleValues.baseValue();
-            // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
-            // that some items that have had its stats shifted from positive to negative to
-            // break the bounds
-            // FIXME: This is probably completely broken. Rewrite!!!
-            if (actualValue.value() > possibleValues.range().high()) {
-                return new IncreaseCalculator(possibleValues, 1d, 0d).flipIf(isInverted, possibleValues);
-            } else if (actualValue.value() < possibleValues.range().low()) {
-                return new IncreaseCalculator(possibleValues, 0d, 1d).flipIf(isInverted, possibleValues);
-            }
+        if (possibleValues.range().isFixed()) {
+            return 0d;
+        }
 
-            if (possibleValues.range().isFixed()) {
-                return new IncreaseCalculator(possibleValues, 0d, 0d).flipIf(isInverted, possibleValues);
-            }
+        // This code finds the lowest possible and highest possible rolls that achieve the correct
+        // result (inclusive). Then, it finds the average decrease and increase afterwards
 
-            // This code finds the lowest possible and highest possible rolls that achieve the correct
-            // result (inclusive). Then, it finds the average decrease and increase afterwards
+        // Note that due to rounding, a bound may not actually be a possible roll
+        // if it results in a value that is exactly .5, which then rounds up/down
 
-            // Note that due to rounding, a bound may not actually be a possible roll
-            // if it results in a value that is exactly .5, which then rounds up/down
+        double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
+        double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
 
-            double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
-            double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
+        if (baseValue > 0) {
+            // We can further bound the possible rolls using the star count
+            int starMin = 30;
+            int starMax = 130;
 
-            if (baseValue > 0) {
-                // We can further bound the possible rolls using the star count
-                int starMin = 30;
-                int starMax = 130;
-
-                switch (actualValue.stars()) {
-                    case 0 -> {
-                        starMin = 30;
-                        starMax = 100;
-                    }
-                    case 1 -> {
-                        starMin = 101;
-                        starMax = 124;
-                    }
-                    case 2 -> {
-                        starMin = 125;
-                        starMax = 129;
-                    }
-                    case 3 -> {
-                        return new IncreaseCalculator(possibleValues, 100 / 101d, 0d);
-                    }
-                    default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
+            switch (actualValue.stars()) {
+                case 0 -> {
+                    starMin = 30;
+                    starMax = 100;
                 }
-
-                double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
-                double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
-
-                double avg = (lowerRollBound + higherRollBound) / 2d;
-
-                return new IncreaseCalculator(possibleValues, (avg - 30) / 101d, (130 - avg) / 101d)
-                        .flipIf(isInverted, possibleValues);
-            } else {
-                double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-                double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
-
-                double avg = (lowerRollBound + higherRollBound) / 2d;
-
-                return new IncreaseCalculator(possibleValues, (130 - avg) / 61d, (avg - 70) / 61d)
-                        .flipIf(isInverted, possibleValues);
+                case 1 -> {
+                    starMin = 101;
+                    starMax = 124;
+                }
+                case 2 -> {
+                    starMin = 125;
+                    starMax = 129;
+                }
+                case 3 -> {
+                    return 0d;
+                }
+                default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
             }
-        }
 
+            double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
+            double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
 
-        private IncreaseCalculator flipIf(boolean flip, StatPossibleValues possibleValues) {
-            if (flip) return new IncreaseCalculator(possibleValues, increase, decrease);
+            double avg = (lowerRollBound + higherRollBound) / 2d;
 
-            return this;
-        }
+            return (130 - avg) / 101d;
+        } else {
+            double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
+            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
 
-        public double getDecrease() {
-            return decrease;
-        }
+            double avg = (lowerRollBound + higherRollBound) / 2d;
 
-        public double getIncrease() {
-            return increase;
+            return (avg - 70) / 61d;
         }
     }
 }
