@@ -110,7 +110,12 @@ public final class GearCalculator {
             return 0d;
         }
 
-        return getDecreaseChance(possibleValues, actualValue) * 100;
+        // This code finds the lowest possible and highest possible rolls that achieve the correct
+        // result (inclusive). Then, it finds the average decrease and increase afterwards
+        int baseValue = possibleValues.baseValue();
+        RangedValue innerRollRange = getInnerRollRange(actualValue, baseValue);
+
+        return getDecreaseFromInnerRoll(innerRollRange) * 100;
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
@@ -127,69 +132,36 @@ public final class GearCalculator {
             return 0d;
         }
 
-        return getIncreaseChance(possibleValues, actualValue) * 100;
-    }
-
-    private static double getDecreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it finds the average decrease and increase afterwards
-
-        // Note that due to rounding, a bound may not actually be a possible roll
-        // if it results in a value that is exactly .5, which then rounds up/down
-
         int baseValue = possibleValues.baseValue();
+        RangedValue innerRollRange = getInnerRollRange(actualValue, baseValue);
 
-        double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
-        double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
+        return getIncreaseFromInnerRoll(innerRollRange) * 100;
+    }
 
-        if (baseValue > 0) {
-            // We can further bound the possible rolls using the star count
-            int starMin = 30;
-            int starMax = 130;
-
-            switch (actualValue.stars()) {
-                case 0 -> {
-                    starMin = 30;
-                    starMax = 100;
-                }
-                case 1 -> {
-                    starMin = 101;
-                    starMax = 124;
-                }
-                case 2 -> {
-                    starMin = 125;
-                    starMax = 129;
-                }
-                case 3 -> {
-                    return 100 / 101d;
-                }
-                default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
-            }
-
-            double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
-            double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
-
-            double avg = (lowerRollBound + higherRollBound) / 2d;
-
+    private static double getDecreaseFromInnerRoll(RangedValue innerRollRange) {
+        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
+        if (innerRollRange.low() > 0) {
             return (avg - 30) / 101d;
         } else {
-            double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
-
-            double avg = (lowerRollBound + higherRollBound) / 2d;
-
             return (130 - avg) / 61d;
         }
     }
 
-    private static double getIncreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        // This code finds the lowest possible and highest possible rolls that achieve the correct
-        // result (inclusive). Then, it finds the average decrease and increase afterwards
+    private static double getIncreaseFromInnerRoll(RangedValue innerRollRange) {
+        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
 
+        if (innerRollRange.low() > 0) {
+            return (130 - avg) / 101d;
+        } else {
+            return (avg - 70) / 61d;
+        }
+    }
+
+    private static RangedValue getInnerRollRange(StatActualValue actualValue, int baseValue) {
         // Note that due to rounding, a bound may not actually be a possible roll
         // if it results in a value that is exactly .5, which then rounds up/down
-        int baseValue = possibleValues.baseValue();
-
         double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
         double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
 
@@ -212,24 +184,18 @@ public final class GearCalculator {
                     starMax = 129;
                 }
                 case 3 -> {
-                    return 0d;
+                    return RangedValue.of(130, 130);
                 }
                 default -> WynntilsMod.warn("Invalid star count of " + actualValue.stars());
             }
 
-            double lowerRollBound = Math.max(Math.ceil(lowerRawRollBound), starMin);
-            double higherRollBound = Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
-
-            double avg = (lowerRollBound + higherRollBound) / 2d;
-
-            return (130 - avg) / 101d;
+            int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
+            int higherRollBound = (int) Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
+            return RangedValue.of(lowerRollBound, higherRollBound);
         } else {
-            double lowerRollBound = Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-            double higherRollBound = Math.max(Math.ceil(higherRawRollBound), 70);
-
-            double avg = (lowerRollBound + higherRollBound) / 2d;
-
-            return (avg - 70) / 61d;
+            int lowerRollBound = (int) Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
+            int higherRollBound = (int) Math.max(Math.ceil(higherRawRollBound), 70);
+            return RangedValue.of(lowerRollBound, higherRollBound);
         }
     }
 }
