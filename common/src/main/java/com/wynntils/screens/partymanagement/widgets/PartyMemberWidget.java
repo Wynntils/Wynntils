@@ -45,6 +45,10 @@ public class PartyMemberWidget extends AbstractWidget {
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
+        if (playerName.equals(Models.Party.getPartyLeader())) {
+            this.promoteButton.active = false;
+            this.kickButton.active = false;
+        }
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.disbandParty())

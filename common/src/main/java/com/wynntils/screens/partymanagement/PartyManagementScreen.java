@@ -302,7 +302,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             if (playerName == null) continue;
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
-                    this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 200, 20, playerName));
+                    this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, TOTAL_WIDTH / 2, 20, playerName));
         }
     }
 
@@ -332,7 +332,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             partyMembersWidgets.add(new PartyMemberWidget(
                     this.width / 2 - X_START + 4,
                     this.height / 2 - 125 + i * 20 - 10,
-                    200,
+                    TOTAL_WIDTH,
                     20,
                     playerName,
                     offlineMembers.contains(playerName)));
@@ -385,15 +385,14 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+        for (AbstractWidget widget : partyMembersWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) return widget.mouseClicked(mouseX, mouseY, button);
+        }
+        for (AbstractWidget widget : suggestedPlayersWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) return widget.mouseClicked(mouseX, mouseY, button);
+        }
 
-        // For some reason the (widget.isMouseOver) check does not work for partyMembersWidgets
-        partyMembersWidgets.forEach(widget -> widget.mouseClicked(mouseX, mouseY, button));
-        suggestedPlayersWidgets.forEach(widget -> {
-            if (widget.isMouseOver(mouseX, mouseY)) widget.mouseClicked(mouseX, mouseY, button);
-        });
-
-        return true;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
