@@ -10,6 +10,7 @@ import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;
 import com.wynntils.models.stats.builders.SpellStatBuilder;
+import com.wynntils.models.stats.builders.StatBuilder;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
@@ -32,10 +33,10 @@ public final class StatModel extends Model {
         super(List.of());
 
         // First build stats of all kinds
-        List<MiscStatType> miscStats = MiscStatBuilder.createStats();
-        List<DefenceStatType> defenceStats = DefenceStatBuilder.createStats();
-        List<DamageStatType> damageStats = DamageStatBuilder.createStats();
-        List<SpellStatType> spellStats = SpellStatBuilder.createStats();
+        List<MiscStatType> miscStats = buildStats(new MiscStatBuilder());
+        List<DefenceStatType> defenceStats = buildStats(new DefenceStatBuilder());
+        List<DamageStatType> damageStats = buildStats(new DamageStatBuilder());
+        List<SpellStatType> spellStats = buildStats(new SpellStatBuilder());
 
         // Then put them all in the registry
         initRegistry(miscStats, defenceStats, damageStats, spellStats);
@@ -76,6 +77,13 @@ public final class StatModel extends Model {
         return statTypeRegistry;
     }
 
+    private static <T extends StatType> List<T> buildStats(StatBuilder<T> builder) {
+        List<T> statList = new ArrayList<>();
+
+        builder.buildStats(statList::add);
+        return statList;
+    }
+
     private void initRegistry(
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
@@ -91,6 +99,12 @@ public final class StatModel extends Model {
         for (StatType stat : statTypeRegistry) {
             String lookupName = stat.getDisplayName() + stat.getUnit().getDisplayName();
             statTypeLookup.put(lookupName, stat);
+        }
+        // Spell Cost stats have a lot of aliases under which they can appear
+        for (SpellStatType stat : spellStats) {
+            for (String alias : SpellStatBuilder.getAliases(stat)) {
+                statTypeLookup.put(alias, stat);
+            }
         }
     }
 }

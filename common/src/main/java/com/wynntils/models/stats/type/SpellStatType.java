@@ -8,8 +8,16 @@ package com.wynntils.models.stats.type;
 // Can've have them multiply all over the place. They need aliases?
 // And a way to present themselves differently depending on item type.
 public final class SpellStatType extends StatType {
-    public SpellStatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
+    private final int spellNumber;
+
+    public SpellStatType(
+            String key, String displayName, String apiName, String internalRollName, StatUnit unit, int spellNumber) {
         super(key, displayName, apiName, internalRollName, unit);
+        this.spellNumber = spellNumber;
+    }
+
+    public int getSpellNumber() {
+        return spellNumber;
     }
 
     @Override

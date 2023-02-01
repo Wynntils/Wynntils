@@ -9,19 +9,9 @@ import com.wynntils.models.stats.type.AttackType;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
-    public static List<DamageStatType> createStats() {
-        List<DamageStatType> statList = new ArrayList<>();
-
-        DamageStatBuilder builder = new DamageStatBuilder();
-        builder.buildStats(statList::add);
-        return statList;
-    }
-
     @Override
     public void buildStats(Consumer<DamageStatType> callback) {
         for (AttackType attackType : AttackType.values()) {
