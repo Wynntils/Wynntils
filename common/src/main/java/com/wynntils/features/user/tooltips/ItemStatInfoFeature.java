@@ -151,13 +151,28 @@ public class ItemStatInfoFeature extends UserFeature {
         @Override
         public MutableComponent getSuffix(
                 StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
-            if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)
+                    && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+                return getInnerRollSuffix(style, statActualValue, possibleValues);
+            } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
                 return getRangeSuffix(style, statActualValue, possibleValues);
             } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
                 return getRerollSuffix(style, statActualValue, possibleValues);
             } else {
                 return getPercentSuffix(style, statActualValue, possibleValues);
             }
+        }
+
+        private MutableComponent getInnerRollSuffix(
+                GearTooltipStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
+            MutableComponent rangeTextComponent = Component.literal(" <")
+                    .append(Component.literal(statActualValue.internalRoll().low() + "% to "
+                                    + statActualValue.internalRoll().high() + "%")
+                            .withStyle(ChatFormatting.GREEN))
+                    .append(">")
+                    .withStyle(ChatFormatting.DARK_GREEN);
+
+            return rangeTextComponent;
         }
 
         private MutableComponent getRangeSuffix(
