@@ -1,9 +1,21 @@
+## [0.0.2-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.161...v0.0.2-alpha.162) (2023-02-01)
+
+
+### New Features
+
+* Overlay-ify SpellCastRenderFeature ([#1110](https://github.com/Wynntils/Artemis/issues/1110)) ([700ebde](https://github.com/Wynntils/Artemis/commit/700ebde196a9e1a5d753380eb734d99b5c3e3e3f))
+
 ## [0.0.2-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.160...v0.0.2-alpha.161) (2023-02-01)
 
 
 ### Bug Fixes
 
 * CreativeCore 2.10.4 works with Wynntils! ([10efda0](https://github.com/Wynntils/Artemis/commit/10efda0e0f774e732ea397fb733e76f8a55a8e14))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.161 [skip ci] ([d1482bc](https://github.com/Wynntils/Artemis/commit/d1482bc6a49272d08b0d35b9dbc4b9dfe86b911b))
 
 ## [0.0.2-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.159...v0.0.2-alpha.160) (2023-01-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.158 [skip ci] ([34de95f](https://github.com/Wynntils/Artemis/commit/34de95f7402f38799db3b6542c031f2bd51d5dbd))
-
-## [0.0.2-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.156...v0.0.2-alpha.157) (2023-01-30)
-
-
-### Bug Fixes
-
-* Mixed bag of fixes ([#1100](https://github.com/Wynntils/Artemis/issues/1100)) ([0fe3be5](https://github.com/Wynntils/Artemis/commit/0fe3be518abb4a3081e18e2f1b24c921537ebc44))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.157 [skip ci] ([f6dcb93](https://github.com/Wynntils/Artemis/commit/f6dcb9342a917f47043d35526268e3d0dbc152bf))
 
