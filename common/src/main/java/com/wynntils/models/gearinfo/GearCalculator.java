@@ -91,42 +91,53 @@ public final class GearCalculator {
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         // FIXME: This is the chance of getting a *** (3 star) roll, not the chance of
-        // getting the maximum possible value.
+        // getting the maximum possible value. But for now, keep old behavior.
         double perfectChance = 1 / (possibleValues.baseValue() > 0 ? 101d : 61d) * 100;
         return perfectChance;
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        double decreaseChance = getDecreaseChance(possibleValues, actualValue) * 100;
-        return decreaseChance;
-    }
-
-    public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        double increaseChance = getIncreaseChance(possibleValues, actualValue) * 100;
-        return increaseChance;
-    }
-
-    private static double getDecreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        int baseValue = possibleValues.baseValue();
-        // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
-        // that some items that have had its stats shifted from positive to negative to
-        // break the bounds
-        // FIXME: This is probably completely broken. Rewrite!!!
+        // If we are in any of these situations, our gear has "invalid" values. Maybe it is old?
+        // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
         if (actualValue.value() > possibleValues.range().high()) {
             return 1d;
         } else if (actualValue.value() < possibleValues.range().low()) {
             return 0d;
         }
 
+        // We should not be checking this if it is fixed, but handle that case as well
         if (possibleValues.range().isFixed()) {
             return 0d;
         }
 
+        return getDecreaseChance(possibleValues, actualValue) * 100;
+    }
+
+    public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        // If we are in any of these situations, our gear has "invalid" values. Maybe it is old?
+        // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
+        if (actualValue.value() > possibleValues.range().high()) {
+            return 0d;
+        } else if (actualValue.value() < possibleValues.range().low()) {
+            return 1d;
+        }
+
+        // We should not be checking this if it is fixed, but handle that case as well
+        if (possibleValues.range().isFixed()) {
+            return 0d;
+        }
+
+        return getIncreaseChance(possibleValues, actualValue) * 100;
+    }
+
+    private static double getDecreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it finds the average decrease and increase afterwards
 
         // Note that due to rounding, a bound may not actually be a possible roll
         // if it results in a value that is exactly .5, which then rounds up/down
+
+        int baseValue = possibleValues.baseValue();
 
         double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
         double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
@@ -172,26 +183,12 @@ public final class GearCalculator {
     }
 
     private static double getIncreaseChance(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        int baseValue = possibleValues.baseValue();
-        // Accounts for bounds - api isn't updated. Furthermore, there does exist the fact
-        // that some items that have had its stats shifted from positive to negative to
-        // break the bounds
-        // FIXME: This is probably completely broken. Rewrite!!!
-        if (actualValue.value() > possibleValues.range().high()) {
-            return 0d;
-        } else if (actualValue.value() < possibleValues.range().low()) {
-            return 1d;
-        }
-
-        if (possibleValues.range().isFixed()) {
-            return 0d;
-        }
-
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it finds the average decrease and increase afterwards
 
         // Note that due to rounding, a bound may not actually be a possible roll
         // if it results in a value that is exactly .5, which then rounds up/down
+        int baseValue = possibleValues.baseValue();
 
         double lowerRawRollBound = (actualValue.value() * 100 - 50) / ((double) baseValue);
         double higherRawRollBound = (actualValue.value() * 100 + 50) / ((double) baseValue);
