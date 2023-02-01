@@ -18,6 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -45,22 +46,26 @@ public class PartyMemberWidget extends AbstractWidget {
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
-        if (playerName.equals(Models.Party.getPartyLeader())) {
-            this.promoteButton.active = false;
-            this.kickButton.active = false;
-        }
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.disbandParty())
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
+        if (playerName.equals(Models.Party.getPartyLeader())) {
+            this.promoteButton.active = false;
+            this.kickButton.active = false;
+        } else {
+            this.disbandButton.active = false;
+        }
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        PlayerInfo playerInfo =
+                McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
-                McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
+                (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
         RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
         // hat rendering

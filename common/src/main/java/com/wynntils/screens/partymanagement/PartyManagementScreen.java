@@ -49,8 +49,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private final List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
     private final List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
 
-    private final Set<String> offlineMembers = new HashSet<>();
-
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
         WynntilsMod.registerEventListener(this);
@@ -89,7 +87,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 kickOfflineButton = new Button.Builder(
                                 Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
                                         .withStyle(ChatFormatting.RED),
-                                (button) -> kickOffline())
+                                (button) -> Models.Party.kickOfflineMembers())
                         .pos(this.width / 2 - (X_START - 87), this.height / 2 - 176)
                         .size(83, 20)
                         .build());
@@ -120,11 +118,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         createPartyButton.active = !partying;
         leavePartyButton.active = partying;
-        kickOfflineButton.active = partying && !offlineMembers.isEmpty();
+        kickOfflineButton.active = partying && !Models.Party.getOfflineMembers().isEmpty();
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // partying check not required as button automatically makes new party if not in one
-        refreshOffline();
         FontRenderer fr = FontRenderer.getInstance();
 
         // region Invite field header
@@ -320,7 +317,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                     TOTAL_WIDTH,
                     20,
                     playerName,
-                    offlineMembers.contains(playerName)));
+                    Models.Party.getOfflineMembers().contains(playerName)));
         }
     }
 
@@ -340,26 +337,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void refreshParty() {
         Models.Party.requestPartyListUpdate();
+        Models.Party.refreshOfflineMembers();
         reloadSuggestedPlayersWidgets();
         reloadMembersWidgets();
-        refreshOffline();
-    }
-
-    private void kickOffline() {
-        refreshParty();
-        offlineMembers.forEach(Models.Party::kickFromParty);
-    }
-
-    /**
-     * Refreshes the list of offline members
-     * <p>
-     * First, all party members are added to the list. Then, all members on the scoreboard are removed.
-     * Only online players will have a scoreboard entry.
-     */
-    private void refreshOffline() {
-        offlineMembers.clear();
-        offlineMembers.addAll(Models.Party.getPartyMembers());
-        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
     }
 
     @Override

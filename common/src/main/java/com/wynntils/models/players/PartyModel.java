@@ -5,10 +5,12 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
@@ -37,6 +39,7 @@ public final class PartyModel extends Model {
             Pattern.compile("§eSay hello to (.+) which just joined your party!");
     private static final Pattern PARTY_OTHER_PROMOTED =
             Pattern.compile("§eSuccessfully promoted (.+) to party leader!");
+    private static final Pattern PARTY_OTHER_KICK = Pattern.compile("§eYou have kicked the player from the party\\.");
     private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
             Pattern.compile("§eYou have been removed from the party\\.");
     private static final Pattern PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN =
@@ -54,7 +57,8 @@ public final class PartyModel extends Model {
 
     private HashSet<String> partyMembers = new HashSet<>();
     private String partyLeader = null;
-    private boolean isPartying;
+    private boolean partying;
+    private HashSet<String> offlineMembers = new HashSet<>();
 
     public PartyModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
@@ -100,7 +104,7 @@ public final class PartyModel extends Model {
         if (PARTY_CREATE.matcher(coded).matches()) {
             WynntilsMod.info("Player created a new party.");
 
-            isPartying = true;
+            partying = true;
             partyLeader = McUtils.player().getName().getString();
             partyMembers = new HashSet<>(Set.of(partyLeader));
             WynntilsMod.postEvent(
@@ -114,7 +118,7 @@ public final class PartyModel extends Model {
                 || PARTY_SELF_DISBAND.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
 
-            isPartying = false;
+            partying = false;
             partyMembers = new HashSet<>();
             partyLeader = null;
             WynntilsMod.postEvent(
@@ -125,7 +129,7 @@ public final class PartyModel extends Model {
         if (PARTY_SELF_JOIN_MESSAGE_PATTERN.matcher(coded).matches()) {
             WynntilsMod.info("Player joined a party.");
 
-            isPartying = true;
+            partying = true;
             requestPartyListUpdate();
             return true;
         }
@@ -136,7 +140,7 @@ public final class PartyModel extends Model {
 
             WynntilsMod.info("Player's party has a new member: " + player);
 
-            isPartying = true;
+            partying = true;
             partyMembers.add(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
@@ -149,7 +153,7 @@ public final class PartyModel extends Model {
 
             WynntilsMod.info("Player's party has a new member #2: " + player);
 
-            isPartying = true;
+            partying = true;
             partyMembers.add(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
@@ -162,7 +166,7 @@ public final class PartyModel extends Model {
 
             WynntilsMod.info("Player's party has been left by an other player: " + player);
 
-            isPartying = true;
+            partying = true;
             partyMembers.remove(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.REMOVE));
@@ -175,7 +179,7 @@ public final class PartyModel extends Model {
 
             WynntilsMod.info("Player's party has a new leader: " + player);
 
-            isPartying = true;
+            partying = true;
             partyLeader = player;
             return true;
         }
@@ -184,8 +188,22 @@ public final class PartyModel extends Model {
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
-            isPartying = true;
+            partying = true;
             partyLeader = McUtils.player().getName().getString();
+            return true;
+        }
+
+        matcher = PARTY_OTHER_KICK.matcher(coded);
+        if (matcher.matches()) {
+
+            WynntilsMod.info("Other player has been kicked by player");
+            partying = true;
+
+            requestPartyListUpdate();
+            Managers.TickScheduler.scheduleLater(this::refreshOfflineMembers, 3);
+            // Since Wynn does not tell us who was kicked, we have to request the list again
+            // That method will also handle the event
+
             return true;
         }
 
@@ -194,7 +212,7 @@ public final class PartyModel extends Model {
 
     private boolean tryParseNoPartyMessage(String coded) {
         if (PARTY_NO_LIST_MESSAGE_PATTERN.matcher(coded).matches()) {
-            isPartying = false;
+            partying = false;
             WynntilsMod.info("Player is not in a party.");
             return true;
         }
@@ -207,6 +225,7 @@ public final class PartyModel extends Model {
         if (!matcher.matches()) return false;
 
         String[] partyList = matcher.group(1).split(", ");
+        partyMembers.clear();
 
         for (String member : partyList) {
             Matcher m = PARTY_LIST_LEADER_PATTERN.matcher(member);
@@ -217,7 +236,7 @@ public final class PartyModel extends Model {
             partyMembers.add(ComponentUtils.stripFormatting(member));
         }
 
-        isPartying = true;
+        partying = true;
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
 
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
@@ -227,7 +246,8 @@ public final class PartyModel extends Model {
     private void resetRelations() {
         partyMembers = new HashSet<>();
         partyLeader = null;
-        isPartying = false;
+        partying = false;
+        offlineMembers = new HashSet<>();
 
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
     }
@@ -249,7 +269,7 @@ public final class PartyModel extends Model {
     }
 
     public boolean isPartying() {
-        return isPartying;
+        return partying;
     }
 
     public void kickFromParty(String player) {
@@ -265,7 +285,7 @@ public final class PartyModel extends Model {
      * @param player The player to invite to the party
      */
     public void inviteToParty(String player) {
-        if (!isPartying()) {
+        if (!partying) {
             createParty();
         }
         McUtils.sendCommand("party invite " + player);
@@ -283,6 +303,10 @@ public final class PartyModel extends Model {
         McUtils.sendCommand("party create");
     }
 
+    public void kickOfflineMembers() {
+        offlineMembers.forEach(this::kickFromParty);
+    }
+
     @SubscribeEvent
     public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
         if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
@@ -290,5 +314,39 @@ public final class PartyModel extends Model {
             partyManagementScreen
                     .reloadSuggestedPlayersWidgets(); // Reload because we don't want to suggest party members
         }
+    }
+
+    @SubscribeEvent
+    public void onSetTeam(SetPlayerTeamEvent e) {
+        if (!partying) return;
+        // Delay by 3 ticks to allow the scoreboard to update
+        Managers.TickScheduler.scheduleLater(
+                () -> {
+                    refreshOfflineMembers();
+                    /*
+                    We want to refresh offline members for every single user that joins the server, because they may have been
+                    kicked from the party while offline. If we don't check for this, the user may become stuck in the offline list.
+                     */
+                    if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
+                        partyManagementScreen.reloadMembersWidgets();
+                    }
+                },
+                3);
+    }
+
+    /**
+     * Refreshes the list of offline members
+     * <p>
+     * First, all party members are added to the list. Then, all members on the scoreboard are removed.
+     * Only online players will have a scoreboard entry.
+     */
+    public void refreshOfflineMembers() {
+        offlineMembers.clear();
+        offlineMembers.addAll(partyMembers);
+        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
+    }
+
+    public Set<String> getOfflineMembers() {
+        return offlineMembers;
     }
 }

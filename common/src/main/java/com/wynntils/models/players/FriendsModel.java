@@ -182,7 +182,7 @@ public final class FriendsModel extends Model {
     public void onFriendLeave(FriendConnectionEvent.Leave e) {
         if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
             // Delay the reload to allow the scoreboard to update
-            Managers.TickScheduler.scheduleLater(partyManagementScreen::reloadSuggestedPlayersWidgets, 5);
+            Managers.TickScheduler.scheduleLater(partyManagementScreen::reloadSuggestedPlayersWidgets, 3);
         }
     }
 }
