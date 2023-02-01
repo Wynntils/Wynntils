@@ -232,21 +232,12 @@ public final class StatListOrderer {
             if (apiName.isEmpty()) {
                 legacyOrdering.add(new StatListDelimiter());
             } else {
-                legacyOrdering.addAll(fromApiName(apiName, allStats));
+                allStats.stream()
+                        .filter(statType -> statType.getApiName().equals(apiName))
+                        .findFirst()
+                        .ifPresent(legacyOrdering::add);
             }
         }
         return legacyOrdering;
-    }
-
-    private static List<StatType> fromApiName(String apiName, List<StatType> statTypeRegistry) {
-        List<StatType> stats = new ArrayList<>();
-        // We might have many stats matching the same name (for spell cost stats)
-        // FIXME: do something about this?
-        for (StatType statType : statTypeRegistry) {
-            if (statType.getApiName().equals(apiName)) {
-                stats.add(statType);
-            }
-        }
-        return stats;
     }
 }
