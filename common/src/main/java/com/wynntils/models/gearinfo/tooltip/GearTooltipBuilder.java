@@ -116,17 +116,18 @@ public final class GearTooltipBuilder {
                 if (matcher.matches()) {
                     String statName = matcher.group(6);
 
-                    // Skill points counts to the header since they are fixed (but look like
-                    // identified stats), so ignore those
-                    if (!Skill.isSkill(statName)) {
+                    if (Skill.isSkill(statName)) {
+                        // Skill points counts to the header since they are fixed (but look like
+                        // identified stats), so ignore those, and fall through
+                    } else {
                         headerEnded = true;
                         // Don't keep identifications lines at all
                         continue;
                     }
-                    // else fall through with skill lines
                 }
             }
 
+            // We want to keep this line, so figure out where to put it
             if (!headerEnded) {
                 header.add(loreLine);
             } else {
