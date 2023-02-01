@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gearinfo.tooltip;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.gearinfo.type.GearInstance;
@@ -73,8 +74,7 @@ public final class GearTooltipIdentifications {
             StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
             StatActualValue statActualValue = gearInstance.getActualValue(statType);
             if (statActualValue == null) {
-                // FIXME: spell cost cause this to explode...
-                //      WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
+                WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
                 return null;
             }
 
@@ -109,7 +109,8 @@ public final class GearTooltipIdentifications {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(Component.literal(" " + statType.getDisplayName()).withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
@@ -149,7 +150,8 @@ public final class GearTooltipIdentifications {
         line.append(
                 Component.literal(last + statType.getUnit().getDisplayName()).withStyle(colorCode));
 
-        line.append(Component.literal(" " + statType.getDisplayName()).withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }

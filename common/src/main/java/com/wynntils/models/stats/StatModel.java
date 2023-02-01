@@ -7,6 +7,7 @@ package com.wynntils.models.stats;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;
@@ -64,14 +65,10 @@ public final class StatModel extends Model {
     public String getDisplayName(StatType statType, GearInfo gearInfo) {
         ClassType classReq = gearInfo.type().getClassReq();
         if (classReq != null && statType instanceof SpellStatType spellStatType) {
-            return getDisplayNameForClass(spellStatType, classReq);
+            SpellType spellType = spellStatType.getSpellType().forOtherClass(classReq);
+            return SpellStatBuilder.getStatNameFromSpell(spellType.getName());
         }
         return statType.getDisplayName();
-    }
-
-    public String getDisplayNameForClass(SpellStatType spellStatType, ClassType classReq) {
-        String spellName = spellStatType.getSpellType().forOtherClass(classReq).getName();
-        return SpellStatBuilder.getStatNameFromSpell(spellName);
     }
 
     public List<StatType> getOrderingList(StatListOrdering ordering) {
