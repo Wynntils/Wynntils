@@ -179,7 +179,7 @@ public class GearChatEncoding {
             counter++;
 
             // create ID and append to list
-            identifications.add(new StatActualValue(statType, value, stars));
+            identifications.add(Models.Stat.buildActualValue(statType, value, stars, possibleValues));
         }
 
         // powders

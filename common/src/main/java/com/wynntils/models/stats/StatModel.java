@@ -17,9 +17,12 @@ import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.SpellStatType;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -45,6 +48,14 @@ public final class StatModel extends Model {
 
         // Finally create ordered lists for sorting
         orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
+    }
+
+    public StatActualValue buildActualValue(
+            StatType statType, int value, int stars, StatPossibleValues possibleValues) {
+        RangedValue internalRoll = possibleValues != null
+                ? StatCalculator.calculateInternalRoll(possibleValues, value, stars)
+                : RangedValue.NONE;
+        return new StatActualValue(statType, value, stars, internalRoll);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {

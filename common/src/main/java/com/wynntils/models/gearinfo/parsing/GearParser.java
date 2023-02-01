@@ -19,6 +19,7 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public final class GearParser {
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
 
-    public static GearParseResult parseItemStack(ItemStack itemStack) {
+    public static GearParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
         int tierCount = 0;
@@ -113,8 +114,8 @@ public final class GearParser {
                 String starString = statMatcher.group(5);
                 String statDisplayName = statMatcher.group(6);
 
-                StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
-                if (type == null) {
+                StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
+                if (statType == null) {
                     // Skill bonuses looks like stats when parsing, ignore them
                     if (Skill.isSkill(statDisplayName)) continue;
 
@@ -122,14 +123,16 @@ public final class GearParser {
                             "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
                 }
-                if (type.showAsInverted()) {
+                if (statType.showAsInverted()) {
                     // Spell Cost stats are shown as negative, but we store them as positive
                     value = -value;
                 }
 
                 int stars = starString == null ? 0 : starString.length();
 
-                identifications.add(new StatActualValue(type, value, stars));
+                StatPossibleValues possibleValues = gearInfo != null ? gearInfo.getPossibleValues(statType) : null;
+                StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
+                identifications.add(actualValue);
             }
         }
 
@@ -202,6 +205,7 @@ public final class GearParser {
         // Negative values can never show stars
         int stars = (value > 0) ? StatCalculator.getStarsFromInternalRoll(internalRoll) : 0;
 
-        return new StatActualValue(statType, value, stars);
+        // In this case, we actually know the exact internal roll
+        return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));
     }
 }

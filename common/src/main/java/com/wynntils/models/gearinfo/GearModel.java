@@ -51,7 +51,7 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack, gearInfo);
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
@@ -66,7 +66,7 @@ public final class GearModel extends Model {
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(

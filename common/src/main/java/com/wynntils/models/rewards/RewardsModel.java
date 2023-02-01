@@ -29,7 +29,7 @@ public class RewardsModel extends Model {
         // TODO: replace with API lookup
         CharmInfo charmInfo = new CharmInfo(displayName, tier, type);
 
-        GearParseResult result = GearParser.parseItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack, null);
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
         }
@@ -44,7 +44,7 @@ public class RewardsModel extends Model {
         // TODO: replace with API lookup
         TomeInfo tomeInfo = new TomeInfo(displayName, gearTier, variant, tomeType, tier);
 
-        GearParseResult result = GearParser.parseItemStack(itemStack);
+        GearParseResult result = GearParser.parseItemStack(itemStack, null);
         if (result.tier() != tomeInfo.gearTier()) {
             WynntilsMod.warn("Tier for " + tomeInfo.displayName() + " is reported as " + result.tier());
         }
