@@ -1,9 +1,21 @@
+## [0.0.2-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.162...v0.0.2-alpha.163) (2023-02-01)
+
+
+### Bug Fixes
+
+* Use AthenaLoginEvent ([#1107](https://github.com/Wynntils/Artemis/issues/1107)) ([9c8bde3](https://github.com/Wynntils/Artemis/commit/9c8bde31c1c42a681b313d0149ee9110391626a7))
+
 ## [0.0.2-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.161...v0.0.2-alpha.162) (2023-02-01)
 
 
 ### New Features
 
 * Overlay-ify SpellCastRenderFeature ([#1110](https://github.com/Wynntils/Artemis/issues/1110)) ([700ebde](https://github.com/Wynntils/Artemis/commit/700ebde196a9e1a5d753380eb734d99b5c3e3e3f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.162 [skip ci] ([c5a5a2e](https://github.com/Wynntils/Artemis/commit/c5a5a2eece1b66c9893c1c700050ef0972319b15))
 
 ## [0.0.2-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.160...v0.0.2-alpha.161) (2023-02-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.159 [skip ci] ([f37a760](https://github.com/Wynntils/Artemis/commit/f37a760e51a3ace1a6f30cacb7a8e07aa9f641a2))
-
-## [0.0.2-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.157...v0.0.2-alpha.158) (2023-01-30)
-
-
-### Bug Fixes
-
-* Make Hades Ping Scheduler run correctly, fixing Hades disconnects before even joining Wynncraft ([#1102](https://github.com/Wynntils/Artemis/issues/1102)) ([d5c4fe0](https://github.com/Wynntils/Artemis/commit/d5c4fe088066187dad9bd9fb91648a4fbb373ae5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.158 [skip ci] ([34de95f](https://github.com/Wynntils/Artemis/commit/34de95f7402f38799db3b6542c031f2bd51d5dbd))
 
