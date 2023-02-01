@@ -89,20 +89,34 @@ public final class GearCalculator {
         return RangedValue.NONE;
     }
 
-    public static RecollCalculator calculateChances(StatPossibleValues possibleValues, StatActualValue actualValue) {
-        return RecollCalculator.calculateChances(possibleValues, actualValue);
+    public static double getPerfectChance(StatPossibleValues possibleValues) {
+        // FIXME: This is the chance of getting a *** (3 star) roll, not the chance of
+        // getting the maximum possible value.
+        double perfectChance = 1 / (possibleValues.baseValue() > 0 ? 101d : 61d) * 100;
+        return perfectChance;
+    }
+
+
+    public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        RecollCalculator chances = RecollCalculator.calculateChances(possibleValues, actualValue);
+        double decreaseChance = chances.getDecrease() * 100;
+        return decreaseChance;
+    }
+
+    public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        RecollCalculator chances = RecollCalculator.calculateChances(possibleValues, actualValue);
+        double increaseChance = chances.getIncrease() * 100;
+        return increaseChance;
     }
 
     // FIXME: This should be a method, not a class...
     public static class RecollCalculator {
         private final double decrease;
         private final double increase;
-        private final double perfect;
 
         protected RecollCalculator(StatPossibleValues possibleValues, double decrease, double increase) {
             this.decrease = decrease;
             this.increase = increase;
-            this.perfect = getPerfectChance(possibleValues);
         }
 
         public static RecollCalculator calculateChances(
@@ -174,10 +188,6 @@ public final class GearCalculator {
             }
         }
 
-        /** @return The chance for this identification to become perfect (From 0 to 1) */
-        private static double getPerfectChance(StatPossibleValues possibleValues) {
-            return 1 / (possibleValues.baseValue() > 0 ? 101d : 61d);
-        }
 
         private RecollCalculator flipIf(boolean flip, StatPossibleValues possibleValues) {
             if (flip) return new RecollCalculator(possibleValues, increase, decrease);
@@ -191,10 +201,6 @@ public final class GearCalculator {
 
         public double getIncrease() {
             return increase;
-        }
-
-        public double getPerfect() {
-            return perfect;
         }
     }
 }

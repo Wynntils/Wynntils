@@ -175,14 +175,12 @@ public class ItemStatInfoFeature extends UserFeature {
 
         private MutableComponent getRerollSuffix(
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            GearCalculator.RecollCalculator chances = GearCalculator.calculateChances(possibleValues, actualValue);
-
             MutableComponent rerollChancesComponent = Component.literal(
-                            String.format(Locale.ROOT, " \u2605%.2f%%", chances.getPerfect() * 100))
+                            String.format(Locale.ROOT, " \u2605%.2f%%", GearCalculator.getPerfectChance(possibleValues)))
                     .withStyle(ChatFormatting.AQUA)
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", chances.getIncrease() * 100))
+                    .append(Component.literal(String.format(Locale.ROOT, " \u21E7%.1f%%", GearCalculator.getIncreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.GREEN))
-                    .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", chances.getDecrease() * 100))
+                    .append(Component.literal(String.format(Locale.ROOT, " \u21E9%.1f%%", GearCalculator.getDecreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.RED));
 
             return rerollChancesComponent;
