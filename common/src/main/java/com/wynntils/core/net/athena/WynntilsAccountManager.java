@@ -11,11 +11,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,8 +38,6 @@ public final class WynntilsAccountManager extends Manager {
 
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
-
-    private final List<Runnable> onLogin = new ArrayList<>();
 
     public WynntilsAccountManager(NetManager netManager) {
         super(List.of(netManager));
@@ -104,6 +102,10 @@ public final class WynntilsAccountManager extends Manager {
 
             ApiResponse apiAuthResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
             apiAuthResponse.handleJsonObject(authJson -> {
+                // FIXME: This is needed for patching class loading issue with Forge EventBus:
+                //        https://github.com/MinecraftForge/EventBus/issues/44
+                Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
+
                 token = authJson.get("authToken").getAsString(); /* md5 hashes*/
                 JsonObject hashes = authJson.getAsJsonObject("hashes");
                 hashes.entrySet()
@@ -117,15 +119,9 @@ public final class WynntilsAccountManager extends Manager {
                 loggedIn = true;
                 WynntilsMod.info("Successfully connected to Athena!");
 
-                // It would be ideal to use an event here, but the event bus seems to be having issues with doing so.
-                // Maybe this is related to the fact that this is called from ForkJoinPool?
-                onLogin.forEach(Runnable::run);
+                WynntilsMod.postEvent(new AthenaLoginEvent());
             });
         });
-    }
-
-    public void onLoginRun(Runnable runnable) {
-        onLogin.add(runnable);
     }
 
     private String parseAndJoinPublicKey(String key) {
