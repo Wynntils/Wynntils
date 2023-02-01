@@ -117,8 +117,6 @@ public final class WynntilsAccountManager extends Manager {
                 loggedIn = true;
                 WynntilsMod.info("Successfully connected to Athena!");
 
-                // It would be ideal to use an event here, but the event bus seems to be having issues with doing so.
-                // Maybe this is related to the fact that this is called from ForkJoinPool?
                 onLogin.forEach(Runnable::run);
             });
         });
