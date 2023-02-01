@@ -30,54 +30,75 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * This model handles the player's party relations.
  */
 public final class PartyModel extends Model {
-    private static final Pattern PARTY_LIST_MESSAGE_PATTERN = Pattern.compile("§eParty members: (.*)");
-    private static final Pattern PARTY_LIST_LEADER_PATTERN = Pattern.compile("§r§b(.+)");
-    private static final Pattern PARTY_NO_LIST_MESSAGE_PATTERN = Pattern.compile("§eYou must be in a party to list\\.");
-    private static final Pattern PARTY_OTHER_LEAVE_MESSAGE_PATTERN = Pattern.compile("§e(.+) has left the party\\.");
-    private static final Pattern PARTY_OTHER_JOIN_MESSAGE_PATTERN = Pattern.compile("§e(.+) has joined the party\\.");
-    private static final Pattern PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN =
+    // region Party Regexes
+    /*
+    Regexes should be named with this format:
+    PARTY_ACTION_INVOLVED_(DETAIL)
+    where:
+    PARTY should be the first word in the name
+    ACTION should be something like JOIN, LEAVE, LIST, etc.
+    INVOLVED should be the player that is affected by the action:
+    - ALL should be used if the action affects all players in the party
+    - LEADER should be used if the action affects the party leader
+    - SELF should be used if the action affects the player
+    - OTHER should be used if the action affects another player(s), but not ALL players
+    DETAIL (optional) should be a descriptor if necessary
+    */
+    private static final Pattern PARTY_LIST_ALL = Pattern.compile("§eParty members: (.*)");
+    private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§r§b(.+)");
+    private static final Pattern PARTY_LIST_SELF_FAILED = Pattern.compile("§eYou must be in a party to list\\.");
+
+    private static final Pattern PARTY_LEAVE_OTHER = Pattern.compile("§e(.+) has left the party\\.");
+    private static final Pattern PARTY_LEAVE_SELF_ALREADYLEFT = Pattern.compile("§eYou must be in a party to leave\\.");
+
+    // This is a special case; Wynn sends the same message for when we leave a party or get kicked from a party
+    private static final Pattern PARTY_LEAVE_SELF_KICK = Pattern.compile("§eYou have been removed from the party\\.");
+
+    private static final Pattern PARTY_JOIN_OTHER = Pattern.compile("§e(.+) has joined the party\\.");
+    private static final Pattern PARTY_JOIN_OTHER_SWITCH =
             Pattern.compile("§eSay hello to (.+) which just joined your party!");
-    private static final Pattern PARTY_OTHER_PROMOTED =
-            Pattern.compile("§eSuccessfully promoted (.+) to party leader!");
-    private static final Pattern PARTY_OTHER_KICK = Pattern.compile("§eYou have kicked the player from the party\\.");
-    private static final Pattern PARTY_SELF_LEAVE_MESSAGE_PATTERN =
-            Pattern.compile("§eYou have been removed from the party\\.");
-    private static final Pattern PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN =
-            Pattern.compile("§eYou must be in a party to leave\\.");
-    private static final Pattern PARTY_SELF_JOIN_MESSAGE_PATTERN =
-            Pattern.compile("§eYou have successfully joined the party\\.");
-    private static final Pattern PARTY_SELF_DISBAND =
-            Pattern.compile("§eYour party has been disbanded since you were the only member remaining\\.");
-    private static final Pattern PARTY_SELF_PROMOTED_MESSAGE_PATTERN =
+    private static final Pattern PARTY_JOIN_SELF = Pattern.compile("§eYou have successfully joined the party\\.");
+
+    private static final Pattern PARTY_PROMOTE_OTHER = Pattern.compile("§eSuccessfully promoted (.+) to party leader!");
+    private static final Pattern PARTY_PROMOTE_SELF =
             Pattern.compile("§eYou are now the leader of this party! Type /party for a list of commands\\.");
-    private static final Pattern PARTY_CREATE = Pattern.compile("§eYou have successfully created a party\\.");
-    private static final Pattern PARTY_DISBAND = Pattern.compile("§eYour party has been disbanded\\.");
 
-    private boolean expectingPartyMessage = false;
+    private static final Pattern PARTY_DISBAND_ALL = Pattern.compile("§eYour party has been disbanded\\.");
+    private static final Pattern PARTY_DISBAND_SELF =
+            Pattern.compile("§eYour party has been disbanded since you were the only member remaining\\.");
 
-    private HashSet<String> partyMembers = new HashSet<>();
-    private String partyLeader = null;
-    private boolean partying;
-    private HashSet<String> offlineMembers = new HashSet<>();
+    private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
+
+    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party.\\.");
+    // endregion
+
+    private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
+    private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
+
+    private boolean partying; // Whether the player is in a party
+    private String partyLeader = null; // The name of the party leader
+    private HashSet<String> partyMembers = new HashSet<>(); // A set of Strings representing all party members
+    private HashSet<String> offlineMembers =
+            new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
 
     public PartyModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
-        resetRelations();
+        resetPartyData();
     }
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
         if (!Models.WorldState.onWorld()) return;
 
-        requestPartyListUpdate();
+        requestPartyData();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) {
-            requestPartyListUpdate();
+            requestPartyData();
         } else {
-            resetRelations();
+            resetPartyData();
         }
     }
 
@@ -101,7 +122,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyMessages(String coded) {
-        if (PARTY_CREATE.matcher(coded).matches()) {
+        if (PARTY_CREATE_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player created a new party.");
 
             partying = true;
@@ -112,97 +133,101 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (PARTY_DISBAND.matcher(coded).matches()
-                || PARTY_SELF_LEAVE_MESSAGE_PATTERN.matcher(coded).matches()
-                || PARTY_SELF_ALREADY_LEFT_MESSAGE_PATTERN.matcher(coded).matches()
-                || PARTY_SELF_DISBAND.matcher(coded).matches()) {
+        if (PARTY_DISBAND_ALL.matcher(coded).matches()
+                || PARTY_LEAVE_SELF_KICK.matcher(coded).matches()
+                || PARTY_LEAVE_SELF_ALREADYLEFT.matcher(coded).matches()
+                || PARTY_DISBAND_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
 
-            partying = false;
-            partyMembers = new HashSet<>();
-            partyLeader = null;
+            resetPartyData();
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
             return true;
         }
 
-        if (PARTY_SELF_JOIN_MESSAGE_PATTERN.matcher(coded).matches()) {
+        if (PARTY_JOIN_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player joined a party.");
-
-            partying = true;
-            requestPartyListUpdate();
+            requestPartyData();
             return true;
         }
 
-        Matcher matcher = PARTY_OTHER_JOIN_MESSAGE_PATTERN.matcher(coded);
+        Matcher matcher = PARTY_JOIN_OTHER.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
             WynntilsMod.info("Player's party has a new member: " + player);
 
-            partying = true;
             partyMembers.add(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
             return true;
         }
 
-        matcher = PARTY_OTHER_JOIN_SWITCH_MESSAGE_PATTERN.matcher(coded);
+        matcher = PARTY_JOIN_OTHER_SWITCH.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
             WynntilsMod.info("Player's party has a new member #2: " + player);
 
-            partying = true;
             partyMembers.add(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
             return true;
         }
 
-        matcher = PARTY_OTHER_LEAVE_MESSAGE_PATTERN.matcher(coded);
+        matcher = PARTY_LEAVE_OTHER.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
-            WynntilsMod.info("Player's party has been left by an other player: " + player);
+            WynntilsMod.info("Other player left player's party: " + player);
 
-            partying = true;
             partyMembers.remove(player);
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.REMOVE));
             return true;
         }
 
-        matcher = PARTY_OTHER_PROMOTED.matcher(coded);
+        matcher = PARTY_PROMOTE_OTHER.matcher(coded);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
             WynntilsMod.info("Player's party has a new leader: " + player);
 
-            partying = true;
             partyLeader = player;
             return true;
         }
 
-        matcher = PARTY_SELF_PROMOTED_MESSAGE_PATTERN.matcher(coded);
+        matcher = PARTY_PROMOTE_SELF.matcher(coded);
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
-            partying = true;
             partyLeader = McUtils.player().getName().getString();
             return true;
         }
 
-        matcher = PARTY_OTHER_KICK.matcher(coded);
+        matcher = PARTY_KICK_OTHER.matcher(coded);
         if (matcher.matches()) {
+            WynntilsMod.info("Other player was kicked from player's party");
 
-            WynntilsMod.info("Other player has been kicked by player");
-            partying = true;
+            /*
+            (!) This message/matcher is ONLY triggered when the player sends "/party kick". Since that message
+            does not tell us who we actually kicked, the #processPartyKick() method handles all the logic for this event.
+            That method should be invoked whereever we run "/party kick".
+            HOWEVER: if the player decides to run "/party kick" manually from the chat for whatever reason,
+            this event will be triggered and the #processPartyKick() method will not be invoked.
 
-            requestPartyListUpdate();
-            Managers.TickScheduler.scheduleLater(this::refreshOfflineMembers, 3);
-            // Since Wynn does not tell us who was kicked, we have to request the list again
-            // That method will also handle the event
+            So, the nextKickHandled boolean will tell us if the kick was already handled.
+            If it was not handled, we have no choice but to re-request the party data.
+
+            But also, we have a delay here because it takes time for the server to update the leaderboard. (Which is partially
+            the reason why we don't like to use the request function too much.)
+            */
+
+            if (!nextKickHandled) {
+                Managers.TickScheduler.scheduleLater(this::requestPartyData, 2);
+            } else {
+                nextKickHandled = false;
+            }
 
             return true;
         }
@@ -211,8 +236,8 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParseNoPartyMessage(String coded) {
-        if (PARTY_NO_LIST_MESSAGE_PATTERN.matcher(coded).matches()) {
-            partying = false;
+        if (PARTY_LIST_SELF_FAILED.matcher(coded).matches()) {
+            resetPartyData();
             WynntilsMod.info("Player is not in a party.");
             return true;
         }
@@ -221,14 +246,14 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyList(String coded) {
-        Matcher matcher = PARTY_LIST_MESSAGE_PATTERN.matcher(coded);
+        Matcher matcher = PARTY_LIST_ALL.matcher(coded);
         if (!matcher.matches()) return false;
 
         String[] partyList = matcher.group(1).split(", ");
         partyMembers.clear();
 
         for (String member : partyList) {
-            Matcher m = PARTY_LIST_LEADER_PATTERN.matcher(member);
+            Matcher m = PARTY_LIST_LEADER.matcher(member);
             if (m.matches()) {
                 partyLeader = m.group(1);
             }
@@ -238,12 +263,33 @@ public final class PartyModel extends Model {
 
         partying = true;
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
-
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
+
+        offlineMembers.clear();
+        offlineMembers.addAll(partyMembers);
+        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
+        WynntilsMod.info("Successfully updated offline members, user's party has " + offlineMembers.size()
+                + " offline members.");
+
         return true;
     }
 
-    private void resetRelations() {
+    /**
+     * Wynncraft doesn't tell us who we kicked when we do "/party kick", and manually requesting the party list
+     * is slow and expensive. So this method exists.
+     */
+    private void processPartyKick(String playerName) {
+        partyMembers.remove(playerName);
+        offlineMembers.remove(playerName);
+
+        WynntilsMod.postEvent(
+                new RelationsUpdateEvent.PartyList(Set.of(playerName), RelationsUpdateEvent.ChangeType.REMOVE));
+    }
+
+    /**
+     * Resets all party data to a state where the player is not in a party.
+     */
+    private void resetPartyData() {
         partyMembers = new HashSet<>();
         partyLeader = null;
         partying = false;
@@ -252,7 +298,12 @@ public final class PartyModel extends Model {
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    public void requestPartyListUpdate() {
+    /**
+     * Sends "/party list" to Wynncraft and waits for the response.
+     * When the response is received, partyMembers and partyLeader will be updated.
+     * After that, the offlineMembers list will be updated from scoreboard data.
+     */
+    public void requestPartyData() {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
@@ -260,93 +311,94 @@ public final class PartyModel extends Model {
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 
-    public Set<String> getPartyMembers() {
-        return partyMembers;
+    public boolean isPartying() {
+        return partying;
     }
 
     public String getPartyLeader() {
         return partyLeader;
     }
 
-    public boolean isPartying() {
-        return partying;
-    }
-
-    public void kickFromParty(String player) {
-        McUtils.sendCommand("party kick " + player);
-    }
-
-    public void promoteToLeader(String player) {
-        McUtils.sendCommand("party promote " + player);
-    }
-
-    /**
-     * Invites a player to the party. Creates a party if the player is not in one.
-     * @param player The player to invite to the party
-     */
-    public void inviteToParty(String player) {
-        if (!partying) {
-            createParty();
-        }
-        McUtils.sendCommand("party invite " + player);
-    }
-
-    public void leaveParty() {
-        McUtils.sendCommand("party leave");
-    }
-
-    public void disbandParty() {
-        McUtils.sendCommand("party disband");
-    }
-
-    public void createParty() {
-        McUtils.sendCommand("party create");
-    }
-
-    public void kickOfflineMembers() {
-        offlineMembers.forEach(this::kickFromParty);
-    }
-
-    @SubscribeEvent
-    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
-        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen
-                    .reloadSuggestedPlayersWidgets(); // Reload because we don't want to suggest party members
-        }
-    }
-
-    @SubscribeEvent
-    public void onSetTeam(SetPlayerTeamEvent e) {
-        if (!partying) return;
-        // Delay by 3 ticks to allow the scoreboard to update
-        Managers.TickScheduler.scheduleLater(
-                () -> {
-                    refreshOfflineMembers();
-                    /*
-                    We want to refresh offline members for every single user that joins the server, because they may have been
-                    kicked from the party while offline. If we don't check for this, the user may become stuck in the offline list.
-                     */
-                    if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
-                        partyManagementScreen.reloadMembersWidgets();
-                    }
-                },
-                3);
-    }
-
-    /**
-     * Refreshes the list of offline members
-     * <p>
-     * First, all party members are added to the list. Then, all members on the scoreboard are removed.
-     * Only online players will have a scoreboard entry.
-     */
-    public void refreshOfflineMembers() {
-        offlineMembers.clear();
-        offlineMembers.addAll(partyMembers);
-        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
+    public Set<String> getPartyMembers() {
+        return partyMembers;
     }
 
     public Set<String> getOfflineMembers() {
         return offlineMembers;
     }
+
+    @SubscribeEvent
+    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
+        PartyManagementScreen.reloadWidgetsIfScreenOpen();
+    }
+
+    @SubscribeEvent
+    public void onSetTeam(SetPlayerTeamEvent e) {
+        if (!partying) return;
+
+        if (e.getMethod() == 0) { // ADD, so player joined the server
+            offlineMembers.remove(e.getTeamName());
+            PartyManagementScreen.reloadWidgetsIfScreenOpen();
+        } else if (e.getMethod() == 1) { // REMOVE, so player left the server
+            if (partyMembers.contains(e.getTeamName())) {
+                offlineMembers.add(e.getTeamName());
+                PartyManagementScreen.reloadWidgetsIfScreenOpen();
+            }
+        }
+    }
+
+    // region Party Commands
+    /**
+     * Kicks a player from the party.
+     */
+    public void partyKick(String player) {
+        nextKickHandled = true;
+        McUtils.sendCommand("party kick " + player);
+        processPartyKick(player);
+    }
+
+    /**
+     * Promotes a player to party leader.
+     */
+    public void partyPromote(String player) {
+        McUtils.sendCommand("party promote " + player);
+    }
+
+    /**
+     * Invites a player to the party. Creates a party if the player is not in one.
+     */
+    public void partyInvite(String player) {
+        if (!partying) partyCreate();
+        McUtils.sendCommand("party invite " + player);
+    }
+
+    /**
+     * Leaves the party.
+     */
+    public void partyLeave() {
+        McUtils.sendCommand("party leave");
+    }
+
+    /**
+     * Disbands the party.
+     */
+    public void partyDisband() {
+        McUtils.sendCommand("party disband");
+    }
+
+    /**
+     * Creates a party.
+     */
+    public void partyCreate() {
+        McUtils.sendCommand("party create");
+    }
+
+    /**
+     * Kicks everyone in offlineMembers.
+     * Consider running {@link #requestPartyData()} before this.
+     */
+    public void partyKickOffline() {
+        offlineMembers.forEach(this::partyKick);
+    }
+    // endregion
 }

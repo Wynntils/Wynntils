@@ -29,7 +29,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         this.playerName = playerName;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                        (button) -> Models.Party.inviteToParty(playerName))
+                        (button) -> Models.Party.partyInvite(playerName))
                 .pos(this.getX() + 130, this.getY())
                 .size(40, 20)
                 .build();

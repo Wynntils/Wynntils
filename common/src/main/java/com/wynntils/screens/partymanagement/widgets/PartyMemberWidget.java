@@ -36,19 +36,19 @@ public class PartyMemberWidget extends AbstractWidget {
         this.isOffline = isOffline;
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
-                        (button) -> Models.Party.promoteToLeader(playerName))
+                        (button) -> Models.Party.partyPromote(playerName))
                 .pos(this.getX() + 240, this.getY())
                 .size(50, 20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
-                        (button) -> Models.Party.kickFromParty(playerName))
+                        (button) -> Models.Party.partyKick(playerName))
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
-                        (button) -> Models.Party.disbandParty())
+                        (button) -> Models.Party.partyDisband())
                 .pos(this.getX() + 292, this.getY())
                 .size(50, 20)
                 .build();

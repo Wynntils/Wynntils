@@ -37,7 +37,7 @@ public class HadesFeature extends UserFeature {
             }
             case "shareWithParty" -> {
                 if (shareWithParty) {
-                    Models.Party.requestPartyListUpdate();
+                    Models.Party.requestPartyData();
                 } else {
                     Models.Hades.resetSocialType(SocialType.PARTY);
                 }
