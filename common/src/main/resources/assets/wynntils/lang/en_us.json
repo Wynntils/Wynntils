@@ -662,6 +662,7 @@
   "feature.wynntils.soulPointTimer.lore": "Time until next soul point: %s",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer",
   "feature.wynntils.spellCastRender.name": "Spell Cast Render",
+  "feature.wynntils.spellCastRender.overlay.spellCast.name": "Spell Cast Overlay",
   "feature.wynntils.spellCastRender.renderVignette.description": "Should we render a brief vignette when a spell is cast?",
   "feature.wynntils.spellCastRender.renderVignette.name": "Render Vignette",
   "feature.wynntils.spellCastRender.vignetteColor.description": "What color to use for the spell cast vignette",
