@@ -19,6 +19,7 @@ import com.wynntils.models.stats.type.MiscStatType;
 import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,8 +28,7 @@ import java.util.Map;
 
 public final class StatModel extends Model {
     private final List<StatType> statTypeRegistry = new ArrayList<>();
-    private final Map<String, StatType> statTypeLookup = new HashMap<>();
-
+    private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
 
     public StatModel() {
@@ -48,8 +48,7 @@ public final class StatModel extends Model {
     }
 
     public StatType fromDisplayName(String displayName, String unit) {
-        String lookupName = displayName + (unit == null ? "" : unit);
-        return statTypeLookup.get(lookupName);
+        return statTypeLookup.get(displayName, unit);
     }
 
     public StatType fromInternalRollId(String id) {
@@ -108,14 +107,29 @@ public final class StatModel extends Model {
 
         // Create a fast lookup map
         for (StatType stat : statTypeRegistry) {
-            String lookupName = stat.getDisplayName() + stat.getUnit().getDisplayName();
-            statTypeLookup.put(lookupName, stat);
+            StatUnit unit = stat.getUnit();
+            statTypeLookup.put(stat.getDisplayName(), unit, stat);
         }
         // Spell Cost stats have a lot of aliases under which they can appear
         for (SpellStatType stat : spellStats) {
             for (String alias : SpellStatBuilder.getAliases(stat)) {
-                statTypeLookup.put(alias, stat);
+                String lookupName = alias + stat.getUnit().getDisplayName();
+                statTypeLookup.put(alias, stat.getUnit(), stat);
             }
+        }
+    }
+
+    private static class StatLookupTable {
+        private final Map<String, StatType> lookupTable = new HashMap<>();
+
+        private StatType get(String displayName, String unit) {
+            String lookupName = displayName + (unit == null ? "" : unit);
+            return lookupTable.get(lookupName);
+        }
+
+        private void put(String displayName, StatUnit unit, StatType statType) {
+            String lookupName = displayName + unit.getDisplayName();
+            lookupTable.put(lookupName, statType);
         }
     }
 }

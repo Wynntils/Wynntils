@@ -114,8 +114,11 @@ public final class GearParser {
                 String statDisplayName = statMatcher.group(6);
 
                 StatType type = Models.Stat.fromDisplayName(statDisplayName, unit);
-                if (type == null && Skill.isSkill(statDisplayName)) {
+                if (type == null) {
                     // Skill bonuses looks like stats when parsing, ignore them
+                    if (Skill.isSkill(statDisplayName)) continue;
+
+                    WynntilsMod.warn("Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
                 }
                 if (type.showAsInverted()) {

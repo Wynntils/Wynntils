@@ -29,11 +29,14 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
         List aliases = new ArrayList<>();
         SpellType spellType = statType.getSpellType();
         for (ClassType classType : ClassType.values()) {
+            // Skip the unspecified class, we have that as our base name
+            if (classType == ClassType.None) continue;
+
             SpellType spell = spellType.forOtherClass(classType);
             aliases.add(getStatNameFromSpell(spell.getName()));
         }
         // Also add an alias of the form "{sp1} Cost" which can appear on unidentified gear
-        String unidentifiedAliasName = getStatNameFromSpell("{sp" + spellType + "}");
+        String unidentifiedAliasName = getStatNameFromSpell("{sp" + spellType.getSpellNumber() + "}");
         aliases.add(unidentifiedAliasName);
 
         return Collections.unmodifiableList(aliases);
