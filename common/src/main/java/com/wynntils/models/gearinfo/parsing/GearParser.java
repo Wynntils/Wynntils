@@ -203,7 +203,7 @@ public final class GearParser {
         }
 
         // Negative values can never show stars
-        int stars = (value > 0) ? StatCalculator.getStarsFromInternalRoll(internalRoll) : 0;
+        int stars = (value > 0) ? StatCalculator.calculateStarsFromInternalRoll(internalRoll) : 0;
 
         // In this case, we actually know the exact internal roll
         return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));

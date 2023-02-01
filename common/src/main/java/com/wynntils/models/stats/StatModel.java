@@ -53,7 +53,7 @@ public final class StatModel extends Model {
     public StatActualValue buildActualValue(
             StatType statType, int value, int stars, StatPossibleValues possibleValues) {
         RangedValue internalRoll = possibleValues != null
-                ? StatCalculator.calculateInternalRoll(possibleValues, value, stars)
+                ? StatCalculator.calculateInternalRollRange(possibleValues, value, stars)
                 : RangedValue.NONE;
         return new StatActualValue(statType, value, stars, internalRoll);
     }
