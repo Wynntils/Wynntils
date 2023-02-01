@@ -26,7 +26,6 @@ import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.FriendsModel;
-import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.hades.HadesModel;
@@ -60,7 +59,6 @@ public final class Models {
     public static final CharacterModel Character = new CharacterModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
-    public static final GuildModel Guild = new GuildModel(WorldState);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final ItemModel Item = new ItemModel(GearItem, GearProfiles, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
