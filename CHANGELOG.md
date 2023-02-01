@@ -1,9 +1,21 @@
+## [0.0.2-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.160...v0.0.2-alpha.161) (2023-02-01)
+
+
+### Bug Fixes
+
+* CreativeCore 2.10.4 works with Wynntils! ([10efda0](https://github.com/Wynntils/Artemis/commit/10efda0e0f774e732ea397fb733e76f8a55a8e14))
+
 ## [0.0.2-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.159...v0.0.2-alpha.160) (2023-01-31)
 
 
 ### Bug Fixes
 
 * Hades events will work now, workaround for Forge EventBus issues ([#1104](https://github.com/Wynntils/Artemis/issues/1104)) ([32f2b5c](https://github.com/Wynntils/Artemis/commit/32f2b5cb95ab025e185d26c91b32ff967525ab0d)), closes [#2](https://github.com/Wynntils/Artemis/issues/2)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.160 [skip ci] ([876ad6f](https://github.com/Wynntils/Artemis/commit/876ad6f31fe0697135ad18ddd97f41916e10eed1))
 
 ## [0.0.2-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.158...v0.0.2-alpha.159) (2023-01-30)
 
@@ -40,18 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.157 [skip ci] ([f6dcb93](https://github.com/Wynntils/Artemis/commit/f6dcb9342a917f47043d35526268e3d0dbc152bf))
-
-## [0.0.2-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.155...v0.0.2-alpha.156) (2023-01-30)
-
-
-### New Features
-
-* Add Changelog Screen ([#1099](https://github.com/Wynntils/Artemis/issues/1099)) ([0962e1a](https://github.com/Wynntils/Artemis/commit/0962e1a0341797efc8082bf18746eef78fec1c68))
-* Add Experience Functions (xpm_raw, xpm, xppm) ([#1098](https://github.com/Wynntils/Artemis/issues/1098)) ([6fac180](https://github.com/Wynntils/Artemis/commit/6fac180e76157847c309fac709966f6942ed6a3f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.156 [skip ci] ([f858e92](https://github.com/Wynntils/Artemis/commit/f858e92b4bd7ea6e4b251ecd3f342a78eb0e7585))
-* **release:** v0.0.2-alpha.156 [skip ci] ([f1c0034](https://github.com/Wynntils/Artemis/commit/f1c003489cca56d41fa7351a5a5cbad094df6efe))
 
