@@ -114,7 +114,16 @@ public final class StatCalculator {
         int baseValue = possibleValues.baseValue();
         RangedValue innerRollRange = getInnerRollRange(actualValue, baseValue);
 
-        return getDecreaseFromInnerRoll(innerRollRange) * 100;
+        // FIXME: What we probably really want is the percentage of possible internal rolls
+        // that is lower than innerRollRange.low, but do not change this for now.
+        double result;
+        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
+        if (innerRollRange.low() > 0) {
+            result = (avg - 30) / 101d;
+        } else {
+            result = (130 - avg) / 61d;
+        }
+        return result * 100;
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
@@ -136,26 +145,17 @@ public final class StatCalculator {
         int baseValue = possibleValues.baseValue();
         RangedValue innerRollRange = getInnerRollRange(actualValue, baseValue);
 
-        return getIncreaseFromInnerRoll(innerRollRange) * 100;
-    }
-
-    private static double getDecreaseFromInnerRoll(RangedValue innerRollRange) {
-        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
-        if (innerRollRange.low() > 0) {
-            return (avg - 30) / 101d;
-        } else {
-            return (130 - avg) / 61d;
-        }
-    }
-
-    private static double getIncreaseFromInnerRoll(RangedValue innerRollRange) {
+        // FIXME: What we probably really want is the percentage of possible internal rolls
+        // that is higher than innerRollRange.high, but do not change this for now.
+        double result;
         double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
 
         if (innerRollRange.low() > 0) {
-            return (130 - avg) / 101d;
+            result = (130 - avg) / 101d;
         } else {
-            return (avg - 70) / 61d;
+            result = (avg - 70) / 61d;
         }
+        return result * 100;
     }
 
     private static RangedValue getInnerRollRange(StatActualValue actualValue, int baseValue) {
