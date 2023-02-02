@@ -1,9 +1,21 @@
+## [0.0.2-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.163...v0.0.2-alpha.164) (2023-02-02)
+
+
+### New Features
+
+* Make ItemScreenshotFeature disk saving optional ([#1101](https://github.com/Wynntils/Artemis/issues/1101)) ([cfcdbdf](https://github.com/Wynntils/Artemis/commit/cfcdbdf0ab279b1080172be811d4dab95123f8ab))
+
 ## [0.0.2-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.162...v0.0.2-alpha.163) (2023-02-01)
 
 
 ### Bug Fixes
 
 * Use AthenaLoginEvent ([#1107](https://github.com/Wynntils/Artemis/issues/1107)) ([9c8bde3](https://github.com/Wynntils/Artemis/commit/9c8bde31c1c42a681b313d0149ee9110391626a7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.163 [skip ci] ([604724c](https://github.com/Wynntils/Artemis/commit/604724c1f20061c671148277f6e2028a80458515))
 
 ## [0.0.2-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.161...v0.0.2-alpha.162) (2023-02-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.160 [skip ci] ([876ad6f](https://github.com/Wynntils/Artemis/commit/876ad6f31fe0697135ad18ddd97f41916e10eed1))
-
-## [0.0.2-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.158...v0.0.2-alpha.159) (2023-01-30)
-
-
-### Bug Fixes
-
-* Fix status effect constructor order ([#1103](https://github.com/Wynntils/Artemis/issues/1103)) ([c3a753e](https://github.com/Wynntils/Artemis/commit/c3a753ed1fb893708731d08505fe420746e0d790))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.159 [skip ci] ([f37a760](https://github.com/Wynntils/Artemis/commit/f37a760e51a3ace1a6f30cacb7a8e07aa9f641a2))
 
