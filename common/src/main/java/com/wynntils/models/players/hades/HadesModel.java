@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -54,8 +55,6 @@ public final class HadesModel extends Model {
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
-
-    private boolean loggedIn = false;
 
     public HadesModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
         super(List.of(characterModel, worldStateModel));
@@ -139,13 +138,10 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.NOT_CONNECTED && !loggedIn) {
-            loggedIn = true;
+        if (event.getNewState() != WorldState.NOT_CONNECTED && !isConnected()) {
             if (Managers.WynntilsAccount.isLoggedIn()) {
                 tryCreateConnection();
             }
-
-            Managers.WynntilsAccount.onLoginRun(this::onLogin);
         }
 
         userRegistry.reset();
@@ -166,6 +162,15 @@ public final class HadesModel extends Model {
         }
 
         tryResendWorldData();
+    }
+
+    @SubscribeEvent
+    public void onAthenaLogin(AthenaLoginEvent event) {
+        if (Models.WorldState.getCurrentState() != WorldState.NOT_CONNECTED && !isConnected()) {
+            if (Managers.WynntilsAccount.isLoggedIn()) {
+                tryCreateConnection();
+            }
+        }
     }
 
     @SubscribeEvent
