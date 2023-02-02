@@ -16,8 +16,6 @@ import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
-import com.wynntils.models.gear.GearItemModel;
-import com.wynntils.models.gear.GearProfilesModel;
 import com.wynntils.models.gearinfo.GearModel;
 import com.wynntils.models.gearinfo.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
@@ -47,7 +45,6 @@ public final class Models {
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
-    public static final GearProfilesModel GearProfiles = new GearProfilesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
@@ -63,7 +60,6 @@ public final class Models {
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterModel Character = new CharacterModel(CombatXp);
     public static final GearModel Gear = new GearModel(Stat);
-    public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
