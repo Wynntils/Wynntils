@@ -83,22 +83,22 @@ public final class PartyModel extends Model {
 
     public PartyModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
-        resetPartyData();
+        resetData();
     }
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
         if (!Models.WorldState.onWorld()) return;
 
-        requestPartyData();
+        requestData();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) {
-            requestPartyData();
+            requestData();
         } else {
-            resetPartyData();
+            resetData();
         }
     }
 
@@ -139,7 +139,7 @@ public final class PartyModel extends Model {
                 || PARTY_DISBAND_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
 
-            resetPartyData();
+            resetData();
             WynntilsMod.postEvent(
                     new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
             return true;
@@ -147,7 +147,7 @@ public final class PartyModel extends Model {
 
         if (PARTY_JOIN_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player joined a party.");
-            requestPartyData();
+            requestData();
             return true;
         }
 
@@ -224,7 +224,7 @@ public final class PartyModel extends Model {
             */
 
             if (!nextKickHandled) {
-                Managers.TickScheduler.scheduleLater(this::requestPartyData, 2);
+                Managers.TickScheduler.scheduleLater(this::requestData, 2);
             } else {
                 nextKickHandled = false;
             }
@@ -237,7 +237,7 @@ public final class PartyModel extends Model {
 
     private boolean tryParseNoPartyMessage(String coded) {
         if (PARTY_LIST_SELF_FAILED.matcher(coded).matches()) {
-            resetPartyData();
+            resetData();
             WynntilsMod.info("Player is not in a party.");
             return true;
         }
@@ -289,7 +289,7 @@ public final class PartyModel extends Model {
     /**
      * Resets all party data to a state where the player is not in a party.
      */
-    private void resetPartyData() {
+    private void resetData() {
         partyMembers = new HashSet<>();
         partyLeader = null;
         partying = false;
@@ -303,7 +303,7 @@ public final class PartyModel extends Model {
      * When the response is received, partyMembers and partyLeader will be updated.
      * After that, the offlineMembers list will be updated from scoreboard data.
      */
-    public void requestPartyData() {
+    public void requestData() {
         if (McUtils.player() == null) return;
 
         expectingPartyMessage = true;
@@ -395,7 +395,7 @@ public final class PartyModel extends Model {
 
     /**
      * Kicks everyone in offlineMembers.
-     * Consider running {@link #requestPartyData()} before this.
+     * Consider running {@link #requestData()} before this.
      */
     public void partyKickOffline() {
         offlineMembers.forEach(this::partyKick);

@@ -55,22 +55,22 @@ public final class FriendsModel extends Model {
 
     public FriendsModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
-        resetFriendData();
+        resetData();
     }
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
         if (!Models.WorldState.onWorld()) return;
 
-        requestFriendData();
+        requestData();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) {
-            requestFriendData();
+            requestData();
         } else {
-            resetFriendData();
+            resetData();
         }
     }
 
@@ -160,13 +160,13 @@ public final class FriendsModel extends Model {
         return true;
     }
 
-    private void resetFriendData() {
+    private void resetData() {
         friends = new HashSet<>();
 
         WynntilsMod.postEvent(new RelationsUpdateEvent.FriendList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    public void requestFriendData() {
+    public void requestData() {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;

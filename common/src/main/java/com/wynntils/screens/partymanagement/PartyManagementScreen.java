@@ -343,7 +343,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     private void refreshAll() {
-        Models.Party.requestPartyData();
+        Models.Party.requestData();
         reloadWidgetsIfScreenOpen();
     }
 
