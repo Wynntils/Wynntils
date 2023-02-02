@@ -50,6 +50,10 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 public class GearInfoRegistry {
+    // This is a list of entries in the API that do not really reflect actual gears in Wynncraft
+    // FIXME: This should be read from an external json file, and have more entries added to it
+    private static final List<String> INVALID_ENTRIES = List.of("default");
+
     private List<GearMajorId> allMajorIds = List.of();
     List<GearInfo> gearInfoRegistry = List.of();
     Map<String, GearInfo> gearInfoLookup = Map.of();
@@ -82,9 +86,9 @@ public class GearInfoRegistry {
                 WynncraftGearInfoResponse gearInfoResponse =
                         gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
 
-                // Remove the dummy "default" entry
+                // Some entries are test entries etc and should be removed
                 List<GearInfo> registry = gearInfoResponse.items.stream()
-                        .filter(gearInfo -> !gearInfo.name().equals("default"))
+                        .filter(gearInfo -> !INVALID_ENTRIES.contains(gearInfo.name()))
                         .toList();
 
                 // Create fast lookup maps
