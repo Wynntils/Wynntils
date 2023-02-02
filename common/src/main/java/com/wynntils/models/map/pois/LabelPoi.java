@@ -55,7 +55,7 @@ public class LabelPoi implements Poi {
         return DisplayPriority.HIGH;
     }
 
-    private float getAlphaFromScale(float zoom) {
+    public float getAlphaFromScale(float zoom) {
         float alpha;
         if (zoom >= 1) {
             // Fade out when zoomed in
