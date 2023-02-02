@@ -73,18 +73,16 @@ public class ShamanTotemModel extends Model {
         Managers.TickScheduler.scheduleLater(
                 () -> {
                     // Checks to verify this is a totem
-                    // These must be ran with a delay, as health and inventory contents
-                    // are set a couple ticks after the totem actually spawns
-                    if (Math.abs(totemAS.getHealth() - 1.0f) > 0.0001f) return;
+                    // These must be ran with a delay, as inventory contents are set a couple ticks after the totem
+                    // actually spawns
                     List<ItemStack> inv = new ArrayList<>();
                     totemAS.getArmorSlots().forEach(inv::add);
-                    if (inv.size() < 4 || inv.get(3).getItem() != Items.STONE_SHOVEL) return;
-
-                    for (SynchedEntityData.DataValue<?> d :
-                            totemAS.getEntityData().getNonDefaultValues()) {
-                        // This returns if the ArmorStand is a Guild Banner
-                        if (d.id() == 15 && (byte) d.value() == 6) return;
-                    }
+                    if (inv.size() < 4) return;
+                    ItemStack data = inv.get(3);
+                    if (data.getItem() != Items.STONE_SHOVEL) return;
+                    // This relies on the fact that damage values 28 (Shaman) and 29 (Skyseer) on the stone shovel set
+                    // the totem's texture
+                    if (data.getDamageValue() != 28 && data.getDamageValue() != 29) return;
                     // Checks complete, this is a valid totem
 
                     int totemNumber = getNextTotemSlot();
