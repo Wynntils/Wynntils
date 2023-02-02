@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gearinfo.type.GearTier;
 import com.wynntils.models.items.items.game.TrinketItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -30,7 +30,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);
-            GearTier gearTier = GearTier.fromString(name);
+            GearTier gearTier = GearTier.fromFormattedString(name);
             if (matcher.group(3) != null) {
                 CappedValue uses =
                         new CappedValue(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));

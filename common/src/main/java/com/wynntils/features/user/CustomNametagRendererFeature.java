@@ -9,25 +9,25 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gearinfo.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
-import com.wynntils.utils.wynn.WynnItemUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomNametagRendererFeature extends UserFeature {
@@ -100,26 +100,14 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static MutableComponent getItemComponent(ItemStack itemStack) {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
+        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        if (description != null) return description;
 
-        if (itemName.contains("Crafted")) {
-            return Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA);
-        }
+        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
+        if (gearInfo == null) return null;
 
-        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
-        if (gearProfile == null) return null;
-
-        // this solves an unidentified item showcase exploit
-        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
-        if (itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6) {
-            return Component.literal("Unidentified Item")
-                    .withStyle(gearProfile.getTier().getChatFormatting());
-        }
-
-        return Component.literal(gearProfile.getDisplayName())
-                .withStyle(gearProfile.getTier().getChatFormatting());
+        return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
     }
 
     private void addAccountTypeNametag(NametagRenderEvent event, List<CustomNametag> nametags) {

@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.items;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.extension.ItemStackExtension;
+import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.utils.wynn.GearTooltipBuilder;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -29,13 +29,14 @@ public class FakeItemStack extends ItemStack {
     }
 
     public FakeItemStack(GearItem gearItem, String source) {
-        this(gearItem, gearItem.getGearProfile().getGearInfo().asItemStack(), source);
+        this(gearItem, gearItem.getGearInfo().metaInfo().material().itemStack(), source);
     }
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
-        GearTooltipBuilder tooltipBuilder = GearTooltipBuilder.fromGearItem(gearItem);
-        List<Component> tooltip = tooltipBuilder.getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
+        GearTooltipBuilder tooltipBuilder = Models.GearTooltip.buildNew(
+                gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null), false);
+        List<Component> tooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
         // Add a line describing the source of this fake stack
         tooltip.add(
                 1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));

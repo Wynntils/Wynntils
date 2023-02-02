@@ -6,8 +6,6 @@ package com.wynntils.models.concepts;
 
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
@@ -46,19 +44,6 @@ public enum Powder {
     public static Powder getFromSymbol(String symbol) {
         Element element = Element.fromSymbol(symbol);
         return fromElement(element);
-    }
-
-    public static List<Powder> findPowders(String input) {
-        List<Powder> foundPowders = new LinkedList<>();
-        input.chars().forEach(ch -> {
-            for (Powder powder : values()) {
-                if (ch == powder.getSymbol()) {
-                    foundPowders.add(powder);
-                }
-            }
-        });
-
-        return foundPowders;
     }
 
     public Element getElement() {

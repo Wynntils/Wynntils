@@ -61,7 +61,7 @@ public class SpellCastRenderFeature extends UserFeature {
         if (gearItemOpt.isEmpty()) return;
 
         GearItem gearItem = gearItemOpt.get();
-        if (!gearItem.getGearProfile().getGearInfo().getType().isWeapon()) return;
+        if (!gearItem.getGearInfo().type().isWeapon()) return;
 
         // Hide vanilla item rename popup
         event.setCanceled(true);

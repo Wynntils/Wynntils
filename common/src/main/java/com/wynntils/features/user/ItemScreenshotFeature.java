@@ -188,7 +188,7 @@ public class ItemScreenshotFeature extends UserFeature {
                     .withStyle(ChatFormatting.RED));
             return;
         }
-        String encoded = Models.GearItem.toEncodedString(gearItem);
+        String encoded = Models.Gear.toEncodedString(gearItem);
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
