@@ -11,6 +11,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.List;
 import java.util.Objects;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +20,8 @@ public final class PlayerInventoryModel extends Model {
     private int openSlots = 0;
 
     public PlayerInventoryModel() {
+        super(List.of());
+
         resetCache();
     }
 

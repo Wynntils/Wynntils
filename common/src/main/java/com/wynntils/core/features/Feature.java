@@ -173,9 +173,8 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     }
 
     public final void crash() {
-        state = FeatureState.CRASHED;
-
         disable();
+        state = FeatureState.CRASHED;
     }
 
     /** Whether a feature is enabled */

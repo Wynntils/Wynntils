@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -19,12 +20,15 @@ import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.RelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.players.hades.objects.PlayerStatus;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -52,12 +56,8 @@ public final class HadesModel extends Model {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
-    public HadesModel() {
-        if (Managers.WynntilsAccount.isLoggedIn()) {
-            tryCreateConnection();
-        }
-
-        Managers.WynntilsAccount.onLoginRun(this::onLogin);
+    public HadesModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
+        super(List.of(characterModel, worldStateModel));
     }
 
     public Stream<HadesUser> getHadesUsers() {
@@ -138,7 +138,14 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() != WorldState.NOT_CONNECTED && !isConnected()) {
+            if (Managers.WynntilsAccount.isLoggedIn()) {
+                tryCreateConnection();
+            }
+        }
+
         userRegistry.reset();
+
         if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
                 MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
@@ -155,6 +162,15 @@ public final class HadesModel extends Model {
         }
 
         tryResendWorldData();
+    }
+
+    @SubscribeEvent
+    public void onAthenaLogin(AthenaLoginEvent event) {
+        if (Models.WorldState.getCurrentState() != WorldState.NOT_CONNECTED && !isConnected()) {
+            if (Managers.WynntilsAccount.isLoggedIn()) {
+                tryCreateConnection();
+            }
+        }
     }
 
     @SubscribeEvent

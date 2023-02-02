@@ -15,6 +15,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.lootruns.event.LootrunCacheRefreshEvent;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunPath;
@@ -53,7 +54,9 @@ public final class LootrunModel extends Model {
 
     private RecordingInformation recordingInformation = null;
 
-    public LootrunModel() {
+    public LootrunModel(ContainerModel containerModel) {
+        super(List.of(containerModel));
+
         FileUtils.mkdir(Models.Lootrun.LOOTRUNS);
     }
 
@@ -278,7 +281,7 @@ public final class LootrunModel extends Model {
     }
 
     @SubscribeEvent
-    public void onOpen(ScreenOpenedEvent event) {
+    public void onOpen(ScreenOpenedEvent.Post event) {
         if (state != LootrunState.RECORDING) return;
         if (recordingInformation.getLastChest() == null) return;
         if (!Models.Container.isLootChest(event.getScreen())) return;

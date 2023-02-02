@@ -6,8 +6,6 @@ package com.wynntils.models.gear;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.tooltips.ItemStatInfoFeature;
@@ -23,7 +21,6 @@ import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
@@ -69,6 +66,10 @@ public final class GearItemModel extends Model {
     private static final Pattern ITEM_IDENTIFICATION_PATTERN =
             Pattern.compile("(^\\+?(?<Value>-?\\d+)(?: to \\+?(?<UpperValue>-?\\d+))?(?<Suffix>%|/\\ds|"
                     + " tier)?(?<Stars>\\*{0,3}) (?<ID>[a-zA-Z 0-9]+))");
+
+    public GearItemModel(GearProfilesModel gearProfilesModel) {
+        super(List.of(gearProfilesModel));
+    }
 
     public GearItem fromItemStack(ItemStack itemStack, GearProfile gearProfile) {
         List<GearIdentification> identifications = new ArrayList<>();
@@ -353,14 +354,7 @@ public final class GearItemModel extends Model {
 
     public GearItem fromJsonLore(ItemStack itemStack, GearProfile gearProfile) {
         // attempt to parse item itemData
-        JsonObject itemData;
-        String rawLore = StringUtils.substringBeforeLast(LoreUtils.getStringLore(itemStack), "}")
-                + "}"; // remove extra unnecessary info
-        try {
-            itemData = JsonParser.parseString(rawLore).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            itemData = new JsonObject(); // invalid or empty itemData on item
-        }
+        JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
 
         List<GearIdentificationContainer> idContainers = new ArrayList<>();
         List<GearIdentification> identifications = new ArrayList<>();

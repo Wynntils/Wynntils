@@ -15,6 +15,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.CustomBeaconRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.phys.Vec3;
@@ -49,10 +50,16 @@ public class BeaconBeamFeature extends UserFeature {
             dz *= scale;
         }
 
+        float alpha = 1f;
+
+        if (distance <= 7) {
+            alpha = MathUtils.clamp(MathUtils.map((float) distance, 2f, 7f, 0f, 1f), 0f, 1f);
+        }
+
         poseStack.pushPose();
         poseStack.translate(dx, dy, dz);
 
-        BeaconRenderer.renderBeaconBeam(
+        CustomBeaconRenderer.renderBeaconBeam(
                 poseStack,
                 bufferSource,
                 BeaconRenderer.BEAM_LOCATION,
@@ -62,6 +69,7 @@ public class BeaconBeamFeature extends UserFeature {
                 0,
                 1024,
                 waypointBeamColor.asFloatArray(),
+                alpha,
                 0.166f,
                 0.33f);
 

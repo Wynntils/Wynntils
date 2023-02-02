@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 
 public final class StringUtils {
     private static final String[] suffixes = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
@@ -129,5 +130,9 @@ public final class StringUtils {
         } else {
             return Integer.toString(value);
         }
+    }
+
+    public static String convertMarkdownToColorCode(String input) {
+        return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
     }
 }

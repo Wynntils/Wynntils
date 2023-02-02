@@ -66,22 +66,6 @@ public final class WynnItemUtils {
         return ids;
     }
 
-    public static void removeLoreTooltipLines(List<Component> tooltip) {
-        int loreStart = -1;
-        for (int i = 0; i < tooltip.size(); i++) {
-            // only remove text after the item type indicator
-            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
-                loreStart = i + 1;
-                break;
-            }
-        }
-
-        // type indicator was found
-        if (loreStart != -1) {
-            tooltip.subList(loreStart, tooltip.size()).clear();
-        }
-    }
-
     public static String getTranslatedName(ItemStack itemStack) {
         String unformattedItemName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         return Models.GearProfiles.getTranslatedReference(unformattedItemName).replace("֎", "");

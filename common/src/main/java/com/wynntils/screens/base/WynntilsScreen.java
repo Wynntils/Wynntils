@@ -18,8 +18,8 @@ public abstract class WynntilsScreen extends Screen {
 
     private void failure(String method, Throwable e) {
         WynntilsMod.error("Failure in " + this.getClass().getSimpleName() + "." + method + "()", e);
-        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in " + method + " in "
-                        + this.getClass().getSimpleName() + ". Screen forcefully closed.")
+        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in "
+                        + this.getClass().getSimpleName() + " during " + method + ". Screen forcefully closed.")
                 .withStyle(ChatFormatting.RED));
         McUtils.mc().setScreen(null);
     }

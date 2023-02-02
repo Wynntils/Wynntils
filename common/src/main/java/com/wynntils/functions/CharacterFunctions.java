@@ -7,7 +7,6 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.models.concepts.ProfessionType;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
@@ -153,53 +152,6 @@ public class CharacterFunctions {
             int currentMana = Models.Character.getCurrentMana();
             int maxMana = Models.Character.getMaxMana();
             return ((float) currentMana / maxMana * 100.0f);
-        }
-    }
-
-    public static class LevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Character.getXpLevel();
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("lvl");
-        }
-    }
-
-    public static class XpFunction extends Function<String> {
-        @Override
-        public String getValue(String argument) {
-            return StringUtils.integerToShortString((int) Models.Character.getCurrentXp());
-        }
-    }
-
-    public static class XpRawFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Character.getCurrentXp();
-        }
-    }
-
-    public static class XpReqFunction extends Function<String> {
-        @Override
-        public String getValue(String argument) {
-            return StringUtils.integerToShortString(Models.Character.getXpPointsNeededToLevelUp());
-        }
-    }
-
-    public static class XpReqRawFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Character.getXpPointsNeededToLevelUp();
-        }
-    }
-
-    public static class XpPctFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Character.getXpProgress() * 100.0f;
         }
     }
 

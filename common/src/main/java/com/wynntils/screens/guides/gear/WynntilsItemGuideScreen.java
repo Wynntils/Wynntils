@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.gear;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.screens.base.WynntilsMenuListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -27,8 +27,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 
-public final class WynntilsItemGuideScreen
-        extends WynntilsMenuListScreen<GuideGearItemStack, GuideGearItemStackButton> {
+public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearItemStack, GuideGearItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 

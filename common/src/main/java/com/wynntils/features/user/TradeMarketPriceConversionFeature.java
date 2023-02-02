@@ -45,7 +45,7 @@ public class TradeMarketPriceConversionFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onGuiOpen(ScreenOpenedEvent event) {
+    public void onGuiOpen(ScreenOpenedEvent.Post event) {
         if (TRADE_MARKET_PATTERN
                 .matcher(event.getScreen().getTitle().getString())
                 .matches()) {

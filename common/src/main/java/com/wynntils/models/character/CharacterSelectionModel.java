@@ -42,8 +42,12 @@ public final class CharacterSelectionModel extends Model {
     private int firstNewCharacterSlot = -1;
     private final List<ClassInfo> classInfoList = new ArrayList<>();
 
+    public CharacterSelectionModel() {
+        super(List.of());
+    }
+
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent event) {
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
         if (event.getScreen() instanceof CharacterSelectorScreen characterSelectorScreen) {
             currentScreen = characterSelectorScreen;
 

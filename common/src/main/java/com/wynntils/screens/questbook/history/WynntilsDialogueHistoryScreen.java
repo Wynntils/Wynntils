@@ -8,7 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
-import com.wynntils.screens.base.WynntilsMenuPagedScreenBase;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -35,7 +36,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreenBase {
+public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase implements WynntilsPagedScreen {
     private static final int LINES_PER_PAGE = 16;
 
     private static final List<Component> RELOAD_TOOLTIP = List.of(
@@ -172,6 +173,20 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuPagedScreen
                         Texture.QUEST_BOOK_BACKGROUND.height() - 50,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle);
+    }
+
+    private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        (currentPage) + " / " + (maxPage),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                        Texture.QUEST_BOOK_BACKGROUND.width(),
+                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        0,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.Center,
+                        TextShadow.NONE);
     }
 
     @Override

@@ -346,6 +346,6 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {
-        return font.wordWrapHeight(line, (int) maxWidth);
+        return font.wordWrapHeight(line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 }

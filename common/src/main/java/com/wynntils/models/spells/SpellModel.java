@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -17,6 +18,7 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +36,9 @@ public class SpellModel extends Model {
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
-    public SpellModel() {
+    public SpellModel(CharacterModel characterModel) {
+        super(List.of(characterModel));
+
         Handlers.ActionBar.registerSegment(spellSegment);
     }
 
