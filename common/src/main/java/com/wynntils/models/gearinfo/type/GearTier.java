@@ -47,13 +47,7 @@ public enum GearTier {
     }
 
     public static GearTier fromComponent(Component component) {
-        String name = component.getString();
-
-        if (name.charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
-        }
-
-        return null;
+        return fromFormattedString(component.getString());
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {
