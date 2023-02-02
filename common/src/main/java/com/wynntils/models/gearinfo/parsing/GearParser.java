@@ -137,7 +137,7 @@ public final class GearParser {
             }
         }
 
-        return new GearParseResult(tier, gearType, identifications, powders, tierCount, durabilityMax);
+        return new GearParseResult(tier, gearType, identifications, powders, tierCount, tierCount, durabilityMax);
     }
 
     public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
