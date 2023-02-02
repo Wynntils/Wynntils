@@ -355,7 +355,8 @@ public class GearInfoRegistry {
             return List.copyOf(list);
         }
 
-        private void addDamageStat(List<Pair<DamageType, RangedValue>> list, DamageType damageType, JsonElement damageJson) {
+        private void addDamageStat(
+                List<Pair<DamageType, RangedValue>> list, DamageType damageType, JsonElement damageJson) {
             if (damageJson == null) return;
 
             String rangeString = damageJson.getAsString();
