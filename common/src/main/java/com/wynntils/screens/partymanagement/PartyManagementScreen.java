@@ -121,7 +121,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
 
-        boolean partying = Models.Party.isPartying();
+        boolean partying = Models.Party.isInParty();
 
         createPartyButton.active = !partying;
         leavePartyButton.active = partying;

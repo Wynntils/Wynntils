@@ -75,7 +75,7 @@ public final class PartyModel extends Model {
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
 
-    private boolean partying; // Whether the player is in a party
+    private boolean inParty; // Whether the player is in a party
     private String partyLeader = null; // The name of the party leader
     private HashSet<String> partyMembers = new HashSet<>(); // A set of Strings representing all party members
     private HashSet<String> offlineMembers =
@@ -125,7 +125,7 @@ public final class PartyModel extends Model {
         if (PARTY_CREATE_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player created a new party.");
 
-            partying = true;
+            inParty = true;
             partyLeader = McUtils.player().getName().getString();
             partyMembers = new HashSet<>(Set.of(partyLeader));
             WynntilsMod.postEvent(
@@ -261,7 +261,7 @@ public final class PartyModel extends Model {
             partyMembers.add(ComponentUtils.stripFormatting(member));
         }
 
-        partying = true;
+        inParty = true;
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
 
@@ -292,7 +292,7 @@ public final class PartyModel extends Model {
     private void resetData() {
         partyMembers = new HashSet<>();
         partyLeader = null;
-        partying = false;
+        inParty = false;
         offlineMembers = new HashSet<>();
 
         WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
@@ -311,8 +311,8 @@ public final class PartyModel extends Model {
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 
-    public boolean isPartying() {
-        return partying;
+    public boolean isInParty() {
+        return inParty;
     }
 
     public String getPartyLeader() {
@@ -334,7 +334,7 @@ public final class PartyModel extends Model {
 
     @SubscribeEvent
     public void onSetTeam(SetPlayerTeamEvent e) {
-        if (!partying) return;
+        if (!inParty) return;
 
         if (e.getMethod() == 0) { // ADD, so player joined the server
             offlineMembers.remove(e.getTeamName());
@@ -368,7 +368,7 @@ public final class PartyModel extends Model {
      * Invites a player to the party. Creates a party if the player is not in one.
      */
     public void partyInvite(String player) {
-        if (!partying) partyCreate();
+        if (!inParty) partyCreate();
         McUtils.sendCommand("party invite " + player);
     }
 
