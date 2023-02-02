@@ -41,6 +41,7 @@ public final class GearParser {
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
+    private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
 
     public static GearParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
@@ -66,7 +67,7 @@ public final class GearParser {
                 String codedPowders = powderMatcher.group(3);
                 if (codedPowders == null) continue;
 
-                String powderString = codedPowders.replaceAll("[^✹✦❋❉✤]", "");
+                String powderString = POWDER_MARKERS.matcher(codedPowders).replaceAll("");
                 if (powderString.length() != usedSlots) {
                     WynntilsMod.warn("Mismatch between powder slot count " + usedSlots + " and actual powder symbols: "
                             + codedPowders + " for " + itemStack.getHoverName().getString());
