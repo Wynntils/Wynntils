@@ -341,31 +341,28 @@ public class GearInfoRegistry {
 
         private List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
             List<Pair<DamageType, RangedValue>> list = new ArrayList<>();
+
             // First look for neutral damage, which has a non-standard name
-            JsonElement neutralDamageJson = json.get("damage");
-            if (neutralDamageJson != null) {
-                String rangeString = neutralDamageJson.getAsString();
-                RangedValue range = RangedValue.fromString(rangeString);
-                if (!range.equals(RangedValue.NONE)) {
-                    list.add(Pair.of(DamageType.NEUTRAL, range));
-                }
-            }
+            addDamageStat(list, DamageType.NEUTRAL, json.get("damage"));
 
             // Then check for elemental damage
             for (Element element : Element.values()) {
-                String damageJsonName = element.name().toLowerCase(Locale.ROOT) + "Damage";
-                JsonElement damageJson = json.get(damageJsonName);
-                if (damageJson == null) continue;
-
-                String rangeString = damageJson.getAsString();
-                RangedValue range = RangedValue.fromString(rangeString);
-                if (range.equals(RangedValue.NONE)) continue;
-
-                list.add(Pair.of(DamageType.fromElement(element), range));
+                String damageName = element.name().toLowerCase(Locale.ROOT) + "Damage";
+                addDamageStat(list, DamageType.fromElement(element), json.get(damageName));
             }
 
             // Return an immutable list
             return List.copyOf(list);
+        }
+
+        private void addDamageStat(List<Pair<DamageType, RangedValue>> list, DamageType damageType, JsonElement damageJson) {
+            if (damageJson == null) return;
+
+            String rangeString = damageJson.getAsString();
+            RangedValue range = RangedValue.fromString(rangeString);
+            if (range.equals(RangedValue.NONE)) return;
+
+            list.add(Pair.of(damageType, range));
         }
 
         private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
