@@ -1,9 +1,21 @@
+## [0.0.2-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.166...v0.0.2-alpha.167) (2023-02-02)
+
+
+### New Features
+
+* Party management ui ([#1055](https://github.com/Wynntils/Artemis/issues/1055)) ([72c170b](https://github.com/Wynntils/Artemis/commit/72c170b6617ae63f8ed61bb4358147c2104e6eac))
+
 ## [0.0.2-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.165...v0.0.2-alpha.166) (2023-02-02)
 
 
 ### New Features
 
 * Add textured lootrun path ([#1115](https://github.com/Wynntils/Artemis/issues/1115)) ([a3cd361](https://github.com/Wynntils/Artemis/commit/a3cd361d65f7a00fbc767e72d96d78d6f468f32b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.166 [skip ci] ([945b9cc](https://github.com/Wynntils/Artemis/commit/945b9cc78bd59e8e02bdbe2f6c0e2d2b0aaad735))
 
 ## [0.0.2-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.164...v0.0.2-alpha.165) (2023-02-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.163 [skip ci] ([604724c](https://github.com/Wynntils/Artemis/commit/604724c1f20061c671148277f6e2028a80458515))
-
-## [0.0.2-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.161...v0.0.2-alpha.162) (2023-02-01)
-
-
-### New Features
-
-* Overlay-ify SpellCastRenderFeature ([#1110](https://github.com/Wynntils/Artemis/issues/1110)) ([700ebde](https://github.com/Wynntils/Artemis/commit/700ebde196a9e1a5d753380eb734d99b5c3e3e3f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.162 [skip ci] ([c5a5a2e](https://github.com/Wynntils/Artemis/commit/c5a5a2eece1b66c9893c1c700050ef0972319b15))
 
