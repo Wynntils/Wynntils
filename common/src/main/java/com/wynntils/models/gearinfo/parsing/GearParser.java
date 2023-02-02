@@ -188,7 +188,7 @@ public final class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearParseResult(gearInfo.tier(), null, identifications, powders, rerolls, 0);
+        return new GearParseResult(gearInfo.tier(), null, identifications, powders, rerolls, 0, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
