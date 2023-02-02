@@ -112,7 +112,7 @@ public final class FriendsModel extends Model {
 
     private boolean tryParseNoFriendList(String coded) {
         if (FRIEND_LIST_FAIL_2.matcher(coded).matches()) {
-            WynntilsMod.info("Player has no friends!");
+            WynntilsMod.info("Friend list is empty.");
             return true;
         }
 
