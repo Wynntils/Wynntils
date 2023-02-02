@@ -76,6 +76,10 @@ public final class McUtils {
         mc().gameMode.startPrediction(mc().level, predictiveAction);
     }
 
+    /**
+     * Sends the specified command to the server.
+     * @param command The command to send. The leading '/' should not be included.
+     */
     public static void sendCommand(String command) {
         mc().getConnection().sendCommand(command);
     }
