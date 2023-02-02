@@ -13,7 +13,6 @@ import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -217,7 +216,9 @@ public final class LootrunRenderer {
                 ColoredPoint point = locationsInRoute.points().get(i);
                 BlockPos blockPos = new BlockPos(point.vec3());
 
-                ColoredPoint end = locationsInRoute.points().get(Math.min(locationsInRoute.points().size() - 1, i + 1));
+                ColoredPoint end = locationsInRoute
+                        .points()
+                        .get(Math.min(locationsInRoute.points().size() - 1, i + 1));
                 Pair<ColoredPoint, ColoredPoint> pointPair = new Pair<>(point, end);
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
@@ -245,19 +246,19 @@ public final class LootrunRenderer {
                     }
                 }
 
-                    lastBlockPos = blockPos;
+                lastBlockPos = blockPos;
 
-                    if (!pauseDraw) {
-                        renderTexturedPoint(pointPair, poseStack, consumer);
-                    } else if (!sourceBatchEnded) {
-                        BUFFER_SOURCE.endBatch();
-                        sourceBatchEnded = true;
-                    }
-            }
-                if (!sourceBatchEnded) {
-                    renderTexturedQueuedPoints(toRender, poseStack, consumer);
+                if (!pauseDraw) {
+                    renderTexturedPoint(pointPair, poseStack, consumer);
+                } else if (!sourceBatchEnded) {
                     BUFFER_SOURCE.endBatch();
+                    sourceBatchEnded = true;
                 }
+            }
+            if (!sourceBatchEnded) {
+                renderTexturedQueuedPoints(toRender, poseStack, consumer);
+                BUFFER_SOURCE.endBatch();
+            }
         }
         poseStack.popPose();
     }
@@ -276,18 +277,23 @@ public final class LootrunRenderer {
                 .normal(0, 0, 1)
                 .endVertex();
     }
-    private static void renderTexturedQueuedPoints(List<Pair<ColoredPoint, ColoredPoint>> pointPairList, PoseStack poseStack, VertexConsumer vertexConsumer) {
+
+    private static void renderTexturedQueuedPoints(
+            List<Pair<ColoredPoint, ColoredPoint>> pointPairList, PoseStack poseStack, VertexConsumer vertexConsumer) {
         for (Pair<ColoredPoint, ColoredPoint> pointPair : pointPairList) {
             renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
         }
     }
 
-    private static void renderTexturedPoint(Pair<ColoredPoint, ColoredPoint> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
+    private static void renderTexturedPoint(
+            Pair<ColoredPoint, ColoredPoint> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
         renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
     }
 
-    private static void renderTexturedPoint(ColoredPoint start, ColoredPoint end, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        Vector3f camPos = McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
+    private static void renderTexturedPoint(
+            ColoredPoint start, ColoredPoint end, PoseStack poseStack, VertexConsumer vertexConsumer) {
+        Vector3f camPos =
+                McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
         Vector3f startVec = start.vec3().toVector3f();
         Vector3f endVec = end.vec3().toVector3f();
         int color = start.color();
@@ -298,7 +304,8 @@ public final class LootrunRenderer {
         Vector3f pos3 = new Vector3f(0.5f, 0.24f, 0.5f);
         Vector3f pos4 = new Vector3f(-0.5f, 0.24f, 0.5f);
 
-        Vector3f direction = new Vector3f(endVec.x, endVec.y, endVec.z).sub(startVec).normalize();
+        Vector3f direction =
+                new Vector3f(endVec.x, endVec.y, endVec.z).sub(startVec).normalize();
 
         // rotation angle to point surface normal to end position
         // rotate the angle so the arrow point to the end position instead of surface normal
@@ -321,10 +328,25 @@ public final class LootrunRenderer {
         pos3 = pos3.add(startVec).sub(camPos);
         pos4 = pos4.add(startVec).sub(camPos);
 
-        vertexConsumer.vertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z).color(color).uv(0, 1).endVertex();
-        vertexConsumer.vertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z).color(color).uv(0, 0).endVertex();
-        vertexConsumer.vertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z).color(color).uv(1, 0).endVertex();
-        vertexConsumer.vertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z).color(color).uv(1, 1).endVertex();
-
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z)
+                .color(color)
+                .uv(0, 1)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z)
+                .color(color)
+                .uv(0, 0)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z)
+                .color(color)
+                .uv(1, 0)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z)
+                .color(color)
+                .uv(1, 1)
+                .endVertex();
     }
 }

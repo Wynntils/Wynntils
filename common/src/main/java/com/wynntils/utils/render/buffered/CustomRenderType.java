@@ -7,10 +7,9 @@ package com.wynntils.utils.render.buffered;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.wynntils.utils.render.Texture;
 import java.util.OptionalDouble;
 import java.util.function.Function;
-
-import com.wynntils.utils.render.Texture;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -50,7 +49,6 @@ public class CustomRenderType extends RenderType {
                     .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));
-
 
     public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
             "wynntils_position_color_triangle_strip",
