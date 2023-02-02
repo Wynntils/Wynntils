@@ -79,11 +79,17 @@ public class ShamanTotemModel extends Model {
                     List<ItemStack> inv = new ArrayList<>();
                     totemAS.getArmorSlots().forEach(inv::add);
                     if (inv.size() < 4 || inv.get(3).getItem() != Items.STONE_SHOVEL) return;
+
+                    for (SynchedEntityData.DataValue<?> d :
+                            totemAS.getEntityData().getNonDefaultValues()) {
+                        // This returns if the ArmorStand is a Guild Banner
+                        if (d.id() == 15 && (byte) d.value() == 6) return;
+                    }
                     // Checks complete, this is a valid totem
 
                     int totemNumber = getNextTotemSlot();
 
-                    WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, (ArmorStand) entity));
+                    WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, totemAS));
 
                     ShamanTotem newTotem = new ShamanTotem(
                             totemNumber,
