@@ -9,6 +9,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
@@ -51,6 +52,9 @@ public class ItemScreenshotFeature extends UserFeature {
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
+    @Config
+    public boolean saveToDisk = false;
+
     private Slot screenshotSlot = null;
 
     private void onInventoryPress(Slot hoveredSlot) {
@@ -72,7 +76,7 @@ public class ItemScreenshotFeature extends UserFeature {
         screenshotSlot = null;
     }
 
-    private static void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
+    private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
         ItemStack stack = hoveredSlot.getItem();
         List<Component> tooltip = new ArrayList<>(itemTooltip);
         removeLoreTooltipLines(tooltip);
@@ -117,35 +121,46 @@ public class ItemScreenshotFeature extends UserFeature {
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
 
-        // First try to save it to disk
-        String itemNameForFile = WynnUtils.normalizeBadString(
-                        ComponentUtils.stripFormatting(stack.getHoverName().getString()))
-                .replaceAll("[/ ]", "_");
-        File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
-        String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
-        try {
-            File outputfile = new File(screenshotDir, filename);
-            ImageIO.write(bi, "png", outputfile);
+        if (saveToDisk) {
+            // First try to save it to disk
+            String itemNameForFile = WynnUtils.normalizeBadString(
+                            ComponentUtils.stripFormatting(stack.getHoverName().getString()))
+                    .replaceAll("[/ ]", "_");
+            File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
+            String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
+            try {
+                File outputfile = new File(screenshotDir, filename);
+                ImageIO.write(bi, "png", outputfile);
 
-            McUtils.sendMessageToClient(Component.translatable(
-                            "feature.wynntils.itemScreenshot.save.message",
-                            stack.getHoverName(),
-                            Component.literal(outputfile.getName())
-                                    .withStyle(ChatFormatting.UNDERLINE)
-                                    .withStyle(style -> style.withClickEvent(
-                                            new ClickEvent(ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
-                    .withStyle(ChatFormatting.GREEN));
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to save image to disk", e);
-            McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.itemScreenshot.save.error", stack.getHoverName(), filename)
-                            .withStyle(ChatFormatting.RED));
-        }
+                McUtils.sendMessageToClient(Component.translatable(
+                                "feature.wynntils.itemScreenshot.save.message",
+                                stack.getHoverName(),
+                                Component.literal(outputfile.getName())
+                                        .withStyle(ChatFormatting.UNDERLINE)
+                                        .withStyle(style -> style.withClickEvent(new ClickEvent(
+                                                ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
+                        .withStyle(ChatFormatting.GREEN));
+            } catch (IOException e) {
+                WynntilsMod.error("Failed to save image to disk", e);
+                McUtils.sendMessageToClient(Component.translatable(
+                                "feature.wynntils.itemScreenshot.save.error", stack.getHoverName(), filename)
+                        .withStyle(ChatFormatting.RED));
+            }
 
-        // Then try to send a copy to the clipboard
-        if (SystemUtils.isMac()) {
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
-                    .withStyle(ChatFormatting.GRAY));
+            if (SystemUtils.isMac()) {
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
+                        .withStyle(ChatFormatting.GRAY));
+                return;
+            }
+        } else if (SystemUtils.isMac()) {
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac2")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
+                            .withStyle(ChatFormatting.GRAY)
+                            .withStyle(ChatFormatting.UNDERLINE)
+                            .withStyle(style -> style.withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/wynntils config set ItemScreenshotFeature saveToDisk true")))));
             return;
         }
 
