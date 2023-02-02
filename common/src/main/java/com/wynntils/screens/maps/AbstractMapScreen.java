@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.PointerType;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.IconPoi;
+import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -171,6 +172,11 @@ public abstract class AbstractMapScreen extends Screen {
             if (poi instanceof IconPoi iconPoi) {
                 // Check if the poi is visible
                 if (iconPoi.getIconAlpha(currentZoom) < 0.1f) {
+                    continue;
+                }
+            } else if (poi instanceof LabelPoi labelPoi) {
+                // Check if label is visible
+                if (labelPoi.getAlphaFromScale(currentZoom) < 0.1f) {
                     continue;
                 }
             }
