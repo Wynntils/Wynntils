@@ -1,9 +1,21 @@
+## [0.0.2-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.165...v0.0.2-alpha.166) (2023-02-02)
+
+
+### New Features
+
+* Add textured lootrun path ([#1115](https://github.com/Wynntils/Artemis/issues/1115)) ([a3cd361](https://github.com/Wynntils/Artemis/commit/a3cd361d65f7a00fbc767e72d96d78d6f468f32b))
+
 ## [0.0.2-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.164...v0.0.2-alpha.165) (2023-02-02)
 
 
 ### Bug Fixes
 
 * Totem detection improvements ([#1116](https://github.com/Wynntils/Artemis/issues/1116)) ([5db2d7f](https://github.com/Wynntils/Artemis/commit/5db2d7fde5d61f991c4a6b09a306cdb580219bd0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.165 [skip ci] ([f1fcf95](https://github.com/Wynntils/Artemis/commit/f1fcf95749eac7449c37fb2c8025cf53e38928c8))
 
 ## [0.0.2-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.163...v0.0.2-alpha.164) (2023-02-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.162 [skip ci] ([c5a5a2e](https://github.com/Wynntils/Artemis/commit/c5a5a2eece1b66c9893c1c700050ef0972319b15))
-
-## [0.0.2-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.160...v0.0.2-alpha.161) (2023-02-01)
-
-
-### Bug Fixes
-
-* CreativeCore 2.10.4 works with Wynntils! ([10efda0](https://github.com/Wynntils/Artemis/commit/10efda0e0f774e732ea397fb733e76f8a55a8e14))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.161 [skip ci] ([d1482bc](https://github.com/Wynntils/Artemis/commit/d1482bc6a49272d08b0d35b9dbc4b9dfe86b911b))
 
