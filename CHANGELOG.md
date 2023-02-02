@@ -1,9 +1,21 @@
+## [0.0.2-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.164...v0.0.2-alpha.165) (2023-02-02)
+
+
+### Bug Fixes
+
+* Totem detection improvements ([#1116](https://github.com/Wynntils/Artemis/issues/1116)) ([5db2d7f](https://github.com/Wynntils/Artemis/commit/5db2d7fde5d61f991c4a6b09a306cdb580219bd0))
+
 ## [0.0.2-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.163...v0.0.2-alpha.164) (2023-02-02)
 
 
 ### New Features
 
 * Make ItemScreenshotFeature disk saving optional ([#1101](https://github.com/Wynntils/Artemis/issues/1101)) ([cfcdbdf](https://github.com/Wynntils/Artemis/commit/cfcdbdf0ab279b1080172be811d4dab95123f8ab))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.164 [skip ci] ([2ad0b34](https://github.com/Wynntils/Artemis/commit/2ad0b34db903edea02c206a88347838ae4649fb2))
 
 ## [0.0.2-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.162...v0.0.2-alpha.163) (2023-02-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.161 [skip ci] ([d1482bc](https://github.com/Wynntils/Artemis/commit/d1482bc6a49272d08b0d35b9dbc4b9dfe86b911b))
-
-## [0.0.2-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.159...v0.0.2-alpha.160) (2023-01-31)
-
-
-### Bug Fixes
-
-* Hades events will work now, workaround for Forge EventBus issues ([#1104](https://github.com/Wynntils/Artemis/issues/1104)) ([32f2b5c](https://github.com/Wynntils/Artemis/commit/32f2b5cb95ab025e185d26c91b32ff967525ab0d)), closes [#2](https://github.com/Wynntils/Artemis/issues/2)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.160 [skip ci] ([876ad6f](https://github.com/Wynntils/Artemis/commit/876ad6f31fe0697135ad18ddd97f41916e10eed1))
 
