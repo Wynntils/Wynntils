@@ -27,8 +27,9 @@ import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
 import com.wynntils.models.objectives.ObjectivesModel;
+import com.wynntils.models.players.FriendsModel;
+import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
-import com.wynntils.models.players.PlayerRelationsModel;
 import com.wynntils.models.players.hades.HadesModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.rewards.RewardsModel;
@@ -62,6 +63,7 @@ public final class Models {
     // Models with dependencies, ordered alphabetically as far as possible
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterModel Character = new CharacterModel(CombatXp);
+    public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Stat);
     public static final GearItemModel GearItem = new GearItemModel(GearProfiles);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
@@ -69,7 +71,7 @@ public final class Models {
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
-    public static final PlayerRelationsModel PlayerRelations = new PlayerRelationsModel(WorldState);
+    public static final PartyModel Party = new PartyModel(WorldState);
     public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
