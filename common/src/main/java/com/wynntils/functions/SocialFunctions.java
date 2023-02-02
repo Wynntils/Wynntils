@@ -11,14 +11,14 @@ public class SocialFunctions {
     public static class OnlineFriendsFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.PlayerRelations.getFriends().size();
+            return Models.Friends.getFriends().size();
         }
     }
 
     public static class OnlinePartyMembersFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.PlayerRelations.getPartyMembers().size();
+            return Models.Party.getPartyMembers().size();
         }
     }
 }

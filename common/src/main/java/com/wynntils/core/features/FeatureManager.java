@@ -57,6 +57,7 @@ import com.wynntils.features.user.LobbyUptimeFeature;
 import com.wynntils.features.user.LowHealthVignetteFeature;
 import com.wynntils.features.user.MythicBlockerFeature;
 import com.wynntils.features.user.MythicBoxScalerFeature;
+import com.wynntils.features.user.PartyManagementScreenFeature;
 import com.wynntils.features.user.QuickCastFeature;
 import com.wynntils.features.user.SoulPointTimerFeature;
 import com.wynntils.features.user.TerritoryDefenseMessageFeature;
@@ -195,6 +196,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
+        registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());

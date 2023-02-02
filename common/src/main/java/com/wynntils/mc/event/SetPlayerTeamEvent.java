@@ -17,6 +17,13 @@ public class SetPlayerTeamEvent extends Event {
         this.teamName = teamName;
     }
 
+    /**
+     * 0 = METHOD_ADD<p>
+     * 1 = METHOD_REMOVE<p>
+     * 2 = METHOD_CHANGE<p>
+     * 3 = METHOD_JOIN<p>
+     * 4 = METHOD_LEAVE
+     */
     public int getMethod() {
         return method;
     }
