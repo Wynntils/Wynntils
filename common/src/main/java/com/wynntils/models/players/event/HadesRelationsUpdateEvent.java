@@ -8,11 +8,11 @@ import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
 import net.minecraftforge.eventbus.api.Event;
 
-public abstract class RelationsUpdateEvent extends Event {
+public abstract class HadesRelationsUpdateEvent extends Event {
     private final Set<String> changedPlayers;
     private final ChangeType changeType;
 
-    protected RelationsUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
+    protected HadesRelationsUpdateEvent(Set<String> changedPlayers, ChangeType changeType) {
         this.changedPlayers = changedPlayers;
         this.changeType = changeType;
     }
@@ -25,13 +25,13 @@ public abstract class RelationsUpdateEvent extends Event {
         return changeType;
     }
 
-    public static class FriendList extends RelationsUpdateEvent {
+    public static class FriendList extends HadesRelationsUpdateEvent {
         public FriendList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }
 
-    public static class PartyList extends RelationsUpdateEvent {
+    public static class PartyList extends HadesRelationsUpdateEvent {
 
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
