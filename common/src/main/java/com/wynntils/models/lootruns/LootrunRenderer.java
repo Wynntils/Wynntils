@@ -206,7 +206,6 @@ public final class LootrunRenderer {
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
         for (ColoredPath locationsInRoute : locations) {
-//            ColoredPath toRender = new ColoredPath(new ArrayList<>());
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
             List<Pair<ColoredPoint, ColoredPoint>> toRender = new ArrayList<>();
             boolean sourceBatchEnded = false;
