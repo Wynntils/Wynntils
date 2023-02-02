@@ -56,18 +56,18 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.tierCount());
+        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         GearParseResult result = GearParser.parseInternalRolls(gearInfo, itemData);
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.tierCount());
+        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
         GearParseResult result = GearParser.parseItemStack(itemStack, null);
-        CappedValue durability = new CappedValue(result.tierCount(), result.durabilityMax());
+        CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
                 result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
