@@ -137,7 +137,7 @@ public final class LootrunRenderer {
         if (level == null) return;
 
         switch (LootrunFeature.INSTANCE.pathType) {
-            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.getLootrunTextureQuad(Texture.LOOTRUN_LINE.resource()));
+            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
             case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
         }
     }
@@ -287,9 +287,9 @@ public final class LootrunRenderer {
     }
 
     private static void renderTexturedPoint(ColoredPoint start, ColoredPoint end, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        Vec3 camPos = McUtils.mc().gameRenderer.getMainCamera().getPosition();
-        Vec3 startVec = start.vec3();
-        Vec3 endVec = end.vec3();
+        Vector3f camPos = McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
+        Vector3f startVec = start.vec3().toVector3f();
+        Vector3f endVec = end.vec3().toVector3f();
         int color = start.color();
 
         // vertex position delta to starting point
@@ -298,11 +298,11 @@ public final class LootrunRenderer {
         Vector3f pos3 = new Vector3f(0.5f, 0.24f, 0.5f);
         Vector3f pos4 = new Vector3f(-0.5f, 0.24f, 0.5f);
 
-        Vec3 direction = new Vec3(endVec.x, endVec.y, endVec.z).subtract(startVec).normalize();
+        Vector3f direction = new Vector3f(endVec.x, endVec.y, endVec.z).sub(startVec).normalize();
 
         // rotation angle to point surface normal to end position
-        // 1.5707963267948966 is the result of Math.toRadians(90f), so the arrow point to the end position instead
-        float xAngle = (float) ((float) Math.acos(direction.y / direction.length()) - 1.5707963267948966);
+        // rotate the angle so the arrow point to the end position instead of surface normal
+        float xAngle = (float) ((float) Math.acos(direction.y / direction.length()) - Math.PI / 2);
         float yAngle = (float) Math.atan2(direction.x, direction.z);
 
         Quaternionf yRot = new Quaternionf().rotateY(yAngle);
@@ -316,10 +316,10 @@ public final class LootrunRenderer {
         pos4.rotate(yRot).rotate(xRot);
 
         // transform position back to world space and then to position camera delta
-        pos1 = pos1.add(startVec.toVector3f()).sub(camPos.toVector3f());
-        pos2 = pos2.add(startVec.toVector3f()).sub(camPos.toVector3f());
-        pos3 = pos3.add(startVec.toVector3f()).sub(camPos.toVector3f());
-        pos4 = pos4.add(startVec.toVector3f()).sub(camPos.toVector3f());
+        pos1 = pos1.add(startVec).sub(camPos);
+        pos2 = pos2.add(startVec).sub(camPos);
+        pos3 = pos3.add(startVec).sub(camPos);
+        pos4 = pos4.add(startVec).sub(camPos);
 
         vertexConsumer.vertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z).color(color).uv(0, 1).endVertex();
         vertexConsumer.vertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z).color(color).uv(0, 0).endVertex();

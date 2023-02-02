@@ -9,6 +9,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import java.util.OptionalDouble;
 import java.util.function.Function;
+
+import com.wynntils.utils.render.Texture;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -33,6 +35,22 @@ public class CustomRenderType extends RenderType {
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
+
+    public static final RenderType LOOTRUN_QUAD = RenderType.create(
+            "wynntils_lootrun_quad",
+            DefaultVertexFormat.POSITION_COLOR_TEX,
+            Mode.QUADS,
+            256,
+            false,
+            false,
+            CompositeState.builder()
+                    .setShaderState(POSITION_COLOR_TEX_SHADER)
+                    .setCullState(NO_CULL)
+                    .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.resource(), false, false))
+                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                    .setWriteMaskState(COLOR_WRITE)
+                    .createCompositeState(false));
+
 
     public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
             "wynntils_position_color_triangle_strip",
@@ -89,28 +107,8 @@ public class CustomRenderType extends RenderType {
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
-    private static final Function<ResourceLocation, RenderType> LOOTRUN_QUAD =
-            Util.memoize(resource -> RenderType.create(
-                    "wynntils_lootrun_quad",
-                    DefaultVertexFormat.POSITION_COLOR_TEX,
-                    Mode.QUADS,
-                    256,
-                    false,
-                    false,
-                    CompositeState.builder()
-                            .setShaderState(POSITION_COLOR_TEX_SHADER)
-                            .setCullState(NO_CULL)
-                            .setTextureState(new TextureStateShard(resource, false, false))
-                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
-                            .setWriteMaskState(COLOR_WRITE)
-                            .createCompositeState(false)));
-
     public static RenderType getPositionColorTextureQuad(ResourceLocation resource) {
         return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
-    }
-
-    public static RenderType getLootrunTextureQuad(ResourceLocation resource) {
-        return LOOTRUN_QUAD.apply(resource);
     }
 
     public static RenderType getPositionTextureQuad(ResourceLocation resource) {
