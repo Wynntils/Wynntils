@@ -29,11 +29,18 @@ import java.util.stream.Collectors;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
-    private static final Pattern FRIEND_LIST_MESSAGE_PATTERN = Pattern.compile(".+'s friends \\(.+\\): (.*)");
-    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_1 =
-            Pattern.compile("§eWe couldn't find any friends\\.");
-    private static final Pattern FRIEND_NO_LIST_MESSAGE_PATTERN_2 =
-            Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
+    // region Friend Regexes
+    /*
+    Regexes should be named with this format:
+    FRIEND_ACTION_(DETAIL)
+    where:
+    FRIEND should be the first word
+    ACTION should be something like ADD, LIST, etc.
+    DETAIL (optional) should be a descriptor if necessary
+     */
+    private static final Pattern FRIEND_LIST = Pattern.compile(".+'s friends \\(.+\\): (.*)");
+    private static final Pattern FRIEND_LIST_FAIL_1 = Pattern.compile("§eWe couldn't find any friends\\.");
+    private static final Pattern FRIEND_LIST_FAIL_2 = Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =
             Pattern.compile("§e(.+) has been removed from your friends!");
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
@@ -48,22 +55,22 @@ public final class FriendsModel extends Model {
 
     public FriendsModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
-        resetRelations();
+        resetFriendData();
     }
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
         if (!Models.WorldState.onWorld()) return;
 
-        requestFriendListUpdate();
+        requestFriendData();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) {
-            requestFriendListUpdate();
+            requestFriendData();
         } else {
-            resetRelations();
+            resetFriendData();
         }
     }
 
@@ -96,7 +103,7 @@ public final class FriendsModel extends Model {
             }
 
             // Skip first message of two, but still expect more messages
-            if (FRIEND_NO_LIST_MESSAGE_PATTERN_1.matcher(coded).matches()) {
+            if (FRIEND_LIST_FAIL_1.matcher(coded).matches()) {
                 event.setCanceled(true);
                 return;
             }
@@ -104,7 +111,7 @@ public final class FriendsModel extends Model {
     }
 
     private boolean tryParseNoFriendList(String coded) {
-        if (FRIEND_NO_LIST_MESSAGE_PATTERN_2.matcher(coded).matches()) {
+        if (FRIEND_LIST_FAIL_2.matcher(coded).matches()) {
             WynntilsMod.info("Player has no friends!");
             return true;
         }
@@ -141,7 +148,7 @@ public final class FriendsModel extends Model {
     }
 
     private boolean tryParseFriendList(String unformatted) {
-        Matcher matcher = FRIEND_LIST_MESSAGE_PATTERN.matcher(unformatted);
+        Matcher matcher = FRIEND_LIST.matcher(unformatted);
         if (!matcher.matches()) return false;
 
         String[] friendList = matcher.group(1).split(", ");
@@ -153,13 +160,13 @@ public final class FriendsModel extends Model {
         return true;
     }
 
-    private void resetRelations() {
+    private void resetFriendData() {
         friends = new HashSet<>();
 
         WynntilsMod.postEvent(new RelationsUpdateEvent.FriendList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
     }
 
-    public void requestFriendListUpdate() {
+    public void requestFriendData() {
         if (McUtils.player() == null) return;
 
         expectingFriendMessage = true;
