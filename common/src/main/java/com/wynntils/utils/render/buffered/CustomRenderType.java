@@ -89,8 +89,28 @@ public class CustomRenderType extends RenderType {
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
+    private static final Function<ResourceLocation, RenderType> LOOTRUN_QUAD =
+            Util.memoize(resource -> RenderType.create(
+                    "wynntils_lootrun_quad",
+                    DefaultVertexFormat.POSITION_COLOR_TEX,
+                    Mode.QUADS,
+                    256,
+                    false,
+                    false,
+                    CompositeState.builder()
+                            .setShaderState(POSITION_COLOR_TEX_SHADER)
+                            .setCullState(NO_CULL)
+                            .setTextureState(new TextureStateShard(resource, false, false))
+                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                            .setWriteMaskState(COLOR_WRITE)
+                            .createCompositeState(false)));
+
     public static RenderType getPositionColorTextureQuad(ResourceLocation resource) {
         return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
+    }
+
+    public static RenderType getLootrunTextureQuad(ResourceLocation resource) {
+        return LOOTRUN_QUAD.apply(resource);
     }
 
     public static RenderType getPositionTextureQuad(ResourceLocation resource) {
