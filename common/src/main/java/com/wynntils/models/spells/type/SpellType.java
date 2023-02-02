@@ -41,6 +41,8 @@ public enum SpellType {
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", 0, 0);
 
+    public static final int MAX_SPELL = 4;
+
     private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
     private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
     private static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
