@@ -16,9 +16,8 @@ import com.wynntils.utils.colors.CustomColor;
 public class LootrunFeature extends StateManagedFeature {
     public static LootrunFeature INSTANCE;
 
-    // TODO: Add textured path type
-    //    @Config
-    //    public PathType pathType = PathType.TEXTURED;
+    @Config
+    public PathType pathType = PathType.TEXTURED;
 
     @Config
     public CustomColor activePathColor = CommonColors.LIGHT_BLUE;

@@ -22,7 +22,7 @@ import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.players.hades.objects.PlayerStatus;
@@ -115,7 +115,7 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public void onFriendListUpdate(RelationsUpdateEvent.FriendList event) {
+    public void onFriendListUpdate(HadesRelationsUpdateEvent.FriendList event) {
         if (!isConnected()) return;
         if (!HadesFeature.INSTANCE.shareWithFriends) return;
 
@@ -126,7 +126,7 @@ public final class HadesModel extends Model {
     }
 
     @SubscribeEvent
-    public void onPartyListUpdate(RelationsUpdateEvent.PartyList event) {
+    public void onPartyListUpdate(HadesRelationsUpdateEvent.PartyList event) {
         if (!isConnected()) return;
         if (!HadesFeature.INSTANCE.shareWithParty) return;
 

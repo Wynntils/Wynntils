@@ -14,6 +14,7 @@ import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public final class LootrunRenderer {
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
@@ -132,7 +135,10 @@ public final class LootrunRenderer {
         Level level = McUtils.mc().level;
         if (level == null) return;
 
-        renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
+        switch (LootrunFeature.INSTANCE.pathType) {
+            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
+            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
+        }
     }
 
     private static void renderNonTexturedLootrunPoints(
@@ -191,6 +197,72 @@ public final class LootrunRenderer {
         }
     }
 
+    private static void renderTexturedLootrunPoints(
+            PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
+
+        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        poseStack.pushPose();
+        poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+
+        for (ColoredPath locationsInRoute : locations) {
+            VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
+            List<Pair<ColoredPoint, ColoredPoint>> toRender = new ArrayList<>();
+            boolean sourceBatchEnded = false;
+            BlockPos lastBlockPos = null;
+
+            boolean pauseDraw = false;
+
+            for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
+                ColoredPoint point = locationsInRoute.points().get(i);
+                BlockPos blockPos = new BlockPos(point.vec3());
+
+                ColoredPoint end = locationsInRoute
+                        .points()
+                        .get(Math.min(locationsInRoute.points().size() - 1, i + 1));
+                Pair<ColoredPoint, ColoredPoint> pointPair = new Pair<>(point, end);
+
+                if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
+                    if (!toRender.isEmpty()) {
+                        toRender.add(pointPair);
+                    }
+                } else {
+                    BlockValidness blockValidness = BlockValidness.checkBlockValidness(level, point);
+
+                    if (blockValidness == BlockValidness.VALID) {
+                        pauseDraw = false;
+                        if (sourceBatchEnded) {
+                            consumer = BUFFER_SOURCE.getBuffer(renderType);
+                            sourceBatchEnded = false;
+                        }
+                        renderTexturedQueuedPoints(toRender, poseStack, consumer);
+                        toRender.clear();
+                    } else if (blockValidness == BlockValidness.HAS_BARRIER) {
+                        pauseDraw = true;
+                        toRender.clear();
+                    } else {
+                        pauseDraw = false;
+                        toRender.add(pointPair);
+                        continue;
+                    }
+                }
+
+                lastBlockPos = blockPos;
+
+                if (!pauseDraw) {
+                    renderTexturedPoint(pointPair, poseStack, consumer);
+                } else if (!sourceBatchEnded) {
+                    BUFFER_SOURCE.endBatch();
+                    sourceBatchEnded = true;
+                }
+            }
+            if (!sourceBatchEnded) {
+                renderTexturedQueuedPoints(toRender, poseStack, consumer);
+                BUFFER_SOURCE.endBatch();
+            }
+        }
+        poseStack.popPose();
+    }
+
     private static void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
         for (ColoredPoint location : toRender.points()) {
             renderPoint(consumer, lastMatrix, location);
@@ -203,6 +275,78 @@ public final class LootrunRenderer {
         consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
                 .color(pathColor)
                 .normal(0, 0, 1)
+                .endVertex();
+    }
+
+    private static void renderTexturedQueuedPoints(
+            List<Pair<ColoredPoint, ColoredPoint>> pointPairList, PoseStack poseStack, VertexConsumer vertexConsumer) {
+        for (Pair<ColoredPoint, ColoredPoint> pointPair : pointPairList) {
+            renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
+        }
+    }
+
+    private static void renderTexturedPoint(
+            Pair<ColoredPoint, ColoredPoint> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
+        renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
+    }
+
+    private static void renderTexturedPoint(
+            ColoredPoint start, ColoredPoint end, PoseStack poseStack, VertexConsumer vertexConsumer) {
+        Vector3f camPos =
+                McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
+        Vector3f startVec = start.vec3().toVector3f();
+        Vector3f endVec = end.vec3().toVector3f();
+        int color = start.color();
+
+        // vertex position delta to starting point
+        Vector3f pos1 = new Vector3f(-0.5f, 0.24f, -0.5f);
+        Vector3f pos2 = new Vector3f(0.5f, 0.24f, -0.5f);
+        Vector3f pos3 = new Vector3f(0.5f, 0.24f, 0.5f);
+        Vector3f pos4 = new Vector3f(-0.5f, 0.24f, 0.5f);
+
+        Vector3f direction =
+                new Vector3f(endVec.x, endVec.y, endVec.z).sub(startVec).normalize();
+
+        // rotation angle to point surface normal to end position
+        // rotate the angle so the arrow point to the end position instead of surface normal
+        float xAngle = (float) ((float) Math.acos(direction.y / direction.length()) - Math.PI / 2);
+        float yAngle = (float) Math.atan2(direction.x, direction.z);
+
+        Quaternionf yRot = new Quaternionf().rotateY(yAngle);
+        Vector3f xRotAxis = new Vector3f(1, 0, 0).rotate(yRot);
+        Quaternionf xRot = new Quaternionf().rotateAxis(xAngle, xRotAxis);
+
+        // apply vertex rotation
+        pos1.rotate(yRot).rotate(xRot);
+        pos2.rotate(yRot).rotate(xRot);
+        pos3.rotate(yRot).rotate(xRot);
+        pos4.rotate(yRot).rotate(xRot);
+
+        // transform position back to world space and then to position camera delta
+        pos1 = pos1.add(startVec).sub(camPos);
+        pos2 = pos2.add(startVec).sub(camPos);
+        pos3 = pos3.add(startVec).sub(camPos);
+        pos4 = pos4.add(startVec).sub(camPos);
+
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z)
+                .color(color)
+                .uv(0, 1)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z)
+                .color(color)
+                .uv(0, 0)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z)
+                .color(color)
+                .uv(1, 0)
+                .endVertex();
+        vertexConsumer
+                .vertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z)
+                .color(color)
+                .uv(1, 1)
                 .endVertex();
     }
 }
