@@ -16,6 +16,6 @@ import org.lwjgl.glfw.GLFW;
 public class PartyManagementScreenFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind openPartyManagementScreen =
-            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_RIGHT_BRACKET, true, () -> McUtils.mc()
+            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_P, true, () -> McUtils.mc()
                     .setScreen(PartyManagementScreen.create()));
 }
