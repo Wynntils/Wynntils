@@ -48,6 +48,7 @@ public final class FriendsModel extends Model {
     private static final Pattern JOIN_PATTERN = Pattern.compile(
             "(?:§a|§r§7)(?:§o)?(.+)§r(?:§2|§8(?:§o)?) has logged into server §r(?:§a|§7(?:§o)?)(?<server>.+)§r(?:§2|§8(?:§o)?) as (?:§r§a|§r§7(?:§o)?)an? (?<class>.+)");
     private static final Pattern LEAVE_PATTERN = Pattern.compile("(?:§a|§r§7)(.+) left the game\\.");
+    // endregion
 
     private boolean expectingFriendMessage = false;
 
