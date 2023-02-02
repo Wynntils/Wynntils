@@ -5,18 +5,16 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.players.event.FriendConnectionEvent;
-import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.event.FriendsEvent;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -84,11 +82,11 @@ public final class FriendsModel extends Model {
 
         Matcher joinMatcher = JOIN_PATTERN.matcher(coded);
         if (joinMatcher.matches()) {
-            WynntilsMod.postEvent(new FriendConnectionEvent.Join(joinMatcher.group(1)));
+            WynntilsMod.postEvent(new FriendsEvent.Joined(joinMatcher.group(1)));
         } else {
             Matcher leaveMatcher = LEAVE_PATTERN.matcher(coded);
             if (leaveMatcher.matches()) {
-                WynntilsMod.postEvent(new FriendConnectionEvent.Leave(leaveMatcher.group(1)));
+                WynntilsMod.postEvent(new FriendsEvent.Left(leaveMatcher.group(1)));
             }
         }
 
@@ -128,8 +126,9 @@ public final class FriendsModel extends Model {
             WynntilsMod.info("Player has removed friend: " + player);
 
             friends.remove(player);
-            WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.FriendList(Set.of(player), RelationsUpdateEvent.ChangeType.REMOVE));
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.FriendList(
+                    Set.of(player), HadesRelationsUpdateEvent.ChangeType.REMOVE));
+            WynntilsMod.postEvent(new FriendsEvent.Removed(player));
             return true;
         }
 
@@ -141,7 +140,8 @@ public final class FriendsModel extends Model {
 
             friends.add(player);
             WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.FriendList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
+                    new HadesRelationsUpdateEvent.FriendList(Set.of(player), HadesRelationsUpdateEvent.ChangeType.ADD));
+            WynntilsMod.postEvent(new FriendsEvent.Added(player));
             return true;
         }
 
@@ -155,7 +155,9 @@ public final class FriendsModel extends Model {
         String[] friendList = matcher.group(1).split(", ");
 
         friends = Arrays.stream(friendList).collect(Collectors.toSet());
-        WynntilsMod.postEvent(new RelationsUpdateEvent.FriendList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(
+                new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new FriendsEvent.Listed());
 
         WynntilsMod.info("Successfully updated friend list, user has " + friendList.length + " friends.");
         return true;
@@ -164,7 +166,8 @@ public final class FriendsModel extends Model {
     private void resetData() {
         friends = new HashSet<>();
 
-        WynntilsMod.postEvent(new RelationsUpdateEvent.FriendList(friends, RelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(
+                new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
     public void requestData() {
@@ -177,20 +180,5 @@ public final class FriendsModel extends Model {
 
     public Set<String> getFriends() {
         return friends;
-    }
-
-    @SubscribeEvent
-    public void onFriendJoin(FriendConnectionEvent.Join e) {
-        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
-    }
-
-    @SubscribeEvent
-    public void onFriendLeave(FriendConnectionEvent.Leave e) {
-        if (McUtils.mc().screen instanceof PartyManagementScreen partyManagementScreen) {
-            // Delay the reload to allow the scoreboard to update
-            Managers.TickScheduler.scheduleLater(partyManagementScreen::reloadSuggestedPlayersWidgets, 3);
-        }
     }
 }

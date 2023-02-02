@@ -58,13 +58,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         return new PartyManagementScreen();
     }
 
-    public static void reloadWidgetsIfScreenOpen() {
-        if (McUtils.mc().screen instanceof PartyManagementScreen screen) {
-            screen.reloadMembersWidgets();
-            screen.reloadSuggestedPlayersWidgets();
-        }
-    }
-
     @Override
     public void init() {
         refreshAll();
@@ -344,7 +337,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void refreshAll() {
         Models.Party.requestData();
-        reloadWidgetsIfScreenOpen();
+        reloadMembersWidgets();
+        reloadSuggestedPlayersWidgets();
     }
 
     @Override

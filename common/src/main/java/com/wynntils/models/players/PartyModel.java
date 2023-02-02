@@ -11,12 +11,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
-import com.wynntils.models.players.event.RelationsUpdateEvent;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
+import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.HashSet;
@@ -129,7 +129,8 @@ public final class PartyModel extends Model {
             partyLeader = McUtils.player().getName().getString();
             partyMembers = new HashSet<>(Set.of(partyLeader));
             WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
+                    new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+            WynntilsMod.postEvent(new PartyEvent.Listed());
             return true;
         }
 
@@ -139,9 +140,7 @@ public final class PartyModel extends Model {
                 || PARTY_DISBAND_SELF.matcher(coded).matches()) {
             WynntilsMod.info("Player left the party.");
 
-            resetData();
-            WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
+            resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
@@ -159,7 +158,8 @@ public final class PartyModel extends Model {
 
             partyMembers.add(player);
             WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
+                    new HadesRelationsUpdateEvent.PartyList(Set.of(player), HadesRelationsUpdateEvent.ChangeType.ADD));
+            WynntilsMod.postEvent(new PartyEvent.OtherJoined(player));
             return true;
         }
 
@@ -171,7 +171,8 @@ public final class PartyModel extends Model {
 
             partyMembers.add(player);
             WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.ADD));
+                    new HadesRelationsUpdateEvent.PartyList(Set.of(player), HadesRelationsUpdateEvent.ChangeType.ADD));
+            WynntilsMod.postEvent(new PartyEvent.OtherJoined(player));
             return true;
         }
 
@@ -182,8 +183,9 @@ public final class PartyModel extends Model {
             WynntilsMod.info("Other player left player's party: " + player);
 
             partyMembers.remove(player);
-            WynntilsMod.postEvent(
-                    new RelationsUpdateEvent.PartyList(Set.of(player), RelationsUpdateEvent.ChangeType.REMOVE));
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                    Set.of(player), HadesRelationsUpdateEvent.ChangeType.REMOVE));
+            WynntilsMod.postEvent(new PartyEvent.OtherLeft(player));
             return true;
         }
 
@@ -262,7 +264,9 @@ public final class PartyModel extends Model {
         }
 
         inParty = true;
-        WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(
+                new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new PartyEvent.Listed());
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
 
         offlineMembers.clear();
@@ -282,12 +286,14 @@ public final class PartyModel extends Model {
         partyMembers.remove(playerName);
         offlineMembers.remove(playerName);
 
-        WynntilsMod.postEvent(
-                new RelationsUpdateEvent.PartyList(Set.of(playerName), RelationsUpdateEvent.ChangeType.REMOVE));
+        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                Set.of(playerName), HadesRelationsUpdateEvent.ChangeType.REMOVE));
+        WynntilsMod.postEvent(new PartyEvent.OtherLeft(playerName));
     }
 
     /**
      * Resets all party data to a state where the player is not in a party.
+     * Posts events for both PartyEvent and HadesRelationsUpdateEvent.
      */
     private void resetData() {
         partyMembers = new HashSet<>();
@@ -295,7 +301,9 @@ public final class PartyModel extends Model {
         inParty = false;
         offlineMembers = new HashSet<>();
 
-        WynntilsMod.postEvent(new RelationsUpdateEvent.PartyList(partyMembers, RelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(
+                new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new PartyEvent.Listed());
     }
 
     /**
@@ -328,21 +336,16 @@ public final class PartyModel extends Model {
     }
 
     @SubscribeEvent
-    public void onPartyUpdate(RelationsUpdateEvent.PartyList e) {
-        PartyManagementScreen.reloadWidgetsIfScreenOpen();
-    }
-
-    @SubscribeEvent
     public void onSetTeam(SetPlayerTeamEvent e) {
         if (!inParty) return;
 
         if (e.getMethod() == 0) { // ADD, so player joined the server
             offlineMembers.remove(e.getTeamName());
-            PartyManagementScreen.reloadWidgetsIfScreenOpen();
+            WynntilsMod.postEvent(new PartyEvent.OtherReconnected(e.getTeamName()));
         } else if (e.getMethod() == 1) { // REMOVE, so player left the server
             if (partyMembers.contains(e.getTeamName())) {
                 offlineMembers.add(e.getTeamName());
-                PartyManagementScreen.reloadWidgetsIfScreenOpen();
+                WynntilsMod.postEvent(new PartyEvent.OtherDisconnected(e.getTeamName()));
             }
         }
     }
