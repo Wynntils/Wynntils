@@ -6,8 +6,8 @@ package com.wynntils.models.stats;
 
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.type.GearAttackSpeed;
-import com.wynntils.models.gearinfo.type.GearMajorId;
+import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;

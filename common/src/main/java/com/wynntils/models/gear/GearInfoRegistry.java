@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gear;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -19,16 +19,16 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.type.GearAttackSpeed;
-import com.wynntils.models.gearinfo.type.GearDropType;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearMajorId;
-import com.wynntils.models.gearinfo.type.GearMaterial;
-import com.wynntils.models.gearinfo.type.GearMetaInfo;
-import com.wynntils.models.gearinfo.type.GearRequirements;
-import com.wynntils.models.gearinfo.type.GearRestrictions;
-import com.wynntils.models.gearinfo.type.GearTier;
-import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearDropType;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearMajorId;
+import com.wynntils.models.gear.type.GearMaterial;
+import com.wynntils.models.gear.type.GearMetaInfo;
+import com.wynntils.models.gear.type.GearRequirements;
+import com.wynntils.models.gear.type.GearRestrictions;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;

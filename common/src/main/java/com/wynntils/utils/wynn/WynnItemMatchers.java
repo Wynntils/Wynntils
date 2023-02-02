@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;

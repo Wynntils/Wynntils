@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.properties;
 
-import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gear.type.GearTier;
 
 public interface GearTierItemProperty {
     GearTier getGearTier();

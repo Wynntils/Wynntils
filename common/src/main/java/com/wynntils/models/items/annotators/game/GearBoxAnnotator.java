@@ -6,8 +6,8 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gearinfo.type.GearTier;
-import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;

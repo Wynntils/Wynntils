@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.tooltip;
+package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;

@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.tooltip;
+package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
-import com.wynntils.models.gearinfo.type.GearMajorId;
-import com.wynntils.models.gearinfo.type.GearRestrictions;
-import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearMajorId;
+import com.wynntils.models.gear.type.GearRestrictions;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import java.util.ArrayList;

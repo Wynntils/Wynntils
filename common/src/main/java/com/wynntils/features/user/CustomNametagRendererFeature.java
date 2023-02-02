@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
