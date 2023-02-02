@@ -7,6 +7,7 @@ package com.wynntils.utils.render.buffered;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.wynntils.utils.render.Texture;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import net.minecraft.Util;
@@ -32,6 +33,21 @@ public class CustomRenderType extends RenderType {
                     .setOutputState(ITEM_ENTITY_TARGET)
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .setCullState(NO_CULL)
+                    .createCompositeState(false));
+
+    public static final RenderType LOOTRUN_QUAD = RenderType.create(
+            "wynntils_lootrun_quad",
+            DefaultVertexFormat.POSITION_COLOR_TEX,
+            Mode.QUADS,
+            256,
+            false,
+            false,
+            CompositeState.builder()
+                    .setShaderState(POSITION_COLOR_TEX_SHADER)
+                    .setCullState(NO_CULL)
+                    .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.resource(), false, false))
+                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));
 
     public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
