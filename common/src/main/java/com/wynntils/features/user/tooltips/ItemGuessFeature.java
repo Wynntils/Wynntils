@@ -43,10 +43,10 @@ public class ItemGuessFeature extends UserFeature {
 
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
         List<Component> addon = new ArrayList<>();
-        List<String> itemPossibilities = Models.Gear.getPossibleGears(gearBoxItem);
+        List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
         GearTier gearTier = gearBoxItem.getGearTier();
 
-        if (itemPossibilities.isEmpty()) return addon; // nothing to put in tooltip
+        if (possibleGear.isEmpty()) return addon; // nothing to put in tooltip
 
         addon.add(Component.literal("- ")
                 .withStyle(ChatFormatting.GREEN)
@@ -55,14 +55,12 @@ public class ItemGuessFeature extends UserFeature {
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
-        for (String itemName : itemPossibilities) {
-            GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
-
+        for (GearInfo gearInfo : possibleGear) {
             int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 
-            MutableComponent itemDesc = Component.literal(itemName).withStyle(gearTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(gearInfo.name()).withStyle(gearTier.getChatFormatting());
 
-            if (Models.Favorites.isFavorite(itemName)) {
+            if (Models.Favorites.isFavorite(gearInfo.name())) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
             }
 

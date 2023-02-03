@@ -42,23 +42,22 @@ public final class GearModel extends Model {
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
-    private Map<GearBoxItem, List<String>> possibilitiesCache = new HashMap<>();
+    private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
     }
 
-    public List<String> getPossibleGears(GearBoxItem gearBoxItem) {
-        List<String> possibilities = possibilitiesCache.get(gearBoxItem);
+    public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
+        List<GearInfo> possibilities = possibilitiesCache.get(gearBoxItem);
         if (possibilities != null) return possibilities;
 
-        List<String> possibleGear = getAllGearInfos()
+        List<GearInfo> possibleGear = getAllGearInfos()
                 .filter(gear -> gear.type() == gearBoxItem.getGearType()
                         && gear.tier() == gearBoxItem.getGearTier()
                         && gearBoxItem
                                 .getLevelRange()
                                 .inRange(gear.requirements().level()))
-                .map(gearInfo -> gearInfo.name())
                 .toList();
         possibilitiesCache.put(gearBoxItem, possibleGear);
 
