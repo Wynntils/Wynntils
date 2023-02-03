@@ -1,9 +1,21 @@
+## [0.0.2-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.168...v0.0.2-alpha.169) (2023-02-03)
+
+
+### Bug Fixes
+
+* Problem in Party Management with friends where the name capitalization differet from IGN ([#1119](https://github.com/Wynntils/Artemis/issues/1119)) ([728ce64](https://github.com/Wynntils/Artemis/commit/728ce645d51124cabe34db1310f51450d1e20ff5))
+
 ## [0.0.2-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.167...v0.0.2-alpha.168) (2023-02-02)
 
 
 ### Bug Fixes
 
 * Clicking on invisible LabelPois sets waypoint ([#1118](https://github.com/Wynntils/Artemis/issues/1118)) ([145ca6d](https://github.com/Wynntils/Artemis/commit/145ca6dd6dc59a45f77f2bf7ad4a7ab6aff6b149))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.168 [skip ci] ([83db888](https://github.com/Wynntils/Artemis/commit/83db888ac10b1639e39afe323357badc89f153f5))
 
 ## [0.0.2-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.166...v0.0.2-alpha.167) (2023-02-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.165 [skip ci] ([f1fcf95](https://github.com/Wynntils/Artemis/commit/f1fcf95749eac7449c37fb2c8025cf53e38928c8))
-
-## [0.0.2-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.163...v0.0.2-alpha.164) (2023-02-02)
-
-
-### New Features
-
-* Make ItemScreenshotFeature disk saving optional ([#1101](https://github.com/Wynntils/Artemis/issues/1101)) ([cfcdbdf](https://github.com/Wynntils/Artemis/commit/cfcdbdf0ab279b1080172be811d4dab95123f8ab))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.164 [skip ci] ([2ad0b34](https://github.com/Wynntils/Artemis/commit/2ad0b34db903edea02c206a88347838ae4649fb2))
 
