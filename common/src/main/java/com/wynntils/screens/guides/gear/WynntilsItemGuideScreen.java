@@ -128,9 +128,8 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
     private List<GuideGearItemStack> getAllGearItems() {
         if (allGearItems.isEmpty()) {
             // Populate list
-            allGearItems = Models.Gear.getAllGearInfos()
-                    .map(GuideGearItemStack::new)
-                    .toList();
+            allGearItems =
+                    Models.Gear.getAllGearInfos().map(GuideGearItemStack::new).toList();
         }
 
         return allGearItems;

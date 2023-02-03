@@ -12,14 +12,12 @@ import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.type.RangedValue;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,6 +43,7 @@ public final class GearModel extends Model {
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
+    private Map<GearBoxItem, List<String>> possibilitiesCache = new HashMap<>();
 
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
@@ -53,20 +52,20 @@ public final class GearModel extends Model {
     }
 
     public List<String> getPossibleGears(GearBoxItem gearBoxItem) {
-        RangedValue levelRange = gearBoxItem.getLevelRange();
-        GearType gearType = gearBoxItem.getGearType();
-        GearTier gearTier = gearBoxItem.getGearTier();
+        List<String> possibilities = possibilitiesCache.get(gearBoxItem);
+        if (possibilities != null) return possibilities;
 
-        ItemGuessProfile guessProfile = ItemGuessProfile.getItemGuess(levelRange.asString());
-        if (guessProfile == null) return List.of();
+        List<String> possibleGear = getAllGearInfos()
+                .filter(gear -> gear.type() == gearBoxItem.getGearType()
+                        && gear.tier() == gearBoxItem.getGearTier()
+                        && gearBoxItem
+                                .getLevelRange()
+                                .inRange(gear.requirements().level()))
+                .map(gearInfo -> gearInfo.name())
+                .toList();
+        possibilitiesCache.put(gearBoxItem, possibleGear);
 
-        Map<GearTier, List<String>> rarityMap = guessProfile.getItems().get(gearType);
-        if (rarityMap == null) return List.of();
-
-        List<String> itemPossibilities = rarityMap.get(gearTier);
-        if (itemPossibilities == null) return List.of();
-
-        return itemPossibilities;
+        return possibleGear;
     }
 
     public void reloadData() {
