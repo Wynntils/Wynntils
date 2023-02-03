@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.ItemIdFix;
+import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,15 +41,12 @@ public record GearMaterial(ItemStack itemStack) {
     }
 
     public static GearMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
-        String itemId;
+        String toIdString = ItemIdFix.getItem(itemTypeCode);
+        String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
+        String itemId = alternativeName != null ? alternativeName : toIdString;
 
-        if (itemTypeCode == 397 && damageCode == 2) {
-            // Special case for Mama Zomble's memory
-            itemId = "minecraft:zombie_head";
-        } else {
-            itemId = ItemIdFix.getItem(itemTypeCode);
-        }
-
+        // FIXME: The vanilla lookup still fails for e.g. Totem of Undying.
+        // In this case, AIR is returned.
         ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
 
         return new GearMaterial(itemStack);

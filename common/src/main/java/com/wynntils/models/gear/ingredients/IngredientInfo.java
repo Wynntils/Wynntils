@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.gear.ingredients;
 
+import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
@@ -30,4 +32,6 @@ public record IngredientInfo(
         int tier,
         int level,
         Optional<String> apiName,
+        GearMaterial material,
+        List<ProfessionType> professions,
         List<Pair<StatType, StatPossibleValues>> variableStats) {}

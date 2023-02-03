@@ -6,17 +6,20 @@ package com.wynntils.models.gear.ingredients;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
+import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
@@ -37,6 +40,7 @@ import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -118,13 +122,6 @@ public class IngredientInfoRegistry {
 
             /*
              json fields:
-            *      "name"
-            *      "tier"
-                  "skills"
-            *      "level"
-
-                  "sprite"
-            *      "displayName"
 
                   "itemOnlyIDs"
                   "consumableOnlyIDs"
@@ -135,9 +132,30 @@ public class IngredientInfoRegistry {
             int tier = JsonUtils.getNullableJsonInt(json, "tier");
             int level = json.get("level").getAsInt();
 
-            List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
+            List<ProfessionType> professions = new ArrayList<>();
+            JsonArray professionsJson = json.get("skills").getAsJsonArray();
+            for (JsonElement professionJson : professionsJson) {
+                String professionName = professionJson.getAsString();
+                ProfessionType professionType = ProfessionType.fromString(professionName);
+                professions.add(professionType);
+            }
 
-            return new IngredientInfo(name, tier, level, apiNameOpt, variableStats);
+            JsonObject sprite = json.get("sprite").getAsJsonObject();
+            GearMaterial material;
+            if (sprite != null && !sprite.isJsonNull() && sprite.getAsJsonObject().size() != 0) {
+                int id = JsonUtils.getNullableJsonInt(sprite, "id");
+                int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
+
+                material = GearMaterial.fromItemTypeCode(id, damage);
+            } else {
+                // FIXME: Bad?
+                WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
+                material = null;
+            }
+
+           List<Pair<StatType, StatPossibleValues>> variableStats = null;//parseVariableStats(json);
+
+            return new IngredientInfo(name, tier, level, apiNameOpt, material, Collections.unmodifiableList(professions), variableStats);
         }
 
         private GearType parseType(JsonObject json) {
