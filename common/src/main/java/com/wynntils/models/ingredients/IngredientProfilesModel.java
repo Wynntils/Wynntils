@@ -76,8 +76,6 @@ public final class IngredientProfilesModel extends Model {
     private void tryLoadInvertedList() {
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_ITEM_LIST);
         dl.handleJsonObject(json -> {
-            Type hashmapType = new TypeToken<HashMap<String, String>>() {}.getType();
-
             invertedList = WynntilsMod.GSON.fromJson(
                     json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
         });
