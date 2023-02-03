@@ -92,6 +92,11 @@
     "md5": "959bf4ef2cab8aa23b7666fea0315e64"
   },
   {
+    "id": "dataStaticIngredients",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json",
+    "md5": "a7aa8bcf7b682f31d343eb47fc4ec821"
+  },
+  {
     "id": "dataStaticItemGuesses",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/item_guesses.json",
     "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8"
