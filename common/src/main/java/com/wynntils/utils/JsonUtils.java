@@ -31,5 +31,4 @@ public final class JsonUtils {
 
         return jsonElement.getAsBoolean();
     }
-
 }

@@ -30,7 +30,7 @@ public enum GearAttackSpeed {
             return attackSpeed;
         } catch (IllegalArgumentException e) {
             WynntilsMod.warn("Invalid gear attack speed: " + str);
-           return null;
+            return null;
         }
     }
 
