@@ -4,20 +4,17 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.itemguess.ItemGuessProfile;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import java.util.List;
-import java.util.Map;
+import com.wynntils.utils.type.RangedValue;
 
 public class GearBoxItem extends GameItem implements GearTierItemProperty {
     private final GearType gearType;
     private final GearTier gearTier;
-    private final String levelRange;
+    private final RangedValue levelRange;
 
-    public GearBoxItem(GearType gearType, GearTier gearTier, String levelRange) {
+    public GearBoxItem(GearType gearType, GearTier gearTier, RangedValue levelRange) {
         this.gearType = gearType;
         this.gearTier = gearTier;
         this.levelRange = levelRange;
@@ -27,26 +24,13 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
         return gearType;
     }
 
-    public String getLevelRange() {
-        return levelRange;
-    }
-
-    public List<String> getItemPossibilities() {
-        ItemGuessProfile guessProfile = Models.Gear.getItemGuess(levelRange);
-        if (guessProfile == null) return List.of();
-
-        Map<GearTier, List<String>> rarityMap = guessProfile.getItems().get(gearType);
-        if (rarityMap == null) return List.of();
-
-        List<String> itemPossibilities = rarityMap.get(gearTier);
-        if (itemPossibilities == null) return List.of();
-
-        return itemPossibilities;
-    }
-
     @Override
     public GearTier getGearTier() {
         return gearTier;
+    }
+
+    public RangedValue getLevelRange() {
+        return levelRange;
     }
 
     @Override

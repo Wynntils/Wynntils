@@ -5,6 +5,7 @@
 package com.wynntils.models.favorites;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.WynnItem;
@@ -59,7 +60,7 @@ public final class FavoritesModel extends Model {
         }
 
         if (wynnItem instanceof GearBoxItem gearBoxItem) {
-            for (String possibleItem : gearBoxItem.getItemPossibilities()) {
+            for (String possibleItem : Models.Gear.getPossibleGears(gearBoxItem)) {
                 if (isFavorite(possibleItem)) {
                     return true;
                 }
