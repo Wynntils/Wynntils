@@ -132,7 +132,7 @@ public class IngredientInfoRegistry {
                   "ingredientPositionModifiers"
              */
 
-            int tier = json.get("tier").getAsInt();
+            int tier = JsonUtils.getNullableJsonInt(json, "tier");
             int level = json.get("level").getAsInt();
 
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);

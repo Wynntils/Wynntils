@@ -15,4 +15,12 @@ public final class JsonUtils {
 
         return jsonElement.getAsString();
     }
+
+    public static int getNullableJsonInt(JsonObject json, String key) {
+        JsonElement jsonElement = json.get(key);
+        if (jsonElement == null) return 0;
+        if (jsonElement.isJsonNull()) return 0;
+
+        return jsonElement.getAsInt();
+    }
 }
