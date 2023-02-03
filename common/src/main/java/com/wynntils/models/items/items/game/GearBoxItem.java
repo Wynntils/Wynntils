@@ -8,6 +8,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.type.RangedValue;
+import java.util.Objects;
 
 public class GearBoxItem extends GameItem implements GearTierItemProperty {
     private final GearType gearType;
@@ -39,5 +40,18 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
                 + gearType + ", gearTier="
                 + gearTier + ", levelRange='"
                 + levelRange + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GearBoxItem that = (GearBoxItem) o;
+        return gearType == that.gearType && gearTier == that.gearTier && Objects.equals(levelRange, that.levelRange);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gearType, gearTier, levelRange);
     }
 }
