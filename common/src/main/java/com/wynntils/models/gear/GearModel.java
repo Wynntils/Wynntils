@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gear.itemguess.ItemGuessProfile;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
@@ -47,8 +46,6 @@ public final class GearModel extends Model {
 
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
-
-        ItemGuessProfile.init();
     }
 
     public List<String> getPossibleGears(GearBoxItem gearBoxItem) {
