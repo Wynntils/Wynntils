@@ -20,12 +20,10 @@ import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
-import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
@@ -43,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -70,7 +67,8 @@ public class IngredientInfoRegistry {
             Gson ingredientInfoGson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
                     .create();
-            WynncraftIngredientInfoResponse ingredientInfoResponse = ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
+            WynncraftIngredientInfoResponse ingredientInfoResponse =
+                    ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
 
             // Some entries are test entries etc and should be removed
             // FIXME: Is this really needed for ingredients?
@@ -83,8 +81,8 @@ public class IngredientInfoRegistry {
             Map<String, IngredientInfo> altLookupMap = new HashMap<>();
             for (IngredientInfo ingredientInfo : registry) {
                 lookupMap.put(ingredientInfo.name(), ingredientInfo);
-                if (ingredientInfo.metaInfo().apiName().isPresent()) {
-                    altLookupMap.put(ingredientInfo.metaInfo().apiName().get(), ingredientInfo);
+                if (ingredientInfo.apiName().isPresent()) {
+                    altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
                 }
             }
 
@@ -116,17 +114,30 @@ public class IngredientInfoRegistry {
             // does not exist, the api name is the same as the displayName.
             String name = secondaryName.isEmpty() ? primaryName : secondaryName;
             String apiName = secondaryName.isEmpty() ? null : primaryName;
+            Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
-            GearType type = parseType(json);
-            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
-            int powderSlots = json.get("sockets").getAsInt();
+            /*
+             json fields:
+            *      "name"
+            *      "tier"
+                  "skills"
+            *      "level"
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, apiName, type);
-            GearRequirements requirements = parseRequirements(json, type);
-            FixedStats fixedStats = parseFixedStats(json);
+                  "sprite"
+            *      "displayName"
+
+                  "itemOnlyIDs"
+                  "consumableOnlyIDs"
+                  "identifications"
+                  "ingredientPositionModifiers"
+             */
+
+            int tier = json.get("tier").getAsInt();
+            int level = json.get("level").getAsInt();
+
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
 
-            return new IngredientInfo(name, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
+            return new IngredientInfo(name, tier, level, apiNameOpt, variableStats);
         }
 
         private GearType parseType(JsonObject json) {
@@ -269,28 +280,10 @@ public class IngredientInfoRegistry {
                     ? Optional.empty()
                     : Optional.of(GearAttackSpeed.valueOf(attackSpeedJson.getAsString()));
 
-            List<GearMajorId> majorIds = parseMajorIds(json);
             List<Pair<DamageType, RangedValue>> damages = parseDamages(json);
             List<Pair<Element, Integer>> defences = parseDefences(json);
 
-            return new FixedStats(healthBuff, skillBonuses, attackSpeed, majorIds, damages, defences);
-        }
-
-        private List<GearMajorId> parseMajorIds(JsonObject json) {
-            JsonElement majorIdsJson = json.get("majorIds");
-            if (majorIdsJson == null || majorIdsJson.isJsonNull()) return List.of();
-
-            return majorIdsJson.getAsJsonArray().asList().stream()
-                    .map(majorIdName -> getMajorIdFromString(majorIdName.getAsString()))
-                    .filter(Objects::nonNull)
-                    .toList();
-        }
-
-        protected GearMajorId getMajorIdFromString(String majorIdString) {
-            return this.allMajorIds.stream()
-                    .filter(mId -> mId.id().equals(majorIdString))
-                    .findFirst()
-                    .orElse(null);
+            return new FixedStats(healthBuff, skillBonuses, attackSpeed, null, damages, defences);
         }
 
         private List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {

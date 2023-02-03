@@ -1,36 +1,33 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.gear.ingredients;
 
-import com.wynntils.models.gear.type.GearMetaInfo;
-import com.wynntils.models.gear.type.GearRequirements;
-import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
+import java.util.Optional;
 
 /*
- json fields:
-      "name"
-      "tier"
-      "skills"
-      "level"
+json fields:
+     "name"
+     "tier"
+     "skills"
+     "level"
 
-      "sprite"
-      "displayName"
+     "sprite"
+     "displayName"
 
-      "itemOnlyIDs"
-      "consumableOnlyIDs"
-      "identifications"
-      "ingredientPositionModifiers"
- */
-public record IngredientInfo(String name,
-                             int tier,
-                             GearType type,
-                             int powderSlots,
-                             GearMetaInfo metaInfo,
-                             GearRequirements requirements,
-                             FixedStats fixedStats,
-                             List<Pair<StatType, StatPossibleValues>> variableStats) {
-}
+     "itemOnlyIDs"
+     "consumableOnlyIDs"
+     "identifications"
+     "ingredientPositionModifiers"
+*/
+public record IngredientInfo(
+        String name,
+        int tier,
+        int level,
+        Optional<String> apiName,
+        List<Pair<StatType, StatPossibleValues>> variableStats) {}
