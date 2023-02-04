@@ -1,9 +1,21 @@
+## [0.0.2-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.170...v0.0.2-alpha.171) (2023-02-04)
+
+
+### Miscellaneous Chores
+
+* Clean up code and fix race issue with PartyManagementScreen ([#1122](https://github.com/Wynntils/Artemis/issues/1122)) ([e070dd3](https://github.com/Wynntils/Artemis/commit/e070dd3cfa1f337a6253c1e265f3a4532e95b2a1))
+
 ## [0.0.2-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.169...v0.0.2-alpha.170) (2023-02-04)
 
 
 ### Bug Fixes
 
 * Correctly display treasury and defence colors on guild map ([#1123](https://github.com/Wynntils/Artemis/issues/1123)) ([910f6a0](https://github.com/Wynntils/Artemis/commit/910f6a09365489b1e00f49758507a5e757ca3c09))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.170 [skip ci] ([6aec7a1](https://github.com/Wynntils/Artemis/commit/6aec7a1f469ac7e9bf3a4284b10539f95ef0c7b2))
 
 ## [0.0.2-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.168...v0.0.2-alpha.169) (2023-02-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.167 [skip ci] ([c5d16e1](https://github.com/Wynntils/Artemis/commit/c5d16e11f3e5b0ff373d53224f9b0a0cfede51c2))
-
-## [0.0.2-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.165...v0.0.2-alpha.166) (2023-02-02)
-
-
-### New Features
-
-* Add textured lootrun path ([#1115](https://github.com/Wynntils/Artemis/issues/1115)) ([a3cd361](https://github.com/Wynntils/Artemis/commit/a3cd361d65f7a00fbc767e72d96d78d6f468f32b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.166 [skip ci] ([945b9cc](https://github.com/Wynntils/Artemis/commit/945b9cc78bd59e8e02bdbe2f6c0e2d2b0aaad735))
 
