@@ -1,9 +1,21 @@
+## [0.0.2-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.169...v0.0.2-alpha.170) (2023-02-04)
+
+
+### Bug Fixes
+
+* Correctly display treasury and defence colors on guild map ([#1123](https://github.com/Wynntils/Artemis/issues/1123)) ([910f6a0](https://github.com/Wynntils/Artemis/commit/910f6a09365489b1e00f49758507a5e757ca3c09))
+
 ## [0.0.2-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.168...v0.0.2-alpha.169) (2023-02-03)
 
 
 ### Bug Fixes
 
 * Problem in Party Management with friends where the name capitalization differet from IGN ([#1119](https://github.com/Wynntils/Artemis/issues/1119)) ([728ce64](https://github.com/Wynntils/Artemis/commit/728ce645d51124cabe34db1310f51450d1e20ff5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.169 [skip ci] ([f8e88c1](https://github.com/Wynntils/Artemis/commit/f8e88c1877c07df8092f4dfcc614d62f21c7fd5a))
 
 ## [0.0.2-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.167...v0.0.2-alpha.168) (2023-02-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.166 [skip ci] ([945b9cc](https://github.com/Wynntils/Artemis/commit/945b9cc78bd59e8e02bdbe2f6c0e2d2b0aaad735))
-
-## [0.0.2-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.164...v0.0.2-alpha.165) (2023-02-02)
-
-
-### Bug Fixes
-
-* Totem detection improvements ([#1116](https://github.com/Wynntils/Artemis/issues/1116)) ([5db2d7f](https://github.com/Wynntils/Artemis/commit/5db2d7fde5d61f991c4a6b09a306cdb580219bd0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.165 [skip ci] ([f1fcf95](https://github.com/Wynntils/Artemis/commit/f1fcf95749eac7449c37fb2c8025cf53e38928c8))
 
