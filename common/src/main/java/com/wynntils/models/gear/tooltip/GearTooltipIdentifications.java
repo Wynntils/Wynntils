@@ -34,7 +34,18 @@ public final class GearTooltipIdentifications {
         List<Component> identifications = new ArrayList<>();
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
-        List<StatType> allStats = gearInfo.getVariableStats();
+        ArrayList<StatType> allStats = new ArrayList<>(gearInfo.getVariableStats());
+
+        if (gearInstance != null) {
+            // If the gear instance contains identifications with stat types not present in the
+            // GearInfo, add these as well to the list of stats to be displayed. This should not happen,
+            // but might if the GearInfo from the API is not up to date with the actual gear.
+            gearInstance.identifications().stream()
+                    .map(StatActualValue::statType)
+                    .filter(stat -> !allStats.contains(stat))
+                    .forEach(allStats::add);
+        }
+
         if (allStats.isEmpty()) return identifications;
 
         boolean useDelimiters = style.useDelimiters();
