@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.models.map.pois.IconPoi;
@@ -20,6 +21,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
@@ -202,6 +204,12 @@ public final class MainMapScreen extends AbstractMapScreen {
                 MapFeature.INSTANCE.playerPointerScale,
                 MapFeature.INSTANCE.pointerColor,
                 MapFeature.INSTANCE.pointerType);
+
+        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        if (currentLootrun != null) {
+            MapRenderer.renderLootrunLine(
+                    currentLootrun, 5f, poseStack, centerX, centerZ, mapCenterX, mapCenterZ, currentZoom);
+        }
 
         RenderSystem.disableScissor();
 

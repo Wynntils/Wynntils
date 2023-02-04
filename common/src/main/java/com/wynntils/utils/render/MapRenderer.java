@@ -12,11 +12,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.features.user.map.PointerType;
+import com.wynntils.models.lootruns.LootrunInstance;
+import com.wynntils.models.lootruns.type.ColoredPath;
+import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.Poi;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -81,6 +87,26 @@ public final class MapRenderer {
         BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
+    public static void renderLootrunLine(
+            LootrunInstance lootrun,
+            float lootrunWidth,
+            PoseStack poseStack,
+            float centerX,
+            float centerZ,
+            float mapTextureX,
+            float mapTextureZ,
+            float currentZoom) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        renderLootrun(
+                lootrun, lootrunWidth + 2, true, poseStack, centerX, centerZ, mapTextureX, mapTextureZ, currentZoom);
+        renderLootrun(lootrun, lootrunWidth, false, poseStack, centerX, centerZ, mapTextureX, mapTextureZ, currentZoom);
+
+        RenderSystem.disableBlend();
+    }
+
     public static void renderCursor(
             PoseStack poseStack,
             float renderX,
@@ -127,7 +153,11 @@ public final class MapRenderer {
      * {@param currentZoom} the bigger, the more detailed the map is
      */
     public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
-        double distanceX = poi.getLocation().getX() - mapCenterX;
+        return getRenderX(poi.getLocation().getX(), mapCenterX, centerX, currentZoom);
+    }
+
+    public static float getRenderX(int worldX, float mapCenterX, float centerX, float currentZoom) {
+        double distanceX = worldX - mapCenterX;
         return (float) (centerX + distanceX * currentZoom);
     }
 
@@ -138,7 +168,148 @@ public final class MapRenderer {
      * {@param currentZoom} the bigger, the more detailed the map is
      */
     public static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
-        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
+        return getRenderZ(poi.getLocation().getZ(), mapCenterZ, centerZ, currentZoom);
+    }
+
+    public static float getRenderZ(int worldZ, float mapCenterZ, float centerZ, float currentZoom) {
+        double distanceZ = worldZ - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
+    }
+
+    private static void renderLootrun(
+            LootrunInstance lootrun,
+            float lootrunWidth,
+            boolean outline,
+            PoseStack poseStack,
+            float centerX,
+            float centerZ,
+            float mapTextureX,
+            float mapTextureZ,
+            float currentZoom) {
+        for (List<ColoredPath> value : lootrun.points().values()) {
+            for (ColoredPath path : value) {
+                BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+                bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+
+                List<ColoredPoint> points = path.points();
+                for (int i = 0; i < points.size() - 1; i++) {
+                    ColoredPoint point1 = points.get(i);
+                    Vec3 pos1 = point1.vec3();
+                    float renderX1 = getRenderX((int) pos1.x(), mapTextureX, centerX, currentZoom);
+                    float renderZ1 = getRenderZ((int) pos1.z(), mapTextureZ, centerZ, currentZoom);
+
+                    ColoredPoint point2 = points.get(i + 1);
+                    Vec3 pos2 = point2.vec3();
+                    float renderX2 = getRenderX((int) pos2.x(), mapTextureX, centerX, currentZoom);
+                    float renderZ2 = getRenderZ((int) pos2.z(), mapTextureZ, centerZ, currentZoom);
+
+                    drawLine(
+                            poseStack,
+                            bufferBuilder,
+                            outline ? CommonColors.BLACK.asInt() : point1.color(),
+                            renderX1,
+                            renderZ1,
+                            renderX2,
+                            renderZ2,
+                            0,
+                            lootrunWidth);
+                }
+
+                BufferUploader.drawWithShader(bufferBuilder.end());
+            }
+        }
+    }
+
+    // Taken from RenderUtils and modified for this use case
+    private static void drawLine(
+            PoseStack poseStack,
+            BufferBuilder bufferBuilder,
+            int color,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float z,
+            float width) {
+        Matrix4f matrix = poseStack.last().pose();
+
+        float halfWidth = width / 2;
+
+        if (x1 == x2) {
+            if (y2 < y1) {
+                float tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+            bufferBuilder.vertex(matrix, x1 - halfWidth, y1, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x2 - halfWidth, y2, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x1 + halfWidth, y1, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x2 + halfWidth, y2, z).color(color).endVertex();
+        } else if (y1 == y2) {
+            if (x2 < x1) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+            }
+
+            bufferBuilder.vertex(matrix, x1, y1 - halfWidth, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x1, y1 + halfWidth, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x2, y2 - halfWidth, z).color(color).endVertex();
+            bufferBuilder.vertex(matrix, x2, y2 + halfWidth, z).color(color).endVertex();
+        } else if ((x1 < x2 && y1 < y2) || (x2 < x1 && y2 < y1)) { // Top Left to Bottom Right line
+            if (x2 < x1) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+
+                tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+
+            bufferBuilder
+                    .vertex(matrix, x1 + halfWidth, y1 - halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1 - halfWidth, y1 + halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 + halfWidth, y2 - halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 - halfWidth, y2 + halfWidth, z)
+                    .color(color)
+                    .endVertex();
+        } else { // Top Right to Bottom Left Line
+            if (x1 < x2) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+
+                tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+
+            bufferBuilder
+                    .vertex(matrix, x1 + halfWidth, y1 + halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x1 - halfWidth, y1 - halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 + halfWidth, y2 + halfWidth, z)
+                    .color(color)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, x2 - halfWidth, y2 - halfWidth, z)
+                    .color(color)
+                    .endVertex();
+        }
     }
 }
