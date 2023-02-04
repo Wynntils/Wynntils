@@ -27,7 +27,10 @@ public final class GearTooltipFooter {
         List<Component> footer = new ArrayList<>();
 
         // major ids
-        // FIXME: Missing "<+Entropy: >Meteor falls..." which should be in AQUA.
+        // FIXME: This is not the format Wynncraft uses. We should have a Component
+        // which starts with the major ID name, like this:
+        //  "<+Entropy: >Meteor falls...", and the <> part should be in AQUA.
+        // To fix this, we need a version af wrapTextBySize() that can take in a Component.
         if (!gearInfo.fixedStats().majorIds().isEmpty()) {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
                 Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
