@@ -88,7 +88,8 @@ public final class GearTooltipIdentifications {
             // Normally this should not happen, but if our API data does not match the
             // actual gear, it might, so handle it gracefully
             if (possibleValues == null) {
-                WynntilsMod.warn("Missing stat type in item " + gearInfo.name() + " for stat: " + statType + " which has value: " + statActualValue.value());
+                WynntilsMod.warn("Missing stat type in item " + gearInfo.name() + " for stat: " + statType
+                        + " which has value: " + statActualValue.value());
                 return line;
             }
 
