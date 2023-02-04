@@ -318,9 +318,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderYOffset += 10;
 
         String treasury = ChatFormatting.GRAY
-                + "✦ Treasury: %s".formatted(territoryInfo.getTreasury().asColoredString());
+                + "✦ Treasury: %s"
+                        .formatted(territoryInfo.getTreasury().getTreasuryColor()
+                                + territoryInfo.getTreasury().getAsString());
         String defences = ChatFormatting.GRAY
-                + "Territory Defences: %s".formatted(territoryInfo.getDefences().asColoredString());
+                + "Territory Defences: %s"
+                        .formatted(territoryInfo.getDefences().getDefenceColor()
+                                + territoryInfo.getDefences().getAsString());
 
         FontRenderer.getInstance()
                 .renderText(
@@ -413,7 +417,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         Component lastLine = territoryDefenseFilterEnabled
                 ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
-                        .append(territoryDefenseFilterLevel.asColoredString())
+                        .append(territoryDefenseFilterLevel.getDefenceColor()
+                                + territoryDefenseFilterLevel.getAsString())
                         .append(territoryDefenseFilterType.asComponent())
                 : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
