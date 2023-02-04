@@ -5,7 +5,6 @@
 package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -51,7 +50,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
-        WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
@@ -111,80 +109,88 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.renderBackground(poseStack);
 
-        boolean partying = Models.Party.isInParty();
+        boolean inParty = Models.Party.isInParty();
 
-        createPartyButton.active = !partying;
-        leavePartyButton.active = partying;
-        kickOfflineButton.active = partying && !Models.Party.getOfflineMembers().isEmpty();
+        // Update button states before rendering them
+        createPartyButton.active = !inParty;
+        leavePartyButton.active = inParty;
+        kickOfflineButton.active = inParty && !Models.Party.getOfflineMembers().isEmpty();
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
-                .isBlank(); // partying check not required as button automatically makes new party if not in one
-        FontRenderer fr = FontRenderer.getInstance();
+                .isBlank(); // inParty check not required as button automatically makes new party if not in one
+
+        super.render(poseStack, mouseX, mouseY, partialTick);
 
         // region Invite field header
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1"),
-                this.width / 2 - X_START,
-                this.height / 2 - 206,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
-                this.width / 2 - X_START + 77,
-                this.height / 2 - 206,
-                CommonColors.LIGHT_GRAY,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1"),
+                        this.width / 2 - X_START,
+                        this.height / 2 - 206,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                        this.width / 2 - X_START + 77,
+                        this.height / 2 - 206,
+                        CommonColors.LIGHT_GRAY,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
         // endregion
 
         // region Party list headers
         RenderUtils.drawRect(
                 poseStack, CommonColors.WHITE, this.width / 2 - X_START, this.height / 2 - 140, 0, TOTAL_WIDTH, 1);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.head"),
-                this.width / 2 - X_START,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.name"),
-                this.width / 2 - X_START + 40,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.promote"),
-                this.width / 2 - X_START + 249,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.kick"),
-                this.width / 2 - X_START + 312,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        this.width / 2 - X_START,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.name"),
+                        this.width / 2 - X_START + 40,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.promote"),
+                        this.width / 2 - X_START + 249,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.kick"),
+                        this.width / 2 - X_START + 312,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
         // endregion
+
         // region Party list
         partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         // endregion
@@ -192,86 +198,134 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // region Suggestion list headers
         RenderUtils.drawRect(
                 poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, TOTAL_WIDTH / 2, 1);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.head"),
-                this.width / 2 + 200,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                this.width / 2 + 240,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.invite"),
-                this.width / 2 + 340,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        this.width / 2 + 200,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.suggestions"),
+                        this.width / 2 + 240,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.invite"),
+                        this.width / 2 + 340,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
         // endregion
+
         // region Suggestion list
         suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         // endregion
 
         // region Legend
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 300, this.height / 2 - 140, 0, 50, 1);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.legend"),
-                this.width / 2 - 300,
-                this.height / 2 - 144,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
-                this.width / 2 - 300,
-                this.height / 2 - 132,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.leader"),
-                this.width / 2 - 300,
-                this.height / 2 - 120,
-                CommonColors.YELLOW,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
-                this.width / 2 - 300,
-                this.height / 2 - 108,
-                CommonColors.WHITE,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
-        fr.renderText(
-                poseStack,
-                I18n.get("screens.wynntils.partyManagementGui.friend"),
-                this.width / 2 - 300,
-                this.height / 2 - 96,
-                CommonColors.GREEN,
-                HorizontalAlignment.Left,
-                VerticalAlignment.Middle,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.legend"),
+                        this.width / 2 - 300,
+                        this.height / 2 - 144,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
+                        this.width / 2 - 300,
+                        this.height / 2 - 132,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.leader"),
+                        this.width / 2 - 300,
+                        this.height / 2 - 120,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
+                        this.width / 2 - 300,
+                        this.height / 2 - 108,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        I18n.get("screens.wynntils.partyManagementGui.friend"),
+                        this.width / 2 - 300,
+                        this.height / 2 - 96,
+                        CommonColors.GREEN,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle,
+                        TextShadow.NORMAL);
         // endregion
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (AbstractWidget widget : partyMembersWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return widget.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
+        for (AbstractWidget widget : suggestedPlayersWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return widget.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
     }
 
     /**
@@ -344,39 +398,5 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         Models.Friends.requestData();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        for (AbstractWidget widget : partyMembersWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) return widget.mouseClicked(mouseX, mouseY, button);
-        }
-        for (AbstractWidget widget : suggestedPlayersWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) return widget.mouseClicked(mouseX, mouseY, button);
-        }
-
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
     }
 }
