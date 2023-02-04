@@ -135,18 +135,7 @@ public final class StatCalculator {
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // If we are in any of these situations, our stat has "invalid" values. Maybe it is old?
-        // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
-        if (actualValue.value() > possibleValues.range().high()) {
-            return 1d;
-        } else if (actualValue.value() < possibleValues.range().low()) {
-            return 0d;
-        }
-
-        // We should not be checking this if it is fixed, but handle that case as well
-        if (possibleValues.range().isFixed()) {
-            return 0d;
-        }
+        assert !possibleValues.range().isFixed();
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it finds the average decrease and increase afterwards
@@ -165,18 +154,7 @@ public final class StatCalculator {
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
-        // If we are in any of these situations, our stat has "invalid" values. Maybe it is old?
-        // If so, rerolling will have a certain outcome of 100% or 0% chance of decrease
-        if (actualValue.value() > possibleValues.range().high()) {
-            return 0d;
-        } else if (actualValue.value() < possibleValues.range().low()) {
-            return 1d;
-        }
-
-        // We should not be checking this if it is fixed, but handle that case as well
-        if (possibleValues.range().isFixed()) {
-            return 0d;
-        }
+        assert !possibleValues.range().isFixed();
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it finds the average decrease and increase afterwards

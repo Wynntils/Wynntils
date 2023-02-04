@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -29,7 +30,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.scores.Scoreboard;
 
 public final class PartyManagementScreen extends Screen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
@@ -281,9 +281,13 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
      */
     public void reloadSuggestedPlayersWidgets() {
         // Add friends that are online in the same world as user
-        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
-        Set<String> onlineUsers = new HashSet<>(scoreboard.getTeamNames());
-        onlineUsers.retainAll(Models.Friends.getFriends());
+        List<String> onlineUsers =
+                new ArrayList<>(McUtils.mc().level.getScoreboard().getTeamNames());
+        // Remove non-friends as we do not want to suggest them
+        onlineUsers.removeIf(user -> !Models.Friends.getFriends().stream()
+                .map(s -> s.toLowerCase(Locale.ROOT))
+                .toList()
+                .contains(user.toLowerCase(Locale.ROOT)));
 
         List<String> suggestedPlayers = new ArrayList<>(onlineUsers);
         suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
@@ -337,6 +341,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     private void refreshAll() {
         Models.Party.requestData();
+        Models.Friends.requestData();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
     }
