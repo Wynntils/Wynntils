@@ -76,7 +76,6 @@ public final class GearTooltipIdentifications {
             GearTooltipStyle style) {
         if (gearInstance != null) {
             // We have an actual value
-            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
             StatActualValue statActualValue = gearInstance.getActualValue(statType);
             if (statActualValue == null) {
                 WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
@@ -84,6 +83,14 @@ public final class GearTooltipIdentifications {
             }
 
             MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue, currentClass);
+
+            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+            // Normally this should not happen, but if our API data does not match the
+            // actual gear, it might, so handle it gracefully
+            if (possibleValues == null) {
+                WynntilsMod.warn("Missing stat type in item " + gearInfo.name() + " for stat: " + statType + " which has value: " + statActualValue.value());
+                return line;
+            }
 
             if (possibleValues.range().isFixed() || decorator == null) return line;
 
