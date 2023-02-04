@@ -35,43 +35,29 @@ public class PartyManagementScreenFeature extends UserFeature {
     // region Party events
     @SubscribeEvent
     public void onPartyList(PartyEvent.Listed e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
 
     @SubscribeEvent
     public void onPartyMemberJoin(PartyEvent.OtherJoined e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
 
     @SubscribeEvent
     public void onPartyMemberLeave(PartyEvent.OtherLeft e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
 
     @SubscribeEvent
     public void onPartyMemberDisconnect(PartyEvent.OtherDisconnected e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
 
     @SubscribeEvent
     public void onPartyMemberReconnect(PartyEvent.OtherReconnected e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadMembersWidgets();
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
+
     // endregion
 
     // region Friend events
@@ -80,16 +66,19 @@ public class PartyManagementScreenFeature extends UserFeature {
 
     @SubscribeEvent
     public void onFriendJoin(FriendsEvent.Joined e) {
-        if (partyManagementScreen != null) {
-            partyManagementScreen.reloadSuggestedPlayersWidgets();
-        }
+        reloadScreenWidgets();
     }
 
     @SubscribeEvent
     public void onFriendLeave(FriendsEvent.Left e) {
-        if (partyManagementScreen != null) {
-            Managers.TickScheduler.scheduleLater(partyManagementScreen::reloadSuggestedPlayersWidgets, 3);
-        }
+        Managers.TickScheduler.scheduleLater(this::reloadScreenWidgets, 3);
     }
     // endregion
+
+    private void reloadScreenWidgets() {
+        if (partyManagementScreen == null) return;
+
+        partyManagementScreen.reloadMembersWidgets();
+        partyManagementScreen.reloadSuggestedPlayersWidgets();
+    }
 }
