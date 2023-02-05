@@ -114,6 +114,7 @@ public class IngredientInfoRegistry {
             List<ProfessionType> professions = parseProfessions(json);
 
             GearMaterial material;
+            // FIXME: Materials are missing a lot of values, e.g. 383 (enderman_spawn_egg?)
             material = parseMaterial(json);
             if (material == null) {
                 // FIXME: Bad?
