@@ -192,7 +192,7 @@ public class WynntilsCommand extends Command {
 
         Managers.Url.reloadUrls();
         Models.Gear.reloadData();
-        Models.IngredientProfiles.reloadData();
+        Models.Ingredient.reloadData();
         Models.Discovery.reloadData();
         Models.Map.reloadData();
 

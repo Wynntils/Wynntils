@@ -72,4 +72,8 @@ public class IngredientModel extends Model {
     public List<IngredientInfo> getIngredientInfoRegistry() {
         return ingredientInfoRegistry.ingredientInfoRegistry;
     }
+
+    public void reloadData() {
+        ingredientInfoRegistry.reloadData();
+    }
 }
