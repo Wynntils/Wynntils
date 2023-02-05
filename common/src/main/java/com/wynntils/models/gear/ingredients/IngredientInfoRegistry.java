@@ -121,13 +121,10 @@ public class IngredientInfoRegistry {
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             /*
-             json fields:
+            json fields:
 
-                  "itemOnlyIDs"
-                  "consumableOnlyIDs"
-                  "identifications"
-                  "ingredientPositionModifiers"
-             */
+                 "identifications"
+            */
 
             int tier = JsonUtils.getNullableJsonInt(json, "tier");
             int level = json.get("level").getAsInt();
@@ -142,7 +139,9 @@ public class IngredientInfoRegistry {
 
             JsonObject sprite = json.get("sprite").getAsJsonObject();
             GearMaterial material;
-            if (sprite != null && !sprite.isJsonNull() && sprite.getAsJsonObject().size() != 0) {
+            if (sprite != null
+                    && !sprite.isJsonNull()
+                    && sprite.getAsJsonObject().size() != 0) {
                 int id = JsonUtils.getNullableJsonInt(sprite, "id");
                 int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
 
@@ -153,9 +152,49 @@ public class IngredientInfoRegistry {
                 material = null;
             }
 
-           List<Pair<StatType, StatPossibleValues>> variableStats = null;//parseVariableStats(json);
+            // Get consumables-only parts
+            JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
+            int duration = JsonUtils.getNullableJsonInt(consumableIdsJson, "duration");
+            int charges = JsonUtils.getNullableJsonInt(consumableIdsJson, "charges");
 
-            return new IngredientInfo(name, tier, level, apiNameOpt, material, Collections.unmodifiableList(professions), variableStats);
+            // Get items-only parts
+            List<Pair<Skill, Integer>> skillRequirements = new ArrayList<>();
+            JsonObject itemIdsJson = JsonUtils.getNullableJsonObject(json, "itemOnlyIDs");
+            int durabilityModifier = JsonUtils.getNullableJsonInt(itemIdsJson, "durabilityModifier");
+            for (Skill skill : Skill.values()) {
+                // In particular, note that the API spelling "defense" is not used
+                String requirementName = skill.getDisplayName().toLowerCase(Locale.ROOT) + "Requirement";
+                int requirementValue = JsonUtils.getNullableJsonInt(itemIdsJson, requirementName);
+                if (requirementValue != 0) {
+                    skillRequirements.add(Pair.of(skill, requirementValue));
+                }
+            }
+
+            // Get recipe position format modifiers
+            JsonObject positionsJson = JsonUtils.getNullableJsonObject(json, "ingredientPositionModifiers");
+            Map<IngredientPosition, Integer> positionModifiers = new HashMap<>();
+            for (IngredientPosition position : IngredientPosition.values()) {
+                int value = JsonUtils.getNullableJsonInt(positionsJson, position.getApiName());
+                if (value == 0) continue;
+
+                positionModifiers.put(position, value);
+            }
+
+            List<Pair<StatType, StatPossibleValues>> variableStats = null; // parseVariableStats(json);
+
+            return new IngredientInfo(
+                    name,
+                    tier,
+                    level,
+                    apiNameOpt,
+                    material,
+                    Collections.unmodifiableList(professions),
+                    Collections.unmodifiableList(skillRequirements),
+                    Collections.unmodifiableMap(positionModifiers),
+                    duration,
+                    charges,
+                    durabilityModifier,
+                    variableStats);
         }
 
         private GearType parseType(JsonObject json) {

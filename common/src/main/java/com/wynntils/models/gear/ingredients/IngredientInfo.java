@@ -5,11 +5,13 @@
 package com.wynntils.models.gear.ingredients;
 
 import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -34,4 +36,9 @@ public record IngredientInfo(
         Optional<String> apiName,
         GearMaterial material,
         List<ProfessionType> professions,
+        List<Pair<Skill, Integer>> skillRequirements,
+        Map<IngredientPosition, Integer> positionModifiers,
+        int duration,
+        int charges,
+        int durabilityModifier,
         List<Pair<StatType, StatPossibleValues>> variableStats) {}
