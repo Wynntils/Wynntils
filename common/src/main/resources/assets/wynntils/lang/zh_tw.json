@@ -350,7 +350,7 @@
   "feature.wynntils.itemScreenshot.chatItemMessage": "點擊在此為了複製物品在聊天室使用！",
   "feature.wynntils.itemScreenshot.chatItemTooltip": "粘貼這文本在聊天室裡給別的 Wynntils 用者顯示",
   "feature.wynntils.itemScreenshot.copy.error": "複製截圖到剪貼簿時出現錯誤",
-  "feature.wynntils.itemScreenshot.copy.mac": "無法在 macOS 上複製物品截圖到剪貼簿.",
+  "feature.wynntils.itemScreenshot.copy.mac": "無法在 macOS 上複製物品截圖到剪貼簿",
   "feature.wynntils.itemScreenshot.copy.message": "複製截圖到剪貼簿",
   "feature.wynntils.itemScreenshot.name": "物品截屏",
   "feature.wynntils.itemScreenshot.save.error": "將 %s 的截圖儲存到 %s 時出現錯誤",
