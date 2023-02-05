@@ -1,9 +1,17 @@
+## [0.0.2-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.171...v0.0.2-alpha.172) (2023-02-05)
+
+
+### Bug Fixes
+
+* kick offline button not greying out for non-leader ([#1125](https://github.com/Wynntils/Artemis/issues/1125)) ([acf7c09](https://github.com/Wynntils/Artemis/commit/acf7c09ff81403b93487b285ad515a555d2411a2))
+
 ## [0.0.2-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.170...v0.0.2-alpha.171) (2023-02-04)
 
 
 ### Miscellaneous Chores
 
 * Clean up code and fix race issue with PartyManagementScreen ([#1122](https://github.com/Wynntils/Artemis/issues/1122)) ([e070dd3](https://github.com/Wynntils/Artemis/commit/e070dd3cfa1f337a6253c1e265f3a4532e95b2a1))
+* **release:** v0.0.2-alpha.171 [skip ci] ([b0d219b](https://github.com/Wynntils/Artemis/commit/b0d219b5252c9e5f5843c65be6e691e14149375d))
 
 ## [0.0.2-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.169...v0.0.2-alpha.170) (2023-02-04)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.168 [skip ci] ([83db888](https://github.com/Wynntils/Artemis/commit/83db888ac10b1639e39afe323357badc89f153f5))
-
-## [0.0.2-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.166...v0.0.2-alpha.167) (2023-02-02)
-
-
-### New Features
-
-* Party management ui ([#1055](https://github.com/Wynntils/Artemis/issues/1055)) ([72c170b](https://github.com/Wynntils/Artemis/commit/72c170b6617ae63f8ed61bb4358147c2104e6eac))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.167 [skip ci] ([c5d16e1](https://github.com/Wynntils/Artemis/commit/c5d16e11f3e5b0ff373d53224f9b0a0cfede51c2))
 
