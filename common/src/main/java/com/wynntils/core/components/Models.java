@@ -18,7 +18,7 @@ import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.GearTooltipModel;
-import com.wynntils.models.gear.ingredients.IngredientModel;
+import com.wynntils.models.ingredientinfo.IngredientModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;

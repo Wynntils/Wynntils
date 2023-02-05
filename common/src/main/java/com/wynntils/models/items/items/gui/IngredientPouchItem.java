@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.gui;
 
-import com.wynntils.models.gear.ingredients.IngredientInfo;
+import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.utils.type.Pair;
 import java.util.List;

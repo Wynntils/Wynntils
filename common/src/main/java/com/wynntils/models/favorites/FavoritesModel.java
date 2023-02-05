@@ -6,7 +6,7 @@ package com.wynntils.models.favorites;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.features.user.ItemFavoriteFeature;
-import com.wynntils.models.gear.ingredients.IngredientInfo;
+import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.IngredientItem;

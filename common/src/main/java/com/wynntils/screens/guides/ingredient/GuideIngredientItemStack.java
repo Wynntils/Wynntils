@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
-import com.wynntils.models.gear.ingredients.IngredientInfo;
+import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.items.items.game.IngredientItem;
