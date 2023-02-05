@@ -116,7 +116,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // Update button states before rendering them
         createPartyButton.active = !inParty;
         leavePartyButton.active = inParty;
-        kickOfflineButton.active = inParty && !Models.Party.getOfflineMembers().isEmpty();
+        kickOfflineButton.active = inParty
+                && !Models.Party.getOfflineMembers().isEmpty()
+                && Models.Party.getPartyLeader()
+                        .equals(McUtils.player().getName().getString());
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
