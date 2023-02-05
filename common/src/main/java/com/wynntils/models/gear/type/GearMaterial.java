@@ -14,8 +14,11 @@ import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public record GearMaterial(ItemStack itemStack) {
+    public static final GearMaterial UNKNOWN = new GearMaterial(new ItemStack(Items.BEDROCK, 1));
+
     public static GearMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
                 + gearType.name().toLowerCase(Locale.ROOT);
