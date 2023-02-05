@@ -9,11 +9,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredients.type.IngredientTier;
+import com.wynntils.utils.mc.SkinUtils;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -98,19 +96,7 @@ public class IngredientProfile {
                         + ingredientInfo.asItemStack().getDisplayName());
                 return itemStack;
             }
-
-            CompoundTag skullData = new CompoundTag();
-            skullData.putString("Id", UUID.randomUUID().toString());
-
-            CompoundTag properties = new CompoundTag();
-            ListTag textures = new ListTag();
-            CompoundTag textureEntry = new CompoundTag();
-            textureEntry.putString("Value", ingredientHeadTexture);
-            textures.add(textureEntry);
-            properties.put("textures", textures);
-            skullData.put("Properties", properties);
-
-            itemStack.getOrCreateTag().put("SkullOwner", skullData);
+            SkinUtils.setPlayerHeadSkin(itemStack, ingredientHeadTexture);
         }
 
         return itemStack;

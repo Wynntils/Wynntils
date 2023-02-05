@@ -6,6 +6,7 @@ package com.wynntils.models.gear.type;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.SkinUtils;
 import java.util.Locale;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public record GearMaterial(ItemStack itemStack) {
     public static final GearMaterial UNKNOWN = fromItemId("minecraft:bedrock", 0);
@@ -31,6 +33,13 @@ public record GearMaterial(ItemStack itemStack) {
             displayTag.putInt("color", color.asInt());
             itemStack.setTag(tag);
         }
+
+        return new GearMaterial(itemStack);
+    }
+
+    public static GearMaterial fromPlayerHeadTexture(String skinTexture) {
+        ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0);
+        SkinUtils.setPlayerHeadSkin(itemStack, skinTexture);
 
         return new GearMaterial(itemStack);
     }

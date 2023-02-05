@@ -214,6 +214,12 @@ public class GearInfoRegistry {
                 return parseOtherMaterial(json, gearType);
             }
 
+            // Some helmets are player heads
+            String skin = JsonUtils.getNullableJsonString(json, "skin");
+            if (skin != null) {
+                return GearMaterial.fromPlayerHeadTexture(skin);
+            }
+
             String materialType =
                     JsonUtils.getNullableJsonString(json, "armorType").toLowerCase(Locale.ROOT);
 
