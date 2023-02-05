@@ -213,6 +213,19 @@ public class IngredientInfoRegistry {
             for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
                 StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
 
+                if (statType == null) {
+    /*
+    FIXME
+    We are missing:
+    STRENGTHPOINTS
+    DEFENSEPOINTS
+    AGILITYPOINTS
+    INTELLIGENCEPOINTS
+    DEXTERITYPOINTS
+     */
+                    // For now, just use a dummy stat
+                    statType = Models.Stat.fromInternalRollId("POISON");
+                }
                 JsonObject rangeJson = entry.getValue().getAsJsonObject();
                 int low = JsonUtils.getNullableJsonInt(rangeJson, "minimum");
                 int high = JsonUtils.getNullableJsonInt(rangeJson, "maximum");
