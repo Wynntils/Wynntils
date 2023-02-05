@@ -7,28 +7,13 @@ package com.wynntils.models.gear.ingredients;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
-import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/*
-json fields:
-     "name"
-     "tier"
-     "skills"
-     "level"
-
-     "sprite"
-     "displayName"
-
-     "itemOnlyIDs"
-     "consumableOnlyIDs"
-     "identifications"
-     "ingredientPositionModifiers"
-*/
 public record IngredientInfo(
         String name,
         int tier,
@@ -41,4 +26,4 @@ public record IngredientInfo(
         int duration,
         int charges,
         int durabilityModifier,
-        List<Pair<StatType, StatPossibleValues>> variableStats) {}
+        List<Pair<StatType, RangedValue>> variableStats) {}

@@ -20,8 +20,6 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
-import com.wynntils.models.stats.StatCalculator;
-import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
@@ -136,7 +134,7 @@ public class IngredientInfoRegistry {
             Map<IngredientPosition, Integer> positionModifiers = getPositionModifiers(json);
 
             /*            json fields:                 "identifications"            */
-            List<Pair<StatType, StatPossibleValues>> variableStats = null; // parseVariableStats(json);
+            List<Pair<StatType, RangedValue>> variableStats = parseVariableStats(json);
 
             return new IngredientInfo(
                     name,
@@ -208,32 +206,23 @@ public class IngredientInfoRegistry {
             return Collections.unmodifiableMap(positionModifiers);
         }
 
-        private List<Pair<StatType, StatPossibleValues>> parseVariableStats(JsonObject json) {
-            List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
-            JsonElement identifiedJson = json.get("identified");
-            boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
+        private List<Pair<StatType, RangedValue>> parseVariableStats(JsonObject json) {
+            List<Pair<StatType, RangedValue>> list = new ArrayList<>();
+            JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
-            for (StatType statType : Models.Stat.getAllStatTypes()) {
-                JsonElement statJson = json.get(statType.getApiName());
-                if (statJson == null) continue;
+            for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
+                StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
 
-                int baseValue = statJson.getAsInt();
-                if (baseValue == 0) continue;
+                JsonObject rangeJson = entry.getValue().getAsJsonObject();
+                int low = JsonUtils.getNullableJsonInt(rangeJson, "minimum");
+                int high = JsonUtils.getNullableJsonInt(rangeJson, "maximum");
 
-                // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
-                // and only converted to negative at display time.
-                if (statType.showAsInverted()) {
-                    baseValue = -baseValue;
-                }
-                // Range will always be stored such as "low" means "worst possible value" and
-                // "high" means "best possible value".
-                RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified);
-                StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
-                list.add(Pair.of(statType, possibleValues));
+                RangedValue range = RangedValue.of(low, high);
+                list.add(Pair.of(statType, range));
             }
 
             // Return an immutable list
-            return List.copyOf(list);
+            return Collections.unmodifiableList(list);
         }
     }
 
