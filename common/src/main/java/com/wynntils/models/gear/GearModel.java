@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gear.ingredients.IngredientInfoRegistry;
 import com.wynntils.models.gear.itemguess.ItemGuessProfile;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
@@ -37,8 +36,6 @@ import net.minecraft.world.item.ItemStack;
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearModel extends Model {
-
-    private final IngredientInfoRegistry ingredientInfoRegistry = new IngredientInfoRegistry();
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();

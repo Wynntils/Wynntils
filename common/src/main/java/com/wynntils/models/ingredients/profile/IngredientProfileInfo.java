@@ -12,14 +12,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class IngredientInfo {
+public final class IngredientProfileInfo {
     @SerializedName("name")
     private final String materialName;
 
     @SerializedName("damage")
     private final String metadata;
 
-    public IngredientInfo(String materialName, String metadata) {
+    public IngredientProfileInfo(String materialName, String metadata) {
         this.materialName = materialName;
         this.metadata = metadata;
     }

@@ -7,6 +7,10 @@ package com.wynntils.models.gear.ingredients;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
+import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
+import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
+import com.wynntils.models.ingredients.profile.IngredientModifiers;
+import com.wynntils.models.ingredients.type.IngredientTier;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -26,4 +30,21 @@ public record IngredientInfo(
         int duration,
         int charges,
         int durabilityModifier,
-        List<Pair<StatType, RangedValue>> variableStats) {}
+        List<Pair<StatType, RangedValue>> variableStats) {
+    //FIXME: remove those
+    public IngredientTier getTier() {
+        return null;
+    }
+
+    public Map<String, IngredientIdentificationContainer> getStatuses() {
+        return null;
+    }
+
+    public IngredientModifiers getIngredientModifiers() {
+        return null;
+    }
+
+    public IngredientItemModifiers getItemModifiers() {
+        return null;
+    }
+}

@@ -18,6 +18,7 @@ import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.GearTooltipModel;
+import com.wynntils.models.gear.ingredients.IngredientModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
@@ -63,6 +64,7 @@ public final class Models {
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
+    public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);

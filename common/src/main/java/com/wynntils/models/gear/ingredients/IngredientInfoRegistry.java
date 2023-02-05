@@ -214,15 +214,15 @@ public class IngredientInfoRegistry {
                 StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
 
                 if (statType == null) {
-    /*
-    FIXME
-    We are missing:
-    STRENGTHPOINTS
-    DEFENSEPOINTS
-    AGILITYPOINTS
-    INTELLIGENCEPOINTS
-    DEXTERITYPOINTS
-     */
+                    /*
+                    FIXME
+                    We are missing:
+                    STRENGTHPOINTS
+                    DEFENSEPOINTS
+                    AGILITYPOINTS
+                    INTELLIGENCEPOINTS
+                    DEXTERITYPOINTS
+                     */
                     // For now, just use a dummy stat
                     statType = Models.Stat.fromInternalRollId("POISON");
                 }

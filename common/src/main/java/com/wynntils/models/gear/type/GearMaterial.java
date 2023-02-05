@@ -14,10 +14,9 @@ import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public record GearMaterial(ItemStack itemStack) {
-    public static final GearMaterial UNKNOWN = new GearMaterial(new ItemStack(Items.BEDROCK, 1));
+    public static final GearMaterial UNKNOWN = fromItemId("minecraft:bedrock", 0);
 
     public static GearMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
@@ -43,16 +42,20 @@ public record GearMaterial(ItemStack itemStack) {
         return new GearMaterial(itemStack);
     }
 
+    private static GearMaterial fromItemId(String itemId, int damageCode) {
+        ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
+
+        return new GearMaterial(itemStack);
+    }
+
     public static GearMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
         String toIdString = ItemIdFix.getItem(itemTypeCode);
         String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
         String itemId = alternativeName != null ? alternativeName : toIdString;
-
         // FIXME: The vanilla lookup still fails for e.g. Totem of Undying.
         // In this case, AIR is returned.
-        ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
 
-        return new GearMaterial(itemStack);
+        return fromItemId(itemId, damageCode);
     }
 
     private static ItemStack createItemStack(Item item, int damageValue) {

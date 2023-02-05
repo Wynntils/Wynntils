@@ -32,7 +32,7 @@ public class IngredientProfile {
     private final IngredientModifiers ingredientModifiers;
 
     @SerializedName("itemInfo")
-    private IngredientInfo ingredientInfo;
+    private IngredientProfileInfo ingredientInfo;
 
     public IngredientProfile(
             String name,

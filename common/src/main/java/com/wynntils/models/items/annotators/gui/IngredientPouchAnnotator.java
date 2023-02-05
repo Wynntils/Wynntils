@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.ingredients.profile.IngredientProfile;
+import com.wynntils.models.gear.ingredients.IngredientInfo;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -30,7 +30,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         Matcher matcher = INGREDIENT_POUCH_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        List<Pair<IngredientProfile, Integer>> ingredients = new ArrayList<>();
+        List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<String> lore = LoreUtils.getLore(itemStack);
         for (String line : lore) {
             Matcher loreMatcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line);
@@ -38,16 +38,17 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
             int count = Integer.parseInt(loreMatcher.group(1));
             String ingredientName = loreMatcher.group(2);
             String tierColor = loreMatcher.group(3);
-            int tier = Models.IngredientProfiles.getTierFromColorCode(tierColor);
 
-            IngredientProfile ingredientProfile = Models.IngredientProfiles.getIngredient(ingredientName);
-            if (ingredientProfile == null) return null;
-            if (ingredientProfile.getTier().getTierInt() != tier) {
+            int tier = Models.Ingredient.getTierFromColorCode(tierColor);
+            IngredientInfo ingredientInfo = Models.Ingredient.fromName(ingredientName);
+            if (ingredientInfo == null) return null;
+
+            if (ingredientInfo.getTier().getTierInt() != tier) {
                 WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
                 return null;
             }
 
-            ingredients.add(Pair.of(ingredientProfile, count));
+            ingredients.add(Pair.of(ingredientInfo, count));
         }
 
         return new IngredientPouchItem(ingredients);

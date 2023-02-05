@@ -35,7 +35,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.getIngredientProfile().getTier().getHighlightColor();
+        CustomColor color = itemStack.getIngredientInfo().getTier().getHighlightColor();
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();
@@ -53,7 +53,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
         RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
 
-        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+        String unformattedName = itemStack.getIngredientInfo().name();
         if (Models.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
@@ -74,7 +74,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+        String unformattedName = itemStack.getIngredientInfo().name();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
