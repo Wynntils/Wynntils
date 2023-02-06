@@ -41,16 +41,16 @@ public class SpellCastRenderFeature extends UserFeature {
     public Overlay spellCastOverlay = new SpellCastOverlay();
 
     @Config
-    public boolean renderVignette = false;
+    public boolean renderVignette = true;
 
     @Config
-    public int vignetteFadeTime = 10;
+    public int vignetteFadeTime = 12;
 
     @Config
-    public float vignetteIntensity = 1.3f;
+    public float vignetteIntensity = 0.75f;
 
     @Config
-    public CustomColor vignetteColor = new CustomColor(0, 0, 255);
+    public CustomColor vignetteColor = new CustomColor(0, 71, 201);
 
     private int spellTimer;
     private String spellMessage;
