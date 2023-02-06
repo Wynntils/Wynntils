@@ -36,13 +36,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class SpellCastRenderFeature extends UserFeature {
     private static final int SHOW_TICKS = 40;
-    public static final int FADE_TICKS = 4;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public Overlay spellCastOverlay = new SpellCastOverlay();
 
     @Config
     public boolean renderVignette = false;
+
+    @Config
+    public int vignetteFadeTime = 10;
 
     @Config
     public float vignetteIntensity = 1.3f;
@@ -97,9 +99,9 @@ public class SpellCastRenderFeature extends UserFeature {
         if (!renderVignette || intensity <= 0f) return;
 
         int shownTicks = SHOW_TICKS - spellTimer;
-        int fade = FADE_TICKS - shownTicks;
+        int fade = vignetteFadeTime - shownTicks;
         if (fade > 0) {
-            float alpha = intensity * ((float) fade / FADE_TICKS);
+            float alpha = intensity * ((float) fade / vignetteFadeTime);
             RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor, alpha);
         }
     }
