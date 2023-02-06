@@ -24,6 +24,14 @@ public final class JsonUtils {
         return jsonElement.getAsInt();
     }
 
+    public static boolean getNullableJsonBoolean(JsonObject json, String key) {
+        JsonElement jsonElement = json.get(key);
+        if (jsonElement == null) return false;
+        if (jsonElement.isJsonNull()) return false;
+
+        return jsonElement.getAsBoolean();
+    }
+
     public static JsonObject getNullableJsonObject(JsonObject json, String key) {
         JsonElement jsonElement = json.get(key);
         if (jsonElement == null) return new JsonObject();
