@@ -1,9 +1,21 @@
+## [0.0.2-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.172...v0.0.2-alpha.173) (2023-02-06)
+
+
+### New Features
+
+* Make spell vignette fade time configurable ([#1126](https://github.com/Wynntils/Artemis/issues/1126)) ([029ca79](https://github.com/Wynntils/Artemis/commit/029ca7960c131b081f38ab2aea6b376dc7c7ace2))
+
 ## [0.0.2-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.171...v0.0.2-alpha.172) (2023-02-05)
 
 
 ### Bug Fixes
 
 * kick offline button not greying out for non-leader ([#1125](https://github.com/Wynntils/Artemis/issues/1125)) ([acf7c09](https://github.com/Wynntils/Artemis/commit/acf7c09ff81403b93487b285ad515a555d2411a2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.172 [skip ci] ([8e76b1f](https://github.com/Wynntils/Artemis/commit/8e76b1f7313625ab6356bc2267bfc9d4b8fd54fa))
 
 ## [0.0.2-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.170...v0.0.2-alpha.171) (2023-02-04)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.169 [skip ci] ([f8e88c1](https://github.com/Wynntils/Artemis/commit/f8e88c1877c07df8092f4dfcc614d62f21c7fd5a))
-
-## [0.0.2-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.167...v0.0.2-alpha.168) (2023-02-02)
-
-
-### Bug Fixes
-
-* Clicking on invisible LabelPois sets waypoint ([#1118](https://github.com/Wynntils/Artemis/issues/1118)) ([145ca6d](https://github.com/Wynntils/Artemis/commit/145ca6dd6dc59a45f77f2bf7ad4a7ab6aff6b149))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.168 [skip ci] ([83db888](https://github.com/Wynntils/Artemis/commit/83db888ac10b1639e39afe323357badc89f153f5))
 
