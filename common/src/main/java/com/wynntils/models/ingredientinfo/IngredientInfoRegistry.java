@@ -111,13 +111,9 @@ public class IngredientInfoRegistry {
 
             List<ProfessionType> professions = parseProfessions(json);
 
-            GearMaterial material;
-            // FIXME: Materials are missing a lot of values, e.g. 383 (enderman_spawn_egg?)
-            material = parseMaterial(json);
-            if (material == null) {
-                // FIXME: Bad?
+            GearMaterial material = parseMaterial(json, name);
+            if (material == GearMaterial.UNKNOWN) {
                 WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
-                material = GearMaterial.UNKNOWN;
             }
 
             // Get consumables-only parts
@@ -133,7 +129,6 @@ public class IngredientInfoRegistry {
             // Get recipe position format modifiers
             Map<IngredientPosition, Integer> positionModifiers = getPositionModifiers(json);
 
-            /*            json fields:                 "identifications"            */
             List<Pair<StatType, RangedValue>> variableStats = parseVariableStats(json);
 
             return new IngredientInfo(
@@ -164,13 +159,21 @@ public class IngredientInfoRegistry {
             return Collections.unmodifiableList(professions);
         }
 
-        private static GearMaterial parseMaterial(JsonObject json) {
+        private static GearMaterial parseMaterial(JsonObject json, String name) {
             JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
-            if (sprite.getAsJsonObject().size() == 0) return null;
+            if (sprite.getAsJsonObject().size() == 0) return GearMaterial.UNKNOWN;
 
             int id = JsonUtils.getNullableJsonInt(sprite, "id");
             int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
 
+            if (id == 397) {
+                // FIXME
+                System.out.println("NEEDS_HEAD:" + name);
+                // This is a player head. Check if we got a skin for it instead!
+
+            }
+            // FIXME: Materials are missing a lot of values, e.g. 383 (enderman_spawn_egg?)
+            // Check https://github.com/Wynntils/Reference/blob/main/materials/materials.json in addition
             return GearMaterial.fromItemTypeCode(id, damage);
         }
 

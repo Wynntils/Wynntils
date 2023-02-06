@@ -33,18 +33,18 @@ public record IngredientInfo(
         List<Pair<StatType, RangedValue>> variableStats) {
     //FIXME: remove those
     public IngredientTier getTier() {
-        return null;
+        return IngredientTier.TIER_1;
     }
 
     public Map<String, IngredientIdentificationContainer> getStatuses() {
-        return null;
+        return Map.of();
     }
 
     public IngredientModifiers getIngredientModifiers() {
-        return null;
+        return new IngredientModifiers();
     }
 
     public IngredientItemModifiers getItemModifiers() {
-        return null;
+        return new IngredientItemModifiers();
     }
 }

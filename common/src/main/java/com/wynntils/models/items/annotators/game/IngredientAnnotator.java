@@ -35,6 +35,14 @@ public final class IngredientAnnotator implements ItemAnnotator {
             return null;
         }
 
+        /*
+        FIXME: keep debug code a while longer
+        if (itemStack.getItem().equals(Items.PLAYER_HEAD)) {
+            String texture = itemStack.getTag().getCompound("SkullOwner").getCompound("Properties").getList("textures", Tag.TAG_COMPOUND).getCompound(0).getString("Value");
+            System.out.println("GOT_HEAD:" + ingredientName + "###" + texture);
+        }
+
+         */
         return new IngredientItem(ingredientInfo);
     }
 }
