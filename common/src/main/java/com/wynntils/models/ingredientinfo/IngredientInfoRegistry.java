@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.ingredientinfo;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -52,38 +53,54 @@ public class IngredientInfoRegistry {
     }
 
     private void loadRegistry() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
-        dl.handleReader(reader -> {
-            Gson ingredientInfoGson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
-                    .create();
-            WynncraftIngredientInfoResponse ingredientInfoResponse =
-                    ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
+        // We must download and parse ingredient player head textures before
+        // attempting to parse the ingredient DB
+        Download skinsDl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENT_SKINS);
+        skinsDl.handleReader(skinsReader -> {
+            Type type = new TypeToken<Map<String, String>>() {}.getType();
+            Map<String, String> ingredientSkins = WynntilsMod.GSON.fromJson(skinsReader, type);
 
-            // Some entries are test entries etc and should be removed
-            // FIXME: Is this really needed for ingredients?
-            List<IngredientInfo> registry = ingredientInfoResponse.ingredients.stream()
-                    .filter(ingredientInfo -> !INVALID_ENTRIES.contains(ingredientInfo.name()))
-                    .toList();
+            // Now we can do the ingredient DB
+            Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
+            dl.handleReader(reader -> {
+                Gson ingredientInfoGson = new GsonBuilder()
+                        .registerTypeHierarchyAdapter(
+                                IngredientInfo.class, new IngredientInfoDeserializer(ingredientSkins))
+                        .create();
+                WynncraftIngredientInfoResponse ingredientInfoResponse =
+                        ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
 
-            // Create fast lookup maps
-            Map<String, IngredientInfo> lookupMap = new HashMap<>();
-            Map<String, IngredientInfo> altLookupMap = new HashMap<>();
-            for (IngredientInfo ingredientInfo : registry) {
-                lookupMap.put(ingredientInfo.name(), ingredientInfo);
-                if (ingredientInfo.apiName().isPresent()) {
-                    altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
+                // Some entries are test entries etc and should be removed
+                // FIXME: Is this really needed for ingredients?
+                List<IngredientInfo> registry = ingredientInfoResponse.ingredients.stream()
+                        .filter(ingredientInfo -> !INVALID_ENTRIES.contains(ingredientInfo.name()))
+                        .toList();
+
+                // Create fast lookup maps
+                Map<String, IngredientInfo> lookupMap = new HashMap<>();
+                Map<String, IngredientInfo> altLookupMap = new HashMap<>();
+                for (IngredientInfo ingredientInfo : registry) {
+                    lookupMap.put(ingredientInfo.name(), ingredientInfo);
+                    if (ingredientInfo.apiName().isPresent()) {
+                        altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
+                    }
                 }
-            }
 
-            // Make the result visisble to the world
-            ingredientInfoRegistry = registry;
-            ingredientInfoLookup = lookupMap;
-            ingredientInfoLookupApiName = altLookupMap;
+                // Make the result visisble to the world
+                ingredientInfoRegistry = registry;
+                ingredientInfoLookup = lookupMap;
+                ingredientInfoLookupApiName = altLookupMap;
+            });
         });
     }
 
     private static final class IngredientInfoDeserializer implements JsonDeserializer<IngredientInfo> {
+        private final Map<String, String> ingredientSkins;
+
+        private IngredientInfoDeserializer(Map<String, String> ingredientSkins) {
+            this.ingredientSkins = ingredientSkins;
+        }
+
         @Override
         public IngredientInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -146,7 +163,7 @@ public class IngredientInfoRegistry {
                     variableStats);
         }
 
-        private static List<ProfessionType> parseProfessions(JsonObject json) {
+        private List<ProfessionType> parseProfessions(JsonObject json) {
             List<ProfessionType> professions = new ArrayList<>();
 
             JsonArray professionsJson = json.get("skills").getAsJsonArray();
@@ -159,7 +176,7 @@ public class IngredientInfoRegistry {
             return Collections.unmodifiableList(professions);
         }
 
-        private static GearMaterial parseMaterial(JsonObject json, String name) {
+        private GearMaterial parseMaterial(JsonObject json, String name) {
             JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
             if (sprite.getAsJsonObject().size() == 0) return GearMaterial.UNKNOWN;
 
@@ -167,17 +184,17 @@ public class IngredientInfoRegistry {
             int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
 
             if (id == 397) {
-                // FIXME
-                System.out.println("NEEDS_HEAD:" + name);
                 // This is a player head. Check if we got a skin for it instead!
-
+                String skinTexture = ingredientSkins.get(name);
+                if (skinTexture != null) {
+                    return GearMaterial.fromPlayerHeadTexture(skinTexture);
+                }
             }
-            // FIXME: Materials are missing a lot of values, e.g. 383 (enderman_spawn_egg?)
-            // Check https://github.com/Wynntils/Reference/blob/main/materials/materials.json in addition
+
             return GearMaterial.fromItemTypeCode(id, damage);
         }
 
-        private static List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {
+        private List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {
             if (itemIdsJson == null) return List.of();
 
             List<Pair<Skill, Integer>> skillRequirements = new ArrayList<>();
@@ -194,7 +211,7 @@ public class IngredientInfoRegistry {
             return Collections.unmodifiableList(skillRequirements);
         }
 
-        private static Map<IngredientPosition, Integer> getPositionModifiers(JsonObject json) {
+        private Map<IngredientPosition, Integer> getPositionModifiers(JsonObject json) {
             JsonObject positionsJson = JsonUtils.getNullableJsonObject(json, "ingredientPositionModifiers");
             if (positionsJson.size() == 0) return Map.of();
 

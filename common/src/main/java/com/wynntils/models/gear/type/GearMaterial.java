@@ -62,7 +62,9 @@ public record GearMaterial(ItemStack itemStack) {
         String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
         String itemId = alternativeName != null ? alternativeName : toIdString;
         // FIXME: The vanilla lookup still fails for e.g. Totem of Undying.
+        // or 383 (spawn eggs, e.g. enderman_spawn_egg)
         // In this case, AIR is returned.
+        // Check https://github.com/Wynntils/Reference/blob/main/materials/materials.json in addition
 
         return fromItemId(itemId, damageCode);
     }
