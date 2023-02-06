@@ -31,7 +31,7 @@ public record IngredientInfo(
         int charges,
         int durabilityModifier,
         List<Pair<StatType, RangedValue>> variableStats) {
-    //FIXME: remove those
+    // FIXME: remove those
     public IngredientTier getTier() {
         return IngredientTier.TIER_1;
     }
