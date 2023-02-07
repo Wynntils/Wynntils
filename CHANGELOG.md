@@ -1,9 +1,21 @@
+## [0.0.2-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.175...v0.0.2-alpha.176) (2023-02-07)
+
+
+### New Features
+
+* Calculate gear guesses on the fly ([#1130](https://github.com/Wynntils/Artemis/issues/1130)) ([93595f7](https://github.com/Wynntils/Artemis/commit/93595f7b20d11a076c65353017b822d7e3ef7fe3))
+
 ## [0.0.2-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.174...v0.0.2-alpha.175) (2023-02-07)
 
 
 ### New Features
 
 * Completely new gear and stat models ([#1111](https://github.com/Wynntils/Artemis/issues/1111)) ([ffee9d9](https://github.com/Wynntils/Artemis/commit/ffee9d9da1cd105bebc697946efe89627c5a29df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.175 [skip ci] ([920a240](https://github.com/Wynntils/Artemis/commit/920a2403908ac56a3caaf529e05d4ad129a2b359))
 
 ## [0.0.2-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.173...v0.0.2-alpha.174) (2023-02-07)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.172 [skip ci] ([8e76b1f](https://github.com/Wynntils/Artemis/commit/8e76b1f7313625ab6356bc2267bfc9d4b8fd54fa))
-
-## [0.0.2-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.170...v0.0.2-alpha.171) (2023-02-04)
-
-
-### Miscellaneous Chores
-
-* Clean up code and fix race issue with PartyManagementScreen ([#1122](https://github.com/Wynntils/Artemis/issues/1122)) ([e070dd3](https://github.com/Wynntils/Artemis/commit/e070dd3cfa1f337a6253c1e265f3a4532e95b2a1))
-* **release:** v0.0.2-alpha.171 [skip ci] ([b0d219b](https://github.com/Wynntils/Artemis/commit/b0d219b5252c9e5f5843c65be6e691e14149375d))
 
