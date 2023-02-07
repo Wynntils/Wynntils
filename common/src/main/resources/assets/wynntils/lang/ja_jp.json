@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "名前の全体の割合",
   "feature.wynntils.itemStatInfo.perfect.description": "パーフェクト(100%)アイテムの名前が虹色になるはずですか?",
   "feature.wynntils.itemStatInfo.perfect.name": "虹色の完璧なアイテム",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "識別はWynntilsの順序に従って再注文されるべきであるか?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "識別情報の順序変更",
   "feature.wynntils.itemStatInfo.showStars.description": "ID にはスター (*, ** か ***) が必要ですか?",
   "feature.wynntils.itemStatInfo.showStars.name": "スターを表示",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "コルキアンプ層を表示するアイテムオーバーレイを描くべきですか?",
