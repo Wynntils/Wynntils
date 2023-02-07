@@ -78,8 +78,9 @@ public class ItemLockFeature extends UserFeature {
                 || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
 
+        // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
-                .filter(slot -> slot.container instanceof Inventory && slot.getItem() == event.getItemStack())
+                .filter(slot -> slot.container instanceof Inventory && slot.index == event.getSlotNum())
                 .findFirst();
 
         if (slotOptional.isEmpty()) {
