@@ -369,8 +369,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Minden Százalék a Névben",
   "feature.wynntils.itemStatInfo.perfect.description": "A tökéletes(100%) nevű tárgyak legyenek szivárvány színűek?",
   "feature.wynntils.itemStatInfo.perfect.name": "Szivárvány Tökéletes Tárgyak",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Legyenek az azonosítók újrarendezve a Wynntils által?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Újrarendezési Azonosítók",
   "feature.wynntils.itemStatInfo.showStars.description": "Legyenek az azonosítók csillaggal (*, ** vagy ***) kiírva?",
   "feature.wynntils.itemStatInfo.showStars.name": "Csillagok Mutatása",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "A corkian erősítő szintjének legyen képernyőrátét rajzolva?",
