@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Total procentandel i namn",
   "feature.wynntils.itemStatInfo.perfect.description": "Ska namnen på perfekta (100%) objekt vara regnbågsfärgad?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regnbåge perfekt objekt",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Bör identifieringar omordnas enligt Wynntils ordning?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Ordna om identifieringar",
   "feature.wynntils.itemStatInfo.showStars.description": "Ska ID:n ha stjärnor (*, ** eller ***) tryckta?",
   "feature.wynntils.itemStatInfo.showStars.name": "Visa stjärnor",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Ska vi rita ett överlägg som visar korkisk förstärkarnivå?",
