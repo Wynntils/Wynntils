@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Całkowity procent w nazwie",
   "feature.wynntils.itemStatInfo.perfect.description": "Czy nazwy idealnych (100%) przedmiotów powinny być kolorowane?",
   "feature.wynntils.itemStatInfo.perfect.name": "Tęczowe przedmioty",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Czy identyfikacje powinny być zmieniane zgodnie z porządkiem Wynntis?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Zmień identyfikacje",
   "feature.wynntils.itemStatInfo.showStars.description": "Czy identyfikatory powinny mieć wydrukowane gwiazdki (*, ** czy ***)?",
   "feature.wynntils.itemStatInfo.showStars.name": "Pokaż gwiazdki",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Czy powinniśmy narysować nakładkę przedmiotu pokazującą poziom wzmacniacza rogówki?",
