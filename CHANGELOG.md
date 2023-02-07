@@ -1,9 +1,21 @@
+## [0.0.2-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.179...v0.0.2-alpha.180) (2023-02-07)
+
+
+### Bug Fixes
+
+* Fix return value in mixin for FixCastingSpellsFromInventoryFeature ([#1132](https://github.com/Wynntils/Artemis/issues/1132)) ([5f51aa4](https://github.com/Wynntils/Artemis/commit/5f51aa4539760a72f8d3b0de276d83920daf5d5d))
+
 ## [0.0.2-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.178...v0.0.2-alpha.179) (2023-02-07)
 
 
 ### Bug Fixes
 
 * Change hideLevelUp default value to false ([#1135](https://github.com/Wynntils/Artemis/issues/1135)) ([ded9ecd](https://github.com/Wynntils/Artemis/commit/ded9ecd7ea4fa7337855b729e8907403049ee31f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.179 [skip ci] ([cb24a5a](https://github.com/Wynntils/Artemis/commit/cb24a5a2864b2fd3c1b9c11f712e9545696db359))
 
 ## [0.0.2-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.177...v0.0.2-alpha.178) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.176 [skip ci] ([64d7a41](https://github.com/Wynntils/Artemis/commit/64d7a41659dd3928039a43ef05d1d182f28b8e44))
-
-## [0.0.2-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.174...v0.0.2-alpha.175) (2023-02-07)
-
-
-### New Features
-
-* Completely new gear and stat models ([#1111](https://github.com/Wynntils/Artemis/issues/1111)) ([ffee9d9](https://github.com/Wynntils/Artemis/commit/ffee9d9da1cd105bebc697946efe89627c5a29df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.175 [skip ci] ([920a240](https://github.com/Wynntils/Artemis/commit/920a2403908ac56a3caaf529e05d4ad129a2b359))
 
