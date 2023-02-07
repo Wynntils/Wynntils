@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Samlet prosent i navn",
   "feature.wynntils.itemStatInfo.perfect.description": "Skal man gi det perfekte navnet (100%) gjenstander som er regnbue?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regnbue gjenstander",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Skal identifikasjoner bli omorganisert i henhold til Wynntils rekkefølge?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Omorganiser identifikasjoner",
   "feature.wynntils.itemStatInfo.showStars.description": "Skal IDer ha stjerner (*, ** eller ***) utskrift?",
   "feature.wynntils.itemStatInfo.showStars.name": "Vis stjerner",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Skal vi tegne et elementoverlegg som viser korkansk forsterkerjustering?",
