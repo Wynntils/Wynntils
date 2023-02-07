@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Porcentagem global em nome",
   "feature.wynntils.itemStatInfo.perfect.description": "Os nomes dos itens perfeitos (100%) devem ser coloridos?",
   "feature.wynntils.itemStatInfo.perfect.name": "Itens Perfeitos do Arco-íris",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "As identificações devem ser reordenadas de acordo com a ordem Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Reordenar Identificações",
   "feature.wynntils.itemStatInfo.showStars.description": "Os IDs devem ter estrelas (*, ** ou ***) impressos?",
   "feature.wynntils.itemStatInfo.showStars.name": "Mostrar Favoritos",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Devemos desenhar uma camada de item mostrando o nível amplificador de corkian?",
