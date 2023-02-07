@@ -345,8 +345,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Percentatge general al nom",
   "feature.wynntils.itemStatInfo.perfect.description": "Els noms dels elements perfectes (100%) haurien de ser de color arc de Sant Martí?",
   "feature.wynntils.itemStatInfo.perfect.name": "Elements perfectes de l'arc de Sant Martí",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Cal reordenar les identificacions d'acord amb l'ordre Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Reordena les identificacions",
   "feature.wynntils.itemStatInfo.showStars.description": "Els IDs han de tenir les estrelles (*, ** o ***) impreses?",
   "feature.wynntils.itemStatInfo.showStars.name": "Mostra les estrelles",
   "feature.wynntils.itemTextOverlay.emeraldPouchTierEnabled.description": "Afegeix els nombres de nivells als articles de la bossa de maragdes.",
