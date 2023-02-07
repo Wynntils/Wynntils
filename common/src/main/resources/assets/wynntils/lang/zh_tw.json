@@ -372,8 +372,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "名稱中的總百分比",
   "feature.wynntils.itemStatInfo.perfect.description": "要是否完美物品 (100%) 的名使用彩色顯示？",
   "feature.wynntils.itemStatInfo.perfect.name": "彩色的完美物品名",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "要是否把物品的屬性基於 Wynntils 的次第安排嗎？",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "從安排屬性",
   "feature.wynntils.itemStatInfo.showStars.description": "屬性字以後要是否有星星 (*，**，***) 嗎？",
   "feature.wynntils.itemStatInfo.showStars.name": "顯示星星",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "要是否加疊加層顯示 Corkian Amplifier 等級量嗎？",
