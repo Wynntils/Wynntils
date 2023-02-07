@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Pourcentage total dans le nom",
   "feature.wynntils.itemStatInfo.perfect.description": "Les noms des objets parfaits (100%) doivent-ils être colorés arc-en-ciel?",
   "feature.wynntils.itemStatInfo.perfect.name": "Objets parfaits en arc-en-ciel",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Les identifications doivent-elles être réordonnées selon l'ordre de Wynntils ?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Réordonner les identifications",
   "feature.wynntils.itemStatInfo.showStars.description": "Les IDs doivent-ils avoir des étoiles (*, ** ou ***) ?",
   "feature.wynntils.itemStatInfo.showStars.name": "Afficher les étoiles",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Devrions-nous dessiner une superposition d'élément montrant le niveau d'amplificateur corkien ?",
