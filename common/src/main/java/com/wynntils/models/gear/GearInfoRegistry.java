@@ -60,7 +60,7 @@ public class GearInfoRegistry {
     Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
-        //   loadRegistry();
+        loadRegistry();
     }
 
     public void reloadData() {
