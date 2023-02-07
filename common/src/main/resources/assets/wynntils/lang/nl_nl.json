@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Totale percentage in Naam",
   "feature.wynntils.itemStatInfo.perfect.description": "Moeten de namen van perfecte (100%) voorwerpen regenboog gekleurd zijn?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regenboog perfecte voorwerpen",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Moeten de identificaties volgens het bevel van Wynntils worden geherordend?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Determinaties herordenen",
   "feature.wynntils.itemStatInfo.showStars.description": "Dienen ID's sterren (*, ** of ***) bedrukt te worden?",
   "feature.wynntils.itemStatInfo.showStars.name": "Toon sterren",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Moeten we een voorwerp overlay tekenen die corkiaanse versterker tier laat zien?",
