@@ -6,7 +6,6 @@ package com.wynntils.models.spells.type;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gear.profile.IdentificationProfile;
 import java.util.Arrays;
 
 public enum SpellType {
@@ -40,6 +39,8 @@ public enum SpellType {
     SECOND_SPELL(ClassType.None, 2, "2nd Spell", 0, 0),
     THIRD_SPELL(ClassType.None, 3, "3rd Spell", 0, 0),
     FOURTH_SPELL(ClassType.None, 4, "4th Spell", 0, 0);
+
+    public static final int MAX_SPELL = 4;
 
     private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
     private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
@@ -171,10 +172,6 @@ public enum SpellType {
 
     public String getGenericAndSpecificName() {
         return getGenericName() + " (" + getName() + ")";
-    }
-
-    public String getShortIdName(boolean isRaw) {
-        return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
     }
 
     public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {

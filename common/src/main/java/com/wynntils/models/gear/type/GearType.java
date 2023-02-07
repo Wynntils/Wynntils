@@ -6,7 +6,6 @@ package com.wynntils.models.gear.type;
 
 import com.wynntils.models.character.type.ClassType;
 import java.util.Locale;
-import java.util.Optional;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -36,33 +35,38 @@ public enum GearType {
         this.defaultDamage = defaultDamage;
     }
 
-    public ClassType getClassReq() {
-        return classReq;
+    public static GearType fromString(String typeStr) {
+        try {
+            return GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
-    public int getDefaultDamage() {
-        return defaultDamage;
+    public ClassType getClassReq() {
+        return classReq;
     }
 
     public Item getDefaultItem() {
         return defaultItem;
     }
 
-    public static Optional<GearType> fromString(String typeStr) {
-        try {
-            return Optional.of(GearType.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_")));
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
+    public int getDefaultDamage() {
+        return defaultDamage;
     }
 
     public boolean isWeapon() {
-        switch (this) {
-            case SPEAR, WAND, DAGGER, BOW, RELIK -> {
-                return true;
-            }
-        }
+        return classReq != null;
+    }
 
-        return false;
+    public boolean isAccessory() {
+        return defaultItem == Items.FLINT_AND_STEEL;
+    }
+
+    public boolean isArmour() {
+        return switch (this) {
+            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> true;
+            default -> false;
+        };
     }
 }
