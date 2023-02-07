@@ -10,6 +10,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.RangedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -32,16 +33,18 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         if (gearType == null) return null;
 
         GearTier gearTier = GearTier.fromFormattedString(name);
-        String levelRange = getLevelRange(itemStack);
+        RangedValue levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;
 
         return new GearBoxItem(gearType, gearTier, levelRange);
     }
 
-    private static String getLevelRange(ItemStack itemStack) {
+    private static RangedValue getLevelRange(ItemStack itemStack) {
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
         if (!matcher.matches()) return null;
-        return matcher.group(1) + "-" + matcher.group(2);
+        int low = Integer.parseInt(matcher.group(1));
+        int high = Integer.parseInt(matcher.group(2));
+        return RangedValue.of(low, high);
     }
 }
