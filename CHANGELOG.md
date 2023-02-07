@@ -1,9 +1,21 @@
+## [0.0.2-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.176...v0.0.2-alpha.177) (2023-02-07)
+
+
+### Bug Fixes
+
+* Item Lock's block all mode now works correctly if HEAD slot is locked ([#1134](https://github.com/Wynntils/Artemis/issues/1134)) ([d533785](https://github.com/Wynntils/Artemis/commit/d533785641f6a1f5f3d542f0626d5f59f87117dd))
+
 ## [0.0.2-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.175...v0.0.2-alpha.176) (2023-02-07)
 
 
 ### New Features
 
 * Calculate gear guesses on the fly ([#1130](https://github.com/Wynntils/Artemis/issues/1130)) ([93595f7](https://github.com/Wynntils/Artemis/commit/93595f7b20d11a076c65353017b822d7e3ef7fe3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.176 [skip ci] ([64d7a41](https://github.com/Wynntils/Artemis/commit/64d7a41659dd3928039a43ef05d1d182f28b8e44))
 
 ## [0.0.2-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.174...v0.0.2-alpha.175) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.173 [skip ci] ([9ebec5d](https://github.com/Wynntils/Artemis/commit/9ebec5d0d28b61538bdd8b1eb4f84285dd618fa9))
-
-## [0.0.2-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.171...v0.0.2-alpha.172) (2023-02-05)
-
-
-### Bug Fixes
-
-* kick offline button not greying out for non-leader ([#1125](https://github.com/Wynntils/Artemis/issues/1125)) ([acf7c09](https://github.com/Wynntils/Artemis/commit/acf7c09ff81403b93487b285ad515a555d2411a2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.172 [skip ci] ([8e76b1f](https://github.com/Wynntils/Artemis/commit/8e76b1f7313625ab6356bc2267bfc9d4b8fd54fa))
 
