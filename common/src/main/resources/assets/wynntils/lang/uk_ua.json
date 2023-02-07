@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Загальний відсоток у назві",
   "feature.wynntils.itemStatInfo.perfect.description": "Чи повинні назви досконалих (100%) елементів бути заготовленими?",
   "feature.wynntils.itemStatInfo.perfect.name": "Ідеальні предмети веселки",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Чи слід впорядкувати ідентифікацію відповідно до порядку Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Перевпорядкувати ідентифікації",
   "feature.wynntils.itemStatInfo.showStars.description": "Чи повинні ID мати зірки (*, ** або ***) надруковані?",
   "feature.wynntils.itemStatInfo.showStars.name": "Показати зірки",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Чи треба намалювати предмет, що накладе на коркіанові підсилювачі?",
