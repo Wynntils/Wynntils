@@ -48,7 +48,7 @@ public class InfoMessageFilterFeature extends UserFeature {
     private boolean hideSystemInfo = true;
 
     @Config
-    private boolean hideLevelUp = true;
+    private boolean hideLevelUp = false;
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
