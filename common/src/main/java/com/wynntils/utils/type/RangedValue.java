@@ -23,4 +23,8 @@ public record RangedValue(int low, int high) {
     public boolean isFixed() {
         return low == high;
     }
+
+    public boolean inRange(int value) {
+        return value >= low && value <= high;
+    }
 }
