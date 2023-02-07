@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gear;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.quests.QuestModel;
 import java.util.List;

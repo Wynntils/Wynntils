@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gear;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
-import com.wynntils.models.gearinfo.parsing.GearParseResult;
-import com.wynntils.models.gearinfo.parsing.GearParser;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
+import com.wynntils.models.gear.itemguess.ItemGuessProfile;
+import com.wynntils.models.gear.parsing.GearParseResult;
+import com.wynntils.models.gear.parsing.GearParser;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;

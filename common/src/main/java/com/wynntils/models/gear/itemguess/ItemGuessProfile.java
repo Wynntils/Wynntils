@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo.itemguess;
+package com.wynntils.models.gear.itemguess;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -15,8 +15,8 @@ import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gearinfo.type.GearTier;
-import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.EnumMap;

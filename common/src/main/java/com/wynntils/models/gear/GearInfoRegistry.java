@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gearinfo;
+package com.wynntils.models.gear;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -19,16 +19,16 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.concepts.Element;
 import com.wynntils.models.concepts.Skill;
-import com.wynntils.models.gearinfo.type.GearAttackSpeed;
-import com.wynntils.models.gearinfo.type.GearDropType;
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearMajorId;
-import com.wynntils.models.gearinfo.type.GearMaterial;
-import com.wynntils.models.gearinfo.type.GearMetaInfo;
-import com.wynntils.models.gearinfo.type.GearRequirements;
-import com.wynntils.models.gearinfo.type.GearRestrictions;
-import com.wynntils.models.gearinfo.type.GearTier;
-import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearDropType;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearMajorId;
+import com.wynntils.models.gear.type.GearMaterial;
+import com.wynntils.models.gear.type.GearMetaInfo;
+import com.wynntils.models.gear.type.GearRequirements;
+import com.wynntils.models.gear.type.GearRestrictions;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
@@ -152,7 +152,7 @@ public class GearInfoRegistry {
 
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
-            int powderSlots = json.get("sockets").getAsInt();
+            int powderSlots = JsonUtils.getNullableJsonInt(json, "sockets");
 
             GearMetaInfo metaInfo = parseMetaInfo(json, apiName, type);
             GearRequirements requirements = parseRequirements(json, type);
@@ -181,8 +181,7 @@ public class GearInfoRegistry {
             Optional<String> loreOpt = parseLore(json);
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
-            JsonElement allowCraftsmanJson = json.get("allowCraftsman");
-            boolean allowCraftsman = allowCraftsmanJson != null && allowCraftsmanJson.getAsBoolean();
+            boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
 
             return new GearMetaInfo(restrictions, material, dropType, loreOpt, apiNameOpt, allowCraftsman);
         }
@@ -272,11 +271,7 @@ public class GearInfoRegistry {
         private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
             List<Pair<Skill, Integer>> list = new ArrayList<>();
             for (Skill skill : Skill.values()) {
-                String skillJsonName = skill.getApiName();
-                JsonElement skillJson = json.get(skillJsonName);
-                if (skillJson == null) continue;
-
-                int minPoints = skillJson.getAsInt();
+                int minPoints = JsonUtils.getNullableJsonInt(json, skill.getApiName());
                 if (minPoints == 0) continue;
 
                 list.add(Pair.of(skill, minPoints));
@@ -294,13 +289,10 @@ public class GearInfoRegistry {
         }
 
         private FixedStats parseFixedStats(JsonObject json) {
-            JsonElement healthJson = json.get("health");
-            int healthBuff = healthJson == null ? 0 : healthJson.getAsInt();
+            int healthBuff = JsonUtils.getNullableJsonInt(json, "health");
             List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(json);
-            JsonElement attackSpeedJson = json.get("attackSpeed");
-            Optional<GearAttackSpeed> attackSpeed = (attackSpeedJson == null)
-                    ? Optional.empty()
-                    : Optional.of(GearAttackSpeed.valueOf(attackSpeedJson.getAsString()));
+            String attackSpeedStr = JsonUtils.getNullableJsonString(json, "attackSpeed");
+            Optional<GearAttackSpeed> attackSpeed = Optional.ofNullable(GearAttackSpeed.fromString(attackSpeedStr));
 
             List<GearMajorId> majorIds = parseMajorIds(json);
             List<Pair<DamageType, RangedValue>> damages = parseDamages(json);
@@ -329,11 +321,8 @@ public class GearInfoRegistry {
         private List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {
             List<Pair<Skill, Integer>> list = new ArrayList<>();
             for (Skill skill : Skill.values()) {
-                String skillJsonName = skill.getApiName() + "Points";
-                JsonElement skillJson = json.get(skillJsonName);
-                if (skillJson == null) continue;
-
-                int minPoints = skillJson.getAsInt();
+                String skillBonusApiName = skill.getApiName() + "Points";
+                int minPoints = JsonUtils.getNullableJsonInt(json, skillBonusApiName);
                 if (minPoints == 0) continue;
 
                 list.add(Pair.of(skill, minPoints));
@@ -373,11 +362,9 @@ public class GearInfoRegistry {
         private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
             List<Pair<Element, Integer>> list = new ArrayList<>();
             for (Element element : Element.values()) {
-                String skillJsonName = element.name().toLowerCase(Locale.ROOT) + "Defense";
-                JsonElement skillJson = json.get(skillJsonName);
-                if (skillJson == null) continue;
+                String defenceApiName = element.name().toLowerCase(Locale.ROOT) + "Defense";
 
-                int minPoints = skillJson.getAsInt();
+                int minPoints = JsonUtils.getNullableJsonInt(json, defenceApiName);
                 if (minPoints == 0) continue;
 
                 list.add(Pair.of(element, minPoints));
@@ -393,10 +380,7 @@ public class GearInfoRegistry {
             boolean preIdentified = identifiedJson != null && identifiedJson.getAsBoolean();
 
             for (StatType statType : Models.Stat.getAllStatTypes()) {
-                JsonElement statJson = json.get(statType.getApiName());
-                if (statJson == null) continue;
-
-                int baseValue = statJson.getAsInt();
+                int baseValue = JsonUtils.getNullableJsonInt(json, statType.getApiName());
                 if (baseValue == 0) continue;
 
                 // "Inverted" stats (i.e. spell costs) will be stored as a positive value,

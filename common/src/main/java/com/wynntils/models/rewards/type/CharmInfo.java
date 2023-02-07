@@ -4,6 +4,6 @@
  */
 package com.wynntils.models.rewards.type;
 
-import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gear.type.GearTier;
 
 public record CharmInfo(String displayName, GearTier tier, String type) {}

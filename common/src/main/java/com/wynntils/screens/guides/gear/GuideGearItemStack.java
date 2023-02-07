@@ -5,8 +5,8 @@
 package com.wynntils.screens.guides.gear;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
-import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
