@@ -5,7 +5,6 @@
 package com.wynntils.screens.guides.powder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.PowderProfile;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -14,19 +13,15 @@ import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.TooltipFlag;
 
 public final class WynntilsPowderGuideScreen
         extends WynntilsListScreen<GuidePowderItemStack, GuidePowderItemStackButton> {
@@ -103,26 +98,7 @@ public final class WynntilsPowderGuideScreen
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
-            GuidePowderItemStack itemStack = guidePowderItemStack.getItemStack();
-
-            List<Component> tooltipLines = itemStack.getTooltipLines(McUtils.player(), TooltipFlag.NORMAL);
-            tooltipLines.add(Component.empty());
-            if (Models.Favorites.isFavorite(itemStack)) {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                        .withStyle(ChatFormatting.YELLOW));
-            } else {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                        .withStyle(ChatFormatting.GREEN));
-            }
-
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    0,
-                    ComponentUtils.wrapTooltips(tooltipLines, 200),
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            this.renderTooltip(poseStack, guidePowderItemStack.getItemStack(), mouseX, mouseY);
         }
     }
 

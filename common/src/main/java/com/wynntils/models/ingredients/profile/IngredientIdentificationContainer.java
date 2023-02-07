@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.ingredients.profile;
 
-import com.wynntils.models.gear.type.IdentificationModifier;
+import com.wynntils.models.ingredients.type.IdentificationModifier;
 
 public class IngredientIdentificationContainer {
     private final int minimum;

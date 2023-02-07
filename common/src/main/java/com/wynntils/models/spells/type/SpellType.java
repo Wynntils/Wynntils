@@ -6,7 +6,6 @@ package com.wynntils.models.spells.type;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gear.profile.IdentificationProfile;
 import java.util.Arrays;
 
 public enum SpellType {
@@ -173,10 +172,6 @@ public enum SpellType {
 
     public String getGenericAndSpecificName() {
         return getGenericName() + " (" + getName() + ")";
-    }
-
-    public String getShortIdName(boolean isRaw) {
-        return IdentificationProfile.getAsShortName(getGenericName() + " Cost", isRaw);
     }
 
     public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {

@@ -4,12 +4,14 @@
  */
 package com.wynntils.screens.guides.ingredient;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
-import com.wynntils.models.gear.profile.IdentificationProfile;
+import com.wynntils.models.ingredients.profile.IdentificationProfile;
 import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
+import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     private final IngredientProfile ingredientProfile;
 
     public GuideIngredientItemStack(IngredientProfile ingredientProfile) {
-        super(ingredientProfile.asItemStack());
+        super(ingredientProfile.asItemStack(), new IngredientItem(ingredientProfile));
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
@@ -43,6 +45,18 @@ public final class GuideIngredientItemStack extends GuideItemStack {
         tooltip.add(getHoverName());
 
         tooltip.addAll(guideTooltip);
+
+        tooltip.add(Component.empty());
+        if (Models.Favorites.isFavorite(ingredientProfile.getDisplayName())) {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
+        tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
+                .withStyle(ChatFormatting.RED));
+
         return tooltip;
     }
 

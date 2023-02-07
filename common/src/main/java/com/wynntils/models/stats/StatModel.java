@@ -6,7 +6,7 @@ package com.wynntils.models.stats;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gearinfo.type.GearInfo;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;

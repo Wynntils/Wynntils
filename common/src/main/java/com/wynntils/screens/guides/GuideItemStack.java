@@ -4,11 +4,14 @@
  */
 package com.wynntils.screens.guides;
 
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.mc.extension.ItemStackExtension;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class GuideItemStack extends ItemStack {
-    protected GuideItemStack(ItemStack stack) {
-        super(stack.getItem(), stack.getCount());
-        if (stack.getTag() != null) setTag(stack.getTag());
+    protected GuideItemStack(ItemStack itemStack, ItemAnnotation annotation) {
+        super(itemStack.getItem(), 1);
+        this.setTag(itemStack.getTag());
+        ((ItemStackExtension) this).setAnnotation(annotation);
     }
 }

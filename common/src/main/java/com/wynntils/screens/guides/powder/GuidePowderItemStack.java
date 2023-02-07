@@ -4,8 +4,10 @@
  */
 package com.wynntils.screens.guides.powder;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.Powder;
 import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -25,12 +27,12 @@ public final class GuidePowderItemStack extends GuideItemStack {
 
     private final List<Component> generatedTooltip;
 
-    public GuidePowderItemStack(PowderProfile profile) {
-        super(getItemStack(profile));
+    public GuidePowderItemStack(PowderProfile powderProfile) {
+        super(getItemStack(powderProfile), new PowderItem(powderProfile));
 
-        this.element = profile.element();
-        this.tier = profile.tier();
-        this.powderProfile = profile;
+        this.element = powderProfile.element();
+        this.tier = powderProfile.tier();
+        this.powderProfile = powderProfile;
         this.generatedTooltip = generateLore();
     }
 
@@ -45,6 +47,15 @@ public final class GuidePowderItemStack extends GuideItemStack {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
+
+        tooltip.add(Component.empty());
+        if (Models.Favorites.isFavorite(this)) {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
 
         return tooltip;
     }
