@@ -1,9 +1,21 @@
+## [0.0.2-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.177...v0.0.2-alpha.178) (2023-02-07)
+
+
+### Bug Fixes
+
+* Make sure class/world data is sent to Hades if login happened after joining a world ([#1131](https://github.com/Wynntils/Artemis/issues/1131)) ([564b5a5](https://github.com/Wynntils/Artemis/commit/564b5a5767dfac5097a0165cf901d408944a0965))
+
 ## [0.0.2-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.176...v0.0.2-alpha.177) (2023-02-07)
 
 
 ### Bug Fixes
 
 * Item Lock's block all mode now works correctly if HEAD slot is locked ([#1134](https://github.com/Wynntils/Artemis/issues/1134)) ([d533785](https://github.com/Wynntils/Artemis/commit/d533785641f6a1f5f3d542f0626d5f59f87117dd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.177 [skip ci] ([17d1058](https://github.com/Wynntils/Artemis/commit/17d10587a50dd6c7aad6c8cb7d75c1142616d6a0))
 
 ## [0.0.2-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.175...v0.0.2-alpha.176) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.174 [skip ci] ([230e8eb](https://github.com/Wynntils/Artemis/commit/230e8ebcfe5cd79eddf0f4e290b71e57b3a5974b))
-
-## [0.0.2-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.172...v0.0.2-alpha.173) (2023-02-06)
-
-
-### New Features
-
-* Make spell vignette fade time configurable ([#1126](https://github.com/Wynntils/Artemis/issues/1126)) ([029ca79](https://github.com/Wynntils/Artemis/commit/029ca7960c131b081f38ab2aea6b376dc7c7ace2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.173 [skip ci] ([9ebec5d](https://github.com/Wynntils/Artemis/commit/9ebec5d0d28b61538bdd8b1eb4f84285dd618fa9))
 
