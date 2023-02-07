@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Procentaj global în nume",
   "feature.wynntils.itemStatInfo.perfect.description": "Ar trebui ca numele obiectelor perfect (100%) să fie frigorifice curcubeu?",
   "feature.wynntils.itemStatInfo.perfect.name": "Elemente Perfect Curcubeu",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Ar trebui reclasate identificarile in conformitate cu ordinea Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Reordonează identificarea",
   "feature.wynntils.itemStatInfo.showStars.description": "ID-urile ar trebui să aibă stele (*, ** sau ***)?",
   "feature.wynntils.itemStatInfo.showStars.name": "Arată stele",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Ar trebui să desenăm un element suprapus care să arate nivelul amplificatorului de corkian?",
