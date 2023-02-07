@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Porcentaje global en nombre",
   "feature.wynntils.itemStatInfo.perfect.description": "¿Deben colorearse los nombres de objetos perfectos (100%) con arco de lluvia?",
   "feature.wynntils.itemStatInfo.perfect.name": "Arco Rainarco Perfecto",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "¿Deberían reordenarse las identidades según el pedido de Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Reordenar identidades",
   "feature.wynntils.itemStatInfo.showStars.description": "¿Deberían los IDs tener estrellas (*, ** o ***) impresas?",
   "feature.wynntils.itemStatInfo.showStars.name": "Mostrar estrellas",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "¿Deberíamos dibujar un objeto superpuesto mostrando el nivel del amplificador corkiano?",
