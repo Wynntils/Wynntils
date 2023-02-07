@@ -47,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class GearInfoRegistry {
@@ -55,9 +56,9 @@ public class GearInfoRegistry {
     private static final List<String> INVALID_ENTRIES = List.of("default");
 
     private List<GearMajorId> allMajorIds = List.of();
-    List<GearInfo> gearInfoRegistry = List.of();
-    Map<String, GearInfo> gearInfoLookup = Map.of();
-    Map<String, GearInfo> gearInfoLookupApiName = Map.of();
+    private List<GearInfo> gearInfoRegistry = List.of();
+    private Map<String, GearInfo> gearInfoLookup = Map.of();
+    private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
         loadRegistry();
@@ -65,6 +66,23 @@ public class GearInfoRegistry {
 
     public void reloadData() {
         loadRegistry();
+    }
+
+    public GearInfo getFromDisplayName(String gearName) {
+        return gearInfoLookup.get(gearName);
+    }
+
+    public GearInfo getFromApiName(String apiName) {
+        GearInfo gearInfo = gearInfoLookupApiName.get(apiName);
+        if (gearInfo != null) return gearInfo;
+
+        // The name is only stored in gearInfoLookupApiName if it differs from the display name
+        // Otherwise the api name is the same as the display name
+        return gearInfoLookup.get(apiName);
+    }
+
+    public Stream<GearInfo> getGearInfoStream() {
+        return gearInfoRegistry.stream();
     }
 
     private void loadRegistry() {

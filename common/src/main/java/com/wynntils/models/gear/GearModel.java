@@ -7,17 +7,20 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gear.itemguess.ItemGuessProfile;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.utils.type.CappedValue;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -39,11 +42,26 @@ public final class GearModel extends Model {
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
+    private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
     public GearModel(StatModel statModel) {
         super(List.of(statModel));
+    }
 
-        ItemGuessProfile.init();
+    public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
+        List<GearInfo> possibilities = possibilitiesCache.get(gearBoxItem);
+        if (possibilities != null) return possibilities;
+
+        List<GearInfo> possibleGear = getAllGearInfos()
+                .filter(gear -> gear.type() == gearBoxItem.getGearType()
+                        && gear.tier() == gearBoxItem.getGearTier()
+                        && gearBoxItem
+                                .getLevelRange()
+                                .inRange(gear.requirements().level()))
+                .toList();
+        possibilitiesCache.put(gearBoxItem, possibleGear);
+
+        return possibleGear;
     }
 
     public void reloadData() {
@@ -86,23 +104,14 @@ public final class GearModel extends Model {
     }
 
     public GearInfo getGearInfoFromDisplayName(String gearName) {
-        return gearInfoRegistry.gearInfoLookup.get(gearName);
+        return gearInfoRegistry.getFromDisplayName(gearName);
     }
 
     public GearInfo getGearInfoFromApiName(String apiName) {
-        GearInfo gearInfo = gearInfoRegistry.gearInfoLookupApiName.get(apiName);
-        if (gearInfo != null) return gearInfo;
-
-        // The name is only stored in gearInfoLookupApiName if it differs from the display name
-        // Otherwise the api name is the same as the display name
-        return gearInfoRegistry.gearInfoLookup.get(apiName);
+        return gearInfoRegistry.getFromApiName(apiName);
     }
 
-    public List<GearInfo> getGearInfoRegistry() {
-        return gearInfoRegistry.gearInfoRegistry;
-    }
-
-    public ItemGuessProfile getItemGuess(String levelRange) {
-        return ItemGuessProfile.getItemGuess(levelRange);
+    public Stream<GearInfo> getAllGearInfos() {
+        return gearInfoRegistry.getGearInfoStream();
     }
 }

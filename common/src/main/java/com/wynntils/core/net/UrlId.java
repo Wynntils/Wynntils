@@ -34,7 +34,6 @@ public enum UrlId {
     DATA_STATIC_GEAR("dataStaticGear"),
     DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
     DATA_STATIC_INGREDIENT_SKINS("dataStaticIngredientSkins"),
-    DATA_STATIC_ITEM_GUESSES("dataStaticItemGuesses"),
     DATA_STATIC_MAJOR_IDS("dataStaticMajorIds"),
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
