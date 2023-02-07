@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Συνολικό ποσοστό στο όνομα",
   "feature.wynntils.itemStatInfo.perfect.description": "Θα πρέπει τα ονόματα του τέλειου (100%) στοιχεία είναι ουράνιο τόξο χρωματισμένο?",
   "feature.wynntils.itemStatInfo.perfect.name": "Τέλεια Αντικείμενα Ουράνιο Τόξο",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Θα πρέπει να αναταξινομούνται σύμφωνα με την παραγγελία Wynntil?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Αναδιάταξη Ταυτοποιήσεων",
   "feature.wynntils.itemStatInfo.showStars.description": "Τα αναγνωριστικά πρέπει να έχουν εκτυπωμένα (*, ** ή ***)?",
   "feature.wynntils.itemStatInfo.showStars.name": "Εμφάνιση Αστέρων",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Θα πρέπει να σχεδιάσουμε ένα στοιχείο επικάλυψη δείχνει φελλώδη ενισχυτή tier?",
