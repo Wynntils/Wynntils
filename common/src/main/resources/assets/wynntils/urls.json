@@ -1,6 +1,6 @@
 [
   {
-    "version": 3
+    "version": 4
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -89,7 +89,12 @@
   {
     "id": "dataStaticGear",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json",
-    "md5": "dc71d6b73ed1b7167d7155010d335e5e"
+    "md5": "00c5bf05be959cf7068d692f2da18557"
+  },
+  {
+    "id": "dataStaticIngredients",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json",
+    "md5": "a7aa8bcf7b682f31d343eb47fc4ec821"
   },
   {
     "id": "dataStaticItemGuesses",
@@ -108,7 +113,7 @@
   {
     "id": "dataStaticPlaces",
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json",
-    "md5": "e324d05e62aaea82aaf89705bf403efe"
+    "md5": "c1907ba6d7c8851be2c6cf3062d17de5"
   },
   {
     "id": "dataStaticServices",
