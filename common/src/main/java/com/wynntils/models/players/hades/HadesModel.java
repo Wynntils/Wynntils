@@ -50,8 +50,9 @@ public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
+    private final HadesUserRegistry userRegistry = new HadesUserRegistry();
+
     private HadesConnection hadesConnection;
-    private HadesUserRegistry userRegistry = new HadesUserRegistry();
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
@@ -64,7 +65,7 @@ public final class HadesModel extends Model {
         return userRegistry.getHadesUserMap().values().stream();
     }
 
-    private void onLogin() {
+    private void login() {
         // Try to log in to Hades, if we're not already connected
         if (!isConnected()) {
             tryCreateConnection();
@@ -95,6 +96,11 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
+        if (Models.WorldState.onWorld()) {
+            // Send initial world data if Hades login only happened after joining the player's class
+            tryResendWorldData();
+        }
+
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -168,7 +174,7 @@ public final class HadesModel extends Model {
     public void onAthenaLogin(AthenaLoginEvent event) {
         if (Models.WorldState.getCurrentState() != WorldState.NOT_CONNECTED && !isConnected()) {
             if (Managers.WynntilsAccount.isLoggedIn()) {
-                tryCreateConnection();
+                login();
             }
         }
     }
