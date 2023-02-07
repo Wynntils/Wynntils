@@ -12,7 +12,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -56,9 +56,9 @@ public class ItemGuessFeature extends UserFeature {
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
 
         for (String itemName : itemPossibilities) {
-            GearProfile profile = Models.GearProfiles.getItemsProfile(itemName);
+            GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
 
-            int level = (profile != null) ? profile.getLevelRequirement() : -1;
+            int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 
             MutableComponent itemDesc = Component.literal(itemName).withStyle(gearTier.getChatFormatting());
 

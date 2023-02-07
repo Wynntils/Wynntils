@@ -40,6 +40,16 @@ public enum Skill {
         }
     }
 
+    public static Skill fromApiId(String apiId) {
+        String str = apiId.toLowerCase(Locale.ROOT);
+        for (Skill skill : values()) {
+            if (skill.getApiName().equals(str)) {
+                return skill;
+            }
+        }
+        return null;
+    }
+
     public static boolean isSkill(String idName) {
         for (Skill skill : values()) {
             if (idName.equals(skill.getDisplayName())) {

@@ -12,6 +12,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,8 @@ public final class IngredientProfilesModel extends Model {
             ChatFormatting.YELLOW, 1,
             ChatFormatting.LIGHT_PURPLE, 2,
             ChatFormatting.AQUA, 3);
+
+    private IdentificationInvertedList invertedList = new IdentificationInvertedList(null, null, null);
 
     private Map<String, IngredientProfile> ingredients = Map.of();
     private Map<String, String> ingredientHeadTextures = Map.of();
@@ -44,6 +47,7 @@ public final class IngredientProfilesModel extends Model {
 
     private void loadData() {
         tryLoadIngredientList();
+        tryLoadInvertedList();
     }
 
     private void tryLoadIngredientList() {
@@ -69,6 +73,14 @@ public final class IngredientProfilesModel extends Model {
         });
     }
 
+    private void tryLoadInvertedList() {
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_ITEM_LIST);
+        dl.handleJsonObject(json -> {
+            invertedList = WynntilsMod.GSON.fromJson(
+                    json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
+        });
+    }
+
     public IngredientProfile getIngredient(String name) {
         return ingredients.get(name);
     }
@@ -79,5 +91,16 @@ public final class IngredientProfilesModel extends Model {
 
     public Collection<IngredientProfile> getIngredientsCollection() {
         return ingredients.values();
+    }
+
+    public boolean isInverted(String id) {
+        return invertedList.inverted.contains(id);
+    }
+
+    public static class IdentificationInvertedList {
+        public final List<String> inverted = new ArrayList<>();
+
+        public IdentificationInvertedList(
+                Map<String, Integer> idOrders, ArrayList<String> groupRanges, ArrayList<String> inverted) {}
     }
 }

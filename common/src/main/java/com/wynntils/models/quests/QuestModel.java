@@ -80,6 +80,10 @@ public final class QuestModel extends Model {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
+    public Optional<QuestInfo> getQuestFromName(String name) {
+        return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
+    }
+
     public List<QuestInfo> getQuestsRaw() {
         return quests;
     }

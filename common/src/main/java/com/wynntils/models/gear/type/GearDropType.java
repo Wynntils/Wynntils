@@ -4,8 +4,19 @@
  */
 package com.wynntils.models.gear.type;
 
+import java.util.Locale;
+
 public enum GearDropType {
     NEVER, // quests or merchants
-    LOOTCHEST, // lootchests
-    NORMAL // mobs
+    LOOTCHEST, // lootchests (implies t3 or t4, afaict)
+    DUNGEON, // drop on dungeon completion or forgery chest
+    NORMAL; // mobs
+
+    public static GearDropType fromString(String typeStr) {
+        try {
+            return GearDropType.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

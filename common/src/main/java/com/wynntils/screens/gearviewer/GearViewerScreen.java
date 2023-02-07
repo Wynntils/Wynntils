@@ -4,30 +4,33 @@
  */
 package com.wynntils.screens.gearviewer;
 
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.profile.GearProfile;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.gearviewer.widgets.GearItemButton;
 import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.wynn.WynnItemUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -62,31 +65,21 @@ public final class GearViewerScreen extends WynntilsScreen {
             return itemStack;
         }
 
-        String itemName = WynnItemUtils.getTranslatedName(itemStack);
-
-        // can't create lore on crafted items
-        if (itemName.startsWith("Crafted")) {
-            itemStack.setHoverName(Component.literal(itemName).withStyle(ChatFormatting.DARK_AQUA));
+        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        if (description != null) {
+            itemStack.setHoverName(description);
             return itemStack;
         }
 
-        // disable viewing unidentified items
-        if (itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6) {
-            itemStack.setHoverName(Component.literal("Unidentified Item")
-                    .withStyle(
-                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting()));
+        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
+        if (gearInfo == null) {
             return itemStack;
         }
 
-        GearProfile gearProfile = Models.GearProfiles.getItemsProfile(itemName);
-        if (gearProfile == null) {
-            return itemStack;
-        }
-
-        GearItem gearItem = Models.GearItem.fromJsonLore(itemStack, gearProfile);
-        return new FakeItemStack(gearItem, "From " + playerName.getString());
+        JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
+        GearInstance gearInstance = Models.Gear.parseInstance(gearInfo, itemData);
+        return new FakeItemStack(new GearItem(gearInfo, gearInstance), "From " + playerName.getString());
     }
 
     @Override
