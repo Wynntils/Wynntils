@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "النسبة المئوية الإجمالية في الاسم",
   "feature.wynntils.itemStatInfo.perfect.description": "هل يجب أن تكون أسماء العناصر المثالية (100%) ملونة قوس قزح؟",
   "feature.wynntils.itemStatInfo.perfect.name": "عناصر قوس قزح مثالية",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "هل ينبغي إعادة ترتيب الهويات وفقا لأمر واينتيل؟",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "إعادة ترتيب الهويات",
   "feature.wynntils.itemStatInfo.showStars.description": "هل يجب أن تكون للهويات نجوم (*، ** أو ***) مطبعة؟",
   "feature.wynntils.itemStatInfo.showStars.name": "إظهار النجوم",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "هل يجب أن نرسم تراكب عنصر يظهر مستوى تضخيم الكوركية؟",
