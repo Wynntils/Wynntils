@@ -676,6 +676,8 @@
   "feature.wynntils.spellCastRender.renderVignette.name": "Render Vignette",
   "feature.wynntils.spellCastRender.vignetteColor.description": "What color to use for the spell cast vignette",
   "feature.wynntils.spellCastRender.vignetteColor.name": "Vignette Color",
+  "feature.wynntils.spellCastRender.vignetteFadeTime.description": "For how long (in ticks, 1/20 s) should the spell vignette be shown?",
+  "feature.wynntils.spellCastRender.vignetteFadeTime.name": "Vignette Fade Time",
   "feature.wynntils.spellCastRender.vignetteIntensity.description": "How intense should the vignette be displayed?",
   "feature.wynntils.spellCastRender.vignetteIntensity.name": "Vignette Intensity",
   "feature.wynntils.statusOverlay.name": "Statuses",

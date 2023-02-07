@@ -34,7 +34,18 @@ public final class GearTooltipIdentifications {
         List<Component> identifications = new ArrayList<>();
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
-        List<StatType> allStats = gearInfo.getVariableStats();
+        ArrayList<StatType> allStats = new ArrayList<>(gearInfo.getVariableStats());
+
+        if (gearInstance != null) {
+            // If the gear instance contains identifications with stat types not present in the
+            // GearInfo, add these as well to the list of stats to be displayed. This should not happen,
+            // but might if the GearInfo from the API is not up to date with the actual gear.
+            gearInstance.identifications().stream()
+                    .map(StatActualValue::statType)
+                    .filter(stat -> !allStats.contains(stat))
+                    .forEach(allStats::add);
+        }
+
         if (allStats.isEmpty()) return identifications;
 
         boolean useDelimiters = style.useDelimiters();
@@ -76,7 +87,6 @@ public final class GearTooltipIdentifications {
             GearTooltipStyle style) {
         if (gearInstance != null) {
             // We have an actual value
-            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
             StatActualValue statActualValue = gearInstance.getActualValue(statType);
             if (statActualValue == null) {
                 WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
@@ -84,6 +94,15 @@ public final class GearTooltipIdentifications {
             }
 
             MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue, currentClass);
+
+            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+            // Normally this should not happen, but if our API data does not match the
+            // actual gear, it might, so handle it gracefully
+            if (possibleValues == null) {
+                WynntilsMod.warn("Missing stat type in item " + gearInfo.name() + " for stat: " + statType
+                        + " which has value: " + statActualValue.value());
+                return line;
+            }
 
             if (possibleValues.range().isFixed() || decorator == null) return line;
 

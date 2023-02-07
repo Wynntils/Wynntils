@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.WynntilsMod;
+
 public enum GearAttackSpeed {
     SUPER_FAST("Super Fast Attack Speed", 3),
     VERY_FAST("Very Fast Attack Speed", 2),
@@ -19,6 +21,17 @@ public enum GearAttackSpeed {
     GearAttackSpeed(String name, int offset) {
         this.name = name;
         this.offset = offset;
+    }
+
+    public static GearAttackSpeed fromString(String str) {
+        if (str == null) return null;
+        try {
+            GearAttackSpeed attackSpeed = GearAttackSpeed.valueOf(str);
+            return attackSpeed;
+        } catch (IllegalArgumentException e) {
+            WynntilsMod.warn("Invalid gear attack speed: " + str);
+            return null;
+        }
     }
 
     public String getName() {
