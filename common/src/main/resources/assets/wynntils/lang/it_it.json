@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Percentuale complessiva nel nome",
   "feature.wynntils.itemStatInfo.perfect.description": "I nomi di oggetti perfetti (100%) dovrebbero essere arcobaleno colorati?",
   "feature.wynntils.itemStatInfo.perfect.name": "Oggetti Perfetti Arcobaleno",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Le identificazioni devono essere riordinate secondo l'ordine di Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Riordina Identificazioni",
   "feature.wynntils.itemStatInfo.showStars.description": "Gli ID dovrebbero avere delle stelle (*, ** o ***) stampate?",
   "feature.wynntils.itemStatInfo.showStars.name": "Mostra Stelle",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Dovremmo disegnare un elemento sovrapposto mostrando il livello di amplificatore corkian?",
