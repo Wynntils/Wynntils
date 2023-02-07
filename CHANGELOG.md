@@ -1,9 +1,21 @@
+## [0.0.2-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.178...v0.0.2-alpha.179) (2023-02-07)
+
+
+### Bug Fixes
+
+* Change hideLevelUp default value to false ([#1135](https://github.com/Wynntils/Artemis/issues/1135)) ([ded9ecd](https://github.com/Wynntils/Artemis/commit/ded9ecd7ea4fa7337855b729e8907403049ee31f))
+
 ## [0.0.2-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.177...v0.0.2-alpha.178) (2023-02-07)
 
 
 ### Bug Fixes
 
 * Make sure class/world data is sent to Hades if login happened after joining a world ([#1131](https://github.com/Wynntils/Artemis/issues/1131)) ([564b5a5](https://github.com/Wynntils/Artemis/commit/564b5a5767dfac5097a0165cf901d408944a0965))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.178 [skip ci] ([e8964e5](https://github.com/Wynntils/Artemis/commit/e8964e50fe877070e319c0ae821f3cbc85e16f6d))
 
 ## [0.0.2-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.176...v0.0.2-alpha.177) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.175 [skip ci] ([920a240](https://github.com/Wynntils/Artemis/commit/920a2403908ac56a3caaf529e05d4ad129a2b359))
-
-## [0.0.2-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.173...v0.0.2-alpha.174) (2023-02-07)
-
-
-### Bug Fixes
-
-* Make the guild tag optional in local regex ([#1128](https://github.com/Wynntils/Artemis/issues/1128)) ([a2fd576](https://github.com/Wynntils/Artemis/commit/a2fd57612c4092e2d869066a57f4d4992b89c2bb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.174 [skip ci] ([230e8eb](https://github.com/Wynntils/Artemis/commit/230e8ebcfe5cd79eddf0f4e290b71e57b3a5974b))
 
