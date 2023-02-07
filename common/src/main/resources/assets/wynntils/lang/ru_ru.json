@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Общие Проценты в Имя",
   "feature.wynntils.itemStatInfo.perfect.description": "Должны ли имена идеальных (100%) предметов быть радужными цветами?",
   "feature.wynntils.itemStatInfo.perfect.name": "Радужная радуга",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Следует ли переупорядочить идентификацию по заказу Wynntils?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Изменить порядок идентификации",
   "feature.wynntils.itemStatInfo.showStars.description": "Должны ли идентификаторы печатать звезды (*, ** или ***)?",
   "feature.wynntils.itemStatInfo.showStars.name": "Показать звезды",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Нарисуем оверлей предмета, показывающий уровень усилителя?",
