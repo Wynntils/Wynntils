@@ -151,6 +151,13 @@ public class ItemStatInfoFeature extends UserFeature {
         @Override
         public MutableComponent getSuffix(
                 StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
+            if (!possibleValues.range().inRange(statActualValue.value())) {
+                // Our actual value lies outside the range of possible values
+                // This can happen if the API data is outdated. In this case, just mark
+                // the stat as "NEW".
+                return Component.literal(" [NEW]").withStyle(ChatFormatting.GOLD);
+            }
+
             if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)
                     && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
                 return getInnerRollSuffix(style, statActualValue, possibleValues);
