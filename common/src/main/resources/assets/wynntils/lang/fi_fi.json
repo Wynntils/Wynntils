@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Kokonaisprosenttiosuus nimessä",
   "feature.wynntils.itemStatInfo.perfect.description": "Pitäisikö nimet täydellinen (100%) kohteita olla sateenkaari väri?",
   "feature.wynntils.itemStatInfo.perfect.name": "Sateenkaari Täydelliset Kohteet",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Pitäisikö tunnisteet tilata uudelleen Wynntilsin tilauksen mukaisesti?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Järjestä Tunnistukset",
   "feature.wynntils.itemStatInfo.showStars.description": "Pitäisikö tunnisteilla olla tähdet (*, ** tai ***) tulostettu?",
   "feature.wynntils.itemStatInfo.showStars.name": "Näytä Tähdet",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Pitäisikö meidän piirtää kohteen peittokuva osoittaa corkian vahvistin taso?",
