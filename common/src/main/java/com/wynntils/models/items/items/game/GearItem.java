@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.gearinfo.type.GearInfo;
-import com.wynntils.models.gearinfo.type.GearInstance;
-import com.wynntils.models.gearinfo.type.GearTier;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import java.util.Optional;
 

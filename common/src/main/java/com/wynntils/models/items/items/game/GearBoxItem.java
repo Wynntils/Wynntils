@@ -5,9 +5,9 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gearinfo.itemguess.ItemGuessProfile;
-import com.wynntils.models.gearinfo.type.GearTier;
-import com.wynntils.models.gearinfo.type.GearType;
+import com.wynntils.models.gear.itemguess.ItemGuessProfile;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import java.util.List;
 import java.util.Map;

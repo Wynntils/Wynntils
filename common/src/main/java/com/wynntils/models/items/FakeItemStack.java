@@ -6,7 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.models.gearinfo.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
