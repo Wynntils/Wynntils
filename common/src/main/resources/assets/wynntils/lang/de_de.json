@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Gesamtprozentsatz in Name",
   "feature.wynntils.itemStatInfo.perfect.description": "Sollen die Namen von perfekten (100%) Gegenständen regenbogenfarben sein?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regenbogen Perfekte Items",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Sollten die Identifizierungen nach Wynntils Reihenfolge neu geordnet werden?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Identifikationen neu ordnen",
   "feature.wynntils.itemStatInfo.showStars.description": "Sollen IDs mit Sternen (*, ** oder ***) angezeigt werden?",
   "feature.wynntils.itemStatInfo.showStars.name": "Zeige Sterne",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Soll ein Item-Overlay mit den Stufen der Corkus Verstärker angezeigt werden?",
