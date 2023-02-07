@@ -1,9 +1,21 @@
+## [0.0.2-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.173...v0.0.2-alpha.174) (2023-02-07)
+
+
+### Bug Fixes
+
+* Make the guild tag optional in local regex ([#1128](https://github.com/Wynntils/Artemis/issues/1128)) ([a2fd576](https://github.com/Wynntils/Artemis/commit/a2fd57612c4092e2d869066a57f4d4992b89c2bb))
+
 ## [0.0.2-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.172...v0.0.2-alpha.173) (2023-02-06)
 
 
 ### New Features
 
 * Make spell vignette fade time configurable ([#1126](https://github.com/Wynntils/Artemis/issues/1126)) ([029ca79](https://github.com/Wynntils/Artemis/commit/029ca7960c131b081f38ab2aea6b376dc7c7ace2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.173 [skip ci] ([9ebec5d](https://github.com/Wynntils/Artemis/commit/9ebec5d0d28b61538bdd8b1eb4f84285dd618fa9))
 
 ## [0.0.2-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.171...v0.0.2-alpha.172) (2023-02-05)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.170 [skip ci] ([6aec7a1](https://github.com/Wynntils/Artemis/commit/6aec7a1f469ac7e9bf3a4284b10539f95ef0c7b2))
-
-## [0.0.2-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.168...v0.0.2-alpha.169) (2023-02-03)
-
-
-### Bug Fixes
-
-* Problem in Party Management with friends where the name capitalization differet from IGN ([#1119](https://github.com/Wynntils/Artemis/issues/1119)) ([728ce64](https://github.com/Wynntils/Artemis/commit/728ce645d51124cabe34db1310f51450d1e20ff5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.169 [skip ci] ([f8e88c1](https://github.com/Wynntils/Artemis/commit/f8e88c1877c07df8092f4dfcc614d62f21c7fd5a))
 
