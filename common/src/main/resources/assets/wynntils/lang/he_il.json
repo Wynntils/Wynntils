@@ -16,6 +16,7 @@
   "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow.name": "צל טקסט",
   "feature.wynntils.customBarsOverlay.overlay.healthBar.name": "מד חיים",
   "feature.wynntils.customBarsOverlay.overlay.manaBankBar.name": "מד באנק המאנא",
+  "feature.wynntils.customBarsOverlay.overlay.manaBar.name": "מד מאנא",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.name": "צל טקסט",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.name": "צל טקסט",
   "feature.wynntils.hidePotionGlint.name": "החבא ניצוצי שיקוים",
