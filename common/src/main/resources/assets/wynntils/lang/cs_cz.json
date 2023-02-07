@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Celkové procento v názvu",
   "feature.wynntils.itemStatInfo.perfect.description": "Měly by být názvy perfektních (100%) předmětů duhového chladu?",
   "feature.wynntils.itemStatInfo.perfect.name": "Dluhový dokonalý předmět",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Měla by být identifikace přeřazena podle Wynntils pořadí?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Změnit pořadí identifikací",
   "feature.wynntils.itemStatInfo.showStars.description": "Má mít ID vytištěné hvězdičky (*, ** nebo ***)?",
   "feature.wynntils.itemStatInfo.showStars.name": "Zobrazit hvězdičky",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Měli bychom nakreslit překryvnou vrstvu s korkovým zesilovačem?",
