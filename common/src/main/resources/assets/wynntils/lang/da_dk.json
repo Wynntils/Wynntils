@@ -383,8 +383,6 @@
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Samlet procent i navn",
   "feature.wynntils.itemStatInfo.perfect.description": "Skal navnene på perfekte (100%) elementer være regnbue farvet?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regnbue Perfekt Elementer",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.description": "Skal identifikationer omsorteres i henhold til Wynntils ordre?",
-  "feature.wynntils.itemStatInfo.reorderIdentifications.name": "Genbestil Identifikationer",
   "feature.wynntils.itemStatInfo.showStars.description": "Skal ID'er have stjerner (*, ** eller ***) trykt?",
   "feature.wynntils.itemStatInfo.showStars.name": "Vis Stjerner",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Skal vi tegne en vare overlejring viser corkian forstærker tier?",
