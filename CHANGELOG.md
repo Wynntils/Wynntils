@@ -1,9 +1,21 @@
+## [0.0.2-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.180...v0.0.2-alpha.181) (2023-02-07)
+
+
+### New Features
+
+* Indicate that numbers can be used for selecting options in dialouges ([#1133](https://github.com/Wynntils/Artemis/issues/1133)) ([cab3a8e](https://github.com/Wynntils/Artemis/commit/cab3a8e5faefbb51030ccdae2595edafa46fb7e2))
+
 ## [0.0.2-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.179...v0.0.2-alpha.180) (2023-02-07)
 
 
 ### Bug Fixes
 
 * Fix return value in mixin for FixCastingSpellsFromInventoryFeature ([#1132](https://github.com/Wynntils/Artemis/issues/1132)) ([5f51aa4](https://github.com/Wynntils/Artemis/commit/5f51aa4539760a72f8d3b0de276d83920daf5d5d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.180 [skip ci] ([cb5845b](https://github.com/Wynntils/Artemis/commit/cb5845b0905612e3d52c77cf4b900f7ee94049fd))
 
 ## [0.0.2-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.178...v0.0.2-alpha.179) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.177 [skip ci] ([17d1058](https://github.com/Wynntils/Artemis/commit/17d10587a50dd6c7aad6c8cb7d75c1142616d6a0))
-
-## [0.0.2-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.175...v0.0.2-alpha.176) (2023-02-07)
-
-
-### New Features
-
-* Calculate gear guesses on the fly ([#1130](https://github.com/Wynntils/Artemis/issues/1130)) ([93595f7](https://github.com/Wynntils/Artemis/commit/93595f7b20d11a076c65353017b822d7e3ef7fe3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.176 [skip ci] ([64d7a41](https://github.com/Wynntils/Artemis/commit/64d7a41659dd3928039a43ef05d1d182f28b8e44))
 
