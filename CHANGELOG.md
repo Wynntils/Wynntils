@@ -1,9 +1,21 @@
+## [0.0.2-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.182...v0.0.2-alpha.183) (2023-02-08)
+
+
+### Miscellaneous Chores
+
+* Fixes according to IntelliJ analyze "Artemis mini" ([#1138](https://github.com/Wynntils/Artemis/issues/1138)) ([c8e0df2](https://github.com/Wynntils/Artemis/commit/c8e0df242ef975ab7053186ea21d14d3487b4281))
+
 ## [0.0.2-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.181...v0.0.2-alpha.182) (2023-02-08)
 
 
 ### Bug Fixes
 
 * Set bonus was incorrectly handled after Gear Rewrite ([#1136](https://github.com/Wynntils/Artemis/issues/1136)) ([ca6fb59](https://github.com/Wynntils/Artemis/commit/ca6fb59039a81e0c5480dbca1fc575f2a9950519))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.182 [skip ci] ([f1b0306](https://github.com/Wynntils/Artemis/commit/f1b03066a97ebec9b4ffe816f19624d7bdcbcfe1))
 
 ## [0.0.2-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.180...v0.0.2-alpha.181) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.179 [skip ci] ([cb24a5a](https://github.com/Wynntils/Artemis/commit/cb24a5a2864b2fd3c1b9c11f712e9545696db359))
-
-## [0.0.2-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.177...v0.0.2-alpha.178) (2023-02-07)
-
-
-### Bug Fixes
-
-* Make sure class/world data is sent to Hades if login happened after joining a world ([#1131](https://github.com/Wynntils/Artemis/issues/1131)) ([564b5a5](https://github.com/Wynntils/Artemis/commit/564b5a5767dfac5097a0165cf901d408944a0965))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.178 [skip ci] ([e8964e5](https://github.com/Wynntils/Artemis/commit/e8964e50fe877070e319c0ae821f3cbc85e16f6d))
 
