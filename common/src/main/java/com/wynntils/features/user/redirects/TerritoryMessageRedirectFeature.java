@@ -34,14 +34,11 @@ public class TerritoryMessageRedirectFeature extends UserFeature {
         String directionalArrow;
 
         switch (rawDirection) {
-            case "entering":
-                directionalArrow = "→";
-                break;
-            case "leaving":
-                directionalArrow = "←";
-                break;
-            default:
+            case "entering" -> directionalArrow = "→";
+            case "leaving" -> directionalArrow = "←";
+            default -> {
                 return;
+            }
         }
 
         // Want to account for weird stuff like "the Forgery" and make it "The Forgery"

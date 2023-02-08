@@ -93,7 +93,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
         String emeraldText;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            emeraldText = String.valueOf(emeralds) + EmeraldUnits.EMERALD.getSymbol();
+            emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
             int[] emeraldAmounts = calculateEmeraldAmounts(emeralds);
             StringBuilder builder = new StringBuilder();

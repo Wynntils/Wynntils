@@ -159,7 +159,6 @@ public class GearChatEncoding {
 
             // id value
             int value;
-            int stars = 0;
 
             int encodedValue = ids[counter] / 4;
             if (Math.abs(possibleValues.baseValue()) > 100) {
@@ -174,7 +173,7 @@ public class GearChatEncoding {
             }
 
             // stars
-            stars = ids[counter] % 4;
+            int stars = ids[counter] % 4;
 
             counter++;
 
