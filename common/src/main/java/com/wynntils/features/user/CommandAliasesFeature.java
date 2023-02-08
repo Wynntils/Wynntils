@@ -37,9 +37,9 @@ public class CommandAliasesFeature extends UserFeature {
         String message = e.getCommand();
 
         for (CommandAlias commandAlias : aliases) {
-            if (commandAlias.aliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
+            if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
-                McUtils.sendCommand(commandAlias.originalCommand());
+                McUtils.sendCommand(commandAlias.getOriginalCommand());
                 break;
             }
         }
@@ -50,7 +50,7 @@ public class CommandAliasesFeature extends UserFeature {
         RootCommandNode root = event.getRoot();
 
         for (CommandAlias commandAlias : aliases) {
-            for (String alias : commandAlias.aliases()) {
+            for (String alias : commandAlias.getAliases()) {
                 String[] parts = alias.split(" ");
                 LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(parts[0]);
 
@@ -63,5 +63,35 @@ public class CommandAliasesFeature extends UserFeature {
         }
     }
 
-    private record CommandAlias(String originalCommand, List<String> aliases) {}
+    private static final class CommandAlias {
+        private final String originalCommand;
+        private final List<String> aliases;
+
+        private CommandAlias(String originalCommand, List<String> aliases) {
+            this.originalCommand = originalCommand;
+            this.aliases = aliases;
+        }
+
+        private List<String> getAliases() {
+            return aliases;
+        }
+
+        private String getOriginalCommand() {
+            return originalCommand;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            if (other == null || getClass() != other.getClass()) return false;
+
+            CommandAlias that = (CommandAlias) other;
+            return originalCommand.equals(that.originalCommand) && aliases.equals(that.aliases);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(originalCommand, aliases);
+        }
+    }
 }
