@@ -256,10 +256,10 @@ public final class CharacterModel extends Model {
 
         String[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
         for (String effect : effects) {
-            effect = effect.trim();
-            if (effect.isEmpty()) continue;
+            String trimmedEffect = effect.trim();
+            if (trimmedEffect.isEmpty()) continue;
 
-            Matcher m = STATUS_EFFECT_PATTERN.matcher(effect);
+            Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect);
             if (!m.find()) continue;
 
             // See comment at TAB_EFFECT_PATTERN definition for format description of these

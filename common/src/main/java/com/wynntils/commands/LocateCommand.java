@@ -66,8 +66,7 @@ public class LocateCommand extends Command {
         }
 
         // Got exactly one match
-        ServiceKind selectedKind = matchedKinds.get(0);
-        return selectedKind;
+        return matchedKinds.get(0);
     }
 
     @Override

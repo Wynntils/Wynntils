@@ -187,11 +187,12 @@ public class GearChatEncoding {
             ArrayUtils.reverse(powders); // must reverse powders so they are read in reverse order
             for (int powderNum : powders) {
                 // once powderNum is 0, all the powders have been read
-                while (powderNum > 0) {
-                    Powder p = Powder.values()[powderNum % 6 - 1];
+                int currentPowder = powderNum;
+                while (currentPowder > 0) {
+                    Powder p = Powder.values()[currentPowder % 6 - 1];
                     powderList.add(0, p); // prepend powders because they are decoded in reverse
 
-                    powderNum /= 6;
+                    currentPowder /= 6;
                 }
             }
         }

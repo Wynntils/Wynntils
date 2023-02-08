@@ -419,6 +419,6 @@ public class GearInfoRegistry {
     }
 
     protected static class WynncraftGearInfoResponse {
-        List<GearInfo> items;
+        protected List<GearInfo> items;
     }
 }

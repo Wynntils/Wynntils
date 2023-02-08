@@ -64,7 +64,7 @@ public class CustomColor {
     }
 
     public CustomColor(String toParse) {
-        String noSpace = toParse.replaceAll(" ", "");
+        String noSpace = toParse.replace(" ", "");
 
         CustomColor parseTry = CustomColor.fromString(noSpace);
 
