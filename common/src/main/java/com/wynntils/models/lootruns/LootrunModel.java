@@ -258,7 +258,7 @@ public final class LootrunModel extends Model {
         File file = new File(LOOTRUNS, name + ".json");
         uncompiled = new LootrunUncompiled(activeLootrun.path(), activeLootrun.chests(), activeLootrun.notes(), file);
 
-        return LootrunFileParser.writeJson(activeLootrun, file, name);
+        return LootrunFileParser.writeJson(activeLootrun, file);
     }
 
     @SubscribeEvent

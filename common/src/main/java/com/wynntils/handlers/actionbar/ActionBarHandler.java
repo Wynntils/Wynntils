@@ -38,15 +38,6 @@ public final class ActionBarHandler extends Handler {
         allSegments.get(segment.getPosition()).add(segment);
     }
 
-    public void unregisterSegment(ActionBarSegment segment) {
-        ActionBarPosition pos = segment.getPosition();
-        segment.removed();
-        allSegments.get(pos).remove(segment);
-        if (lastSegments.get(pos) == segment) {
-            lastSegments.remove(pos);
-        }
-    }
-
     @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
         // FIXME: Reverse dependency!

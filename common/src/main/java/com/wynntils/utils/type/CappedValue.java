@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class CappedValue {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
-    private int current;
-    private int max;
+    private final int current;
+    private final int max;
 
     public CappedValue(int current, int max) {
         this.current = current;
@@ -20,16 +20,8 @@ public class CappedValue {
         return current;
     }
 
-    public void setCurrent(int current) {
-        this.current = current;
-    }
-
     public int getMax() {
         return max;
-    }
-
-    public void setMax(int max) {
-        this.max = max;
     }
 
     @Override
