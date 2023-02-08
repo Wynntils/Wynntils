@@ -325,7 +325,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     @Override
     public void onClose() {
         Managers.Config.loadConfigFile();
-        Managers.Config.loadConfigOptions(Managers.Config.getConfigHolders(), true);
+        Managers.Config.loadAllConfigOptions();
         super.onClose();
     }
 
