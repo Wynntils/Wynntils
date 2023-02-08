@@ -107,10 +107,10 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX -= (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
-        mouseY -= (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
+        double adjustedMouseX = mouseX - (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
+        double adjustedMouseY = mouseY - (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
     private void calculateRenderTasks() {

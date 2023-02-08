@@ -122,12 +122,12 @@ public final class GearViewerScreen extends WynntilsScreen {
     }
 
     private void renderHoveredTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        mouseX -= getTranslationX();
-        mouseY -= getTranslationY();
+        int adjustedMouseX = mouseX - (int) getTranslationX();
+        int adjustedMouseY = mouseY - (int) getTranslationY();
 
         GuiEventListener hovered = null;
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
+            if (child.isMouseOver(adjustedMouseX, adjustedMouseY)) {
                 hovered = child;
                 break;
             }
@@ -138,8 +138,8 @@ public final class GearViewerScreen extends WynntilsScreen {
         if (hovered instanceof ViewPlayerStatsButton) {
             RenderUtils.drawTooltipAt(
                     poseStack,
-                    mouseX,
-                    mouseY,
+                    adjustedMouseX,
+                    adjustedMouseY,
                     0,
                     VIEW_STATS_TOOLTIP,
                     FontRenderer.getInstance().getFont(),
@@ -148,7 +148,7 @@ public final class GearViewerScreen extends WynntilsScreen {
         }
 
         if (hovered instanceof GearItemButton gearItemButton && gearItemButton.getItemStack() != null) {
-            this.renderTooltip(poseStack, gearItemButton.getItemStack(), mouseX, mouseY);
+            this.renderTooltip(poseStack, gearItemButton.getItemStack(), adjustedMouseX, adjustedMouseY);
         }
     }
 
@@ -172,12 +172,12 @@ public final class GearViewerScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX -= getTranslationX();
-        mouseY -= getTranslationY();
+        double adjustedMouseX = mouseX - getTranslationX();
+        double adjustedMouseY = mouseY - getTranslationY();
 
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                child.mouseClicked(mouseX, mouseY, button);
+            if (child.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                child.mouseClicked(adjustedMouseX, adjustedMouseY, button);
             }
         }
 
