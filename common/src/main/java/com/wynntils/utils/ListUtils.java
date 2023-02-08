@@ -6,7 +6,7 @@ package com.wynntils.utils;
 
 import java.util.List;
 
-public class ListUtils {
+public final class ListUtils {
     public static <T> void swapPairwise(List<T> list) {
         for (int i = 0; i < list.size() - 1; i += 2) {
             T element = list.get(i);

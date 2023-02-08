@@ -11,6 +11,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,13 +22,13 @@ public class ChatTimestampFeature extends UserFeature {
     @Config
     public String formatPattern = "HH:mm:ss";
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern, Locale.ROOT);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         // Try to set the new format string and if it fails revert to the default
         try {
-            formatter = DateTimeFormatter.ofPattern(formatPattern);
+            formatter = DateTimeFormatter.ofPattern(formatPattern, Locale.ROOT);
         } catch (Exception e) {
             formatter = null;
 
