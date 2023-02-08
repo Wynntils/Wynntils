@@ -118,9 +118,7 @@ public class ItemHandler extends Handler {
             return false;
         }
 
-        if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
-
-        return true;
+        return firstItem.getDamageValue() == secondItem.getDamageValue();
     }
 
     private void annotate(ItemStack item) {

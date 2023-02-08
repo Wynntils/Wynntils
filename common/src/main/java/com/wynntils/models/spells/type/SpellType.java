@@ -92,7 +92,7 @@ public enum SpellType {
         return 0;
     }
 
-    public int getGrade(int level) {
+    private int getGrade(int level) {
         int compareLevel = level - (spellNumber - 1) * 10;
         if (compareLevel >= 36) {
             return 3;

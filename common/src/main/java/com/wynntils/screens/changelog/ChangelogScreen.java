@@ -26,12 +26,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 
-public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
+public final class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
     private final String changelog;
     private List<List<TextRenderTask>> changelogTasks;
     private int currentPage = 0;
 
-    public ChangelogScreen(String changelog) {
+    private ChangelogScreen(String changelog) {
         super(Component.translatable("screens.wynntils.changelog.name"));
 
         this.changelog = changelog;
