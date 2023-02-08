@@ -40,7 +40,7 @@ public abstract class ScoreboardMixin {
     }
 
     @Inject(method = "addPlayerToTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)Z", at = @At("RETURN"))
-    private void addPlayerToTeamPost(String username, PlayerTeam playerTeam, CallbackInfoReturnable cir) {
+    private void addPlayerToTeamPost(String username, PlayerTeam playerTeam, CallbackInfoReturnable<Boolean> cir) {
         EventFactory.onAddPlayerToTeam(username, playerTeam);
     }
 }

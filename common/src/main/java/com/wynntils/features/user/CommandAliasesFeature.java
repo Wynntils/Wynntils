@@ -15,7 +15,6 @@ import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.commands.CommandSourceStack;
@@ -38,9 +37,9 @@ public class CommandAliasesFeature extends UserFeature {
         String message = e.getCommand();
 
         for (CommandAlias commandAlias : aliases) {
-            if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
+            if (commandAlias.aliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
-                McUtils.sendCommand(commandAlias.getOriginalCommand());
+                McUtils.sendCommand(commandAlias.originalCommand());
                 break;
             }
         }
@@ -51,7 +50,7 @@ public class CommandAliasesFeature extends UserFeature {
         RootCommandNode root = event.getRoot();
 
         for (CommandAlias commandAlias : aliases) {
-            for (String alias : commandAlias.getAliases()) {
+            for (String alias : commandAlias.aliases()) {
                 String[] parts = alias.split(" ");
                 LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(parts[0]);
 
@@ -64,35 +63,5 @@ public class CommandAliasesFeature extends UserFeature {
         }
     }
 
-    protected static class CommandAlias {
-        private final String originalCommand;
-        private final List<String> aliases;
-
-        protected CommandAlias(String originalCommand, List<String> aliases) {
-            this.originalCommand = originalCommand;
-            this.aliases = Collections.unmodifiableList(aliases);
-        }
-
-        protected List<String> getAliases() {
-            return aliases;
-        }
-
-        protected String getOriginalCommand() {
-            return originalCommand;
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            if (other == null || getClass() != other.getClass()) return false;
-
-            CommandAlias that = (CommandAlias) other;
-            return originalCommand.equals(that.originalCommand) && aliases.equals(that.aliases);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(originalCommand, aliases);
-        }
-    }
+    private record CommandAlias(String originalCommand, List<String> aliases) {}
 }
