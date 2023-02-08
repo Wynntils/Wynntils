@@ -110,17 +110,23 @@ public final class GearTooltipBuilder {
             String codedLine = WynnUtils.normalizeBadString(ComponentUtils.getCoded(loreLine));
 
             if (!footerStarted) {
-                Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
-                if (matcher.matches()) {
-                    String statName = matcher.group(6);
+                Matcher setBonusMatcher = GearParser.SET_BONUS_PATTEN.matcher(codedLine);
+                if (setBonusMatcher.matches()) {
+                    headerEnded = true;
+                    footerStarted = true;
+                } else {
+                    Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
+                    if (matcher.matches()) {
+                        String statName = matcher.group(6);
 
-                    if (Skill.isSkill(statName)) {
-                        // Skill points counts to the header since they are fixed (but look like
-                        // identified stats), so ignore those, and fall through
-                    } else {
-                        headerEnded = true;
-                        // Don't keep identifications lines at all
-                        continue;
+                        if (Skill.isSkill(statName)) {
+                            // Skill points counts to the header since they are fixed (but look like
+                            // identified stats), so ignore those, and fall through
+                        } else {
+                            headerEnded = true;
+                            // Don't keep identifications lines at all
+                            continue;
+                        }
                     }
                 }
             }
