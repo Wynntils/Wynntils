@@ -1,9 +1,21 @@
+## [0.0.2-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.185...v0.0.2-alpha.186) (2023-02-08)
+
+
+### Miscellaneous Chores
+
+* More IntelliJ fixes ([#1139](https://github.com/Wynntils/Artemis/issues/1139)) ([fa114b6](https://github.com/Wynntils/Artemis/commit/fa114b6b23878e731f1e065031247b51bd4c200e))
+
 ## [0.0.2-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.184...v0.0.2-alpha.185) (2023-02-08)
 
 
 ### Bug Fixes
 
 * Textured lootlun line should render correctly in dark areas ([#1140](https://github.com/Wynntils/Artemis/issues/1140)) ([18609fd](https://github.com/Wynntils/Artemis/commit/18609fd4c98c63bf95bce5a933c83c9f5d2f59a5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.185 [skip ci] ([4f222c9](https://github.com/Wynntils/Artemis/commit/4f222c988fe7974d465e3c6cf8ac09942cc569d1))
 
 ## [0.0.2-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.183...v0.0.2-alpha.184) (2023-02-08)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.182 [skip ci] ([f1b0306](https://github.com/Wynntils/Artemis/commit/f1b03066a97ebec9b4ffe816f19624d7bdcbcfe1))
-
-## [0.0.2-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.180...v0.0.2-alpha.181) (2023-02-07)
-
-
-### New Features
-
-* Indicate that numbers can be used for selecting options in dialouges ([#1133](https://github.com/Wynntils/Artemis/issues/1133)) ([cab3a8e](https://github.com/Wynntils/Artemis/commit/cab3a8e5faefbb51030ccdae2595edafa46fb7e2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.181 [skip ci] ([508c0f8](https://github.com/Wynntils/Artemis/commit/508c0f8998ee051cc094d0144063473a3e90d291))
 
