@@ -229,11 +229,11 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
         }
+    }
 
-        public enum TotemTrackingDetail {
-            NONE,
-            COORDS,
-            DISTANCE
-        }
+    public enum TotemTrackingDetail {
+        NONE,
+        COORDS,
+        DISTANCE
     }
 }

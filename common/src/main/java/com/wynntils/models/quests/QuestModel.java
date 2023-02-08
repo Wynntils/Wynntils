@@ -159,9 +159,7 @@ public final class QuestModel extends Model {
 
         Optional<Location> location = questInfo.getNextLocation();
 
-        if (location.isEmpty()) return null;
-
-        return location.get();
+        return location.orElse(null);
     }
 
     public void clearTrackedQuestFromScoreBoard() {

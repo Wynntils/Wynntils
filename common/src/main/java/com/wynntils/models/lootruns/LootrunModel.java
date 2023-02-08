@@ -42,7 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
-    private static List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
+    private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
 
     private LootrunUncompiled uncompiled = null;
 
