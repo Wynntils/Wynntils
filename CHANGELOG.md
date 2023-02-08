@@ -1,9 +1,21 @@
+## [0.0.2-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.181...v0.0.2-alpha.182) (2023-02-08)
+
+
+### Bug Fixes
+
+* Set bonus was incorrectly handled after Gear Rewrite ([#1136](https://github.com/Wynntils/Artemis/issues/1136)) ([ca6fb59](https://github.com/Wynntils/Artemis/commit/ca6fb59039a81e0c5480dbca1fc575f2a9950519))
+
 ## [0.0.2-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.180...v0.0.2-alpha.181) (2023-02-07)
 
 
 ### New Features
 
 * Indicate that numbers can be used for selecting options in dialouges ([#1133](https://github.com/Wynntils/Artemis/issues/1133)) ([cab3a8e](https://github.com/Wynntils/Artemis/commit/cab3a8e5faefbb51030ccdae2595edafa46fb7e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.181 [skip ci] ([508c0f8](https://github.com/Wynntils/Artemis/commit/508c0f8998ee051cc094d0144063473a3e90d291))
 
 ## [0.0.2-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.179...v0.0.2-alpha.180) (2023-02-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.178 [skip ci] ([e8964e5](https://github.com/Wynntils/Artemis/commit/e8964e50fe877070e319c0ae821f3cbc85e16f6d))
-
-## [0.0.2-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.176...v0.0.2-alpha.177) (2023-02-07)
-
-
-### Bug Fixes
-
-* Item Lock's block all mode now works correctly if HEAD slot is locked ([#1134](https://github.com/Wynntils/Artemis/issues/1134)) ([d533785](https://github.com/Wynntils/Artemis/commit/d533785641f6a1f5f3d542f0626d5f59f87117dd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.177 [skip ci] ([17d1058](https://github.com/Wynntils/Artemis/commit/17d10587a50dd6c7aad6c8cb7d75c1142616d6a0))
 
