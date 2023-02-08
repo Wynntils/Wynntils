@@ -58,7 +58,7 @@ public abstract class StatType {
                 && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.apiName, that.apiName)
                 && Objects.equals(this.internalRollName, that.internalRollName)
-                && Objects.equals(this.unit, that.unit);
+                && this.unit == that.unit;
     }
 
     @Override

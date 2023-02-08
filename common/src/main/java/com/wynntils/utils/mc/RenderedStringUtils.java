@@ -6,7 +6,7 @@ package com.wynntils.utils.mc;
 
 import net.minecraft.client.gui.Font;
 
-public class RenderedStringUtils {
+public final class RenderedStringUtils {
     public static String[] wrapTextBySize(String s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");

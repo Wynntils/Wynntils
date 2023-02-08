@@ -82,7 +82,7 @@ public final class WorldStateModel extends Model {
     @SubscribeEvent
     public void connecting(WynncraftConnectionEvent.Connected e) {
         if (currentState != WorldState.NOT_CONNECTED) {
-            WynntilsMod.error("Got connected event while already connected to server: " + e);
+            WynntilsMod.error("Got connected event while already connected to server: " + e.getHost());
             currentState = WorldState.NOT_CONNECTED;
             currentWorldName = "";
         }
