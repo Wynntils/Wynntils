@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -81,8 +82,8 @@ public final class WynntilsAccountManager extends Manager {
         return loggedIn;
     }
 
-    public HashMap<String, String> getEncodedConfigs() {
-        return encodedConfigs;
+    public Map<String, String> getEncodedConfigs() {
+        return Collections.unmodifiableMap(encodedConfigs);
     }
 
     public void dumpEncodedConfig(String name) {

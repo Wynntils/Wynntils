@@ -5,6 +5,7 @@
 package com.wynntils.handlers.chat.event;
 
 import com.wynntils.handlers.chat.NpcDialogueType;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -17,7 +18,7 @@ public class NpcDialogEvent extends Event {
     private final boolean isProtected;
 
     public NpcDialogEvent(List<Component> chatMessage, NpcDialogueType type, boolean isProtected) {
-        this.chatMessage = chatMessage;
+        this.chatMessage = Collections.unmodifiableList(chatMessage);
         this.type = type;
         this.isProtected = isProtected;
     }

@@ -26,6 +26,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -119,11 +120,11 @@ public final class DiscoveryModel extends Model {
     }
 
     public List<Component> getDiscoveriesTooltip() {
-        return discoveriesTooltip;
+        return Collections.unmodifiableList(discoveriesTooltip);
     }
 
     public List<Component> getSecretDiscoveriesTooltip() {
-        return secretDiscoveriesTooltip;
+        return Collections.unmodifiableList(secretDiscoveriesTooltip);
     }
 
     public Stream<DiscoveryInfo> getAllDiscoveries() {
@@ -131,7 +132,7 @@ public final class DiscoveryModel extends Model {
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {
-        return discoveryInfoList;
+        return Collections.unmodifiableList(discoveryInfoList);
     }
 
     private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
@@ -132,7 +133,7 @@ public final class LootrunModel extends Model {
     }
 
     public List<LootrunInstance> getLootruns() {
-        return lootrunInstanceCache;
+        return Collections.unmodifiableList(lootrunInstanceCache);
     }
 
     public void refreshLootrunCache() {

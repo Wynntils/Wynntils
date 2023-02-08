@@ -14,6 +14,7 @@ import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -109,7 +110,7 @@ public class QuestInfo {
     }
 
     public List<Pair<String, Integer>> getAdditionalRequirements() {
-        return additionalRequirements;
+        return Collections.unmodifiableList(additionalRequirements);
     }
 
     public int getPageNumber() {

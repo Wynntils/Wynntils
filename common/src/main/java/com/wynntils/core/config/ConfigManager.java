@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -260,7 +261,7 @@ public final class ConfigManager extends Manager {
     }
 
     public List<ConfigHolder> getConfigHolders() {
-        return CONFIG_HOLDERS;
+        return Collections.unmodifiableList(CONFIG_HOLDERS);
     }
 
     public Object deepCopy(Object value, Type fieldType) {

@@ -15,6 +15,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,11 +174,11 @@ public class ItemHandler extends Handler {
     }
 
     public Map<Class<?>, Integer> getProfilingTimes() {
-        return profilingTimes;
+        return Collections.unmodifiableMap(profilingTimes);
     }
 
     public Map<Class<?>, Integer> getProfilingCounts() {
-        return profilingCounts;
+        return Collections.unmodifiableMap(profilingCounts);
     }
 
     public void resetProfiling() {

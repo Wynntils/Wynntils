@@ -4,18 +4,19 @@
  */
 package com.wynntils.mc.event;
 
-import it.unimi.dsi.fastutil.ints.IntList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraftforge.eventbus.api.Event;
 
 public class RemoveEntitiesEvent extends Event {
-    private final IntList entityIds;
+    private final List<Integer> entityIds;
 
     public RemoveEntitiesEvent(ClientboundRemoveEntitiesPacket packet) {
-        this.entityIds = packet.getEntityIds();
+        this.entityIds = Collections.unmodifiableList(packet.getEntityIds());
     }
 
-    public IntList getEntityIds() {
+    public List<Integer> getEntityIds() {
         return entityIds;
     }
 }

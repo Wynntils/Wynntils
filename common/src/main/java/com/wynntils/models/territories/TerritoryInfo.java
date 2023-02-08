@@ -8,6 +8,7 @@ import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,15 +145,15 @@ public class TerritoryInfo {
     }
 
     public Map<GuildResource, Integer> getGenerators() {
-        return generators;
+        return Collections.unmodifiableMap(generators);
     }
 
     public Map<GuildResource, TerritoryStorage> getStorage() {
-        return storage;
+        return Collections.unmodifiableMap(storage);
     }
 
     public List<String> getTradingRoutes() {
-        return tradingRoutes;
+        return Collections.unmodifiableList(tradingRoutes);
     }
 
     public Integer getGeneration(GuildResource resource) {

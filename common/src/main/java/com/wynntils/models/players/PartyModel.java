@@ -19,6 +19,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -328,11 +329,11 @@ public final class PartyModel extends Model {
     }
 
     public Set<String> getPartyMembers() {
-        return partyMembers;
+        return Collections.unmodifiableSet(partyMembers);
     }
 
     public Set<String> getOfflineMembers() {
-        return offlineMembers;
+        return Collections.unmodifiableSet(offlineMembers);
     }
 
     @SubscribeEvent

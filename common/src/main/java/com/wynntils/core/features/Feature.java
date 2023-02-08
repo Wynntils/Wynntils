@@ -17,6 +17,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -89,7 +90,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     }
 
     public List<Overlay> getOverlays() {
-        return overlays;
+        return Collections.unmodifiableList(overlays);
     }
 
     /** Gets the name of a feature */

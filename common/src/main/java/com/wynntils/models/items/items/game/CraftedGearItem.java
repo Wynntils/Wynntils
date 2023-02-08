@@ -11,6 +11,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.utils.type.CappedValue;
+import java.util.Collections;
 import java.util.List;
 
 public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {
@@ -28,10 +29,10 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
             List<StatActualValue> identifications,
             List<Powder> powders,
             CappedValue durability) {
-        this.damages = damages;
-        this.requirements = requirements;
-        this.identifications = identifications;
-        this.powders = powders;
+        this.damages = Collections.unmodifiableList(damages);
+        this.requirements = Collections.unmodifiableList(requirements);
+        this.identifications = Collections.unmodifiableList(identifications);
+        this.powders = Collections.unmodifiableList(powders);
         this.durability = durability;
     }
 

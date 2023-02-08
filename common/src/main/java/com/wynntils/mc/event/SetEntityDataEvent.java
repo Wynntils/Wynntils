@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.event;
 
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,7 +16,7 @@ public class SetEntityDataEvent extends Event {
 
     public SetEntityDataEvent(ClientboundSetEntityDataPacket packet) {
         this.id = packet.id();
-        this.packedItems = packet.packedItems();
+        this.packedItems = Collections.unmodifiableList(packet.packedItems());
     }
 
     public int getId() {

@@ -5,6 +5,7 @@
 package com.wynntils.models.players.hades;
 
 import com.wynntils.models.players.hades.objects.HadesUser;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,7 +15,7 @@ public final class HadesUserRegistry {
     private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
     public Map<UUID, HadesUser> getHadesUserMap() {
-        return hadesUserMap;
+        return Collections.unmodifiableMap(hadesUserMap);
     }
 
     public Optional<HadesUser> getUser(UUID uuid) {

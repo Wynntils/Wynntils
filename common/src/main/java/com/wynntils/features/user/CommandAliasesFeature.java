@@ -15,6 +15,7 @@ import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.commands.CommandSourceStack;
@@ -69,7 +70,7 @@ public class CommandAliasesFeature extends UserFeature {
 
         protected CommandAlias(String originalCommand, List<String> aliases) {
             this.originalCommand = originalCommand;
-            this.aliases = aliases;
+            this.aliases = Collections.unmodifiableList(aliases);
         }
 
         protected List<String> getAliases() {

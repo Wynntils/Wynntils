@@ -18,6 +18,7 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -149,11 +150,11 @@ public final class OverlayManager extends Manager {
     }
 
     public Map<Class<?>, Integer> getProfilingTimes() {
-        return profilingTimes;
+        return Collections.unmodifiableMap(profilingTimes);
     }
 
     public Map<Class<?>, Integer> getProfilingCounts() {
-        return profilingCounts;
+        return Collections.unmodifiableMap(profilingCounts);
     }
 
     public void resetProfiling() {
@@ -205,7 +206,7 @@ public final class OverlayManager extends Manager {
     }
 
     public List<SectionCoordinates> getSections() {
-        return sections;
+        return Collections.unmodifiableList(sections);
     }
 
     public Set<Overlay> getOverlays() {
