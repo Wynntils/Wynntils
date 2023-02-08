@@ -32,7 +32,6 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +101,7 @@ public final class CharacterModel extends Model {
     }
 
     public List<StatusEffect> getStatusEffects() {
-        return Collections.unmodifiableList(statusEffects);
+        return statusEffects;
     }
 
     public int getCurrentHealth() {

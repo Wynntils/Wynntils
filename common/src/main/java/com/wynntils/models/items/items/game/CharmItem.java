@@ -8,7 +8,6 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.stats.type.StatActualValue;
-import java.util.Collections;
 import java.util.List;
 
 public class CharmItem extends GameItem implements GearTierItemProperty {
@@ -18,7 +17,7 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
 
     public CharmItem(CharmInfo charmInfo, List<StatActualValue> identifications, int rerolls) {
         this.charmInfo = charmInfo;
-        this.identifications = Collections.unmodifiableList(identifications);
+        this.identifications = identifications;
         this.rerolls = rerolls;
     }
 

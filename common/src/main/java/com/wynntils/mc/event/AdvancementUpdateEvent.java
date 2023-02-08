@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.advancements.Advancement;
@@ -24,9 +23,9 @@ public class AdvancementUpdateEvent extends Event {
             Set<ResourceLocation> removed,
             Map<ResourceLocation, AdvancementProgress> progress) {
         this.reset = reset;
-        this.added = Collections.unmodifiableMap(added);
-        this.removed = Collections.unmodifiableSet(removed);
-        this.progress = Collections.unmodifiableMap(progress);
+        this.added = added;
+        this.removed = removed;
+        this.progress = progress;
     }
 
     public boolean isReset() {

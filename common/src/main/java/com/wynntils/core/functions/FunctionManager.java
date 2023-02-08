@@ -18,7 +18,6 @@ import com.wynntils.functions.WorldFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ public final class FunctionManager extends Manager {
     }
 
     public List<Function<?>> getFunctions() {
-        return Collections.unmodifiableList(functions);
+        return functions;
     }
 
     public boolean enableFunction(Function<?> function) {

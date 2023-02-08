@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.worlds.profile;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +13,7 @@ public class ServerProfile {
 
     public ServerProfile(long firstSeem, Set<String> players) {
         this.firstSeen = firstSeem;
-        this.players = Collections.unmodifiableSet(players);
+        this.players = players;
     }
 
     public Set<String> getPlayers() {

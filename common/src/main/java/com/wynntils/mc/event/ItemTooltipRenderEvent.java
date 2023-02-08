@@ -63,7 +63,7 @@ public abstract class ItemTooltipRenderEvent extends Event {
         }
 
         public List<Component> getTooltips() {
-            return Collections.unmodifiableList(tooltips);
+            return tooltips;
         }
 
         public void setTooltips(List<Component> tooltips) {

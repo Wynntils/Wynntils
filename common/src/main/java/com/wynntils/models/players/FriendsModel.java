@@ -18,7 +18,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -180,6 +179,6 @@ public final class FriendsModel extends Model {
     }
 
     public Set<String> getFriends() {
-        return Collections.unmodifiableSet(friends);
+        return friends;
     }
 }

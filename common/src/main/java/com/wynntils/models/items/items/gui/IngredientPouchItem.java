@@ -7,7 +7,6 @@ package com.wynntils.models.items.items.gui;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.utils.type.Pair;
-import java.util.Collections;
 import java.util.List;
 
 public class IngredientPouchItem extends GuiItem implements CountedItemProperty {
@@ -15,7 +14,7 @@ public class IngredientPouchItem extends GuiItem implements CountedItemProperty 
     private final int count;
 
     public IngredientPouchItem(List<Pair<IngredientProfile, Integer>> ingredients) {
-        this.ingredients = Collections.unmodifiableList(ingredients);
+        this.ingredients = ingredients;
         this.count = ingredients.stream().mapToInt(Pair::b).sum();
     }
 

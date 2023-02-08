@@ -21,7 +21,6 @@ import com.wynntils.utils.type.BoundingBox;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,15 +50,15 @@ public final class MapModel extends Model {
     }
 
     public Set<LabelPoi> getLabelPois() {
-        return Collections.unmodifiableSet(labelPois);
+        return labelPois;
     }
 
     public Set<ServicePoi> getServicePois() {
-        return Collections.unmodifiableSet(servicePois);
+        return servicePois;
     }
 
     public Set<CombatPoi> getCombatPois() {
-        return Collections.unmodifiableSet(combatPois);
+        return combatPois;
     }
 
     public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {

@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -17,7 +16,7 @@ public abstract class ContainerSetContentEvent extends Event {
     private final int stateId;
 
     protected ContainerSetContentEvent(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
-        this.items = Collections.unmodifiableList(items);
+        this.items = items;
         this.carriedItem = carriedItem;
         this.containerId = containerId;
         this.stateId = stateId;

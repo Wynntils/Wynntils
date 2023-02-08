@@ -109,7 +109,6 @@ import com.wynntils.features.user.tooltips.TooltipVanillaHideFeature;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -311,7 +310,7 @@ public final class FeatureManager extends Manager {
     }
 
     public List<Feature> getFeatures() {
-        return Collections.unmodifiableList(FEATURES);
+        return FEATURES;
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {

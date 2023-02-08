@@ -9,7 +9,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredients.type.IngredientTier;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -61,7 +60,7 @@ public class IngredientProfile {
     }
 
     public List<ProfessionType> getProfessions() {
-        return Collections.unmodifiableList(professions);
+        return professions;
     }
 
     public int getLevel() {
@@ -73,7 +72,7 @@ public class IngredientProfile {
     }
 
     public Map<String, IngredientIdentificationContainer> getStatuses() {
-        return Collections.unmodifiableMap(this.statuses);
+        return this.statuses;
     }
 
     public IngredientModifiers getIngredientModifiers() {

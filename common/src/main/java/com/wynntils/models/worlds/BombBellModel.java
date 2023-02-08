@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.ComponentUtils;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +50,6 @@ public final class BombBellModel extends Model {
 
     public Set<BombInfo> getBombBells() {
         removeOldTimers();
-        return Collections.unmodifiableSet(BOMB_BELLS);
+        return BOMB_BELLS;
     }
 }

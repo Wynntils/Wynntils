@@ -5,7 +5,6 @@
 package com.wynntils.models.discoveries.profile;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DiscoveryProfile {
@@ -27,6 +26,6 @@ public class DiscoveryProfile {
     }
 
     public List<String> getRequirements() {
-        return Collections.unmodifiableList(requirements);
+        return requirements;
     }
 }

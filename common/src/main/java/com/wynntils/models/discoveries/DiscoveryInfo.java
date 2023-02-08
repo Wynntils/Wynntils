@@ -11,7 +11,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -107,7 +106,7 @@ public class DiscoveryInfo {
             displayLore = generateLore();
         }
 
-        return Collections.unmodifiableList(displayLore);
+        return displayLore;
     }
 
     public String getName() {
@@ -127,6 +126,6 @@ public class DiscoveryInfo {
     }
 
     public List<String> getRequirements() {
-        return Collections.unmodifiableList(requirements);
+        return requirements;
     }
 }

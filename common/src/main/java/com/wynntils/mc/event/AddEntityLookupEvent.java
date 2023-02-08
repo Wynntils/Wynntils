@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.world.level.entity.EntityAccess;
@@ -18,7 +17,7 @@ public class AddEntityLookupEvent extends Event {
 
     public AddEntityLookupEvent(UUID uuid, Map<UUID, EntityAccess> entityMap) {
         this.uuid = uuid;
-        this.entityMap = Collections.unmodifiableMap(entityMap);
+        this.entityMap = entityMap;
     }
 
     public UUID getUUID() {

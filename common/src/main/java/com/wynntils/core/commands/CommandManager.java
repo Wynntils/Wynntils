@@ -26,7 +26,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -163,7 +162,7 @@ public final class CommandManager extends Manager {
     }
 
     public Set<Command> getCommandInstanceSet() {
-        return Collections.unmodifiableSet(commandInstanceSet);
+        return commandInstanceSet;
     }
 
     private void registerAllCommands() {

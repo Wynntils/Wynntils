@@ -5,7 +5,6 @@
 package com.wynntils.handlers.scoreboard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class ScoreboardSegment {
@@ -74,7 +73,7 @@ public final class ScoreboardSegment {
     }
 
     public void setContent(List<String> content) {
-        this.content = Collections.unmodifiableList(content);
+        this.content = content;
     }
 
     public void setEndIndex(int endIndex) {

@@ -24,7 +24,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +97,7 @@ public final class StatModel extends Model {
     }
 
     public List<StatType> getAllStatTypes() {
-        return Collections.unmodifiableList(statTypeRegistry);
+        return statTypeRegistry;
     }
 
     private static <T extends StatType> List<T> buildStats(StatBuilder<T> builder) {

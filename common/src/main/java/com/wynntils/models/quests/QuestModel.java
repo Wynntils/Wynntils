@@ -20,7 +20,6 @@ import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +85,7 @@ public final class QuestModel extends Model {
     }
 
     public List<QuestInfo> getQuestsRaw() {
-        return Collections.unmodifiableList(quests);
+        return quests;
     }
 
     public List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
@@ -120,7 +119,7 @@ public final class QuestModel extends Model {
     }
 
     public List<List<String>> getDialogueHistory() {
-        return Collections.unmodifiableList(dialogueHistory);
+        return dialogueHistory;
     }
 
     public void startTracking(QuestInfo questInfo) {

@@ -13,7 +13,6 @@ import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +61,7 @@ public final class GuildAttackTimerModel extends Model {
     }
 
     public List<TerritoryAttackTimer> getAttackTimers() {
-        return Collections.unmodifiableList(attackTimers);
+        return attackTimers;
     }
 
     public Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {

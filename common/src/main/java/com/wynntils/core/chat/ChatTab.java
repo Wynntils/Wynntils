@@ -7,7 +7,6 @@ package com.wynntils.core.chat;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -86,7 +85,7 @@ public class ChatTab {
     }
 
     public Set<RecipientType> getFilteredTypes() {
-        return Collections.unmodifiableSet(filteredTypes);
+        return filteredTypes;
     }
 
     @Override

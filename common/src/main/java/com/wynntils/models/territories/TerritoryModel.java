@@ -20,7 +20,6 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +73,7 @@ public final class TerritoryModel extends Model {
     }
 
     public Set<TerritoryPoi> getTerritoryPois() {
-        return Collections.unmodifiableSet(allTerritoryPois);
+        return allTerritoryPois;
     }
 
     public List<Poi> getTerritoryPoisFromAdvancement() {

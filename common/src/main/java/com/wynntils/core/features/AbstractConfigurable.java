@@ -7,7 +7,6 @@ package com.wynntils.core.features;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.config.ConfigHolder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public abstract class AbstractConfigurable implements Configurable {
 
     @Override
     public final List<ConfigHolder> getConfigOptions() {
-        return Collections.unmodifiableList(configOptions);
+        return configOptions;
     }
 
     @Override

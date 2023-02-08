@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -19,7 +18,7 @@ public class BossHealthUpdateEvent extends Event {
 
     public BossHealthUpdateEvent(ClientboundBossEventPacket packet, Map<UUID, LerpingBossEvent> bossEvents) {
         this.packet = packet;
-        this.bossEvents = Collections.unmodifiableMap(bossEvents);
+        this.bossEvents = bossEvents;
     }
 
     public ClientboundBossEventPacket getPacket() {
