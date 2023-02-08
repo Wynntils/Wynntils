@@ -1,9 +1,21 @@
+## [0.0.2-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.184...v0.0.2-alpha.185) (2023-02-08)
+
+
+### Bug Fixes
+
+* Textured lootlun line should render correctly in dark areas ([#1140](https://github.com/Wynntils/Artemis/issues/1140)) ([18609fd](https://github.com/Wynntils/Artemis/commit/18609fd4c98c63bf95bce5a933c83c9f5d2f59a5))
+
 ## [0.0.2-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.183...v0.0.2-alpha.184) (2023-02-08)
 
 
 ### Bug Fixes
 
 * Use classloader workaround for all async netmanager code ([#1137](https://github.com/Wynntils/Artemis/issues/1137)) ([5850e82](https://github.com/Wynntils/Artemis/commit/5850e828a3f3a13677db6a0ab545df8880ff03b4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.184 [skip ci] ([c971354](https://github.com/Wynntils/Artemis/commit/c971354c08ad7b757d84090e68ebacbc07065fb5))
 
 ## [0.0.2-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.182...v0.0.2-alpha.183) (2023-02-08)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.181 [skip ci] ([508c0f8](https://github.com/Wynntils/Artemis/commit/508c0f8998ee051cc094d0144063473a3e90d291))
-
-## [0.0.2-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.179...v0.0.2-alpha.180) (2023-02-07)
-
-
-### Bug Fixes
-
-* Fix return value in mixin for FixCastingSpellsFromInventoryFeature ([#1132](https://github.com/Wynntils/Artemis/issues/1132)) ([5f51aa4](https://github.com/Wynntils/Artemis/commit/5f51aa4539760a72f8d3b0de276d83920daf5d5d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.180 [skip ci] ([cb5845b](https://github.com/Wynntils/Artemis/commit/cb5845b0905612e3d52c77cf4b900f7ee94049fd))
 
