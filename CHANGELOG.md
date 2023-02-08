@@ -1,9 +1,17 @@
+## [0.0.2-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.183...v0.0.2-alpha.184) (2023-02-08)
+
+
+### Bug Fixes
+
+* Use classloader workaround for all async netmanager code ([#1137](https://github.com/Wynntils/Artemis/issues/1137)) ([5850e82](https://github.com/Wynntils/Artemis/commit/5850e828a3f3a13677db6a0ab545df8880ff03b4))
+
 ## [0.0.2-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.182...v0.0.2-alpha.183) (2023-02-08)
 
 
 ### Miscellaneous Chores
 
 * Fixes according to IntelliJ analyze "Artemis mini" ([#1138](https://github.com/Wynntils/Artemis/issues/1138)) ([c8e0df2](https://github.com/Wynntils/Artemis/commit/c8e0df242ef975ab7053186ea21d14d3487b4281))
+* **release:** v0.0.2-alpha.183 [skip ci] ([a57dc3c](https://github.com/Wynntils/Artemis/commit/a57dc3c80839130f6b10b38156ba3fe39b78dfa1))
 
 ## [0.0.2-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.181...v0.0.2-alpha.182) (2023-02-08)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.180 [skip ci] ([cb5845b](https://github.com/Wynntils/Artemis/commit/cb5845b0905612e3d52c77cf4b900f7ee94049fd))
-
-## [0.0.2-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.178...v0.0.2-alpha.179) (2023-02-07)
-
-
-### Bug Fixes
-
-* Change hideLevelUp default value to false ([#1135](https://github.com/Wynntils/Artemis/issues/1135)) ([ded9ecd](https://github.com/Wynntils/Artemis/commit/ded9ecd7ea4fa7337855b729e8907403049ee31f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.179 [skip ci] ([cb24a5a](https://github.com/Wynntils/Artemis/commit/cb24a5a2864b2fd3c1b9c11f712e9545696db359))
 
