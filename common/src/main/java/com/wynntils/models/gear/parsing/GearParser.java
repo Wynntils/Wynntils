@@ -43,6 +43,8 @@ public final class GearParser {
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
     private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
 
+    public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
+
     public static GearParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
@@ -50,6 +52,7 @@ public final class GearParser {
         int durabilityMax = 0;
         GearTier tier = null;
         GearType gearType = null;
+        boolean setBonusStats = false;
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -105,9 +108,15 @@ public final class GearParser {
                 continue;
             }
 
+            Matcher setBonusMatcher = SET_BONUS_PATTEN.matcher(normalizedCoded);
+            if (setBonusMatcher.matches()) {
+                // Any stat lines that follow from now on belongs to the Set Bonus
+                // Maybe these could be collected separately, but for now, ignore them
+                setBonusStats = true;
+            }
             // Look for identifications
             Matcher statMatcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
-            if (statMatcher.matches()) {
+            if (statMatcher.matches() && !setBonusStats) {
                 int value = Integer.parseInt(statMatcher.group(1));
                 // group 2 is only present for unidentified gears, as the to-part of the range
                 String unit = statMatcher.group(3);
