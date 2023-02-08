@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class ContainerSetContentEvent extends Event {
-    protected List<ItemStack> items;
+    private final List<ItemStack> items;
     private final ItemStack carriedItem;
     private final int containerId;
     private final int stateId;
@@ -42,10 +42,6 @@ public abstract class ContainerSetContentEvent extends Event {
     public static class Pre extends ContainerSetContentEvent {
         public Pre(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
-        }
-
-        public void setItems(List<ItemStack> items) {
-            this.items = items;
         }
     }
 

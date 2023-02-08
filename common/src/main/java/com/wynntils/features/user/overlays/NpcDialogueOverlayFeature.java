@@ -361,5 +361,5 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
     }
 
-    public record ConfirmationlessDialogue(List<String> text, long removeTime) {}
+    protected record ConfirmationlessDialogue(List<String> text, long removeTime) {}
 }

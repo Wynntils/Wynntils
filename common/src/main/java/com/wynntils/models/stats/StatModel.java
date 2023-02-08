@@ -120,14 +120,12 @@ public final class StatModel extends Model {
 
         // Create a fast lookup map
         for (StatType statType : statTypeRegistry) {
-            StatUnit unit = statType.getUnit();
-            statTypeLookup.put(statType.getDisplayName(), unit, statType);
+            statTypeLookup.put(statType.getDisplayName(), statType.getUnit(), statType);
         }
         // Spell Cost stats have a lot of aliases under which they can appear
-        for (SpellStatType stat : spellStats) {
-            for (String alias : SpellStatBuilder.getAliases(stat)) {
-                String lookupName = alias + stat.getUnit().getDisplayName();
-                statTypeLookup.put(alias, stat.getUnit(), stat);
+        for (SpellStatType spellStatType : spellStats) {
+            for (String alias : SpellStatBuilder.getAliases(spellStatType)) {
+                statTypeLookup.put(alias, spellStatType.getUnit(), spellStatType);
             }
         }
     }

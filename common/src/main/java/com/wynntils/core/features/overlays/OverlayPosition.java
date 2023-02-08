@@ -38,7 +38,7 @@ public class OverlayPosition {
     }
 
     public OverlayPosition(String string) {
-        Matcher matcher = POSITION_PATTERN.matcher(string.replaceAll(" ", ""));
+        Matcher matcher = POSITION_PATTERN.matcher(string.replace(" ", ""));
 
         if (!matcher.matches()) {
             throw new RuntimeException("Failed to parse OverlayPosition");

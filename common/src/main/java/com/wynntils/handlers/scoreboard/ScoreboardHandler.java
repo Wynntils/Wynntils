@@ -298,16 +298,6 @@ public final class ScoreboardHandler extends Handler {
         return segments;
     }
 
-    public void init() {
-        startThread();
-    }
-
-    public void disable() {
-        resetState();
-        scoreboardParts.clear();
-        updateSegmentMatchers();
-    }
-
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
         updateSegmentMatchers();
@@ -352,9 +342,5 @@ public final class ScoreboardHandler extends Handler {
     private void updateSegmentMatchers() {
         segmentMatchers =
                 scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
-    }
-
-    public void removePart(ScoreboardPart scoreboardPart) {
-        // FIXME: Implement
     }
 }

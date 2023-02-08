@@ -75,7 +75,7 @@ public final class LootrunFileParser {
         return new LootrunUncompiled(pointsList, chests, notes, file);
     }
 
-    public static LootrunSaveResult writeJson(LootrunUncompiled activeLootrun, File file, String name) {
+    public static LootrunSaveResult writeJson(LootrunUncompiled activeLootrun, File file) {
         try {
             boolean result = file.createNewFile();
 

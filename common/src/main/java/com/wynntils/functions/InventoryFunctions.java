@@ -134,7 +134,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().getCurrent());
+                return String.valueOf(durableItem.getDurability().current());
             }
 
             return "";
@@ -154,7 +154,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().getMax());
+                return String.valueOf(durableItem.getDurability().max());
             }
 
             return "";

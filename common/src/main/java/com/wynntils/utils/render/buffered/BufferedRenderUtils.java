@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 public final class BufferedRenderUtils {
     public static void drawLine(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x1,
             float y1,
@@ -135,7 +135,7 @@ public final class BufferedRenderUtils {
 
     public static void drawRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x,
             float y,
@@ -160,7 +160,7 @@ public final class BufferedRenderUtils {
 
     public static void drawColoredTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             CustomColor color,
             float alpha,
@@ -237,7 +237,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             float x,
             float y,
@@ -271,7 +271,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -364,7 +364,7 @@ public final class BufferedRenderUtils {
 
     private static void drawProgressBarForegroundWithColor(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -473,7 +473,7 @@ public final class BufferedRenderUtils {
 
     public static void drawProgressBarForeground(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,
@@ -519,7 +519,7 @@ public final class BufferedRenderUtils {
 
     public static void drawProgressBarBackground(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,

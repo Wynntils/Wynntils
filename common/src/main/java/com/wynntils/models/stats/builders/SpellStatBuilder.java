@@ -30,7 +30,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
     }
 
     public static List<String> getAliases(SpellStatType statType) {
-        List aliases = new ArrayList<>();
+        List<String> aliases = new ArrayList<>();
         SpellType genericSpell = statType.getSpellType();
         for (ClassType classType : ClassType.values()) {
             // Skip the unspecified class, we have that as our base name

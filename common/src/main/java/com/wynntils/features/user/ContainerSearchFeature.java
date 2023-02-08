@@ -169,8 +169,8 @@ public class ContainerSearchFeature extends UserFeature {
         screen.addRenderableWidget(lastSearchWidget);
     }
 
-    private void matchItems(String search, AbstractContainerScreen<?> screen) {
-        search = search.toLowerCase(Locale.ROOT);
+    private void matchItems(String searchStr, AbstractContainerScreen<?> screen) {
+        String search = searchStr.toLowerCase(Locale.ROOT);
 
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack item : screen.getMenu().getItems()) {

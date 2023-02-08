@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ComponentUtils {
+    private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
@@ -148,7 +149,7 @@ public final class ComponentUtils {
             return "";
         }
 
-        return text.replaceAll("(§[1-9a-f])+", "");
+        return COLOR_CODE_PATTERN.matcher(text).replaceAll("");
     }
 
     public static String getLastPartCodes(String lastPart) {

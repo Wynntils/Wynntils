@@ -109,7 +109,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+        renderBackground(poseStack);
 
         boolean inParty = Models.Party.isInParty();
 
