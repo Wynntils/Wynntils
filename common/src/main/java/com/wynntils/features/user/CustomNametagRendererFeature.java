@@ -145,11 +145,11 @@ public class CustomNametagRendererFeature extends UserFeature {
         }
     }
 
-    private static class CustomNametag {
+    private static final class CustomNametag {
         private final Component nametagComponent;
         private final float nametagScale;
 
-        public CustomNametag(Component nametagComponent, float nametagScale) {
+        private CustomNametag(Component nametagComponent, float nametagScale) {
             this.nametagComponent = nametagComponent;
             this.nametagScale = nametagScale;
         }

@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 
 public class TerritoryInfo {
     private static final Pattern GENERATOR_PATTERN =
-            Pattern.compile("(.\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
-    private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\s)?([0-9]+)\\/([0-9]+) stored");
+            Pattern.compile("(.\\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
+    private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\\s)?([0-9]+)\\/([0-9]+) stored");
     private static final Pattern DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final Pattern TREASURY_PATTERN = Pattern.compile("✦ Treasury: (.+)");
 
