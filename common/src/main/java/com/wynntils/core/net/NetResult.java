@@ -49,6 +49,10 @@ public abstract class NetResult {
         handleReader(
                 reader -> {
                     try {
+                        // FIXME: This is needed for patching class loading issue with Forge EventBus:
+                        //        https://github.com/MinecraftForge/EventBus/issues/44
+                        Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
+
                         handler.accept(JsonParser.parseReader(reader).getAsJsonObject());
                     } catch (Throwable t) {
                         WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc, t);
