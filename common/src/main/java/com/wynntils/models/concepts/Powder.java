@@ -34,7 +34,7 @@ public enum Powder {
 
     public static Powder fromElement(Element element) {
         for (Powder powder : Powder.values()) {
-            if (powder.element.equals(element)) {
+            if (powder.element == element) {
                 return powder;
             }
         }

@@ -329,7 +329,7 @@ public class GearInfoRegistry {
                     .toList();
         }
 
-        protected GearMajorId getMajorIdFromString(String majorIdString) {
+        private GearMajorId getMajorIdFromString(String majorIdString) {
             return this.allMajorIds.stream()
                     .filter(mId -> mId.id().equals(majorIdString))
                     .findFirst()

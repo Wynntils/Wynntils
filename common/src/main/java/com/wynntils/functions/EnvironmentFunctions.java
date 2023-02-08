@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.Locale;
 
 public class EnvironmentFunctions {
     public static class ClockFunction extends Function<String> {
@@ -24,7 +25,7 @@ public class EnvironmentFunctions {
         @Override
         public String getValue(String argument) {
             LocalDateTime date = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ROOT);
             return date.format(formatter);
         }
     }

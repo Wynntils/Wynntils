@@ -78,7 +78,7 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
     }
 

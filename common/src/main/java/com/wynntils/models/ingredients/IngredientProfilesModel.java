@@ -75,10 +75,8 @@ public final class IngredientProfilesModel extends Model {
 
     private void tryLoadInvertedList() {
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_ITEM_LIST);
-        dl.handleJsonObject(json -> {
-            invertedList = WynntilsMod.GSON.fromJson(
-                    json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class);
-        });
+        dl.handleJsonObject(json -> invertedList = WynntilsMod.GSON.fromJson(
+                json.getAsJsonObject("identificationOrder"), IdentificationInvertedList.class));
     }
 
     public IngredientProfile getIngredient(String name) {
