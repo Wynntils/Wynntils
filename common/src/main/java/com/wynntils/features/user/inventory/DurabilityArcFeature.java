@@ -50,7 +50,7 @@ public class DurabilityArcFeature extends UserFeature {
         CappedValue durability = durableItem.getDurability();
 
         // calculate color of arc
-        float durabilityFraction = (float) durability.getCurrent() / durability.getMax();
+        float durabilityFraction = (float) durability.current() / durability.max();
         int colorInt = Mth.hsvToRgb(Math.max(0f, durabilityFraction) / 3f, 1f, 1f);
         CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
