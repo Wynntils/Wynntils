@@ -46,7 +46,7 @@ public class CustomRenderType extends RenderType {
                     .setShaderState(POSITION_COLOR_TEX_SHADER)
                     .setCullState(NO_CULL)
                     .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.resource(), false, false))
-                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                    .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));
 
