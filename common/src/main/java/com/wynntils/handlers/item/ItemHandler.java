@@ -74,8 +74,8 @@ public class ItemHandler extends Handler {
     }
 
     private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
-        // These items will already have an annotation, no handling necessary
-        if (newItem instanceof FakeItemStack) return;
+        // For e.g. FakeItemStacks we will already have an annotation
+        if (((ItemStackExtension) newItem).getAnnotation() != null) return;
 
         ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
