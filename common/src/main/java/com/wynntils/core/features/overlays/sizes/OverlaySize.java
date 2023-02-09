@@ -24,7 +24,7 @@ public abstract class OverlaySize {
     }
 
     protected OverlaySize(String string) {
-        Matcher matcher = SIZE_REGEX.matcher(string.replaceAll(" ", ""));
+        Matcher matcher = SIZE_REGEX.matcher(string.replace(" ", ""));
 
         if (!matcher.matches()) {
             throw new RuntimeException("Failed to parse OverlaySize");

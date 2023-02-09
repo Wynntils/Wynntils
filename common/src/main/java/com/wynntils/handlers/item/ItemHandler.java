@@ -73,6 +73,9 @@ public class ItemHandler extends Handler {
     }
 
     private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
+        // For e.g. FakeItemStacks we will already have an annotation
+        if (((ItemStackExtension) newItem).getAnnotation() != null) return;
+
         ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
             annotate(newItem);
@@ -118,9 +121,7 @@ public class ItemHandler extends Handler {
             return false;
         }
 
-        if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
-
-        return true;
+        return firstItem.getDamageValue() == secondItem.getDamageValue();
     }
 
     private void annotate(ItemStack item) {

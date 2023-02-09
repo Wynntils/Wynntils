@@ -99,8 +99,8 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
         private TextRenderSetting textRenderSetting;
 
-        int ticksUntilUpdate = 0;
-        List<TextRenderTask> renderTaskCache;
+        private int ticksUntilUpdate = 0;
+        private List<TextRenderTask> renderTaskCache;
 
         protected ShamanTotemTimerOverlay() {
             super(
@@ -171,7 +171,6 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                                     default -> throw new IllegalArgumentException(
                                             "totemNumber should be 1, 2, or 3! (switch in #render in ShamanTotemTrackingFeature");
                                 };
-                        ;
 
                         String prefix = "Totem " + shamanTotem.getTotemNumber();
 
@@ -229,11 +228,11 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withTextShadow(textShadow);
         }
+    }
 
-        public enum TotemTrackingDetail {
-            NONE,
-            COORDS,
-            DISTANCE
-        }
+    public enum TotemTrackingDetail {
+        NONE,
+        COORDS,
+        DISTANCE
     }
 }

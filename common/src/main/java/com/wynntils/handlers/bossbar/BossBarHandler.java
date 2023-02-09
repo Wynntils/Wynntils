@@ -33,10 +33,6 @@ public class BossBarHandler extends Handler {
         knownBars.add(trackedBar);
     }
 
-    public void unregisterBar(TrackedBar trackedBar) {
-        knownBars.remove(trackedBar);
-    }
-
     // FixPacketBugsFeature gets in the way if receiveCanceled is not set
     @SubscribeEvent(receiveCanceled = true)
     public void onHealthBarEvent(BossHealthUpdateEvent event) {

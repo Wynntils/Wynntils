@@ -56,9 +56,7 @@ public class ChangelogFeature extends UserFeature {
                                 () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
                     }
                 },
-                throwable -> {
-                    WynntilsMod.warn("Could not get update changelog: ", throwable);
-                });
+                throwable -> WynntilsMod.warn("Could not get update changelog: ", throwable));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

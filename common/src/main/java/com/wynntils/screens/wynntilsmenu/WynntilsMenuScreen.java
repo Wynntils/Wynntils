@@ -287,11 +287,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         poseStack.pushPose();
         poseStack.translate(20, 65, 0);
 
-        final float translationX = (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f + 20;
-        final float translationY = (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f + 65;
+        final int translationX = (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2 + 20;
+        final int translationY = (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2 + 65;
 
-        mouseX -= translationX;
-        mouseY -= translationY;
+        int adjustedMouseX = mouseX - translationX;
+        int adjustedMouseY = mouseY - translationY;
 
         this.hovered = null;
 
@@ -299,7 +299,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             final int x = i % 4 * (BUTTON_SIZE + 5);
             final int y = (i / 4) * (BUTTON_SIZE + 5);
 
-            boolean hovered = x <= mouseX && x + BUTTON_SIZE >= mouseX && y <= mouseY && y + BUTTON_SIZE >= mouseY;
+            boolean hovered = x <= adjustedMouseX
+                    && x + BUTTON_SIZE >= adjustedMouseX
+                    && y <= adjustedMouseY
+                    && y + BUTTON_SIZE >= adjustedMouseY;
 
             RenderUtils.drawRect(
                     poseStack, hovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, x, y, 0, BUTTON_SIZE, BUTTON_SIZE);

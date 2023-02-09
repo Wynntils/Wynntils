@@ -63,20 +63,20 @@ public class CommandAliasesFeature extends UserFeature {
         }
     }
 
-    protected static class CommandAlias {
+    private static final class CommandAlias {
         private final String originalCommand;
         private final List<String> aliases;
 
-        protected CommandAlias(String originalCommand, List<String> aliases) {
+        private CommandAlias(String originalCommand, List<String> aliases) {
             this.originalCommand = originalCommand;
             this.aliases = aliases;
         }
 
-        protected List<String> getAliases() {
+        private List<String> getAliases() {
             return aliases;
         }
 
-        protected String getOriginalCommand() {
+        private String getOriginalCommand() {
             return originalCommand;
         }
 

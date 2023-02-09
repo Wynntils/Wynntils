@@ -59,11 +59,11 @@ public final class EmeraldModel extends Model {
         return containerEmeralds;
     }
 
-    public String convertEmeraldPrice(String input) {
-        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
+    public String convertEmeraldPrice(String inputStr) {
+        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(inputStr);
         if (rawMatcher.matches()) return "";
 
-        input = input.toLowerCase(Locale.ROOT);
+        String input = inputStr.toLowerCase(Locale.ROOT);
         long emeralds = 0;
 
         try {

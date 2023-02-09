@@ -9,18 +9,15 @@ import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class SimpleDateFormatter extends DateFormat {
-    private static final HashMap<Integer, String> MAPPINGS = new HashMap<>() {
-        {
-            put(Calendar.DAY_OF_YEAR, "d");
-            put(Calendar.HOUR_OF_DAY, "h");
-            put(Calendar.MINUTE, "m");
-            put(Calendar.SECOND, "s");
-        }
-    };
+    private static final Map<Integer, String> MAPPINGS = Map.of(
+            Calendar.DAY_OF_YEAR, "d",
+            Calendar.HOUR_OF_DAY, "h",
+            Calendar.MINUTE, "m",
+            Calendar.SECOND, "s");
 
     public SimpleDateFormatter() {
         setCalendar(Calendar.getInstance());

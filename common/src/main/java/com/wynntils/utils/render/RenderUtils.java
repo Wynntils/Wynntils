@@ -1052,7 +1052,7 @@ public final class RenderUtils {
         if (d <= 4096.0) {
             float yOffset = entity.getBbHeight() + 0.25F + customOffset;
             float xOffset = -(font.width(nametag) / 2f);
-            boolean notSneaking = !entity.isDiscrete();
+            boolean sneaking = entity.isDiscrete();
 
             matrixStack.pushPose();
             matrixStack.translate(0.0F, yOffset, 0.0F);
@@ -1068,10 +1068,10 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    notSneaking,
+                    !sneaking,
                     backgroundColor,
                     packedLight);
-            if (notSneaking) {
+            if (!sneaking) {
                 font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
             }
 

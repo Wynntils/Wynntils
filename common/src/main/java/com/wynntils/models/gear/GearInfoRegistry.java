@@ -335,7 +335,7 @@ public class GearInfoRegistry {
                     .toList();
         }
 
-        protected GearMajorId getMajorIdFromString(String majorIdString) {
+        private GearMajorId getMajorIdFromString(String majorIdString) {
             return this.allMajorIds.stream()
                     .filter(mId -> mId.id().equals(majorIdString))
                     .findFirst()
@@ -425,6 +425,6 @@ public class GearInfoRegistry {
     }
 
     protected static class WynncraftGearInfoResponse {
-        List<GearInfo> items;
+        protected List<GearInfo> items;
     }
 }

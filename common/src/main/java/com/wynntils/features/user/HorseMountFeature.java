@@ -36,8 +36,8 @@ public class HorseMountFeature extends UserFeature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
-    private static int prevItem = -1;
-    private static boolean alreadySetPrevItem = false;
+    private int prevItem = -1;
+    private boolean alreadySetPrevItem = false;
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);

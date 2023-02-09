@@ -92,7 +92,7 @@ public class WynncraftButtonFeature extends UserFeature {
     }
 
     /** Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods */
-    private static class ServerIcon {
+    private static final class ServerIcon {
         private static final ResourceLocation FALLBACK;
 
         private final ServerData server;
@@ -113,7 +113,7 @@ public class WynncraftButtonFeature extends UserFeature {
             this.serverIconLocation = FALLBACK;
         }
 
-        public void loadResource(boolean allowStale) {
+        protected void loadResource(boolean allowStale) {
             // Try default
             ResourceLocation destination =
                     new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
@@ -138,7 +138,7 @@ public class WynncraftButtonFeature extends UserFeature {
             }
         }
 
-        public ServerIcon(ServerData server) {
+        private ServerIcon(ServerData server) {
             this(server, null);
         }
 
@@ -153,7 +153,7 @@ public class WynncraftButtonFeature extends UserFeature {
         }
 
         /** Returns the icon as a {@link ResourceLocation} if found, else unknown server texture */
-        public synchronized ResourceLocation getServerIconLocation() {
+        protected synchronized ResourceLocation getServerIconLocation() {
             return serverIconLocation;
         }
 

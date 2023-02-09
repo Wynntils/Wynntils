@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
-public class BufferedFontRenderer {
+public final class BufferedFontRenderer {
     private static final BufferedFontRenderer INSTANCE = new BufferedFontRenderer();
     private final Font font;
 
@@ -42,7 +42,7 @@ public class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,

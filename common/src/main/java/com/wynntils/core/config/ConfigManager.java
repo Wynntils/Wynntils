@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -121,11 +122,11 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    public void loadAllConfigOptions(boolean resetIfNotFound) {
-        loadConfigOptions(CONFIG_HOLDERS, resetIfNotFound);
+    public void loadAllConfigOptions() {
+        loadConfigOptions(CONFIG_HOLDERS, true);
     }
 
-    public void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
+    private void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");
             return; // nothing to load from
@@ -259,8 +260,8 @@ public final class ConfigManager extends Manager {
         return options;
     }
 
-    public List<ConfigHolder> getConfigHolders() {
-        return CONFIG_HOLDERS;
+    public Stream<ConfigHolder> getConfigHolders() {
+        return CONFIG_HOLDERS.stream();
     }
 
     public Object deepCopy(Object value, Type fieldType) {

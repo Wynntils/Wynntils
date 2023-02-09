@@ -129,7 +129,7 @@ public class CustomNametagRendererFeature extends UserFeature {
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {
             // move rendering up to fit the next line, plus a small gap
-            yOffset += nametag.getScale() * NAMETAG_HEIGHT;
+            yOffset += nametag.nametagScale() * NAMETAG_HEIGHT;
 
             RenderUtils.renderCustomNametag(
                     event.getPoseStack(),
@@ -138,28 +138,12 @@ public class CustomNametagRendererFeature extends UserFeature {
                     backgroundColor,
                     event.getEntityRenderDispatcher(),
                     event.getEntity(),
-                    nametag.getComponent(),
+                    nametag.nametagComponent(),
                     event.getFont(),
-                    nametag.getScale(),
+                    nametag.nametagScale(),
                     yOffset);
         }
     }
 
-    private static class CustomNametag {
-        private final Component nametagComponent;
-        private final float nametagScale;
-
-        public CustomNametag(Component nametagComponent, float nametagScale) {
-            this.nametagComponent = nametagComponent;
-            this.nametagScale = nametagScale;
-        }
-
-        public Component getComponent() {
-            return nametagComponent;
-        }
-
-        public float getScale() {
-            return nametagScale;
-        }
-    }
+    private record CustomNametag(Component nametagComponent, float nametagScale) {}
 }

@@ -40,13 +40,9 @@ public class ChatTab {
             return false;
         }
 
-        if (customRegexString != null
-                && !customRegexString.isBlank()
-                && !getCustomRegex().matcher(event.getOriginalCodedMessage()).matches()) {
-            return false;
-        }
-
-        return true;
+        return customRegexString == null
+                || customRegexString.isBlank()
+                || getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     public boolean matchMessageFromEvent(ClientsideMessageEvent event) {

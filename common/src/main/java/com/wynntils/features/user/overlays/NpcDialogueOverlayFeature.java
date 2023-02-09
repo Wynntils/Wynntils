@@ -294,7 +294,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     String msg;
                     if (isProtected) {
-                        msg = "Select an option to continue";
+                        msg = "Select an option to continue (Press the number key to select it)";
                     } else {
                         msg = "Open chat and click on the option to select it";
                     }
@@ -361,5 +361,5 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
     }
 
-    public record ConfirmationlessDialogue(List<String> text, long removeTime) {}
+    protected record ConfirmationlessDialogue(List<String> text, long removeTime) {}
 }

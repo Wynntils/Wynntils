@@ -20,7 +20,7 @@ public final class TomeAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        if (!(itemStack.getItem() == Items.ENCHANTED_BOOK)) return null;
+        if (itemStack.getItem() != Items.ENCHANTED_BOOK) return null;
         Matcher matcher = TOME_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
