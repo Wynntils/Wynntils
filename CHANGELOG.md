@@ -1,9 +1,17 @@
+## [0.0.2-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.189...v0.0.2-alpha.190) (2023-02-09)
+
+
+### Bug Fixes
+
+* Properly resolve so fake item stacks keep their annotation ([#1143](https://github.com/Wynntils/Artemis/issues/1143)) ([ce409fc](https://github.com/Wynntils/Artemis/commit/ce409fccbe01dec969c5e685f3bd565760b618a3))
+
 ## [0.0.2-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.188...v0.0.2-alpha.189) (2023-02-09)
 
 
 ### Miscellaneous Chores
 
 * Fix build task trigger ([82de93b](https://github.com/Wynntils/Artemis/commit/82de93bce0e70ccda2c0a77029396ff7e0ef7400))
+* **release:** v0.0.2-alpha.189 [skip ci] ([202010c](https://github.com/Wynntils/Artemis/commit/202010c887caea9c0bbeb17d4181309ddd7cf2b7))
 
 ## [0.0.2-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.187...v0.0.2-alpha.188) (2023-02-09)
 
@@ -32,16 +40,4 @@
 
 * More IntelliJ fixes ([#1139](https://github.com/Wynntils/Artemis/issues/1139)) ([fa114b6](https://github.com/Wynntils/Artemis/commit/fa114b6b23878e731f1e065031247b51bd4c200e))
 * **release:** v0.0.2-alpha.186 [skip ci] ([bcb5c62](https://github.com/Wynntils/Artemis/commit/bcb5c629e6cbe69cd2dd4477d6049caacea39654))
-
-## [0.0.2-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.184...v0.0.2-alpha.185) (2023-02-08)
-
-
-### Bug Fixes
-
-* Textured lootlun line should render correctly in dark areas ([#1140](https://github.com/Wynntils/Artemis/issues/1140)) ([18609fd](https://github.com/Wynntils/Artemis/commit/18609fd4c98c63bf95bce5a933c83c9f5d2f59a5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.185 [skip ci] ([4f222c9](https://github.com/Wynntils/Artemis/commit/4f222c988fe7974d465e3c6cf8ac09942cc569d1))
 
