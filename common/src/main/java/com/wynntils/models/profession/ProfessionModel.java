@@ -5,6 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.labels.LabelEvent;
 import com.wynntils.models.labels.LabelModel;
@@ -12,7 +13,6 @@ import com.wynntils.models.profession.objects.ProfessionProgress;
 import com.wynntils.models.profession.objects.ProfessionType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +25,9 @@ public class ProfessionModel extends Model {
     // §7[+36§f Ⓙ§7 Farming§7 XP] §6[9%]
     private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN =
             Pattern.compile("§7\\[\\+(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
+
+    private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
+            "§7\\[\\+(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
@@ -46,8 +49,19 @@ public class ProfessionModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageReceivedEvent event) {
+        String codedMessage = event.getOriginalCodedMessage();
+
+        Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage);
+
+        if (matcher.matches()) {
+            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")));
+        }
+    }
+
     public void resetValueFromItem(ItemStack professionInfoItem) {
-        Map<ProfessionType, ProfessionProgress> levels = new HashMap<>();
+        Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
         List<String> professionLore = LoreUtils.getLore(professionInfoItem);
         for (String line : professionLore) {
             Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
@@ -80,10 +94,14 @@ public class ProfessionModel extends Model {
     }
 
     public int getLevel(ProfessionType type) {
-        return professionProgressMap.get(type).level();
+        return professionProgressMap
+                .getOrDefault(type, ProfessionProgress.NO_PROGRESS)
+                .level();
     }
 
     public float getProgress(ProfessionType type) {
-        return professionProgressMap.get(type).progress();
+        return professionProgressMap
+                .getOrDefault(type, ProfessionProgress.NO_PROGRESS)
+                .progress();
     }
 }
