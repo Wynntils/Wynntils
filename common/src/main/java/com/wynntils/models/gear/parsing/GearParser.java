@@ -79,7 +79,9 @@ public final class GearParser {
 
                 codedPowders.chars().forEach(ch -> {
                     Powder powder = Powder.getFromSymbol(Character.toString(ch));
-                    if (powder != null) powders.add(powder);
+                    if (powder != null) {
+                        powders.add(powder);
+                    }
                 });
 
                 continue;
