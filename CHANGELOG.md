@@ -1,9 +1,21 @@
+## [0.0.2-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.187...v0.0.2-alpha.188) (2023-02-09)
+
+
+### Miscellaneous Chores
+
+* Update parchment ([#1142](https://github.com/Wynntils/Artemis/issues/1142)) ([c0b7d2c](https://github.com/Wynntils/Artemis/commit/c0b7d2ce5f2ddfe966d68ffd1ac327aec6b8ed9f))
+
 ## [0.0.2-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.186...v0.0.2-alpha.187) (2023-02-09)
 
 
 ### New Features
 
 * Rework gear viewer ([#1141](https://github.com/Wynntils/Artemis/issues/1141)) ([316fd56](https://github.com/Wynntils/Artemis/commit/316fd56224637d9af77cfc405af85890c91f65cf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.187 [skip ci] ([871c62e](https://github.com/Wynntils/Artemis/commit/871c62e49a115d33e4a227de47f22788343092bd))
 
 ## [0.0.2-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.185...v0.0.2-alpha.186) (2023-02-08)
 
@@ -36,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.184 [skip ci] ([c971354](https://github.com/Wynntils/Artemis/commit/c971354c08ad7b757d84090e68ebacbc07065fb5))
-
-## [0.0.2-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.182...v0.0.2-alpha.183) (2023-02-08)
-
-
-### Miscellaneous Chores
-
-* Fixes according to IntelliJ analyze "Artemis mini" ([#1138](https://github.com/Wynntils/Artemis/issues/1138)) ([c8e0df2](https://github.com/Wynntils/Artemis/commit/c8e0df242ef975ab7053186ea21d14d3487b4281))
-* **release:** v0.0.2-alpha.183 [skip ci] ([a57dc3c](https://github.com/Wynntils/Artemis/commit/a57dc3c80839130f6b10b38156ba3fe39b78dfa1))
 
