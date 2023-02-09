@@ -1,9 +1,21 @@
+## [0.0.2-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.191...v0.0.2-alpha.192) (2023-02-09)
+
+
+### Bug Fixes
+
+* Don't show emerald count for character info screen ([#1145](https://github.com/Wynntils/Artemis/issues/1145)) ([d0ca91d](https://github.com/Wynntils/Artemis/commit/d0ca91d9242e318f3148aec8bd32129b89eb2d75))
+
 ## [0.0.2-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.190...v0.0.2-alpha.191) (2023-02-09)
 
 
 ### Bug Fixes
 
 * Trigger build on merge group ([72f62ef](https://github.com/Wynntils/Artemis/commit/72f62effd8ddaa9dd20f4a9c2f2570957bf62f9c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.191 [skip ci] ([b2d40fc](https://github.com/Wynntils/Artemis/commit/b2d40fcccb087688b7d2bd98fc98c94d62c65d1d))
 
 ## [0.0.2-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.189...v0.0.2-alpha.190) (2023-02-09)
 
@@ -32,16 +44,4 @@
 
 * **release:** v0.0.2-alpha.188 [skip ci] ([3f15a3c](https://github.com/Wynntils/Artemis/commit/3f15a3cfa1d730cfb30c4e74a8bc4da8870e6ba5))
 * Update parchment ([#1142](https://github.com/Wynntils/Artemis/issues/1142)) ([c0b7d2c](https://github.com/Wynntils/Artemis/commit/c0b7d2ce5f2ddfe966d68ffd1ac327aec6b8ed9f))
-
-## [0.0.2-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.186...v0.0.2-alpha.187) (2023-02-09)
-
-
-### New Features
-
-* Rework gear viewer ([#1141](https://github.com/Wynntils/Artemis/issues/1141)) ([316fd56](https://github.com/Wynntils/Artemis/commit/316fd56224637d9af77cfc405af85890c91f65cf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.187 [skip ci] ([871c62e](https://github.com/Wynntils/Artemis/commit/871c62e49a115d33e4a227de47f22788343092bd))
 
