@@ -6,7 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.objects.ProfessionType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
@@ -158,7 +158,7 @@ public class CharacterFunctions {
     public static class WoodcuttingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WOODCUTTING);
+            return Models.Profession.getLevel(ProfessionType.WOODCUTTING);
         }
 
         @Override
@@ -170,7 +170,7 @@ public class CharacterFunctions {
     public static class MiningLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.MINING);
+            return Models.Profession.getLevel(ProfessionType.MINING);
         }
 
         @Override
@@ -182,7 +182,7 @@ public class CharacterFunctions {
     public static class FishingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.FISHING);
+            return Models.Profession.getLevel(ProfessionType.FISHING);
         }
 
         @Override
@@ -194,7 +194,7 @@ public class CharacterFunctions {
     public static class FarmingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.FARMING);
+            return Models.Profession.getLevel(ProfessionType.FARMING);
         }
 
         @Override
@@ -206,7 +206,7 @@ public class CharacterFunctions {
     public static class AlchemismLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.ALCHEMISM);
+            return Models.Profession.getLevel(ProfessionType.ALCHEMISM);
         }
 
         @Override
@@ -218,7 +218,7 @@ public class CharacterFunctions {
     public static class ArmouringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.ARMOURING);
+            return Models.Profession.getLevel(ProfessionType.ARMOURING);
         }
 
         @Override
@@ -230,7 +230,7 @@ public class CharacterFunctions {
     public static class CookingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.COOKING);
+            return Models.Profession.getLevel(ProfessionType.COOKING);
         }
 
         @Override
@@ -242,7 +242,7 @@ public class CharacterFunctions {
     public static class JewelingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.JEWELING);
+            return Models.Profession.getLevel(ProfessionType.JEWELING);
         }
 
         @Override
@@ -254,7 +254,7 @@ public class CharacterFunctions {
     public static class ScribingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.SCRIBING);
+            return Models.Profession.getLevel(ProfessionType.SCRIBING);
         }
 
         @Override
@@ -266,7 +266,7 @@ public class CharacterFunctions {
     public static class TailoringLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.TAILORING);
+            return Models.Profession.getLevel(ProfessionType.TAILORING);
         }
 
         @Override
@@ -278,7 +278,7 @@ public class CharacterFunctions {
     public static class WeaponsmithingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WEAPONSMITHING);
+            return Models.Profession.getLevel(ProfessionType.WEAPONSMITHING);
         }
 
         @Override
@@ -290,7 +290,7 @@ public class CharacterFunctions {
     public static class WoodworkingLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
-            return Models.Character.getProfessionInfo().getLevel(ProfessionType.WOODWORKING);
+            return Models.Profession.getLevel(ProfessionType.WOODWORKING);
         }
 
         @Override
