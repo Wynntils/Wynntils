@@ -29,7 +29,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
         if (Objects.equals(event.getHash(), appliedHash)) {
-            event.setCanceled(true);
+                                event.setCanceled(true);
             return;
         }
 
