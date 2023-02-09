@@ -21,7 +21,6 @@ import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
-import com.wynntils.models.labels.LabelModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
@@ -50,7 +49,6 @@ public final class Models {
     public static final FavoritesModel Favorites = new FavoritesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
-    public static final LabelModel Label = new LabelModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
@@ -71,7 +69,7 @@ public final class Models {
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
     public static final PartyModel Party = new PartyModel(WorldState);
-    public static final ProfessionModel Profession = new ProfessionModel(Character, Label);
+    public static final ProfessionModel Profession = new ProfessionModel(Character);
     public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);

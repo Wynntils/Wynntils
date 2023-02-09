@@ -9,6 +9,7 @@ import com.wynntils.handlers.bossbar.BossBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.container.ContainerQueryHandler;
 import com.wynntils.handlers.item.ItemHandler;
+import com.wynntils.handlers.labels.LabelHandler;
 import com.wynntils.handlers.scoreboard.ScoreboardHandler;
 
 public final class Handlers {
@@ -17,5 +18,6 @@ public final class Handlers {
     public static final ChatHandler Chat = new ChatHandler();
     public static final ContainerQueryHandler ContainerQuery = new ContainerQueryHandler();
     public static final ItemHandler Item = new ItemHandler();
+    public static final LabelHandler Label = new LabelHandler();
     public static final ScoreboardHandler Scoreboard = new ScoreboardHandler();
 }
