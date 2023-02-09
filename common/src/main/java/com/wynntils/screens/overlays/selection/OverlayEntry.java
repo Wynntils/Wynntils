@@ -112,7 +112,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         // right click
         if (button == 1) {
-            Managers.Config.getConfigHolders().stream()
+            Managers.Config.getConfigHolders()
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()

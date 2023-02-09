@@ -118,9 +118,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     /**
      * Called on enabling of Feature
      */
-    protected boolean onEnable() {
-        return true;
-    }
+    protected void onEnable() {}
 
     /** Called on disabling of Feature */
     protected void onDisable() {}

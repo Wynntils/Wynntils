@@ -38,15 +38,6 @@ public final class ActionBarHandler extends Handler {
         allSegments.get(segment.getPosition()).add(segment);
     }
 
-    public void unregisterSegment(ActionBarSegment segment) {
-        ActionBarPosition pos = segment.getPosition();
-        segment.removed();
-        allSegments.get(pos).remove(segment);
-        if (lastSegments.get(pos) == segment) {
-            lastSegments.remove(pos);
-        }
-    }
-
     @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
         // FIXME: Reverse dependency!
@@ -72,25 +63,7 @@ public final class ActionBarHandler extends Handler {
         Map<ActionBarPosition, String> positionMatches = new HashMap<>();
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> positionMatches.put(pos, matcher.group(pos.name())));
 
-        Arrays.stream(ActionBarPosition.values()).forEach(pos -> {
-            List<ActionBarSegment> potentialSegments = allSegments.get(pos);
-            for (ActionBarSegment segment : potentialSegments) {
-                Matcher m = segment.getPattern().matcher(positionMatches.get(pos));
-                if (m.matches()) {
-                    ActionBarSegment lastSegment = lastSegments.get(pos);
-                    if (segment != lastSegment) {
-                        // This is a new kind of segment, tell the old one it disappeared
-                        if (lastSegment != null) {
-                            lastSegment.removed();
-                        }
-                        lastSegments.put(pos, segment);
-                        segment.appeared(m);
-                    } else {
-                        segment.update(m);
-                    }
-                }
-            }
-        });
+        Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
         StringBuilder newContentBuilder = new StringBuilder();
         if (!lastSegments.get(ActionBarPosition.LEFT).isHidden()) {
@@ -110,6 +83,26 @@ public final class ActionBarHandler extends Handler {
 
         if (!content.equals(newContent)) {
             event.setMessage(Component.literal(newContent));
+        }
+    }
+
+    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, String> positionMatches) {
+        List<ActionBarSegment> potentialSegments = allSegments.get(pos);
+        for (ActionBarSegment segment : potentialSegments) {
+            Matcher m = segment.getPattern().matcher(positionMatches.get(pos));
+            if (m.matches()) {
+                ActionBarSegment lastSegment = lastSegments.get(pos);
+                if (segment != lastSegment) {
+                    // This is a new kind of segment, tell the old one it disappeared
+                    if (lastSegment != null) {
+                        lastSegment.removed();
+                    }
+                    lastSegments.put(pos, segment);
+                    segment.appeared(m);
+                } else {
+                    segment.update(m);
+                }
+            }
         }
     }
 }

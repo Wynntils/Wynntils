@@ -42,11 +42,11 @@ public class ConfigCommand extends Command {
 
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
-                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
-
-                        return foundFeature.get().getOverlays().stream()
-                                .map(Overlay::getConfigJsonName)
-                                .iterator();
+                        return foundFeature
+                                .map(feature -> feature.getOverlays().stream()
+                                        .map(Overlay::getConfigJsonName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
                     },
                     builder);
     private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
@@ -56,11 +56,11 @@ public class ConfigCommand extends Command {
 
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
-                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
-
-                        return foundFeature.get().getVisibleConfigOptions().stream()
-                                .map(ConfigHolder::getFieldName)
-                                .iterator();
+                        return foundFeature
+                                .map(feature -> feature.getVisibleConfigOptions().stream()
+                                        .map(ConfigHolder::getFieldName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
                     },
                     builder);
 
@@ -79,11 +79,11 @@ public class ConfigCommand extends Command {
                                 .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                                 .findFirst();
 
-                        if (overlayOptional.isEmpty()) return Collections.emptyIterator();
-
-                        return overlayOptional.get().getVisibleConfigOptions().stream()
-                                .map(ConfigHolder::getFieldName)
-                                .iterator();
+                        return overlayOptional
+                                .map(overlay -> overlay.getVisibleConfigOptions().stream()
+                                        .map(ConfigHolder::getFieldName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
                     },
                     builder);
 
@@ -188,7 +188,7 @@ public class ConfigCommand extends Command {
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
         Managers.Config.loadConfigFile();
-        Managers.Config.loadAllConfigOptions(true);
+        Managers.Config.loadAllConfigOptions();
         Managers.Config.saveConfig();
 
         context.getSource()

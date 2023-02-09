@@ -81,7 +81,7 @@ public final class WynntilsAccountManager extends Manager {
         return loggedIn;
     }
 
-    public HashMap<String, String> getEncodedConfigs() {
+    public Map<String, String> getEncodedConfigs() {
         return encodedConfigs;
     }
 

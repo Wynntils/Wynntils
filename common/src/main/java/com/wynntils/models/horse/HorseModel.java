@@ -43,9 +43,7 @@ public class HorseModel extends Model {
 
     public HorseItem getHorseItem(ItemStack itemStack) {
         Optional<HorseItem> horseOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
-        if (horseOpt.isEmpty()) return null;
-
-        return horseOpt.get();
+        return horseOpt.orElse(null);
     }
 
     public AbstractHorse searchForHorseNearby(int searchRadius) {

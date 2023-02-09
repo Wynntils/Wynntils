@@ -10,6 +10,7 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
+import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -73,6 +74,9 @@ public class ItemHandler extends Handler {
     }
 
     private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
+        // These items will already have an annotation, no handling necessary
+        if (newItem instanceof FakeItemStack) return;
+
         ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
             annotate(newItem);
@@ -118,9 +122,7 @@ public class ItemHandler extends Handler {
             return false;
         }
 
-        if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
-
-        return true;
+        return firstItem.getDamageValue() == secondItem.getDamageValue();
     }
 
     private void annotate(ItemStack item) {

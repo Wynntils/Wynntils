@@ -81,9 +81,9 @@ public final class StringUtils {
     /**
      * Matches a string to a specific search term
      */
-    public static boolean partialMatch(String toMatch, String searchTerm) {
-        searchTerm = searchTerm.toLowerCase(Locale.ROOT);
-        toMatch = toMatch.toLowerCase(Locale.ROOT);
+    public static boolean partialMatch(String toMatchStr, String searchTermStr) {
+        String searchTerm = searchTermStr.toLowerCase(Locale.ROOT);
+        String toMatch = toMatchStr.toLowerCase(Locale.ROOT);
 
         int firstIndexToMatch = 0;
 

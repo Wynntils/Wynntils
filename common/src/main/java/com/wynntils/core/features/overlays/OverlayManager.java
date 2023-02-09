@@ -58,12 +58,11 @@ public final class OverlayManager extends Manager {
     }
 
     public void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
-        if (!ignoreState) {
-            overlays = overlays.stream().filter(Overlay::isEnabled).toList();
-        }
-
-        enabledOverlays.addAll(overlays);
-        overlays.forEach(
+        List<Overlay> enabledOverlays = ignoreState
+                ? overlays
+                : overlays.stream().filter(Overlay::isEnabled).toList();
+        this.enabledOverlays.addAll(enabledOverlays);
+        enabledOverlays.forEach(
                 overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
 

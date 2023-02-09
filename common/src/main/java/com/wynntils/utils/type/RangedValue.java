@@ -4,8 +4,6 @@
  */
 package com.wynntils.utils.type;
 
-import java.util.Objects;
-
 public record RangedValue(int low, int high) {
     public static final RangedValue NONE = new RangedValue(0, 0);
 
@@ -18,33 +16,20 @@ public record RangedValue(int low, int high) {
         return new RangedValue(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
     }
 
-    public String asString() {
-        return low + "-" + high;
-    }
-
     public boolean isFixed() {
         return low == high;
+    }
+
+    public boolean inRange(int value) {
+        return value >= low && value <= high;
+    }
+
+    public String asString() {
+        return low + "-" + high;
     }
 
     @Override
     public String toString() {
         return "<" + low + "-" + high + '>';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RangedValue that = (RangedValue) o;
-        return low == that.low && high == that.high;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(low, high);
-    }
-
-    public boolean inRange(int value) {
-        return value >= low && value <= high;
     }
 }

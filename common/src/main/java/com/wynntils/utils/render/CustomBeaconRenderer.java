@@ -10,15 +10,10 @@ import com.wynntils.utils.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class CustomBeaconRenderer extends BeaconRenderer {
-    public CustomBeaconRenderer(BlockEntityRendererProvider.Context context) {
-        super(context);
-    }
-
+public final class CustomBeaconRenderer {
     public static void renderBeaconBeam(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -45,7 +40,7 @@ public class CustomBeaconRenderer extends BeaconRenderer {
         poseStack.mulPose(Axis.YP.rotationDegrees(f * 2.25F - 45.0F));
         float maxV = -1.0F + h;
         float minV = (float) height * textureScale * (0.5F / beamRadius) + maxV;
-        renderPart(
+        BeaconRenderer.renderPart(
                 poseStack,
                 bufferSource.getBuffer(RenderType.beaconBeam(beamLocation, true)),
                 red,
@@ -69,7 +64,7 @@ public class CustomBeaconRenderer extends BeaconRenderer {
         poseStack.popPose();
         maxV = -1.0F + h;
         minV = (float) height * textureScale + maxV;
-        renderPart(
+        BeaconRenderer.renderPart(
                 poseStack,
                 bufferSource.getBuffer(RenderType.beaconBeam(beamLocation, true)),
                 red,

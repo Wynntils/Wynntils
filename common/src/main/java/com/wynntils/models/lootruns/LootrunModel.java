@@ -42,7 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
-    private static List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
+    private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
 
     private LootrunUncompiled uncompiled = null;
 
@@ -258,7 +258,7 @@ public final class LootrunModel extends Model {
         File file = new File(LOOTRUNS, name + ".json");
         uncompiled = new LootrunUncompiled(activeLootrun.path(), activeLootrun.chests(), activeLootrun.notes(), file);
 
-        return LootrunFileParser.writeJson(activeLootrun, file, name);
+        return LootrunFileParser.writeJson(activeLootrun, file);
     }
 
     @SubscribeEvent

@@ -16,7 +16,7 @@ public class HorseFunctions {
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getLevel().getCurrent();
+            return horse.getLevel().current();
         }
 
         @Override
@@ -30,7 +30,7 @@ public class HorseFunctions {
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
-            return horse.getLevel().getMax();
+            return horse.getLevel().max();
         }
 
         @Override
