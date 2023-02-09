@@ -82,4 +82,8 @@ public class ProfessionModel extends Model {
     public int getLevel(ProfessionType type) {
         return professionProgressMap.get(type).level();
     }
+
+    public float getProgress(ProfessionType type) {
+        return professionProgressMap.get(type).progress();
+    }
 }
