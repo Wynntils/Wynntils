@@ -1,9 +1,21 @@
+## [0.0.2-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.190...v0.0.2-alpha.191) (2023-02-09)
+
+
+### Bug Fixes
+
+* Trigger build on merge group ([72f62ef](https://github.com/Wynntils/Artemis/commit/72f62effd8ddaa9dd20f4a9c2f2570957bf62f9c))
+
 ## [0.0.2-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.189...v0.0.2-alpha.190) (2023-02-09)
 
 
 ### Bug Fixes
 
 * Properly resolve so fake item stacks keep their annotation ([#1143](https://github.com/Wynntils/Artemis/issues/1143)) ([ce409fc](https://github.com/Wynntils/Artemis/commit/ce409fccbe01dec969c5e685f3bd565760b618a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.190 [skip ci] ([be61728](https://github.com/Wynntils/Artemis/commit/be617287c76eebd7f5926a6a82b58d665589b1e2))
 
 ## [0.0.2-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.188...v0.0.2-alpha.189) (2023-02-09)
 
@@ -32,12 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.187 [skip ci] ([871c62e](https://github.com/Wynntils/Artemis/commit/871c62e49a115d33e4a227de47f22788343092bd))
-
-## [0.0.2-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.185...v0.0.2-alpha.186) (2023-02-08)
-
-
-### Miscellaneous Chores
-
-* More IntelliJ fixes ([#1139](https://github.com/Wynntils/Artemis/issues/1139)) ([fa114b6](https://github.com/Wynntils/Artemis/commit/fa114b6b23878e731f1e065031247b51bd4c200e))
-* **release:** v0.0.2-alpha.186 [skip ci] ([bcb5c62](https://github.com/Wynntils/Artemis/commit/bcb5c629e6cbe69cd2dd4477d6049caacea39654))
 
