@@ -10,7 +10,6 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
