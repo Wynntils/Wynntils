@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Bryt tekst",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Dette vil gjemme mer informasjon, som for eksempel 'Dyed', som ikke er relevant for Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Skjul mer verktøytips info",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dette vil snu avansert verktøytips (F3+H) på Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Skjul alltid Avansert Verktøytips",
   "feature.wynntils.tooltipVanillaHide.name": "Skjul Irrelevant informasjon om Vanilla verktøytips",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Markedets åpne chat",
