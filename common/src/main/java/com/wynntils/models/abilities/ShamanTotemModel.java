@@ -242,18 +242,6 @@ public class ShamanTotemModel extends Model {
         removeAllTotems();
     }
 
-    private String getNameFromMetadata(List<SynchedEntityData.DataValue<?>> data) {
-        // The rename stuff we're looking for is eventually something like
-        // Optional[literal{§c26s}[style={}]]
-        for (SynchedEntityData.DataValue<?> packedItem : data) {
-            if (!(packedItem.value() instanceof Optional<?> packetData)
-                    || packetData.isEmpty()
-                    || (!(packetData.get() instanceof MutableComponent content))) continue;
-            return content.toString();
-        }
-        return null;
-    }
-
     private Entity getBufferedEntity(int entityId) {
         Entity entity = McUtils.mc().level.getEntity(entityId);
         if (entity != null) return entity;
