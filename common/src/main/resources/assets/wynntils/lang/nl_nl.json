@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Tekst omslaan",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Dit zal extra info, zoals \"Dyed”, verbergen, dat niet relevant is voor Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Verberg extra tooltip info",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dit zet de geavanceerde tooltip (F3+H) op Wynncraft om",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Verberg geavanceerde knopinfo altijd",
   "feature.wynntils.tooltipVanillaHide.name": "Verberg irrelevante Vanilla Tooltip info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Markt Open chat automatisch",
