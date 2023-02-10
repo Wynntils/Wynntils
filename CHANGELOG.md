@@ -1,9 +1,21 @@
+## [0.0.2-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.192...v0.0.2-alpha.193) (2023-02-10)
+
+
+### New Features
+
+* Auto update profession level and parse level/percentage from nodes/crafting ([#1146](https://github.com/Wynntils/Artemis/issues/1146)) ([f440c17](https://github.com/Wynntils/Artemis/commit/f440c17ba445b3d51202db303af3883339a585aa))
+
 ## [0.0.2-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.191...v0.0.2-alpha.192) (2023-02-09)
 
 
 ### Bug Fixes
 
 * Don't show emerald count for character info screen ([#1145](https://github.com/Wynntils/Artemis/issues/1145)) ([d0ca91d](https://github.com/Wynntils/Artemis/commit/d0ca91d9242e318f3148aec8bd32129b89eb2d75))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.192 [skip ci] ([f30f6c8](https://github.com/Wynntils/Artemis/commit/f30f6c8fd8104121c4e992a5394eca85208b02d4))
 
 ## [0.0.2-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.190...v0.0.2-alpha.191) (2023-02-09)
 
@@ -36,12 +48,4 @@
 
 * Fix build task trigger ([82de93b](https://github.com/Wynntils/Artemis/commit/82de93bce0e70ccda2c0a77029396ff7e0ef7400))
 * **release:** v0.0.2-alpha.189 [skip ci] ([202010c](https://github.com/Wynntils/Artemis/commit/202010c887caea9c0bbeb17d4181309ddd7cf2b7))
-
-## [0.0.2-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.187...v0.0.2-alpha.188) (2023-02-09)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.188 [skip ci] ([3f15a3c](https://github.com/Wynntils/Artemis/commit/3f15a3cfa1d730cfb30c4e74a8bc4da8870e6ba5))
-* Update parchment ([#1142](https://github.com/Wynntils/Artemis/issues/1142)) ([c0b7d2c](https://github.com/Wynntils/Artemis/commit/c0b7d2ce5f2ddfe966d68ffd1ac327aec6b8ed9f))
 
