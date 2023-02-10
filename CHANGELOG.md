@@ -1,9 +1,21 @@
+## [0.0.2-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.197...v0.0.2-alpha.198) (2023-02-10)
+
+
+### Miscellaneous Chores
+
+* Fix spotless ([9a00617](https://github.com/Wynntils/Artemis/commit/9a006176b41bae9450c3ace2a0c3a968a624e94c))
+
 ## [0.0.2-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.196...v0.0.2-alpha.197) (2023-02-10)
 
 
 ### Bug Fixes
 
 * typo in hide advanced tooltips ([#1151](https://github.com/Wynntils/Artemis/issues/1151)) ([b68a26c](https://github.com/Wynntils/Artemis/commit/b68a26c5c93f70e50ecf86676ed54b534c505a6b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.197 [skip ci] ([0f34daf](https://github.com/Wynntils/Artemis/commit/0f34dafa0012890e06711bfc0a0076119e9dc386))
 
 ## [0.0.2-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.195...v0.0.2-alpha.196) (2023-02-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.194 [skip ci] ([22538c9](https://github.com/Wynntils/Artemis/commit/22538c960b2b5cca2ec74c53f7084bb8a23fe5dd))
-
-## [0.0.2-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.192...v0.0.2-alpha.193) (2023-02-10)
-
-
-### New Features
-
-* Auto update profession level and parse level/percentage from nodes/crafting ([#1146](https://github.com/Wynntils/Artemis/issues/1146)) ([f440c17](https://github.com/Wynntils/Artemis/commit/f440c17ba445b3d51202db303af3883339a585aa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.193 [skip ci] ([ba3158a](https://github.com/Wynntils/Artemis/commit/ba3158a01aa22ed74fd9a6e586cc86a82b1f1596))
 
