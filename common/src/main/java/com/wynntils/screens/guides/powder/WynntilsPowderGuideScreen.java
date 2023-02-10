@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.powder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.elements.type.PowderProfile;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;

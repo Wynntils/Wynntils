@@ -5,8 +5,8 @@
 package com.wynntils.screens.guides.powder;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.PowderProfile;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;

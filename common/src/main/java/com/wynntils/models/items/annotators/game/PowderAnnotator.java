@@ -6,8 +6,8 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.PowderProfile;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.utils.MathUtils;
 import java.util.Locale;

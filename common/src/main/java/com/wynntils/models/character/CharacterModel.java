@@ -21,7 +21,7 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.StatusEffect;
-import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
