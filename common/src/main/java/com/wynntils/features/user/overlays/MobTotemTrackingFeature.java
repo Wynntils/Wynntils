@@ -115,7 +115,8 @@ public class MobTotemTrackingFeature extends UserFeature {
                         Location mobTotemLocation = mobTotem.getLocation();
                         double deltaX = mobTotemLocation.x() - playerLocation.x();
                         double deltaZ = mobTotemLocation.z() - playerLocation.z();
-                        double angle = Math.atan2(deltaZ, deltaX) * 180 / Math.PI;
+                        double angle = Math.toDegrees(Math.atan2(deltaZ, deltaX));
+                        System.out.println(angle);
                         if (angle < 0) {
                             angle += 360;
                         }
