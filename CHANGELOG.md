@@ -1,9 +1,21 @@
+## [0.0.2-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.195...v0.0.2-alpha.196) (2023-02-10)
+
+
+### Bug Fixes
+
+* Crafted items is now handled better ([#1149](https://github.com/Wynntils/Artemis/issues/1149)) ([11c9faf](https://github.com/Wynntils/Artemis/commit/11c9fafcaedca4387f8433a0110ba38907b459d3))
+
 ## [0.0.2-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.194...v0.0.2-alpha.195) (2023-02-10)
 
 
 ### New Features
 
 * Extend EntityLabelChangedEvent ([#1150](https://github.com/Wynntils/Artemis/issues/1150)) ([f96a39e](https://github.com/Wynntils/Artemis/commit/f96a39e2baaa574d74bb56810e72e145512c258b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.195 [skip ci] ([05424ec](https://github.com/Wynntils/Artemis/commit/05424ec6b7f49ff1aea85f4e25781200fb55615f))
 
 ## [0.0.2-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.193...v0.0.2-alpha.194) (2023-02-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.192 [skip ci] ([f30f6c8](https://github.com/Wynntils/Artemis/commit/f30f6c8fd8104121c4e992a5394eca85208b02d4))
-
-## [0.0.2-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.190...v0.0.2-alpha.191) (2023-02-09)
-
-
-### Bug Fixes
-
-* Trigger build on merge group ([72f62ef](https://github.com/Wynntils/Artemis/commit/72f62effd8ddaa9dd20f4a9c2f2570957bf62f9c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.191 [skip ci] ([b2d40fc](https://github.com/Wynntils/Artemis/commit/b2d40fcccb087688b7d2bd98fc98c94d62c65d1d))
 
