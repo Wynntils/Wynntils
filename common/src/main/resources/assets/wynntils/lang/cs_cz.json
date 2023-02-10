@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Zalomit text",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Toto skryje další informace, například \"barvené\", které nejsou relevantní pro Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Skrýt další informace o Tooltip",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Toto zapne pokročilý tooltip (F3+H) na Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Vždy skrýt pokročilý náhled",
   "feature.wynntils.tooltipVanillaHide.name": "Skrýt nerelevantní informace o Vanilla Tooltip",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Chat pro automatické otevření trhu",
