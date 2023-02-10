@@ -28,6 +28,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.List;
+
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class MobTotemTrackingFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -52,12 +54,12 @@ public class MobTotemTrackingFeature extends UserFeature {
         private TextRenderSetting textRenderSetting;
 
         private int ticksUntilUpdate = 0;
-        private TextRenderTask renderTaskCache;
+        private List<TextRenderTask> renderTaskCache;
 
         protected MobTotemTimerOverlay() {
             super(
                     new OverlayPosition(
-                            290,
+                            330,
                             -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
@@ -75,7 +77,7 @@ public class MobTotemTrackingFeature extends UserFeature {
             }
 
             BufferedFontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             bufferSource,
                             this.getRenderX(),
@@ -97,7 +99,7 @@ public class MobTotemTrackingFeature extends UserFeature {
                             this.getRenderX(),
                             this.getRenderY(),
                             new TextRenderTask(
-                                    "Mob Totem (Player) at [(]105, 58, 3948] (4:11)",
+                                    "Mob Totem (Player) at [-105, 58, 3948] (4:11)",
                                     textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
@@ -106,14 +108,10 @@ public class MobTotemTrackingFeature extends UserFeature {
         }
 
         void updateRenderTaskCache() {
-            MobTotemModel.MobTotem mobTotem = Models.MobTotem.getMobTotem();
-            if (mobTotem == null) {
-                renderTaskCache = null;
-            } else {
-                renderTaskCache = new TextRenderTask(
-                        "Mob Totem " + mobTotem.getOwner() + " at " + mobTotem.getLocation() + " (" + mobTotem.getTimerString() + ")",
-                        textRenderSetting);
-            }
+            renderTaskCache = Models.MobTotem.getMobTotems().stream()
+                    .map(mobTotem -> new TextRenderTask(
+                            "Mob Totem (" + mobTotem.getOwner() + ") at " + mobTotem.getLocation() + " (" + mobTotem.getTimerString() + ")",
+                            textRenderSetting)).toList();
         }
 
         @Override

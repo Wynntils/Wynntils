@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +22,7 @@ public class MobTotemModel extends Model {
     private static final Pattern MOB_TOTEM_TIMER = Pattern.compile("^§c§l([0-9]+:[0-9]+)$");
     private static final double TOTEM_COORDINATE_DIFFERENCE = 0.2d;
 
-    private MobTotem mobTotem = null;
+    private HashMap<Integer, MobTotem> mobTotems = new HashMap<>();
 
 
     public MobTotemModel(WorldStateModel worldState) {
@@ -41,21 +42,24 @@ public class MobTotemModel extends Model {
         if (nameMatcher.find()) {
             int mobTotemId = e.getId();
 
-            mobTotem = new MobTotem(mobTotemId, new Location(as), nameMatcher.group(1));
+            if (mobTotems.containsKey(mobTotemId)) return; // If the totem is already in the list, don't add it again
+
+            mobTotems.put(mobTotemId, new MobTotem(mobTotemId, new Location(as), nameMatcher.group(1)));
             return;
         }
 
-        if (mobTotem == null) return;
+        if (mobTotems.isEmpty()) return;
 
-        if (as.getX() == mobTotem.getLocation().x() &&
-                as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE) &&
-                as.getZ() == mobTotem.getLocation().z()) {
-            Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(PacketUtils.getNameFromMetadata(e.getPackedItems()));
-            if (timerMatcher.find()) {
-                mobTotem.setTimerString(timerMatcher.group(1));
-
-                System.out.println(timerMatcher.group(1));
-                return;
+        for (MobTotem mobTotem : mobTotems.values()) {
+            // Exact equality is fine here because the totem is stationary
+            if (as.getX() == mobTotem.getLocation().x() &&
+                    as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE) &&
+                    as.getZ() == mobTotem.getLocation().z()) {
+                Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(PacketUtils.getNameFromMetadata(e.getPackedItems()));
+                if (timerMatcher.find()) {
+                    mobTotem.setTimerString(timerMatcher.group(1));
+                    return;
+                }
             }
         }
     }
@@ -64,11 +68,7 @@ public class MobTotemModel extends Model {
     public void onTotemDestroy(RemoveEntitiesEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        e.getEntityIds().forEach(id -> {
-            if (mobTotem != null && mobTotem.getEntityId() == id) {
-                mobTotem = null;
-            }
-        });
+        e.getEntityIds().forEach(id -> mobTotems.remove(id));
     }
 
     private Entity getBufferedEntity(int entityId) {
@@ -82,8 +82,8 @@ public class MobTotemModel extends Model {
         return null;
     }
 
-    public MobTotem getMobTotem() {
-        return mobTotem;
+    public List<MobTotem> getMobTotems() {
+        return mobTotems.values().stream().toList();
     }
 
     public static class MobTotem {
