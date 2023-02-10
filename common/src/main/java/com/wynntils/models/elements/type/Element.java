@@ -8,11 +8,11 @@ import com.wynntils.utils.StringUtils;
 import net.minecraft.ChatFormatting;
 
 public enum Element {
-    FIRE("✹", ChatFormatting.RED),
-    WATER("❉", ChatFormatting.AQUA),
-    AIR("❋", ChatFormatting.WHITE),
+    EARTH("✤", ChatFormatting.DARK_GREEN),
     THUNDER("✦", ChatFormatting.YELLOW),
-    EARTH("✤", ChatFormatting.DARK_GREEN);
+    WATER("❉", ChatFormatting.AQUA),
+    FIRE("✹", ChatFormatting.RED),
+    AIR("❋", ChatFormatting.WHITE);
 
     private final String symbol;
     private final ChatFormatting colorCode;

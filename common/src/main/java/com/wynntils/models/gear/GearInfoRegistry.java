@@ -357,7 +357,7 @@ public class GearInfoRegistry {
             addDamageStat(list, DamageType.NEUTRAL, json.get("damage"));
 
             // Then check for elemental damage
-            for (Element element : Element.values()) {
+            for (Element element : Models.Element.getElementStatOrder()) {
                 String damageName = element.name().toLowerCase(Locale.ROOT) + "Damage";
                 addDamageStat(list, DamageType.fromElement(element), json.get(damageName));
             }
@@ -379,7 +379,7 @@ public class GearInfoRegistry {
 
         private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
             List<Pair<Element, Integer>> list = new ArrayList<>();
-            for (Element element : Element.values()) {
+            for (Element element : Models.Element.getElementStatOrder()) {
                 String defenceApiName = element.name().toLowerCase(Locale.ROOT) + "Defense";
 
                 int minPoints = JsonUtils.getNullableJsonInt(json, defenceApiName);
