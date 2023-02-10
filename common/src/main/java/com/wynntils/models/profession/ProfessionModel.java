@@ -6,10 +6,10 @@ package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.labels.event.LabelEvent;
+import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.profession.objects.ProfessionProgress;
-import com.wynntils.models.profession.objects.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionProgress;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onLabelSpawn(LabelEvent event) {
+    public void onLabelSpawn(EntityLabelChangedEvent event) {
         String codedString = ComponentUtils.getCoded(event.getComponent());
 
         Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(codedString);

@@ -6,7 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
-import com.wynntils.models.profession.objects.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.List;
 
 public class ProfessionFunctions {

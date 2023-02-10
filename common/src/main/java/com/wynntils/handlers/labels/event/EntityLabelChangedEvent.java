@@ -7,10 +7,10 @@ package com.wynntils.handlers.labels.event;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Event;
 
-public class LabelEvent extends Event {
+public class EntityLabelChangedEvent extends Event {
     private final Component component;
 
-    public LabelEvent(Component component) {
+    public EntityLabelChangedEvent(Component component) {
         this.component = component;
     }
 

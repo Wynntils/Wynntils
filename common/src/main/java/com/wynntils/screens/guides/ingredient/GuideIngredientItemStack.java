@@ -11,7 +11,7 @@ import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.items.game.IngredientItem;
-import com.wynntils.models.profession.objects.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;

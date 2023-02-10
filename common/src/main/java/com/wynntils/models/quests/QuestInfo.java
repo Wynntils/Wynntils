@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.profession.objects.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredients.type.IngredientTier;
-import com.wynntils.models.profession.objects.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

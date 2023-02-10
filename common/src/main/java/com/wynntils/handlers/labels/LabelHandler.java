@@ -6,7 +6,7 @@ package com.wynntils.handlers.labels;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.handlers.labels.event.LabelEvent;
+import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class LabelHandler extends Handler {
                 Optional<Component> value = (Optional<Component>) packedItem.value();
                 if (value.isEmpty()) continue;
 
-                WynntilsMod.postEvent(new LabelEvent(value.get()));
+                WynntilsMod.postEvent(new EntityLabelChangedEvent(value.get()));
                 return;
             }
         }
