@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "النص المغلف",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "هذا سوف يخفي معلومات اضافية، مثل 'Dyed'، غير ذات صلة على Wyncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "إخفاء معلومات نصيحة الأدوات الإضافية",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "هذا سوف يستدير من تلميح الأدوات المتقدمة (F3+H) على Wyncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "إخفاء النصيحة المتقدمة دائماً",
   "feature.wynntils.tooltipVanillaHide.name": "إخفاء معلومات نصيحة أدوات الفانيليا غير ذات الصلة",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "فتح المحادثة التلقائية للسوق",
