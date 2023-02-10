@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Переносити текст",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Це приховає додаткову інформацію, як-от «Dyed», яка не стосується Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Приховати додаткову інформацію підказки",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Це вимкне розширену підказку (F3+H) у Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Завжди приховувати розширену підказку",
   "feature.wynntils.tooltipVanillaHide.name": "Приховати невідповідну інформацію підказки Vanilla",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Маркет автоматично відкриваючий чат",
