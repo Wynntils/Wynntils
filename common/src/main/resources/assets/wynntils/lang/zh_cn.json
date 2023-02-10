@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "折行提示文本",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "这将隐藏额外信息，例如与Wynncraft 无关的“Dyed”信息",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "隐藏附加工具提示信息",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "这将转向Wynncraft 上的高级工具提示(F3+H)",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "总是隐藏高级工具提示",
   "feature.wynntils.tooltipVanillaHide.name": "隐藏不相关的原版工具提示信息",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "市场自动打开聊天室",
