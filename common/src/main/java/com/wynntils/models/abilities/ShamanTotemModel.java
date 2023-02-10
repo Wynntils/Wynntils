@@ -18,7 +18,6 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.PacketUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
