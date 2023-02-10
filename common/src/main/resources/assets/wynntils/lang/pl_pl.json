@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Zawijanie tekstu",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Spowoduje to ukrywanie dodatkowych informacji, takich jak 'Barwione', które nie są istotne na Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Ukryj dodatkowe informacje o narzędziu",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Spowoduje to odwrócenie zaawansowanej podpowiedzi (F3+H) na Wynncrafcie",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Zawsze ukryj zaawansowaną podpowiedź",
   "feature.wynntils.tooltipVanillaHide.name": "Ukryj informacje o narzędziu Vanilla",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Automatycznie otwieraj czat",
