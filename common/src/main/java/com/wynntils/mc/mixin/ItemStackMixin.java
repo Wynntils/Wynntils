@@ -23,6 +23,9 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     @Unique
     private ItemAnnotation wynntilsAnnotation;
 
+    @Unique
+    private String wynntilsOriginalName;
+
     @Redirect(
             method =
                     "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
@@ -69,5 +72,17 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     @Unique
     public void setAnnotation(ItemAnnotation annotation) {
         this.wynntilsAnnotation = annotation;
+    }
+
+    @Override
+    @Unique
+    public String getOriginalName() {
+        return this.wynntilsOriginalName;
+    }
+
+    @Override
+    @Unique
+    public void setOriginalName(String name) {
+        this.wynntilsOriginalName = name;
     }
 }

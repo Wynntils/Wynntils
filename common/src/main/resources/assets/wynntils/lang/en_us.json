@@ -697,7 +697,7 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Wrap Text",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "This will hide additional info, such as 'Dyed', that is not relevant on Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Hide Additional Tooltip Info",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "This will turn of the advanced tooltip (F3+H) on Wynncraft",
+  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "This will turn off the advanced tooltip (F3+H) on Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Always Hide Advanced Tooltip",
   "feature.wynntils.tooltipVanillaHide.name": "Hide Irrelevant Vanilla Tooltip Info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Market Auto Open Chat",
