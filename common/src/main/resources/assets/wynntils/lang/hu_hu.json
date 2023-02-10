@@ -645,7 +645,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Szöveg Körbefuttatása",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Ez elrejti a további információkat, mint például a „Dyed”, ez nem releváns a Wynncraft esetében",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "További Eszközleírás Információinak Elrejtése",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Ez kikapcsolja fejlett eszközleírást (F3+H) Wynncraft-ban",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Mindig Rejtse a Fejlett Eszközleírást",
   "feature.wynntils.tooltipVanillaHide.name": "Rejtse az Irreleváns Vanilla Eszközleírások Információit",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Piac Automatikusan Nyisson Chat-et",
