@@ -18,20 +18,19 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PacketUtils;
 import com.wynntils.utils.mc.type.Location;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ShamanTotemModel extends Model {
 
@@ -240,18 +239,6 @@ public class ShamanTotemModel extends Model {
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent e) {
         removeAllTotems();
-    }
-
-    private String getNameFromMetadata(List<SynchedEntityData.DataValue<?>> data) {
-        // The rename stuff we're looking for is eventually something like
-        // Optional[literal{§c26s}[style={}]]
-        for (SynchedEntityData.DataValue<?> packedItem : data) {
-            if (!(packedItem.value() instanceof Optional<?> packetData)
-                    || packetData.isEmpty()
-                    || (!(packetData.get() instanceof MutableComponent content))) continue;
-            return content.toString();
-        }
-        return null;
     }
 
     private Entity getBufferedEntity(int entityId) {
