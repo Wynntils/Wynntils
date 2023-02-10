@@ -402,8 +402,8 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPacket;)V",
-            at = @At("RETURN"))
-    private void handleSetEntityData(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
+            at = @At("HEAD"))
+    private void handleSetEntityDataPre(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         EventFactory.onSetEntityData(packet);
     }
