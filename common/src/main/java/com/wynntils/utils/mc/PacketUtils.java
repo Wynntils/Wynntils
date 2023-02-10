@@ -1,10 +1,13 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.mc;
-
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.syncher.SynchedEntityData;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.syncher.SynchedEntityData;
 
 public final class PacketUtils {
 
@@ -21,5 +24,4 @@ public final class PacketUtils {
         }
         return null;
     }
-
 }

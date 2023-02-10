@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.mobtotem;
 
 import com.wynntils.core.components.Model;
@@ -8,14 +12,13 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PacketUtils;
 import com.wynntils.utils.mc.type.Location;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MobTotemModel extends Model {
     private static final Pattern MOB_TOTEM_NAME = Pattern.compile("^§f§l(.*)'s§6§l Mob Totem$");
@@ -23,7 +26,6 @@ public class MobTotemModel extends Model {
     private static final double TOTEM_COORDINATE_DIFFERENCE = 0.2d;
 
     private HashMap<Integer, MobTotem> mobTotems = new HashMap<>();
-
 
     public MobTotemModel(WorldStateModel worldState) {
         super(List.of(worldState));
@@ -52,9 +54,9 @@ public class MobTotemModel extends Model {
 
         for (MobTotem mobTotem : mobTotems.values()) {
             // Exact equality is fine here because the totem is stationary
-            if (as.getX() == mobTotem.getLocation().x() &&
-                    as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE) &&
-                    as.getZ() == mobTotem.getLocation().z()) {
+            if (as.getX() == mobTotem.getLocation().x()
+                    && as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE)
+                    && as.getZ() == mobTotem.getLocation().z()) {
                 Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(PacketUtils.getNameFromMetadata(e.getPackedItems()));
                 if (timerMatcher.find()) {
                     mobTotem.setTimerString(timerMatcher.group(1));
