@@ -1,9 +1,21 @@
+## [0.0.2-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.194...v0.0.2-alpha.195) (2023-02-10)
+
+
+### New Features
+
+* Extend EntityLabelChangedEvent ([#1150](https://github.com/Wynntils/Artemis/issues/1150)) ([f96a39e](https://github.com/Wynntils/Artemis/commit/f96a39e2baaa574d74bb56810e72e145512c258b))
+
 ## [0.0.2-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.193...v0.0.2-alpha.194) (2023-02-10)
 
 
 ### Bug Fixes
 
 * default info box positioning overlaps with minimap coordinates ([#1147](https://github.com/Wynntils/Artemis/issues/1147)) ([681d7ed](https://github.com/Wynntils/Artemis/commit/681d7ed68506f6c768ed749090504820860f3f6f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.194 [skip ci] ([22538c9](https://github.com/Wynntils/Artemis/commit/22538c960b2b5cca2ec74c53f7084bb8a23fe5dd))
 
 ## [0.0.2-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.192...v0.0.2-alpha.193) (2023-02-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.191 [skip ci] ([b2d40fc](https://github.com/Wynntils/Artemis/commit/b2d40fcccb087688b7d2bd98fc98c94d62c65d1d))
-
-## [0.0.2-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.189...v0.0.2-alpha.190) (2023-02-09)
-
-
-### Bug Fixes
-
-* Properly resolve so fake item stacks keep their annotation ([#1143](https://github.com/Wynntils/Artemis/issues/1143)) ([ce409fc](https://github.com/Wynntils/Artemis/commit/ce409fccbe01dec969c5e685f3bd565760b618a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.190 [skip ci] ([be61728](https://github.com/Wynntils/Artemis/commit/be617287c76eebd7f5926a6a82b58d665589b1e2))
 
