@@ -20,17 +20,16 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PacketUtils;
 import com.wynntils.utils.mc.type.Location;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ShamanTotemModel extends Model {
 

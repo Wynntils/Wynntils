@@ -18,17 +18,15 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.List;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
 public class MobTotemTrackingFeature extends UserFeature {
@@ -98,9 +96,7 @@ public class MobTotemTrackingFeature extends UserFeature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask(
-                                    "Mob Totem (Player) at [-105, 58, 3948] (4:11)",
-                                    textRenderSetting),
+                            new TextRenderTask("Mob Totem (Player) at [-105, 58, 3948] (4:11)", textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
@@ -110,8 +106,10 @@ public class MobTotemTrackingFeature extends UserFeature {
         void updateRenderTaskCache() {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
                     .map(mobTotem -> new TextRenderTask(
-                            "Mob Totem (" + mobTotem.getOwner() + ") at " + mobTotem.getLocation() + " (" + mobTotem.getTimerString() + ")",
-                            textRenderSetting)).toList();
+                            "Mob Totem (" + mobTotem.getOwner() + ") at " + mobTotem.getLocation() + " ("
+                                    + mobTotem.getTimerString() + ")",
+                            textRenderSetting))
+                    .toList();
         }
 
         @Override
