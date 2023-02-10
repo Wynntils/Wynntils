@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Envelopper le texte",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Ceci masquera des informations supplémentaires, telles que \"teinter\", qui ne sont pas pertinentes pour Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Masquer les info-bulles supplémentaires",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Ce sera le tour de l'infobulle avancée (F3+H) sur Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Toujours masquer l'infobulle avancée",
   "feature.wynntils.tooltipVanillaHide.name": "Masquer les infos de l'info-bulle de vanille inappropriée",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Chat ouvert automatiquement sur le marché",
