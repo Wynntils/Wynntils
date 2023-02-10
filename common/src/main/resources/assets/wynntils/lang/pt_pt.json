@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Quebrar Texto",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Isto irá esconder informações adicionais, como \"Dinheiro\", que não são relevantes no Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Ocultar informações adicionais da dica",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Isto irá virar a dica avançada (F3+H) sobre o Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Sempre ocultar dicas avançadas",
   "feature.wynntils.tooltipVanillaHide.name": "Esconder informações irrelevantes do Vanilla Tooltip",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Chat de Mercado Aberto Automático",
