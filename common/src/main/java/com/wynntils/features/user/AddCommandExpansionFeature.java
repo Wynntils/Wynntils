@@ -69,6 +69,7 @@ public class AddCommandExpansionFeature extends UserFeature {
         root.addChild(literal("renamepet").build());
         root.addChild(literal("rules").build());
         root.addChild(literal("shop").build());
+        root.addChild(literal("sign").build());
         root.addChild(literal("skiptutorial").build());
         root.addChild(literal("store").build());
         root.addChild(literal("stream").build());

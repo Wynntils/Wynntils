@@ -5,11 +5,11 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.items.items.game.IngredientItem;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.type.Pair;
@@ -27,7 +27,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     private final List<MutableComponent> guideTooltip;
 
     public GuideIngredientItemStack(IngredientInfo ingredientInfo) {
-        super(ingredientInfo.material().itemStack(), new IngredientItem(ingredientInfo));
+        super(ingredientInfo.material().itemStack(), new IngredientItem(ingredientInfo), ingredientInfo.name());
 
         this.ingredientInfo = ingredientInfo;
         this.guideTooltip = generateGuideTooltip();

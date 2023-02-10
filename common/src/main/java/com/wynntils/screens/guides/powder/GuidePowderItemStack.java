@@ -28,7 +28,10 @@ public final class GuidePowderItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
 
     public GuidePowderItemStack(PowderProfile powderProfile) {
-        super(getItemStack(powderProfile), new PowderItem(powderProfile));
+        super(
+                getItemStack(powderProfile),
+                new PowderItem(powderProfile),
+                powderProfile.element().getName() + " Powder");
 
         this.element = powderProfile.element();
         this.tier = powderProfile.tier();

@@ -30,6 +30,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.hades.HadesModel;
+import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.spells.SpellModel;
@@ -70,6 +71,7 @@ public final class Models {
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
     public static final PartyModel Party = new PartyModel(WorldState);
+    public static final ProfessionModel Profession = new ProfessionModel(Character);
     public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);

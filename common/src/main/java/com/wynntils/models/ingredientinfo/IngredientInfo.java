@@ -4,13 +4,13 @@
  */
 package com.wynntils.models.ingredientinfo;
 
-import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.concepts.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.ingredients.type.IngredientTier;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
