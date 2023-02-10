@@ -8,10 +8,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
-import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -176,21 +176,22 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemRename(SetEntityDataEvent e) {
+    public void onTotemRename(EntityLabelChangedEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        int entityId = e.getId();
-        Entity entity = getBufferedEntity(entityId);
+        Entity entity = e.getEntity();
         if (!(entity instanceof ArmorStand)) return;
 
-        String name = getNameFromMetadata(e.getPackedItems());
-        if (name == null || name.isEmpty()) return;
+        String name = e.getName();
+        if (name.isEmpty()) return;
 
         Matcher m = SHAMAN_TOTEM_TIMER.matcher(name);
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));
         Location parsedLocation = new Location(entity.position().x, entity.position().y, entity.position().z);
+
+        int entityId = entity.getId();
         if (getBoundTotem(entityId) == null) return;
 
         if (totem1 != null && getBoundTotem(entityId) == totem1) {
