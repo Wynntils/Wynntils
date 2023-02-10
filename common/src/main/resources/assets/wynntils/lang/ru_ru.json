@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Перенос текста",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Это скроет дополнительную информацию, такую как 'Украски', которая не имеет значения в Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Скрыть дополнительную информацию о подсказке",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Переключение дополнительных подсказок (F3+H) на Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Всегда скрывать дополнительные подсказки",
   "feature.wynntils.tooltipVanillaHide.name": "Скрыть информацию о Vanilla Tooltip",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Авто-открытие Чата",
