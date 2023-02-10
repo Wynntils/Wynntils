@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Envolver texto",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Esto ocultará información adicional, como 'Dyed', que no es relevante en Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Ocultar información adicional de descripción",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Esto girará la descripción avanzada (F3+H) en Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Ocultar siempre la descripción avanzada",
   "feature.wynntils.tooltipVanillaHide.name": "Ocultar información irrelevante de Vanilla",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Chat Auto-Abrir de Mercado",
