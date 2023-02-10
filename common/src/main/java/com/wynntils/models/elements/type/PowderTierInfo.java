@@ -4,5 +4,5 @@
  */
 package com.wynntils.models.elements.type;
 
-public record PowderProfile(
+public record PowderTierInfo(
         Powder element, int tier, int min, int max, int convertedFromNeutral, int addedDefence, int removedDefence) {}

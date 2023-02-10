@@ -41,7 +41,7 @@ public final class WynntilsPowderGuideScreen
     @Override
     protected void doInit() {
         if (parsedItemCache == null) {
-            parsedItemCache = Models.Element.getAllPowderProfiles().stream()
+            parsedItemCache = Models.Element.getAllPowderTierInfo().stream()
                     .map(GuidePowderItemStack::new)
                     .toList();
         }
