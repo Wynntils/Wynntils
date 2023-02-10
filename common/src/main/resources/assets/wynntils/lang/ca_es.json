@@ -563,7 +563,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Ajusta el text",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Això ocultarà informació addicional, com Dyed, que no és rellevant a Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Amaga la informació addicional del consell",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Això girarà el consell d'eina avançat (F3+H) a Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Amaga sempre l'indicador de funció avançat",
   "feature.wynntils.tooltipVanillaHide.name": "Oculta la informació rellevant del consell d'eina de vainilla",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Mercat d'obertura automàtica de xat",
