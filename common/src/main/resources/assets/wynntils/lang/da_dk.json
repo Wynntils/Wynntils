@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Ombryd Tekst",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Dette vil skjule yderligere info, såsom 'Dyed', der ikke er relevant på Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Skjul Yderligere Tooltip Info",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dette vil vende det avancerede værktøjstip (F3+H) på Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Skjul Altid Avanceret Værktøjstip",
   "feature.wynntils.tooltipVanillaHide.name": "Skjul Irrelevant Vanilla Tooltip Info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Marked Auto Åbn Chat",
