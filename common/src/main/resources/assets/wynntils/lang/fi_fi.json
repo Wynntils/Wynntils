@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Rivitä Teksti",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Tämä piilottaa ylimääräiset tiedot, kuten 'kyllä', joilla ei ole merkitystä Wynncraftissa",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Piilota Lisätyökaluvihjeen Tiedot",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Tämä kääntää edistyksellisen työkaluvihjeen (F3+H) Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Piilota Lisätyökaluvihje Aina",
   "feature.wynntils.tooltipVanillaHide.name": "Piilota Epäasiaankuuluvat Vaniljatyökaluvihjetiedot",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Kaupan Automaattinen Avaaminen Keskustelu",
