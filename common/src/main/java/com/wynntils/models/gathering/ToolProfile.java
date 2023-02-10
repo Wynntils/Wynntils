@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gathering;
 
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Locale;
 
 public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
