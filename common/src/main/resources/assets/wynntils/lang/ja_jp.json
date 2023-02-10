@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "テキストを折り返す",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Wynncraft に関係のない 'Dyed' などの追加情報を非表示にします",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "追加ツールチップ情報を隠す",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Wynncraft の高度なツールチップ（F3+H）が変わります",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "高度なツールチップを常に隠す",
   "feature.wynntils.tooltipVanillaHide.name": "無関係なバニラツールチップ情報を隠す",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "マーケット自動開放チャット",
