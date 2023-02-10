@@ -1,9 +1,21 @@
+## [0.0.2-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.196...v0.0.2-alpha.197) (2023-02-10)
+
+
+### Bug Fixes
+
+* typo in hide advanced tooltips ([#1151](https://github.com/Wynntils/Artemis/issues/1151)) ([b68a26c](https://github.com/Wynntils/Artemis/commit/b68a26c5c93f70e50ecf86676ed54b534c505a6b))
+
 ## [0.0.2-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.195...v0.0.2-alpha.196) (2023-02-10)
 
 
 ### Bug Fixes
 
 * Crafted items is now handled better ([#1149](https://github.com/Wynntils/Artemis/issues/1149)) ([11c9faf](https://github.com/Wynntils/Artemis/commit/11c9fafcaedca4387f8433a0110ba38907b459d3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.196 [skip ci] ([cbbb094](https://github.com/Wynntils/Artemis/commit/cbbb094b23ef87222422e094bd9b4f362541e4ce))
 
 ## [0.0.2-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.194...v0.0.2-alpha.195) (2023-02-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.193 [skip ci] ([ba3158a](https://github.com/Wynntils/Artemis/commit/ba3158a01aa22ed74fd9a6e586cc86a82b1f1596))
-
-## [0.0.2-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.191...v0.0.2-alpha.192) (2023-02-09)
-
-
-### Bug Fixes
-
-* Don't show emerald count for character info screen ([#1145](https://github.com/Wynntils/Artemis/issues/1145)) ([d0ca91d](https://github.com/Wynntils/Artemis/commit/d0ca91d9242e318f3148aec8bd32129b89eb2d75))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.192 [skip ci] ([f30f6c8](https://github.com/Wynntils/Artemis/commit/f30f6c8fd8104121c4e992a5394eca85208b02d4))
 
