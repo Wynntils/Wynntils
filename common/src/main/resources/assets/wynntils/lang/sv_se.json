@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Radbryt text",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Detta kommer att dölja ytterligare information, såsom \"Färgade\", som inte är relevant för Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Dölj ytterligare information om verktygstips",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Detta kommer att slå av den avancerade verktygstips (F3+H) på Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Göm alltid avancerade verktygstips",
   "feature.wynntils.tooltipVanillaHide.name": "Dölj Irrelevant Vanilla Tooltip Info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Marknadsför automatisk öppna chatt",
