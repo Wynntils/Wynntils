@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Αναδίπλωση Κειμένου",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Αυτό θα κρύψει πρόσθετες πληροφορίες, όπως το 'Dyed', που δεν σχετίζονται με το Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Απόκρυψη Επιπλέον Πληροφοριών Tooltip",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Αυτό θα γυρίσει την προηγμένη υπόδειξη (F3+H) στο Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Πάντα Απόκρυψη Προχωρημένης Συμβουλής",
   "feature.wynntils.tooltipVanillaHide.name": "Απόκρυψη Μη Σχετικών Πληροφοριών Εργαλείου Βανίλιας",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Αυτόματη Άνοιγμα Συνομιλίας Αγοράς",
