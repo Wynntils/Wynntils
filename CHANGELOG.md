@@ -1,9 +1,21 @@
+## [0.0.2-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.193...v0.0.2-alpha.194) (2023-02-10)
+
+
+### Bug Fixes
+
+* default info box positioning overlaps with minimap coordinates ([#1147](https://github.com/Wynntils/Artemis/issues/1147)) ([681d7ed](https://github.com/Wynntils/Artemis/commit/681d7ed68506f6c768ed749090504820860f3f6f))
+
 ## [0.0.2-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.192...v0.0.2-alpha.193) (2023-02-10)
 
 
 ### New Features
 
 * Auto update profession level and parse level/percentage from nodes/crafting ([#1146](https://github.com/Wynntils/Artemis/issues/1146)) ([f440c17](https://github.com/Wynntils/Artemis/commit/f440c17ba445b3d51202db303af3883339a585aa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.193 [skip ci] ([ba3158a](https://github.com/Wynntils/Artemis/commit/ba3158a01aa22ed74fd9a6e586cc86a82b1f1596))
 
 ## [0.0.2-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.191...v0.0.2-alpha.192) (2023-02-09)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.190 [skip ci] ([be61728](https://github.com/Wynntils/Artemis/commit/be617287c76eebd7f5926a6a82b58d665589b1e2))
-
-## [0.0.2-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.188...v0.0.2-alpha.189) (2023-02-09)
-
-
-### Miscellaneous Chores
-
-* Fix build task trigger ([82de93b](https://github.com/Wynntils/Artemis/commit/82de93bce0e70ccda2c0a77029396ff7e0ef7400))
-* **release:** v0.0.2-alpha.189 [skip ci] ([202010c](https://github.com/Wynntils/Artemis/commit/202010c887caea9c0bbeb17d4181309ddd7cf2b7))
 
