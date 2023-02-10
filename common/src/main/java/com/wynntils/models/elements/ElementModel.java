@@ -19,20 +19,6 @@ public class ElementModel extends Model {
         allPowderTierInfo = buildPowderTierInfo();
     }
 
-    public static Element getOpposingElement(Element element) {
-        return switch (element) {
-            case EARTH -> Element.AIR;
-            case THUNDER -> Element.EARTH;
-            case WATER -> Element.THUNDER;
-            case FIRE -> Element.WATER;
-            case AIR -> Element.FIRE;
-        };
-    }
-
-    public Powder getOpposingElement(Powder powder) {
-        return Powder.fromElement(getOpposingElement(powder.getElement()));
-    }
-
     public List<PowderTierInfo> getAllPowderTierInfo() {
         return allPowderTierInfo;
     }
@@ -50,6 +36,20 @@ public class ElementModel extends Model {
 
     public List<Element> getGearElementOrder() {
         return List.of(Element.FIRE, Element.WATER, Element.AIR, Element.THUNDER, Element.EARTH);
+    }
+
+    public static Element getOpposingElement(Element element) {
+        return switch (element) {
+            case EARTH -> Element.AIR;
+            case THUNDER -> Element.EARTH;
+            case WATER -> Element.THUNDER;
+            case FIRE -> Element.WATER;
+            case AIR -> Element.FIRE;
+        };
+    }
+
+    public Powder getOpposingElement(Powder powder) {
+        return Powder.fromElement(getOpposingElement(powder.getElement()));
     }
 
     private List<PowderTierInfo> buildPowderTierInfo() {
