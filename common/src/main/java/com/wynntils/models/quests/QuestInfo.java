@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
@@ -172,11 +172,10 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base =
-                    Models.Character.getProfessionInfo().getLevel(ProfessionType.fromString(additionalRequirement.a()))
-                                    >= additionalRequirement.b()
-                            ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
-                            : Component.literal("✖ ").withStyle(ChatFormatting.RED);
+            MutableComponent base = Models.Profession.getLevel(ProfessionType.fromString(additionalRequirement.a()))
+                            >= additionalRequirement.b()
+                    ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
+                    : Component.literal("✖ ").withStyle(ChatFormatting.RED);
 
             tooltipLines.add(base.append(Component.literal(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)
