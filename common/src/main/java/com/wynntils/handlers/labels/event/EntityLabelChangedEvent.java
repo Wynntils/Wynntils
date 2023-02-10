@@ -4,17 +4,29 @@
  */
 package com.wynntils.handlers.labels.event;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
 public class EntityLabelChangedEvent extends Event {
-    private final Component component;
+    private final Entity entity;
+    private final String name;
+    private final String oldName;
 
-    public EntityLabelChangedEvent(Component component) {
-        this.component = component;
+    public EntityLabelChangedEvent(Entity entity, String name, String oldName) {
+        this.entity = entity;
+        this.name = name;
+        this.oldName = oldName;
     }
 
-    public Component getComponent() {
-        return component;
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOldName() {
+        return oldName;
     }
 }

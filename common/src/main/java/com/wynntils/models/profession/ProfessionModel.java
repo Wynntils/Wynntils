@@ -10,7 +10,6 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +38,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        String codedString = ComponentUtils.getCoded(event.getComponent());
-
-        Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(codedString);
+        Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName());
 
         if (matcher.matches()) {
             updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")));

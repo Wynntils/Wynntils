@@ -25,7 +25,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
 
     public GuideEmeraldPouchItemStack(int tier) {
-        super(new ItemStack(Items.DIAMOND_AXE), new EmeraldPouchItem(tier, 0));
+        super(new ItemStack(Items.DIAMOND_AXE), new EmeraldPouchItem(tier, 0), "Emerald Pouch");
         this.setDamageValue(97);
 
         this.tier = tier;
