@@ -687,7 +687,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "Umbruch Text",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "Zusätzliche Informationen wie zum Beispiel 'gefärbt', die bei Wynncraft nicht relevant sind",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Zusätzliche Tooltip Info ausblenden",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dies dreht den Erweiterten Tooltipp (F3+H) bei Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Erweiterten Tooltip immer ausblenden",
   "feature.wynntils.tooltipVanillaHide.name": "Verstecke unrelevante Vanilla Tooltip Info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Markt-Auto-Chat öffnen",
