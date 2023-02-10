@@ -666,7 +666,6 @@
   "feature.wynntils.tooltipFitting.wrapText.name": "折行提示文本",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.description": "這將隱藏與 Wynncraft 無關的額外資訊，例如「已染色」",
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "隱藏額外物品提示資訊",
-  "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "這將會關閉 Wynncraft 上的進階物品提示（F3 + H）",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "永遠隱藏進階物品提示",
   "feature.wynntils.tooltipVanillaHide.name": "隱藏不相關的原版物品提示資訊",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "市場自動打開聊天室",
