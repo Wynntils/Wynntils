@@ -29,7 +29,10 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     private final IngredientProfile ingredientProfile;
 
     public GuideIngredientItemStack(IngredientProfile ingredientProfile) {
-        super(ingredientProfile.asItemStack(), new IngredientItem(ingredientProfile));
+        super(
+                ingredientProfile.asItemStack(),
+                new IngredientItem(ingredientProfile),
+                ingredientProfile.getDisplayName());
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);

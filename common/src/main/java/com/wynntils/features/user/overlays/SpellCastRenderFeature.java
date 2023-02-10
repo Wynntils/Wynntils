@@ -19,7 +19,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -28,9 +27,8 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Optional;
+import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -58,12 +56,7 @@ public class SpellCastRenderFeature extends UserFeature {
 
     @SubscribeEvent
     public void onItemRename(ItemRenamedEvent event) {
-        ItemStack itemStack = event.getItemStack();
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
-
-        GearItem gearItem = gearItemOpt.get();
-        if (!gearItem.getGearInfo().type().isWeapon()) return;
+        if (!InventoryUtils.isWeapon(event.getItemStack())) return;
 
         // Hide vanilla item rename popup
         event.setCanceled(true);
