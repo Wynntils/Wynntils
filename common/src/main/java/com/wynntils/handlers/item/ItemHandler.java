@@ -45,9 +45,15 @@ public class ItemHandler extends Handler {
         annotators.add(annotator);
     }
 
+    public void updateItem(ItemStack itemStack, ItemAnnotation annotation, String name) {
+        ItemStackExtension itemStackExtension = (ItemStackExtension) itemStack;
+        itemStackExtension.setAnnotation(annotation);
+        itemStackExtension.setOriginalName(name);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        updateAnnotation(event.getContainer().getItem(event.getSlot()), event.getItem());
+        onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItem());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -68,11 +74,11 @@ public class ItemHandler extends Handler {
         List<ItemStack> newItems = event.getItems();
 
         for (int i = 0; i < newItems.size(); i++) {
-            updateAnnotation(existingItems.get(i), newItems.get(i));
+            onItemStackUpdate(existingItems.get(i), newItems.get(i));
         }
     }
 
-    private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
+    private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
 
@@ -93,24 +99,54 @@ public class ItemHandler extends Handler {
         ListTag newLore = LoreUtils.getLoreTag(newItem);
 
         if (!LoreUtils.isLoreEquals(existingLore, newLore)) {
+            // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
         }
 
-        // We consider it to be the same item, so copy existing annotation
-        ((ItemStackExtension) newItem).setAnnotation(annotation);
+        String originalName = ((ItemStackExtension) existingItem).getOriginalName();
+        String existingName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(existingItem.getHoverName()));
+        String newName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(newItem.getHoverName()));
 
-        // Name might have changed for Wynn to use this functionality to
-        // signal info like spells etc.
-        Component existingName = existingItem.getHoverName();
-        Component newName = newItem.getHoverName();
-        if (!newName.equals(existingName)) {
-            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName.getString(), newName.getString());
+        if (newName.equals(existingName)) {
+            // This is exactly the same item, so copy existing annotation
+            updateItem(newItem, annotation, originalName);
+            return;
+        }
+
+        // The lore is the same, but the name is different. Determine the reason for the name change
+        String originalBaseName = getBaseName(originalName);
+        String existingBaseName = getBaseName(existingName);
+        String newBaseName = getBaseName(newName);
+
+        // When a crafted item loses durability (or a consumable loses a charge), we need to detect
+        // this and update the item. But note that this might happen exactly after a spell!
+        // So check against originalName, not existingName.
+        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)) {
+            // The base name is the same but the full name differs. This means we have an updated
+            // title, and the existing item has changed some property.
+            annotation = calculateAnnotation(newItem, newName);
+        }
+
+        // Set the new item with the old (or updated) annotation, and keep the original name
+        updateItem(newItem, annotation, originalName);
+
+        // If an item is "really" renamed, we need to send out an event. But this should not
+        // trigger just for a consumable or crafted gear that changes the [...] text, so
+        // check only on base name, not the full name.
+        if (!newBaseName.equals(existingBaseName)) {
+            // This is the same item, but it is renamed to signal e.g. a spell.
+            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
             if (event.isCanceled()) {
-                newItem.setHoverName(existingName);
+                newItem.setHoverName(existingItem.getHoverName());
             }
         }
+    }
+
+    private String getBaseName(String name) {
+        int bracketIndex = name.lastIndexOf('[');
+        return bracketIndex == -1 ? name : name.substring(0, bracketIndex);
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
@@ -124,11 +160,10 @@ public class ItemHandler extends Handler {
         return firstItem.getDamageValue() == secondItem.getDamageValue();
     }
 
-    private void annotate(ItemStack item) {
-        ItemAnnotation annotation = null;
-
+    private ItemAnnotation calculateAnnotation(ItemStack item, String name) {
         long startTime = System.currentTimeMillis();
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
+
+        ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
@@ -157,12 +192,20 @@ public class ItemHandler extends Handler {
         }
         crashedAnnotators.clear();
 
-        if (annotation == null) return;
+        if (annotation == null) return null;
 
         // Measure performance
         logProfilingData(startTime, annotation);
 
-        ((ItemStackExtension) item).setAnnotation(annotation);
+        return annotation;
+    }
+
+    private void annotate(ItemStack item) {
+        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
+        ItemAnnotation annotation = calculateAnnotation(item, name);
+        if (annotation == null) return;
+
+        updateItem(item, annotation, name);
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
