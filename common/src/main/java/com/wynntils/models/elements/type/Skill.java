@@ -5,7 +5,6 @@
 package com.wynntils.models.elements.type;
 
 import com.wynntils.utils.StringUtils;
-import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
@@ -57,10 +56,6 @@ public enum Skill {
             }
         }
         return false;
-    }
-
-    public static List<Skill> getGearSkillOrder() {
-        return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
     }
 
     public Element getAssociatedElement() {

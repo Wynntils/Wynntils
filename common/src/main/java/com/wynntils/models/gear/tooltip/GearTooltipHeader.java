@@ -119,7 +119,7 @@ public final class GearTooltipHeader {
         // skill bonuses
         List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
         if (!skillBonuses.isEmpty()) {
-            for (Skill skill : Skill.getGearSkillOrder()) {
+            for (Skill skill : Models.Element.getGearSkillOrder()) {
                 int skillBonusValue = gearInfo.fixedStats().getSkillBonus(skill);
                 if (skillBonusValue == 0) continue;
 

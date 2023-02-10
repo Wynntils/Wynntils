@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Powder;
@@ -27,7 +28,7 @@ public final class PowderAnnotator implements ItemAnnotator {
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));
         int tier = MathUtils.integerFromRoman(matcher.group(2));
 
-        PowderProfile powderProfile = PowderProfile.getPowderProfile(element, tier);
+        PowderProfile powderProfile = Models.Element.getPowderProfile(element, tier);
 
         return new PowderItem(powderProfile);
     }

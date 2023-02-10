@@ -81,14 +81,4 @@ public enum Powder {
     public String getName() {
         return StringUtils.capitalizeFirst(this.name().toLowerCase(Locale.ROOT));
     }
-
-    public Powder getOpposingElement() {
-        return switch (this) {
-            case EARTH -> Powder.AIR;
-            case THUNDER -> Powder.EARTH;
-            case WATER -> Powder.THUNDER;
-            case FIRE -> Powder.WATER;
-            case AIR -> Powder.FIRE;
-        };
-    }
 }

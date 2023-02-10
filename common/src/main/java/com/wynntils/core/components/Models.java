@@ -66,7 +66,7 @@ public final class Models {
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Element, Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
-    public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);

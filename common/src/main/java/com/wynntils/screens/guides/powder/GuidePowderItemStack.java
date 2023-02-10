@@ -72,7 +72,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 + "■".repeat(Math.max(0, 6 - tier));
 
         String name = element.getName();
-        Powder opposingElement = element.getOpposingElement();
+        Powder opposingElement = Models.Element.getOpposingElement(element);
 
         itemLore.add(Component.literal("Tier " + tier + " [")
                 .withStyle(ChatFormatting.GRAY)
