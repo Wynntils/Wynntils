@@ -105,7 +105,9 @@ public class MobTotemModel extends Model {
         }
 
         public int getDistanceToPlayer() {
-            return (int) McUtils.player().distanceToSqr(this.getLocation().toVec3());
+            // y() - 4 because the entity is 4 blocks above the ground
+            return (int)
+                    Math.sqrt(McUtils.player().distanceToSqr(new Vec3(location.x(), location.y() - 4, location.z())));
         }
 
         public double getLookAngleDiff() {
