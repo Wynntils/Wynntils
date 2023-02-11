@@ -38,7 +38,7 @@ public class MobTotemModel extends Model {
 
         // If a new mob totem just appeared, add it to the unstarted list
         // Totem timers do not match the MOB_TOTEM_NAME pattern
-        Matcher nameMatcher = MOB_TOTEM_NAME.matcher(as.getName().getString());
+        Matcher nameMatcher = MOB_TOTEM_NAME.matcher(e.getName());
         if (nameMatcher.find()) {
             int mobTotemId = e.getEntity().getId();
 
@@ -68,7 +68,7 @@ public class MobTotemModel extends Model {
     public void onTotemDestroy(RemoveEntitiesEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        e.getEntityIds().forEach(id -> mobTotems.remove(id));
+        e.getEntityIds().forEach(mobTotems::remove);
     }
 
     public List<MobTotem> getMobTotems() {

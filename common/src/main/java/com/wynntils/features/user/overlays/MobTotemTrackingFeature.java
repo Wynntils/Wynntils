@@ -19,7 +19,6 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -29,6 +28,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -110,39 +110,43 @@ public class MobTotemTrackingFeature extends UserFeature {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
                     .map(mobTotem -> {
                         // find direction from where the player is looking to mob totem
-                        String direction;
-                        Position playerLocation = new Location(McUtils.player());
-                        Location mobTotemLocation = mobTotem.getLocation();
-                        double deltaX = mobTotemLocation.x() - playerLocation.x();
-                        double deltaZ = mobTotemLocation.z() - playerLocation.z();
-                        double angle = Math.toDegrees(StrictMath.atan2(deltaZ, deltaX));
-                        System.out.println(angle);
-                        if (angle < 0) {
-                            angle += 360;
-                        }
-                        if (angle >= 337.5 || angle < 22.5) {
-                            direction = "N";
-                        } else if (angle < 67.5) {
-                            direction = "NE";
-                        } else if (angle < 112.5) {
-                            direction = "E";
-                        } else if (angle < 157.5) {
-                            direction = "SE";
-                        } else if (angle < 202.5) {
-                            direction = "S";
-                        } else if (angle < 247.5) {
-                            direction = "SW";
-                        } else if (angle < 292.5) {
-                            direction = "W";
-                        } else {
-                            direction = "NW";
-                        }
-                        
-                        return new TextRenderTask(
-                            "Mob Totem (" + mobTotem.getOwner() + ") at " + direction + " ("
-                                    + mobTotem.getTimerString() + ")",
-                            textRenderSetting);
+                        Vec3 playerLook = McUtils.player().getLookAngle();
+                        double lookAngle = Math.toDegrees(StrictMath.atan2(playerLook.z, playerLook.x));
 
+                        Position mobTotemLocation = mobTotem.getLocation();
+                        double angle = Math.toDegrees(StrictMath.atan2(
+                                mobTotemLocation.z() - McUtils.player().getZ(),
+                                mobTotemLocation.x() - McUtils.player().getX()));
+
+                        double angleDiff = lookAngle - angle;
+                        if (angleDiff < 0) angleDiff = 360 + angleDiff; // Convert negative angles to positive
+                        // Anglediff is now the angle between the player and the mob totem
+                        // 0 is straight ahead, 90 is to the left, 180 is behind, 270 is to the right
+                        String direction;
+                        if (angleDiff > 337.5 || angleDiff < 22.5) {
+                            direction = "⬆";
+                        } else if (angleDiff > 22.5 && angleDiff < 67.5) {
+                            direction = "⬉";
+                        } else if (angleDiff > 67.5 && angleDiff < 112.5) {
+                            direction = "⬅";
+                        } else if (angleDiff > 112.5 && angleDiff < 157.5) {
+                            direction = "⬋";
+                        } else if (angleDiff > 157.5 && angleDiff < 202.5) {
+                            direction = "⬇";
+                        } else if (angleDiff > 202.5 && angleDiff < 247.5) {
+                            direction = "⬊";
+                        } else if (angleDiff > 247.5 && angleDiff < 292.5) {
+                            direction = "➡";
+                        } else if (angleDiff > 292.5 && angleDiff < 337.5) {
+                            direction = "⬈";
+                        } else {
+                            direction = "?";
+                        }
+
+                        return new TextRenderTask(
+                                "Mob Totem (" + mobTotem.getOwner() + ") at " + direction + " ("
+                                        + mobTotem.getTimerString() + ")",
+                                textRenderSetting);
                     })
                     .toList();
         }
