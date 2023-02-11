@@ -5,8 +5,8 @@
 package com.wynntils.screens.guides.powder;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
@@ -23,19 +23,19 @@ import net.minecraft.world.item.TooltipFlag;
 public final class GuidePowderItemStack extends GuideItemStack {
     private final int tier;
     private final Powder element;
-    private final PowderProfile powderProfile;
+    private final PowderTierInfo powderTierInfo;
 
     private final List<Component> generatedTooltip;
 
-    public GuidePowderItemStack(PowderProfile powderProfile) {
+    public GuidePowderItemStack(PowderTierInfo powderTierInfo) {
         super(
-                getItemStack(powderProfile),
-                new PowderItem(powderProfile),
-                powderProfile.element().getName() + " Powder");
+                getItemStack(powderTierInfo),
+                new PowderItem(powderTierInfo),
+                powderTierInfo.element().getName() + " Powder");
 
-        this.element = powderProfile.element();
-        this.tier = powderProfile.tier();
-        this.powderProfile = powderProfile;
+        this.element = powderTierInfo.element();
+        this.tier = powderTierInfo.tier();
+        this.powderTierInfo = powderTierInfo;
         this.generatedTooltip = generateLore();
     }
 
@@ -72,7 +72,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 + "■".repeat(Math.max(0, 6 - tier));
 
         String name = element.getName();
-        Powder opposingElement = element.getOpposingElement();
+        Powder opposingElement = Models.Element.getOpposingElement(element);
 
         itemLore.add(Component.literal("Tier " + tier + " [")
                 .withStyle(ChatFormatting.GRAY)
@@ -80,19 +80,19 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
-        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderProfile.min()
-                + "-" + powderProfile.max() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
+        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderTierInfo.min()
+                + "-" + powderTierInfo.max() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
                 + ChatFormatting.GRAY + "Damage"));
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
-                + powderProfile.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral" + ChatFormatting.GRAY
+                + powderTierInfo.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral" + ChatFormatting.GRAY
                 + " to " + element.getLightColor() + element.getSymbol() + " " + name));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
-                + powderProfile.addedDefence() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
+                + powderTierInfo.addedDefence() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
                 + ChatFormatting.GRAY + "Defence"));
         itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
-                + powderProfile.removedDefence() + " " + opposingElement.getLightColor() + opposingElement.getSymbol()
+                + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor() + opposingElement.getSymbol()
                 + " " + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
                 + ChatFormatting.GRAY + "Defence"));
         itemLore.add(Component.empty());
@@ -110,7 +110,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
         return itemLore;
     }
 
-    private static ItemStack getItemStack(PowderProfile profile) {
+    private static ItemStack getItemStack(PowderTierInfo profile) {
         if (profile.tier() <= 3) {
             return new ItemStack(profile.element().getLowTierItem());
         } else {
