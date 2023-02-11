@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gear.parsing;
 
-import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.type.StatActualValue;

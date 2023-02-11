@@ -13,6 +13,7 @@ import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
+import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.favorites.FavoritesModel;
@@ -46,6 +47,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
@@ -62,9 +64,9 @@ public final class Models {
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterModel Character = new CharacterModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
-    public static final GearModel Gear = new GearModel(Stat);
+    public static final GearModel Gear = new GearModel(Element, Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
-    public static final ItemModel Item = new ItemModel(Gear, Rewards, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, IngredientProfiles);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);
