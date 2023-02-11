@@ -43,6 +43,17 @@ public enum GearType {
         }
     }
 
+    public static GearType fromClassReq(String classReq) {
+        return switch (classReq) {
+            case "Warrior/Knight" -> SPEAR;
+            case "Mage/Dark Wizard" -> WAND;
+            case "Assassin/Ninja" -> DAGGER;
+            case "Archer/Hunter" -> BOW;
+            case "Shaman/Skyseer" -> RELIK;
+            default -> null;
+        };
+    }
+
     public ClassType getClassReq() {
         return classReq;
     }
