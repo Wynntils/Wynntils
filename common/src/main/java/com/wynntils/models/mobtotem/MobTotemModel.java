@@ -9,13 +9,17 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MobTotemModel extends Model {
@@ -38,7 +42,7 @@ public class MobTotemModel extends Model {
 
         // If a new mob totem just appeared, add it to the unstarted list
         // Totem timers do not match the MOB_TOTEM_NAME pattern
-        Matcher nameMatcher = MOB_TOTEM_NAME.matcher(as.getName().getString());
+        Matcher nameMatcher = MOB_TOTEM_NAME.matcher(e.getName());
         if (nameMatcher.find()) {
             int mobTotemId = e.getEntity().getId();
 
@@ -68,7 +72,7 @@ public class MobTotemModel extends Model {
     public void onTotemDestroy(RemoveEntitiesEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        e.getEntityIds().forEach(id -> mobTotems.remove(id));
+        e.getEntityIds().forEach(mobTotems::remove);
     }
 
     public List<MobTotem> getMobTotems() {
@@ -99,6 +103,23 @@ public class MobTotemModel extends Model {
 
         public void setTimerString(String timerString) {
             this.timerString = timerString;
+        }
+
+        public double getLookAngleDiff() {
+            Vec3 playerLook = McUtils.player().getLookAngle();
+            double lookAngle = Math.toDegrees(StrictMath.atan2(playerLook.z, playerLook.x));
+
+            Position mobTotemLocation = this.getLocation();
+            double angle = Math.toDegrees(StrictMath.atan2(
+                    mobTotemLocation.z() - McUtils.player().getZ(),
+                    mobTotemLocation.x() - McUtils.player().getX()));
+
+            double angleDiff = lookAngle - angle;
+            if (angleDiff < 0) angleDiff = 360 + angleDiff; // Convert negative angles to positive
+            // Anglediff is now the angle between the player and the mob totem
+            // 0 is straight ahead, 90 is to the left, 180 is behind, 270 is to the right
+
+            return angleDiff;
         }
     }
 }
