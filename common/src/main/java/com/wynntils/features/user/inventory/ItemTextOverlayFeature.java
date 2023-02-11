@@ -13,7 +13,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.items.game.AmplifierItem;

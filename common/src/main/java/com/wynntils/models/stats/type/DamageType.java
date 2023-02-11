@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.stats.type;
 
-import com.wynntils.models.concepts.Element;
+import com.wynntils.models.elements.type.Element;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 

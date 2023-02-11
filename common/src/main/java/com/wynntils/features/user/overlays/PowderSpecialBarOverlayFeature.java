@@ -17,7 +17,7 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;

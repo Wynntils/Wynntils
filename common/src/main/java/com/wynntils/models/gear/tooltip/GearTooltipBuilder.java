@@ -5,7 +5,7 @@
 package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;

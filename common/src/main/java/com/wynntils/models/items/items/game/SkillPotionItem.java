@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.properties.UsesItemPropery;
 import com.wynntils.utils.type.CappedValue;
 

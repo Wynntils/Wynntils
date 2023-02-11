@@ -4,27 +4,27 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
 
 public class PowderItem extends GameItem implements NumberedTierItemProperty {
-    private final PowderProfile powderProfile;
+    private final PowderTierInfo powderTierInfo;
 
-    public PowderItem(PowderProfile powderProfile) {
-        this.powderProfile = powderProfile;
+    public PowderItem(PowderTierInfo powderTierInfo) {
+        this.powderTierInfo = powderTierInfo;
     }
 
-    public PowderProfile getPowderProfile() {
-        return powderProfile;
+    public PowderTierInfo getPowderProfile() {
+        return powderTierInfo;
     }
 
     @Override
     public int getTier() {
-        return powderProfile.tier();
+        return powderTierInfo.tier();
     }
 
     @Override
     public String toString() {
-        return "PowderItem{" + "powderProfile=" + powderProfile + '}';
+        return "PowderItem{" + "powderTierInfo=" + powderTierInfo + '}';
     }
 }
