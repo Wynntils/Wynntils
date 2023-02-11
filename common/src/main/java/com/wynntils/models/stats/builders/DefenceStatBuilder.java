@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.stats.builders;
 
-import com.wynntils.models.concepts.Element;
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.function.Consumer;

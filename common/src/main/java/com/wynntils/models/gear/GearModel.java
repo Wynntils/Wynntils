@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearDropType;
@@ -45,7 +46,7 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(StatModel statModel) {
+    public GearModel(ElementModel elementModel, StatModel statModel) {
         super(List.of(statModel));
     }
 
