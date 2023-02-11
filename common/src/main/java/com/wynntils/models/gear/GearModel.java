@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
+import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -53,9 +54,13 @@ public final class GearModel extends Model {
         List<GearInfo> possibilities = possibilitiesCache.get(gearBoxItem);
         if (possibilities != null) return possibilities;
 
+        // FIXME: This is not entirely correct. Some drop type "NEVER" items can still be
+        // in boxes, e.g. as quest rewards. We need "htoi" (how to obtain item) data to solve
+        // that properly.
         List<GearInfo> possibleGear = getAllGearInfos()
                 .filter(gear -> gear.type() == gearBoxItem.getGearType()
                         && gear.tier() == gearBoxItem.getGearTier()
+                        && gear.metaInfo().dropType() != GearDropType.NEVER
                         && gearBoxItem
                                 .getLevelRange()
                                 .inRange(gear.requirements().level()))
