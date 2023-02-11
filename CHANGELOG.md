@@ -1,9 +1,17 @@
+## [0.0.2-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.198...v0.0.2-alpha.199) (2023-02-11)
+
+
+### Code Refactoring
+
+* Create ElementModel ([#1152](https://github.com/Wynntils/Artemis/issues/1152)) ([c28da9f](https://github.com/Wynntils/Artemis/commit/c28da9f00d1790dc9390f2270d7e9d2016ffb904))
+
 ## [0.0.2-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.197...v0.0.2-alpha.198) (2023-02-10)
 
 
 ### Miscellaneous Chores
 
 * Fix spotless ([9a00617](https://github.com/Wynntils/Artemis/commit/9a006176b41bae9450c3ace2a0c3a968a624e94c))
+* **release:** v0.0.2-alpha.198 [skip ci] ([96eead1](https://github.com/Wynntils/Artemis/commit/96eead11b2b0504fc0e125b55d374393e487898a))
 
 ## [0.0.2-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.196...v0.0.2-alpha.197) (2023-02-10)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.195 [skip ci] ([05424ec](https://github.com/Wynntils/Artemis/commit/05424ec6b7f49ff1aea85f4e25781200fb55615f))
-
-## [0.0.2-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.193...v0.0.2-alpha.194) (2023-02-10)
-
-
-### Bug Fixes
-
-* default info box positioning overlaps with minimap coordinates ([#1147](https://github.com/Wynntils/Artemis/issues/1147)) ([681d7ed](https://github.com/Wynntils/Artemis/commit/681d7ed68506f6c768ed749090504820860f3f6f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.194 [skip ci] ([22538c9](https://github.com/Wynntils/Artemis/commit/22538c960b2b5cca2ec74c53f7084bb8a23fe5dd))
 
