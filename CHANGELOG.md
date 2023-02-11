@@ -1,9 +1,21 @@
+## [0.0.2-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.199...v0.0.2-alpha.200) (2023-02-11)
+
+
+### Bug Fixes
+
+* Improve gear box guesses ([#1155](https://github.com/Wynntils/Artemis/issues/1155)) ([704a228](https://github.com/Wynntils/Artemis/commit/704a22831cf150b5746730cabb790e32632d6715))
+
 ## [0.0.2-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.198...v0.0.2-alpha.199) (2023-02-11)
 
 
 ### Code Refactoring
 
 * Create ElementModel ([#1152](https://github.com/Wynntils/Artemis/issues/1152)) ([c28da9f](https://github.com/Wynntils/Artemis/commit/c28da9f00d1790dc9390f2270d7e9d2016ffb904))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.199 [skip ci] ([0060a64](https://github.com/Wynntils/Artemis/commit/0060a647dc98cf323f0cf726d4299b74bec8f23a))
 
 ## [0.0.2-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.197...v0.0.2-alpha.198) (2023-02-10)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.196 [skip ci] ([cbbb094](https://github.com/Wynntils/Artemis/commit/cbbb094b23ef87222422e094bd9b4f362541e4ce))
-
-## [0.0.2-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.194...v0.0.2-alpha.195) (2023-02-10)
-
-
-### New Features
-
-* Extend EntityLabelChangedEvent ([#1150](https://github.com/Wynntils/Artemis/issues/1150)) ([f96a39e](https://github.com/Wynntils/Artemis/commit/f96a39e2baaa574d74bb56810e72e145512c258b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.195 [skip ci] ([05424ec](https://github.com/Wynntils/Artemis/commit/05424ec6b7f49ff1aea85f4e25781200fb55615f))
 
