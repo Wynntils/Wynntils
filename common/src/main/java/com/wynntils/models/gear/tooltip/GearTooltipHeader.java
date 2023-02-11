@@ -6,8 +6,8 @@ package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.concepts.Element;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Element;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -119,7 +119,7 @@ public final class GearTooltipHeader {
         // skill bonuses
         List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
         if (!skillBonuses.isEmpty()) {
-            for (Skill skill : Skill.getGearSkillOrder()) {
+            for (Skill skill : Models.Element.getGearSkillOrder()) {
                 int skillBonusValue = gearInfo.fixedStats().getSkillBonus(skill);
                 if (skillBonusValue == 0) continue;
 

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.concepts;
+package com.wynntils.models.elements.type;
 
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -80,15 +80,5 @@ public enum Powder {
 
     public String getName() {
         return StringUtils.capitalizeFirst(this.name().toLowerCase(Locale.ROOT));
-    }
-
-    public Powder getOpposingElement() {
-        return switch (this) {
-            case EARTH -> Powder.AIR;
-            case THUNDER -> Powder.EARTH;
-            case WATER -> Powder.THUNDER;
-            case FIRE -> Powder.WATER;
-            case AIR -> Powder.FIRE;
-        };
     }
 }
