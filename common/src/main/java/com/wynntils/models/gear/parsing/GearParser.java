@@ -38,9 +38,6 @@ public final class GearParser {
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
             "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) [A-Za-z\\d _]+(?:§r§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
-    // Test suite: https://regexr.com/782rn
-    private static final Pattern CLASS_REQ_PATTERN = Pattern.compile("§c(?:✖|✔)§r§7 Class Req: ([a-zA-Z/ ]+)");
-
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
@@ -104,16 +101,6 @@ public final class GearParser {
                 // If we have a crafted gear, we also have a durability max
                 String durabilityMaxString = tierMatcher.group(3);
                 durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
-                continue;
-            }
-
-            // Determine gear type
-            Matcher classReqMatcher = CLASS_REQ_PATTERN.matcher(normalizedCoded);
-            if (classReqMatcher.matches()) {
-                // classReqString will be something like "Assassin/Ninja"
-                String classReqString = classReqMatcher.group(1);
-                // null if the item doesn't have a class req (not a weapon)
-                gearType = GearType.fromClassReq(classReqString);
                 continue;
             }
 
