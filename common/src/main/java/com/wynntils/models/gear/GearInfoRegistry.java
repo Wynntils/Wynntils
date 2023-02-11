@@ -17,8 +17,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.concepts.Element;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Element;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearInfo;
@@ -357,7 +357,7 @@ public class GearInfoRegistry {
             addDamageStat(list, DamageType.NEUTRAL, json.get("damage"));
 
             // Then check for elemental damage
-            for (Element element : Element.values()) {
+            for (Element element : Models.Element.getGearElementOrder()) {
                 String damageName = element.name().toLowerCase(Locale.ROOT) + "Damage";
                 addDamageStat(list, DamageType.fromElement(element), json.get(damageName));
             }
@@ -379,7 +379,7 @@ public class GearInfoRegistry {
 
         private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
             List<Pair<Element, Integer>> list = new ArrayList<>();
-            for (Element element : Element.values()) {
+            for (Element element : Models.Element.getGearElementOrder()) {
                 String defenceApiName = element.name().toLowerCase(Locale.ROOT) + "Defense";
 
                 int minPoints = JsonUtils.getNullableJsonInt(json, defenceApiName);

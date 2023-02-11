@@ -21,9 +21,7 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.StatusEffect;
-import com.wynntils.models.concepts.Powder;
-import com.wynntils.models.concepts.ProfessionInfo;
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -32,9 +30,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -47,8 +43,7 @@ public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §r§f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
-    private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
-            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
+
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
 
@@ -88,7 +83,6 @@ public final class CharacterModel extends Model {
     private int id;
 
     private List<StatusEffect> statusEffects = new ArrayList<>();
-    private ProfessionInfo professionInfo;
 
     public CharacterModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
@@ -195,12 +189,6 @@ public final class CharacterModel extends Model {
         return id;
     }
 
-    public ProfessionInfo getProfessionInfo() {
-        if (!hasCharacter) return new ProfessionInfo();
-
-        return professionInfo;
-    }
-
     @SubscribeEvent
     public void onMenuClosed(MenuClosedEvent e) {
         inCharacterSelection = false;
@@ -281,9 +269,11 @@ public final class CharacterModel extends Model {
                     ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                     ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
 
+                    Models.Profession.resetValueFromItem(professionInfoItem);
+
                     // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
                     // default to oldId
-                    parseCharacterFromCharacterMenu(characterInfoItem, professionInfoItem, oldId);
+                    parseCharacterFromCharacterMenu(characterInfoItem, oldId);
                     hasCharacter = true;
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + getCharacterString());
@@ -298,11 +288,10 @@ public final class CharacterModel extends Model {
                 + classType + ", reskinned="
                 + reskinned + ", level="
                 + level + ", id="
-                + id + ", professionInfo="
-                + professionInfo + '}';
+                + id + '}';
     }
 
-    private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem, ItemStack professionInfoItem, int id) {
+    private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem, int id) {
         List<String> lore = LoreUtils.getLore(characterInfoItem);
 
         int level = 0;
@@ -323,22 +312,7 @@ public final class CharacterModel extends Model {
         }
         ClassType classType = ClassType.fromName(className);
 
-        Map<ProfessionType, Integer> levels = new HashMap<>();
-        List<String> professionLore = LoreUtils.getLore(professionInfoItem);
-        for (String line : professionLore) {
-            Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
-
-            if (matcher.matches()) {
-                levels.put(ProfessionType.fromString(matcher.group(2)), Integer.parseInt(matcher.group(1)));
-            }
-        }
-
-        updateCharacterInfo(
-                classType,
-                classType != null && ClassType.isReskinned(className),
-                level,
-                id,
-                new ProfessionInfo(levels));
+        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
     }
 
     @SubscribeEvent
@@ -377,16 +351,13 @@ public final class CharacterModel extends Model {
         }
         ClassType classType = ClassType.fromName(className);
 
-        updateCharacterInfo(
-                classType, classType != null && ClassType.isReskinned(className), level, id, new ProfessionInfo());
+        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
     }
 
-    private void updateCharacterInfo(
-            ClassType classType, boolean reskinned, int level, int id, ProfessionInfo professionInfo) {
+    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level, int id) {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
-        this.professionInfo = professionInfo;
         this.id = id;
     }
 }

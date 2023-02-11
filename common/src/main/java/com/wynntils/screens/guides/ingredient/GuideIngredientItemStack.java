@@ -5,13 +5,13 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.ProfessionType;
 import com.wynntils.models.ingredients.profile.IdentificationProfile;
 import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.items.game.IngredientItem;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,10 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     private final IngredientProfile ingredientProfile;
 
     public GuideIngredientItemStack(IngredientProfile ingredientProfile) {
-        super(ingredientProfile.asItemStack(), new IngredientItem(ingredientProfile));
+        super(
+                ingredientProfile.asItemStack(),
+                new IngredientItem(ingredientProfile),
+                ingredientProfile.getDisplayName());
 
         CompoundTag tag = this.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);

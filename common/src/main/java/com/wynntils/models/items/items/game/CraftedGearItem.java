@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.concepts.Powder;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.DurableItemProperty;
@@ -14,6 +14,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class CraftedGearItem extends GameItem implements GearTierItemProperty, DurableItemProperty {
+    private final GearType gearType;
     // FIXME: Better types than strings...
     private final List<String> damages;
     private final List<String> requirements;
@@ -28,6 +29,7 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
             List<StatActualValue> identifications,
             List<Powder> powders,
             CappedValue durability) {
+        this.gearType = gearType;
         this.damages = damages;
         this.requirements = requirements;
         this.identifications = identifications;
@@ -35,12 +37,9 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
         this.durability = durability;
     }
 
-    public List<StatActualValue> getIdentifications() {
-        return identifications;
-    }
-
-    public List<Powder> getPowders() {
-        return powders;
+    public GearType getGearType() {
+        // FIXME: We do not recognize gear type for crafted gear
+        return gearType;
     }
 
     public List<String> getDamages() {
@@ -49,6 +48,14 @@ public class CraftedGearItem extends GameItem implements GearTierItemProperty, D
 
     public List<String> getRequirements() {
         return requirements;
+    }
+
+    public List<StatActualValue> getIdentifications() {
+        return identifications;
+    }
+
+    public List<Powder> getPowders() {
+        return powders;
     }
 
     @Override
