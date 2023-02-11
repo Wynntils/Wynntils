@@ -223,7 +223,7 @@
   "feature.wynntils.healthPotionBlocker.thresholdReached": "您已經超過 %s%% 最大血量數！",
   "feature.wynntils.hidePotionGlint.name": "隱藏藥水的閃爍",
   "feature.wynntils.horseMount.alreadyRiding": "您已經在騎一隻馬",
-  "feature.wynntils.horseMount.noHorse": "沒找到您的馬",
+  "feature.wynntils.horseMount.noHorse": "沒找到你的馬",
   "feature.wynntils.infoBox.name": "數據顯示框",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "這位框應該顯示什麽？您可以用函數 (Function)",
   "feature.wynntils.infoBox.overlay.infoBox.content.name": "框顯示的内容",
