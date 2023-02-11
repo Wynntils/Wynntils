@@ -46,6 +46,8 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         int low = Integer.parseInt(matcher.group(1));
         int high = Integer.parseInt(matcher.group(2));
         // Wynncraft "lies" to us, it says like "range 8-12" but in reality this means "9-12".
+        // The lowest level is presented as "0-4" so this should be fine
         return RangedValue.of(low + 1, high);
+
     }
 }
