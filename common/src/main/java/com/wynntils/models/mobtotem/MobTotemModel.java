@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -103,6 +102,10 @@ public class MobTotemModel extends Model {
 
         public void setTimerString(String timerString) {
             this.timerString = timerString;
+        }
+
+        public int getDistanceToPlayer() {
+            return (int) McUtils.player().distanceToSqr(this.getLocation().toVec3());
         }
 
         public double getLookAngleDiff() {

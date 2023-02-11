@@ -18,7 +18,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -27,8 +26,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.Position;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.OVERLAYS)
@@ -133,8 +130,8 @@ public class MobTotemTrackingFeature extends UserFeature {
                         }
 
                         return new TextRenderTask(
-                                "Mob Totem (" + mobTotem.getOwner() + ") at " + direction + " ("
-                                        + mobTotem.getTimerString() + ")",
+                                "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer() + " blocks "
+                                        + direction + " (" + mobTotem.getTimerString() + ")",
                                 textRenderSetting);
                     })
                     .toList();
