@@ -110,18 +110,7 @@ public class MobTotemTrackingFeature extends UserFeature {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
                     .map(mobTotem -> {
                         // find direction from where the player is looking to mob totem
-                        Vec3 playerLook = McUtils.player().getLookAngle();
-                        double lookAngle = Math.toDegrees(StrictMath.atan2(playerLook.z, playerLook.x));
-
-                        Position mobTotemLocation = mobTotem.getLocation();
-                        double angle = Math.toDegrees(StrictMath.atan2(
-                                mobTotemLocation.z() - McUtils.player().getZ(),
-                                mobTotemLocation.x() - McUtils.player().getX()));
-
-                        double angleDiff = lookAngle - angle;
-                        if (angleDiff < 0) angleDiff = 360 + angleDiff; // Convert negative angles to positive
-                        // Anglediff is now the angle between the player and the mob totem
-                        // 0 is straight ahead, 90 is to the left, 180 is behind, 270 is to the right
+                        double angleDiff = mobTotem.getLookAngleDiff();
                         String direction;
                         if (angleDiff > 337.5 || angleDiff < 22.5) {
                             direction = "⬆";
