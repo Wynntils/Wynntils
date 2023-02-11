@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.stats;
 
-import com.wynntils.models.concepts.Element;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Element;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.stats.type.DamageType;

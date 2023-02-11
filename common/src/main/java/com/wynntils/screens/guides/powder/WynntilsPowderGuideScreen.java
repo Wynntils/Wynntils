@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.powder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.concepts.PowderProfile;
+import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -41,7 +41,7 @@ public final class WynntilsPowderGuideScreen
     @Override
     protected void doInit() {
         if (parsedItemCache == null) {
-            parsedItemCache = PowderProfile.getAllPowderProfiles().stream()
+            parsedItemCache = Models.Element.getAllPowderTierInfo().stream()
                     .map(GuidePowderItemStack::new)
                     .toList();
         }

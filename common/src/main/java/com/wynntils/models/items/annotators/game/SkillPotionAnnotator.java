@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.items.game.SkillPotionItem;
 import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
