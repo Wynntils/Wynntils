@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
@@ -35,7 +36,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.getIngredientInfo().getTier().getHighlightColor();
+        CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();
@@ -66,6 +67,20 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
                     Texture.FAVORITE.width(),
                     Texture.FAVORITE.height());
         }
+    }
+
+    private CustomColor getHighlightColor(int tier) {
+        return switch (tier) {
+            case 0 -> new CustomColor(102, 102, 102);
+            case 1 -> new CustomColor(255, 247, 153);
+            case 2 -> new CustomColor(255, 255, 0);
+            case 3 -> new CustomColor(230, 77, 0);
+            default -> {
+                WynntilsMod.warn("Invalid ingredient tier for: "
+                        + itemStack.getIngredientInfo().name() + ": " + tier);
+                yield CustomColor.NONE;
+            }
+        };
     }
 
     @Override

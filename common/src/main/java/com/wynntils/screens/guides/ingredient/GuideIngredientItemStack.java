@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.ingredient;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
@@ -58,7 +59,22 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     public Component getHoverName() {
         return Component.literal(ingredientInfo.name())
                 .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(" " + ingredientInfo.getTier().getTierString()));
+                .append(Component.literal(" " + getTierString(ingredientInfo.tier())));
+    }
+
+    private String getTierString(int tier) {
+        return switch (tier) {
+            case 0 -> ChatFormatting.GRAY + "[" + ChatFormatting.DARK_GRAY + "✫✫✫" + ChatFormatting.GRAY + "]";
+            case 1 -> ChatFormatting.GOLD + "[" + ChatFormatting.YELLOW + "✫" + ChatFormatting.DARK_GRAY + "✫✫"
+                    + ChatFormatting.GOLD + "]";
+            case 2 -> ChatFormatting.DARK_PURPLE + "[" + ChatFormatting.LIGHT_PURPLE + "✫✫" + ChatFormatting.DARK_GRAY
+                    + "✫" + ChatFormatting.DARK_PURPLE + "]";
+            case 3 -> ChatFormatting.DARK_AQUA + "[" + ChatFormatting.AQUA + "✫✫✫" + ChatFormatting.DARK_AQUA + "]";
+            default -> {
+                WynntilsMod.warn("Invalid ingredient tier for: " + this.ingredientInfo.name() + ": " + tier);
+                yield "";
+            }
+        };
     }
 
     private List<MutableComponent> generateGuideTooltip() {

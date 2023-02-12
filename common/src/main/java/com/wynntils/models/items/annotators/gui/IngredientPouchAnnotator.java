@@ -43,7 +43,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
             IngredientInfo ingredientInfo = Models.Ingredient.fromName(ingredientName);
             if (ingredientInfo == null) return null;
 
-            if (ingredientInfo.getTier().getTierInt() != tier) {
+            if (ingredientInfo.tier() != tier) {
                 WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
                 return null;
             }
