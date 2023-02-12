@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.ingredientinfo;
 
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;

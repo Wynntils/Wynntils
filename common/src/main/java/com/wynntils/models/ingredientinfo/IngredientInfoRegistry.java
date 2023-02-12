@@ -18,7 +18,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
