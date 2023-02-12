@@ -58,6 +58,10 @@ public enum ItemObtainType {
         return apiName;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public boolean isMerchant() {
         return isMerchant;
     }

@@ -70,6 +70,10 @@ public class GearInfoRegistry {
         loadAllRegistryData();
     }
 
+    public List<ItemObtainInfo> getObtainInfo(String name) {
+        return itemObtainMap.get(name);
+    }
+
     public GearInfo getFromDisplayName(String gearName) {
         return gearInfoLookup.get(gearName);
     }
