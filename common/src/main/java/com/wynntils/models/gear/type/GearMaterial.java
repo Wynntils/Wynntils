@@ -18,8 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public record GearMaterial(ItemStack itemStack) {
-    public static final GearMaterial UNKNOWN = fromItemId("minecraft:bedrock", 0);
-
     public static GearMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
                 + gearType.name().toLowerCase(Locale.ROOT);
@@ -51,7 +49,7 @@ public record GearMaterial(ItemStack itemStack) {
         return new GearMaterial(itemStack);
     }
 
-    private static GearMaterial fromItemId(String itemId, int damageCode) {
+    public static GearMaterial fromItemId(String itemId, int damageCode) {
         ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
 
         return new GearMaterial(itemStack);

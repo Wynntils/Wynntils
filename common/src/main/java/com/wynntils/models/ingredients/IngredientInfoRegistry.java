@@ -129,9 +129,6 @@ public class IngredientInfoRegistry {
             List<ProfessionType> professions = parseProfessions(json);
 
             GearMaterial material = parseMaterial(json, name);
-            if (material == GearMaterial.UNKNOWN) {
-                WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
-            }
 
             // Get consumables-only parts
             JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
@@ -178,7 +175,10 @@ public class IngredientInfoRegistry {
 
         private GearMaterial parseMaterial(JsonObject json, String name) {
             JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
-            if (sprite.getAsJsonObject().size() == 0) return GearMaterial.UNKNOWN;
+            if (sprite.getAsJsonObject().size() == 0) {
+                WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
+                return GearMaterial.fromItemId("minecraft:air", 0);
+            }
 
             int id = JsonUtils.getNullableJsonInt(sprite, "id");
             int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
