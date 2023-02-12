@@ -36,10 +36,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class IngredientInfoRegistry {
-    // This is a list of entries in the API that do not really reflect actual ingredients in Wynncraft
-    // FIXME: This should be read from an external json file, and have more entries added to it
-    private static final List<String> INVALID_ENTRIES = List.of();
-
     List<IngredientInfo> ingredientInfoRegistry = List.of();
     Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
     Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
@@ -70,13 +66,8 @@ public class IngredientInfoRegistry {
                 WynncraftIngredientInfoResponse ingredientInfoResponse =
                         ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
 
-                // Some entries are test entries etc and should be removed
-                // FIXME: Is this really needed for ingredients?
-                List<IngredientInfo> registry = ingredientInfoResponse.ingredients.stream()
-                        .filter(ingredientInfo -> !INVALID_ENTRIES.contains(ingredientInfo.name()))
-                        .toList();
-
                 // Create fast lookup maps
+                List<IngredientInfo> registry = ingredientInfoResponse.ingredients;
                 Map<String, IngredientInfo> lookupMap = new HashMap<>();
                 Map<String, IngredientInfo> altLookupMap = new HashMap<>();
                 for (IngredientInfo ingredientInfo : registry) {
