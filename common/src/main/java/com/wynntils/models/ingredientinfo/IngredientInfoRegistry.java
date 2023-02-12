@@ -34,11 +34,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class IngredientInfoRegistry {
-    List<IngredientInfo> ingredientInfoRegistry = List.of();
-    Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
-    Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
+    private List<IngredientInfo> ingredientInfoRegistry = List.of();
+    private Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
+    private Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
 
     public IngredientInfoRegistry() {
         loadRegistry();
@@ -46,6 +47,14 @@ public class IngredientInfoRegistry {
 
     public void reloadData() {
         loadRegistry();
+    }
+
+    public IngredientInfo getFromDisplayName(String ingredientName) {
+        return ingredientInfoLookup.get(ingredientName);
+    }
+
+    public Stream<IngredientInfo> getIngredientInfoStream() {
+        return ingredientInfoRegistry.stream();
     }
 
     private void loadRegistry() {

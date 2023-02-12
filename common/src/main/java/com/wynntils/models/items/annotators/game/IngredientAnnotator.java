@@ -27,7 +27,7 @@ public final class IngredientAnnotator implements ItemAnnotator {
         String tierColor = matcher.group(2);
 
         int tier = Models.Ingredient.getTierFromColorCode(tierColor);
-        IngredientInfo ingredientInfo = Models.Ingredient.fromName(ingredientName);
+        IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);
         if (ingredientInfo == null) return null;
 
         if (ingredientInfo.tier() != tier) {
