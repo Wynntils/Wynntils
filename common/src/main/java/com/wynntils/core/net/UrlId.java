@@ -25,8 +25,6 @@ public enum UrlId {
     API_GOOGLE_TRANSLATION("apiGoogleTranslation"),
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
     API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
-    DATA_ATHENA_INGREDIENT_LIST("dataAthenaIngredientList"),
-    DATA_ATHENA_ITEM_LIST("dataAthenaItemList"),
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
     DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
