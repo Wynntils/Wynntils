@@ -5,8 +5,8 @@
 package com.wynntils.models.ingredients.type;
 
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.stats.metadata.ItemMaterial;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -19,7 +19,7 @@ public record IngredientInfo(
         int tier,
         int level,
         Optional<String> apiName,
-        GearMaterial material,
+        ItemMaterial material,
         List<ProfessionType> professions,
         List<Pair<Skill, Integer>> skillRequirements,
         Map<IngredientPosition, Integer> positionModifiers,

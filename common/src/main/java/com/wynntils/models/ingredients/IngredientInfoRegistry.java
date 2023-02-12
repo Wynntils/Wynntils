@@ -19,10 +19,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.stats.metadata.ItemMaterial;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
@@ -130,7 +130,7 @@ public class IngredientInfoRegistry {
 
             List<ProfessionType> professions = parseProfessions(json);
 
-            GearMaterial material = parseMaterial(json, name);
+            ItemMaterial material = parseMaterial(json, name);
 
             // Get consumables-only parts
             JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
@@ -175,11 +175,11 @@ public class IngredientInfoRegistry {
             return Collections.unmodifiableList(professions);
         }
 
-        private GearMaterial parseMaterial(JsonObject json, String name) {
+        private ItemMaterial parseMaterial(JsonObject json, String name) {
             JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
             if (sprite.getAsJsonObject().size() == 0) {
                 WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
-                return GearMaterial.fromItemId("minecraft:air", 0);
+                return ItemMaterial.fromItemId("minecraft:air", 0);
             }
 
             int id = JsonUtils.getNullableJsonInt(sprite, "id");
@@ -189,11 +189,11 @@ public class IngredientInfoRegistry {
                 // This is a player head. Check if we got a skin for it instead!
                 String skinTexture = ingredientSkins.get(name);
                 if (skinTexture != null) {
-                    return GearMaterial.fromPlayerHeadTexture(skinTexture);
+                    return ItemMaterial.fromPlayerHeadTexture(skinTexture);
                 }
             }
 
-            return GearMaterial.fromItemTypeCode(id, damage);
+            return ItemMaterial.fromItemTypeCode(id, damage);
         }
 
         private List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {

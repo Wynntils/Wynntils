@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.type;
+package com.wynntils.models.stats.metadata;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
 import java.util.Locale;
@@ -17,8 +18,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public record GearMaterial(ItemStack itemStack) {
-    public static GearMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
+/**
+ * This do not strictly belong to the StatModel, but it is currently the only place where we have code
+ * that is shared between Gear and Ingredients.
+ */
+public record ItemMaterial(ItemStack itemStack) {
+    public static ItemMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
                 + gearType.name().toLowerCase(Locale.ROOT);
 
@@ -32,30 +37,30 @@ public record GearMaterial(ItemStack itemStack) {
             itemStack.setTag(tag);
         }
 
-        return new GearMaterial(itemStack);
+        return new ItemMaterial(itemStack);
     }
 
-    public static GearMaterial fromPlayerHeadTexture(String skinTexture) {
+    public static ItemMaterial fromPlayerHeadTexture(String skinTexture) {
         ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0);
         SkinUtils.setPlayerHeadSkin(itemStack, skinTexture);
 
-        return new GearMaterial(itemStack);
+        return new ItemMaterial(itemStack);
     }
 
-    public static GearMaterial fromGearType(GearType gearType) {
+    public static ItemMaterial fromGearType(GearType gearType) {
         // Material is missing, so just give generic icon for this type of gear (weapon or accessory)
         ItemStack itemStack = createItemStack(gearType.getDefaultItem(), gearType.getDefaultDamage());
 
-        return new GearMaterial(itemStack);
+        return new ItemMaterial(itemStack);
     }
 
-    public static GearMaterial fromItemId(String itemId, int damageCode) {
+    public static ItemMaterial fromItemId(String itemId, int damageCode) {
         ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
 
-        return new GearMaterial(itemStack);
+        return new ItemMaterial(itemStack);
     }
 
-    public static GearMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
+    public static ItemMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
         String toIdString = ItemIdFix.getItem(itemTypeCode);
         String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
         String itemId = alternativeName != null ? alternativeName : toIdString;

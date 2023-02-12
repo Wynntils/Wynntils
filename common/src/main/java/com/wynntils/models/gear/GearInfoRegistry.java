@@ -23,7 +23,6 @@ import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
-import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
@@ -31,6 +30,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.metadata.ItemMaterial;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -193,7 +193,7 @@ public class GearInfoRegistry {
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
-            GearMaterial material = parseMaterial(json, type);
+            ItemMaterial material = parseMaterial(json, type);
             GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
 
             Optional<String> loreOpt = parseLore(json);
@@ -219,11 +219,11 @@ public class GearInfoRegistry {
             return GearRestrictions.fromString(restrictions);
         }
 
-        private GearMaterial parseMaterial(JsonObject json, GearType type) {
+        private ItemMaterial parseMaterial(JsonObject json, GearType type) {
             return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
         }
 
-        private GearMaterial parseArmorType(JsonObject json, GearType gearType) {
+        private ItemMaterial parseArmorType(JsonObject json, GearType gearType) {
             // We might have a specified material (like a carved pumpkin or mob head),
             // if so this takes precedence
             String material = JsonUtils.getNullableJsonString(json, "material");
@@ -234,7 +234,7 @@ public class GearInfoRegistry {
             // Some helmets are player heads
             String skin = JsonUtils.getNullableJsonString(json, "skin");
             if (skin != null) {
-                return GearMaterial.fromPlayerHeadTexture(skin);
+                return ItemMaterial.fromPlayerHeadTexture(skin);
             }
 
             String materialType =
@@ -255,21 +255,21 @@ public class GearInfoRegistry {
                 }
             }
 
-            return GearMaterial.fromArmorType(materialType, gearType, color);
+            return ItemMaterial.fromArmorType(materialType, gearType, color);
         }
 
-        private GearMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
+        private ItemMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
             String material = JsonUtils.getNullableJsonString(json, "material");
             if (material == null) {
                 // We're screwed. The best we can do is to give a generic default representation
                 // for this gear type
-                return GearMaterial.fromGearType(gearType);
+                return ItemMaterial.fromGearType(gearType);
             }
 
             String[] materialArray = material.split(":");
             int itemTypeCode = Integer.parseInt(materialArray[0]);
             int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-            return GearMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+            return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
         }
 
         private GearRequirements parseRequirements(JsonObject json, GearType type) {

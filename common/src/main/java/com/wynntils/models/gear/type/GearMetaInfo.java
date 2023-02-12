@@ -4,13 +4,14 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.models.stats.metadata.ItemMaterial;
 import java.util.Optional;
 
 // The api name is normally the same as the name, but if not, the api name is given
 // by apiName
 public record GearMetaInfo(
         GearRestrictions restrictions,
-        GearMaterial material,
+        ItemMaterial material,
         GearDropType dropType,
         Optional<String> lore,
         Optional<String> apiName,
