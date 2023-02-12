@@ -34,9 +34,9 @@ public final class GearParser {
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|/[35]s)?(?:§r§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
 
-    // Test suite: https://regexr.com/778gh
+    // Test suite: https://regexr.com/782rk
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z ]+)(?:§r§8)?(?: \\[(\\d+)(?:/(\\d+) Durability)?\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) [A-Za-z\\d _]+(?:§r§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
@@ -74,7 +74,7 @@ public final class GearParser {
                 if (powderString.length() != usedSlots) {
                     WynntilsMod.warn("Mismatch between powder slot count " + usedSlots + " and actual powder symbols: "
                             + codedPowders + " for " + itemStack.getHoverName().getString());
-                    // Fall through and use codedPowfers nevertheless
+                    // Fall through and use codedPowders nevertheless
                 }
 
                 codedPowders.chars().forEach(ch -> {
@@ -92,21 +92,15 @@ public final class GearParser {
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
                 tier = GearTier.fromFormattedString(tierString);
-                // group 2 is the type of item, like "Raid Reward" or "Item"
-                // or "Wand" (the latter only for crafted items)
-                String gearTypeString = tierMatcher.group(2);
-                // This will return null for everything but crafted gear
-                gearType = GearType.fromString(gearTypeString);
 
                 // This is either the rerolls (for re-identified gear), or the
                 // current durability (for crafted gear)
-                String tierCountString = tierMatcher.group(3);
+                String tierCountString = tierMatcher.group(2);
                 tierCount = tierCountString != null ? Integer.parseInt(tierCountString) : 0;
 
                 // If we have a crafted gear, we also have a durability max
-                String durabilityMaxString = tierMatcher.group(4);
+                String durabilityMaxString = tierMatcher.group(3);
                 durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
-
                 continue;
             }
 
