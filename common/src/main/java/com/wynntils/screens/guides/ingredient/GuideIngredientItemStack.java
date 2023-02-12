@@ -7,8 +7,8 @@ package com.wynntils.screens.guides.ingredient;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredientinfo.IngredientInfo;
+import com.wynntils.models.ingredientinfo.IngredientPosition;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
-import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
@@ -17,6 +17,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -128,10 +129,18 @@ public final class GuideIngredientItemStack extends GuideItemStack {
             itemLore.add(Component.empty());
         }
 
-        IngredientModifiers ingredientModifiers = ingredientInfo.getIngredientModifiers();
-        itemLore.addAll(ingredientModifiers.getModifierLoreLines());
+        Map<IngredientPosition, Integer> ingredientModifiers = ingredientInfo.positionModifiers();
+        for (Map.Entry<IngredientPosition, Integer> modifier : ingredientModifiers.entrySet()) {
+            int value = modifier.getValue();
 
-        if (ingredientModifiers.anyExists()) {
+            String colorCode = value > 0 ? ChatFormatting.GREEN + "+" : ChatFormatting.RED.toString();
+            itemLore.add(
+                    Component.literal(colorCode + value + "%" + ChatFormatting.GRAY + " Ingredient Effectiveness"));
+            itemLore.add(Component.literal(
+                    ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDisplayName() + " this one)"));
+        }
+
+        if (!ingredientModifiers.isEmpty()) {
             itemLore.add(Component.empty());
         }
 

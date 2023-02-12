@@ -4,9 +4,7 @@
  */
 package com.wynntils.models.ingredientinfo;
 
-import java.util.List;
 import java.util.Locale;
-import net.minecraft.ChatFormatting;
 
 public enum IngredientPosition {
     LEFT("to the left of"),
@@ -35,12 +33,5 @@ public enum IngredientPosition {
 
     public String getApiName() {
         return apiName;
-    }
-
-    public List<String> getLore(int value) {
-        String colorCode = value > 0 ? ChatFormatting.GREEN + "+" : ChatFormatting.RED.toString();
-        return List.of(
-                colorCode + value + "%" + ChatFormatting.GRAY + " Ingredient Effectiveness",
-                ChatFormatting.GRAY + "(To ingredients " + this.displayName + " this one)");
     }
 }

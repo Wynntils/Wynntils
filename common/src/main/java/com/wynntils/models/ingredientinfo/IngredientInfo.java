@@ -6,9 +6,7 @@ package com.wynntils.models.ingredientinfo;
 
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
-import com.wynntils.models.ingredients.profile.IngredientIdentificationContainer;
 import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
-import com.wynntils.models.ingredients.profile.IngredientModifiers;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
@@ -31,14 +29,6 @@ public record IngredientInfo(
         int durabilityModifier,
         List<Pair<StatType, RangedValue>> variableStats) {
     // FIXME: remove those
-    public Map<String, IngredientIdentificationContainer> getStatuses() {
-        return Map.of();
-    }
-
-    public IngredientModifiers getIngredientModifiers() {
-        return new IngredientModifiers();
-    }
-
     public IngredientItemModifiers getItemModifiers() {
         return new IngredientItemModifiers();
     }
