@@ -5,6 +5,7 @@
 package com.wynntils.models.ingredients;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.stats.StatModel;
 import java.util.List;
 import java.util.Map;

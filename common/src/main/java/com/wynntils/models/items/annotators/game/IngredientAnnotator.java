@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.ingredients.IngredientInfo;
+import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.game.IngredientItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -20,6 +20,8 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
+import com.wynntils.models.ingredients.type.IngredientInfo;
+import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.JsonUtils;
