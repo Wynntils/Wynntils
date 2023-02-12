@@ -69,6 +69,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
         }
     }
 
+    // FIXME: This should be painted by ItemHighlightFeature instead...
     private CustomColor getHighlightColor(int tier) {
         return switch (tier) {
             case 0 -> new CustomColor(102, 102, 102);
