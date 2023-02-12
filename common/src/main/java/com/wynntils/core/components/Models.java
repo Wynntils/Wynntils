@@ -21,7 +21,6 @@ import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredientinfo.IngredientModel;
-import com.wynntils.models.ingredients.IngredientProfilesModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
@@ -51,7 +50,6 @@ public final class Models {
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final IngredientProfilesModel IngredientProfiles = new IngredientProfilesModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
@@ -68,7 +66,7 @@ public final class Models {
     public static final GearModel Gear = new GearModel(Element, Stat);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
-    public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, IngredientProfiles);
+    public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
     public static final LootChestModel LootChest = new LootChestModel(Container);
     public static final LootrunModel Lootrun = new LootrunModel(Container);
     public static final MapModel Map = new MapModel(GuildAttackTimer);

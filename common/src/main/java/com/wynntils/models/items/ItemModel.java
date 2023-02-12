@@ -11,7 +11,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.GearModel;
-import com.wynntils.models.ingredients.IngredientProfilesModel;
+import com.wynntils.models.ingredientinfo.IngredientModel;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedConsumableAnnotator;
@@ -49,8 +49,8 @@ public class ItemModel extends Model {
             ElementModel elementModel,
             GearModel gearModel,
             RewardsModel rewardsModel,
-            IngredientProfilesModel ingredientProfilesModel) {
-        super(List.of(elementModel, gearModel, rewardsModel, ingredientProfilesModel));
+            IngredientModel ingredientModel) {
+        super(List.of(elementModel, gearModel, rewardsModel, ingredientModel));
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
