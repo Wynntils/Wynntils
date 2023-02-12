@@ -6,13 +6,14 @@ package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredientinfo.IngredientInfo;
 import com.wynntils.models.ingredientinfo.IngredientPosition;
-import com.wynntils.models.ingredients.profile.IngredientItemModifiers;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -84,9 +85,25 @@ public final class GuideIngredientItemStack extends GuideItemStack {
         itemLore.add(Component.literal("Crafting Ingredient").withStyle(ChatFormatting.DARK_GRAY));
         itemLore.add(Component.empty());
 
-        List<Pair<StatType, RangedValue>> stats = ingredientInfo.variableStats();
+        itemLore.addAll(getStatsLore(ingredientInfo));
+        itemLore.addAll(getPositionModifierLore(ingredientInfo));
+        itemLore.addAll(getEffectsAndRequirementsLore(ingredientInfo));
 
-        for (Pair<StatType, RangedValue> valuedStat : stats) {
+        itemLore.add(
+                Component.literal("Crafting Lv. Min: " + ingredientInfo.level()).withStyle(ChatFormatting.GRAY));
+
+        for (ProfessionType profession : ingredientInfo.professions()) {
+            itemLore.add(Component.literal("  " + profession.getProfessionIconChar() + " ")
+                    .append(Component.literal(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
+        }
+
+        return itemLore;
+    }
+
+    private List<MutableComponent> getStatsLore(IngredientInfo ingredientInfo) {
+        List<MutableComponent> itemLore = new ArrayList<>();
+
+        for (Pair<StatType, RangedValue> valuedStat : ingredientInfo.variableStats()) {
             if (valuedStat.value().isFixed()) {
                 if (valuedStat.value().low() >= 0) {
                     itemLore.add(Component.literal("+" + valuedStat.value().low()
@@ -125,12 +142,18 @@ public final class GuideIngredientItemStack extends GuideItemStack {
             }
         }
 
-        if (!stats.isEmpty()) {
+        if (!itemLore.isEmpty()) {
             itemLore.add(Component.empty());
         }
 
-        Map<IngredientPosition, Integer> ingredientModifiers = ingredientInfo.positionModifiers();
-        for (Map.Entry<IngredientPosition, Integer> modifier : ingredientModifiers.entrySet()) {
+        return itemLore;
+    }
+
+    private List<MutableComponent> getPositionModifierLore(IngredientInfo ingredientInfo) {
+        List<MutableComponent> itemLore = new ArrayList<>();
+
+        for (Map.Entry<IngredientPosition, Integer> modifier :
+                ingredientInfo.positionModifiers().entrySet()) {
             int value = modifier.getValue();
 
             String colorCode = value > 0 ? ChatFormatting.GREEN + "+" : ChatFormatting.RED.toString();
@@ -140,26 +163,50 @@ public final class GuideIngredientItemStack extends GuideItemStack {
                     ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDisplayName() + " this one)"));
         }
 
-        if (!ingredientModifiers.isEmpty()) {
+        if (!itemLore.isEmpty()) {
             itemLore.add(Component.empty());
-        }
-
-        IngredientItemModifiers itemModifiers = ingredientInfo.getItemModifiers();
-        itemLore.addAll(itemModifiers.getItemModifierLoreLines());
-
-        if (itemModifiers.anyExists()) {
-            itemLore.add(Component.empty());
-        }
-
-        itemLore.add(
-                Component.literal("Crafting Lv. Min: " + ingredientInfo.level()).withStyle(ChatFormatting.GRAY));
-
-        for (ProfessionType profession : ingredientInfo.professions()) {
-            itemLore.add(Component.literal("  " + profession.getProfessionIconChar() + " ")
-                    .append(Component.literal(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
         }
 
         return itemLore;
+    }
+
+    private List<MutableComponent> getEffectsAndRequirementsLore(IngredientInfo ingredientInfo) {
+        List<MutableComponent> itemLore = new ArrayList<>();
+
+        if (ingredientInfo.durabilityModifier() != 0 && ingredientInfo.duration() != 0) {
+            int duration = ingredientInfo.duration();
+            int durability = ingredientInfo.durabilityModifier();
+            itemLore.add(getEffectsAndRequirementsLine("Durability", durability, durability > 0)
+                    .append(Component.literal(" or ").withStyle(ChatFormatting.GRAY))
+                    .append(getEffectsAndRequirementsLine("Duration", duration, duration > 0)));
+        } else if (ingredientInfo.durabilityModifier() != 0) {
+            int durability = ingredientInfo.durabilityModifier();
+            itemLore.add(getEffectsAndRequirementsLine("Durability", durability, durability > 0));
+        } else if (ingredientInfo.duration() != 0) {
+            int duration = ingredientInfo.duration();
+            itemLore.add(getEffectsAndRequirementsLine("Duration", duration, duration > 0));
+        }
+
+        if (ingredientInfo.charges() != 0) {
+            int charges = ingredientInfo.charges();
+            itemLore.add(getEffectsAndRequirementsLine("Charges", charges, charges > 0));
+        }
+
+        for (Pair<Skill, Integer> skillReq : ingredientInfo.skillRequirements()) {
+            int minLevel = skillReq.value();
+            itemLore.add(
+                    getEffectsAndRequirementsLine(skillReq.key().getDisplayName() + " Min.", minLevel, minLevel < 0));
+        }
+
+        if (!itemLore.isEmpty()) {
+            itemLore.add(Component.empty());
+        }
+        return itemLore;
+    }
+
+    private static MutableComponent getEffectsAndRequirementsLine(String effectName, int value, boolean isGood) {
+        return Component.literal(StringUtils.toSignedString(value) + " " + effectName)
+                .withStyle(isGood ? ChatFormatting.GREEN : ChatFormatting.RED);
     }
 
     public IngredientInfo getIngredientInfo() {
