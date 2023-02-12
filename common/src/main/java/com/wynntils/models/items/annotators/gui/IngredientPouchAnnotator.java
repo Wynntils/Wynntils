@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.ingredientinfo.IngredientInfo;
+import com.wynntils.models.ingredients.IngredientInfo;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;

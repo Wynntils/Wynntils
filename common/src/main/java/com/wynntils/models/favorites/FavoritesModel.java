@@ -8,7 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.user.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.ingredientinfo.IngredientInfo;
+import com.wynntils.models.ingredients.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.IngredientItem;

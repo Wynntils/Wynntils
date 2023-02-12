@@ -20,7 +20,7 @@ import com.wynntils.models.favorites.FavoritesModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
-import com.wynntils.models.ingredientinfo.IngredientModel;
+import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;

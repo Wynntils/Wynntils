@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.ingredientinfo;
+package com.wynntils.models.ingredients;
 
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMaterial;
