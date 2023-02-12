@@ -18,6 +18,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -108,26 +109,7 @@ public class MobTotemTrackingFeature extends UserFeature {
                     .map(mobTotem -> {
                         // find direction from where the player is looking to mob totem
                         double angleDiff = mobTotem.getLookAngleDiff();
-                        String direction;
-                        if (angleDiff > 337.5 || angleDiff < 22.5) {
-                            direction = "⬆";
-                        } else if (angleDiff > 22.5 && angleDiff < 67.5) {
-                            direction = "⬉";
-                        } else if (angleDiff > 67.5 && angleDiff < 112.5) {
-                            direction = "⬅";
-                        } else if (angleDiff > 112.5 && angleDiff < 157.5) {
-                            direction = "⬋";
-                        } else if (angleDiff > 157.5 && angleDiff < 202.5) {
-                            direction = "⬇";
-                        } else if (angleDiff > 202.5 && angleDiff < 247.5) {
-                            direction = "⬊";
-                        } else if (angleDiff > 247.5 && angleDiff < 292.5) {
-                            direction = "➡";
-                        } else if (angleDiff > 292.5 && angleDiff < 337.5) {
-                            direction = "⬈";
-                        } else {
-                            direction = "?";
-                        }
+                        String direction = StringUtils.angleToDirectionArrowString(angleDiff);
 
                         return new TextRenderTask(
                                 "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer() + " blocks "
