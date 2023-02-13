@@ -54,7 +54,6 @@ public class ChatMentionFeature extends UserFeature {
         // .getString() is used here as it gives formattingchars when those exist. It is needed for guild messages
         // because wynn still uses legacy coloring for it.
         String text = curr.getString();
-        System.out.println(text);
 
         // case: component has no text
         if (text == "") {
