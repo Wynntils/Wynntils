@@ -1,9 +1,21 @@
+## [0.0.2-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.202...v0.0.2-alpha.203) (2023-02-13)
+
+
+### New Features
+
+* Add "how to obtain item" info ([#1157](https://github.com/Wynntils/Artemis/issues/1157)) ([5e80a1a](https://github.com/Wynntils/Artemis/commit/5e80a1a7ce08f866b62115d79e1028abf27ce35c))
+
 ## [0.0.2-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.201...v0.0.2-alpha.202) (2023-02-12)
 
 
 ### Documentation
 
 * improve readme ([#1153](https://github.com/Wynntils/Artemis/issues/1153)) ([b1ca9cd](https://github.com/Wynntils/Artemis/commit/b1ca9cd1eed8b503a11e19e33430a8ce022cb470))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.202 [skip ci] ([61a8b42](https://github.com/Wynntils/Artemis/commit/61a8b42b9caee819510e9a29c8b4bfe4555041c5))
 
 ## [0.0.2-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.200...v0.0.2-alpha.201) (2023-02-12)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.199 [skip ci] ([0060a64](https://github.com/Wynntils/Artemis/commit/0060a647dc98cf323f0cf726d4299b74bec8f23a))
-
-## [0.0.2-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.197...v0.0.2-alpha.198) (2023-02-10)
-
-
-### Miscellaneous Chores
-
-* Fix spotless ([9a00617](https://github.com/Wynntils/Artemis/commit/9a006176b41bae9450c3ace2a0c3a968a624e94c))
-* **release:** v0.0.2-alpha.198 [skip ci] ([96eead1](https://github.com/Wynntils/Artemis/commit/96eead11b2b0504fc0e125b55d374393e487898a))
 
