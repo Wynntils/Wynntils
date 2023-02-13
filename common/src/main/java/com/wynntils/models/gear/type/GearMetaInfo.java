@@ -4,7 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.models.stats.metadata.ItemMaterial;
+import com.wynntils.models.itemmetadata.type.ItemMaterial;
+import com.wynntils.models.itemmetadata.type.ItemObtainInfo;
 import java.util.List;
 import java.util.Optional;
 

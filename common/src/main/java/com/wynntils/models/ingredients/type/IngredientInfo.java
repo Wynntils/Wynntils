@@ -5,8 +5,8 @@
 package com.wynntils.models.ingredients.type;
 
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.itemmetadata.type.ItemMaterial;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.models.stats.metadata.ItemMaterial;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;

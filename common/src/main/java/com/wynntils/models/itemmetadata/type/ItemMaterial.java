@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.stats.metadata;
+package com.wynntils.models.itemmetadata.type;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.gear.type.GearType;
@@ -18,10 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-/**
- * This do not strictly belong to the StatModel, but it is currently the only place where we have code
- * that is shared between Gear and Ingredients.
- */
 public record ItemMaterial(ItemStack itemStack) {
     public static ItemMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
