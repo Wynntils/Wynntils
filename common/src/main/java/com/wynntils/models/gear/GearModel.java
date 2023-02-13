@@ -7,15 +7,12 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.ItemObtainInfo;
-import com.wynntils.models.gear.type.ItemObtainType;
-import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -24,7 +21,6 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -130,14 +126,5 @@ public final class GearModel extends Model {
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
         return gearInfoRegistry.getObtainInfo(name);
-    }
-
-    // FIXME: This really belongs in IngredientModel, but it is not available yet in the main branch
-    public List<ItemObtainInfo> getIngredientObtainInfos(IngredientInfo ingredientInfo) {
-        List<ItemObtainInfo> obtainInfo = Models.Gear.getObtainInfo(ingredientInfo.name());
-        if (obtainInfo == null) {
-            return List.of(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
-        }
-        return obtainInfo;
     }
 }

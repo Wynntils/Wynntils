@@ -5,10 +5,14 @@
 package com.wynntils.models.ingredients;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.gear.type.ItemObtainInfo;
+import com.wynntils.models.gear.type.ItemObtainType;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.stats.StatModel;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 
@@ -30,6 +34,14 @@ public class IngredientModel extends Model {
 
     public IngredientInfo getIngredientInfoFromName(String ingredientName) {
         return ingredientInfoRegistry.getFromDisplayName(ingredientName);
+    }
+
+    public List<ItemObtainInfo> getObtainInfo(IngredientInfo ingredientInfo) {
+        List<ItemObtainInfo> obtainInfo = Models.Gear.getObtainInfo(ingredientInfo.name());
+        if (obtainInfo == null) {
+            return List.of(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
+        }
+        return obtainInfo;
     }
 
     public Stream<IngredientInfo> getAllIngredientInfos() {
