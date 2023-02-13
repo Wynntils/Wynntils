@@ -12,11 +12,11 @@ import com.wynntils.models.gear.parsing.GearParseResult;
 import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.ItemObtainInfo;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
+import com.wynntils.models.stats.metadata.ItemMetadataModel;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +46,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(ElementModel elementModel, StatModel statModel) {
-        super(List.of(statModel));
+    public GearModel(ElementModel elementModel, StatModel statModel, ItemMetadataModel itemMetadataModel) {
+        super(List.of(elementModel, statModel, itemMetadataModel));
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
@@ -122,9 +122,5 @@ public final class GearModel extends Model {
 
     public Stream<GearInfo> getAllGearInfos() {
         return gearInfoRegistry.getGearInfoStream();
-    }
-
-    public List<ItemObtainInfo> getObtainInfo(String name) {
-        return gearInfoRegistry.getObtainInfo(name);
     }
 }

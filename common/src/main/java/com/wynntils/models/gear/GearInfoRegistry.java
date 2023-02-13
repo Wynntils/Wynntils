@@ -57,7 +57,6 @@ public class GearInfoRegistry {
     private static final List<String> INVALID_ENTRIES = List.of("default");
 
     private List<GearMajorId> allMajorIds = List.of();
-    private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = Map.of();
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
@@ -68,10 +67,6 @@ public class GearInfoRegistry {
 
     public void reloadData() {
         loadAllRegistryData();
-    }
-
-    public List<ItemObtainInfo> getObtainInfo(String name) {
-        return itemObtainMap.get(name);
     }
 
     public GearInfo getFromDisplayName(String gearName) {
@@ -101,18 +96,8 @@ public class GearInfoRegistry {
                     .create();
             allMajorIds = majorIdGson.fromJson(majorIdsReader, type);
 
-            // Now get the obtain info DB
-            Download obtainDl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
-            obtainDl.handleReader(obtainReader -> {
-                Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-                Gson obtainGson = new GsonBuilder()
-                        .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
-                        .create();
-                itemObtainMap = obtainGson.fromJson(obtainReader, obtainType);
-
-                // Now we can do the gear DB
-                downloadGearRegistry();
-            });
+            // Now we can do the gear DB
+            downloadGearRegistry();
         });
     }
 
@@ -120,7 +105,7 @@ public class GearInfoRegistry {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
         dl.handleReader(reader -> {
             Gson gearInfoGson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds, itemObtainMap))
+                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds))
                     .create();
             WynncraftGearInfoResponse gearInfoResponse = gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
 
@@ -161,11 +146,9 @@ public class GearInfoRegistry {
 
     private static final class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         private final List<GearMajorId> allMajorIds;
-        private final Map<String, List<ItemObtainInfo>> itemObtainMap;
 
-        private GearInfoDeserializer(List<GearMajorId> allMajorIds, Map<String, List<ItemObtainInfo>> itemObtainMap) {
+        private GearInfoDeserializer(List<GearMajorId> allMajorIds) {
             this.allMajorIds = allMajorIds;
-            this.itemObtainMap = itemObtainMap;
         }
 
         @Override
@@ -215,7 +198,7 @@ public class GearInfoRegistry {
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseMaterial(json, type);
-            List<ItemObtainInfo> obtainCrowdSourced = itemObtainMap.get(name);
+            List<ItemObtainInfo> obtainCrowdSourced = Models.ItemMetadata.getObtainInfo(name);
             List<ItemObtainInfo> obtainInfo =
                     obtainCrowdSourced == null ? new ArrayList<>() : new ArrayList<>(obtainCrowdSourced);
 
@@ -479,20 +462,5 @@ public class GearInfoRegistry {
 
     protected static class WynncraftGearInfoResponse {
         protected List<GearInfo> items;
-    }
-
-    private static final class ItemObtainInfoDeserializer implements JsonDeserializer<ItemObtainInfo> {
-        @Override
-        public ItemObtainInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
-                throws JsonParseException {
-            JsonObject json = jsonElement.getAsJsonObject();
-            String sourceTypeStr = json.get("type").getAsString();
-            ItemObtainType sourceType = ItemObtainType.fromApiName(sourceTypeStr);
-            String name = JsonUtils.getNullableJsonString(json, "name");
-
-            // FIXME: We are ignoring the details field for now...
-
-            return new ItemObtainInfo(sourceType, Optional.ofNullable(name));
-        }
     }
 }
