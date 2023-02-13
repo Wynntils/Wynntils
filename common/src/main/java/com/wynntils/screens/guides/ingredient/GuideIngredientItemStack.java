@@ -49,6 +49,8 @@ public final class GuideIngredientItemStack extends GuideItemStack {
 
         tooltip.addAll(guideTooltip);
 
+        appendObtainInfo(tooltip, Models.Gear.getIngredientObtainInfos(ingredientProfile));
+
         tooltip.add(Component.empty());
         if (Models.Favorites.isFavorite(ingredientProfile.getDisplayName())) {
             tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
