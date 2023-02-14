@@ -60,7 +60,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
             return itemStack;
         }
 
-        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        // This must specifically NOT be normalized; the ֎ is significant
+        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);

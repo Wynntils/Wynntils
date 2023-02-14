@@ -70,7 +70,7 @@ public final class GearTooltipIdentifications {
             delimiterNeeded = true;
         }
 
-        if (identifications.get(identifications.size() - 1).getString().isEmpty()) {
+        if (!identifications.isEmpty() && identifications.get(identifications.size() - 1).getString().isEmpty()) {
             // Remove last line if it is a delimiter line
             identifications.remove(identifications.size() - 1);
         }

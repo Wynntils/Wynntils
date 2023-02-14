@@ -100,7 +100,8 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static MutableComponent getItemComponent(ItemStack itemStack) {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
-        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        // This must specifically NOT be normalized; the ֎ is significant
+        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
