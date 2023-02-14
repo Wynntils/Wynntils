@@ -22,6 +22,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChatMentionFeature extends UserFeature {
     @Config
+    public boolean markMention = true;
+
+    @Config
+    public boolean dingMention = true;
+
+    @Config
     public String aliases = "";
 
     private Pattern pattern = Pattern.compile(
@@ -44,19 +50,23 @@ public class ChatMentionFeature extends UserFeature {
         Matcher looseMatcher = pattern.matcher(ComponentUtils.getUnformatted(message));
 
         if (looseMatcher.find()) {
-            e.setMessage(recurseMark(message));
-            McUtils.playSound(SoundEvents.NOTE_BLOCK_PLING.value());
+            if (markMention) {
+                e.setMessage(rewriteComponentWithHighlight(message));
+            }
+            if (dingMention) {
+                McUtils.playSound(SoundEvents.NOTE_BLOCK_PLING.value());
+            }
         }
     }
 
-    private Component recurseMark(Component comp) {
+    private Component rewriteComponentWithHighlight(Component comp) {
         MutableComponent curr = MutableComponent.create(comp.getContents()).withStyle(comp.getStyle());
         // .getString() is used here as it gives formattingchars when those exist. It is needed for guild messages
         // because wynn still uses legacy coloring for it.
         String text = curr.getString();
 
-        // case: component has no text
         if (text == "") {
+            // case: component has no text -> pass the component thru and process its siblings
             List<Component> sib = comp.getSiblings();
             if (sib.size() == 0) {
                 // no siblings -> this is an end component return self
@@ -64,10 +74,11 @@ public class ChatMentionFeature extends UserFeature {
             } else {
                 // some siblings -> check them
                 for (Component c : sib) {
-                    curr.append(recurseMark(c));
+                    curr.append(rewriteComponentWithHighlight(c));
                 }
             }
         } else {
+            // component has text -> check if it has the mention
             Matcher match = pattern.matcher(text);
 
             int nextStart = 0;
@@ -76,7 +87,9 @@ public class ChatMentionFeature extends UserFeature {
 
             String lastcol = "";
 
+            // NOTE: Message is modified here!
             while (match.find()) {
+                // Mention found -> split component and mark the
                 String before = text.substring(nextStart, match.start());
                 String name = text.substring(match.start(), match.end());
 
@@ -95,7 +108,7 @@ public class ChatMentionFeature extends UserFeature {
             List<Component> sib = comp.getSiblings();
             if (sib.size() != 0) {
                 for (Component c : sib) {
-                    afterComp.append(recurseMark(c));
+                    afterComp.append(rewriteComponentWithHighlight(c));
                 }
             }
 
