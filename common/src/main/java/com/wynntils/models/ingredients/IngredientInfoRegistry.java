@@ -236,18 +236,10 @@ public class IngredientInfoRegistry {
                 StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
 
                 if (statType == null) {
-                    /*
-                    FIXME
-                    We are missing:
-                    STRENGTHPOINTS
-                    DEFENSEPOINTS
-                    AGILITYPOINTS
-                    INTELLIGENCEPOINTS
-                    DEXTERITYPOINTS
-                     */
-                    // For now, just use a dummy stat
-                    statType = Models.Stat.fromInternalRollId("POISON");
+                    WynntilsMod.warn("Ingredient DB contains invalid stat type " + entry.getKey());
+                    continue;
                 }
+
                 JsonObject rangeJson = entry.getValue().getAsJsonObject();
                 int low = JsonUtils.getNullableJsonInt(rangeJson, "minimum");
                 int high = JsonUtils.getNullableJsonInt(rangeJson, "maximum");

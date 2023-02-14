@@ -72,6 +72,11 @@ public final class StatModel extends Model {
         for (StatType statType : statTypeRegistry) {
             if (statType.getInternalRollName().equals(id)) return statType;
         }
+
+        for (StatType statType : skillStats) {
+            if (statType.getInternalRollName().equals(id)) return statType;
+        }
+
         return null;
     }
 
