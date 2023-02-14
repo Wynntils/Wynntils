@@ -18,7 +18,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
