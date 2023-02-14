@@ -11,11 +11,13 @@ import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.stats.builders.DamageStatBuilder;
 import com.wynntils.models.stats.builders.DefenceStatBuilder;
 import com.wynntils.models.stats.builders.MiscStatBuilder;
+import com.wynntils.models.stats.builders.SkillStatBuilder;
 import com.wynntils.models.stats.builders.SpellStatBuilder;
 import com.wynntils.models.stats.builders.StatBuilder;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -33,6 +35,7 @@ public final class StatModel extends Model {
     private final List<StatType> statTypeRegistry = new ArrayList<>();
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
+    private final List<SkillStatType> skillStats;
 
     public StatModel() {
         super(List.of());
@@ -42,6 +45,9 @@ public final class StatModel extends Model {
         List<DefenceStatType> defenceStats = buildStats(new DefenceStatBuilder());
         List<DamageStatType> damageStats = buildStats(new DamageStatBuilder());
         List<SpellStatType> spellStats = buildStats(new SpellStatBuilder());
+
+        // Skill stats is special, they are not variable for gear
+        skillStats = buildStats(new SkillStatBuilder());
 
         // Then put them all in the registry
         initRegistry(miscStats, defenceStats, damageStats, spellStats);
