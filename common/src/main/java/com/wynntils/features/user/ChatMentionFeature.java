@@ -96,7 +96,7 @@ public class ChatMentionFeature extends UserFeature {
 
             comps.add(Component.literal(before).withStyle(comp.getStyle()));
             // styling is not used as it breaks guild chat because wynn in their infinite wisdom decided to make
-            // guild chat not use the propper styling
+            // guild chat not use the proper styling
             comps.add(Component.literal(rewriteColorCode + name));
 
             nextStart = match.end();
