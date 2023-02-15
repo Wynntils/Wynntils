@@ -1,9 +1,21 @@
+## [0.0.2-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.203...v0.0.2-alpha.204) (2023-02-15)
+
+
+### Bug Fixes
+
+* The cure for Cancer (and Necrosis) ([#1159](https://github.com/Wynntils/Artemis/issues/1159)) ([453c30e](https://github.com/Wynntils/Artemis/commit/453c30ee5cc7af67f3af10e5568485d46ed89c88))
+
 ## [0.0.2-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.202...v0.0.2-alpha.203) (2023-02-13)
 
 
 ### New Features
 
 * Add "how to obtain item" info ([#1157](https://github.com/Wynntils/Artemis/issues/1157)) ([5e80a1a](https://github.com/Wynntils/Artemis/commit/5e80a1a7ce08f866b62115d79e1028abf27ce35c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.203 [skip ci] ([9979db2](https://github.com/Wynntils/Artemis/commit/9979db24c037606e90bb2ca3a8da5fc0dcc92d11))
 
 ## [0.0.2-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.201...v0.0.2-alpha.202) (2023-02-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.200 [skip ci] ([deb1483](https://github.com/Wynntils/Artemis/commit/deb1483c90ecb074f6c553c04126b50ec3e59456))
-
-## [0.0.2-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.198...v0.0.2-alpha.199) (2023-02-11)
-
-
-### Code Refactoring
-
-* Create ElementModel ([#1152](https://github.com/Wynntils/Artemis/issues/1152)) ([c28da9f](https://github.com/Wynntils/Artemis/commit/c28da9f00d1790dc9390f2270d7e9d2016ffb904))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.199 [skip ci] ([0060a64](https://github.com/Wynntils/Artemis/commit/0060a647dc98cf323f0cf726d4299b74bec8f23a))
 
