@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -28,16 +29,21 @@ public class ChatMentionFeature extends UserFeature {
     public boolean dingMention = true;
 
     @Config
+    ChatFormatting rewriteColorCode = ChatFormatting.YELLOW;
+
+    @Config
     public String aliases = "";
 
-    private Pattern pattern = Pattern.compile(
-            "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
-                    + (aliases.length() > 0 ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
-            Pattern.CASE_INSENSITIVE);
+    private Pattern pattern = buildPattern();
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        pattern = Pattern.compile(
+        // rebuild pattern incase it has changed
+        pattern = buildPattern();
+    }
+
+    private Pattern buildPattern() {
+        return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
                         + (aliases.length() > 0 ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
                 Pattern.CASE_INSENSITIVE);
@@ -60,70 +66,59 @@ public class ChatMentionFeature extends UserFeature {
     }
 
     private Component rewriteComponentWithHighlight(Component comp) {
+        // Create a new component with only the body and style of comp
         MutableComponent curr = MutableComponent.create(comp.getContents()).withStyle(comp.getStyle());
         // .getString() is used here as it gives formattingchars when those exist. It is needed for guild messages
         // because wynn still uses legacy coloring for it.
         String text = curr.getString();
 
+        // if current component has no text just process its children and return it
         if (text == "") {
-            // case: component has no text -> pass the component thru and process its siblings
-            List<Component> sib = comp.getSiblings();
-            if (sib.size() == 0) {
-                // no siblings -> this is an end component return self
-                return comp;
-            } else {
-                // some siblings -> check them
-                for (Component c : sib) {
-                    curr.append(rewriteComponentWithHighlight(c));
-                }
-            }
-        } else {
-            // component has text -> check if it has the mention
-            Matcher match = pattern.matcher(text);
-
-            int nextStart = 0;
-
-            List<MutableComponent> comps = new ArrayList();
-
-            String lastcol = "";
-
-            // NOTE: Message is modified here!
-            while (match.find()) {
-                // Mention found -> split component and mark the
-                String before = text.substring(nextStart, match.start());
-                String name = text.substring(match.start(), match.end());
-
-                comps.add(Component.literal(before).withStyle(comp.getStyle()));
-                // styling is not used as it breaks guild chat because wynn in their infinite wisdom decided to make
-                // guild chat not use the propper styling
-                comps.add(Component.literal("§e" + name));
-
-                nextStart = match.end();
+            for (Component c : comp.getSiblings()) {
+                curr.append(rewriteComponentWithHighlight(c));
             }
 
-            MutableComponent afterComp =
-                    Component.literal(text.substring(nextStart)).withStyle(comp.getStyle());
-
-            // process any siblings
-            List<Component> sib = comp.getSiblings();
-            if (sib.size() != 0) {
-                for (Component c : sib) {
-                    afterComp.append(rewriteComponentWithHighlight(c));
-                }
-            }
-
-            // throw all of it together
-            MutableComponent comp1 = afterComp;
-            Collections.reverse(comps);
-
-            for (MutableComponent c : comps) {
-                c.append(comp1);
-                comp1 = c;
-            }
-
-            return comp1;
+            return curr;
         }
 
-        return curr;
+        // component has text -> check if it has the mention and modify message to highlight it
+        Matcher match = pattern.matcher(text);
+
+        int nextStart = 0;
+
+        List<MutableComponent> comps = new ArrayList();
+
+        // NOTE: Message is modified here!
+        while (match.find()) {
+            // Mention found -> split component and highlight the mention
+            String before = text.substring(nextStart, match.start());
+            String name = text.substring(match.start(), match.end());
+
+            comps.add(Component.literal(before).withStyle(comp.getStyle()));
+            // styling is not used as it breaks guild chat because wynn in their infinite wisdom decided to make
+            // guild chat not use the propper styling
+            comps.add(Component.literal(rewriteColorCode + name));
+
+            nextStart = match.end();
+        }
+
+        MutableComponent afterComp =
+                Component.literal(text.substring(nextStart)).withStyle(comp.getStyle());
+
+        // process any siblings
+        for (Component c : comp.getSiblings()) {
+            afterComp.append(rewriteComponentWithHighlight(c));
+        }
+
+        // throw all of it together
+        MutableComponent modifiedComp = afterComp;
+        Collections.reverse(comps);
+
+        for (MutableComponent c : comps) {
+            c.append(modifiedComp);
+            modifiedComp = c;
+        }
+
+        return modifiedComp;
     }
 }
