@@ -38,7 +38,7 @@ public class ChatMentionFeature extends UserFeature {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        // rebuild pattern incase it has changed
+        // rebuild pattern in case it has changed
         pattern = buildPattern();
     }
 
@@ -66,7 +66,7 @@ public class ChatMentionFeature extends UserFeature {
     }
 
     private Component rewriteComponentWithHighlight(Component comp) {
-        // Create a new component with only the body and style of comp
+        // Make a copy of the component without the siblings
         MutableComponent curr = MutableComponent.create(comp.getContents()).withStyle(comp.getStyle());
         // .getString() is used here as it gives formattingchars when those exist. It is needed for guild messages
         // because wynn still uses legacy coloring for it.
