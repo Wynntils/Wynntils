@@ -1,9 +1,21 @@
+## [0.0.2-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.207...v0.0.2-alpha.208) (2023-02-17)
+
+
+### New Features
+
+* Assign stable Character GUIDs to classes ([#1164](https://github.com/Wynntils/Artemis/issues/1164)) ([168ef9a](https://github.com/Wynntils/Artemis/commit/168ef9a98b5eb7c9ae972886e8d669f27f348714))
+
 ## [0.0.2-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.206...v0.0.2-alpha.207) (2023-02-17)
 
 
 ### Bug Fixes
 
 * Fix guild map time held order ([#1163](https://github.com/Wynntils/Artemis/issues/1163)) ([906673a](https://github.com/Wynntils/Artemis/commit/906673ad397855d999a298b97c8b2fc897428664))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.207 [skip ci] ([d266f96](https://github.com/Wynntils/Artemis/commit/d266f96a97e57837196186f63ee8d64c70317230))
 
 ## [0.0.2-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.205...v0.0.2-alpha.206) (2023-02-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.204 [skip ci] ([2e0533e](https://github.com/Wynntils/Artemis/commit/2e0533e52dcd9b16c73dee6e7667baa2d75cf65a))
-
-## [0.0.2-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.202...v0.0.2-alpha.203) (2023-02-13)
-
-
-### New Features
-
-* Add "how to obtain item" info ([#1157](https://github.com/Wynntils/Artemis/issues/1157)) ([5e80a1a](https://github.com/Wynntils/Artemis/commit/5e80a1a7ce08f866b62115d79e1028abf27ce35c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.203 [skip ci] ([9979db2](https://github.com/Wynntils/Artemis/commit/9979db24c037606e90bb2ca3a8da5fc0dcc92d11))
 
