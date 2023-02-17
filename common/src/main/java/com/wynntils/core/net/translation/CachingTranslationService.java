@@ -81,6 +81,14 @@ public abstract class CachingTranslationService implements TranslationService {
             translationCaches = WynntilsMod.GSON.fromJson(json, type);
         } catch (IOException e) {
             WynntilsMod.error("Error when trying to load translation cache.", e);
+        } catch (IllegalStateException e) {
+            WynntilsMod.error("Translation cache was corrupt when parsing it. Trying to delete it.", e);
+
+            try {
+                FileUtils.delete(f);
+            } catch (IOException ioException) {
+                WynntilsMod.error("Error when trying to delete translation cache.", ioException);
+            }
         } finally {
             if (translationCaches == null) {
                 translationCaches = new HashMap<>();
