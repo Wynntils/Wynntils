@@ -1,9 +1,21 @@
+## [0.0.2-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.206...v0.0.2-alpha.207) (2023-02-17)
+
+
+### Bug Fixes
+
+* Fix guild map time held order ([#1163](https://github.com/Wynntils/Artemis/issues/1163)) ([906673a](https://github.com/Wynntils/Artemis/commit/906673ad397855d999a298b97c8b2fc897428664))
+
 ## [0.0.2-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.205...v0.0.2-alpha.206) (2023-02-17)
 
 
 ### Bug Fixes
 
 * Delete translation cache if it gets corrupted ([#1165](https://github.com/Wynntils/Artemis/issues/1165)) ([9ba0454](https://github.com/Wynntils/Artemis/commit/9ba0454cc745ba0145b261a396249fc3dec50727))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.206 [skip ci] ([22267fa](https://github.com/Wynntils/Artemis/commit/22267fa8f733e71b12801832c382e09ee2e98fc7))
 
 ## [0.0.2-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.204...v0.0.2-alpha.205) (2023-02-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.203 [skip ci] ([9979db2](https://github.com/Wynntils/Artemis/commit/9979db24c037606e90bb2ca3a8da5fc0dcc92d11))
-
-## [0.0.2-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.201...v0.0.2-alpha.202) (2023-02-12)
-
-
-### Documentation
-
-* improve readme ([#1153](https://github.com/Wynntils/Artemis/issues/1153)) ([b1ca9cd](https://github.com/Wynntils/Artemis/commit/b1ca9cd1eed8b503a11e19e33430a8ce022cb470))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.202 [skip ci] ([61a8b42](https://github.com/Wynntils/Artemis/commit/61a8b42b9caee819510e9a29c8b4bfe4555041c5))
 
