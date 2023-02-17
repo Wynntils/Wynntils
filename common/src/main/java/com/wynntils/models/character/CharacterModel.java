@@ -26,13 +26,16 @@ import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -45,6 +48,7 @@ public final class CharacterModel extends Model {
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §r§f(\\d+)");
 
     private static final int CHARACTER_INFO_SLOT = 7;
+    private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
 
     /**
@@ -80,7 +84,7 @@ public final class CharacterModel extends Model {
     // This field is basically the slot id of the class,
     // meaning that if a class changes slots, the ID will not be persistent.
     // This was implemented the same way by legacy.
-    private int id;
+    private String id;
 
     private List<StatusEffect> statusEffects = new ArrayList<>();
 
@@ -183,8 +187,10 @@ public final class CharacterModel extends Model {
         return getClassType().getActualName(isReskinned());
     }
 
-    public int getId() {
-        if (!hasCharacter) return 0;
+    public String getId() {
+        // We can't return an empty string, otherwise we risk making our config file messed up (empty string map key for
+        // ItemLockFeature)
+        if (!hasCharacter) return "-";
 
         return id;
     }
@@ -208,20 +214,13 @@ public final class CharacterModel extends Model {
         }
 
         if (e.getNewState() == WorldState.WORLD) {
-            if (e.getOldState() != WorldState.CHARACTER_SELECTION) {
-                // We went directly to a world without coming from the character selection
-                // menu. This means the player has "autojoin" enabled, and that we did not
-                // get a chance to read the character info from the character selection menu.
-                // Instead, we send a container query to read it from the character (compass) menu.
-                WynntilsMod.info("Scheduling character info query");
+            WynntilsMod.info("Scheduling character info query");
 
-                // This time, we need to scan character info and profession info as well.
-                scanCharacterInfoPage(-1);
-            } else {
-                // We did not auto-join, we have a correct ID already.
-                int oldId = getId();
-                scanCharacterInfoPage(oldId);
-            }
+            // We need to scan character info and profession info as well.
+            scanCharacterInfoPage();
+
+            // We need to parse the current character id from our inventory
+            updateCharacterId();
         }
     }
 
@@ -261,7 +260,7 @@ public final class CharacterModel extends Model {
         WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
-    private void scanCharacterInfoPage(int oldId) {
+    private void scanCharacterInfoPage() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
@@ -271,9 +270,7 @@ public final class CharacterModel extends Model {
 
                     Models.Profession.resetValueFromItem(professionInfoItem);
 
-                    // FIXME: When we can calculate id here, check if calculated id is -1, if not use it, otherwise
-                    // default to oldId
-                    parseCharacterFromCharacterMenu(characterInfoItem, oldId);
+                    parseCharacterFromCharacterMenu(characterInfoItem);
                     hasCharacter = true;
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + getCharacterString());
@@ -281,6 +278,24 @@ public final class CharacterModel extends Model {
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
                 .build();
         query.executeQuery();
+    }
+
+    private void updateCharacterId() {
+        ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
+
+        LinkedList<String> soulLore = LoreUtils.getLore(soulPointItem);
+
+        String id = "";
+        for (String line : soulLore) {
+            if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
+                id = ComponentUtils.stripFormatting(line);
+                break;
+            }
+        }
+
+        WynntilsMod.info("Selected character: " + id);
+
+        this.id = id;
     }
 
     private String getCharacterString() {
@@ -291,7 +306,7 @@ public final class CharacterModel extends Model {
                 + id + '}';
     }
 
-    private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem, int id) {
+    private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
         List<String> lore = LoreUtils.getLore(characterInfoItem);
 
         int level = 0;
@@ -312,7 +327,7 @@ public final class CharacterModel extends Model {
         }
         ClassType classType = ClassType.fromName(className);
 
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
+        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
     }
 
     @SubscribeEvent
@@ -351,13 +366,12 @@ public final class CharacterModel extends Model {
         }
         ClassType classType = ClassType.fromName(className);
 
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level, id);
+        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
     }
 
-    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level, int id) {
+    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level) {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
-        this.id = id;
     }
 }
