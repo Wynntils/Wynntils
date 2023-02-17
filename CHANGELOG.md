@@ -1,9 +1,21 @@
+## [0.0.2-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.205...v0.0.2-alpha.206) (2023-02-17)
+
+
+### Bug Fixes
+
+* Delete translation cache if it gets corrupted ([#1165](https://github.com/Wynntils/Artemis/issues/1165)) ([9ba0454](https://github.com/Wynntils/Artemis/commit/9ba0454cc745ba0145b261a396249fc3dec50727))
+
 ## [0.0.2-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.204...v0.0.2-alpha.205) (2023-02-17)
 
 
 ### Bug Fixes
 
 * Remove player nametag from gear viewer GUI ([#1162](https://github.com/Wynntils/Artemis/issues/1162)) ([ca886d5](https://github.com/Wynntils/Artemis/commit/ca886d5767147e9ef98fde46cb1ea0c7c16ec3d5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.205 [skip ci] ([69a006b](https://github.com/Wynntils/Artemis/commit/69a006b538d87ca91864c0dabbb6b870477c9a7b))
 
 ## [0.0.2-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.203...v0.0.2-alpha.204) (2023-02-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.202 [skip ci] ([61a8b42](https://github.com/Wynntils/Artemis/commit/61a8b42b9caee819510e9a29c8b4bfe4555041c5))
-
-## [0.0.2-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.200...v0.0.2-alpha.201) (2023-02-12)
-
-
-### Bug Fixes
-
-* Crafted and signed items aren't parsed correctly ([#1154](https://github.com/Wynntils/Artemis/issues/1154)) ([925e5dc](https://github.com/Wynntils/Artemis/commit/925e5dc52cb1c3bc647f62735c5c9687c3ec633e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.201 [skip ci] ([8e8b44f](https://github.com/Wynntils/Artemis/commit/8e8b44f3672d32e473112604435b10e6770a5e3b))
 
