@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -33,14 +34,18 @@ public class ChatMentionFeature extends UserFeature {
 
     private Pattern pattern;
 
+    public ChatMentionFeature() {
+        pattern = buildPattern();
+    }
+
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         // rebuild pattern in case it has changed
-        buildPattern();
+        pattern = buildPattern();
     }
 
-    private void buildPattern() {
-        pattern = Pattern.compile(
+    private Pattern buildPattern() {
+        return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
                         + (aliases.length() > 0 ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
                 Pattern.CASE_INSENSITIVE);
@@ -69,41 +74,48 @@ public class ChatMentionFeature extends UserFeature {
         // because wynn still uses legacy coloring for it.
         String text = curr.getString();
 
-        // if current component has text check it for mentions
+        // if current component has text check it for mentions and rewrite the component if necessary
         if (text != "") {
-            Matcher match = pattern.matcher(text);
-
-            // if we match then rewrite the component
-            if (match.find()) {
-                // get the start of the string before any mention and set curr to be it
-                String before = text.substring(0, match.start());
-                curr = Component.literal(before).withStyle(comp.getStyle());
-
-                int nextStart = 0;
-
-                do {
-                    // get the bit in between of matches if there are multiple matches
-                    if (nextStart != 0) {
-                        String middle = text.substring(nextStart, match.start());
-                        curr.append(Component.literal(middle)).withStyle(comp.getStyle());
-                    }
-
-                    // get the name and recolor it
-                    String name = text.substring(match.start(), match.end());
-                    curr.append(Component.literal(rewriteColorCode + name));
-
-                    nextStart = match.end();
-                } while (match.find());
-
-                // finally add the rest of the text back
-                String after = text.substring(nextStart);
-                curr.append(Component.literal(after)).withStyle(comp.getStyle());
-            }
+            curr = rewriteMentions(curr, text, comp.getStyle());
         }
 
         // process and append siblings
         for (Component c : comp.getSiblings()) {
             curr.append(rewriteComponentTree(c));
+        }
+
+        return curr;
+    }
+
+    private MutableComponent rewriteMentions(MutableComponent curr, String text, Style style) {
+        Matcher match = pattern.matcher(text);
+
+        // if we match then rewrite the component if there are no matches the function will just return
+        if (match.find()) {
+            // get the start of the string before any mention and set curr to be it
+            curr = Component.literal(text.substring(0, match.start())).withStyle(style);
+
+            // do the name of the first mention
+            curr.append(Component.literal(rewriteColorCode + match.group()));
+
+            // Store the point at which this match ended
+            int lastEnd = match.end();
+
+            // Handle any additional mentions within the message
+            while (match.find()) {
+                // get the bit in between of matches
+                curr.append(Component.literal(text.substring(lastEnd, match.start())))
+                        .withStyle(style);
+
+                // get the name and recolor it
+                curr.append(Component.literal(rewriteColorCode + match.group()));
+
+                // set the starting point for the next mentions before variable
+                lastEnd = match.end();
+            }
+
+            // finally add any text after the mentions back onto the component tree
+            curr.append(Component.literal(text.substring(lastEnd))).withStyle(style);
         }
 
         return curr;
