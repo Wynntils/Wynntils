@@ -1,9 +1,21 @@
+## [0.0.2-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.204...v0.0.2-alpha.205) (2023-02-17)
+
+
+### Bug Fixes
+
+* Remove player nametag from gear viewer GUI ([#1162](https://github.com/Wynntils/Artemis/issues/1162)) ([ca886d5](https://github.com/Wynntils/Artemis/commit/ca886d5767147e9ef98fde46cb1ea0c7c16ec3d5))
+
 ## [0.0.2-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.203...v0.0.2-alpha.204) (2023-02-15)
 
 
 ### Bug Fixes
 
 * The cure for Cancer (and Necrosis) ([#1159](https://github.com/Wynntils/Artemis/issues/1159)) ([453c30e](https://github.com/Wynntils/Artemis/commit/453c30ee5cc7af67f3af10e5568485d46ed89c88))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.204 [skip ci] ([2e0533e](https://github.com/Wynntils/Artemis/commit/2e0533e52dcd9b16c73dee6e7667baa2d75cf65a))
 
 ## [0.0.2-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.202...v0.0.2-alpha.203) (2023-02-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.201 [skip ci] ([8e8b44f](https://github.com/Wynntils/Artemis/commit/8e8b44f3672d32e473112604435b10e6770a5e3b))
-
-## [0.0.2-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.199...v0.0.2-alpha.200) (2023-02-11)
-
-
-### Bug Fixes
-
-* Improve gear box guesses ([#1155](https://github.com/Wynntils/Artemis/issues/1155)) ([704a228](https://github.com/Wynntils/Artemis/commit/704a22831cf150b5746730cabb790e32632d6715))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.200 [skip ci] ([deb1483](https://github.com/Wynntils/Artemis/commit/deb1483c90ecb074f6c553c04126b50ec3e59456))
 
