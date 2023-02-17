@@ -14,14 +14,13 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class SimpleDateFormatter extends DateFormat {
-    private static final Map<Integer, String> MAPPINGS = new LinkedHashMap<>();
+    private static final Map<Integer, String> MAPPINGS = new LinkedHashMap<>(Map.of(
+            Calendar.DAY_OF_YEAR, "d",
+            Calendar.HOUR_OF_DAY, "h",
+            Calendar.MINUTE, "m",
+            Calendar.SECOND, "s"));
 
     public SimpleDateFormatter() {
-        MAPPINGS.put(Calendar.DAY_OF_YEAR, "d");
-        MAPPINGS.put(Calendar.HOUR_OF_DAY, "h");
-        MAPPINGS.put(Calendar.MINUTE, "m");
-        MAPPINGS.put(Calendar.SECOND, "s");
-
         setCalendar(Calendar.getInstance());
         setTimeZone(TimeZone.getTimeZone("UTC"));
     }
