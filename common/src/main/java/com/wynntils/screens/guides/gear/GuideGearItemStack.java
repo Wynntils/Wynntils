@@ -41,6 +41,8 @@ public final class GuideGearItemStack extends GuideItemStack {
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
+        appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());
+
         tooltipLines.add(Component.empty());
         if (Models.Favorites.isFavorite(this)) {
             tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")

@@ -20,7 +20,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearDropType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMaterial;
@@ -29,6 +28,8 @@ import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.ItemObtainInfo;
+import com.wynntils.models.gear.type.ItemObtainType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
@@ -56,16 +57,21 @@ public class GearInfoRegistry {
     private static final List<String> INVALID_ENTRIES = List.of("default");
 
     private List<GearMajorId> allMajorIds = List.of();
+    private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = Map.of();
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
-        loadRegistry();
+        loadAllRegistryData();
     }
 
     public void reloadData() {
-        loadRegistry();
+        loadAllRegistryData();
+    }
+
+    public List<ItemObtainInfo> getObtainInfo(String name) {
+        return itemObtainMap.get(name);
     }
 
     public GearInfo getFromDisplayName(String gearName) {
@@ -85,8 +91,8 @@ public class GearInfoRegistry {
         return gearInfoRegistry.stream();
     }
 
-    private void loadRegistry() {
-        // We must download and parse Major IDs before attempting to parse the gear DB
+    private void loadAllRegistryData() {
+        // We must download and parse Major IDs and the obtain info database before attempting to parse the gear DB
         Download majorIdsDl = Managers.Net.download(UrlId.DATA_STATIC_MAJOR_IDS);
         majorIdsDl.handleReader(majorIdsReader -> {
             Type type = new TypeToken<List<GearMajorId>>() {}.getType();
@@ -95,35 +101,48 @@ public class GearInfoRegistry {
                     .create();
             allMajorIds = majorIdGson.fromJson(majorIdsReader, type);
 
-            // Now we can do the gear DB
-            Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
-            dl.handleReader(reader -> {
-                Gson gearInfoGson = new GsonBuilder()
-                        .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds))
+            // Now get the obtain info DB
+            Download obtainDl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
+            obtainDl.handleReader(obtainReader -> {
+                Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
+                Gson obtainGson = new GsonBuilder()
+                        .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
                         .create();
-                WynncraftGearInfoResponse gearInfoResponse =
-                        gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
+                itemObtainMap = obtainGson.fromJson(obtainReader, obtainType);
 
-                // Some entries are test entries etc and should be removed
-                List<GearInfo> registry = gearInfoResponse.items.stream()
-                        .filter(gearInfo -> !INVALID_ENTRIES.contains(gearInfo.name()))
-                        .toList();
-
-                // Create fast lookup maps
-                Map<String, GearInfo> lookupMap = new HashMap<>();
-                Map<String, GearInfo> altLookupMap = new HashMap<>();
-                for (GearInfo gearInfo : registry) {
-                    lookupMap.put(gearInfo.name(), gearInfo);
-                    if (gearInfo.metaInfo().apiName().isPresent()) {
-                        altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
-                    }
-                }
-
-                // Make the result visisble to the world
-                gearInfoRegistry = registry;
-                gearInfoLookup = lookupMap;
-                gearInfoLookupApiName = altLookupMap;
+                // Now we can do the gear DB
+                downloadGearRegistry();
             });
+        });
+    }
+
+    private void downloadGearRegistry() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
+        dl.handleReader(reader -> {
+            Gson gearInfoGson = new GsonBuilder()
+                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds, itemObtainMap))
+                    .create();
+            WynncraftGearInfoResponse gearInfoResponse = gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
+
+            // Some entries are test entries etc and should be removed
+            List<GearInfo> registry = gearInfoResponse.items.stream()
+                    .filter(gearInfo -> !INVALID_ENTRIES.contains(gearInfo.name()))
+                    .toList();
+
+            // Create fast lookup maps
+            Map<String, GearInfo> lookupMap = new HashMap<>();
+            Map<String, GearInfo> altLookupMap = new HashMap<>();
+            for (GearInfo gearInfo : registry) {
+                lookupMap.put(gearInfo.name(), gearInfo);
+                if (gearInfo.metaInfo().apiName().isPresent()) {
+                    altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
+                }
+            }
+
+            // Make the result visisble to the world
+            gearInfoRegistry = registry;
+            gearInfoLookup = lookupMap;
+            gearInfoLookupApiName = altLookupMap;
         });
     }
 
@@ -142,9 +161,11 @@ public class GearInfoRegistry {
 
     private static final class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         private final List<GearMajorId> allMajorIds;
+        private final Map<String, List<ItemObtainInfo>> itemObtainMap;
 
-        private GearInfoDeserializer(List<GearMajorId> allMajorIds) {
+        private GearInfoDeserializer(List<GearMajorId> allMajorIds, Map<String, List<ItemObtainInfo>> itemObtainMap) {
             this.allMajorIds = allMajorIds;
+            this.itemObtainMap = itemObtainMap;
         }
 
         @Override
@@ -152,27 +173,37 @@ public class GearInfoRegistry {
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            String primaryName = WynnUtils.normalizeBadString(json.get("name").getAsString());
-            String secondaryName = WynnUtils.normalizeBadString(JsonUtils.getNullableJsonString(json, "displayName"));
+            // Wynncraft API has two fields: name and displayName. The former is the "api name", and is
+            // always present, the latter is only present if it differs from the api name.
+            // We want to store this the other way around: We always want a displayName (as the "name"),
+            // but if it the apiName is different, we want to store it separately
+            String primaryName = json.get("name").getAsString();
+            String secondaryName = JsonUtils.getNullableJsonString(json, "displayName");
 
-            // After normalization, we can end up with the same name. If so, treat this as not having
-            // a secondary name.
-            if (primaryName.equals(secondaryName)) {
-                secondaryName = "";
+            if (secondaryName == null) {
+                String normalizedApiName = WynnUtils.normalizeBadString(primaryName);
+                if (!normalizedApiName.equals(primaryName)) {
+                    // Normalization removed a ֎ from the name. This means we want to
+                    // treat the name as apiName and the normalized name as display name
+                    secondaryName = normalizedApiName;
+                }
             }
 
-            // The real name (display name) is the secondaryName if it exists, otherwise it is
-            // the primary name.
-            // If the secondary name exists, the primary name is the apiName. If the apiName
-            // does not exist, the api name is the same as the displayName.
-            String name = secondaryName.isEmpty() ? primaryName : secondaryName;
-            String apiName = secondaryName.isEmpty() ? null : primaryName;
+            String name;
+            String apiName;
+            if (secondaryName == null) {
+                name = primaryName;
+                apiName = null;
+            } else {
+                name = secondaryName;
+                apiName = primaryName;
+            }
 
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = JsonUtils.getNullableJsonInt(json, "sockets");
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, apiName, type);
+            GearMetaInfo metaInfo = parseMetaInfo(json, name, apiName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
@@ -191,17 +222,49 @@ public class GearInfoRegistry {
             return GearType.fromString(typeString);
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
+        private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
             GearMaterial material = parseMaterial(json, type);
-            GearDropType dropType = GearDropType.fromString(json.get("dropType").getAsString());
+            List<ItemObtainInfo> obtainCrowdSourced = itemObtainMap.get(name);
+            List<ItemObtainInfo> obtainInfo =
+                    obtainCrowdSourced == null ? new ArrayList<>() : new ArrayList<>(obtainCrowdSourced);
+
+            // FIXME: Should "Unobtainable" override API info?
+            ItemObtainType obtainApi = ItemObtainType.fromApiName(
+                    json.get("dropType").getAsString().toLowerCase(Locale.ROOT));
+            switch (obtainApi) {
+                case LOOT_CHEST -> obtainInfo.add(new ItemObtainInfo(ItemObtainType.LOOT_CHEST, Optional.empty()));
+                case NORMAL_MOB_DROP -> {
+                    // Only add this if we do not have more specific information
+                    boolean hasSpecialMob =
+                            obtainInfo.stream().anyMatch(o -> o.sourceType() == ItemObtainType.SPECIAL_MOB_DROP);
+                    if (!hasSpecialMob) {
+                        obtainInfo.add(new ItemObtainInfo(ItemObtainType.NORMAL_MOB_DROP, Optional.empty()));
+                    }
+                }
+                case DUNGEON_RAIN -> {
+                    // Only add this if we do not have more specific information
+                    boolean hasDungeon =
+                            obtainInfo.stream().anyMatch(o -> o.sourceType().isDungeon());
+                    if (!hasDungeon) {
+                        obtainInfo.add(new ItemObtainInfo(ItemObtainType.DUNGEON_RAIN, Optional.empty()));
+                    }
+                }
+                default -> {
+                    // do nothing
+                }
+            }
+            if (obtainInfo.isEmpty()) {
+                // We have no information on how to obtain this
+                obtainInfo.add(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
+            }
 
             Optional<String> loreOpt = parseLore(json);
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
 
-            return new GearMetaInfo(restrictions, material, dropType, loreOpt, apiNameOpt, allowCraftsman);
+            return new GearMetaInfo(restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman);
         }
 
         private Optional<String> parseLore(JsonObject json) {
@@ -420,5 +483,20 @@ public class GearInfoRegistry {
 
     protected static class WynncraftGearInfoResponse {
         protected List<GearInfo> items;
+    }
+
+    private static final class ItemObtainInfoDeserializer implements JsonDeserializer<ItemObtainInfo> {
+        @Override
+        public ItemObtainInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonObject json = jsonElement.getAsJsonObject();
+            String sourceTypeStr = json.get("type").getAsString();
+            ItemObtainType sourceType = ItemObtainType.fromApiName(sourceTypeStr);
+            String name = JsonUtils.getNullableJsonString(json, "name");
+
+            // FIXME: We are ignoring the details field for now...
+
+            return new ItemObtainInfo(sourceType, Optional.ofNullable(name));
+        }
     }
 }
