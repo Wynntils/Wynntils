@@ -135,35 +135,4 @@ public final class StringUtils {
     public static String convertMarkdownToColorCode(String input) {
         return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
     }
-
-    /**
-     * Returns an arrow (like ⬆) based on the given angle.
-     * The angle is expected to be in degrees, with 0 being north, 90 being west, 180 being south, and 270 being east.
-     * Throws IllegalArgumentException if the angle is not in the range 0-360 inclusive.
-     * @param angle The angle in degrees
-     * @return The arrow string
-     */
-    public static String angleToDirectionArrowString(double angle) {
-        if (angle > 360 || angle < 0) {
-            throw new IllegalArgumentException("Angle must be in the range 0-360 inclusive");
-        }
-
-        if (angle > 22.5 && angle <= 67.5) {
-            return "⬉";
-        } else if (angle > 67.5 && angle <= 112.5) {
-            return "⬅";
-        } else if (angle > 112.5 && angle <= 157.5) {
-            return "⬋";
-        } else if (angle > 157.5 && angle <= 202.5) {
-            return "⬇";
-        } else if (angle > 202.5 && angle <= 247.5) {
-            return "⬊";
-        } else if (angle > 247.5 && angle <= 292.5) {
-            return "⮕";
-        } else if (angle > 292.5 && angle <= 337.5) {
-            return "⬈";
-        } else { // 337.5 < angle <= 22.5
-            return "⬆";
-        }
-    }
 }

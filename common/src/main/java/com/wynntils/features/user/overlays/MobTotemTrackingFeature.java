@@ -106,16 +106,9 @@ public class MobTotemTrackingFeature extends UserFeature {
 
         void updateRenderTaskCache() {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
-                    .map(mobTotem -> {
-                        // find direction from where the player is looking to mob totem
-                        double angleDiff = mobTotem.getLookAngleDiff();
-                        String direction = StringUtils.angleToDirectionArrowString(angleDiff);
-
-                        return new TextRenderTask(
-                                "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer() + " blocks "
-                                        + direction + " (" + mobTotem.getTimerString() + ")",
-                                textRenderSetting);
-                    })
+                    .map(mobTotem -> new TextRenderTask(
+                            "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer() + " blocks away (" + mobTotem.getTimerString() + ")",
+                            textRenderSetting))
                     .toList();
         }
 
