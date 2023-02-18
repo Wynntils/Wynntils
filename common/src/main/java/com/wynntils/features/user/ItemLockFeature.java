@@ -40,7 +40,7 @@ public class ItemLockFeature extends UserFeature {
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
-    private final Map<Integer, Set<Integer>> classSlotLockMap = new HashMap<>();
+    private final Map<String, Set<Integer>> classSlotLockMap = new HashMap<>();
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<HashMap<Integer, Set<Integer>>>() {}.getType();

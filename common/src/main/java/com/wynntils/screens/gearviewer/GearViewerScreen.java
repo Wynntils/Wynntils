@@ -31,15 +31,35 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Team.Visibility;
 
 public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
+    private static final String TEAM_NAME = "GearViewerTeam";
+
     private final Player player;
+    private final Scoreboard scoreboard;
+    private PlayerTeam gearViewerTeam;
+    private PlayerTeam oldTeam;
     private ViewPlayerStatsButton viewPlayerStatsButton;
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
+        this.scoreboard = player.level.getScoreboard();
+
+        if (scoreboard.getTeamNames().contains(TEAM_NAME)) {
+            gearViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
+        } else {
+            gearViewerTeam = scoreboard.addPlayerTeam(TEAM_NAME);
+            gearViewerTeam.setNameTagVisibility(Visibility.NEVER);
+        }
+
+        // this is done to prevent the player's nametag from rendering in the GUI
+        oldTeam = scoreboard.getPlayersTeam(player.getScoreboardName());
+        scoreboard.addPlayerToTeam(player.getScoreboardName(), gearViewerTeam);
     }
 
     public static Screen create(Player player) {
@@ -135,6 +155,17 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void onClose() {
+        // restore previous scoreboard team setup
+        scoreboard.removePlayerFromTeam(player.getScoreboardName(), gearViewerTeam);
+        if (oldTeam != null) {
+            scoreboard.addPlayerToTeam(player.getScoreboardName(), oldTeam);
+        }
+
+        super.onClose();
     }
 
     public Player getPlayer() {
