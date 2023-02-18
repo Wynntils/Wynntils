@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Αρχείο Αλλαγών",
   "feature.wynntils.chatCoordinates.name": "Συντεταγμένες Συνομιλίας",
   "feature.wynntils.chatItem.name": "Αντικείμενο Συνομιλίας",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Χρώμα επισήμανσης",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Πώς θα πρέπει να εμφανίζεται το στοιχείο ανθεκτικότητα μηνύματα?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Κατασκευασμένο Φιλτράρισμα Ανθεκτικότητας",
   "feature.wynntils.chatRedirect.friendJoin.description": "Πώς θα πρέπει να ενταχθούν τα μηνύματα εμφανίζονται?",
