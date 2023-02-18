@@ -38,6 +38,7 @@
   "feature.wynntils.changelog.name": "Újdonságok",
   "feature.wynntils.chatCoordinates.name": "Chat Koordináták",
   "feature.wynntils.chatItem.name": "Chat Tárgy",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Kiemelés színe",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Hogyan jelenjen meg a barkácsolt eszköz élettartamának üzenete?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Barkálcsolt Élettartam Szűrő",
   "feature.wynntils.chatRedirect.friendJoin.description": "Hogyan jelenjen meg a barát csatlakozásának üzenete?",
