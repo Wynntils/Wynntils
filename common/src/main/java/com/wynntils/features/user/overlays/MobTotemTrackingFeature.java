@@ -106,8 +106,8 @@ public class MobTotemTrackingFeature extends UserFeature {
         void updateRenderTaskCache() {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
                     .map(mobTotem -> new TextRenderTask(
-                            "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer()
-                                    + " blocks away (" + mobTotem.getTimerString() + ")",
+                            mobTotem.getOwner() + "'s Mob Totem [" + mobTotem.getDistanceToPlayer() + " m] ("
+                                    + mobTotem.getTimerString() + ")",
                             textRenderSetting))
                     .toList();
         }
