@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Endringslogg",
   "feature.wynntils.chatCoordinates.name": "Koordinater for samtaler",
   "feature.wynntils.chatItem.name": "Prate element",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Uthev farge",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Hvordan skal lagd elementets holdbarhetsmeldinger vises?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Lagd holdbarhetsfiltrering",
   "feature.wynntils.chatRedirect.friendJoin.description": "Hvordan skal vennen bli med i meldinger vises?",
