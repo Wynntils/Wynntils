@@ -53,6 +53,11 @@ public final class NetManager extends Manager {
     }
 
     public Download download(URI uri, File file, String expectedHash) {
+        // For debugging, always return cached files if requested
+        if (WynntilsMod.isDevelopmentEnvironment() && new File(CACHE_DIR, "keep").exists()) {
+            return new Download(file.getName(), file);
+        }
+
         if (checkLocalHash(file, expectedHash)) {
             return new Download(file.getName(), file);
         }
