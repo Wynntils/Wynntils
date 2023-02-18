@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Wijzigingslogboek",
   "feature.wynntils.chatCoordinates.name": "Chat Coördinaten",
   "feature.wynntils.chatItem.name": "Chat Item",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Kleur markeren",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Hoe moeten gemaakte berichten over duurzaamheid worden weergegeven?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Gemaakt Duurzaamheid Filteren",
   "feature.wynntils.chatRedirect.friendJoin.description": "Hoe moet vriend inschrijven berichten verschijnen?",
