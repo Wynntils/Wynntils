@@ -28,6 +28,7 @@ import com.wynntils.features.user.BombBellTrackingFeature;
 import com.wynntils.features.user.ChangelogFeature;
 import com.wynntils.features.user.ChatCoordinatesFeature;
 import com.wynntils.features.user.ChatItemFeature;
+import com.wynntils.features.user.ChatMentionFeature;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.features.user.ChatTimestampFeature;
 import com.wynntils.features.user.CombatXpGainMessageFeature;
@@ -148,6 +149,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChangelogFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
+        registerFeature(new ChatMentionFeature());
         registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
