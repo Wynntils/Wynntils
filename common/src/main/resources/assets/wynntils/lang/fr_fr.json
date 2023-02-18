@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Historique des modifications",
   "feature.wynntils.chatCoordinates.name": "Coordonnées du fil de discussion",
   "feature.wynntils.chatItem.name": "Éléments du fil de discussion",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Couleur de surbrillance",
   "feature.wynntils.chatRedirect.craftedDurability.description": "De quelle façon les messages de durabilités des objets doivent apparaître ?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtrage de durabilité artisanale",
   "feature.wynntils.chatRedirect.friendJoin.description": "De quelle façon les alertes de connexion des amis doivent apparaitre ?",
