@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Seznam změn",
   "feature.wynntils.chatCoordinates.name": "Souřadnice chatu",
   "feature.wynntils.chatItem.name": "Položka v chatu",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Barva zvýraznění",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Jak by se měly objevit zprávy o trvanlivosti zboží?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtrování trvanlivosti výroby",
   "feature.wynntils.chatRedirect.friendJoin.description": "Jak by se měli připojit ke zprávám?",
