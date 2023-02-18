@@ -18,7 +18,6 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -107,7 +106,8 @@ public class MobTotemTrackingFeature extends UserFeature {
         void updateRenderTaskCache() {
             renderTaskCache = Models.MobTotem.getMobTotems().stream()
                     .map(mobTotem -> new TextRenderTask(
-                            "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer() + " blocks away (" + mobTotem.getTimerString() + ")",
+                            "Mob Totem (" + mobTotem.getOwner() + ") " + mobTotem.getDistanceToPlayer()
+                                    + " blocks away (" + mobTotem.getTimerString() + ")",
                             textRenderSetting))
                     .toList();
         }
