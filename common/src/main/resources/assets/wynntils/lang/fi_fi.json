@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Muutosloki",
   "feature.wynntils.chatCoordinates.name": "Chatin Koordinaatit",
   "feature.wynntils.chatItem.name": "Keskustelun Kohde",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Korostuksen väri",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Miten esineen kestävyysviestit tulisi näyttää?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Valmistettu Kestävyyssuodatus",
   "feature.wynntils.chatRedirect.friendJoin.description": "Miten ystävän pitäisi liittyä viesteihin?",
