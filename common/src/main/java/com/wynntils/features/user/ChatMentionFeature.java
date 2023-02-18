@@ -108,7 +108,7 @@ public class ChatMentionFeature extends UserFeature {
                         .withStyle(style);
 
                 // get the name and recolor it
-                curr.append(Component.literal(mentionColor + match.group()));
+                curr.append(Component.literal(mentionColor + match.group(0)));
 
                 // set the starting point for the next mentions before variable
                 lastEnd = match.end();
