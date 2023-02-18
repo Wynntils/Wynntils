@@ -27,21 +27,21 @@ public class ChatMentionFeature extends UserFeature {
     public boolean dingMention = true;
 
     @Config
-    ChatFormatting rewriteColorCode = ChatFormatting.YELLOW;
+    public ChatFormatting mentionColor = ChatFormatting.YELLOW;
 
     @Config
     public String aliases = "";
 
-    private Pattern pattern;
+    private Pattern mentionPattern;
 
     public ChatMentionFeature() {
-        pattern = buildPattern();
+        mentionPattern = buildPattern();
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         // rebuild pattern in case it has changed
-        pattern = buildPattern();
+        mentionPattern = buildPattern();
     }
 
     private Pattern buildPattern() {
@@ -55,7 +55,7 @@ public class ChatMentionFeature extends UserFeature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        Matcher looseMatcher = pattern.matcher(ComponentUtils.getUnformatted(message));
+        Matcher looseMatcher = mentionPattern.matcher(ComponentUtils.getUnformatted(message));
 
         if (looseMatcher.find()) {
             if (markMention) {
@@ -88,7 +88,7 @@ public class ChatMentionFeature extends UserFeature {
     }
 
     private MutableComponent rewriteMentions(MutableComponent curr, String text, Style style) {
-        Matcher match = pattern.matcher(text);
+        Matcher match = mentionPattern.matcher(text);
 
         // if we match then rewrite the component if there are no matches the function will just return
         if (match.find()) {
@@ -96,7 +96,7 @@ public class ChatMentionFeature extends UserFeature {
             curr = Component.literal(text.substring(0, match.start())).withStyle(style);
 
             // do the name of the first mention
-            curr.append(Component.literal(rewriteColorCode + match.group(0)));
+            curr.append(Component.literal(mentionColor + match.group(0)));
 
             // Store the point at which this match ended
             int lastEnd = match.end();
@@ -108,7 +108,7 @@ public class ChatMentionFeature extends UserFeature {
                         .withStyle(style);
 
                 // get the name and recolor it
-                curr.append(Component.literal(rewriteColorCode + match.group()));
+                curr.append(Component.literal(mentionColor + match.group()));
 
                 // set the starting point for the next mentions before variable
                 lastEnd = match.end();
