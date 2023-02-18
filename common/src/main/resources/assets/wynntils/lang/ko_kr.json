@@ -38,6 +38,7 @@
   "feature.wynntils.bombBellTracking.name": "밤 알림 트래킹",
   "feature.wynntils.chatCoordinates.name": "채팅창 좌표",
   "feature.wynntils.chatItem.name": "채팅창 아이템",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "색 하이라이트",
   "feature.wynntils.chatRedirect.craftedDurability.description": "제작템 내구도 메시지는 어떻게 표시할 것입니까?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "제작템 내구도 필터링",
   "feature.wynntils.chatRedirect.friendJoin.description": "친구 접속 메시지는 어떻게 표시할 것입니까?",
