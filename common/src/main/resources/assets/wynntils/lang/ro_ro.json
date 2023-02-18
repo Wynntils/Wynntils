@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Jurnal modificări",
   "feature.wynntils.chatCoordinates.name": "Coordonate de chat",
   "feature.wynntils.chatItem.name": "Element de chat",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Evidențiere culoare",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Cum ar trebui să apară mesajul de durabilitate?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtru de durabilitate meșteșugit",
   "feature.wynntils.chatRedirect.friendJoin.description": "Cum ar trebui să apară prietenul care se alătură mesajelor?",
