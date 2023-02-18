@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Ändringslogg",
   "feature.wynntils.chatCoordinates.name": "Chatt koordinater",
   "feature.wynntils.chatItem.name": "Chatt objekt",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Markera färg",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Hur ska varaktighetsmeddelanden för tillverkade objekt visas?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Tillverkad hållbarhet filtrering",
   "feature.wynntils.chatRedirect.friendJoin.description": "Hur ska vännen gå med meddelanden visas?",
