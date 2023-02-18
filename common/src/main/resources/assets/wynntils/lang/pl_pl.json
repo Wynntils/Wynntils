@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Lista zmian",
   "feature.wynntils.chatCoordinates.name": "Współrzędne na czacie",
   "feature.wynntils.chatItem.name": "Przedmioty na czacie",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Kolor podświetlenia",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Jak powinny wyświetlać się komunikaty o trwałości przedmiotu?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtrowanie trwałości",
   "feature.wynntils.chatRedirect.friendJoin.description": "Jak powinny wyświetlać się komunikaty o dołączaniu znajomych?",
