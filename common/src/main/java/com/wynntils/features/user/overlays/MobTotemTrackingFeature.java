@@ -96,7 +96,7 @@ public class MobTotemTrackingFeature extends UserFeature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask("Mob Totem (Player) at [-105, 58, 3948] (4:11)", textRenderSetting),
+                            new TextRenderTask("Player's Mob Totem [16 m] (4:11)", textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
