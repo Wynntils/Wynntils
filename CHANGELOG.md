@@ -1,9 +1,21 @@
+## [0.0.2-alpha.210](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.209...v0.0.2-alpha.210) (2023-02-18)
+
+
+### New Features
+
+* Chat mentions ([#1158](https://github.com/Wynntils/Artemis/issues/1158)) ([555dfe9](https://github.com/Wynntils/Artemis/commit/555dfe9470c00f0f06b0e237e20e40614970c3fd))
+
 ## [0.0.2-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.208...v0.0.2-alpha.209) (2023-02-18)
 
 
 ### Bug Fixes
 
 * Consuming chat tabs don't duplicate messages ([#1166](https://github.com/Wynntils/Artemis/issues/1166)) ([76b67cc](https://github.com/Wynntils/Artemis/commit/76b67ccf2d598fcf5ee865a371f3c1865aa4b407))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.209 [skip ci] ([a8ad1ee](https://github.com/Wynntils/Artemis/commit/a8ad1eeb7feb133b163ed7b987dbd3d5f505096b))
 
 ## [0.0.2-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.207...v0.0.2-alpha.208) (2023-02-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.206 [skip ci] ([22267fa](https://github.com/Wynntils/Artemis/commit/22267fa8f733e71b12801832c382e09ee2e98fc7))
-
-## [0.0.2-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.204...v0.0.2-alpha.205) (2023-02-17)
-
-
-### Bug Fixes
-
-* Remove player nametag from gear viewer GUI ([#1162](https://github.com/Wynntils/Artemis/issues/1162)) ([ca886d5](https://github.com/Wynntils/Artemis/commit/ca886d5767147e9ef98fde46cb1ea0c7c16ec3d5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.205 [skip ci] ([69a006b](https://github.com/Wynntils/Artemis/commit/69a006b538d87ca91864c0dabbb6b870477c9a7b))
 
