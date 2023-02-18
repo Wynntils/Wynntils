@@ -50,7 +50,7 @@
   "feature.wynntils.chatMention.markMention.description": "Should mentions be highlighted in chat?",
   "feature.wynntils.chatMention.markMention.name": "Highlight Mentions",
   "feature.wynntils.chatMention.name": "Chat Mentions",
-  "feature.wynntils.chatMention.rewriteColorCode.description": "What color should be used for highlighting",
+  "feature.wynntils.chatMention.rewriteColorCode.description": "What color should be used for highlighting?",
   "feature.wynntils.chatMention.rewriteColorCode.name": "Highlight color",
   "feature.wynntils.chatRedirect.craftedDurability.description": "How should crafted item durability messages appear?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Crafted Durability Filtering",

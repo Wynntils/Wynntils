@@ -51,7 +51,7 @@ public class ChatMentionFeature extends UserFeature {
                 Pattern.CASE_INSENSITIVE);
     }
 
-    @SubscribeEvent()
+    @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
@@ -75,7 +75,7 @@ public class ChatMentionFeature extends UserFeature {
         String text = curr.getString();
 
         // if current component has text check it for mentions and rewrite the component if necessary
-        if (text != "") {
+        if (!text.isEmpty()) {
             curr = rewriteMentions(curr, text, comp.getStyle());
         }
 
@@ -96,7 +96,7 @@ public class ChatMentionFeature extends UserFeature {
             curr = Component.literal(text.substring(0, match.start())).withStyle(style);
 
             // do the name of the first mention
-            curr.append(Component.literal(rewriteColorCode + match.group()));
+            curr.append(Component.literal(rewriteColorCode + match.group(0)));
 
             // Store the point at which this match ended
             int lastEnd = match.end();
