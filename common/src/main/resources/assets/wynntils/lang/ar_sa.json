@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "تغيير",
   "feature.wynntils.chatCoordinates.name": "إحداثيات الدردشة",
   "feature.wynntils.chatItem.name": "عنصر الدردشة",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "لون التمييز",
   "feature.wynntils.chatRedirect.craftedDurability.description": "كيف ينبغي أن تظهر رسائل متانة العنصر؟",
   "feature.wynntils.chatRedirect.craftedDurability.name": "تصفية المتانة المصنوعة",
   "feature.wynntils.chatRedirect.friendJoin.description": "كيف ينبغي لانضمام الصديق أن يبدو في الرسائل الظاهرة؟",
