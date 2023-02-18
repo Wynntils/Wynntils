@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Changelog",
   "feature.wynntils.chatCoordinates.name": "Coordinate Chat",
   "feature.wynntils.chatItem.name": "Elemento Chat",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Colore evidenziazione",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Come dovrebbe la durabilità degli oggetti costruiti apparire?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtro della durabilità degli oggetti costruiti",
   "feature.wynntils.chatRedirect.friendJoin.description": "Come dovrebbe apparire il messaggio di quando un amico entra nel server?",
