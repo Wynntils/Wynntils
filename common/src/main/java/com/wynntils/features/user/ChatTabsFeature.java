@@ -51,6 +51,9 @@ public class ChatTabsFeature extends UserFeature {
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
+        // We are already sending this message to every matching tab, so we can cancel it.
+        event.setCanceled(true);
+
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : chatTabs) {
             if (!chatTab.isConsuming()) continue;
@@ -69,13 +72,13 @@ public class ChatTabsFeature extends UserFeature {
                 Managers.ChatTab.addMessageToTab(chatTab, event.getMessage());
             }
         }
-
-        // We've already sent this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onClientsideChat(ClientsideMessageEvent event) {
+        // We've already sent this message to every matching tab, so we can cancel it.
+        event.setCanceled(true);
+
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : chatTabs) {
             if (!chatTab.isConsuming()) continue;
@@ -94,9 +97,6 @@ public class ChatTabsFeature extends UserFeature {
                 Managers.ChatTab.addMessageToTab(chatTab, event.getComponent());
             }
         }
-
-        // We've already sent this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
     }
 
     @SubscribeEvent
