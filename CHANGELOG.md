@@ -1,9 +1,21 @@
+## [0.0.2-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.208...v0.0.2-alpha.209) (2023-02-18)
+
+
+### Bug Fixes
+
+* Consuming chat tabs don't duplicate messages ([#1166](https://github.com/Wynntils/Artemis/issues/1166)) ([76b67cc](https://github.com/Wynntils/Artemis/commit/76b67ccf2d598fcf5ee865a371f3c1865aa4b407))
+
 ## [0.0.2-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.207...v0.0.2-alpha.208) (2023-02-17)
 
 
 ### New Features
 
 * Assign stable Character GUIDs to classes ([#1164](https://github.com/Wynntils/Artemis/issues/1164)) ([168ef9a](https://github.com/Wynntils/Artemis/commit/168ef9a98b5eb7c9ae972886e8d669f27f348714))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.208 [skip ci] ([13de7dc](https://github.com/Wynntils/Artemis/commit/13de7dcba02cf8da9ceb2d59659fdbf7ab683d53))
 
 ## [0.0.2-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.206...v0.0.2-alpha.207) (2023-02-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.205 [skip ci] ([69a006b](https://github.com/Wynntils/Artemis/commit/69a006b538d87ca91864c0dabbb6b870477c9a7b))
-
-## [0.0.2-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.203...v0.0.2-alpha.204) (2023-02-15)
-
-
-### Bug Fixes
-
-* The cure for Cancer (and Necrosis) ([#1159](https://github.com/Wynntils/Artemis/issues/1159)) ([453c30e](https://github.com/Wynntils/Artemis/commit/453c30ee5cc7af67f3af10e5568485d46ed89c88))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.204 [skip ci] ([2e0533e](https://github.com/Wynntils/Artemis/commit/2e0533e52dcd9b16c73dee6e7667baa2d75cf65a))
 
