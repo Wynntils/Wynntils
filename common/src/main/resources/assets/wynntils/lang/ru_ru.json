@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Список изменений",
   "feature.wynntils.chatCoordinates.name": "Координаты в Чате",
   "feature.wynntils.chatItem.name": "Предметы в Чате",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Цвет подсветки",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Как должны появляться сообщения о прочности крафтового предмета?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Фильтр Прочности Крафтовых Предметов",
   "feature.wynntils.chatRedirect.friendJoin.description": "Как должны появляться сообщения о добавлении в друзья?",
