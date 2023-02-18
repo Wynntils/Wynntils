@@ -43,6 +43,7 @@
   "feature.wynntils.changelog.name": "Mudanças",
   "feature.wynntils.chatCoordinates.name": "Coordenadas de Chat",
   "feature.wynntils.chatItem.name": "Item de Bate-papo",
+  "feature.wynntils.chatMention.rewriteColorCode.name": "Cor de destaque",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Como devem aparecer as mensagens de durabilidade do item criado?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtragem de Durabilidade Fabricada",
   "feature.wynntils.chatRedirect.friendJoin.description": "Como devem aparecer as mensagens de junta?",
