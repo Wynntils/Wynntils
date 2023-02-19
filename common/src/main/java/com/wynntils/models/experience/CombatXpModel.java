@@ -40,8 +40,8 @@ public class CombatXpModel extends Model {
 
     private boolean firstJoinHappened = false;
 
-    private final TimedSet<Float> lastMinuteXpGainRawSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-    private final TimedSet<Float> lastMinuteXpGainPercentageSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
+    private final TimedSet<Float> rawXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
+    private final TimedSet<Float> percentageXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
 
     public CombatXpModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
@@ -49,8 +49,8 @@ public class CombatXpModel extends Model {
 
     @SubscribeEvent
     public void onExperienceGain(CombatXpGainEvent event) {
-        lastMinuteXpGainRawSet.put(event.getGainedXpRaw());
-        lastMinuteXpGainPercentageSet.put(event.getGainedXpPercentage());
+        rawXpGainInLastMinute.put(event.getGainedXpRaw());
+        percentageXpGainInLastMinute.put(event.getGainedXpPercentage());
     }
 
     @SubscribeEvent
@@ -155,11 +155,11 @@ public class CombatXpModel extends Model {
         return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
     }
 
-    public TimedSet<Float> getLastMinuteXpGainRawSet() {
-        return lastMinuteXpGainRawSet;
+    public TimedSet<Float> getRawXpGainInLastMinute() {
+        return rawXpGainInLastMinute;
     }
 
-    public TimedSet<Float> getLastMinuteXpGainPercentageSet() {
-        return lastMinuteXpGainPercentageSet;
+    public TimedSet<Float> getPercentageXpGainInLastMinute() {
+        return percentageXpGainInLastMinute;
     }
 }

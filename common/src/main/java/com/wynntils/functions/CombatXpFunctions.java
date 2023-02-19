@@ -14,7 +14,7 @@ public class CombatXpFunctions {
 
         @Override
         public Integer getValue(String argument) {
-            return (int) (Models.CombatXp.getLastMinuteXpGainRawSet().stream()
+            return (int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
                     .mapToDouble(Float::doubleValue)
                     .sum());
         }
@@ -28,7 +28,7 @@ public class CombatXpFunctions {
     public static class XpPerMinuteFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString((int) (Models.CombatXp.getLastMinuteXpGainRawSet().stream()
+            return StringUtils.integerToShortString((int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
                     .mapToDouble(Float::doubleValue)
                     .sum()));
         }
@@ -43,7 +43,7 @@ public class CombatXpFunctions {
         @Override
         public Double getValue(String argument) {
             // Round to 2 decimal places
-            return Math.round(Models.CombatXp.getLastMinuteXpGainPercentageSet().stream()
+            return Math.round(Models.CombatXp.getPercentageXpGainInLastMinute().stream()
                                     .mapToDouble(Float::doubleValue)
                                     .sum()
                             * 100.0)
