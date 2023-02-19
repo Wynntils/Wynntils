@@ -29,7 +29,8 @@ public final class SplashManager extends Manager {
         updateCurrentSplash();
     }
 
-    public void reset() {
+    @Override
+    public void reloadData() {
         updateCurrentSplash();
     }
 

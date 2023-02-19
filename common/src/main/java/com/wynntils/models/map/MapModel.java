@@ -40,6 +40,7 @@ public final class MapModel extends Model {
         loadData();
     }
 
+    @Override
     public void reloadData() {
         loadData();
     }
