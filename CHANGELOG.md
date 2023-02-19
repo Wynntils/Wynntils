@@ -1,9 +1,21 @@
+## [0.0.2-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.217...v0.0.2-alpha.218) (2023-02-19)
+
+
+### New Features
+
+* Introduce a system-wide way to reload all data ([#1173](https://github.com/Wynntils/Artemis/issues/1173)) ([25d2fcf](https://github.com/Wynntils/Artemis/commit/25d2fcf80f531febf455a71a90814f7ee7df6bc2))
+
 ## [0.0.2-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.216...v0.0.2-alpha.217) (2023-02-19)
 
 
 ### Bug Fixes
 
 * Actually fix guild map date order ([#1176](https://github.com/Wynntils/Artemis/issues/1176)) ([6dc6a8b](https://github.com/Wynntils/Artemis/commit/6dc6a8b47cc27797ad4050022de5ec88085c9480))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.217 [skip ci] ([9ddf8f1](https://github.com/Wynntils/Artemis/commit/9ddf8f1231d2ca15e68f71f3285d582416eefca0))
 
 ## [0.0.2-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.215...v0.0.2-alpha.216) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.214 [skip ci] ([2b78f0d](https://github.com/Wynntils/Artemis/commit/2b78f0df9c5961060090011ccd490633f7e04eaf))
-
-## [0.0.2-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.212...v0.0.2-alpha.213) (2023-02-19)
-
-
-### New Features
-
-* Send events when net resources are fully processed ([#1169](https://github.com/Wynntils/Artemis/issues/1169)) ([a6551c5](https://github.com/Wynntils/Artemis/commit/a6551c5712df97a70c35522e153e75574246b316))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.213 [skip ci] ([ef588a3](https://github.com/Wynntils/Artemis/commit/ef588a3fd1287f6fd8885ca7625e252137395d85))
 
