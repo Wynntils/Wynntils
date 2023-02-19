@@ -12,10 +12,12 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -49,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public class GearInfoRegistry {
@@ -63,11 +66,13 @@ public class GearInfoRegistry {
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
-        loadAllRegistryData();
+        WynntilsMod.registerEventListener(this);
+        reloadData();
     }
 
     public void reloadData() {
-        loadAllRegistryData();
+        // We trigger reload of all data by starting by downloading major IDs
+        loadMajorIds();
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
@@ -91,38 +96,49 @@ public class GearInfoRegistry {
         return gearInfoRegistry.stream();
     }
 
-    private void loadAllRegistryData() {
-        // We must download and parse Major IDs and the obtain info database before attempting to parse the gear DB
-        Download majorIdsDl = Managers.Net.download(UrlId.DATA_STATIC_MAJOR_IDS);
-        majorIdsDl.handleReader(majorIdsReader -> {
+    @SubscribeEvent
+    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
+        if (event.getUrlId() == UrlId.DATA_STATIC_MAJOR_IDS) {
+            // After major IDs, we can load the obtain info
+            loadObtainInfo();
+            return;
+        }
+        if (event.getUrlId() == UrlId.DATA_STATIC_ITEM_OBTAIN) {
+            // After obtain info, we can load the gear DB
+            loadGearRegistry();
+            return;
+        }
+    }
+
+    private void loadMajorIds() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAJOR_IDS);
+        dl.handleReader(reader -> {
             Type type = new TypeToken<List<GearMajorId>>() {}.getType();
-            Gson majorIdGson = new GsonBuilder()
+            Gson gson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(GearMajorId.class, new GearMajorIdDeserializer())
                     .create();
-            allMajorIds = majorIdGson.fromJson(majorIdsReader, type);
-
-            // Now get the obtain info DB
-            Download obtainDl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
-            obtainDl.handleReader(obtainReader -> {
-                Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-                Gson obtainGson = new GsonBuilder()
-                        .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
-                        .create();
-                itemObtainMap = obtainGson.fromJson(obtainReader, obtainType);
-
-                // Now we can do the gear DB
-                downloadGearRegistry();
-            });
+            allMajorIds = gson.fromJson(reader, type);
         });
     }
 
-    private void downloadGearRegistry() {
+    private void loadObtainInfo() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
+        dl.handleReader(reader -> {
+            Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
+            Gson gson = new GsonBuilder()
+                    .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
+                    .create();
+            itemObtainMap = gson.fromJson(reader, obtainType);
+        });
+    }
+
+    private void loadGearRegistry() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
         dl.handleReader(reader -> {
-            Gson gearInfoGson = new GsonBuilder()
+            Gson gson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds, itemObtainMap))
                     .create();
-            WynncraftGearInfoResponse gearInfoResponse = gearInfoGson.fromJson(reader, WynncraftGearInfoResponse.class);
+            WynncraftGearInfoResponse gearInfoResponse = gson.fromJson(reader, WynncraftGearInfoResponse.class);
 
             // Some entries are test entries etc and should be removed
             List<GearInfo> registry = gearInfoResponse.items.stream()
