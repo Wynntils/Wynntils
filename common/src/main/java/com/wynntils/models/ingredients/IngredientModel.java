@@ -50,6 +50,6 @@ public class IngredientModel extends Model {
 
     @Override
     public void reloadData() {
-        ingredientInfoRegistry.reloadData();
+        ingredientInfoRegistry.loadData();
     }
 }

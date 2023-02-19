@@ -18,6 +18,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
@@ -37,18 +38,23 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class IngredientInfoRegistry {
+    private Map<String, String> ingredientSkins = Map.of();
     private List<IngredientInfo> ingredientInfoRegistry = List.of();
     private Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
     private Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
 
     public IngredientInfoRegistry() {
-        loadRegistry();
+        WynntilsMod.registerEventListener(this);
+
+        loadData();
     }
 
-    public void reloadData() {
-        loadRegistry();
+    public void loadData() {
+        // We trigger the chain of downloading everything by downloading skins
+        loadIngredientSkins();
     }
 
     public IngredientInfo getFromDisplayName(String ingredientName) {
@@ -59,40 +65,56 @@ public class IngredientInfoRegistry {
         return ingredientInfoRegistry.stream();
     }
 
-    private void loadRegistry() {
-        // We must download and parse ingredient player head textures before
-        // attempting to parse the ingredient DB
-        Download skinsDl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENT_SKINS);
-        skinsDl.handleReader(skinsReader -> {
+    @SubscribeEvent
+    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
+        UrlId urlId = event.getUrlId();
+        if (urlId == UrlId.DATA_STATIC_INGREDIENT_SKINS
+                || urlId == UrlId.DATA_STATIC_ITEM_OBTAIN
+                || urlId == UrlId.DATA_STATIC_MATERIAL_CONVERSION) {
+            // We need both ingredient skins and obtain info to be able to load the ingredient DB
+            if (ingredientSkins.isEmpty()) return;
+            if (!Models.WynnItem.hasObtainInfo()) return;
+            if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+
+            loadIngredients();
+            return;
+        }
+    }
+
+    private void loadIngredientSkins() {
+        // Download and parse ingredient player head textures
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENT_SKINS);
+        dl.handleReader(reader -> {
             Type type = new TypeToken<Map<String, String>>() {}.getType();
-            Map<String, String> ingredientSkins = WynntilsMod.GSON.fromJson(skinsReader, type);
+            ingredientSkins = WynntilsMod.GSON.fromJson(reader, type);
+        });
+    }
 
-            // Now we can do the ingredient DB
-            Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
-            dl.handleReader(reader -> {
-                Gson ingredientInfoGson = new GsonBuilder()
-                        .registerTypeHierarchyAdapter(
-                                IngredientInfo.class, new IngredientInfoDeserializer(ingredientSkins))
-                        .create();
-                WynncraftIngredientInfoResponse ingredientInfoResponse =
-                        ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
+    private void loadIngredients() {
+        // Download and parse the ingredient DB
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
+        dl.handleReader(reader -> {
+            Gson ingredientInfoGson = new GsonBuilder()
+                    .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer(ingredientSkins))
+                    .create();
+            WynncraftIngredientInfoResponse ingredientInfoResponse =
+                    ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
 
-                // Create fast lookup maps
-                List<IngredientInfo> registry = ingredientInfoResponse.ingredients;
-                Map<String, IngredientInfo> lookupMap = new HashMap<>();
-                Map<String, IngredientInfo> altLookupMap = new HashMap<>();
-                for (IngredientInfo ingredientInfo : registry) {
-                    lookupMap.put(ingredientInfo.name(), ingredientInfo);
-                    if (ingredientInfo.apiName().isPresent()) {
-                        altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
-                    }
+            // Create fast lookup maps
+            List<IngredientInfo> registry = ingredientInfoResponse.ingredients;
+            Map<String, IngredientInfo> lookupMap = new HashMap<>();
+            Map<String, IngredientInfo> altLookupMap = new HashMap<>();
+            for (IngredientInfo ingredientInfo : registry) {
+                lookupMap.put(ingredientInfo.name(), ingredientInfo);
+                if (ingredientInfo.apiName().isPresent()) {
+                    altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
                 }
+            }
 
-                // Make the result visisble to the world
-                ingredientInfoRegistry = registry;
-                ingredientInfoLookup = lookupMap;
-                ingredientInfoLookupApiName = altLookupMap;
-            });
+            // Make the result visisble to the world
+            ingredientInfoRegistry = registry;
+            ingredientInfoLookup = lookupMap;
+            ingredientInfoLookupApiName = altLookupMap;
         });
     }
 

@@ -66,6 +66,7 @@ public class GearInfoRegistry {
 
     public GearInfoRegistry() {
         WynntilsMod.registerEventListener(this);
+
         reloadData();
     }
 

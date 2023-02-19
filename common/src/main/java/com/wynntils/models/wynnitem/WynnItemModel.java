@@ -22,22 +22,41 @@ import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.models.wynnitem.type.MaterialConversionInfo;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class WynnItemModel extends Model {
     private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
-    private List<MaterialConversionInfo> materialConversion = List.of();
+    private List<MaterialConversionInfo> allMaterialConversions = List.of();
+    private Map<Integer, MaterialConversionInfo> materialConversionLookup = Map.of();
 
     public WynnItemModel() {
         super(List.of());
+
         loadObtainData();
         loadMaterialConversionData();
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
         return itemObtainMap.get(name);
+    }
+
+    public String getMaterialName(int idCode, int damageCode) {
+        MaterialConversionInfo conversionInfo = materialConversionLookup.get(idCode);
+        if (conversionInfo == null) return "air";
+
+        if (conversionInfo.variations() != null) {
+            // Do we have a special name for this damageId?
+            MaterialConversionInfo.VariationInfo variationInfo = conversionInfo.variations().stream()
+                    .filter(v -> v.metadata() == damageCode)
+                    .findFirst()
+                    .orElse(null);
+            if (variationInfo != null) return variationInfo.name();
+        }
+
+        return conversionInfo.name();
     }
 
     private void loadObtainData() {
@@ -55,13 +74,21 @@ public class WynnItemModel extends Model {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MATERIAL_CONVERSION);
         dl.handleReader(reader -> {
             Type materialConversionType = new TypeToken<List<MaterialConversionInfo>>() {}.getType();
-            materialConversion = WynntilsMod.GSON.fromJson(reader, materialConversionType);
-            System.out.println(materialConversion);
+            allMaterialConversions = WynntilsMod.GSON.fromJson(reader, materialConversionType);
+
+            // Store in fast lookup map
+            Map<Integer, MaterialConversionInfo> lookupMap = new HashMap<>();
+            allMaterialConversions.forEach(m -> lookupMap.put(m.id(), m));
+            materialConversionLookup = lookupMap;
         });
     }
 
     public boolean hasObtainInfo() {
         return !itemObtainMap.isEmpty();
+    }
+
+    public boolean hasMaterialConversionInfo() {
+        return !allMaterialConversions.isEmpty();
     }
 
     private static final class ItemObtainInfoDeserializer implements JsonDeserializer<ItemObtainInfo> {

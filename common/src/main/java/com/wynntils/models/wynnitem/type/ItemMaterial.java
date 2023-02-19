@@ -5,6 +5,7 @@
 package com.wynntils.models.wynnitem.type;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
@@ -63,7 +64,9 @@ public record ItemMaterial(ItemStack itemStack) {
         // FIXME: The vanilla lookup still fails for e.g. Totem of Undying.
         // or 383 (spawn eggs, e.g. enderman_spawn_egg)
         // In this case, AIR is returned.
-        // Check https://github.com/Wynntils/Reference/blob/main/materials/materials.json in addition
+        if (itemId.equals("minecraft:air")) {
+            itemId = "minecraft:" + Models.WynnItem.getMaterialName(itemTypeCode, damageCode);
+        }
 
         return fromItemId(itemId, damageCode);
     }
