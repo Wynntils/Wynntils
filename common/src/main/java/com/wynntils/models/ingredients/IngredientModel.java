@@ -48,6 +48,7 @@ public class IngredientModel extends Model {
         return ingredientInfoRegistry.getIngredientInfoStream();
     }
 
+    @Override
     public void reloadData() {
         ingredientInfoRegistry.reloadData();
     }

@@ -52,6 +52,7 @@ public final class DiscoveryModel extends Model {
         super(List.of(combatXpModel, compassModel, questModel, territoryModel));
     }
 
+    @Override
     public void reloadData() {
         updateDiscoveriesResource();
     }

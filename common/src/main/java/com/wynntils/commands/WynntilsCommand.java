@@ -190,11 +190,8 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        Managers.Url.reloadUrls();
-        Models.Gear.reloadData();
-        Models.Ingredient.reloadData();
-        Models.Discovery.reloadData();
-        Models.Map.reloadData();
+        // Reload all downloaded data
+        WynntilsMod.reloadAllComponentData();
 
         return 1;
     }
