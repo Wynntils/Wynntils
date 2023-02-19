@@ -43,7 +43,7 @@
   "feature.wynntils.changelog.name": "更新履歴",
   "feature.wynntils.chatCoordinates.name": "チャット座標",
   "feature.wynntils.chatItem.name": "チャットアイテム",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "ハイライト色",
+  "feature.wynntils.chatMention.mentionColor.name": "ハイライト色",
   "feature.wynntils.chatRedirect.craftedDurability.description": "アイテム耐久性メッセージはどのように表示されますか？",
   "feature.wynntils.chatRedirect.craftedDurability.name": "耐久性フィルタ",
   "feature.wynntils.chatRedirect.friendJoin.description": "フレンド参加メッセージはどのように表示されますか？",
