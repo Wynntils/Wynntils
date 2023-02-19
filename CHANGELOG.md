@@ -1,9 +1,21 @@
+## [0.0.2-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.216...v0.0.2-alpha.217) (2023-02-19)
+
+
+### Bug Fixes
+
+* Actually fix guild map date order ([#1176](https://github.com/Wynntils/Artemis/issues/1176)) ([6dc6a8b](https://github.com/Wynntils/Artemis/commit/6dc6a8b47cc27797ad4050022de5ec88085c9480))
+
 ## [0.0.2-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.215...v0.0.2-alpha.216) (2023-02-19)
 
 
 ### Bug Fixes
 
 * Add more event annotations ([#1172](https://github.com/Wynntils/Artemis/issues/1172)) ([232c088](https://github.com/Wynntils/Artemis/commit/232c08818b825a1cd4b22700eba659c6b5e65d88))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.216 [skip ci] ([16789d1](https://github.com/Wynntils/Artemis/commit/16789d1534bd84b3191f4f8e7ce9e73b3f64137d))
 
 ## [0.0.2-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.214...v0.0.2-alpha.215) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.213 [skip ci] ([ef588a3](https://github.com/Wynntils/Artemis/commit/ef588a3fd1287f6fd8885ca7625e252137395d85))
-
-## [0.0.2-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.211...v0.0.2-alpha.212) (2023-02-19)
-
-
-### New Features
-
-* mob totem tracking ([#1148](https://github.com/Wynntils/Artemis/issues/1148)) ([a49eb9e](https://github.com/Wynntils/Artemis/commit/a49eb9ea970d24a856b2c420f31ccfa89d2bd51a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.212 [skip ci] ([c23b78c](https://github.com/Wynntils/Artemis/commit/c23b78c3e38dc804ed1a5061cdc2f2a9b18ca51a))
 
