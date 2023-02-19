@@ -6,6 +6,7 @@ package com.wynntils.core.net;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,13 +28,13 @@ public class Download extends NetResult {
     // Saved since we might need to get timestamps from the HttpResponse
     private CompletableFuture<HttpResponse<Path>> httpResponse = null;
 
-    public Download(String desc, File localFile) {
-        super("DL:" + desc, null); // Only use cached file
+    public Download(String desc, File localFile, NetResultProcessedEvent processedEvent) {
+        super("DL:" + desc, null, processedEvent); // Only use cached file
         this.localFile = localFile;
     }
 
-    public Download(String desc, File localFile, HttpRequest request) {
-        super("DL:" + desc, request);
+    public Download(String desc, File localFile, HttpRequest request, NetResultProcessedEvent processedEvent) {
+        super("DL:" + desc, request, processedEvent);
         this.localFile = localFile;
     }
 
