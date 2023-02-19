@@ -38,8 +38,6 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        addon.add(Component.literal("Wynn Item Type:").withStyle(ChatFormatting.GREEN));
-
         List<String> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(wynnItem.toString(), 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
