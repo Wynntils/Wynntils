@@ -50,19 +50,16 @@ public class MobTotemModel extends Model {
             mobTotems.put(mobTotemId, new MobTotem(new Location(as), nameMatcher.group(1)));
             return;
         }
-        
-        for (MobTotem mobTotem : mobTotems.values()) {
-            // Exact equality is fine here because the totem is stationary
-            if (as.getX() == mobTotem.getLocation().x()
-                    && as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE)
-                    && as.getZ() == mobTotem.getLocation().z()) {
-                Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(e.getName());
-                if (timerMatcher.find()) {
-                    mobTotem.setTimerString(timerMatcher.group(1));
-                    return;
-                }
-            }
-        }
+
+        Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(e.getName());
+        if (!timerMatcher.find()) return;
+
+        mobTotems.values().stream().filter(
+                // Exact equality is fine here because the totem is stationary
+                mobTotem -> as.getX() == mobTotem.getLocation().x() &&
+                        as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE) &&
+                        as.getZ() == mobTotem.getLocation().z()
+        ).forEach(mobTotem -> mobTotem.setTimerString(timerMatcher.group(1)));
     }
 
     @SubscribeEvent
