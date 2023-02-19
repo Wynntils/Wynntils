@@ -47,17 +47,29 @@ public class FunctionExpression extends Expression {
     // This method attempts to parse a function expression in the following ways:
     //   1. The expression is not a function expression, in which case it returns an empty optional.
     //   2. The expression could be a function expression, but the function name is not a valid function, in which case
-    // it returns an empty optional.
+    //      it returns an empty optional.
     //   3. The expression is a function expression, and the function name is a valid function, but the arguments are
-    // invalid, in which case it returns an error.
+    //      invalid, in which case it returns an error.
     //   4. The expression is a function expression, and the function name is a valid function, and the arguments are
-    // valid, in which case it returns the parsed expression.
+    //      valid, in which case it returns the parsed expression.
     //
     //   Arguments are valid if:
     //     1. The number of arguments is equal to the number of arguments the function expects.
     //     2. There is no argument part in the expression, in which case the function is called with the default
-    // arguments.
+    //        arguments.
     //     3. The argument part is empty, in which case the function is called with the default arguments.
+    //
+    //   Formatting parsing:
+    //     1. If the expression does not contain a formatting appendix, the expression is not formatted and the decimal
+    //        count is set to a default of 2.
+    //     2. If the expression contains a formatting appendix, the expression is formatted and the decimal count is set
+    //        to the value in the appendix.
+    //        2.1. The appendix can contain only a decimal count, only a formatting flag, or both.
+    //        2.2. The formatting flag needs to be a capital F.
+    //        2.3. The decimal count needs to be an integer of any length.
+    //        2.4. The decimal count can be omitted, in which case it is set to a default of 2.
+    //        2.5. The formatting flag can be omitted, in which case the expression is not formatted.
+
     public static ErrorOr<Optional<Expression>> tryParse(String rawExpression) {
         Matcher matcher = FUNCTION_EXPRESSION_PATTERN.matcher(rawExpression);
 
