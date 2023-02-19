@@ -6,6 +6,8 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -19,6 +21,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,8 +37,6 @@ import net.minecraft.network.chat.MutableComponent;
 public final class FunctionManager extends Manager {
     private static final Pattern INFO_VARIABLE_PATTERN =
             Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
-    private static TemplateParser templateParser = new TemplateParser();
 
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
@@ -80,13 +81,13 @@ public final class FunctionManager extends Manager {
         return false;
     }
 
-    private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+    private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {
         if (crashedFunctions.contains(function)) {
             return Optional.empty();
         }
 
         try {
-            Object value = function.getValue(argument);
+            Object value = function.getValue(arguments);
             return Optional.ofNullable(value);
         } catch (Throwable throwable) {
             WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
@@ -101,12 +102,19 @@ public final class FunctionManager extends Manager {
     }
 
     public Component getSimpleValueString(
-            Function<?> function, String argument, ChatFormatting color, boolean includeName) {
+            Function<?> function, String rawArguments, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : Component.literal("");
 
-        Optional<Object> value = getFunctionValueSafely(function, argument);
+        ErrorOr<FunctionArguments> errorOrArguments =
+                ArgumentParser.parseArguments(function.getArguments(), rawArguments);
+
+        if (errorOrArguments.hasError()) {
+            return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
+        }
+
+        Optional<Object> value = getFunctionValueSafely(function, errorOrArguments.getValue());
         if (value.isEmpty()) {
             return header.append(Component.literal("??"));
         }
@@ -116,8 +124,8 @@ public final class FunctionManager extends Manager {
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    public String getRawValueString(Function<?> function, String argument) {
-        Optional<Object> value = getFunctionValueSafely(function, argument);
+    public String getRawValueString(Function<?> function, FunctionArguments arguments) {
+        Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
             return "??";
         }
@@ -128,6 +136,14 @@ public final class FunctionManager extends Manager {
     private String format(Object value) {
         return value.toString();
     }
+
+    // region Template formatting
+
+    public String doFormat(String templateString) {
+        return TemplateParser.doFormat(templateString);
+    }
+
+    // endregion
 
     // region Legacy formatting
 
@@ -155,7 +171,8 @@ public final class FunctionManager extends Manager {
                 // %variable%
                 Function<?> function = forName(m.group(1)).get();
 
-                replacement = getRawValueString(function, "");
+                replacement =
+                        getRawValueString(function, function.getArguments().buildWithDefaults());
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));
@@ -206,10 +223,6 @@ public final class FunctionManager extends Manager {
         };
     }
     // endregion
-
-    public TemplateParser getTemplateParser() {
-        return templateParser;
-    }
 
     private void registerFunction(Function<?> function) {
         functions.add(function);

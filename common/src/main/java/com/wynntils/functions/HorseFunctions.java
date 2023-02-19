@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.HorseItem;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class HorseFunctions {
 
     public static class HorseLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getLevel().current();
@@ -27,7 +28,7 @@ public class HorseFunctions {
 
     public static class HorseLevelMaxFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getLevel().max();
@@ -41,7 +42,7 @@ public class HorseFunctions {
 
     public static class HorseXpFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getXp();
@@ -55,7 +56,7 @@ public class HorseFunctions {
 
     public static class HorseTierFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             return horse.getTier();
@@ -69,7 +70,7 @@ public class HorseFunctions {
 
     public static class HorseNameFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
             if (horse == null) return null;
             String name = horse.getName();

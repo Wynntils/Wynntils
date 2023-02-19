@@ -12,17 +12,21 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public final class ExpressionParser {
-    private static final List<Function<String, Optional<Expression>>> registeredExpressions =
+    private static final List<Function<String, ErrorOr<Optional<Expression>>>> registeredExpressions =
             List.of(FunctionExpression::tryParse);
 
     private ExpressionParser() {}
 
     public static ErrorOr<Expression> tryParse(String rawExpression) {
-        for (Function<String, Optional<Expression>> expression : registeredExpressions) {
-            Optional<Expression> optionalExpression = expression.apply(rawExpression);
+        for (Function<String, ErrorOr<Optional<Expression>>> expression : registeredExpressions) {
+            ErrorOr<Optional<Expression>> optionalExpression = expression.apply(rawExpression);
 
-            if (optionalExpression.isPresent()) {
-                return ErrorOr.of(optionalExpression.get());
+            if (optionalExpression.hasError()) {
+                return ErrorOr.error(optionalExpression.getError());
+            }
+
+            if (optionalExpression.getValue().isPresent()) {
+                return ErrorOr.of(optionalExpression.getValue().get());
             }
         }
 

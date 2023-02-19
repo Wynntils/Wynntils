@@ -5,6 +5,7 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -14,7 +15,7 @@ import java.util.Locale;
 public class EnvironmentFunctions {
     public static class ClockFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             LocalDateTime date = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
             return date.format(formatter);
@@ -23,7 +24,7 @@ public class EnvironmentFunctions {
 
     public static class ClockmFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             LocalDateTime date = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ROOT);
             return date.format(formatter);
@@ -32,7 +33,7 @@ public class EnvironmentFunctions {
 
     public static class MemMaxFunction extends Function<Long> {
         @Override
-        public Long getValue(String argument) {
+        public Long getValue(FunctionArguments arguments) {
             return Runtime.getRuntime().maxMemory() / (1024 * 1024);
         }
 
@@ -44,7 +45,7 @@ public class EnvironmentFunctions {
 
     public static class MemUsedFunction extends Function<Long> {
         @Override
-        public Long getValue(String argument) {
+        public Long getValue(FunctionArguments arguments) {
             return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
         }
 
@@ -56,7 +57,7 @@ public class EnvironmentFunctions {
 
     public static class MemPctFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             long max = Runtime.getRuntime().maxMemory() / (1024 * 1024);
             long used =
                     (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
