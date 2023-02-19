@@ -40,7 +40,7 @@
   "feature.wynntils.bombBellTracking.name": "Seguiment de campanes de bomba",
   "feature.wynntils.chatCoordinates.name": "Coordenades de xat",
   "feature.wynntils.chatItem.name": "Element de xat",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "Color de ressaltat",
+  "feature.wynntils.chatMention.mentionColor.name": "Color de ressaltat",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Com han d'aparèixer els missatges de durabilitat d'elements elaborats?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Filtratge de la durabilitat esborrany",
   "feature.wynntils.chatRedirect.friendJoin.description": "Com ha d'aparèixer el missatge d'unió d'amics?",
