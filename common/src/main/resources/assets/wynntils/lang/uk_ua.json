@@ -43,7 +43,7 @@
   "feature.wynntils.changelog.name": "Список змін",
   "feature.wynntils.chatCoordinates.name": "Координати чату",
   "feature.wynntils.chatItem.name": "Предмет чату",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "Колір підсвічування",
+  "feature.wynntils.chatMention.mentionColor.name": "Колір підсвічування",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Як мають з'явитися повідомлення довговічної діяльності?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Фільтрація міцності роботи",
   "feature.wynntils.chatRedirect.friendJoin.description": "Як показувати другові повідомлення?",
