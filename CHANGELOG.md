@@ -1,9 +1,21 @@
+## [0.0.2-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.212...v0.0.2-alpha.213) (2023-02-19)
+
+
+### New Features
+
+* Send events when net resources are fully processed ([#1169](https://github.com/Wynntils/Artemis/issues/1169)) ([a6551c5](https://github.com/Wynntils/Artemis/commit/a6551c5712df97a70c35522e153e75574246b316))
+
 ## [0.0.2-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.211...v0.0.2-alpha.212) (2023-02-19)
 
 
 ### New Features
 
 * mob totem tracking ([#1148](https://github.com/Wynntils/Artemis/issues/1148)) ([a49eb9e](https://github.com/Wynntils/Artemis/commit/a49eb9ea970d24a856b2c420f31ccfa89d2bd51a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.212 [skip ci] ([c23b78c](https://github.com/Wynntils/Artemis/commit/c23b78c3e38dc804ed1a5061cdc2f2a9b18ca51a))
 
 ## [0.0.2-alpha.211](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.210...v0.0.2-alpha.211) (2023-02-18)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.209 [skip ci] ([a8ad1ee](https://github.com/Wynntils/Artemis/commit/a8ad1eeb7feb133b163ed7b987dbd3d5f505096b))
-
-## [0.0.2-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.207...v0.0.2-alpha.208) (2023-02-17)
-
-
-### New Features
-
-* Assign stable Character GUIDs to classes ([#1164](https://github.com/Wynntils/Artemis/issues/1164)) ([168ef9a](https://github.com/Wynntils/Artemis/commit/168ef9a98b5eb7c9ae972886e8d669f27f348714))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.208 [skip ci] ([13de7dc](https://github.com/Wynntils/Artemis/commit/13de7dcba02cf8da9ceb2d59659fdbf7ab683d53))
 
