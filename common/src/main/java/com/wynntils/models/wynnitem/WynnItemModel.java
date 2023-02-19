@@ -47,6 +47,10 @@ public class WynnItemModel extends Model {
         });
     }
 
+    public boolean hasObtainInfo() {
+        return !itemObtainMap.isEmpty();
+    }
+
     private static final class ItemObtainInfoDeserializer implements JsonDeserializer<ItemObtainInfo> {
         @Override
         public ItemObtainInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)

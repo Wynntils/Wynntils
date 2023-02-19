@@ -86,6 +86,7 @@ import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.user.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.user.overlays.InfoBoxFeature;
+import com.wynntils.features.user.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.user.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.user.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.user.overlays.PowderSpecialBarOverlayFeature;
@@ -193,6 +194,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LowHealthVignetteFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
+        registerFeature(new MobTotemTrackingFeature());
         registerFeature(new HorseMountFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
