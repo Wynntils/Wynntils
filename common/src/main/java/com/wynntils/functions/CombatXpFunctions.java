@@ -5,27 +5,18 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.models.experience.event.CombatXpGainEvent;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.TimedSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CombatXpFunctions {
-    public static class XpPerMinuteRawFunction extends ActiveFunction<Integer> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
+    public static class XpPerMinuteRawFunction extends Function<Integer> {
 
         @Override
         public Integer getValue(String argument) {
-            return (int) (timedXpSet.stream().mapToDouble(Double::doubleValue).sum());
-        }
-
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpRaw());
+            return (int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum());
         }
 
         @Override
@@ -34,18 +25,12 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpPerMinuteFunction extends ActiveFunction<String> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-
+    public static class XpPerMinuteFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
-            return StringUtils.integerToShortString(
-                    (int) (timedXpSet.stream().mapToDouble(Double::doubleValue).sum()));
-        }
-
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpRaw());
+            return StringUtils.integerToShortString((int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum()));
         }
 
         @Override
@@ -54,20 +39,15 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpPercentagePerMinuteFunction extends ActiveFunction<Double> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-
+    public static class XpPercentagePerMinuteFunction extends Function<Double> {
         @Override
         public Double getValue(String argument) {
             // Round to 2 decimal places
-            return Math.round(
-                            timedXpSet.stream().mapToDouble(Double::doubleValue).sum() * 100.0)
+            return Math.round(Models.CombatXp.getPercentageXpGainInLastMinute().stream()
+                                    .mapToDouble(Float::doubleValue)
+                                    .sum()
+                            * 100.0)
                     / 100.0;
-        }
-
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpPercentage());
         }
 
         @Override

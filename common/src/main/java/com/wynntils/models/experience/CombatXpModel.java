@@ -13,7 +13,9 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.TimedSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -38,8 +40,17 @@ public class CombatXpModel extends Model {
 
     private boolean firstJoinHappened = false;
 
+    private final TimedSet<Float> rawXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
+    private final TimedSet<Float> percentageXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
+
     public CombatXpModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
+    }
+
+    @SubscribeEvent
+    public void onExperienceGain(CombatXpGainEvent event) {
+        rawXpGainInLastMinute.put(event.getGainedXpRaw());
+        percentageXpGainInLastMinute.put(event.getGainedXpPercentage());
     }
 
     @SubscribeEvent
@@ -142,5 +153,13 @@ public class CombatXpModel extends Model {
             return 0;
         }
         return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
+    }
+
+    public TimedSet<Float> getRawXpGainInLastMinute() {
+        return rawXpGainInLastMinute;
+    }
+
+    public TimedSet<Float> getPercentageXpGainInLastMinute() {
+        return percentageXpGainInLastMinute;
     }
 }

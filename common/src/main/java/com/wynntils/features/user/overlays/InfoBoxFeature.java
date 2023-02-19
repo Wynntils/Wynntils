@@ -17,7 +17,6 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.functions.Function;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -25,8 +24,6 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
@@ -72,7 +69,6 @@ public class InfoBoxFeature extends UserFeature {
         public float secondsPerRecalculation = 0.5f;
 
         private final int id;
-        private final List<Function<?>> functionDependencies = new ArrayList<>();
         private String[] cachedLines;
         private long lastUpdate = 0;
 
@@ -173,17 +169,7 @@ public class InfoBoxFeature extends UserFeature {
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            for (Function<?> oldDependency : functionDependencies) {
-                Managers.Function.disableFunction(oldDependency);
-            }
-
-            functionDependencies.clear();
-
-            for (Function<?> function : Managers.Function.getDependenciesFromStringLegacy(content)) {
-                Managers.Function.enableFunction(function);
-            }
-        }
+        protected void onConfigUpdate(ConfigHolder configHolder) {}
 
         @Override
         public String getTranslatedName() {

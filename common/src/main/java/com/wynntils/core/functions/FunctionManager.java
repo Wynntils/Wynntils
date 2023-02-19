@@ -37,7 +37,6 @@ public final class FunctionManager extends Manager {
             Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
 
     private final List<Function<?>> functions = new ArrayList<>();
-    private final Set<ActiveFunction<?>> enabledFunctions = new HashSet<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
     public FunctionManager() {
@@ -49,34 +48,17 @@ public final class FunctionManager extends Manager {
         return functions;
     }
 
-    public boolean enableFunction(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
-
+    public void enableFunction(Function<?> function) {
         // try to recover, worst case we disable it again
         crashedFunctions.remove(function);
-
-        WynntilsMod.registerEventListener(activeFunction);
-
-        boolean enableSucceeded = activeFunction.onEnable();
-
-        if (!enableSucceeded) {
-            WynntilsMod.unregisterEventListener(activeFunction);
-        }
-        enabledFunctions.add(activeFunction);
-        return enableSucceeded;
     }
 
-    public void disableFunction(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?> activeFunction)) return;
-
-        WynntilsMod.unregisterEventListener(activeFunction);
-        enabledFunctions.remove(activeFunction);
+    private void crashFunction(Function<?> function) {
+        crashedFunctions.add(function);
     }
 
-    public boolean isEnabled(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?>)) return true;
-
-        return (enabledFunctions.contains(function));
+    public boolean isCrashed(Function<?> function) {
+        return crashedFunctions.contains(function);
     }
 
     public Optional<Function<?>> forName(String functionName) {
@@ -111,8 +93,7 @@ public final class FunctionManager extends Manager {
                             "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
                     .withStyle(ChatFormatting.RED));
 
-            disableFunction(function);
-            crashedFunctions.add(function);
+            crashFunction(function);
         }
 
         return Optional.empty();
