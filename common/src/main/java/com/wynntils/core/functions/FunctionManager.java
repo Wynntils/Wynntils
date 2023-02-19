@@ -22,6 +22,7 @@ import com.wynntils.functions.WorldFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -119,21 +120,36 @@ public final class FunctionManager extends Manager {
             return header.append(Component.literal("??"));
         }
 
-        String formattedValue = format(value.get());
+        String formattedValue = format(value.get(), false, 2);
 
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    public String getRawValueString(Function<?> function, FunctionArguments arguments) {
+    public String getRawValueString(
+            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
             return "??";
         }
 
-        return format(value.get());
+        return format(value.get(), formatted, decimals);
     }
 
-    private String format(Object value) {
+    private String format(Object value, boolean formatted, int decimals) {
+        if (value instanceof Number number) {
+            if (formatted) {
+                // French locale has NBSP
+                // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
+                NumberFormat instance = NumberFormat.getInstance();
+                instance.setMinimumFractionDigits(decimals);
+                instance.setMaximumFractionDigits(decimals);
+
+                return instance.format(number).replaceAll("\u00A0", " ");
+            } else {
+                return String.format("%." + decimals + "f", number);
+            }
+        }
+
         return value.toString();
     }
 
@@ -172,7 +188,7 @@ public final class FunctionManager extends Manager {
                 Function<?> function = forName(m.group(1)).get();
 
                 replacement =
-                        getRawValueString(function, function.getArguments().buildWithDefaults());
+                        getRawValueString(function, function.getArguments().buildWithDefaults(), false, 2);
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));

@@ -18,21 +18,30 @@ public class FunctionExpression extends Expression {
     //   function_name(argument1; argument2; ...)
     //   function_name()
     //   function_name
+    // Format appendix: F - formatted, 2 - decimal precision
+    //   :F2
+    //   :2
+    //   :F
     private static final Pattern FUNCTION_EXPRESSION_PATTERN =
-            Pattern.compile("(?<function>.+?)(\\((?<argument>.*)\\))?");
+            Pattern.compile("(?<function>.+?)(\\((?<argument>.*)\\))?(\\:(?<formatted>F)?(?<decimals>[0-9]+)?)?");
 
     private final Function function;
     private final FunctionArguments arguments;
+    private final boolean formatted;
+    private final int decimals;
 
-    protected FunctionExpression(String rawExpression, Function function, FunctionArguments arguments) {
+    protected FunctionExpression(
+            String rawExpression, Function function, FunctionArguments arguments, boolean formatted, int decimals) {
         super(rawExpression);
         this.function = function;
         this.arguments = arguments;
+        this.formatted = formatted;
+        this.decimals = decimals;
     }
 
     @Override
     public ErrorOr<String> calculate() {
-        return ErrorOr.of(Managers.Function.getRawValueString(function, arguments));
+        return ErrorOr.of(Managers.Function.getRawValueString(function, arguments, formatted, decimals));
     }
 
     // This method attempts to parse a function expression in the following ways:
@@ -54,6 +63,8 @@ public class FunctionExpression extends Expression {
 
         if (!matcher.matches()) return ErrorOr.of(Optional.empty());
 
+        // Handle function parsing
+
         Optional<Function<?>> functionOptional = Managers.Function.forName(matcher.group("function"));
 
         if (functionOptional.isEmpty()) {
@@ -62,23 +73,32 @@ public class FunctionExpression extends Expression {
 
         Function<?> function = functionOptional.get();
 
+        // Handle formatting parsing
+
+        boolean isFormatted = matcher.group("formatted") != null;
+        String decimalMatch = matcher.group("decimals");
+        int decimals = decimalMatch != null ? Integer.parseInt(decimalMatch) : 2;
+
+        // Handle argument parsing
+
         FunctionArguments.Builder argumentsBuilder = function.getArguments();
 
         if (matcher.groupCount() < 3) {
-            return ErrorOr.of(
-                    Optional.of(new FunctionExpression(rawExpression, function, argumentsBuilder.buildWithDefaults())));
+            return ErrorOr.of(Optional.of(new FunctionExpression(
+                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
         }
 
         String rawArguments = matcher.group("argument");
 
         if (rawArguments == null || rawArguments.isEmpty()) {
-            return ErrorOr.of(
-                    Optional.of(new FunctionExpression(rawExpression, function, argumentsBuilder.buildWithDefaults())));
+            return ErrorOr.of(Optional.of(new FunctionExpression(
+                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
         }
 
         ErrorOr<FunctionArguments> value = ArgumentParser.parseArguments(argumentsBuilder, rawArguments);
         return value.hasError()
                 ? ErrorOr.error(value.getError())
-                : ErrorOr.of(Optional.of(new FunctionExpression(rawExpression, function, value.getValue())));
+                : ErrorOr.of(Optional.of(
+                        new FunctionExpression(rawExpression, function, value.getValue(), isFormatted, decimals)));
     }
 }
