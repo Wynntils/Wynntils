@@ -156,21 +156,31 @@ public class GearInfoRegistry {
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            String primaryName = WynnUtils.normalizeBadString(json.get("name").getAsString());
-            String secondaryName = WynnUtils.normalizeBadString(JsonUtils.getNullableJsonString(json, "displayName"));
+            // Wynncraft API has two fields: name and displayName. The former is the "api name", and is
+            // always present, the latter is only present if it differs from the api name.
+            // We want to store this the other way around: We always want a displayName (as the "name"),
+            // but if it the apiName is different, we want to store it separately
+            String primaryName = json.get("name").getAsString();
+            String secondaryName = JsonUtils.getNullableJsonString(json, "displayName");
 
-            // After normalization, we can end up with the same name. If so, treat this as not having
-            // a secondary name.
-            if (primaryName.equals(secondaryName)) {
-                secondaryName = "";
+            if (secondaryName == null) {
+                String normalizedApiName = WynnUtils.normalizeBadString(primaryName);
+                if (!normalizedApiName.equals(primaryName)) {
+                    // Normalization removed a ֎ from the name. This means we want to
+                    // treat the name as apiName and the normalized name as display name
+                    secondaryName = normalizedApiName;
+                }
             }
 
-            // The real name (display name) is the secondaryName if it exists, otherwise it is
-            // the primary name.
-            // If the secondary name exists, the primary name is the apiName. If the apiName
-            // does not exist, the api name is the same as the displayName.
-            String name = secondaryName.isEmpty() ? primaryName : secondaryName;
-            String apiName = secondaryName.isEmpty() ? null : primaryName;
+            String name;
+            String apiName;
+            if (secondaryName == null) {
+                name = primaryName;
+                apiName = null;
+            } else {
+                name = secondaryName;
+                apiName = primaryName;
+            }
 
             GearType type = parseType(json);
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
