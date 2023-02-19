@@ -5,12 +5,12 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
+import com.wynntils.core.functions.Function;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import java.util.List;
 
 public class WorldFunctions {
-    public static class CurrentWorldFunction extends ActiveFunction<String> {
+    public static class CurrentWorldFunction extends Function<String> {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 
@@ -30,7 +30,7 @@ public class WorldFunctions {
         }
     }
 
-    public static class CurrentWorldUptimeFunction extends ActiveFunction<String> {
+    public static class CurrentWorldUptimeFunction extends Function<String> {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 

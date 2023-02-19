@@ -5,13 +5,13 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
+import com.wynntils.core.functions.Function;
 import com.wynntils.models.items.items.game.HorseItem;
 import java.util.List;
 
 public class HorseFunctions {
 
-    public static class HorseLevelFunction extends ActiveFunction<Integer> {
+    public static class HorseLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
@@ -25,7 +25,7 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
+    public static class HorseLevelMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
@@ -39,7 +39,7 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseXpFunction extends ActiveFunction<Integer> {
+    public static class HorseXpFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
@@ -53,7 +53,7 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseTierFunction extends ActiveFunction<Integer> {
+    public static class HorseTierFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
@@ -67,7 +67,7 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseNameFunction extends ActiveFunction<String> {
+    public static class HorseNameFunction extends Function<String> {
         @Override
         public String getValue(String argument) {
             HorseItem horse = Models.Horse.getHorse();
