@@ -1,9 +1,17 @@
+## [0.0.2-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.219...v0.0.2-alpha.220) (2023-02-19)
+
+
+### New Features
+
+* Function Refactor Part 0: Functions are just facades for model logic ([#1177](https://github.com/Wynntils/Artemis/issues/1177)) ([cbb8729](https://github.com/Wynntils/Artemis/commit/cbb8729e8b33e4112b38bce4366ac8b1c03b4c5d))
+
 ## [0.0.2-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.218...v0.0.2-alpha.219) (2023-02-19)
 
 
 ### Miscellaneous Chores
 
 * Debug improvements ([#1168](https://github.com/Wynntils/Artemis/issues/1168)) ([8fbbe50](https://github.com/Wynntils/Artemis/commit/8fbbe50f8e569eea4c9f13a95b7664219ab072f9))
+* **release:** v0.0.2-alpha.219 [skip ci] ([d8eba5e](https://github.com/Wynntils/Artemis/commit/d8eba5eecd1c4422f20defe9571195cd97034aee))
 
 ## [0.0.2-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.217...v0.0.2-alpha.218) (2023-02-19)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.216 [skip ci] ([16789d1](https://github.com/Wynntils/Artemis/commit/16789d1534bd84b3191f4f8e7ce9e73b3f64137d))
-
-## [0.0.2-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.214...v0.0.2-alpha.215) (2023-02-19)
-
-
-### Bug Fixes
-
-* Chat Mentions were DOA ([#1171](https://github.com/Wynntils/Artemis/issues/1171)) ([a22b631](https://github.com/Wynntils/Artemis/commit/a22b6317af001fd4443a859243609749c1c0b73d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.215 [skip ci] ([eb1cac6](https://github.com/Wynntils/Artemis/commit/eb1cac63e21fcec364f9a7176abef83ccd82a48c))
 
