@@ -135,22 +135,4 @@ public final class StringUtils {
     public static String convertMarkdownToColorCode(String input) {
         return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
     }
-
-    public static int lastIndexOfBefore(String string, char searched, int startIndex, int endIndex) {
-        if (startIndex < 0
-                || startIndex > string.length()
-                || endIndex < 0
-                || endIndex > string.length()
-                || endIndex < startIndex) {
-            throw new IllegalArgumentException("Invalid start or end index");
-        }
-
-        for (int i = endIndex - 1; i >= startIndex; i--) {
-            if (string.charAt(i) == searched) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
 }
