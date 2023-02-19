@@ -77,6 +77,7 @@ public final class GearModel extends Model {
                 .anyMatch(o -> !o.sourceType().isMerchant());
     }
 
+    @Override
     public void reloadData() {
         gearInfoRegistry.reloadData();
     }
