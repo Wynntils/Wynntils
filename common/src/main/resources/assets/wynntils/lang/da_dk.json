@@ -43,7 +43,7 @@
   "feature.wynntils.changelog.name": "Ændringslog",
   "feature.wynntils.chatCoordinates.name": "Chat Koordinater",
   "feature.wynntils.chatItem.name": "Chat Vare",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "Fremhæv farve",
+  "feature.wynntils.chatMention.mentionColor.name": "Fremhæv farve",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Hvordan skal fabrikerede vare holdbarhed beskeder vises?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Fremstillet Holdbarhed filtrering",
   "feature.wynntils.chatRedirect.friendJoin.description": "Hvordan skal venners forbindelses beskeder vises?",
