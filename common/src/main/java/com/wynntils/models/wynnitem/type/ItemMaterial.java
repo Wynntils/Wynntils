@@ -10,6 +10,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -58,14 +59,17 @@ public record ItemMaterial(ItemStack itemStack) {
     }
 
     public static ItemMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
-        String toIdString = ItemIdFix.getItem(itemTypeCode);
-        String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
-        String itemId = alternativeName != null ? alternativeName : toIdString;
-        // FIXME: The vanilla lookup still fails for e.g. Totem of Undying.
-        // or 383 (spawn eggs, e.g. enderman_spawn_egg)
-        // In this case, AIR is returned.
-        if (itemId.equals("minecraft:air")) {
-            itemId = "minecraft:" + Models.WynnItem.getMaterialName(itemTypeCode, damageCode);
+        String itemId;
+
+        Optional<String> materialNameOverrideOpt = Models.WynnItem.getMaterialName(itemTypeCode, damageCode);
+        if (materialNameOverrideOpt.isPresent()) {
+            // The vanilla lookup fails for a handful of items, so we have a correctional data set
+            itemId = "minecraft:" + materialNameOverrideOpt.get();
+        } else {
+            // Use normal vanilla lookup
+            String toIdString = ItemIdFix.getItem(itemTypeCode);
+            String alternativeName = ItemStackTheFlatteningFix.updateItem(toIdString, damageCode);
+            itemId = alternativeName != null ? alternativeName : toIdString;
         }
 
         return fromItemId(itemId, damageCode);

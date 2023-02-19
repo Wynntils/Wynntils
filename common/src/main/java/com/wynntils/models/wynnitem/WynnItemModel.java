@@ -43,20 +43,14 @@ public class WynnItemModel extends Model {
         return itemObtainMap.get(name);
     }
 
-    public String getMaterialName(int idCode, int damageCode) {
-        MaterialConversionInfo conversionInfo = materialConversionLookup.get(idCode);
-        if (conversionInfo == null) return "air";
+    public Optional<String> getMaterialName(int idCode, int damageCode) {
+        MaterialConversionInfo conversionInfo = allMaterialConversions.stream()
+                .filter(c -> c.id() == idCode && c.type() == damageCode)
+                .findFirst()
+                .orElse(null);
+        if (conversionInfo == null) return Optional.empty();
 
-        if (conversionInfo.variations() != null) {
-            // Do we have a special name for this damageId?
-            MaterialConversionInfo.VariationInfo variationInfo = conversionInfo.variations().stream()
-                    .filter(v -> v.metadata() == damageCode)
-                    .findFirst()
-                    .orElse(null);
-            if (variationInfo != null) return variationInfo.name();
-        }
-
-        return conversionInfo.name();
+        return Optional.of(conversionInfo.name());
     }
 
     private void loadObtainData() {

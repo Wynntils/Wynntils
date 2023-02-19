@@ -4,8 +4,4 @@
  */
 package com.wynntils.models.wynnitem.type;
 
-import java.util.List;
-
-public record MaterialConversionInfo(int id, String name, List<VariationInfo> variations) {
-    public record VariationInfo(int metadata, String name) {}
-}
+public record MaterialConversionInfo(int id, int type, String name) {}
