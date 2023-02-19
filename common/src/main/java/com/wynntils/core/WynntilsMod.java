@@ -6,6 +6,7 @@ package com.wynntils.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Manager;
@@ -19,6 +20,10 @@ import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -46,6 +51,7 @@ public final class WynntilsMod {
     private static IEventBus eventBus;
     private static File modJar;
     private static boolean initCompleted = false;
+    private static Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -66,6 +72,11 @@ public final class WynntilsMod {
             handleExceptionInEventListener(t, event);
             return false;
         }
+    }
+
+    public static void reloadAllComponentData() {
+        componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
+        componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
     }
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
@@ -209,14 +220,17 @@ public final class WynntilsMod {
         addCrashCallbacks();
     }
 
-    private static void registerComponents(Class<?> registryClass, Class<?> componentClass) {
+    private static void registerComponents(Class<?> registryClass, Class<? extends CoreComponent> componentClass) {
         // Register all handler singletons as event listeners
+        List<CoreComponent> components = componentMap.computeIfAbsent(componentClass, k -> new ArrayList<>());
 
         FieldUtils.getAllFieldsList(registryClass).stream()
                 .filter(field -> componentClass.isAssignableFrom(field.getType()))
                 .forEach(field -> {
                     try {
-                        WynntilsMod.registerEventListener(field.get(null));
+                        CoreComponent component = (CoreComponent) field.get(null);
+                        WynntilsMod.registerEventListener(component);
+                        components.add(component);
                     } catch (IllegalAccessException e) {
                         WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
                         throw new RuntimeException(e);
