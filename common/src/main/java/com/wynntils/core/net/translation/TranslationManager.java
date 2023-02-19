@@ -21,6 +21,11 @@ public final class TranslationManager extends Manager {
         CachingTranslationService.loadTranslationCache();
     }
 
+    @Override
+    public void reloadData() {
+        CachingTranslationService.loadTranslationCache();
+    }
+
     public void shutdown() {
         CachingTranslationService.saveTranslationCache();
     }
