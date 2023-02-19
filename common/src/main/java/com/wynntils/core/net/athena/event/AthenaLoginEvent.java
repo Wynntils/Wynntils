@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.net.athena.event;
 
+import com.wynntils.core.events.EventThread;
 import net.minecraftforge.eventbus.api.Event;
 
+@EventThread(EventThread.Type.WORKER)
 public class AthenaLoginEvent extends Event {}
