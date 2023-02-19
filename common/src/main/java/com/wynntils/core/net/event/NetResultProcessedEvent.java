@@ -4,10 +4,12 @@
  */
 package com.wynntils.core.net.event;
 
+import com.wynntils.core.events.EventThread;
 import com.wynntils.core.net.UrlId;
 import net.minecraftforge.eventbus.api.Event;
 
 public class NetResultProcessedEvent extends Event {
+    @EventThread(EventThread.Type.WORKER)
     public static final class ForUrlId extends NetResultProcessedEvent {
         private final UrlId urlId;
 
@@ -20,6 +22,7 @@ public class NetResultProcessedEvent extends Event {
         }
     }
 
+    @EventThread(EventThread.Type.WORKER)
     public static final class ForLocalFile extends NetResultProcessedEvent {
         private final String localFileName;
 
