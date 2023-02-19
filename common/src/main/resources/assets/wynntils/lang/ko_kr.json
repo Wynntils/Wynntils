@@ -69,6 +69,8 @@
   "feature.wynntils.infoBox.overlay.infoBox.textShadow.name": "글자 그림자",
   "feature.wynntils.lowHealthVignette.color.name": "비네트 색",
   "feature.wynntils.map.name": "맵",
+  "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.textShadow.description": "글자 그림자는 어떻게 보이겠습니까?",
+  "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.textShadow.name": "글자 그림자",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.textShadow.description": "글자 그림자는 어떻게 보이겠습니까?",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.textShadow.name": "글자 그림자",
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor.name": "글자 색",
