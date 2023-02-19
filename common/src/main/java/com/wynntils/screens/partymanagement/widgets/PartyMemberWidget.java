@@ -37,19 +37,19 @@ public class PartyMemberWidget extends AbstractWidget {
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
-                .pos(this.getX() + 240, this.getY())
+                .pos(this.getX() + 144, this.getY())
                 .size(50, 20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
-                .pos(this.getX() + 292, this.getY())
+                .pos(this.getX() + 196, this.getY())
                 .size(50, 20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
-                .pos(this.getX() + 292, this.getY())
+                .pos(this.getX() + 196, this.getY())
                 .size(50, 20)
                 .build();
         if (playerName.equals(Models.Party.getPartyLeader())) {

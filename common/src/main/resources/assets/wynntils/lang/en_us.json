@@ -1015,7 +1015,7 @@
   "screens.wynntils.partyManagementGui.head": "Head",
   "screens.wynntils.partyManagementGui.invite": "Invite",
   "screens.wynntils.partyManagementGui.inviteFieldHeader1": "Invite players: ",
-  "screens.wynntils.partyManagementGui.inviteFieldHeader2": "(Separate names with spaces or commas)",
+  "screens.wynntils.partyManagementGui.inviteFieldHeader2": "(Separate with spaces/commas)",
   "screens.wynntils.partyManagementGui.kick": "Kick",
   "screens.wynntils.partyManagementGui.kickOfflineButton": "Kick Offline",
   "screens.wynntils.partyManagementGui.leader": "Leader",
