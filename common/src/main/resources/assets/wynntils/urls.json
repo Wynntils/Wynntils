@@ -1,6 +1,6 @@
 [
   {
-    "version": 6
+    "version": 7
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -119,6 +119,11 @@
     "id": "dataStaticMaps",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
     "md5": "dbb7c99accd944be4efc8fe991a4ac7c"
+  },
+  {
+    "id": "dataStaticMaterialConversion",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/materials/materials.json",
+    "md5": "ec585dca74ed4f8399e7622563e9d6eb"
   },
   {
     "id": "dataStaticPlaces",

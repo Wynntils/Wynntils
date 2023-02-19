@@ -12,12 +12,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
+import com.wynntils.models.wynnitem.type.MaterialConversionInfo;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -26,10 +28,12 @@ import java.util.Optional;
 
 public class WynnItemModel extends Model {
     private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
+    private List<MaterialConversionInfo> materialConversion = List.of();
 
     public WynnItemModel() {
         super(List.of());
         loadObtainData();
+        loadMaterialConversionData();
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
@@ -44,6 +48,15 @@ public class WynnItemModel extends Model {
                     .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
                     .create();
             itemObtainMap = gson.fromJson(reader, obtainType);
+        });
+    }
+
+    private void loadMaterialConversionData() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MATERIAL_CONVERSION);
+        dl.handleReader(reader -> {
+            Type materialConversionType = new TypeToken<List<MaterialConversionInfo>>() {}.getType();
+            materialConversion = WynntilsMod.GSON.fromJson(reader, materialConversionType);
+            System.out.println(materialConversion);
         });
     }
 
