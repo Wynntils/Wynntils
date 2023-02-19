@@ -108,15 +108,14 @@ public final class MapModel extends Model {
                 inputStream -> {
                     try {
                         NativeImage nativeImage = NativeImage.read(inputStream);
-                        MapTexture mapPartImage = new MapTexture(
-                                fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                        MapTexture mapPartImage =
+                                new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
                         maps.add(mapPartImage);
                     } catch (IOException e) {
                         WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                     }
                 },
-                onError -> WynntilsMod.warn(
-                        "Error occurred while download map image of " + mapPart.name, onError));
+                onError -> WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError));
     }
 
     private void loadPlaces() {
