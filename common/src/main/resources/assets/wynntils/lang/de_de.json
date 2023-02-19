@@ -43,7 +43,7 @@
   "feature.wynntils.changelog.name": "Changelog",
   "feature.wynntils.chatCoordinates.name": "Chat-Koordinaten",
   "feature.wynntils.chatItem.name": "Chat-Gegenstand",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "Hervorhebungsfarbe",
+  "feature.wynntils.chatMention.mentionColor.name": "Hervorhebungsfarbe",
   "feature.wynntils.chatRedirect.craftedDurability.description": "Wie sollen die Haltbarkeits-Mitteilungen hergestellter Gegenstände angezeigt werden?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Hergestellte Gegenstände Haltbarkeitsfilterung",
   "feature.wynntils.chatRedirect.friendJoin.description": "Wie sollen Beitritts-Mitteilungen von Freunden aussehen?",
