@@ -7,6 +7,7 @@ package com.wynntils.features.user;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@StartDisabled
 public class ChatMentionFeature extends UserFeature {
     @Config
     public boolean markMention = true;
