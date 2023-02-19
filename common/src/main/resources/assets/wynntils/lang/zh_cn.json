@@ -43,7 +43,7 @@
   "feature.wynntils.changelog.name": "更新日志",
   "feature.wynntils.chatCoordinates.name": "讯息座标",
   "feature.wynntils.chatItem.name": "讯息物品",
-  "feature.wynntils.chatMention.rewriteColorCode.name": "强调色",
+  "feature.wynntils.chatMention.mentionColor.name": "强调色",
   "feature.wynntils.chatRedirect.craftedDurability.description": "合成物品的耐久低讯息要如何显示 How should crafted item durability messages appear？",
   "feature.wynntils.chatRedirect.craftedDurability.name": "合成耐久低讯息过滤",
   "feature.wynntils.chatRedirect.friendJoin.description": "朋友登录讯息要如何显示？",
