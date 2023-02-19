@@ -1,9 +1,21 @@
+## [0.0.2-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.214...v0.0.2-alpha.215) (2023-02-19)
+
+
+### Bug Fixes
+
+* Chat Mentions were DOA ([#1171](https://github.com/Wynntils/Artemis/issues/1171)) ([a22b631](https://github.com/Wynntils/Artemis/commit/a22b6317af001fd4443a859243609749c1c0b73d))
+
 ## [0.0.2-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.213...v0.0.2-alpha.214) (2023-02-19)
 
 
 ### Bug Fixes
 
 * Annotate Athena event ([#1170](https://github.com/Wynntils/Artemis/issues/1170)) ([dffe94b](https://github.com/Wynntils/Artemis/commit/dffe94bcfaa05a4c7bf024c46efeacec12fe4249))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.214 [skip ci] ([2b78f0d](https://github.com/Wynntils/Artemis/commit/2b78f0df9c5961060090011ccd490633f7e04eaf))
 
 ## [0.0.2-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.212...v0.0.2-alpha.213) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.211 [skip ci] ([027a2a5](https://github.com/Wynntils/Artemis/commit/027a2a5280334173123704d5566f11f8cbc187f6))
-
-## [0.0.2-alpha.210](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.209...v0.0.2-alpha.210) (2023-02-18)
-
-
-### New Features
-
-* Chat mentions ([#1158](https://github.com/Wynntils/Artemis/issues/1158)) ([555dfe9](https://github.com/Wynntils/Artemis/commit/555dfe9470c00f0f06b0e237e20e40614970c3fd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.210 [skip ci] ([43061b0](https://github.com/Wynntils/Artemis/commit/43061b0ee4242d64d1953fee20b6fc16abfea844))
 
