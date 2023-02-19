@@ -50,9 +50,7 @@ public class MobTotemModel extends Model {
             mobTotems.put(mobTotemId, new MobTotem(new Location(as), nameMatcher.group(1)));
             return;
         }
-
-        if (mobTotems.isEmpty()) return;
-
+        
         for (MobTotem mobTotem : mobTotems.values()) {
             // Exact equality is fine here because the totem is stationary
             if (as.getX() == mobTotem.getLocation().x()
