@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.functions.expressions.parser;
 
+import com.wynntils.core.functions.expressions.ConstantExpression;
 import com.wynntils.core.functions.expressions.Expression;
 import com.wynntils.core.functions.expressions.FunctionExpression;
 import com.wynntils.utils.type.ErrorOr;
@@ -13,7 +14,7 @@ import java.util.function.Function;
 
 public final class ExpressionParser {
     private static final List<Function<String, ErrorOr<Optional<Expression>>>> registeredExpressions =
-            List.of(FunctionExpression::tryParse);
+            List.of(FunctionExpression::tryParse, ConstantExpression::tryParse);
 
     private ExpressionParser() {}
 

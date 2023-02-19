@@ -5,9 +5,12 @@
 package com.wynntils.core.functions.arguments.parser;
 
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.functions.expressions.Expression;
+import com.wynntils.core.functions.expressions.parser.ExpressionParser;
 import com.wynntils.utils.type.ErrorOr;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class ArgumentParser {
     public static ErrorOr<FunctionArguments> parseArguments(
@@ -16,8 +19,61 @@ public final class ArgumentParser {
             return ErrorOr.of(argumentsBuilder.buildWithDefaults());
         }
 
-        List<String> parts = Arrays.stream(rawArgs.split(";")).map(String::trim).toList();
+        // 1, Split arguments and parse them as expressions
+        List<ErrorOr<Expression>> parts = splitArguments(rawArgs).stream()
+                .map(String::trim)
+                .map(ExpressionParser::tryParse)
+                .toList();
 
-        return argumentsBuilder.buildWithValues(parts);
+        Optional<ErrorOr<Expression>> optionalError =
+                parts.stream().filter(ErrorOr::hasError).findFirst();
+
+        // 2, If any of the expressions failed to parse, return the error
+        if (optionalError.isPresent()) {
+            return ErrorOr.error(optionalError.get().getError());
+        }
+
+        // 3, Calculate the expressions
+        List<ErrorOr<String>> calculatedExpressions =
+                parts.stream().map(ErrorOr::getValue).map(Expression::calculate).toList();
+
+        Optional<ErrorOr<String>> optionalCalculationError =
+                calculatedExpressions.stream().filter(ErrorOr::hasError).findFirst();
+
+        // 4, If any of the expressions failed to calculate, return the error
+        if (optionalCalculationError.isPresent()) {
+            return ErrorOr.error(optionalCalculationError.get().getError());
+        }
+
+        // 5, Return the arguments as calculated expression values
+        return argumentsBuilder.buildWithValues(
+                calculatedExpressions.stream().map(ErrorOr::getValue).toList());
+    }
+
+    // This method handles splitting arguments in a "context-aware" way
+    // For example, the following string: "(test;test2;other_function(test4;test5))" should be parsed as ->
+    // ["test;test2;other_function(test4;test5)"]
+    private static List<String> splitArguments(String rawArgs) {
+        List<String> arguments = new ArrayList<>();
+
+        int paranthesesDepth = 0;
+        int processedIndex = 0;
+
+        for (int i = 0; i < rawArgs.length(); i++) {
+            char current = rawArgs.charAt(i);
+
+            if (current == '(') {
+                paranthesesDepth++;
+            } else if (current == ')') {
+                paranthesesDepth--;
+            } else if (current == ';' && paranthesesDepth == 0) {
+                arguments.add(rawArgs.substring(processedIndex, i));
+                processedIndex = i + 1;
+            }
+        }
+
+        arguments.add(rawArgs.substring(processedIndex));
+
+        return arguments;
     }
 }

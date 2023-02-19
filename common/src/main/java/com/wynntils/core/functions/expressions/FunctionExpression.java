@@ -24,7 +24,7 @@ public class FunctionExpression extends Expression {
     private final Function function;
     private final FunctionArguments arguments;
 
-    public FunctionExpression(String rawExpression, Function function, FunctionArguments arguments) {
+    protected FunctionExpression(String rawExpression, Function function, FunctionArguments arguments) {
         super(rawExpression);
         this.function = function;
         this.arguments = arguments;
@@ -37,9 +37,9 @@ public class FunctionExpression extends Expression {
 
     // This method attempts to parse a function expression in the following ways:
     //   1. The expression is not a function expression, in which case it returns an empty optional.
-    //   2. The expression is a function expression, but the function name is not a valid function, in which case it
-    // returns an error.
-    //   3, The expression is a function expression, and the function name is a valid function, but the arguments are
+    //   2. The expression could be a function expression, but the function name is not a valid function, in which case
+    // it returns an empty optional.
+    //   3. The expression is a function expression, and the function name is a valid function, but the arguments are
     // invalid, in which case it returns an error.
     //   4. The expression is a function expression, and the function name is a valid function, and the arguments are
     // valid, in which case it returns the parsed expression.
@@ -56,8 +56,9 @@ public class FunctionExpression extends Expression {
 
         Optional<Function<?>> functionOptional = Managers.Function.forName(matcher.group("function"));
 
-        if (functionOptional.isEmpty())
-            return ErrorOr.error("Parsed function name is not a valid function: " + matcher.group("function"));
+        if (functionOptional.isEmpty()) {
+            return ErrorOr.of(Optional.empty());
+        }
 
         Function<?> function = functionOptional.get();
 
