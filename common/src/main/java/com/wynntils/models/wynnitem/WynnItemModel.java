@@ -29,21 +29,21 @@ public class WynnItemModel extends Model {
 
     public WynnItemModel() {
         super(List.of());
+        loadObtainData();
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
         return itemObtainMap.get(name);
     }
 
-    private void loadAllRegistryData() {
-        // Now get the obtain info DB
-        Download obtainDl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
-        obtainDl.handleReader(obtainReader -> {
+    private void loadObtainData() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
+        dl.handleReader(reader -> {
             Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-            Gson obtainGson = new GsonBuilder()
+            Gson gson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
                     .create();
-            itemObtainMap = obtainGson.fromJson(obtainReader, obtainType);
+            itemObtainMap = gson.fromJson(reader, obtainType);
         });
     }
 
