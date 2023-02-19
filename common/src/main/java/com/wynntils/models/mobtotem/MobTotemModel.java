@@ -54,12 +54,13 @@ public class MobTotemModel extends Model {
         Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(e.getName());
         if (!timerMatcher.find()) return;
 
-        mobTotems.values().stream().filter(
-                // Exact equality is fine here because the totem is stationary
-                mobTotem -> as.getX() == mobTotem.getLocation().x() &&
-                        as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE) &&
-                        as.getZ() == mobTotem.getLocation().z()
-        ).forEach(mobTotem -> mobTotem.setTimerString(timerMatcher.group(1)));
+        mobTotems.values().stream()
+                .filter(
+                        // Exact equality is fine here because the totem is stationary
+                        mobTotem -> as.getX() == mobTotem.getLocation().x()
+                                && as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE)
+                                && as.getZ() == mobTotem.getLocation().z())
+                .forEach(mobTotem -> mobTotem.setTimerString(timerMatcher.group(1)));
     }
 
     @SubscribeEvent
