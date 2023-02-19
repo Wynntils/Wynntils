@@ -6,7 +6,7 @@ package com.wynntils.screens.guides;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.models.itemmetadata.type.ItemObtainInfo;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

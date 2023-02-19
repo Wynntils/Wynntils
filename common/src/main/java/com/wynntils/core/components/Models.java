@@ -21,7 +21,6 @@ import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
-import com.wynntils.models.itemmetadata.ItemMetadataModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
@@ -41,6 +40,7 @@ import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.models.wynnitem.ItemMetadataModel;
 
 public final class Models {
     public static final BombBellModel BombBell = new BombBellModel();

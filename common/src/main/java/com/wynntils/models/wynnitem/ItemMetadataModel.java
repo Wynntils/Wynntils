@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.itemmetadata;
+package com.wynntils.models.wynnitem;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -16,8 +16,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.itemmetadata.type.ItemObtainInfo;
-import com.wynntils.models.itemmetadata.type.ItemObtainType;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.List;
