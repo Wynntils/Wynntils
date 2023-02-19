@@ -1,9 +1,21 @@
+## [0.0.2-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.218...v0.0.2-alpha.219) (2023-02-19)
+
+
+### Miscellaneous Chores
+
+* Debug improvements ([#1168](https://github.com/Wynntils/Artemis/issues/1168)) ([8fbbe50](https://github.com/Wynntils/Artemis/commit/8fbbe50f8e569eea4c9f13a95b7664219ab072f9))
+
 ## [0.0.2-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.217...v0.0.2-alpha.218) (2023-02-19)
 
 
 ### New Features
 
 * Introduce a system-wide way to reload all data ([#1173](https://github.com/Wynntils/Artemis/issues/1173)) ([25d2fcf](https://github.com/Wynntils/Artemis/commit/25d2fcf80f531febf455a71a90814f7ee7df6bc2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.218 [skip ci] ([207cdaa](https://github.com/Wynntils/Artemis/commit/207cdaa8abd1fe2ee57ba0c1994b6fc106f3bb55))
 
 ## [0.0.2-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.216...v0.0.2-alpha.217) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.215 [skip ci] ([eb1cac6](https://github.com/Wynntils/Artemis/commit/eb1cac63e21fcec364f9a7176abef83ccd82a48c))
-
-## [0.0.2-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.213...v0.0.2-alpha.214) (2023-02-19)
-
-
-### Bug Fixes
-
-* Annotate Athena event ([#1170](https://github.com/Wynntils/Artemis/issues/1170)) ([dffe94b](https://github.com/Wynntils/Artemis/commit/dffe94bcfaa05a4c7bf024c46efeacec12fe4249))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.214 [skip ci] ([2b78f0d](https://github.com/Wynntils/Artemis/commit/2b78f0df9c5961060090011ccd490633f7e04eaf))
 
