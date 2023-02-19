@@ -6,6 +6,7 @@ package com.wynntils.core.functions.expressions.parser;
 
 import com.wynntils.core.functions.expressions.Expression;
 import com.wynntils.core.functions.expressions.FunctionExpression;
+import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,15 +17,15 @@ public final class ExpressionParser {
 
     private ExpressionParser() {}
 
-    public static ParseErrorOr<Expression> tryParse(String rawExpression) {
+    public static ErrorOr<Expression> tryParse(String rawExpression) {
         for (Function<String, Optional<Expression>> expression : registeredExpressions) {
             Optional<Expression> optionalExpression = expression.apply(rawExpression);
 
             if (optionalExpression.isPresent()) {
-                return ParseErrorOr.of(optionalExpression.get());
+                return ErrorOr.of(optionalExpression.get());
             }
         }
 
-        return ParseErrorOr.error("Could not parse expression: \"" + rawExpression + "\"");
+        return ErrorOr.error("Could not parse expression: \"" + rawExpression + "\"");
     }
 }

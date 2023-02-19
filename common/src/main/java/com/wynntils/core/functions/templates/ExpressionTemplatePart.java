@@ -6,7 +6,7 @@ package com.wynntils.core.functions.templates;
 
 import com.wynntils.core.functions.expressions.Expression;
 import com.wynntils.core.functions.expressions.parser.ExpressionParser;
-import com.wynntils.core.functions.expressions.parser.ParseErrorOr;
+import com.wynntils.utils.type.ErrorOr;
 
 public class ExpressionTemplatePart extends TemplatePart {
     private final String expressionString;
@@ -23,9 +23,19 @@ public class ExpressionTemplatePart extends TemplatePart {
 
     @Override
     public String getValue() {
-        ParseErrorOr<Expression> parse = ExpressionParser.tryParse(this.expressionString);
+        ErrorOr<Expression> parse = ExpressionParser.tryParse(this.expressionString);
 
-        return parse.hasError() ? parse.getError() : parse.getValue().calculate();
+        if (parse.hasError()) {
+            return parse.getError();
+        }
+
+        ErrorOr<String> calculatedValue = parse.getValue().calculate();
+
+        if (calculatedValue.hasError()) {
+            return calculatedValue.getError();
+        }
+
+        return calculatedValue.getValue();
     }
 
     @Override

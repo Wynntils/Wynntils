@@ -6,6 +6,7 @@ package com.wynntils.core.functions.expressions;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
+import com.wynntils.utils.type.ErrorOr;
 import java.util.Optional;
 
 public class FunctionExpression extends Expression {
@@ -17,8 +18,8 @@ public class FunctionExpression extends Expression {
     }
 
     @Override
-    public String calculate() {
-        return Managers.Function.getRawValueString(function, "");
+    public ErrorOr<String> calculate() {
+        return ErrorOr.of(Managers.Function.getRawValueString(function, ""));
     }
 
     public static Optional<Expression> tryParse(String rawExpression) {

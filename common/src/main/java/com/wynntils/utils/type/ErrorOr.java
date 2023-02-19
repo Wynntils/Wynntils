@@ -2,23 +2,23 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.functions.expressions.parser;
+package com.wynntils.utils.type;
 
-public final class ParseErrorOr<T> {
+public final class ErrorOr<T> {
     private final T value;
     private final String error;
 
-    private ParseErrorOr(T value, String error) {
+    private ErrorOr(T value, String error) {
         this.value = value;
         this.error = error;
     }
 
-    public static <T> ParseErrorOr<T> of(T value) {
-        return new ParseErrorOr<>(value, null);
+    public static <T> ErrorOr<T> of(T value) {
+        return new ErrorOr<>(value, null);
     }
 
-    public static <T> ParseErrorOr<T> error(String error) {
-        return new ParseErrorOr<>(null, error);
+    public static <T> ErrorOr<T> error(String error) {
+        return new ErrorOr<>(null, error);
     }
 
     public T getValue() {

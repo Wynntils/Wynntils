@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.functions.expressions;
 
+import com.wynntils.utils.type.ErrorOr;
+
 public abstract class Expression {
     protected final String rawExpression;
 
@@ -11,5 +13,5 @@ public abstract class Expression {
         this.rawExpression = rawExpression;
     }
 
-    public abstract String calculate();
+    public abstract ErrorOr<String> calculate();
 }
