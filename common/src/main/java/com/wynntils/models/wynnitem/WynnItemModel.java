@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ItemMetadataModel extends Model {
+public class WynnItemModel extends Model {
     private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
 
-    public ItemMetadataModel() {
+    public WynnItemModel() {
         super(List.of());
     }
 

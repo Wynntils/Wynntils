@@ -208,7 +208,7 @@ public class GearInfoRegistry {
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseMaterial(json, type);
-            List<ItemObtainInfo> obtainCrowdSourced = Models.ItemMetadata.getObtainInfo(name);
+            List<ItemObtainInfo> obtainCrowdSourced = Models.WynnItem.getObtainInfo(name);
             List<ItemObtainInfo> obtainInfo =
                     obtainCrowdSourced == null ? new ArrayList<>() : new ArrayList<>(obtainCrowdSourced);
 

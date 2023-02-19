@@ -37,7 +37,7 @@ public class IngredientModel extends Model {
     }
 
     public List<ItemObtainInfo> getObtainInfo(IngredientInfo ingredientInfo) {
-        List<ItemObtainInfo> obtainInfo = Models.ItemMetadata.getObtainInfo(ingredientInfo.name());
+        List<ItemObtainInfo> obtainInfo = Models.WynnItem.getObtainInfo(ingredientInfo.name());
         if (obtainInfo == null) {
             return List.of(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
         }

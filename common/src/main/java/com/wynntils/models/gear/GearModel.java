@@ -16,7 +16,7 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
-import com.wynntils.models.wynnitem.ItemMetadataModel;
+import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +46,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(ElementModel elementModel, StatModel statModel, ItemMetadataModel itemMetadataModel) {
-        super(List.of(elementModel, statModel, itemMetadataModel));
+    public GearModel(ElementModel elementModel, StatModel statModel, WynnItemModel wynnItemModel) {
+        super(List.of(elementModel, statModel, wynnItemModel));
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {

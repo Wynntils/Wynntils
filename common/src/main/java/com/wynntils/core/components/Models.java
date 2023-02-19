@@ -40,7 +40,7 @@ import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
-import com.wynntils.models.wynnitem.ItemMetadataModel;
+import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final BombBellModel BombBell = new BombBellModel();
@@ -51,7 +51,6 @@ public final class Models {
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final ItemMetadataModel ItemMetadata = new ItemMetadataModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
@@ -60,12 +59,13 @@ public final class Models {
     public static final StatModel Stat = new StatModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
+    public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterModel Character = new CharacterModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
-    public static final GearModel Gear = new GearModel(Element, Stat, ItemMetadata);
+    public static final GearModel Gear = new GearModel(Element, Stat, WynnItem);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
