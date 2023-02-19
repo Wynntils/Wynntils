@@ -1,9 +1,21 @@
+## [0.0.2-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.213...v0.0.2-alpha.214) (2023-02-19)
+
+
+### Bug Fixes
+
+* Annotate Athena event ([#1170](https://github.com/Wynntils/Artemis/issues/1170)) ([dffe94b](https://github.com/Wynntils/Artemis/commit/dffe94bcfaa05a4c7bf024c46efeacec12fe4249))
+
 ## [0.0.2-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.212...v0.0.2-alpha.213) (2023-02-19)
 
 
 ### New Features
 
 * Send events when net resources are fully processed ([#1169](https://github.com/Wynntils/Artemis/issues/1169)) ([a6551c5](https://github.com/Wynntils/Artemis/commit/a6551c5712df97a70c35522e153e75574246b316))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.213 [skip ci] ([ef588a3](https://github.com/Wynntils/Artemis/commit/ef588a3fd1287f6fd8885ca7625e252137395d85))
 
 ## [0.0.2-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.211...v0.0.2-alpha.212) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.210 [skip ci] ([43061b0](https://github.com/Wynntils/Artemis/commit/43061b0ee4242d64d1953fee20b6fc16abfea844))
-
-## [0.0.2-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.208...v0.0.2-alpha.209) (2023-02-18)
-
-
-### Bug Fixes
-
-* Consuming chat tabs don't duplicate messages ([#1166](https://github.com/Wynntils/Artemis/issues/1166)) ([76b67cc](https://github.com/Wynntils/Artemis/commit/76b67ccf2d598fcf5ee865a371f3c1865aa4b407))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.209 [skip ci] ([a8ad1ee](https://github.com/Wynntils/Artemis/commit/a8ad1eeb7feb133b163ed7b987dbd3d5f505096b))
 
