@@ -1,9 +1,21 @@
+## [0.0.2-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.215...v0.0.2-alpha.216) (2023-02-19)
+
+
+### Bug Fixes
+
+* Add more event annotations ([#1172](https://github.com/Wynntils/Artemis/issues/1172)) ([232c088](https://github.com/Wynntils/Artemis/commit/232c08818b825a1cd4b22700eba659c6b5e65d88))
+
 ## [0.0.2-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.214...v0.0.2-alpha.215) (2023-02-19)
 
 
 ### Bug Fixes
 
 * Chat Mentions were DOA ([#1171](https://github.com/Wynntils/Artemis/issues/1171)) ([a22b631](https://github.com/Wynntils/Artemis/commit/a22b6317af001fd4443a859243609749c1c0b73d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.215 [skip ci] ([eb1cac6](https://github.com/Wynntils/Artemis/commit/eb1cac63e21fcec364f9a7176abef83ccd82a48c))
 
 ## [0.0.2-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.213...v0.0.2-alpha.214) (2023-02-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.212 [skip ci] ([c23b78c](https://github.com/Wynntils/Artemis/commit/c23b78c3e38dc804ed1a5061cdc2f2a9b18ca51a))
-
-## [0.0.2-alpha.211](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.210...v0.0.2-alpha.211) (2023-02-18)
-
-
-### Bug Fixes
-
-* Fix item lock json parsing ([#1167](https://github.com/Wynntils/Artemis/issues/1167)) ([ea2deca](https://github.com/Wynntils/Artemis/commit/ea2decad35e8856541beccf15cf644a9dc91e777))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.211 [skip ci] ([027a2a5](https://github.com/Wynntils/Artemis/commit/027a2a5280334173123704d5566f11f8cbc187f6))
 
