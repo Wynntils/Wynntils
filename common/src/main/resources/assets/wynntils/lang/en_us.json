@@ -48,8 +48,6 @@
   "feature.wynntils.chatMention.dingMention.description": "Should there be a sound played when you get mentioned?",
   "feature.wynntils.chatMention.dingMention.name": "Ding On Mention",
   "feature.wynntils.chatMention.markMention.description": "Should mentions be highlighted in chat?",
-  "feature.wynntils.chatMention.markMention.description": "Should mentions be highlighted in chat?",
-  "feature.wynntils.chatMention.markMention.name": "Highlight Mentions",
   "feature.wynntils.chatMention.markMention.name": "Highlight Mentions",
   "feature.wynntils.chatMention.mentionColor.description": "What color should be used for highlighting?",
   "feature.wynntils.chatMention.mentionColor.name": "Highlight color",
