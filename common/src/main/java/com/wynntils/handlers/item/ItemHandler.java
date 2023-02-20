@@ -13,6 +13,7 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,20 +89,17 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        // Check if item type, damage and count matches, if not, it's definitely a new item
-        if (!similarStack(existingItem, newItem)) {
-            annotate(newItem);
-            return;
-        }
-
         // This might be just a name update. Check if lore matches:
         ListTag existingLore = LoreUtils.getLoreTag(existingItem);
         ListTag newLore = LoreUtils.getLoreTag(newItem);
 
         if (!LoreUtils.isLoreEquals(existingLore, newLore)) {
-            // This could be a new item, or a crafted item losing in durability
-            annotate(newItem);
-            return;
+            // This could be a new item, a crafted item losing in durability, or a gear skin being applied
+            // If it is a gear skin, we should continue processing
+            if (!sameGearWithSkin(existingItem, newItem)) {
+                annotate(newItem);
+                return;
+            }
         }
 
         String originalName = ((ItemStackExtension) existingItem).getOriginalName();
@@ -149,15 +147,22 @@ public class ItemHandler extends Handler {
         return bracketIndex == -1 ? name : name.substring(0, bracketIndex);
     }
 
-    private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
-        if (!firstItem.getItem().equals(secondItem.getItem())) return false;
+    private boolean sameGearWithSkin(ItemStack existingItem, ItemStack newItem) {
+        if (WynnItemMatchers.isGearSkin(existingItem) || !WynnItemMatchers.isGearSkin(newItem)) return false;
 
-        // We have to use the count field here to bypass the getCount method empty flag
-        if (firstItem.count != secondItem.count) {
-            return false;
+        // Old item doesn't have a skin and the new item does, so compare lore:
+        List<String> existingLines = LoreUtils.getLore(existingItem);
+        List<String> newLines = LoreUtils.getLore(newItem);
+
+        // If the new lore isn't longer, it can't be the same item but with a skin applied
+        if (newLines.size() <= existingLines.size()) return false;
+
+        for (int i = 0; i < existingLines.size(); i++) {
+            if (!existingLines.get(i).equals(newLines.get(i))) return false;
         }
 
-        return firstItem.getDamageValue() == secondItem.getDamageValue();
+        // The new item's lore is just the old item's, but with more lines: must be a gear skin
+        return true;
     }
 
     private ItemAnnotation calculateAnnotation(ItemStack item, String name) {
