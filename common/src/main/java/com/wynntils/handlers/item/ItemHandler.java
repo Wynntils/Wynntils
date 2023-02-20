@@ -99,7 +99,7 @@ public class ItemHandler extends Handler {
         }
 
         // This might be just a name update. Check if lore matches:
-        if (!LoreUtils.loreSoftMatches(existingItem, newItem)) {
+        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;

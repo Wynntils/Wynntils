@@ -246,11 +246,18 @@ public final class LoreUtils {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem) {
+    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
         List<String> firstLines = getLore(firstItem);
         List<String> secondLines = getLore(secondItem);
+        int firstLinesLen = firstLines.size();
+        int secondLinesLen = secondLines.size();
 
-        int linesToCheck = Math.min(firstLines.size(), secondLines.size());
+        // Only allow a maximum number of additional lines in the longer tooltip
+        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance) return false;
+
+        int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
+        // Prevent soft matching on tooltips that are very small
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
             if (!firstLines.get(i).equals(secondLines.get(i))) return false;
