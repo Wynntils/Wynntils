@@ -67,6 +67,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     (int) (this.width / GRID_DIVISIONS * 36)
     (int) (this.width / GRID_DIVISIONS * 57) - 1
     (this.width / 2)
+    (end of another element) + x
     And these are invalid:
     100
     (int) (this.width / GRID_DIVISIONS * 36) + 4
@@ -106,7 +107,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         Component.translatable("screens.wynntils.partyManagementGui.refreshButton")
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
-                .pos((int) (this.width / GRID_DIVISIONS * 36) + 1, (int) (this.height / GRID_DIVISIONS * 11))
+                .pos((int) (this.width / GRID_DIVISIONS * 36) + 1, (int) (this.height / GRID_DIVISIONS * 14))
                 .size(MGMT_BUTTON_WIDTH, 20)
                 .build());
 
@@ -114,7 +115,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
                         .withStyle(ChatFormatting.RED),
                 (button) -> Models.Party.partyKickOffline())
-                .pos((int) (this.width / GRID_DIVISIONS * 44) + 1, (int) (this.height / GRID_DIVISIONS * 11))
+                .pos((int) (this.width / GRID_DIVISIONS * 44) + 1, (int) (this.height / GRID_DIVISIONS * 14))
                 .size(MGMT_BUTTON_WIDTH, 20)
                 .build();
         this.addRenderableWidget(kickOfflineButton);
@@ -158,6 +159,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         poseStack,
                         // Yes this is kind of abusive of the formatting system, and I should probably do
                         // another .renderText call, but this makes aligning these two texts significantly easier
+                        // (especially with changing gui scales and resolutions)
                         I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1") +
                                 ChatFormatting.GRAY +
                                 I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
@@ -372,7 +374,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     public void reloadCreateLeaveButton() {
         createLeaveButton = new CreateLeaveButton(
                 (int) (this.width / GRID_DIVISIONS * 52) + 1,
-                (int) (this.height / GRID_DIVISIONS * 11),
+                (int) (this.height / GRID_DIVISIONS * 14),
                 MGMT_BUTTON_WIDTH,
                 20);
     }
