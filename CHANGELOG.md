@@ -1,9 +1,21 @@
+## [0.0.2-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.220...v0.0.2-alpha.221) (2023-02-20)
+
+
+### Bug Fixes
+
+* Fix parsing of weapons with gear skins ([#1182](https://github.com/Wynntils/Artemis/issues/1182)) ([07f37f5](https://github.com/Wynntils/Artemis/commit/07f37f5968f644fe5fc713f642745f517b38f6e0))
+
 ## [0.0.2-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.219...v0.0.2-alpha.220) (2023-02-19)
 
 
 ### New Features
 
 * Function Refactor Part 0: Functions are just facades for model logic ([#1177](https://github.com/Wynntils/Artemis/issues/1177)) ([cbb8729](https://github.com/Wynntils/Artemis/commit/cbb8729e8b33e4112b38bce4366ac8b1c03b4c5d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.220 [skip ci] ([7f23315](https://github.com/Wynntils/Artemis/commit/7f233152a29c764f02f58dcb642c4d9121a628fb))
 
 ## [0.0.2-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.218...v0.0.2-alpha.219) (2023-02-19)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.217 [skip ci] ([9ddf8f1](https://github.com/Wynntils/Artemis/commit/9ddf8f1231d2ca15e68f71f3285d582416eefca0))
-
-## [0.0.2-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.215...v0.0.2-alpha.216) (2023-02-19)
-
-
-### Bug Fixes
-
-* Add more event annotations ([#1172](https://github.com/Wynntils/Artemis/issues/1172)) ([232c088](https://github.com/Wynntils/Artemis/commit/232c08818b825a1cd4b22700eba659c6b5e65d88))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.216 [skip ci] ([16789d1](https://github.com/Wynntils/Artemis/commit/16789d1534bd84b3191f4f8e7ce9e73b3f64137d))
 
