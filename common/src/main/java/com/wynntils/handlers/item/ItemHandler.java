@@ -52,6 +52,7 @@ public class ItemHandler extends Handler {
         ItemStackExtension itemStackExtension = (ItemStackExtension) itemStack;
         itemStackExtension.setAnnotation(annotation);
         itemStackExtension.setOriginalName(name);
+        annotation.onUpdate(itemStack);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

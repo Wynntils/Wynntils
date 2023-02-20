@@ -38,4 +38,8 @@ public class WynnItemCache {
     public <T> void clear(String key) {
         cache.remove(key);
     }
+
+    public void clearAll() {
+        cache.clear();
+    }
 }
