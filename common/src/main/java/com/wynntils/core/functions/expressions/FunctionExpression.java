@@ -93,21 +93,12 @@ public class FunctionExpression extends Expression {
 
         // Handle argument parsing
 
-        FunctionArguments.Builder argumentsBuilder = function.getArguments();
-
-        if (matcher.groupCount() < 3) {
-            return ErrorOr.of(Optional.of(new FunctionExpression(
-                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
-        }
+        FunctionArguments.Builder argumentsBuilder = function.getArgumentsBuilder();
 
         String rawArguments = matcher.group("argument");
 
-        if (rawArguments == null || rawArguments.isEmpty()) {
-            return ErrorOr.of(Optional.of(new FunctionExpression(
-                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
-        }
-
         ErrorOr<FunctionArguments> value = ArgumentParser.parseArguments(argumentsBuilder, rawArguments);
+
         return value.hasError()
                 ? ErrorOr.error(value.getError())
                 : ErrorOr.of(Optional.of(

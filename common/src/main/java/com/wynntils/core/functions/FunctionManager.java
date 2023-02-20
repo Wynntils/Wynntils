@@ -109,7 +109,7 @@ public final class FunctionManager extends Manager {
                 : Component.literal("");
 
         ErrorOr<FunctionArguments> errorOrArguments =
-                ArgumentParser.parseArguments(function.getArguments(), rawArguments);
+                ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
 
         if (errorOrArguments.hasError()) {
             return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
@@ -187,8 +187,15 @@ public final class FunctionManager extends Manager {
                 // %variable%
                 Function<?> function = forName(m.group(1)).get();
 
-                replacement =
-                        getRawValueString(function, function.getArguments().buildWithDefaults(), false, 2);
+                FunctionArguments.Builder arguments = function.getArgumentsBuilder();
+
+                if (arguments instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
+                    replacement = getRawValueString(function, optionalArgumentBuilder.buildWithDefaults(), false, 2);
+                } else {
+                    // This is to be removed with legacy formatting all together
+                    replacement = "Function needs arguments.";
+                }
+
             } else if (m.group(2) != null) {
                 // \escape
                 replacement = doEscapeFormat(m.group(2));

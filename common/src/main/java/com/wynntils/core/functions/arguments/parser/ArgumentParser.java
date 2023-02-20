@@ -16,7 +16,11 @@ public final class ArgumentParser {
     public static ErrorOr<FunctionArguments> parseArguments(
             FunctionArguments.Builder argumentsBuilder, String rawArgs) {
         if (rawArgs == null || rawArgs.isEmpty()) {
-            return ErrorOr.of(argumentsBuilder.buildWithDefaults());
+            if (argumentsBuilder instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
+                return ErrorOr.of(optionalArgumentBuilder.buildWithDefaults());
+            } else {
+                return ErrorOr.error("Missing required arguments: (%s)".formatted(argumentsBuilder.getArgumentNames()));
+            }
         }
 
         // 1, Split arguments and parse them as expressions

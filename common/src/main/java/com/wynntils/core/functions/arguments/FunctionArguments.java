@@ -25,17 +25,14 @@ public final class FunctionArguments {
         return this.lookupMap.get(name);
     }
 
-    public static final class Builder {
+    // A builder for functions with required arguments
+    public static class Builder {
         public static final Builder EMPTY = new Builder(List.of());
 
-        private List<Argument> arguments;
+        protected List<Argument> arguments;
 
         public Builder(List<Argument> arguments) {
             this.arguments = arguments;
-        }
-
-        public FunctionArguments buildWithDefaults() {
-            return new FunctionArguments(this.arguments);
         }
 
         public ErrorOr<FunctionArguments> buildWithValues(List<Object> values) {
@@ -56,6 +53,21 @@ public final class FunctionArguments {
             }
 
             return ErrorOr.of(new FunctionArguments(this.arguments));
+        }
+
+        public String getArgumentNames() {
+            return arguments.stream().map(Argument::getName).collect(Collectors.joining("; "));
+        }
+    }
+
+    // A builder for functions with optional arguments
+    public static class OptionalArgumentBuilder extends Builder {
+        public OptionalArgumentBuilder(List<Argument> arguments) {
+            super(arguments);
+        }
+
+        public FunctionArguments buildWithDefaults() {
+            return new FunctionArguments(this.arguments);
         }
     }
 
@@ -85,6 +97,10 @@ public final class FunctionArguments {
             }
 
             this.value = (T) value;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public Class<T> getType() {
