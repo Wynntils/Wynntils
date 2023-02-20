@@ -24,10 +24,12 @@ public class SuggestionPlayerWidget extends AbstractWidget {
 
     private final String playerName;
     private final Button inviteButton;
+    private final float GRID_DIVISIONS;
 
-    public SuggestionPlayerWidget(int x, int y, int width, int height, String playerName) {
-        super(x, y, width, height, Component.literal(playerName));
+    public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
+        super((int) x, (int) y + 2, width, height, Component.literal(playerName));
         this.playerName = playerName;
+        this.GRID_DIVISIONS = gridDivisions;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))

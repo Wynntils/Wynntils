@@ -29,11 +29,13 @@ public class PartyMemberWidget extends AbstractWidget {
     private final Button promoteButton;
     private final Button kickButton;
     private final Button disbandButton;
+    private final float GRID_DIVISIONS;
 
-    public PartyMemberWidget(float x, float y, int width, int height, String playerName, boolean isOffline) {
-        super((int) x, (int) y, width, height, Component.literal(playerName));
+    public PartyMemberWidget(float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
+        super((int) x, (int) y + 2, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;
+        this.GRID_DIVISIONS = gridDivisions;
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
@@ -67,9 +69,9 @@ public class PartyMemberWidget extends AbstractWidget {
         ResourceLocation skin =
                 (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
         // hat rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 1, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY(), 1, 16, 16, 40, 8, 8, 8, 64, 64);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;

@@ -186,10 +186,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.head"),
-                        this.width / GRID_DIVISIONS * 4,
+                        this.width / GRID_DIVISIONS * 5,
                         this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.Center,
                         VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
@@ -241,10 +241,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.head"),
-                        this.width / GRID_DIVISIONS * 36,
+                        this.width / GRID_DIVISIONS * 37,
                         this.height / GRID_DIVISIONS * 22,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.Center,
                         VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
@@ -394,10 +394,11 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             partyMembersWidgets.add(new PartyMemberWidget(
                     this.width / GRID_DIVISIONS * 4,
                     this.height / GRID_DIVISIONS * (8 * (i + 1)),
-                    TOTAL_WIDTH,
+                    (int) (this.width / GRID_DIVISIONS * 28) - (int) (this.width / GRID_DIVISIONS * 4),
                     20,
                     playerName,
-                    Models.Party.getOfflineMembers().contains(playerName)));
+                    Models.Party.getOfflineMembers().contains(playerName),
+                    28 - 4));
         }
     }
 
@@ -426,7 +427,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             if (playerName == null) continue;
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
-                    this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 172, 20, playerName));
+                    this.width / GRID_DIVISIONS * 36,
+                    this.height / GRID_DIVISIONS * (22 * (i + 1)),
+                    (int) (this.width / GRID_DIVISIONS * 52) - (int) (this.width / GRID_DIVISIONS * 36),
+                    20,
+                    playerName,
+                    52 - 36));
         }
     }
 
