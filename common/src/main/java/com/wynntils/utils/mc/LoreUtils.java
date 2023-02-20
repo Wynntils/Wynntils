@@ -243,21 +243,20 @@ public final class LoreUtils {
     }
 
     /**
-     * This checks if the lore of the second item contains the entirety of the first item's lore.
+     * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    public static boolean loreSoftMatches(ItemStack existingItem, ItemStack newItem) {
-        List<String> existingLines = getLore(existingItem);
-        List<String> newLines = getLore(newItem);
+    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem) {
+        List<String> firstLines = getLore(firstItem);
+        List<String> secondLines = getLore(secondItem);
 
-        // If the new lore is shorter, it can't possibly match
-        if (newLines.size() < existingLines.size()) return false;
+        int linesToCheck = Math.min(firstLines.size(), secondLines.size());
 
-        for (int i = 0; i < existingLines.size(); i++) {
-            if (!existingLines.get(i).equals(newLines.get(i))) return false;
+        for (int i = 0; i < linesToCheck; i++) {
+            if (!firstLines.get(i).equals(secondLines.get(i))) return false;
         }
 
-        // Every lore line from existingItem exists in newItem, we have a match
+        // Every lore line matches from the first to the second (or second to the first), so we have a match
         return true;
     }
 
