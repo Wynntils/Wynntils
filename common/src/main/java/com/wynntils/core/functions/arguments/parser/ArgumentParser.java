@@ -34,10 +34,10 @@ public final class ArgumentParser {
         }
 
         // 3, Calculate the expressions
-        List<ErrorOr<String>> calculatedExpressions =
+        List<ErrorOr<Object>> calculatedExpressions =
                 parts.stream().map(ErrorOr::getValue).map(Expression::calculate).toList();
 
-        Optional<ErrorOr<String>> optionalCalculationError =
+        Optional<ErrorOr<Object>> optionalCalculationError =
                 calculatedExpressions.stream().filter(ErrorOr::hasError).findFirst();
 
         // 4, If any of the expressions failed to calculate, return the error

@@ -7,7 +7,6 @@ package com.wynntils.core.functions.arguments;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 // FIXME: Expose this to user and add i18n
@@ -39,13 +38,21 @@ public final class FunctionArguments {
             return new FunctionArguments(this.arguments);
         }
 
-        public ErrorOr<FunctionArguments> buildWithValues(List<String> values) {
+        public ErrorOr<FunctionArguments> buildWithValues(List<Object> values) {
             if (values.size() != this.arguments.size()) {
                 return ErrorOr.error("Invalid number of arguments.");
             }
 
             for (int i = 0; i < this.arguments.size(); i++) {
-                this.arguments.get(i).setValue(values.get(i));
+                Argument argument = this.arguments.get(i);
+
+                if (!argument.getType().equals(values.get(i).getClass())) {
+                    return ErrorOr.error("Invalid argument type: \"%s\" is not a %s."
+                            .formatted(
+                                    values.get(i).toString(), argument.getType().getSimpleName()));
+                }
+
+                argument.setValue(values.get(i));
             }
 
             return ErrorOr.of(new FunctionArguments(this.arguments));
@@ -53,11 +60,8 @@ public final class FunctionArguments {
     }
 
     public static final class Argument<T> {
-        private static final Map<Class<?>, Function<String, Object>> SUPPORTED_ARGUMENT_TYPES = Map.of(
-                String.class, String::valueOf,
-                Integer.class, Integer::parseInt,
-                Double.class, Double::parseDouble,
-                Boolean.class, Boolean::parseBoolean);
+        private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES =
+                List.of(String.class, Integer.class, Double.class, Boolean.class);
 
         private final String name;
         private final Class<T> type;
@@ -66,7 +70,7 @@ public final class FunctionArguments {
         private T value;
 
         public Argument(String name, Class<T> type, T defaultValue) {
-            if (!SUPPORTED_ARGUMENT_TYPES.containsKey(type)) {
+            if (!SUPPORTED_ARGUMENT_TYPES.contains(type)) {
                 throw new IllegalArgumentException("Unsupported argument type: " + type);
             }
 
@@ -75,12 +79,16 @@ public final class FunctionArguments {
             this.defaultValue = defaultValue;
         }
 
-        public void setValue(String value) {
+        public void setValue(Object value) {
             if (this.value != null) {
                 throw new IllegalStateException("Tried setting argument value twice.");
             }
 
-            this.value = (T) SUPPORTED_ARGUMENT_TYPES.get(this.type).apply(value);
+            this.value = (T) value;
+        }
+
+        public Class<T> getType() {
+            return type;
         }
 
         public T getValue() {

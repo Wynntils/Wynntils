@@ -29,13 +29,13 @@ public class ExpressionTemplatePart extends TemplatePart {
             return parse.getError();
         }
 
-        ErrorOr<String> calculatedValue = parse.getValue().calculate();
+        ErrorOr<Object> calculatedValue = parse.getValue().calculate();
 
         if (calculatedValue.hasError()) {
             return calculatedValue.getError();
         }
 
-        return calculatedValue.getValue();
+        return calculatedValue.getValue().toString();
     }
 
     @Override

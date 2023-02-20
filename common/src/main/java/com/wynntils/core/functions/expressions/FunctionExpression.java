@@ -40,7 +40,7 @@ public class FunctionExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculate() {
+    public ErrorOr<Object> calculate() {
         return ErrorOr.of(Managers.Function.getRawValueString(function, arguments, formatted, decimals));
     }
 

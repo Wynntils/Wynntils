@@ -24,8 +24,8 @@ public class ConstantExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculate() {
-        return ErrorOr.of(value.toString());
+    public ErrorOr<Object> calculate() {
+        return ErrorOr.of(value);
     }
 
     public static ErrorOr<Optional<Expression>> tryParse(String rawExpression) {
