@@ -53,8 +53,8 @@ public final class OverlayManager extends Manager {
 
     public void disableOverlays(List<Overlay> overlays) {
         enabledOverlays.removeIf(overlays::contains);
-        overlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+        overlays.forEach(overlay -> Managers.Config.getConfigOptionFromString(overlay, "userEnabled")
+                .ifPresent(overlay::onConfigUpdate));
     }
 
     public void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
@@ -62,8 +62,8 @@ public final class OverlayManager extends Manager {
                 ? overlays
                 : overlays.stream().filter(Overlay::isEnabled).toList();
         this.enabledOverlays.addAll(enabledOverlays);
-        enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+        enabledOverlays.forEach(overlay -> Managers.Config.getConfigOptionFromString(overlay, "userEnabled")
+                .ifPresent(overlay::onConfigUpdate));
     }
 
     @SubscribeEvent
@@ -134,7 +134,7 @@ public final class OverlayManager extends Manager {
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
-            overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
+            Managers.Config.getConfigOptionFromString(overlay, "userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
         }
     }
 

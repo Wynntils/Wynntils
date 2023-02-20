@@ -4,11 +4,8 @@
  */
 package com.wynntils.core.config;
 
-import com.google.common.base.CaseFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class AbstractConfigurable implements Configurable {
     private final List<ConfigHolder> configOptions = new ArrayList<>();
@@ -19,25 +16,7 @@ public abstract class AbstractConfigurable implements Configurable {
     }
 
     @Override
-    public final List<ConfigHolder> getVisibleConfigOptions() {
-        return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
-    }
-
-    @Override
     public final List<ConfigHolder> getConfigOptions() {
         return configOptions;
-    }
-
-    @Override
-    public final Optional<ConfigHolder> getConfigOptionFromString(String name) {
-        return getConfigOptions().stream()
-                .filter(c -> c.getFieldName().equals(name))
-                .findFirst();
-    }
-
-    @Override
-    public String getConfigJsonName() {
-        String name = this.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 }

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -227,6 +228,18 @@ public final class ConfigManager extends Manager {
         }
 
         return null;
+    }
+
+    public List<ConfigHolder> getVisibleConfigOptions(Configurable configurable) {
+        return configurable.getConfigOptions().stream()
+                .filter(c -> c.getMetadata().visible())
+                .collect(Collectors.toList());
+    }
+
+    public Optional<ConfigHolder> getConfigOptionFromString(Configurable configurable, String name) {
+        return configurable.getConfigOptions().stream()
+                .filter(c -> c.getFieldName().equals(name))
+                .findFirst();
     }
 
     private List<ConfigHolder> getConfigOptions(Configurable parent) {

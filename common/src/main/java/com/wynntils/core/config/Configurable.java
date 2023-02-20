@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.config;
 
+import com.google.common.base.CaseFormat;
 import java.util.List;
-import java.util.Optional;
 
 public interface Configurable {
     void updateConfigOption(ConfigHolder configHolder);
@@ -13,14 +13,11 @@ public interface Configurable {
     /** Registers the configurable's config options. Called by ConfigManager when loaded */
     void addConfigOptions(List<ConfigHolder> options);
 
-    /** Returns all configurable options registered that should be visible to the user */
-    List<ConfigHolder> getVisibleConfigOptions();
-
-    /** Returns all configurable options  that should be visible to the user */
+    /** Returns all configurable options that should be visible to the user */
     List<ConfigHolder> getConfigOptions();
 
-    /** Returns the config option matching the given name, if it exists */
-    Optional<ConfigHolder> getConfigOptionFromString(String name);
-
-    String getConfigJsonName();
+    default String getConfigJsonName() {
+        String name = this.getClass().getSimpleName();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
 }

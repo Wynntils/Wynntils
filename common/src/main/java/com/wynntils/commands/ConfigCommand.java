@@ -57,7 +57,7 @@ public class ConfigCommand extends Command {
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
                         return foundFeature
-                                .map(feature -> feature.getVisibleConfigOptions().stream()
+                                .map(feature -> Managers.Config.getVisibleConfigOptions(feature).stream()
                                         .map(ConfigHolder::getFieldName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
@@ -80,7 +80,7 @@ public class ConfigCommand extends Command {
                                 .findFirst();
 
                         return overlayOptional
-                                .map(overlay -> overlay.getVisibleConfigOptions().stream()
+                                .map(overlay -> Managers.Config.getVisibleConfigOptions(overlay).stream()
                                         .map(ConfigHolder::getFieldName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
@@ -260,7 +260,7 @@ public class ConfigCommand extends Command {
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
-        for (ConfigHolder config : overlay.getVisibleConfigOptions()) {
+        for (ConfigHolder config : Managers.Config.getVisibleConfigOptions(overlay)) {
             MutableComponent current = getComponentForConfigHolder(config);
 
             current.withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -397,7 +397,7 @@ public class ConfigCommand extends Command {
                 .withStyle(ChatFormatting.YELLOW)
                 .append(Component.literal("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
-        for (ConfigHolder config : feature.getVisibleConfigOptions()) {
+        for (ConfigHolder config : Managers.Config.getVisibleConfigOptions(feature)) {
             MutableComponent current = getComponentForConfigHolder(config);
 
             current.withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -518,7 +518,7 @@ public class ConfigCommand extends Command {
 
         Feature feature = getFeatureFromArguments(context, featureName);
         if (feature == null) return 0;
-        feature.getVisibleConfigOptions().forEach(ConfigHolder::reset);
+        Managers.Config.getVisibleConfigOptions(feature).forEach(ConfigHolder::reset);
 
         Managers.Config.saveConfig();
 
@@ -550,7 +550,7 @@ public class ConfigCommand extends Command {
 
         if (feature == null) return null;
 
-        Optional<ConfigHolder> configOptional = feature.getConfigOptionFromString(configName);
+        Optional<ConfigHolder> configOptional = Managers.Config.getConfigOptionFromString(feature, configName);
 
         if (configOptional.isEmpty()) {
             context.getSource()
@@ -567,7 +567,7 @@ public class ConfigCommand extends Command {
 
         if (overlay == null) return null;
 
-        Optional<ConfigHolder> configOptional = overlay.getConfigOptionFromString(configName);
+        Optional<ConfigHolder> configOptional = Managers.Config.getConfigOptionFromString(overlay, configName);
 
         if (configOptional.isEmpty()) {
             context.getSource()

@@ -337,10 +337,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         List<Feature> featureList = Managers.Feature.getFeatures().stream()
                 .filter(feature -> searchMatches(feature)
-                        || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains)
+                        || Managers.Config.getVisibleConfigOptions(feature).stream()
+                                .anyMatch(this::configOptionContains)
                         || feature.getOverlays().stream()
                                 .anyMatch(overlay -> searchMatches(feature)
-                                        || overlay.getVisibleConfigOptions().stream()
+                                        || Managers.Config.getVisibleConfigOptions(overlay).stream()
                                                 .anyMatch(this::configOptionContains)))
                 .sorted()
                 .toList();
@@ -408,12 +409,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         List<ConfigHolder> configsOptions;
 
         if (selectedFeature != null) {
-            configsOptions = selectedFeature.getVisibleConfigOptions().stream()
+            configsOptions = Managers.Config.getVisibleConfigOptions(selectedFeature).stream()
                     .sorted(Comparator.comparing(
                             configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
                     .toList();
         } else {
-            configsOptions = selectedOverlay.getVisibleConfigOptions().stream()
+            configsOptions = Managers.Config.getVisibleConfigOptions(selectedOverlay).stream()
                     .sorted(Comparator.comparing(
                             configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
                     .toList();
