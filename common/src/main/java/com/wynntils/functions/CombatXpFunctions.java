@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class CombatXpFunctions {
     public static class XpPerMinuteRawFunction extends Function<Integer> {
 
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return (int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
                     .mapToDouble(Float::doubleValue)
                     .sum());
@@ -27,7 +28,7 @@ public class CombatXpFunctions {
 
     public static class XpPerMinuteFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             return StringUtils.integerToShortString((int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
                     .mapToDouble(Float::doubleValue)
                     .sum()));
@@ -41,7 +42,7 @@ public class CombatXpFunctions {
 
     public static class XpPercentagePerMinuteFunction extends Function<Double> {
         @Override
-        public Double getValue(String argument) {
+        public Double getValue(FunctionArguments arguments) {
             // Round to 2 decimal places
             return Math.round(Models.CombatXp.getPercentageXpGainInLastMinute().stream()
                                     .mapToDouble(Float::doubleValue)
@@ -58,7 +59,7 @@ public class CombatXpFunctions {
 
     public static class LevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.CombatXp.getXpLevel();
         }
 
@@ -70,35 +71,35 @@ public class CombatXpFunctions {
 
     public static class XpFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             return StringUtils.integerToShortString((int) Models.CombatXp.getCurrentXp());
         }
     }
 
     public static class XpRawFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.CombatXp.getCurrentXp();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             return StringUtils.integerToShortString(Models.CombatXp.getXpPointsNeededToLevelUp());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.CombatXp.getXpPointsNeededToLevelUp();
         }
     }
 
     public static class XpPctFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.CombatXp.getXpProgress() * 100.0f;
         }
     }

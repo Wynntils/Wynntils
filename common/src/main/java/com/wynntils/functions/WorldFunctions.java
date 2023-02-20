@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class WorldFunctions {
         private static final String NO_WORLD = "<not on world>";
 
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }
@@ -35,7 +36,7 @@ public class WorldFunctions {
         private static final String NO_WORLD = "<not on world>";
 
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }

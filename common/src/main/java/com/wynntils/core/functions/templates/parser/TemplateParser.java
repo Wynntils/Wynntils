@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class TemplateParser {
-    public String doFormat(String templateString) {
+    public static String doFormat(String templateString) {
         List<TemplatePart> parts = parseTemplate(templateString);
 
         // FIXME: Escaping and colors
@@ -28,7 +28,7 @@ public final class TemplateParser {
     }
 
     // FIXME: There is no way to escape {} in the template
-    private List<TemplatePart> parseTemplate(String templateString) {
+    private static List<TemplatePart> parseTemplate(String templateString) {
         List<TemplatePart> parts = new ArrayList<>();
 
         final int lastIndexOfExpresionEnd = templateString.lastIndexOf('}');

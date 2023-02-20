@@ -6,13 +6,14 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.List;
 
 public class ProfessionFunctions {
     public static class WoodcuttingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.WOODCUTTING);
         }
 
@@ -24,7 +25,7 @@ public class ProfessionFunctions {
 
     public static class MiningLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.MINING);
         }
 
@@ -36,7 +37,7 @@ public class ProfessionFunctions {
 
     public static class FishingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.FISHING);
         }
 
@@ -48,7 +49,7 @@ public class ProfessionFunctions {
 
     public static class FarmingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.FARMING);
         }
 
@@ -60,7 +61,7 @@ public class ProfessionFunctions {
 
     public static class AlchemismLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.ALCHEMISM);
         }
 
@@ -72,7 +73,7 @@ public class ProfessionFunctions {
 
     public static class ArmouringLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.ARMOURING);
         }
 
@@ -84,7 +85,7 @@ public class ProfessionFunctions {
 
     public static class CookingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.COOKING);
         }
 
@@ -96,7 +97,7 @@ public class ProfessionFunctions {
 
     public static class JewelingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.JEWELING);
         }
 
@@ -108,7 +109,7 @@ public class ProfessionFunctions {
 
     public static class ScribingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.SCRIBING);
         }
 
@@ -120,7 +121,7 @@ public class ProfessionFunctions {
 
     public static class TailoringLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.TAILORING);
         }
 
@@ -132,7 +133,7 @@ public class ProfessionFunctions {
 
     public static class WeaponsmithingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.WEAPONSMITHING);
         }
 
@@ -144,7 +145,7 @@ public class ProfessionFunctions {
 
     public static class WoodworkingLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Profession.getLevel(ProfessionType.WOODWORKING);
         }
 
@@ -156,7 +157,7 @@ public class ProfessionFunctions {
 
     public static class WoodcuttingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.WOODCUTTING);
         }
 
@@ -168,7 +169,7 @@ public class ProfessionFunctions {
 
     public static class MiningPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.MINING);
         }
 
@@ -180,7 +181,7 @@ public class ProfessionFunctions {
 
     public static class FishingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.FISHING);
         }
 
@@ -192,7 +193,7 @@ public class ProfessionFunctions {
 
     public static class FarmingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.FARMING);
         }
 
@@ -204,7 +205,7 @@ public class ProfessionFunctions {
 
     public static class AlchemismPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.ALCHEMISM);
         }
 
@@ -216,7 +217,7 @@ public class ProfessionFunctions {
 
     public static class ArmouringPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.ARMOURING);
         }
 
@@ -228,7 +229,7 @@ public class ProfessionFunctions {
 
     public static class CookingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.COOKING);
         }
 
@@ -240,7 +241,7 @@ public class ProfessionFunctions {
 
     public static class JewelingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.JEWELING);
         }
 
@@ -252,7 +253,7 @@ public class ProfessionFunctions {
 
     public static class ScribingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.SCRIBING);
         }
 
@@ -264,7 +265,7 @@ public class ProfessionFunctions {
 
     public static class TailoringPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.TAILORING);
         }
 
@@ -276,7 +277,7 @@ public class ProfessionFunctions {
 
     public static class WeaponsmithingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.WEAPONSMITHING);
         }
 
@@ -288,7 +289,7 @@ public class ProfessionFunctions {
 
     public static class WoodworkingPercentageFunction extends Function<Float> {
         @Override
-        public Float getValue(String argument) {
+        public Float getValue(FunctionArguments arguments) {
             return Models.Profession.getProgress(ProfessionType.WOODWORKING);
         }
 
