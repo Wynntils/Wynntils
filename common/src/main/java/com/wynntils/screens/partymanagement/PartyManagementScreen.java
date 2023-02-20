@@ -172,8 +172,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Party list headers
-        // if you enable the debug dividers, we want to render this on the 2nd line from the left (this.width / 31 * 2)
-        // and the 4th line from the top (this.height / 31 * 4)
+        // if you enable the debug dividers, we want to render this on the 4nd line from the left (this.width / 64 * 4)
+        // and the 8th line from the top (this.height / 64 * 8)
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.WHITE,
