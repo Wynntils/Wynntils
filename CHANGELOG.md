@@ -1,9 +1,21 @@
+## [0.0.2-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.221...v0.0.2-alpha.222) (2023-02-20)
+
+
+### Bug Fixes
+
+* Disable gammabright when disconnecting from Wynn ([#1185](https://github.com/Wynntils/Artemis/issues/1185)) ([cbe3da9](https://github.com/Wynntils/Artemis/commit/cbe3da9ec553b3f448e1ef04f3f2f8e355fd16f5))
+
 ## [0.0.2-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.220...v0.0.2-alpha.221) (2023-02-20)
 
 
 ### Bug Fixes
 
 * Fix parsing of weapons with gear skins ([#1182](https://github.com/Wynntils/Artemis/issues/1182)) ([07f37f5](https://github.com/Wynntils/Artemis/commit/07f37f5968f644fe5fc713f642745f517b38f6e0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.221 [skip ci] ([cdcd3b5](https://github.com/Wynntils/Artemis/commit/cdcd3b51589c492b840da04bb44c501b2509d402))
 
 ## [0.0.2-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.219...v0.0.2-alpha.220) (2023-02-19)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.218 [skip ci] ([207cdaa](https://github.com/Wynntils/Artemis/commit/207cdaa8abd1fe2ee57ba0c1994b6fc106f3bb55))
-
-## [0.0.2-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.216...v0.0.2-alpha.217) (2023-02-19)
-
-
-### Bug Fixes
-
-* Actually fix guild map date order ([#1176](https://github.com/Wynntils/Artemis/issues/1176)) ([6dc6a8b](https://github.com/Wynntils/Artemis/commit/6dc6a8b47cc27797ad4050022de5ec88085c9480))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.217 [skip ci] ([9ddf8f1](https://github.com/Wynntils/Artemis/commit/9ddf8f1231d2ca15e68f71f3285d582416eefca0))
 
