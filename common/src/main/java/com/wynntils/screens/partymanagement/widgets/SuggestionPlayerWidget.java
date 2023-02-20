@@ -68,7 +68,5 @@ public class SuggestionPlayerWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        // nothing
-    }
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
