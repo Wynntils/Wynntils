@@ -1,9 +1,21 @@
+## [0.0.2-alpha.223](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.222...v0.0.2-alpha.223) (2023-02-20)
+
+
+### Bug Fixes
+
+* Clear item cache on item update ([#1186](https://github.com/Wynntils/Artemis/issues/1186)) ([54417ba](https://github.com/Wynntils/Artemis/commit/54417bace0b6c5155f2ad73409c11cd0437b9c87))
+
 ## [0.0.2-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.221...v0.0.2-alpha.222) (2023-02-20)
 
 
 ### Bug Fixes
 
 * Disable gammabright when disconnecting from Wynn ([#1185](https://github.com/Wynntils/Artemis/issues/1185)) ([cbe3da9](https://github.com/Wynntils/Artemis/commit/cbe3da9ec553b3f448e1ef04f3f2f8e355fd16f5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.222 [skip ci] ([80b020b](https://github.com/Wynntils/Artemis/commit/80b020b67cdafb0dade1716c48b0784bba10c16d))
 
 ## [0.0.2-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.220...v0.0.2-alpha.221) (2023-02-20)
 
@@ -36,16 +48,4 @@
 
 * Debug improvements ([#1168](https://github.com/Wynntils/Artemis/issues/1168)) ([8fbbe50](https://github.com/Wynntils/Artemis/commit/8fbbe50f8e569eea4c9f13a95b7664219ab072f9))
 * **release:** v0.0.2-alpha.219 [skip ci] ([d8eba5e](https://github.com/Wynntils/Artemis/commit/d8eba5eecd1c4422f20defe9571195cd97034aee))
-
-## [0.0.2-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.217...v0.0.2-alpha.218) (2023-02-19)
-
-
-### New Features
-
-* Introduce a system-wide way to reload all data ([#1173](https://github.com/Wynntils/Artemis/issues/1173)) ([25d2fcf](https://github.com/Wynntils/Artemis/commit/25d2fcf80f531febf455a71a90814f7ee7df6bc2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.218 [skip ci] ([207cdaa](https://github.com/Wynntils/Artemis/commit/207cdaa8abd1fe2ee57ba0c1994b6fc106f3bb55))
 
