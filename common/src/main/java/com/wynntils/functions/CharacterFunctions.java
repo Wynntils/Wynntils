@@ -106,13 +106,13 @@ public class CharacterFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             Boolean showReskinnedName =
-                    (Boolean) arguments.getArgument("showReskinnedName").getValue();
+                    arguments.getArgument("showReskinnedName").getBooleanValue();
 
             String name = showReskinnedName
                     ? Models.Character.getActualName()
                     : Models.Character.getClassType().getActualName(false);
 
-            if ((Boolean) arguments.getArgument("uppercase").getValue()) {
+            if (arguments.getArgument("uppercase").getBooleanValue()) {
                 return name.toUpperCase(Locale.ROOT);
             }
 

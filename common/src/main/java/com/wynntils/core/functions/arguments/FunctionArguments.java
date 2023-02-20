@@ -86,5 +86,21 @@ public final class FunctionArguments {
         public T getValue() {
             return this.value == null ? this.defaultValue : this.value;
         }
+
+        public Boolean getBooleanValue() {
+            return (Boolean) this.getValue();
+        }
+
+        public Integer getIntegerValue() {
+            return (Integer) this.getValue();
+        }
+
+        public Double getDoubleValue() {
+            return (Double) this.getValue();
+        }
+
+        public String getStringValue() {
+            return (String) this.getValue();
+        }
     }
 }
