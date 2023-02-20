@@ -30,8 +30,8 @@ public class PartyMemberWidget extends AbstractWidget {
     private final Button kickButton;
     private final Button disbandButton;
 
-    public PartyMemberWidget(int x, int y, int width, int height, String playerName, boolean isOffline) {
-        super(x, y, width, height, Component.literal(playerName));
+    public PartyMemberWidget(float x, float y, int width, int height, String playerName, boolean isOffline) {
+        super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;
         this.promoteButton = new Button.Builder(
@@ -61,7 +61,7 @@ public class PartyMemberWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =

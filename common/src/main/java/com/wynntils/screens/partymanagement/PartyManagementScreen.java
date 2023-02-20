@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
@@ -36,10 +35,12 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
-    private static final int BUTTON_WIDTH = 80;
     private static final int GAP = 4;
-    private static final int TOTAL_WIDTH = 3 * BUTTON_WIDTH + 2 * GAP;
-    private static final int X_START = TOTAL_WIDTH / 2;
+    private static final int TOTAL_WIDTH = 3 * 80 + 2 * GAP;
+
+    public static final float GRID_DIVISIONS = 64.0f;
+    private int MGMT_BUTTON_WIDTH;
+
 
     private TextInputBoxWidget focusedTextInput;
 
@@ -59,21 +60,45 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         return new PartyManagementScreen();
     }
 
+    /*
+    Some notes on element alignment and sizing:
+    All elements should be positioned dynamically relative to window size. That is; you must use this.height and
+    this.width, plus any multiplier and optionally, +/- 1 to make small tweaks. For example, these are valid:
+    (int) (this.width / GRID_DIVISIONS * 36)
+    (int) (this.width / GRID_DIVISIONS * 57) - 1
+    (this.width / 2)
+    And these are invalid:
+    100
+    (int) (this.width / GRID_DIVISIONS * 36) + 4
+    (int) (this.width / 2 + 199)
+    The reason for all of this is gui scale. Height and width will be different depending on the gui scale, and
+    the above method will ensure that the gui is always aligned somewhat correctly.
+
+    Also note that button height (and related elements), must be 20 or the texture will break.
+    Element sizing isn't nearly as picky as alignment, but it'll still be better to keep static modifiers (eg. +2) to a
+    minimum.
+     */
+
     @Override
     public void init() {
+        MGMT_BUTTON_WIDTH = (int) (this.width / GRID_DIVISIONS * 8) - 2; // -2 for spacing
         refreshAll();
         // region Invite input and button
-        this.addRenderableWidget(
-                inviteInput = new TextInputBoxWidget(
-                        this.width / 2 - X_START, this.height / 2 - 200, (TOTAL_WIDTH - (BUTTON_WIDTH / 2) - GAP), 20, null, this, inviteInput));
+        inviteInput = new TextInputBoxWidget(
+                (int) (this.width / GRID_DIVISIONS * 36),
+                (int) (this.height / GRID_DIVISIONS * 8) + 1,
+                (int) ((this.width / GRID_DIVISIONS * 57) - (this.width / GRID_DIVISIONS * 36)),
+                20, // height is static 20 to match the button below
+                null, this, inviteInput);
+        this.addRenderableWidget(inviteInput);
 
-        this.addRenderableWidget(
-                inviteButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                                (button) -> inviteFromField())
-                        .pos(this.width / 2 - (X_START - TOTAL_WIDTH + 40), this.height / 2 - 200)
-                        .size(BUTTON_WIDTH / 2, 20)
-                        .build());
+        inviteButton = new Button.Builder(
+                Component.translatable("screens.wynntils.partyManagementGui.invite"),
+                (button) -> inviteFromField())
+                .pos((int) (this.width / GRID_DIVISIONS * 57), (int) (this.height / GRID_DIVISIONS * 8) + 1)
+                .size((int) (this.width / GRID_DIVISIONS * 3), 20) // height must be static 20 or the texture will break
+                .build();
+        this.addRenderableWidget(inviteButton);
         // endregion
 
         // region Management button row (except create/leave)
@@ -81,17 +106,18 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         Component.translatable("screens.wynntils.partyManagementGui.refreshButton")
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
-                .pos(this.width / 2 - X_START, this.height / 2 - 176)
-                .size(BUTTON_WIDTH, 20)
+                .pos((int) (this.width / GRID_DIVISIONS * 36) + 1, (int) (this.height / GRID_DIVISIONS * 11))
+                .size(MGMT_BUTTON_WIDTH, 20)
                 .build());
-        this.addRenderableWidget(
-                kickOfflineButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
-                                        .withStyle(ChatFormatting.RED),
-                                (button) -> Models.Party.partyKickOffline())
-                        .pos(this.width / 2 - (X_START - (BUTTON_WIDTH + GAP)), this.height / 2 - 176)
-                        .size(BUTTON_WIDTH, 20)
-                        .build());
+
+        kickOfflineButton = new Button.Builder(
+                Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
+                        .withStyle(ChatFormatting.RED),
+                (button) -> Models.Party.partyKickOffline())
+                .pos((int) (this.width / GRID_DIVISIONS * 44) + 1, (int) (this.height / GRID_DIVISIONS * 11))
+                .size(MGMT_BUTTON_WIDTH, 20)
+                .build();
+        this.addRenderableWidget(kickOfflineButton);
         // endregion
     }
 
@@ -113,71 +139,86 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         super.render(poseStack, mouseX, mouseY, partialTick);
 
+        // region debug dividers
+        // to make positioning easier, we will split the screen into GRID_DIVISIONS parts horizontally and vertically
+        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
+            double x = this.width / GRID_DIVISIONS * i;
+            double y = this.height / GRID_DIVISIONS * i;
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, this.height);
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, this.width, 1);
+            if (i % 2 == 0) continue; // reduce clutter
+            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), (float) x, this.height / 2, CommonColors.RED, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
+            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), this.width / 2, (float) y, CommonColors.CYAN, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
+        }
+        // endregion
+
         // region Invite field header
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1"),
-                        this.width / 2 - X_START,
-                        this.height / 2 - 206,
+                        // Yes this is kind of abusive of the formatting system, and I should probably do
+                        // another .renderText call, but this makes aligning these two texts significantly easier
+                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1") +
+                                ChatFormatting.GRAY +
+                                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                        this.width / GRID_DIVISIONS * 36,
+                        this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
-                        this.width / 2 - X_START + 77,
-                        this.height / 2 - 206,
-                        CommonColors.LIGHT_GRAY,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         // endregion
 
         // region Party list headers
+        // if you enable the debug dividers, we want to render this on the 2nd line from the left (this.width / 31 * 2)
+        // and the 4th line from the top (this.height / 31 * 4)
         RenderUtils.drawRect(
-                poseStack, CommonColors.WHITE, this.width / 2 - X_START, this.height / 2 - 140, 0, TOTAL_WIDTH, 1);
+                poseStack,
+                CommonColors.WHITE,
+                this.width / GRID_DIVISIONS * 4,
+                this.height / GRID_DIVISIONS * 8,
+                0,
+                this.width / GRID_DIVISIONS * 28 - this.width / GRID_DIVISIONS * 4,
+                1);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.head"),
-                        this.width / 2 - X_START,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 4,
+                        this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.name"),
-                        this.width / 2 - X_START + 40,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 8,
+                        this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.promote"),
-                        this.width / 2 - X_START + 153,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 22,
+                        this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.kick"),
-                        this.width / 2 - X_START + 216,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 26,
+                        this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         // endregion
 
@@ -187,36 +228,42 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         // region Suggestion list headers
         RenderUtils.drawRect(
-                poseStack, CommonColors.WHITE, this.width / 2 + 200, this.height / 2 - 140, 0, 172, 1);
+                poseStack,
+                CommonColors.WHITE,
+                this.width / GRID_DIVISIONS * 36,
+                this.height / GRID_DIVISIONS * 22,
+                0,
+                this.width / GRID_DIVISIONS * 60 - this.width / GRID_DIVISIONS * 36,
+                1);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.head"),
-                        this.width / 2 + 200,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 36,
+                        this.height / GRID_DIVISIONS * 22,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                        this.width / 2 + 240,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 40,
+                        this.height / GRID_DIVISIONS * 22,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.invite"),
-                        this.width / 2 + 340,
-                        this.height / 2 - 144,
+                        this.width / GRID_DIVISIONS * 58,
+                        this.height / GRID_DIVISIONS * 22,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
+                        VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
         // endregion
 
@@ -225,57 +272,57 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // endregion
 
         // region Legend
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 300, this.height / 2 - 140, 0, 50, 1);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.legend"),
-                        this.width / 2 - 300,
-                        this.height / 2 - 144,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
-                        this.width / 2 - 300,
-                        this.height / 2 - 132,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.leader"),
-                        this.width / 2 - 300,
-                        this.height / 2 - 120,
-                        CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
-                        this.width / 2 - 300,
-                        this.height / 2 - 108,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.friend"),
-                        this.width / 2 - 300,
-                        this.height / 2 - 96,
-                        CommonColors.GREEN,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
-                        TextShadow.NORMAL);
+//        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 300, this.height / 2 - 140, 0, 50, 1);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        poseStack,
+//                        I18n.get("screens.wynntils.partyManagementGui.legend"),
+//                        this.width / 2 - 300,
+//                        this.height / 2 - 144,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.Left,
+//                        VerticalAlignment.Middle,
+//                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        poseStack,
+//                        ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
+//                        this.width / 2 - 300,
+//                        this.height / 2 - 132,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.Left,
+//                        VerticalAlignment.Middle,
+//                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        poseStack,
+//                        I18n.get("screens.wynntils.partyManagementGui.leader"),
+//                        this.width / 2 - 300,
+//                        this.height / 2 - 120,
+//                        CommonColors.YELLOW,
+//                        HorizontalAlignment.Left,
+//                        VerticalAlignment.Middle,
+//                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        poseStack,
+//                        ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
+//                        this.width / 2 - 300,
+//                        this.height / 2 - 108,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.Left,
+//                        VerticalAlignment.Middle,
+//                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        poseStack,
+//                        I18n.get("screens.wynntils.partyManagementGui.friend"),
+//                        this.width / 2 - 300,
+//                        this.height / 2 - 96,
+//                        CommonColors.GREEN,
+//                        HorizontalAlignment.Left,
+//                        VerticalAlignment.Middle,
+//                        TextShadow.NORMAL);
         // endregion
     }
 
@@ -323,7 +370,33 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     public void reloadCreateLeaveButton() {
-        createLeaveButton = new CreateLeaveButton(this.width / 2 - (X_START - (2 * (BUTTON_WIDTH + GAP))), this.height / 2 - 176, BUTTON_WIDTH, 20);
+        createLeaveButton = new CreateLeaveButton(
+                (int) (this.width / GRID_DIVISIONS * 52) + 1,
+                (int) (this.height / GRID_DIVISIONS * 11),
+                MGMT_BUTTON_WIDTH,
+                20);
+    }
+
+    /**
+     * Reloads the list of party members widgets
+     * <p>
+     * This should be called when the party list is updated or when the refresh button is pressed
+     */
+    public void reloadMembersWidgets() {
+        partyMembersWidgets.clear();
+        List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
+        for (int i = 0; i < partyMembers.size(); i++) {
+            String playerName = partyMembers.get(i);
+            if (playerName == null) continue;
+
+            partyMembersWidgets.add(new PartyMemberWidget(
+                    this.width / GRID_DIVISIONS * 4,
+                    this.height / GRID_DIVISIONS * (8 * (i + 1)),
+                    TOTAL_WIDTH,
+                    20,
+                    playerName,
+                    Models.Party.getOfflineMembers().contains(playerName)));
+        }
     }
 
     /**
@@ -352,28 +425,6 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     this.width / 2 + 204, this.height / 2 - 125 + i * 20 - 10, 172, 20, playerName));
-        }
-    }
-
-    /**
-     * Reloads the list of party members widgets
-     * <p>
-     * This should be called when the party list is updated or when the refresh button is pressed
-     */
-    public void reloadMembersWidgets() {
-        partyMembersWidgets.clear();
-        List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
-        for (int i = 0; i < partyMembers.size(); i++) {
-            String playerName = partyMembers.get(i);
-            if (playerName == null) continue;
-
-            partyMembersWidgets.add(new PartyMemberWidget(
-                    this.width / 2 - X_START + 4,
-                    this.height / 2 - 125 + i * 20 - 10,
-                    TOTAL_WIDTH,
-                    20,
-                    playerName,
-                    Models.Party.getOfflineMembers().contains(playerName)));
         }
     }
 
