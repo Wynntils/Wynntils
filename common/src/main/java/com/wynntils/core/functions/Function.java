@@ -5,7 +5,7 @@
 package com.wynntils.core.functions;
 
 import com.google.common.base.CaseFormat;
-import com.wynntils.core.features.Translatable;
+import com.wynntils.core.components.Translatable;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 

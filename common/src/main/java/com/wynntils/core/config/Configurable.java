@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.features;
+package com.wynntils.core.config;
 
-import com.wynntils.core.config.ConfigHolder;
 import java.util.List;
 import java.util.Optional;
 

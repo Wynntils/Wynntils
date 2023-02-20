@@ -9,6 +9,8 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Translatable;
+import com.wynntils.core.config.AbstractConfigurable;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
