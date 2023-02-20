@@ -12,6 +12,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -35,6 +36,13 @@ public class GammabrightFeature extends UserFeature {
         if (event.getNewState() != WorldState.WORLD) return;
 
         applyGammabright();
+    }
+
+    @SubscribeEvent
+    public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
+        if (gammabrightEnabled) {
+            resetGamma();
+        }
     }
 
     @Override
