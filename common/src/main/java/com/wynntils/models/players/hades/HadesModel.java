@@ -8,6 +8,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.features.user.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
@@ -46,9 +50,52 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.GLOBAL)
 public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
+
+    @Config
+    public boolean getOtherPlayerInfo = true;
+
+    @Config
+    public boolean shareWithParty = true;
+
+    @Config
+    public boolean shareWithFriends = true;
+
+    @Config
+    public boolean shareWithGuild = true;
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        switch (configHolder.getFieldName()) {
+            case "getOtherPlayerInfo" -> {
+                if (getOtherPlayerInfo) {
+                    Models.Hades.tryResendWorldData();
+                } else {
+                    Models.Hades.resetHadesUsers();
+                }
+            }
+            case "shareWithParty" -> {
+                if (shareWithParty) {
+                    Models.Party.requestData();
+                } else {
+                    Models.Hades.resetSocialType(SocialType.PARTY);
+                }
+            }
+            case "shareWithFriends" -> {
+                if (shareWithFriends) {
+                    Models.Friends.requestData();
+                } else {
+                    Models.Hades.resetSocialType(SocialType.FRIEND);
+                }
+            }
+            case "shareWithGuild" -> {
+                // TODO
+            }
+        }
+    }
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 

@@ -92,7 +92,7 @@ public class ConfigHolder {
     }
 
     private String getNameCamelCase() {
-        String name = parent.getClass().getSimpleName();
+        String name = parent.getShortName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 

@@ -9,6 +9,7 @@ import net.minecraft.client.resources.language.I18n;
 
 public enum FeatureCategory {
     UNCATEGORIZED,
+    GLOBAL,
     INVENTORY,
     MAP,
     OVERLAYS,

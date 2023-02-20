@@ -105,12 +105,8 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
-    public String getShortName() {
-        return this.getClass().getSimpleName();
-    }
-
     private String getNameCamelCase() {
-        String name = this.getClass().getSimpleName().replace("Feature", "");
+        String name = this.getShortName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 

@@ -16,8 +16,11 @@ public interface Configurable {
     /** Returns all configurable options that should be visible to the user */
     List<ConfigHolder> getConfigOptions();
 
+    default String getShortName() {
+        return this.getClass().getSimpleName();
+    }
+
     default String getConfigJsonName() {
-        String name = this.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this.getShortName());
     }
 }

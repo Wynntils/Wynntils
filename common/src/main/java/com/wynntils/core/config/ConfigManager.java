@@ -73,7 +73,7 @@ public final class ConfigManager extends Manager {
         registerConfigOptions(feature);
     }
 
-    private void registerConfigOptions(Configurable configurable) {
+    public void registerConfigOptions(Configurable configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);

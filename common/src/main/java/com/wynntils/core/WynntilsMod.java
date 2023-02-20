@@ -21,10 +21,12 @@ import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
@@ -236,6 +238,10 @@ public final class WynntilsMod {
                         throw new RuntimeException(e);
                     }
                 });
+
+        // Register the component with the Config manager. We can't do this until now since the config
+        // manager is maybe not initialized when we start looping over the fields
+        components.forEach(c -> Managers.Config.registerConfigOptions(c));
     }
 
     private static void parseVersion(String modVersion) {
@@ -259,6 +265,17 @@ public final class WynntilsMod {
 
     private static void addCrashCallbacks() {
         Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
+    }
+
+    public static Optional<CoreComponent> getComponentFromString(String componentName) {
+        return componentMap.values().stream()
+                .flatMap(m -> m.stream())
+                .filter(c -> c.getShortName().equals(componentName))
+                .findFirst();
+    }
+
+    public static Stream<CoreComponent> getComponents() {
+        return componentMap.values().stream().flatMap(Collection::stream);
     }
 
     public enum ModLoader {

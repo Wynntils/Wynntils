@@ -10,9 +10,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.Command;
+import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import java.util.Arrays;
@@ -20,6 +23,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -33,7 +37,10 @@ import org.apache.commons.lang3.StringUtils;
 public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.Feature.getFeatures().stream().map(Feature::getShortName), builder);
+                    Stream.concat(
+                            Managers.Feature.getFeatures().stream().map(Feature::getShortName),
+                            WynntilsMod.getComponents().map(CoreComponent::getShortName)),
+                    builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
@@ -546,11 +553,14 @@ public class ConfigCommand extends Command {
 
     private ConfigHolder getConfigHolderFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String configName) {
-        Feature feature = getFeatureFromArguments(context, featureName);
+        Configurable configurable = getFeatureFromArguments(context, featureName);
 
-        if (feature == null) return null;
+        if (configurable == null) {
+            configurable = getComponentFromArguments(context, featureName);
+            if (configurable == null) return null;
+        }
 
-        Optional<ConfigHolder> configOptional = Managers.Config.getConfigOptionFromString(feature, configName);
+        Optional<ConfigHolder> configOptional = Managers.Config.getConfigOptionFromString(configurable, configName);
 
         if (configOptional.isEmpty()) {
             context.getSource()
@@ -559,6 +569,18 @@ public class ConfigCommand extends Command {
         }
 
         return configOptional.get();
+    }
+
+    private Configurable getComponentFromArguments(CommandContext<CommandSourceStack> context, String componentName) {
+        Optional<CoreComponent> componentOptional = WynntilsMod.getComponentFromString(componentName);
+
+        if (componentOptional.isEmpty()) {
+            context.getSource()
+                    .sendFailure(Component.literal("Component not found!").withStyle(ChatFormatting.RED));
+            return null;
+        }
+
+        return componentOptional.get();
     }
 
     private ConfigHolder getOverlayConfigHolderFromArguments(

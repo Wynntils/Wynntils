@@ -7,6 +7,7 @@
   "commands.wynntils.debug.profile.total": "Total time spent: %d ms; total number of calls: %d",
   "commands.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "commands.wynntils.reloadCaches.reloading": "Reloading caches...",
+  "core.wynntils.category.global": "Global",
   "core.wynntils.category.inventory": "Inventory",
   "core.wynntils.category.map": "Map",
   "core.wynntils.category.overlays": "Overlays",

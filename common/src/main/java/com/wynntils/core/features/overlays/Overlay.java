@@ -99,17 +99,13 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
                 + "." + keySuffix);
     }
 
-    public String getShortName() {
-        return this.getClass().getSimpleName();
-    }
-
     private Class<?> getDeclaringClass() {
         return this.getClass().getDeclaringClass();
     }
 
     protected String getNameCamelCase() {
         return CaseFormat.UPPER_CAMEL.to(
-                CaseFormat.LOWER_CAMEL, this.getClass().getSimpleName().replace("Overlay", ""));
+                CaseFormat.LOWER_CAMEL, this.getShortName().replace("Overlay", ""));
     }
 
     protected String getDeclaringFeatureNameCamelCase() {
