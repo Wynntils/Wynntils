@@ -196,7 +196,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.name"),
-                        this.width / GRID_DIVISIONS * 8,
+                        this.width / GRID_DIVISIONS * 7,
                         this.height / GRID_DIVISIONS * 8,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,
@@ -251,7 +251,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .renderText(
                         poseStack,
                         I18n.get("screens.wynntils.partyManagementGui.suggestions"),
-                        this.width / GRID_DIVISIONS * 40,
+                        this.width / GRID_DIVISIONS * 39,
                         this.height / GRID_DIVISIONS * 22,
                         CommonColors.WHITE,
                         HorizontalAlignment.Left,

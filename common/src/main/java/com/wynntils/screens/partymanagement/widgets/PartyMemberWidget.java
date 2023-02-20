@@ -93,7 +93,7 @@ public class PartyMemberWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         formattedPlayerName,
-                        this.getX() + 36,
+                        this.getX() + (this.width / GRID_DIVISIONS * 3),
                         this.getY() + 8,
                         color,
                         HorizontalAlignment.Left,
