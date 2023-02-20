@@ -243,6 +243,25 @@ public final class LoreUtils {
     }
 
     /**
+     * This checks if the lore of the second item contains the entirety of the first item's lore.
+     * It might have additional lines added, but these are not checked.
+     */
+    public static boolean loreSoftMatches(ItemStack existingItem, ItemStack newItem) {
+        List<String> existingLines = getLore(existingItem);
+        List<String> newLines = getLore(newItem);
+
+        // If the new lore is shorter, it can't possibly match
+        if (newLines.size() < existingLines.size()) return false;
+
+        for (int i = 0; i < existingLines.size(); i++) {
+            if (!existingLines.get(i).equals(newLines.get(i))) return false;
+        }
+
+        // Every lore line from existingItem exists in newItem, we have a match
+        return true;
+    }
+
+    /**
      * This is used to extract the lore from an ingame item that is held by another player.
      * This lore has a completely different format from the normal lore shown to the player
      */

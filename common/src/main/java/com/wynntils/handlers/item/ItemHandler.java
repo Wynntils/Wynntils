@@ -21,13 +21,16 @@ import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
+    private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
+
     private final List<ItemAnnotator> annotators = new ArrayList<>();
     private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
     private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
@@ -89,16 +92,14 @@ public class ItemHandler extends Handler {
         }
 
         // Check if item type, damage and count matches, if not, it's definitely a new item
-        if (!similarStack(existingItem, newItem)) {
+        // Wildcard items are exempt from this check due to the possibility of gear skins
+        if (!similarStack(existingItem, newItem) && !isWildcardItem(existingItem) && !isWildcardItem(newItem)) {
             annotate(newItem);
             return;
         }
 
         // This might be just a name update. Check if lore matches:
-        ListTag existingLore = LoreUtils.getLoreTag(existingItem);
-        ListTag newLore = LoreUtils.getLoreTag(newItem);
-
-        if (!LoreUtils.isLoreEquals(existingLore, newLore)) {
+        if (!LoreUtils.loreSoftMatches(existingItem, newItem)) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
@@ -158,6 +159,11 @@ public class ItemHandler extends Handler {
         }
 
         return firstItem.getDamageValue() == secondItem.getDamageValue();
+    }
+
+    private boolean isWildcardItem(ItemStack itemStack) {
+        // This checks for gear skin items, which are a special exception for item comparisons
+        return WILDCARD_ITEMS.contains(itemStack.getItem());
     }
 
     private ItemAnnotation calculateAnnotation(ItemStack item, String name) {
