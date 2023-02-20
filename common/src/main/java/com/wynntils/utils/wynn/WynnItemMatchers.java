@@ -26,8 +26,6 @@ public final class WynnItemMatchers {
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-    private static final Pattern GEAR_SKIN_PATTERN =
-            Pattern.compile("\\[Active (?:Weapon|Helmet) Skin: ([\\w-' ]+)\\]");
 
     public static boolean isHealingPotion(ItemStack itemStack) {
         if (!isConsumable(itemStack)) return false;
@@ -100,13 +98,6 @@ public final class WynnItemMatchers {
         return itemStack.is(Items.STONE_SHOVEL) && itemStack.getDamageValue() == 6;
     }
 
-    public static boolean isGearSkin(ItemStack itemStack) {
-        for (Component line : LoreUtils.getTooltipLines(itemStack)) {
-            if (gearSkinLineMatcher(line).find()) return true;
-        }
-        return false;
-    }
-
     public static Matcher rarityLineMatcher(Component text) {
         return ITEM_RARITY_PATTERN.matcher(text.getString());
     }
@@ -117,10 +108,6 @@ public final class WynnItemMatchers {
 
     private static Matcher consumableNameMatcher(Component text) {
         return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
-    private static Matcher gearSkinLineMatcher(Component text) {
-        return GEAR_SKIN_PATTERN.matcher(text.getString());
     }
 
     public static CappedValue getDurability(ItemStack itemStack) {
