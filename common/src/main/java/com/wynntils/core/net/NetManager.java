@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,37 +49,44 @@ public final class NetManager extends Manager {
         return callApi(urlId, Map.of());
     }
 
-    public Download download(URI uri, File file) {
-        return new Download(file.getName(), file, createGetRequest(uri));
-    }
-
-    public Download download(URI uri, File file, String expectedHash) {
-        if (checkLocalHash(file, expectedHash)) {
-            return new Download(file.getName(), file);
-        }
-
-        return download(uri, file);
-    }
-
     public Download download(URI uri, String localFileName) {
         File localFile = new File(CACHE_DIR, localFileName);
-        return download(uri, localFile);
+        return download(uri, localFile, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
     public Download download(URI uri, String localFileName, String expectedHash) {
         File localFile = new File(CACHE_DIR, localFileName);
-        return download(uri, localFile, expectedHash);
+        return download(uri, localFile, expectedHash, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
     public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
         String localFileName = urlId.getId();
+        File localFile = new File(CACHE_DIR, localFileName);
 
         if (urlInfo.md5().isPresent()) {
-            return download(uri, localFileName, urlInfo.md5().get());
+            return download(uri, localFile, urlInfo.md5().get(), new NetResultProcessedEvent.ForUrlId(urlId));
         }
-        return download(uri, localFileName);
+
+        return download(uri, localFile, new NetResultProcessedEvent.ForUrlId(urlId));
+    }
+
+    private Download download(URI uri, File localFile, NetResultProcessedEvent processedEvent) {
+        return new Download(localFile.getName(), localFile, createGetRequest(uri), processedEvent);
+    }
+
+    private Download download(URI uri, File localFile, String expectedHash, NetResultProcessedEvent processedEvent) {
+        // For debugging, always return cached files if requested
+        if (WynntilsMod.isDevelopmentEnvironment() && new File(CACHE_DIR, "keep").exists()) {
+            return new Download(localFile.getName(), localFile, processedEvent);
+        }
+
+        if (checkLocalHash(localFile, expectedHash)) {
+            return new Download(localFile.getName(), localFile, processedEvent);
+        }
+
+        return download(uri, localFile, processedEvent);
     }
 
     public File getCacheDir() {
@@ -120,7 +128,7 @@ public final class NetManager extends Manager {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
             HttpRequest request = createGetRequest(uri);
-            return new ApiResponse(urlId.toString(), request);
+            return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
 
@@ -129,7 +137,7 @@ public final class NetManager extends Manager {
 
             URI uri = URI.create(urlInfo.url());
             HttpRequest request = createPostRequest(uri, jsonArgs);
-            return new ApiResponse(urlId.toString(), request);
+            return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
     }
 

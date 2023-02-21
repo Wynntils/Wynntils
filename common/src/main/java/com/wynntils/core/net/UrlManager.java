@@ -72,10 +72,13 @@ public final class UrlManager extends Manager {
                                 StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
     }
 
-    public void reloadUrls() {
+    @Override
+    public void reloadData() {
         // If we reload URLs after initial bootstrapping, use normal manager
         loadUrls(Managers.Net);
     }
+
+    public void reloadUrls() {}
 
     private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially

@@ -239,8 +239,9 @@ public final class HadesModel extends Model {
     public void tryResendWorldData() {
         if (!isConnected()) return;
 
-        hadesConnection.sendPacket(
-                new HCPacketUpdateWorld(Models.WorldState.getCurrentWorldName(), Models.Character.getId()));
+        hadesConnection.sendPacket(new HCPacketUpdateWorld(
+                Models.WorldState.getCurrentWorldName(),
+                Models.Character.getId().hashCode()));
     }
 
     public void resetSocialType(SocialType socialType) {

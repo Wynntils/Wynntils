@@ -19,7 +19,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +31,35 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Team.Visibility;
 
 public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
+    private static final String TEAM_NAME = "GearViewerTeam";
+
     private final Player player;
+    private final Scoreboard scoreboard;
+    private PlayerTeam gearViewerTeam;
+    private PlayerTeam oldTeam;
     private ViewPlayerStatsButton viewPlayerStatsButton;
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
+        this.scoreboard = player.level.getScoreboard();
+
+        if (scoreboard.getTeamNames().contains(TEAM_NAME)) {
+            gearViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
+        } else {
+            gearViewerTeam = scoreboard.addPlayerTeam(TEAM_NAME);
+            gearViewerTeam.setNameTagVisibility(Visibility.NEVER);
+        }
+
+        // this is done to prevent the player's nametag from rendering in the GUI
+        oldTeam = scoreboard.getPlayersTeam(player.getScoreboardName());
+        scoreboard.addPlayerToTeam(player.getScoreboardName(), gearViewerTeam);
     }
 
     public static Screen create(Player player) {
@@ -60,7 +79,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
             return itemStack;
         }
 
-        String gearName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        // This must specifically NOT be normalized; the ֎ is significant
+        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
@@ -135,6 +155,17 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void onClose() {
+        // restore previous scoreboard team setup
+        scoreboard.removePlayerFromTeam(player.getScoreboardName(), gearViewerTeam);
+        if (oldTeam != null) {
+            scoreboard.addPlayerToTeam(player.getScoreboardName(), oldTeam);
+        }
+
+        super.onClose();
     }
 
     public Player getPlayer() {

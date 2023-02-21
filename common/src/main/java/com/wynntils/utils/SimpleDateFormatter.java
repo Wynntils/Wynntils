@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import com.google.common.collect.ImmutableMap;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class SimpleDateFormatter extends DateFormat {
-    private static final Map<Integer, String> MAPPINGS = Map.of(
+    private static final Map<Integer, String> MAPPINGS = ImmutableMap.of(
             Calendar.DAY_OF_YEAR, "d",
             Calendar.HOUR_OF_DAY, "h",
             Calendar.MINUTE, "m",
