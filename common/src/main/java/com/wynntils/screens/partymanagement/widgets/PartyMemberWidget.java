@@ -39,20 +39,20 @@ public class PartyMemberWidget extends AbstractWidget {
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
-                .pos(this.getX() + 144, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 16)) + 1, this.getY())
+                .size((int) ((this.getX() + (this.width / GRID_DIVISIONS * 20)) - (this.getX() + (this.width / GRID_DIVISIONS * 16))) - 2, 20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
-                .pos(this.getX() + 196, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .size((int) ((this.getX() + (this.width / GRID_DIVISIONS * 24)) - (this.getX() + (this.width / GRID_DIVISIONS * 20))) - 2, 20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
-                .pos(this.getX() + 196, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .size((int) ((this.getX() + (this.width / GRID_DIVISIONS * 24)) - (this.getX() + (this.width / GRID_DIVISIONS * 20))) - 2, 20)
                 .build();
         if (playerName.equals(Models.Party.getPartyLeader())) {
             this.promoteButton.active = false;
@@ -64,6 +64,9 @@ public class PartyMemberWidget extends AbstractWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        // debug rect
+        //RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.getX(), this.getY() + this.height / 2, 0, this.width, 1);
+
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =

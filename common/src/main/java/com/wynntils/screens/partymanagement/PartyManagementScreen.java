@@ -429,10 +429,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     this.width / GRID_DIVISIONS * 36,
                     this.height / GRID_DIVISIONS * (22 * (i + 1)),
-                    (int) (this.width / GRID_DIVISIONS * 52) - (int) (this.width / GRID_DIVISIONS * 36),
+                    (int) ((this.width / GRID_DIVISIONS * 60) - (this.width / GRID_DIVISIONS * 36)),
                     20,
                     playerName,
-                    52 - 36));
+                    60 - 36));
         }
     }
 

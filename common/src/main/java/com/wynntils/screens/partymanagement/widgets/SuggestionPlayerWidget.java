@@ -27,34 +27,37 @@ public class SuggestionPlayerWidget extends AbstractWidget {
     private final float GRID_DIVISIONS;
 
     public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
-        super((int) x, (int) y + 2, width, height, Component.literal(playerName));
+        super((int) x, (int) y + 3, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.GRID_DIVISIONS = gridDivisions;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
-                .pos(this.getX() + 130, this.getY())
-                .size(40, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .size((int) ((this.getX() + (this.width / GRID_DIVISIONS * 24)) - (this.getX() + (this.width / GRID_DIVISIONS * 20))) - 2, 20)
                 .build();
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        // debug rect
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.getX(), this.getY() + this.height / 2, 0, this.width, 1);
+
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
                 (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 8, 16, 16, 8, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 8, 16, 16, 40, 8, 8, 8, 64, 64);
 
         // name rendering
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         playerName,
-                        this.getX() + 36,
-                        this.getY() + 8,
+                        this.getX() + (this.width / GRID_DIVISIONS * 3),
+                        this.getY() + this.height / 2,
                         CommonColors.GREEN,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
