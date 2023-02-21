@@ -94,12 +94,14 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1,
                 (int) ((dividedWidth * 57) - (dividedWidth * 36)) - 1,
                 20, // height is static 20 to match the button below
-                null, this, inviteInput);
+                null,
+                this,
+                inviteInput);
         this.addRenderableWidget(inviteInput);
 
         inviteButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.invite"),
-                (button) -> inviteFromField())
+                        Component.translatable("screens.wynntils.partyManagementGui.invite"),
+                        (button) -> inviteFromField())
                 .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
                 .size((int) (dividedWidth * 3) - 1, 20) // height must be static 20 or the texture will break
                 .build();
@@ -116,9 +118,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .build());
 
         kickOfflineButton = new Button.Builder(
-                Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
-                        .withStyle(ChatFormatting.RED),
-                (button) -> Models.Party.partyKickOffline())
+                        Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
+                                .withStyle(ChatFormatting.RED),
+                        (button) -> Models.Party.partyKickOffline())
                 .pos((int) (dividedWidth * 44) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
                 .size(mgmtButtonWidth, 20)
                 .build();
@@ -151,15 +153,17 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         // region debug dividers
         // to make positioning easier, we will split the screen into GRID_DIVISIONS parts horizontally and vertically
         // uncomment when changing gui elements
-//        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
-//            double x = dividedWidth * i;
-//            double y = dividedHeight * i;
-//            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, this.height);
-//            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, this.width, 1);
-//            if (i % 2 == 0) continue; // reduce clutter
-//            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), (float) x, this.height / 2, CommonColors.RED, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
-//            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), this.width / 2, (float) y, CommonColors.CYAN, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
-//        }
+        //        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
+        //            double x = dividedWidth * i;
+        //            double y = dividedHeight * i;
+        //            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, this.height);
+        //            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, this.width, 1);
+        //            if (i % 2 == 0) continue; // reduce clutter
+        //            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), (float) x, this.height / 2,
+        // CommonColors.RED, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
+        //            FontRenderer.getInstance().renderText(poseStack, String.valueOf(i), this.width / 2, (float) y,
+        // CommonColors.CYAN, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
+        //        }
         // endregion
 
         // region Invite field header
@@ -169,9 +173,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         // Yes this is kind of abusive of the formatting system, and I should probably do
                         // another .renderText call, but this makes aligning these two texts significantly easier
                         // (especially with changing gui scales and resolutions)
-                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1") +
-                                ChatFormatting.GRAY +
-                                I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                                + ChatFormatting.GRAY
+                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
                         dividedWidth * 36,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
                         CommonColors.WHITE,
@@ -324,10 +328,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
     public void reloadCreateLeaveButton() {
         createLeaveButton = new CreateLeaveButton(
-                (int) (dividedWidth * 52) + 1,
-                (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT),
-                mgmtButtonWidth,
-                20);
+                (int) (dividedWidth * 52) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT), mgmtButtonWidth, 20);
     }
 
     /**
@@ -344,7 +345,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
             partyMembersWidgets.add(new PartyMemberWidget(
                     dividedWidth * 4,
-                    dividedHeight * (9 + i*3),
+                    dividedHeight * (9 + i * 3),
                     (int) (dividedWidth * 28) - (int) (dividedWidth * 4),
                     20,
                     playerName,
@@ -379,7 +380,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     dividedWidth * 36,
-                    dividedHeight * (23 + i*3),
+                    dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
                     20,
                     playerName,

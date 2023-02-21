@@ -34,7 +34,11 @@ public class SuggestionPlayerWidget extends AbstractWidget {
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
                 .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
-                .size((int) ((this.getX() + (this.width / GRID_DIVISIONS * 24)) - (this.getX() + (this.width / GRID_DIVISIONS * 20))) - 2, 20)
+                .size(
+                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
+                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                                - 2,
+                        20)
                 .build();
     }
 
@@ -45,8 +49,34 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         ResourceLocation skin =
                 (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 8, 16, 16, 8, 8, 8, 8, 64, 64);
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 8, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getY() + (this.height / 2) - 8,
+                8,
+                16,
+                16,
+                8,
+                8,
+                8,
+                8,
+                64,
+                64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getY() + (this.height / 2) - 8,
+                8,
+                16,
+                16,
+                40,
+                8,
+                8,
+                8,
+                64,
+                64);
 
         // name rendering
         FontRenderer.getInstance()
