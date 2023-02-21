@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
+import com.wynntils.screens.partymanagement.widgets.LegendButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -123,6 +124,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .build();
         this.addRenderableWidget(kickOfflineButton);
         // endregion
+
+        this.addRenderableWidget(new LegendButton((int) (dividedWidth * 2), (int) (dividedHeight * 58)));
     }
 
     @Override
@@ -177,7 +180,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         TextShadow.NORMAL);
         // endregion
 
-        // region Party list headers
+        // region Party list
         // if you enable the debug dividers, we want to render this on the 4nd line from the left (this.width / 64 * 4)
         // and the 8th line from the top (this.height / 64 * 8)
         RenderUtils.drawRect(
@@ -228,13 +231,11 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         HorizontalAlignment.Center, // (!) center as the button spans 2 columns
                         VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
-        // endregion
 
-        // region Party list
         partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         // endregion
 
-        // region Suggestion list headers
+        // region Suggestions
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.WHITE,
@@ -273,64 +274,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                         HorizontalAlignment.Center, // (!) center as the button spans 2 columns
                         VerticalAlignment.Bottom,
                         TextShadow.NORMAL);
-        // endregion
 
-        // region Suggestion list
         suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-        // endregion
-
-        // region Legend
-//        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 300, this.height / 2 - 140, 0, 50, 1);
-//        FontRenderer.getInstance()
-//                .renderText(
-//                        poseStack,
-//                        I18n.get("screens.wynntils.partyManagementGui.legend"),
-//                        this.width / 2 - 300,
-//                        this.height / 2 - 144,
-//                        CommonColors.WHITE,
-//                        HorizontalAlignment.Left,
-//                        VerticalAlignment.Middle,
-//                        TextShadow.NORMAL);
-//        FontRenderer.getInstance()
-//                .renderText(
-//                        poseStack,
-//                        ChatFormatting.BOLD + I18n.get("screens.wynntils.partyManagementGui.self"),
-//                        this.width / 2 - 300,
-//                        this.height / 2 - 132,
-//                        CommonColors.WHITE,
-//                        HorizontalAlignment.Left,
-//                        VerticalAlignment.Middle,
-//                        TextShadow.NORMAL);
-//        FontRenderer.getInstance()
-//                .renderText(
-//                        poseStack,
-//                        I18n.get("screens.wynntils.partyManagementGui.leader"),
-//                        this.width / 2 - 300,
-//                        this.height / 2 - 120,
-//                        CommonColors.YELLOW,
-//                        HorizontalAlignment.Left,
-//                        VerticalAlignment.Middle,
-//                        TextShadow.NORMAL);
-//        FontRenderer.getInstance()
-//                .renderText(
-//                        poseStack,
-//                        ChatFormatting.STRIKETHROUGH + I18n.get("screens.wynntils.partyManagementGui.offline"),
-//                        this.width / 2 - 300,
-//                        this.height / 2 - 108,
-//                        CommonColors.WHITE,
-//                        HorizontalAlignment.Left,
-//                        VerticalAlignment.Middle,
-//                        TextShadow.NORMAL);
-//        FontRenderer.getInstance()
-//                .renderText(
-//                        poseStack,
-//                        I18n.get("screens.wynntils.partyManagementGui.friend"),
-//                        this.width / 2 - 300,
-//                        this.height / 2 - 96,
-//                        CommonColors.GREEN,
-//                        HorizontalAlignment.Left,
-//                        VerticalAlignment.Middle,
-//                        TextShadow.NORMAL);
         // endregion
     }
 
