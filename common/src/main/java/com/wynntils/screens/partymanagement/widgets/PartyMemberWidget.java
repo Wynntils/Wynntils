@@ -32,7 +32,7 @@ public class PartyMemberWidget extends AbstractWidget {
     private final float GRID_DIVISIONS;
 
     public PartyMemberWidget(float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
-        super((int) x, (int) y + 2, width, height, Component.literal(playerName));
+        super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;
         this.GRID_DIVISIONS = gridDivisions;
@@ -64,17 +64,14 @@ public class PartyMemberWidget extends AbstractWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        // debug rect
-        //RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.getX(), this.getY() + this.height / 2, 0, this.width, 1);
-
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
                 (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 8, 16, 16, 8, 8, 8, 8, 64, 64);
         // hat rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY(), 1, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(poseStack, skin, this.getX() + (this.width / GRID_DIVISIONS) - 8, this.getY() + (this.height / 2) - 8, 1, 16, 16, 40, 8, 8, 8, 64, 64);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -97,7 +94,7 @@ public class PartyMemberWidget extends AbstractWidget {
                         poseStack,
                         formattedPlayerName,
                         this.getX() + (this.width / GRID_DIVISIONS * 3),
-                        this.getY() + 8,
+                        this.getY() + this.height / 2,
                         color,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,

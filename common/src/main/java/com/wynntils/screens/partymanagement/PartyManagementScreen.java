@@ -393,7 +393,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
             partyMembersWidgets.add(new PartyMemberWidget(
                     this.width / GRID_DIVISIONS * 4,
-                    this.height / GRID_DIVISIONS * (8 * (i + 1)),
+                    this.height / GRID_DIVISIONS * (9 + i*3),
                     (int) (this.width / GRID_DIVISIONS * 28) - (int) (this.width / GRID_DIVISIONS * 4),
                     20,
                     playerName,
@@ -428,7 +428,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     this.width / GRID_DIVISIONS * 36,
-                    this.height / GRID_DIVISIONS * (22 * (i + 1)),
+                    this.height / GRID_DIVISIONS * (23 + i*3),
                     (int) ((this.width / GRID_DIVISIONS * 60) - (this.width / GRID_DIVISIONS * 36)),
                     20,
                     playerName,

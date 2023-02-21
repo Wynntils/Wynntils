@@ -27,7 +27,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
     private final float GRID_DIVISIONS;
 
     public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
-        super((int) x, (int) y + 3, width, height, Component.literal(playerName));
+        super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.GRID_DIVISIONS = gridDivisions;
         this.inviteButton = new Button.Builder(
@@ -40,9 +40,6 @@ public class SuggestionPlayerWidget extends AbstractWidget {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        // debug rect
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.getX(), this.getY() + this.height / 2, 0, this.width, 1);
-
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
