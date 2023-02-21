@@ -99,8 +99,8 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
         inviteButton = new Button.Builder(
                 Component.translatable("screens.wynntils.partyManagementGui.invite"),
                 (button) -> inviteFromField())
-                .pos((int) (dividedWidth * 57), (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
-                .size((int) (dividedWidth * 3) - 2, 20) // height must be static 20 or the texture will break
+                .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
+                .size((int) (dividedWidth * 3) - 1, 20) // height must be static 20 or the texture will break
                 .build();
         this.addRenderableWidget(inviteButton);
         // endregion
@@ -147,7 +147,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
 
         // region debug dividers
         // to make positioning easier, we will split the screen into GRID_DIVISIONS parts horizontally and vertically
-        // uncomment when fixing gui alignment
+        // uncomment when changing gui elements
 //        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
 //            double x = dividedWidth * i;
 //            double y = dividedHeight * i;
