@@ -71,6 +71,7 @@ import com.wynntils.features.user.WynncraftButtonFeature;
 import com.wynntils.features.user.WynncraftPauseScreenFeature;
 import com.wynntils.features.user.WynntilsQuestBookFeature;
 import com.wynntils.features.user.inventory.AbilityTreeScrollFeature;
+import com.wynntils.features.user.inventory.BulkBuyFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.user.inventory.HidePotionGlintFeature;
@@ -146,6 +147,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
         registerFeature(new BombBellTrackingFeature());
+        registerFeature(new BulkBuyFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
