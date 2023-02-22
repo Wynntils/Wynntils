@@ -8,7 +8,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -31,7 +31,7 @@ public class BulkBuyFeature extends UserFeature {
 
         if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left Click
             for (int i = 1; i < bulkBuyAmount; i++) {
-                InventoryUtils.sendInventorySlotMouseClick(e.getSlotNum(), InventoryUtils.MouseClickType.LEFT_CLICK);
+                ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems());
             }
         }
     }
