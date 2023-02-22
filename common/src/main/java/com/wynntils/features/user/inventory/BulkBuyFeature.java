@@ -2,18 +2,20 @@ package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.INVENTORY)
 public class BulkBuyFeature extends UserFeature {
     @Config
     public int bulkBuyAmount = 4;
