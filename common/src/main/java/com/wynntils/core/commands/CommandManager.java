@@ -17,7 +17,7 @@ import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.QuestCommand;
-import com.wynntils.commands.ServerCommand;
+import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.TokenCommand;
 import com.wynntils.commands.UpdateCommand;
@@ -175,7 +175,7 @@ public final class CommandManager extends Manager {
         registerCommand(new LootrunCommand());
         registerCommand(new QuestCommand());
         registerCommand(new UpdateCommand());
-        registerCommand(new ServerCommand());
+        registerCommand(new ServersCommand());
         registerCommand(new TerritoryCommand());
         registerCommand(new TokenCommand());
 
