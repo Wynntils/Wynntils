@@ -24,7 +24,7 @@ public class ChangelogFeature extends UserFeature {
     public String lastShownVersion = "v0.0.2-alpha.2";
 
     @Config
-    public boolean autoClassMenu = true;
+    public boolean autoClassMenu = false;
 
     private boolean waitForScreen = false;
     private String changelogData = "";
