@@ -1,9 +1,21 @@
+## [0.0.2-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.224...v0.0.2-alpha.225) (2023-02-23)
+
+
+### Bug Fixes
+
+* Friend model did not work if player's name ended in "s" ([#1192](https://github.com/Wynntils/Artemis/issues/1192)) ([abf9d63](https://github.com/Wynntils/Artemis/commit/abf9d63cf02dfebbb5739fe8d032e2784492c702))
+
 ## [0.0.2-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.223...v0.0.2-alpha.224) (2023-02-22)
 
 
 ### Bug Fixes
 
 * Changelog no longer forces Character Selection by default ([#1156](https://github.com/Wynntils/Artemis/issues/1156)) ([73dd42d](https://github.com/Wynntils/Artemis/commit/73dd42de00fc9108926fce1b21fea6c81f936032))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.224 [skip ci] ([37cacb0](https://github.com/Wynntils/Artemis/commit/37cacb0309155ff0960d5c90b69bfa378ea9ed9e))
 
 ## [0.0.2-alpha.223](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.222...v0.0.2-alpha.223) (2023-02-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.221 [skip ci] ([cdcd3b5](https://github.com/Wynntils/Artemis/commit/cdcd3b51589c492b840da04bb44c501b2509d402))
-
-## [0.0.2-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.219...v0.0.2-alpha.220) (2023-02-19)
-
-
-### New Features
-
-* Function Refactor Part 0: Functions are just facades for model logic ([#1177](https://github.com/Wynntils/Artemis/issues/1177)) ([cbb8729](https://github.com/Wynntils/Artemis/commit/cbb8729e8b33e4112b38bce4366ac8b1c03b4c5d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.220 [skip ci] ([7f23315](https://github.com/Wynntils/Artemis/commit/7f233152a29c764f02f58dcb642c4d9121a628fb))
 
