@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PoiLocation {
+    private static final int DEFAULT_Y = 64;
+
     private final int x;
     private final Integer y;
     private final int z;
@@ -32,11 +34,14 @@ public class PoiLocation {
     }
 
     public Location asLocation() {
-        return new Location(x, y, z);
+        return new Location(x, y == null ? DEFAULT_Y : y, z);
     }
 
     @Override
     public String toString() {
+        // Use short form if we're missing y coordinate
+        if (y == null) return "[" + x + ", " + z + "]";
+
         return "[" + x + ", " + y + ", " + z + "]";
     }
 
