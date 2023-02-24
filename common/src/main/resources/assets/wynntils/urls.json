@@ -113,12 +113,13 @@
   },
   {
     "id": "dataStaticMajorIds",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json",
+    "md5": "eb8ef7fff4b931a28ffaf7d8fac5a9fb"
   },
   {
     "id": "dataStaticMaps",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
-    "md5": "dbb7c99accd944be4efc8fe991a4ac7c"
+    "md5": "ce8fa555b856dce76b285a606c422aad"
   },
   {
     "id": "dataStaticMaterialConversion",
