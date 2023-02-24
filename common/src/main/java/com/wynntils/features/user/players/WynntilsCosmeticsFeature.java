@@ -8,6 +8,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
@@ -63,6 +64,7 @@ public class WynntilsCosmeticsFeature extends UserFeature {
     }
 
     private boolean shouldRenderCosmetic(Player player, Type type) {
+        if (!Managers.Connection.onServer()) return false;
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
         if (McUtils.player().is(player) && !renderOwnCape) return false;
         if (Models.Player.getUser(player.getUUID()) == null
