@@ -18,17 +18,12 @@ import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServerCommand;
-import com.wynntils.commands.TerritoryCommand;
-import com.wynntils.commands.TokenCommand;
-import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,7 +41,7 @@ import net.minecraft.network.chat.Style;
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class CommandManager extends Manager {
-    private final Set<Command> commandInstanceSet = new HashSet<>();
+    private final List<Command> commandInstanceSet = new ArrayList<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     public CommandManager() {
@@ -60,7 +55,7 @@ public final class CommandManager extends Manager {
 
     private void registerCommand(Command command) {
         commandInstanceSet.add(command);
-        command.register(clientDispatcher);
+        clientDispatcher.register(command.getCommandBuilder());
     }
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
@@ -161,7 +156,7 @@ public final class CommandManager extends Manager {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public Set<Command> getCommandInstanceSet() {
+    public List<Command> getCommandInstanceSet() {
         return commandInstanceSet;
     }
 
@@ -174,10 +169,7 @@ public final class CommandManager extends Manager {
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new QuestCommand());
-        registerCommand(new UpdateCommand());
         registerCommand(new ServerCommand());
-        registerCommand(new TerritoryCommand());
-        registerCommand(new TokenCommand());
 
         // The WynntilsCommand must be registered last, since it
         // need the above commands as aliases

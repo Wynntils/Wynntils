@@ -4,11 +4,9 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.worlds.profile.ServerProfile;
@@ -26,56 +24,27 @@ public class ServerCommand extends Command {
     private static final int UPDATE_TIME_OUT_MS = 3000;
 
     @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(getBaseCommandBuilder());
-
-        dispatcher.register(Commands.literal("s").redirect(node));
+    public String getCommandName() {
+        return "server";
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        LiteralCommandNode<CommandSourceStack> listNode = Commands.literal("list")
-                .then(Commands.literal("up").executes(this::serverUptimeList))
-                .executes(this::serverList)
-                .build();
-
-        LiteralCommandNode<CommandSourceStack> infoNode = Commands.literal("info")
-                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
-                .executes(this::serverInfoHelp)
-                .build();
-
-        return Commands.literal("server")
-                .then(listNode)
-                .then(Commands.literal("ls").redirect(listNode))
-                .then(Commands.literal("l").redirect(listNode))
-                .then(infoNode)
-                .then(Commands.literal("i").redirect(infoNode))
-                .executes(this::serverHelp);
+    public String getDescription() {
+        return "Show information about Wynncraft servers";
     }
 
-    private int serverInfoHelp(CommandContext<CommandSourceStack> context) {
-        context.getSource()
-                .sendFailure(Component.literal("Usage: /s i,info <server> | Example: \"/s i WC1\"")
-                        .withStyle(ChatFormatting.RED));
-        return 1;
-    }
-
-    private int serverHelp(CommandContext<CommandSourceStack> context) {
-        MutableComponent text = Component.literal(
-                        """
-                /s <command> [options]
-
-                commands:
-                l,ls,list (up) | list available servers
-                i,info | get info about a server
-
-                more detailed help:
-                /s <command> help""")
-                .withStyle(ChatFormatting.RED);
-
-        context.getSource().sendSuccess(text, false);
-
-        return 1;
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("list")
+                        .then(Commands.literal("up").executes(this::serverUptimeList))
+                        .executes(this::serverList)
+                        .build())
+                .then(Commands.literal("info")
+                        .then(Commands.argument("server", StringArgumentType.word())
+                                .executes(this::serverInfo))
+                        .build())
+                .executes(this::syntaxError);
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
@@ -170,5 +139,10 @@ public class ServerCommand extends Command {
         context.getSource().sendSuccess(message, false);
 
         return 1;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }

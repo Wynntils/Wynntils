@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.colors.CustomColor;
 import java.lang.reflect.Type;
@@ -126,6 +127,13 @@ public class TerritoryProfile {
 
     public Date getAcquired() {
         return acquired;
+    }
+
+    public PoiLocation getCenterLocation() {
+        int xMiddle = (this.getStartX() + this.getEndX()) / 2;
+        int zMiddle = (this.getStartZ() + this.getEndZ()) / 2;
+        PoiLocation poiLocation = new PoiLocation(xMiddle, 0, zMiddle);
+        return poiLocation;
     }
 
     public boolean insideArea(int playerX, int playerZ) {
