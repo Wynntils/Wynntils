@@ -20,12 +20,12 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class ServerCommand extends Command {
+public class ServersCommand extends Command {
     private static final int UPDATE_TIME_OUT_MS = 3000;
 
     @Override
     public String getCommandName() {
-        return "server";
+        return "servers";
     }
 
     @Override

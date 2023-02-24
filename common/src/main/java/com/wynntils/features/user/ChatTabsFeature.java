@@ -40,9 +40,9 @@ public class ChatTabsFeature extends UserFeature {
             new ChatTab("All", false, null, null, null),
             new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
-            new ChatTab("Guild", false, "/g ", Sets.newHashSet(RecipientType.GUILD), null),
-            new ChatTab("Party", false, "/p ", Sets.newHashSet(RecipientType.PARTY), null),
-            new ChatTab("Private", false, "/r ", Sets.newHashSet(RecipientType.PRIVATE), null),
+            new ChatTab("Guild", false, "/g  ", Sets.newHashSet(RecipientType.GUILD), null),
+            new ChatTab("Party", false, "/p  ", Sets.newHashSet(RecipientType.PARTY), null),
+            new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null)));
 
     @TypeOverride
