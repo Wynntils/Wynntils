@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
+import com.wynntils.models.ingredients.type.IngredientTierFormatting;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
@@ -67,18 +68,14 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     }
 
     private String getTierString(int tier) {
-        return switch (tier) {
-            case 0 -> ChatFormatting.GRAY + "[" + ChatFormatting.DARK_GRAY + "✫✫✫" + ChatFormatting.GRAY + "]";
-            case 1 -> ChatFormatting.GOLD + "[" + ChatFormatting.YELLOW + "✫" + ChatFormatting.DARK_GRAY + "✫✫"
-                    + ChatFormatting.GOLD + "]";
-            case 2 -> ChatFormatting.DARK_PURPLE + "[" + ChatFormatting.LIGHT_PURPLE + "✫✫" + ChatFormatting.DARK_GRAY
-                    + "✫" + ChatFormatting.DARK_PURPLE + "]";
-            case 3 -> ChatFormatting.DARK_AQUA + "[" + ChatFormatting.AQUA + "✫✫✫" + ChatFormatting.DARK_AQUA + "]";
-            default -> {
-                WynntilsMod.warn("Invalid ingredient tier for: " + this.ingredientInfo.name() + ": " + tier);
-                yield "";
-            }
-        };
+        String tierString = IngredientTierFormatting.fromTierNum(tier).getTierString();
+
+        if (tierString == null) {
+            WynntilsMod.warn("Invalid ingredient tier for: " + this.ingredientInfo.name() + ": " + tier);
+            return "";
+        }
+
+        return tierString;
     }
 
     private List<MutableComponent> generateGuideTooltip() {

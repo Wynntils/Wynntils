@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.ingredients.type.IngredientTierFormatting;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -71,17 +72,15 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
     // FIXME: This should be painted by ItemHighlightFeature instead...
     private CustomColor getHighlightColor(int tier) {
-        return switch (tier) {
-            case 0 -> new CustomColor(102, 102, 102);
-            case 1 -> new CustomColor(255, 247, 153);
-            case 2 -> new CustomColor(255, 255, 0);
-            case 3 -> new CustomColor(230, 77, 0);
-            default -> {
-                WynntilsMod.warn("Invalid ingredient tier for: "
-                        + itemStack.getIngredientInfo().name() + ": " + tier);
-                yield CustomColor.NONE;
-            }
-        };
+        CustomColor highlightColor = IngredientTierFormatting.fromTierNum(tier).getHighlightColor();
+
+        if (highlightColor == null) {
+            WynntilsMod.warn("Invalid ingredient tier for: "
+                    + itemStack.getIngredientInfo().name() + ": " + tier);
+            return CustomColor.NONE;
+        }
+
+        return highlightColor;
     }
 
     @Override
