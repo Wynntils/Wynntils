@@ -74,6 +74,10 @@ public final class WynntilsMod {
         }
     }
 
+    public static void postEventOnMainThread(Event event) {
+        Managers.TickScheduler.scheduleNextTick(() -> postEvent(event));
+    }
+
     public static void reloadAllComponentData() {
         componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
         componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
