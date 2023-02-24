@@ -4,13 +4,11 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -45,6 +43,62 @@ public class LootrunCommand extends Command {
                             .map((name) -> name.replaceAll("\\.json$", ""))
                             .map(StringArgumentType::escapeIfRequired),
                     suggestions);
+
+    @Override
+    public String getCommandName() {
+        return "lootrun";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Load, record and manage lootruns";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("load")
+                        .then(Commands.argument("lootrun", StringArgumentType.string())
+                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
+                                .executes(this::loadLootrun)))
+                .then(Commands.literal("record").executes(this::recordLootrun))
+                .then(Commands.literal("save")
+                        .then(Commands.argument("name", StringArgumentType.string())
+                                .executes(this::saveLootrun)))
+                .then(Commands.literal("note")
+                        .then(Commands.literal("add")
+                                .then(Commands.literal("json")
+                                        .then(Commands.argument("text", ComponentArgument.textComponent())
+                                                .executes(this::addJsonLootrunNote)))
+                                .then(Commands.literal("text")
+                                        .then(Commands.argument("text", StringArgumentType.greedyString())
+                                                .executes(this::addTextLootrunNote))))
+                        .then(Commands.literal("list").executes(this::listLootrunNote))
+                        .then(Commands.literal("delete")
+                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                        .executes(this::deleteLootrunNote))))
+                .then(Commands.literal("clear").executes(this::clearLootrun))
+                .then(Commands.literal("delete")
+                        .then(Commands.argument("name", StringArgumentType.string())
+                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
+                                .executes(this::deleteLootrun)))
+                .then(Commands.literal("rename")
+                        .then(Commands.argument("old", StringArgumentType.string())
+                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
+                                .then(Commands.argument("new", StringArgumentType.string())
+                                        .executes(this::renameLootrun))))
+                .then(Commands.literal("chest")
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                        .executes(this::addChest)))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                        .executes(this::removeChest))))
+                .then(Commands.literal("undo").executes(this::undoLootrun))
+                .then(Commands.literal("folder").executes(this::folderLootrun))
+                .then(Commands.literal("screen").executes(this::screenLootrun))
+                .executes(this::syntaxError);
+    }
 
     private int loadLootrun(CommandContext<CommandSourceStack> context) {
         String fileName = StringArgumentType.getString(context, "lootrun");
@@ -346,62 +400,8 @@ public class LootrunCommand extends Command {
     }
 
     private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource()
-                .sendFailure(Component.literal("Missing Commands.argument").withStyle(ChatFormatting.RED));
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
-    }
-
-    @Override
-    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(getBaseCommandBuilder());
-
-        dispatcher.register(Commands.literal("lr").redirect(node));
-    }
-
-    @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("lootrun")
-                .then(Commands.literal("load")
-                        .then(Commands.argument("lootrun", StringArgumentType.string())
-                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
-                                .executes(this::loadLootrun)))
-                .then(Commands.literal("record").executes(this::recordLootrun))
-                .then(Commands.literal("save")
-                        .then(Commands.argument("name", StringArgumentType.string())
-                                .executes(this::saveLootrun)))
-                .then(Commands.literal("note")
-                        .then(Commands.literal("add")
-                                .then(Commands.literal("json")
-                                        .then(Commands.argument("text", ComponentArgument.textComponent())
-                                                .executes(this::addJsonLootrunNote)))
-                                .then(Commands.literal("text")
-                                        .then(Commands.argument("text", StringArgumentType.greedyString())
-                                                .executes(this::addTextLootrunNote))))
-                        .then(Commands.literal("list").executes(this::listLootrunNote))
-                        .then(Commands.literal("delete")
-                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                                        .executes(this::deleteLootrunNote))))
-                .then(Commands.literal("clear").executes(this::clearLootrun))
-                .then(Commands.literal("delete")
-                        .then(Commands.argument("name", StringArgumentType.string())
-                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
-                                .executes(this::deleteLootrun)))
-                .then(Commands.literal("rename")
-                        .then(Commands.argument("old", StringArgumentType.string())
-                                .suggests(LOOTRUN_SUGGESTION_PROVIDER)
-                                .then(Commands.argument("new", StringArgumentType.string())
-                                        .executes(this::renameLootrun))))
-                .then(Commands.literal("chest")
-                        .then(Commands.literal("add")
-                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                                        .executes(this::addChest)))
-                        .then(Commands.literal("remove")
-                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                                        .executes(this::removeChest))))
-                .then(Commands.literal("undo").executes(this::undoLootrun))
-                .then(Commands.literal("folder").executes(this::folderLootrun))
-                .then(Commands.literal("screen").executes(this::screenLootrun))
-                .executes(this::syntaxError);
     }
 
     private int screenLootrun(CommandContext<CommandSourceStack> context) {
