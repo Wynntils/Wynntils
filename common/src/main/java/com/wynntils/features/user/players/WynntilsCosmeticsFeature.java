@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.user.players;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -44,12 +43,12 @@ public class WynntilsCosmeticsFeature extends UserFeature {
     public void onLayerRegisteration(RenderLayerRegistrationEvent event) {
         event.registerLayer(new WynntilsCapeLayer(event.getPlayerRenderer(), this));
         event.registerLayer(new WynntilsElytraLayer(
-                event.getPlayerRenderer(), event.getContext().getModelSet(), this));
+                event.getPlayerRenderer(), this, event.getContext().getModelSet()));
     }
 
     @SubscribeEvent
     public void onCapeRender(PlayerRenderLayerEvent.Cape event) {
-        if (shouldRenderCosmetic(event.getPlayer(), Type.CAPE)) {
+        if (shouldRenderCape(event.getPlayer(), false)) {
             // Cancel default cape rendering, so ours doesn't cause a double up of capes
             event.setCanceled(true);
         }
@@ -57,24 +56,35 @@ public class WynntilsCosmeticsFeature extends UserFeature {
 
     @SubscribeEvent
     public void onElytraRender(PlayerRenderLayerEvent.Elytra event) {
-        if (shouldRenderCosmetic(event.getPlayer(), Type.ELYTRA)) {
+        if (shouldRenderCape(event.getPlayer(), true)) {
             // This might not be necessary?
             event.setCanceled(true);
         }
     }
 
-    private boolean shouldRenderCosmetic(Player player, Type type) {
-        if (!Managers.Connection.onServer()) return false;
+    private boolean shouldRenderCape(Player player, boolean elytra) {
+        if (!isEnabled() || !Managers.Connection.onServer()) return false;
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
         if (McUtils.player().is(player) && !renderOwnCape) return false;
+
         if (Models.Player.getUser(player.getUUID()) == null
                 || Models.Player.getUserCosmeticTexture(player.getUUID()) == null) return false;
 
         CosmeticInfo cosmetics = Models.Player.getUser(player.getUUID()).cosmetics();
-        return (type == Type.CAPE ? cosmetics.hasCape() : cosmetics.hasElytra());
+        return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
     }
 
-    private ResourceLocation getTexture(Player player) {
+    // TODO: implement ear rendering
+    private boolean shouldRenderEars(AbstractClientPlayer player) {
+        if (!isEnabled() || !Managers.Connection.onServer()) return false;
+        if (!player.isSkinLoaded() || player.isInvisible()) return false;
+
+        if (Models.Player.getUser(player.getUUID()) == null) return false;
+
+        return Models.Player.getUser(player.getUUID()).cosmetics().hasEars();
+    }
+
+    private ResourceLocation getCapeTexture(Player player) {
         ResourceLocation[] textures = Models.Player.getUserCosmeticTexture(player.getUUID());
         if (textures == null) return null;
 
@@ -88,15 +98,24 @@ public class WynntilsCosmeticsFeature extends UserFeature {
         return textures[currentFrame];
     }
 
-    private static final class WynntilsCapeLayer
+    private abstract static class WynntilsLayer
             extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-        private final WynntilsCosmeticsFeature parent;
+        protected final WynntilsCosmeticsFeature parent;
 
-        private WynntilsCapeLayer(
+        private WynntilsLayer(
                 RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent,
                 WynntilsCosmeticsFeature parent) {
             super(renderLayerParent);
             this.parent = parent;
+        }
+    }
+
+    private static final class WynntilsCapeLayer extends WynntilsLayer {
+
+        private WynntilsCapeLayer(
+                RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent,
+                WynntilsCosmeticsFeature parent) {
+            super(renderLayerParent, parent);
         }
 
         @Override
@@ -111,39 +130,43 @@ public class WynntilsCosmeticsFeature extends UserFeature {
                 float ageInTicks,
                 float netHeadYaw,
                 float headPitch) {
-            if (!parent.shouldRenderCosmetic(player, Type.CAPE)) return;
+            if (!parent.shouldRenderCape(player, false)) return;
 
-            ResourceLocation texture = parent.getTexture(player);
+            ResourceLocation texture = parent.getCapeTexture(player);
             if (texture == null) return;
 
             poseStack.pushPose();
             poseStack.translate(0.0f, 0.0f, 0.125f);
-            double d = Mth.lerp(partialTick, player.xCloakO, player.xCloak)
+            double xOffset = Mth.lerp(partialTick, player.xCloakO, player.xCloak)
                     - Mth.lerp(partialTick, player.xo, player.getX());
-            double e = Mth.lerp(partialTick, player.yCloakO, player.yCloak)
+            double yOffset = Mth.lerp(partialTick, player.yCloakO, player.yCloak)
                     - Mth.lerp(partialTick, player.yo, player.getY());
-            double f = Mth.lerp(partialTick, player.zCloakO, player.zCloak)
+            double zOffset = Mth.lerp(partialTick, player.zCloakO, player.zCloak)
                     - Mth.lerp(partialTick, player.zo, player.getZ());
-            float g = player.yBodyRotO + (player.yBodyRot - player.yBodyRotO);
-            double h = Mth.sin(g * ((float) Math.PI / 180));
-            double i = -Mth.cos(g * ((float) Math.PI / 180));
-            float j = (float) e * 10.0f;
-            j = Mth.clamp(j, -6.0f, 32.0f);
-            float k = (float) (d * h + f * i) * 100.0f;
-            k = Mth.clamp(k, 0.0f, 150.0f);
-            float l = (float) (d * i - f * h) * 100.0f;
-            l = Mth.clamp(l, -20.0f, 20.0f);
-            if (k < 0.0f) {
-                k = 0.0f;
+
+            float rotation = player.yBodyRotO + (player.yBodyRot - player.yBodyRotO);
+            double rotationSin = Mth.sin(rotation * ((float) Math.PI / 180));
+            double rotationCos = -Mth.cos(rotation * ((float) Math.PI / 180));
+
+            float capeX = (float) (xOffset * rotationSin + zOffset * rotationCos) * 100.0f;
+            capeX = Mth.clamp(capeX, 0.0f, 150.0f);
+            if (capeX < 0.0f) {
+                capeX = 0.0f;
             }
-            float m = Mth.lerp(partialTick, player.oBob, player.bob);
-            j += Mth.sin(Mth.lerp(partialTick, player.walkDistO, player.walkDist) * 6.0f) * 32.0f * m;
+
+            float capeY = (float) Mth.clamp(yOffset * 10f, -6.0f, 32.0f);
+            float bobOffset = Mth.lerp(partialTick, player.oBob, player.bob);
+            capeY += Mth.sin(Mth.lerp(partialTick, player.walkDistO, player.walkDist) * 6.0f) * 32.0f * bobOffset;
             if (player.isCrouching()) {
-                j += 25.0f;
+                capeY += 25.0f;
             }
-            poseStack.mulPose(Axis.XP.rotationDegrees(6.0f + k / 2.0f + j));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(l / 2.0f));
-            poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - l / 2.0f));
+
+            float capeZ = (float) (xOffset * rotationCos - zOffset * rotationSin) * 100.0f;
+            capeZ = Mth.clamp(capeZ, -20.0f, 20.0f);
+
+            poseStack.mulPose(Axis.XP.rotationDegrees(6.0f + capeX / 2.0f + capeY));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(capeZ / 2.0f));
+            poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - capeZ / 2.0f));
 
             VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entitySolid(texture));
             this.getParentModel().renderCloak(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
@@ -151,18 +174,15 @@ public class WynntilsCosmeticsFeature extends UserFeature {
         }
     }
 
-    private static final class WynntilsElytraLayer
-            extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-        private final WynntilsCosmeticsFeature parent;
+    private static final class WynntilsElytraLayer extends WynntilsLayer {
         private final ElytraModel<AbstractClientPlayer> elytraModel;
 
         private WynntilsElytraLayer(
                 RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent,
-                EntityModelSet entityModelSet,
-                WynntilsCosmeticsFeature parent) {
-            super(renderLayerParent);
-            this.elytraModel = new ElytraModel(entityModelSet.bakeLayer(ModelLayers.ELYTRA));
-            this.parent = parent;
+                WynntilsCosmeticsFeature parent,
+                EntityModelSet entityModelSet) {
+            super(renderLayerParent, parent);
+            this.elytraModel = new ElytraModel<>(entityModelSet.bakeLayer(ModelLayers.ELYTRA));
         }
 
         @Override
@@ -177,9 +197,9 @@ public class WynntilsCosmeticsFeature extends UserFeature {
                 float ageInTicks,
                 float netHeadYaw,
                 float headPitch) {
-            if (!parent.shouldRenderCosmetic(player, Type.ELYTRA)) return;
+            if (!parent.shouldRenderCape(player, false)) return;
 
-            ResourceLocation texture = parent.getTexture(player);
+            ResourceLocation texture = parent.getCapeTexture(player);
             if (texture == null) return;
 
             poseStack.pushPose();
