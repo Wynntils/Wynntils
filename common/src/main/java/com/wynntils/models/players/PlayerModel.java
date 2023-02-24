@@ -77,13 +77,9 @@ public final class PlayerModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        switch (event.getNewState()) {
-            case NOT_CONNECTED:
-                clearTextureCache();
-                // intentional fallthrough
-            case CONNECTING:
-                clearUserCache();
-                break;
+        if (event.getNewState() == WorldState.NOT_CONNECTED) {
+            clearTextureCache();
+            clearUserCache();
         }
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
