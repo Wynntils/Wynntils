@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
@@ -24,35 +23,46 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
 public class FunctionCommand extends Command {
-    @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("function")
-                .then(this.buildListNode())
-                .then(this.buildEnableNode())
-                .then(this.buildGetValueNode())
-                .then(this.buildGetValueWithArgumentNode())
-                .then(this.buildHelpNode())
-                .executes(this::syntaxError);
-    }
-
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
-        return 0;
-    }
-
-    private final SuggestionProvider<CommandSourceStack> functionSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> FUNCTION_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Managers.Function.getFunctions().stream().map(Function::getName), builder);
 
-    private final SuggestionProvider<CommandSourceStack> crashedFunctionSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> CRASHED_FUNCTION_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Managers.Function.getFunctions().stream()
                             .filter(Managers.Function::isCrashed)
                             .map(Function::getName),
                     builder);
 
-    private LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return Commands.literal("list").executes(this::listFunctions).build();
+    @Override
+    public String getCommandName() {
+        return "function";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Call Wynntils functions";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("list").executes(this::listFunctions))
+                .then(Commands.literal("enable")
+                        .then(Commands.argument("function", StringArgumentType.word())
+                                .suggests(CRASHED_FUNCTION_SUGGESTION_PROVIDER)
+                                .executes(this::enableFunction)))
+                .then(Commands.literal("get")
+                        .then(Commands.argument("function", StringArgumentType.word())
+                                .suggests(FUNCTION_SUGGESTION_PROVIDER)
+                                .executes(this::getValue))
+                        .then(Commands.argument("argument", StringArgumentType.greedyString())
+                                .executes(this::getValue)))
+                .then(Commands.literal("help")
+                        .then(Commands.argument("function", StringArgumentType.word())
+                                .suggests(FUNCTION_SUGGESTION_PROVIDER)
+                                .executes(this::helpForFunction)))
+                .executes(this::syntaxError);
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
@@ -86,14 +96,6 @@ public class FunctionCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> buildEnableNode() {
-        return Commands.literal("enable")
-                .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(crashedFunctionSuggestionProvider)
-                        .executes(this::enableFunction))
-                .build();
-    }
-
     private int enableFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
@@ -122,23 +124,6 @@ public class FunctionCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> buildGetValueNode() {
-        return Commands.literal("get")
-                .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(functionSuggestionProvider)
-                        .executes(this::getValue))
-                .build();
-    }
-
-    private LiteralCommandNode<CommandSourceStack> buildGetValueWithArgumentNode() {
-        return Commands.literal("get")
-                .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(functionSuggestionProvider)
-                        .then(Commands.argument("argument", StringArgumentType.greedyString())
-                                .executes(this::getValue)))
-                .build();
-    }
-
     private int getValue(CommandContext<CommandSourceStack> context) {
         Component argument;
         try {
@@ -164,14 +149,6 @@ public class FunctionCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> buildHelpNode() {
-        return Commands.literal("help")
-                .then(Commands.argument("function", StringArgumentType.word())
-                        .suggests(functionSuggestionProvider)
-                        .executes(this::helpForFunction))
-                .build();
-    }
-
     private int helpForFunction(CommandContext<CommandSourceStack> context) {
         String functionName = context.getArgument("function", String.class);
 
@@ -192,5 +169,10 @@ public class FunctionCommand extends Command {
                 .append(Component.literal(helpText).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }
