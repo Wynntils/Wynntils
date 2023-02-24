@@ -117,7 +117,9 @@ public class LocateCommand extends Command {
                 poi.getLocation().getY().orElse((int) currentLocation.y),
                 poi.getLocation().getZ())));
         // Removes from element 4 to the end of the list
-        services.subList(4, services.size()).clear();
+        if (services.size() > 4) {
+            services.subList(4, services.size()).clear();
+        }
 
         MutableComponent response = Component.literal("Found " + selectedKind.getName() + " services:")
                 .withStyle(ChatFormatting.AQUA);
