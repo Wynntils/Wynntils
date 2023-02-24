@@ -1,9 +1,21 @@
+## [0.0.2-alpha.226](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.225...v0.0.2-alpha.226) (2023-02-24)
+
+
+### New Features
+
+* Wynntils commands overhaul ([#1194](https://github.com/Wynntils/Artemis/issues/1194)) ([1599b9b](https://github.com/Wynntils/Artemis/commit/1599b9b3d69d6a6ef7020a45afb1d1de340f7676))
+
 ## [0.0.2-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.224...v0.0.2-alpha.225) (2023-02-23)
 
 
 ### Bug Fixes
 
 * Friend model did not work if player's name ended in "s" ([#1192](https://github.com/Wynntils/Artemis/issues/1192)) ([abf9d63](https://github.com/Wynntils/Artemis/commit/abf9d63cf02dfebbb5739fe8d032e2784492c702))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.225 [skip ci] ([fa90b2e](https://github.com/Wynntils/Artemis/commit/fa90b2ead97cf3e5ba1791fbb2f38bbfae421eb0))
 
 ## [0.0.2-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.223...v0.0.2-alpha.224) (2023-02-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.222 [skip ci] ([80b020b](https://github.com/Wynntils/Artemis/commit/80b020b67cdafb0dade1716c48b0784bba10c16d))
-
-## [0.0.2-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.220...v0.0.2-alpha.221) (2023-02-20)
-
-
-### Bug Fixes
-
-* Fix parsing of weapons with gear skins ([#1182](https://github.com/Wynntils/Artemis/issues/1182)) ([07f37f5](https://github.com/Wynntils/Artemis/commit/07f37f5968f644fe5fc713f642745f517b38f6e0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.221 [skip ci] ([cdcd3b5](https://github.com/Wynntils/Artemis/commit/cdcd3b51589c492b840da04bb44c501b2509d402))
 
