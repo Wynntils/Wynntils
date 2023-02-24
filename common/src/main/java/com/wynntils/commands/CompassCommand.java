@@ -43,7 +43,7 @@ public class CompassCommand extends Command {
                             McUtils.mc().level.players().stream().map(Player::getScoreboardName)),
                     builder);
 
-    private static final SuggestionProvider<CommandSourceStack> TERRITORY_SUGGESTION_PROVIDER =
+    public static final SuggestionProvider<CommandSourceStack> TERRITORY_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(Models.Territory.getTerritoryNames(), builder);
 
     @Override
@@ -222,7 +222,8 @@ public class CompassCommand extends Command {
         return 1;
     }
 
-    private int territory(CommandContext<CommandSourceStack> context) {
+    // this is shared by TerritoryCommand
+    public int territory(CommandContext<CommandSourceStack> context) {
         String territoryArg = context.getArgument("territory", String.class);
 
         TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(territoryArg);
@@ -259,7 +260,7 @@ public class CompassCommand extends Command {
         return 0;
     }
 
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
+    public int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }

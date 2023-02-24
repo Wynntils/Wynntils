@@ -18,6 +18,7 @@ import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServerCommand;
+import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
@@ -170,6 +171,7 @@ public final class CommandManager extends Manager {
         registerCommand(new LootrunCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServerCommand());
+        registerCommand(new TerritoryCommand());
 
         // The WynntilsCommand must be registered last, since it
         // need the above commands as aliases
