@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.players;
 
-import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -12,10 +12,13 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
-import com.wynntils.models.players.type.AccountType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,6 +38,7 @@ public final class PlayerModel extends Model {
     private static final int MAX_ERRORS = 5;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
+    private final Map<UUID, ResourceLocation[]> cosmeticTextures = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
@@ -61,6 +67,10 @@ public final class PlayerModel extends Model {
         return users.getOrDefault(uuid, null);
     }
 
+    public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
+        return cosmeticTextures.getOrDefault(uuid, null);
+    }
+
     public void reset() {
         errorCount = 0;
     }
@@ -68,7 +78,12 @@ public final class PlayerModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
-            case NOT_CONNECTED, CONNECTING -> clearUserCache();
+            case NOT_CONNECTED:
+                clearTextureCache();
+                // intentional fallthrough
+            case CONNECTING:
+                clearUserCache();
+                break;
         }
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
@@ -77,12 +92,12 @@ public final class PlayerModel extends Model {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
-        UUID uuid = event.getPlayerId();
-        if (uuid == null || event.getPlayerInfo() == null) return;
-        String name = event.getPlayerInfo().getProfile().getName();
+        Player player = event.getPlayer();
+        if (player == null || player.getUUID() == null) return;
+        String name = player.getGameProfile().getName();
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(uuid);
+        loadUser(player.getUUID());
     }
 
     @SubscribeEvent
@@ -120,11 +135,10 @@ public final class PlayerModel extends Model {
                 json -> {
                     if (!json.has("user")) return;
 
-                    JsonObject user = json.getAsJsonObject("user");
-                    users.put(
-                            uuid,
-                            new WynntilsUser(
-                                    AccountType.valueOf(user.get("accountType").getAsString())));
+                    WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
+
+                    users.put(uuid, user);
+                    loadCosmeticTextures(uuid, user);
                     fetching.remove(uuid);
                 },
                 onError -> {
@@ -135,8 +149,48 @@ public final class PlayerModel extends Model {
                 });
     }
 
+    private void loadCosmeticTextures(UUID uuid, WynntilsUser user) {
+        try {
+            if (user.cosmetics().texture() == null || user.cosmetics().texture().isEmpty()) return;
+            if (cosmeticTextures.containsKey(uuid)) return;
+
+            byte[] textureBytes = Base64.getDecoder().decode(user.cosmetics().texture());
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(textureBytes);
+            NativeImage image = NativeImage.read(byteStream);
+
+            int frames = (image.getHeight() * 2) / image.getWidth();
+            int frameHeight = image.getHeight() / frames;
+
+            ResourceLocation[] locations = new ResourceLocation[frames];
+            String baseLocation = "wynntils:capes/" + uuid.toString().replace("-", "");
+
+            if (frames == 1) { // not animated
+                locations[0] = new ResourceLocation(baseLocation);
+                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
+            } else { // animated
+                for (int i = 0; i < frames; i++) {
+                    NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
+                    image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
+
+                    locations[i] = new ResourceLocation(baseLocation + "/" + i);
+                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
+                }
+            }
+
+            cosmeticTextures.put(uuid, locations);
+        } catch (IOException e) {
+            WynntilsMod.warn("IOException occurred while loading cosmetics for user " + uuid, e);
+        }
+    }
+
     private void clearUserCache() {
         users.clear();
+    }
+
+    private void clearTextureCache() {
+        cosmeticTextures.forEach((uuid, array) -> Arrays.stream(array)
+                .forEach(l -> McUtils.mc().getTextureManager().release(l)));
+        cosmeticTextures.clear();
     }
 
     private void clearGhostCache() {

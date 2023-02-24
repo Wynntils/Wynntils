@@ -50,7 +50,6 @@ import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
-import com.wynntils.mc.event.PlayerArmorRenderEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
@@ -58,10 +57,12 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogInEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.RenderLayerRegistrationEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ResourcePackClearEvent;
@@ -97,18 +98,18 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -167,8 +168,16 @@ public final class EventFactory {
     }
 
     // region Render Events
-    public static PlayerArmorRenderEvent onPlayerArmorRender(Player player, EquipmentSlot slot) {
-        return post(new PlayerArmorRenderEvent(player, slot));
+    public static PlayerRenderLayerEvent.Armor onPlayerArmorRender(Player player, EquipmentSlot slot) {
+        return post(new PlayerRenderLayerEvent.Armor(player, slot));
+    }
+
+    public static PlayerRenderLayerEvent.Cape onCapeRender(Player player) {
+        return post(new PlayerRenderLayerEvent.Cape(player));
+    }
+
+    public static PlayerRenderLayerEvent.Elytra onElytraRender(Player player) {
+        return post(new PlayerRenderLayerEvent.Elytra(player));
     }
 
     public static GroundItemEntityTransformEvent onGroundItemRender(PoseStack poseStack, ItemStack stack) {
@@ -278,6 +287,11 @@ public final class EventFactory {
 
     public static LivingEntityRenderTranslucentCheckEvent onTranslucentCheck(boolean translucent, LivingEntity entity) {
         return post(new LivingEntityRenderTranslucentCheckEvent(translucent, entity, translucent ? 0.15f : 1f));
+    }
+
+    public static RenderLayerRegistrationEvent onRenderLayerRegistration(
+            PlayerRenderer playerRenderer, EntityRendererProvider.Context context, boolean slim) {
+        return postAlways(new RenderLayerRegistrationEvent(playerRenderer, context, slim));
     }
 
     // endregion
@@ -473,16 +487,8 @@ public final class EventFactory {
     // endregion
 
     // region Server Events
-    public static void onPlayerJoinedWorld(ClientboundAddPlayerPacket packet, PlayerInfo playerInfo) {
-        post(new PlayerJoinedWorldEvent(
-                packet.getEntityId(),
-                packet.getPlayerId(),
-                packet.getX(),
-                packet.getY(),
-                packet.getZ(),
-                packet.getxRot(),
-                packet.getyRot(),
-                playerInfo));
+    public static void onPlayerJoinedWorld(Player player) {
+        post(new PlayerJoinedWorldEvent(player));
     }
 
     public static void onDisconnect() {
