@@ -84,12 +84,12 @@
   {
     "id": "dataStaticDiscoveries",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/discoveries.json",
-    "md5": "f85efa2a19d9b84e1a8c3761ba50866a"
+    "md5": "a61038978cc3e26b4f3a80bf42b207b3"
   },
   {
     "id": "dataStaticGear",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json",
-    "md5": "00c5bf05be959cf7068d692f2da18557"
+    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b"
   },
   {
     "id": "dataStaticItemObtain",
@@ -104,7 +104,7 @@
   {
     "id": "dataStaticIngredientSkins",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients_skins.json",
-    "md5": "6ef0610272a92d24d470e17791d1d6e8"
+    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0"
   },
   {
     "id": "dataStaticItemGuesses",
