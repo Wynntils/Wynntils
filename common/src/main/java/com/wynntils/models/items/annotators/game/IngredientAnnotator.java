@@ -32,7 +32,6 @@ public final class IngredientAnnotator implements ItemAnnotator {
 
         if (ingredientInfo.tier() != tier) {
             WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
-            return null;
         }
 
         return new IngredientItem(ingredientInfo);

@@ -41,11 +41,12 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
 
             int tier = Models.Ingredient.getTierFromColorCode(tierColor);
             IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);
-            if (ingredientInfo == null) return null;
+
+            // Skip unknown ingredients; the pouch list will be wrong but better than nothing
+            if (ingredientInfo == null) continue;
 
             if (ingredientInfo.tier() != tier) {
                 WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
-                return null;
             }
 
             ingredients.add(Pair.of(ingredientInfo, count));
