@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.lootruns;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -203,6 +204,7 @@ public final class LootrunRenderer {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
