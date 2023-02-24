@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,7 @@ public final class PlayerModel extends Model {
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
+    private Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());
@@ -71,6 +73,10 @@ public final class PlayerModel extends Model {
         return cosmeticTextures.getOrDefault(uuid, null);
     }
 
+    public Stream<String> getAllPlayerNames() {
+        return nameMap.values().stream();
+    }
+
     public void reset() {
         errorCount = 0;
     }
@@ -93,7 +99,7 @@ public final class PlayerModel extends Model {
         String name = player.getGameProfile().getName();
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(player.getUUID());
+        loadUser(player.getUUID(), name);
     }
 
     @SubscribeEvent
@@ -117,7 +123,7 @@ public final class PlayerModel extends Model {
         ghosts.put(uuid, world);
     }
 
-    private void loadUser(UUID uuid) {
+    private void loadUser(UUID uuid, String name) {
         if (fetching.contains(uuid)) return;
         if (errorCount >= MAX_ERRORS) {
             // Athena is having problems, skip this
@@ -125,6 +131,7 @@ public final class PlayerModel extends Model {
         }
 
         fetching.add(uuid); // temporary, avoid extra loads
+        nameMap.put(uuid, name);
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
@@ -181,6 +188,7 @@ public final class PlayerModel extends Model {
 
     private void clearUserCache() {
         users.clear();
+        nameMap.clear();
     }
 
     private void clearTextureCache() {
