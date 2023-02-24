@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -120,6 +121,10 @@ public class MapFeature extends UserFeature {
     @RegisterKeyBind
     public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, this::openMainMap);
 
+    @RegisterKeyBind
+    public final KeyBind newWaypointKeybind =
+            new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+
     private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
@@ -129,6 +134,15 @@ public class MapFeature extends UserFeature {
         }
 
         McUtils.mc().setScreen(MainMapScreen.create());
+    }
+
+    private void openWaypointSetup() {
+        var location = new PoiLocation(
+                McUtils.player().getBlockX(),
+                McUtils.player().getBlockY(),
+                McUtils.player().getBlockZ());
+
+        McUtils.mc().setScreen(PoiCreationScreen.create(null, location));
     }
 
     @SubscribeEvent
