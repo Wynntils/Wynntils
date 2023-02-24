@@ -1,9 +1,21 @@
+## [0.0.2-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.228...v0.0.2-alpha.229) (2023-02-24)
+
+
+### Bug Fixes
+
+* /locate place and /compass place now work ([#1198](https://github.com/Wynntils/Artemis/issues/1198)) ([ea48c49](https://github.com/Wynntils/Artemis/commit/ea48c49a1eae6d9a5504b109111271f70d0df1d5))
+
 ## [0.0.2-alpha.228](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.227...v0.0.2-alpha.228) (2023-02-24)
 
 
 ### New Features
 
 * Ingredient rewrite ([#1129](https://github.com/Wynntils/Artemis/issues/1129)) ([2c310d1](https://github.com/Wynntils/Artemis/commit/2c310d160beea077334782916514b7eced1fd799))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.228 [skip ci] ([0cdf27e](https://github.com/Wynntils/Artemis/commit/0cdf27ed4f9c4e62945dc1dc5769bfc468756176))
 
 ## [0.0.2-alpha.227](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.226...v0.0.2-alpha.227) (2023-02-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.225 [skip ci] ([fa90b2e](https://github.com/Wynntils/Artemis/commit/fa90b2ead97cf3e5ba1791fbb2f38bbfae421eb0))
-
-## [0.0.2-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.223...v0.0.2-alpha.224) (2023-02-22)
-
-
-### Bug Fixes
-
-* Changelog no longer forces Character Selection by default ([#1156](https://github.com/Wynntils/Artemis/issues/1156)) ([73dd42d](https://github.com/Wynntils/Artemis/commit/73dd42de00fc9108926fce1b21fea6c81f936032))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.224 [skip ci] ([37cacb0](https://github.com/Wynntils/Artemis/commit/37cacb0309155ff0960d5c90b69bfa378ea9ed9e))
 
