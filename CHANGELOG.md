@@ -1,9 +1,21 @@
+## [0.0.2-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.229...v0.0.2-alpha.230) (2023-02-25)
+
+
+### Bug Fixes
+
+* Map data were missing on dev version ([#1199](https://github.com/Wynntils/Artemis/issues/1199)) ([21696bc](https://github.com/Wynntils/Artemis/commit/21696bc026e90d3e6341c2811917101c2ae655cb))
+
 ## [0.0.2-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.228...v0.0.2-alpha.229) (2023-02-24)
 
 
 ### Bug Fixes
 
 * /locate place and /compass place now work ([#1198](https://github.com/Wynntils/Artemis/issues/1198)) ([ea48c49](https://github.com/Wynntils/Artemis/commit/ea48c49a1eae6d9a5504b109111271f70d0df1d5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.229 [skip ci] ([f22d328](https://github.com/Wynntils/Artemis/commit/f22d328f6c3f6560fa2cda76272faab871fc8d0b))
 
 ## [0.0.2-alpha.228](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.227...v0.0.2-alpha.228) (2023-02-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.226 [skip ci] ([a1993ae](https://github.com/Wynntils/Artemis/commit/a1993ae00482e7aba655151b7cb54b5723f4f6d7))
-
-## [0.0.2-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.224...v0.0.2-alpha.225) (2023-02-23)
-
-
-### Bug Fixes
-
-* Friend model did not work if player's name ended in "s" ([#1192](https://github.com/Wynntils/Artemis/issues/1192)) ([abf9d63](https://github.com/Wynntils/Artemis/commit/abf9d63cf02dfebbb5739fe8d032e2784492c702))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.225 [skip ci] ([fa90b2e](https://github.com/Wynntils/Artemis/commit/fa90b2ead97cf3e5ba1791fbb2f38bbfae421eb0))
 
