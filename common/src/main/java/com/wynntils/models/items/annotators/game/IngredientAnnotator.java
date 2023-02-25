@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.ingredients.profile.IngredientProfile;
+import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.game.IngredientItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,15 +25,15 @@ public final class IngredientAnnotator implements ItemAnnotator {
 
         String ingredientName = matcher.group(1);
         String tierColor = matcher.group(2);
-        int tier = Models.IngredientProfiles.getTierFromColorCode(tierColor);
 
-        IngredientProfile ingredientProfile = Models.IngredientProfiles.getIngredient(ingredientName);
-        if (ingredientProfile == null) return null;
-        if (ingredientProfile.getTier().getTierInt() != tier) {
+        int tier = Models.Ingredient.getTierFromColorCode(tierColor);
+        IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);
+        if (ingredientInfo == null) return null;
+
+        if (ingredientInfo.tier() != tier) {
             WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
-            return null;
         }
 
-        return new IngredientItem(ingredientProfile);
+        return new IngredientItem(ingredientInfo);
     }
 }
