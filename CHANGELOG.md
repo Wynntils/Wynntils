@@ -1,9 +1,21 @@
+## [0.0.2-alpha.231](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.230...v0.0.2-alpha.231) (2023-02-25)
+
+
+### New Features
+
+* Custom cape and elytra cosmetics ([#1195](https://github.com/Wynntils/Artemis/issues/1195)) ([5ab1cf2](https://github.com/Wynntils/Artemis/commit/5ab1cf2d9170c3568b9b6cd556a3cdaca6d6e1e4))
+
 ## [0.0.2-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.229...v0.0.2-alpha.230) (2023-02-25)
 
 
 ### Bug Fixes
 
 * Map data were missing on dev version ([#1199](https://github.com/Wynntils/Artemis/issues/1199)) ([21696bc](https://github.com/Wynntils/Artemis/commit/21696bc026e90d3e6341c2811917101c2ae655cb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.230 [skip ci] ([ce4508a](https://github.com/Wynntils/Artemis/commit/ce4508aceb8eae60eb24a0cb9a19b9798419750c))
 
 ## [0.0.2-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.228...v0.0.2-alpha.229) (2023-02-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.227 [skip ci] ([d875fdd](https://github.com/Wynntils/Artemis/commit/d875fdd4bb8f76f465114b789359887d6bb27a36))
-
-## [0.0.2-alpha.226](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.225...v0.0.2-alpha.226) (2023-02-24)
-
-
-### New Features
-
-* Wynntils commands overhaul ([#1194](https://github.com/Wynntils/Artemis/issues/1194)) ([1599b9b](https://github.com/Wynntils/Artemis/commit/1599b9b3d69d6a6ef7020a45afb1d1de340f7676))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.226 [skip ci] ([a1993ae](https://github.com/Wynntils/Artemis/commit/a1993ae00482e7aba655151b7cb54b5723f4f6d7))
 
