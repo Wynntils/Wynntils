@@ -137,7 +137,7 @@ public class MapFeature extends UserFeature {
     }
 
     private void openWaypointSetup() {
-        var location = new PoiLocation(
+        PoiLocation location = new PoiLocation(
                 McUtils.player().getBlockX(),
                 McUtils.player().getBlockY(),
                 McUtils.player().getBlockZ());
