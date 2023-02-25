@@ -5,9 +5,11 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.ingredients.type.IngredientTierFormatting;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -35,7 +37,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.getIngredientProfile().getTier().getHighlightColor();
+        CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
         float actualX = screen.getTranslationX() + getX();
         float actualY = screen.getTranslationY() + getY();
@@ -53,7 +55,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
         RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
 
-        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+        String unformattedName = itemStack.getIngredientInfo().name();
         if (Models.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
@@ -68,13 +70,26 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
         }
     }
 
+    // FIXME: This should be painted by ItemHighlightFeature instead...
+    private CustomColor getHighlightColor(int tier) {
+        CustomColor highlightColor = IngredientTierFormatting.fromTierNum(tier).getHighlightColor();
+
+        if (highlightColor == null) {
+            WynntilsMod.warn("Invalid ingredient tier for: "
+                    + itemStack.getIngredientInfo().name() + ": " + tier);
+            return CustomColor.NONE;
+        }
+
+        return highlightColor;
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
             return false;
         }
 
-        String unformattedName = itemStack.getIngredientProfile().getDisplayName();
+        String unformattedName = itemStack.getIngredientInfo().name();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;

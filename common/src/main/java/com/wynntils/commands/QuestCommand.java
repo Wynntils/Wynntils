@@ -39,8 +39,18 @@ public class QuestCommand extends Command {
                     builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("quest")
+    public String getCommandName() {
+        return "quest";
+    }
+
+    @Override
+    public String getDescription() {
+        return "List, show and track quests";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
                 .then(Commands.literal("list")
                         .executes((ctxt) -> listQuests(ctxt, "distance"))
                         .then(Commands.argument("sort", StringArgumentType.word())

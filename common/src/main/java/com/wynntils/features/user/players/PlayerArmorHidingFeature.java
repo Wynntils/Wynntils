@@ -9,7 +9,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.mc.event.PlayerArmorRenderEvent;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +33,7 @@ public class PlayerArmorHidingFeature extends UserFeature {
     public boolean showCosmetics = true;
 
     @SubscribeEvent
-    public void onPlayerArmorRender(PlayerArmorRenderEvent event) {
+    public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         switch (event.getSlot()) {
             case HEAD -> {
                 if (!hideHelmets) return;

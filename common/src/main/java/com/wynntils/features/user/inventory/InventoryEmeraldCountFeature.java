@@ -98,18 +98,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
-            int[] emeraldAmounts = calculateEmeraldAmounts(emeralds);
-            StringBuilder builder = new StringBuilder();
-
-            for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
-                if (emeraldAmounts[i] == 0) continue;
-
-                builder.append(emeraldAmounts[i])
-                        .append(EmeraldUnits.values()[i].getSymbol())
-                        .append(" ");
-            }
-
-            emeraldText = builder.toString().trim();
+            emeraldText = Models.Emerald.getFormattedString(emeralds);
         }
 
         FontRenderer.getInstance()
@@ -137,7 +126,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
         } else {
-            emeraldAmounts = Arrays.stream(calculateEmeraldAmounts(emeralds))
+            emeraldAmounts = Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
                     .mapToObj(String::valueOf)
                     .toArray(String[]::new);
         }
@@ -190,10 +179,6 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         }
 
         poseStack.popPose();
-    }
-
-    private static int[] calculateEmeraldAmounts(int emeralds) {
-        return new int[] {emeralds % 64, (emeralds / 64) % 64, emeralds / 4096};
     }
 
     public enum EmeraldCountType {

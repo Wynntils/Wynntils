@@ -27,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
@@ -362,12 +361,6 @@ public abstract class ClientPacketListenerMixin {
     private void onDisconnectPre(Component reason, CallbackInfo ci) {
         // Unexpected disconnect
         EventFactory.onDisconnect();
-    }
-
-    @Inject(method = "handleAddPlayer", at = @At("HEAD"))
-    private void handleAddPlayer(ClientboundAddPlayerPacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
-        EventFactory.onPlayerJoinedWorld(packet, this.getPlayerInfo(packet.getPlayerId()));
     }
 
     @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
