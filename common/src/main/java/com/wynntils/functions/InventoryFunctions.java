@@ -17,6 +17,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
+    public static class EmeraldStringFunction extends Function<String> {
+        @Override
+        public String getValue(String argument) {
+            return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory());
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("estr");
+        }
+    }
+
     public static class LiquidEmeraldFunction extends Function<Integer> {
         @Override
         public Integer getValue(String argument) {
