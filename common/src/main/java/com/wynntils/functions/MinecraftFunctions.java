@@ -31,7 +31,7 @@ public class MinecraftFunctions {
         }
     }
 
-    public static class DirFunction extends Function<Float> {
+    public static class DirFunction extends Function<Double> {
         @Override
         public Float getValue(FunctionArguments arguments) {
             return McUtils.player().getYRot();

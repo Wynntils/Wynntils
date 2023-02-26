@@ -95,7 +95,7 @@ public class ProfessionModel extends Model {
                 .level();
     }
 
-    public float getProgress(ProfessionType type) {
+    public double getProgress(ProfessionType type) {
         return professionProgressMap
                 .getOrDefault(type, ProfessionProgress.NO_PROGRESS)
                 .progress();
