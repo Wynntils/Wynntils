@@ -827,6 +827,8 @@
   "function.wynntils.generic.add.name": "Add",
   "function.wynntils.generic.divide.description": "Divides two numbers",
   "function.wynntils.generic.divide.name": "Divide",
+  "function.wynntils.generic.integer.description": "Converts any number type to an integer",
+  "function.wynntils.generic.integer.name": "Integer",
   "function.wynntils.generic.modulo.description": "Returns the remainder of two numbers",
   "function.wynntils.generic.modulo.name": "Modulo",
   "function.wynntils.generic.multiply.description": "Multiplies two numbers",

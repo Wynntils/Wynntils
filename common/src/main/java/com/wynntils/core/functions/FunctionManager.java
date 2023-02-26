@@ -279,6 +279,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
+        registerFunction(new MathFunctions.IntegerFunction());
         registerFunction(new MathFunctions.ModuloFunction());
         registerFunction(new MathFunctions.MultiplyFunction());
         registerFunction(new MathFunctions.PowerFunction());

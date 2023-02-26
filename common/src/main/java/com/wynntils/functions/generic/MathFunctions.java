@@ -158,4 +158,17 @@ public final class MathFunctions {
                     new FunctionArguments.Argument<>("decimals", Integer.class, null)));
         }
     }
+
+    public static class IntegerFunction extends GenericFunction<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return arguments.getArgument("value").getIntegerValue();
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+    }
 }
