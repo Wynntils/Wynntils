@@ -167,14 +167,14 @@ public final class FunctionManager extends Manager {
     // region Raw value calculations
     // These are needed for getting a function value without converting it's type to a string
 
-    public Object getRawFunctionValue(
+    public ErrorOr<Object> getRawFunctionValue(
             Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
-            return "??";
+            return ErrorOr.error("Failed to get value of function: " + function.getName());
         }
 
-        return formatRaw(value.get(), formatted, decimals);
+        return ErrorOr.of(formatRaw(value.get(), formatted, decimals));
     }
 
     private Object formatRaw(Object value, boolean formatted, int decimals) {
