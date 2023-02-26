@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.functions;
 
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import net.minecraft.client.resources.language.I18n;
 
 /**
@@ -13,6 +14,13 @@ import net.minecraft.client.resources.language.I18n;
  * Generic functions should always have required arguments, and should never have optional arguments.
  */
 public abstract class GenericFunction<T> extends Function<T> {
+    public abstract FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder();
+
+    @Override
+    public FunctionArguments.Builder getArgumentsBuilder() {
+        return getRequiredArgumentsBuilder();
+    }
+
     @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("function.wynntils.generic." + getTranslationKeyName() + "." + keySuffix);

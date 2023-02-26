@@ -25,13 +25,10 @@ public final class FunctionArguments {
         return this.lookupMap.get(name);
     }
 
-    // A builder for functions with required arguments
-    public static class Builder {
-        public static final Builder EMPTY = new Builder(List.of());
-
+    public abstract static class Builder {
         protected List<Argument> arguments;
 
-        public Builder(List<Argument> arguments) {
+        protected Builder(List<Argument> arguments) {
             this.arguments = arguments;
         }
 
@@ -64,8 +61,19 @@ public final class FunctionArguments {
         }
     }
 
+    // A builder for functions with required arguments
+    public static class RequiredArgumentBuilder extends Builder {
+        public static final Builder EMPTY = new RequiredArgumentBuilder(List.of());
+
+        public RequiredArgumentBuilder(List<Argument> arguments) {
+            super(arguments);
+        }
+    }
+
     // A builder for functions with optional arguments
     public static class OptionalArgumentBuilder extends Builder {
+        public static final Builder EMPTY = new OptionalArgumentBuilder(List.of());
+
         public OptionalArgumentBuilder(List<Argument> arguments) {
             super(arguments);
         }

@@ -23,7 +23,7 @@ public abstract class Function<T> implements Translatable {
     public abstract T getValue(FunctionArguments arguments);
 
     public FunctionArguments.Builder getArgumentsBuilder() {
-        return FunctionArguments.Builder.EMPTY;
+        return FunctionArguments.OptionalArgumentBuilder.EMPTY;
     }
 
     public String getName() {

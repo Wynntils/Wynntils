@@ -17,8 +17,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -32,8 +32,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -52,8 +52,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -72,8 +72,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -92,8 +92,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -113,8 +113,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
@@ -132,8 +132,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
         }
 
@@ -152,8 +152,8 @@ public final class MathFunctions {
         }
 
         @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("value", Number.class, null),
                     new FunctionArguments.Argument<>("decimals", Integer.class, null)));
         }
