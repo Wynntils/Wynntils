@@ -51,8 +51,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         // Buttons have to be added in reverse order (right to left) so they don't overlap
 
@@ -133,7 +133,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
                 && !GuildMapFeature.INSTANCE.openGuildMapKeybind.getKeyMapping().isDown()) {
             this.onClose();
