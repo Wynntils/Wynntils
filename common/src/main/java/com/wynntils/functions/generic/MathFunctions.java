@@ -37,6 +37,11 @@ public final class MathFunctions {
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("sub");
+        }
     }
 
     public static class MultiplyFunction extends GenericFunction<Double> {
@@ -51,6 +56,11 @@ public final class MathFunctions {
             return new FunctionArguments.Builder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("mul");
         }
     }
 
@@ -67,6 +77,11 @@ public final class MathFunctions {
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("div");
+        }
     }
 
     public static class ModuloFunction extends GenericFunction<Double> {
@@ -81,6 +96,11 @@ public final class MathFunctions {
             return new FunctionArguments.Builder(List.of(
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("mod");
         }
     }
 
@@ -98,6 +118,11 @@ public final class MathFunctions {
                     new FunctionArguments.Argument<>("first", Number.class, null),
                     new FunctionArguments.Argument<>("second", Number.class, null)));
         }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("pow");
+        }
     }
 
     public static class SquareRootFunction extends GenericFunction<Double> {
@@ -110,6 +135,11 @@ public final class MathFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.Builder(
                     List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("sqrt");
         }
     }
 
