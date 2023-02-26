@@ -99,6 +99,7 @@ import com.wynntils.features.user.overlays.StatusOverlayFeature;
 import com.wynntils.features.user.players.PlayerArmorHidingFeature;
 import com.wynntils.features.user.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.user.players.PreventTradesDuelsFeature;
+import com.wynntils.features.user.players.WynntilsCosmeticsFeature;
 import com.wynntils.features.user.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.user.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.user.redirects.ChatRedirectFeature;
@@ -226,6 +227,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new WorldWaypointDistanceFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
+        registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
         // save/create config file after loading all features' options

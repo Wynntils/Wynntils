@@ -36,7 +36,7 @@ public final class FriendsModel extends Model {
     ACTION should be something like ADD, LIST, etc.
     DETAIL (optional) should be a descriptor if necessary
      */
-    private static final Pattern FRIEND_LIST = Pattern.compile(".+'s friends \\(.+\\): (.*)");
+    private static final Pattern FRIEND_LIST = Pattern.compile(".+'s? friends \\(.+\\): (.*)");
     private static final Pattern FRIEND_LIST_FAIL_1 = Pattern.compile("§eWe couldn't find any friends\\.");
     private static final Pattern FRIEND_LIST_FAIL_2 = Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =

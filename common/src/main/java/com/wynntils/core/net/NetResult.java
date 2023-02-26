@@ -103,7 +103,7 @@ public abstract class NetResult {
                 handler.accept(inputStream);
 
                 if (processedEvent != null) {
-                    WynntilsMod.postEvent(processedEvent);
+                    WynntilsMod.postEventOnMainThread(processedEvent);
                 }
             } catch (Throwable t) {
                 // Something went wrong in our handlers, perhaps an NPE?

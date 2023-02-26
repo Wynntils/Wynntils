@@ -1,6 +1,6 @@
 [
   {
-    "version": 5
+    "version": 6
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -84,12 +84,12 @@
   {
     "id": "dataStaticDiscoveries",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/discoveries.json",
-    "md5": "f85efa2a19d9b84e1a8c3761ba50866a"
+    "md5": "a61038978cc3e26b4f3a80bf42b207b3"
   },
   {
     "id": "dataStaticGear",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json",
-    "md5": "00c5bf05be959cf7068d692f2da18557"
+    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b"
   },
   {
     "id": "dataStaticItemObtain",
@@ -102,18 +102,29 @@
     "md5": "a7aa8bcf7b682f31d343eb47fc4ec821"
   },
   {
+    "id": "dataStaticIngredientSkins",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients_skins.json",
+    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0"
+  },
+  {
     "id": "dataStaticItemGuesses",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/item_guesses.json",
     "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8"
   },
   {
     "id": "dataStaticMajorIds",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json",
+    "md5": "eb8ef7fff4b931a28ffaf7d8fac5a9fb"
   },
   {
     "id": "dataStaticMaps",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
-    "md5": "dbb7c99accd944be4efc8fe991a4ac7c"
+    "md5": "ce8fa555b856dce76b285a606c422aad"
+  },
+  {
+    "id": "dataStaticMaterialConversion",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/material_conversions.json",
+    "md5": "ae4b6270b0541c26f730a1bf33f7b1f9"
   },
   {
     "id": "dataStaticPlaces",
