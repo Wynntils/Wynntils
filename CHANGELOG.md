@@ -1,9 +1,21 @@
+## [0.0.2-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.236...v0.0.2-alpha.237) (2023-02-26)
+
+
+### Bug Fixes
+
+* NPE in party management screen ([#1208](https://github.com/Wynntils/Artemis/issues/1208)) ([dfe43ee](https://github.com/Wynntils/Artemis/commit/dfe43ee5515cc330d492d56f0712cab8e8906fed))
+
 ## [0.0.2-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.235...v0.0.2-alpha.236) (2023-02-26)
 
 
 ### Bug Fixes
 
 * At least print the major ID name, even if formatting is off ([#1202](https://github.com/Wynntils/Artemis/issues/1202)) ([663ecf8](https://github.com/Wynntils/Artemis/commit/663ecf84cf29315f3de8aa34164899dea38dc808))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.236 [skip ci] ([07955d4](https://github.com/Wynntils/Artemis/commit/07955d48b1bb6accff26045c3391fa18e27f555a))
 
 ## [0.0.2-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.234...v0.0.2-alpha.235) (2023-02-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.233 [skip ci] ([e0fbff8](https://github.com/Wynntils/Artemis/commit/e0fbff8591956b5cdbbb395b5f0f55b093d74606))
-
-## [0.0.2-alpha.232](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.231...v0.0.2-alpha.232) (2023-02-25)
-
-
-### New Features
-
-* Introduce %estr% which presents your emeralds in a nice looking string ([#1201](https://github.com/Wynntils/Artemis/issues/1201)) ([75a52bf](https://github.com/Wynntils/Artemis/commit/75a52bf12db4490d191f8b615f510032cac768f4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.232 [skip ci] ([ee8d7ec](https://github.com/Wynntils/Artemis/commit/ee8d7ec4715788454910fdc8adfb3407f6d2475b))
 
