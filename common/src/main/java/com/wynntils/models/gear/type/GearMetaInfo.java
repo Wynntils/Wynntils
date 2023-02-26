@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.models.wynnitem.type.ItemMaterial;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,7 @@ import java.util.Optional;
 // by apiName
 public record GearMetaInfo(
         GearRestrictions restrictions,
-        GearMaterial material,
+        ItemMaterial material,
         List<ItemObtainInfo> obtainInfo,
         Optional<String> lore,
         Optional<String> apiName,

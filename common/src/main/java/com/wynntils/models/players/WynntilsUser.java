@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.players;
 
+import com.wynntils.models.players.cosmetics.CosmeticInfo;
 import com.wynntils.models.players.type.AccountType;
 
-// TODO: add cosmeticInfo
-public record WynntilsUser(AccountType accountType) {}
+public record WynntilsUser(AccountType accountType, CosmeticInfo cosmetics) {}

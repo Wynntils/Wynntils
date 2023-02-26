@@ -280,14 +280,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
+        registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
         registerFunction(new InventoryFunctions.InventoryUsedFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
-        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
-        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
         registerFunction(new HorseFunctions.HorseLevelFunction());
@@ -306,28 +307,28 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.ZFunction());
 
         registerFunction(new ProfessionFunctions.AlchemismLevelFunction());
-        registerFunction(new ProfessionFunctions.ArmouringLevelFunction());
-        registerFunction(new ProfessionFunctions.CookingLevelFunction());
-        registerFunction(new ProfessionFunctions.FarmingLevelFunction());
-        registerFunction(new ProfessionFunctions.FishingLevelFunction());
-        registerFunction(new ProfessionFunctions.JewelingLevelFunction());
-        registerFunction(new ProfessionFunctions.MiningLevelFunction());
-        registerFunction(new ProfessionFunctions.ScribingLevelFunction());
-        registerFunction(new ProfessionFunctions.TailoringLevelFunction());
-        registerFunction(new ProfessionFunctions.WeaponsmithingLevelFunction());
-        registerFunction(new ProfessionFunctions.WoodcuttingLevelFunction());
-        registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.AlchemismPercentageFunction());
+        registerFunction(new ProfessionFunctions.ArmouringLevelFunction());
         registerFunction(new ProfessionFunctions.ArmouringPercentageFunction());
+        registerFunction(new ProfessionFunctions.CookingLevelFunction());
         registerFunction(new ProfessionFunctions.CookingPercentageFunction());
+        registerFunction(new ProfessionFunctions.FarmingLevelFunction());
         registerFunction(new ProfessionFunctions.FarmingPercentageFunction());
+        registerFunction(new ProfessionFunctions.FishingLevelFunction());
         registerFunction(new ProfessionFunctions.FishingPercentageFunction());
+        registerFunction(new ProfessionFunctions.JewelingLevelFunction());
         registerFunction(new ProfessionFunctions.JewelingPercentageFunction());
+        registerFunction(new ProfessionFunctions.MiningLevelFunction());
         registerFunction(new ProfessionFunctions.MiningPercentageFunction());
+        registerFunction(new ProfessionFunctions.ScribingLevelFunction());
         registerFunction(new ProfessionFunctions.ScribingPercentageFunction());
+        registerFunction(new ProfessionFunctions.TailoringLevelFunction());
         registerFunction(new ProfessionFunctions.TailoringPercentageFunction());
+        registerFunction(new ProfessionFunctions.WeaponsmithingLevelFunction());
         registerFunction(new ProfessionFunctions.WeaponsmithingPercentageFunction());
+        registerFunction(new ProfessionFunctions.WoodcuttingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodcuttingPercentageFunction());
+        registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
 
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
