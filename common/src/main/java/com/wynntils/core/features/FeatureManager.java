@@ -250,8 +250,7 @@ public final class FeatureManager extends Manager {
         try {
             initializeFeature(feature);
         } catch (AssertionError ae) {
-            WynntilsMod.error(
-                    "Fix i18n for " + feature.getClass().getSimpleName(), ae);
+            WynntilsMod.error("Fix i18n for " + feature.getClass().getSimpleName(), ae);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 System.exit(1);
             }
