@@ -124,9 +124,9 @@ public final class FunctionManager extends Manager {
             return header.append(Component.literal("??"));
         }
 
-        Object formattedValue = format(value.get(), false, 2);
+        String formattedValue = format(value.get(), false, 2);
 
-        return header.append(Component.literal(formattedValue.toString()).withStyle(color));
+        return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
     public String getStringFunctionValue(

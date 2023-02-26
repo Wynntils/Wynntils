@@ -23,7 +23,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class SubtractFunction extends GenericFunction<Double> {
         @Override
@@ -39,7 +38,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class MultiplyFunction extends GenericFunction<Double> {
         @Override
@@ -55,7 +53,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class DivideFunction extends GenericFunction<Double> {
         @Override
@@ -71,7 +68,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class ModuloFunction extends GenericFunction<Double> {
         @Override
@@ -87,7 +83,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class PowerFunction extends GenericFunction<Double> {
         @Override
@@ -104,7 +99,6 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("second", Number.class, null)));
         }
     }
-    ;
 
     public static class SquareRootFunction extends GenericFunction<Double> {
         @Override
@@ -117,7 +111,6 @@ public final class MathFunctions {
             return new FunctionArguments.Builder(List.of(new FunctionArguments.Argument("value", Number.class, null)));
         }
     }
-    ;
 
     public static class RoundFunction extends GenericFunction<Double> {
         @Override
@@ -134,5 +127,4 @@ public final class MathFunctions {
                     new FunctionArguments.Argument("decimals", Integer.class, null)));
         }
     }
-    ;
 }
