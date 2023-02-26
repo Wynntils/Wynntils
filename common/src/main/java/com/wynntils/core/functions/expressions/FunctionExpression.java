@@ -41,7 +41,12 @@ public class FunctionExpression extends Expression {
 
     @Override
     public ErrorOr<Object> calculate() {
-        return ErrorOr.of(Managers.Function.getRawValueString(function, arguments, formatted, decimals));
+        return ErrorOr.of(Managers.Function.getRawFunctionValue(function, arguments, formatted, decimals));
+    }
+
+    @Override
+    public ErrorOr<String> calculateFormattedString() {
+        return ErrorOr.of(Managers.Function.getStringFunctionValue(function, arguments, formatted, decimals));
     }
 
     // This method attempts to parse a function expression in the following ways:

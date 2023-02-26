@@ -19,9 +19,11 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,6 +104,8 @@ public final class FunctionManager extends Manager {
         return Optional.empty();
     }
 
+    // region String value calculations
+
     public Component getSimpleValueString(
             Function<?> function, String rawArguments, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
@@ -120,12 +124,12 @@ public final class FunctionManager extends Manager {
             return header.append(Component.literal("??"));
         }
 
-        String formattedValue = format(value.get(), false, 2);
+        Object formattedValue = format(value.get(), false, 2);
 
-        return header.append(Component.literal(formattedValue).withStyle(color));
+        return header.append(Component.literal(formattedValue.toString()).withStyle(color));
     }
 
-    public String getRawValueString(
+    public String getStringFunctionValue(
             Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
@@ -146,12 +150,46 @@ public final class FunctionManager extends Manager {
 
                 return instance.format(number).replaceAll("\u00A0", " ");
             } else {
-                return String.format("%." + decimals + "f", number);
+                if (decimals == 0) {
+                    return String.valueOf(number.intValue());
+                }
+
+                DecimalFormat decimalFormat = new DecimalFormat("#." + "0".repeat(decimals));
+                return decimalFormat.format(number);
             }
         }
 
         return value.toString();
     }
+
+    // endregion
+
+    // region Raw value calculations
+    // These are needed for getting a function value without converting it's type to a string
+
+    public Object getRawFunctionValue(
+            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
+        Optional<Object> value = getFunctionValueSafely(function, arguments);
+        if (value.isEmpty()) {
+            return "??";
+        }
+
+        return formatRaw(value.get(), formatted, decimals);
+    }
+
+    private Object formatRaw(Object value, boolean formatted, int decimals) {
+        if (value instanceof Number number) {
+            // NOTE: We ignore `formatted` here to not convert numbers into a string.
+            //       If a side effect of this comes up, we can revisit this.
+
+            double roundingValue = Math.pow(10, decimals);
+            return Math.round(number.doubleValue() * roundingValue) / roundingValue;
+        }
+
+        return value;
+    }
+
+    // endregion
 
     // region Template formatting
 
@@ -190,7 +228,8 @@ public final class FunctionManager extends Manager {
                 FunctionArguments.Builder arguments = function.getArgumentsBuilder();
 
                 if (arguments instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
-                    replacement = getRawValueString(function, optionalArgumentBuilder.buildWithDefaults(), false, 2);
+                    replacement =
+                            getStringFunctionValue(function, optionalArgumentBuilder.buildWithDefaults(), false, 2);
                 } else {
                     // This is to be removed with legacy formatting all together
                     replacement = "Function needs arguments.";
@@ -252,6 +291,18 @@ public final class FunctionManager extends Manager {
     }
 
     private void registerAllFunctions() {
+        // Generic Functions
+
+        registerFunction(new MathFunctions.AddFunction());
+        registerFunction(new MathFunctions.DivideFunction());
+        registerFunction(new MathFunctions.ModuloFunction());
+        registerFunction(new MathFunctions.MultiplyFunction());
+        registerFunction(new MathFunctions.PowerFunction());
+        registerFunction(new MathFunctions.RoundFunction());
+        registerFunction(new MathFunctions.SquareRootFunction());
+        registerFunction(new MathFunctions.SubtractFunction());
+
+        // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
 

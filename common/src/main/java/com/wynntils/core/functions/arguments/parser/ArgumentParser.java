@@ -16,6 +16,12 @@ public final class ArgumentParser {
     public static ErrorOr<FunctionArguments> parseArguments(
             FunctionArguments.Builder argumentsBuilder, String rawArgs) {
         if (rawArgs == null || rawArgs.isEmpty()) {
+            // 1, If there are no arguments, return early.
+            if (argumentsBuilder.getArgumentCount() == 0) {
+                return argumentsBuilder.buildWithValues(List.of());
+            }
+
+            // 2, If there are required arguments, return an error, otherwise return the default arguments.
             if (argumentsBuilder instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
                 return ErrorOr.of(optionalArgumentBuilder.buildWithDefaults());
             } else {

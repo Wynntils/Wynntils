@@ -28,6 +28,11 @@ public class ConstantExpression extends Expression {
         return ErrorOr.of(value);
     }
 
+    @Override
+    public ErrorOr<String> calculateFormattedString() {
+        return ErrorOr.of(value.toString());
+    }
+
     public static ErrorOr<Optional<Expression>> tryParse(String rawExpression) {
         for (Function<String, Optional<Object>> value : CONSTANT_EXPRESSION_PARSERS.values()) {
             Optional<Object> parsedValue = value.apply(rawExpression);

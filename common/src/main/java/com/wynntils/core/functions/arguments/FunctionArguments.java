@@ -43,7 +43,7 @@ public final class FunctionArguments {
             for (int i = 0; i < this.arguments.size(); i++) {
                 Argument argument = this.arguments.get(i);
 
-                if (!argument.getType().equals(values.get(i).getClass())) {
+                if (!argument.getType().isAssignableFrom(values.get(i).getClass())) {
                     return ErrorOr.error("Invalid argument type: \"%s\" is not a %s."
                             .formatted(
                                     values.get(i).toString(), argument.getType().getSimpleName()));
@@ -57,6 +57,10 @@ public final class FunctionArguments {
 
         public String getArgumentNames() {
             return arguments.stream().map(Argument::getName).collect(Collectors.joining("; "));
+        }
+
+        public int getArgumentCount() {
+            return arguments.size();
         }
     }
 
@@ -73,7 +77,7 @@ public final class FunctionArguments {
 
     public static final class Argument<T> {
         private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES =
-                List.of(String.class, Integer.class, Double.class, Boolean.class);
+                List.of(String.class, Integer.class, Double.class, Number.class, Boolean.class);
 
         private final String name;
         private final Class<T> type;
@@ -116,10 +120,18 @@ public final class FunctionArguments {
         }
 
         public Integer getIntegerValue() {
+            if (this.type == Number.class) {
+                return ((Number) this.getValue()).intValue();
+            }
+
             return (Integer) this.getValue();
         }
 
         public Double getDoubleValue() {
+            if (this.type == Number.class) {
+                return ((Number) this.getValue()).doubleValue();
+            }
+
             return (Double) this.getValue();
         }
 
