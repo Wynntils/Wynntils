@@ -31,17 +31,18 @@ public class FunctionExpression extends Expression {
     private final int decimals;
 
     protected FunctionExpression(
-            String rawExpression, Function function, FunctionArguments arguments, boolean formatted, int decimals) {
+            String rawExpression, Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         super(rawExpression);
         this.function = function;
         this.arguments = arguments;
+
         this.formatted = formatted;
         this.decimals = decimals;
     }
 
     @Override
     public ErrorOr<Object> calculate() {
-        return Managers.Function.getRawFunctionValue(function, arguments, formatted, decimals);
+        return Managers.Function.getRawFunctionValue(function, arguments);
     }
 
     @Override

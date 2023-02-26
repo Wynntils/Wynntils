@@ -165,28 +165,12 @@ public final class FunctionManager extends Manager {
     // endregion
 
     // region Raw value calculations
-    // These are needed for getting a function value without converting it's type to a string
+    // These are needed for getting a function value without converting its type to a string
 
-    public ErrorOr<Object> getRawFunctionValue(
-            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
+    public ErrorOr<Object> getRawFunctionValue(Function<?> function, FunctionArguments arguments) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
-        if (value.isEmpty()) {
-            return ErrorOr.error("Failed to get value of function: " + function.getName());
-        }
-
-        return ErrorOr.of(formatRaw(value.get(), formatted, decimals));
-    }
-
-    private Object formatRaw(Object value, boolean formatted, int decimals) {
-        if (value instanceof Number number) {
-            // NOTE: We ignore `formatted` here to not convert numbers into a string.
-            //       If a side effect of this comes up, we can revisit this.
-
-            double roundingValue = Math.pow(10, decimals);
-            return Math.round(number.doubleValue() * roundingValue) / roundingValue;
-        }
-
-        return value;
+        return value.map(ErrorOr::of)
+                .orElseGet(() -> ErrorOr.error("Failed to get value of function: " + function.getName()));
     }
 
     // endregion
