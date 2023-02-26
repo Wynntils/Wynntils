@@ -108,7 +108,8 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.Builder(List.of(new FunctionArguments.Argument("value", Number.class, null)));
+            return new FunctionArguments.Builder(
+                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
         }
     }
 
