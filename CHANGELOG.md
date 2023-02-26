@@ -1,9 +1,21 @@
+## [0.0.2-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.233...v0.0.2-alpha.234) (2023-02-26)
+
+
+### Bug Fixes
+
+* Fix elytra rendering logic ([#1203](https://github.com/Wynntils/Artemis/issues/1203)) ([ec93882](https://github.com/Wynntils/Artemis/commit/ec938828fa68bd4b5db7e62f1bf9c79a7f660ea1))
+
 ## [0.0.2-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.232...v0.0.2-alpha.233) (2023-02-25)
 
 
 ### New Features
 
 * Add keybind for waypoint creation ([#1197](https://github.com/Wynntils/Artemis/issues/1197)) ([5885d5e](https://github.com/Wynntils/Artemis/commit/5885d5edf61b88e66710a1b992e88b4be3c88e42))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.233 [skip ci] ([e0fbff8](https://github.com/Wynntils/Artemis/commit/e0fbff8591956b5cdbbb395b5f0f55b093d74606))
 
 ## [0.0.2-alpha.232](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.231...v0.0.2-alpha.232) (2023-02-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.230 [skip ci] ([ce4508a](https://github.com/Wynntils/Artemis/commit/ce4508aceb8eae60eb24a0cb9a19b9798419750c))
-
-## [0.0.2-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.228...v0.0.2-alpha.229) (2023-02-24)
-
-
-### Bug Fixes
-
-* /locate place and /compass place now work ([#1198](https://github.com/Wynntils/Artemis/issues/1198)) ([ea48c49](https://github.com/Wynntils/Artemis/commit/ea48c49a1eae6d9a5504b109111271f70d0df1d5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.229 [skip ci] ([f22d328](https://github.com/Wynntils/Artemis/commit/f22d328f6c3f6560fa2cda76272faab871fc8d0b))
 
