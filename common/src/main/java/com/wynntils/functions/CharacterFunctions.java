@@ -122,8 +122,8 @@ public class CharacterFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new FunctionArguments.Argument("uppercase", Boolean.class, false),
-                    new FunctionArguments.Argument("showReskinnedName", Boolean.class, true)));
+                    new FunctionArguments.Argument<>("uppercase", Boolean.class, false),
+                    new FunctionArguments.Argument<>("showReskinnedName", Boolean.class, true)));
         }
     }
 
