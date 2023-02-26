@@ -197,7 +197,7 @@ public class WynntilsCosmeticsFeature extends UserFeature {
                 float ageInTicks,
                 float netHeadYaw,
                 float headPitch) {
-            if (!parent.shouldRenderCape(player, false)) return;
+            if (!parent.shouldRenderCape(player, true)) return;
 
             ResourceLocation texture = parent.getCapeTexture(player);
             if (texture == null) return;
