@@ -26,7 +26,8 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
+    private static final Pattern COORDINATE_PATTERN =
+            Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
 
     // Quest metadata is forever constant
     private final String name;
