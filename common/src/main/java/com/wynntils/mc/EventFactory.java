@@ -80,6 +80,7 @@ import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
@@ -610,6 +611,7 @@ public final class EventFactory {
     // region Game Events
     public static void onTick() {
         post(new TickEvent());
+        postAlways(new TickAlwaysEvent());
     }
 
     public static void onResizeDisplayPost() {
