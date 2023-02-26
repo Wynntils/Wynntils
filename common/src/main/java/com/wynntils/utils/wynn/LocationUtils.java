@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 public final class LocationUtils {
     private static final Pattern COORDINATE_PATTERN =
-            Pattern.compile("(?<x>[-+]?\\d+)([^0-9+-]{1,5}(?<y>[-+]?\\d+))?[^0-9+-]{1,5}(?<z>[-+]?\\d+)");
+            Pattern.compile("(?<x>[-+]?\\d+)(?:.\\d+)?([^0-9+-]{1,5}(?<y>[-+]?\\d+)(?:.\\d+)?)?[^0-9+-]{1,5}(?<z>[-+]?\\d+)(?:.\\d+)?");
 
     private static final Pattern STRICT_COORDINATE_PATTERN =
-            Pattern.compile("([-+]?\\d{1,5})([,\\s]{1,2}([-+]?\\d{1,4}))?[,\\s]{1,2}([-+]?\\d{1,5})");
+            Pattern.compile("([-+]?\\d{1,5})(?:.\\d+)?([,\\s]{1,2}([-+]?\\d{1,4})(?:.\\d+)?)?[,\\s]{1,2}([-+]?\\d{1,5})(?:.\\d+)?");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
