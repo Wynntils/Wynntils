@@ -1,9 +1,21 @@
+## [0.0.2-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.237...v0.0.2-alpha.238) (2023-02-26)
+
+
+### Bug Fixes
+
+* Add crash protection for a number of screens ([#1209](https://github.com/Wynntils/Artemis/issues/1209)) ([401da8a](https://github.com/Wynntils/Artemis/commit/401da8a2ed4862a6bf59f2ea8078f29e28e0b1cc))
+
 ## [0.0.2-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.236...v0.0.2-alpha.237) (2023-02-26)
 
 
 ### Bug Fixes
 
 * NPE in party management screen ([#1208](https://github.com/Wynntils/Artemis/issues/1208)) ([dfe43ee](https://github.com/Wynntils/Artemis/commit/dfe43ee5515cc330d492d56f0712cab8e8906fed))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.237 [skip ci] ([315d24e](https://github.com/Wynntils/Artemis/commit/315d24ef8d72741e265404ce7f06dcc85ba34efc))
 
 ## [0.0.2-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.235...v0.0.2-alpha.236) (2023-02-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.234 [skip ci] ([0828485](https://github.com/Wynntils/Artemis/commit/08284852064732358edb8b7201e4da0b30a9aefa))
-
-## [0.0.2-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.232...v0.0.2-alpha.233) (2023-02-25)
-
-
-### New Features
-
-* Add keybind for waypoint creation ([#1197](https://github.com/Wynntils/Artemis/issues/1197)) ([5885d5e](https://github.com/Wynntils/Artemis/commit/5885d5edf61b88e66710a1b992e88b4be3c88e42))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.233 [skip ci] ([e0fbff8](https://github.com/Wynntils/Artemis/commit/e0fbff8591956b5cdbbb395b5f0f55b093d74606))
 
