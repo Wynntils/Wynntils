@@ -12,6 +12,7 @@ import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -31,7 +32,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class PoiCreationScreen extends Screen implements TextboxScreen {
+public final class PoiCreationScreen extends WynntilsScreen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
 
     private static final List<Texture> POI_ICONS = List.of(
@@ -103,8 +104,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         // region Name
         this.addRenderableWidget(
@@ -283,9 +284,9 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(
