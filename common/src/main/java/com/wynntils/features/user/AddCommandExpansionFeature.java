@@ -323,6 +323,11 @@ public class AddCommandExpansionFeature extends UserFeature {
                 .then(argument("lore", StringArgumentType.greedyString()))
                 .build());
 
+        // first option is 0; not really supposed to be run by users
+        root.addChild(literal("dialogue")
+                .then(argument("option", IntegerArgumentType.integer()))
+                .build());
+
         // "renameitem" aliases
         CommandNode<CommandSourceStack> renameitemNode = literal("renameitem")
                 .then(argument("name", StringArgumentType.greedyString()))
