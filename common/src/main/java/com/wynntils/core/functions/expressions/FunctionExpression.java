@@ -31,17 +31,23 @@ public class FunctionExpression extends Expression {
     private final int decimals;
 
     protected FunctionExpression(
-            String rawExpression, Function function, FunctionArguments arguments, boolean formatted, int decimals) {
+            String rawExpression, Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         super(rawExpression);
         this.function = function;
         this.arguments = arguments;
+
         this.formatted = formatted;
         this.decimals = decimals;
     }
 
     @Override
-    public ErrorOr<String> calculate() {
-        return ErrorOr.of(Managers.Function.getRawValueString(function, arguments, formatted, decimals));
+    public ErrorOr<Object> calculate() {
+        return Managers.Function.getRawFunctionValue(function, arguments);
+    }
+
+    @Override
+    public ErrorOr<String> calculateFormattedString() {
+        return ErrorOr.of(Managers.Function.getStringFunctionValue(function, arguments, formatted, decimals));
     }
 
     // This method attempts to parse a function expression in the following ways:
@@ -93,21 +99,12 @@ public class FunctionExpression extends Expression {
 
         // Handle argument parsing
 
-        FunctionArguments.Builder argumentsBuilder = function.getArguments();
-
-        if (matcher.groupCount() < 3) {
-            return ErrorOr.of(Optional.of(new FunctionExpression(
-                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
-        }
+        FunctionArguments.Builder argumentsBuilder = function.getArgumentsBuilder();
 
         String rawArguments = matcher.group("argument");
 
-        if (rawArguments == null || rawArguments.isEmpty()) {
-            return ErrorOr.of(Optional.of(new FunctionExpression(
-                    rawExpression, function, argumentsBuilder.buildWithDefaults(), isFormatted, decimals)));
-        }
-
         ErrorOr<FunctionArguments> value = ArgumentParser.parseArguments(argumentsBuilder, rawArguments);
+
         return value.hasError()
                 ? ErrorOr.error(value.getError())
                 : ErrorOr.of(Optional.of(

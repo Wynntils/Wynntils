@@ -24,7 +24,12 @@ public class ConstantExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculate() {
+    public ErrorOr<Object> calculate() {
+        return ErrorOr.of(value);
+    }
+
+    @Override
+    public ErrorOr<String> calculateFormattedString() {
         return ErrorOr.of(value.toString());
     }
 

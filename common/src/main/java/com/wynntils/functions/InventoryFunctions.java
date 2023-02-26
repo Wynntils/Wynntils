@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 public class InventoryFunctions {
     public static class EmeraldStringFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory());
         }
 

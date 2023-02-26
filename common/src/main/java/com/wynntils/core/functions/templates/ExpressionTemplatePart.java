@@ -29,7 +29,7 @@ public class ExpressionTemplatePart extends TemplatePart {
             return parse.getError();
         }
 
-        ErrorOr<String> calculatedValue = parse.getValue().calculate();
+        ErrorOr<String> calculatedValue = parse.getValue().calculateFormattedString();
 
         if (calculatedValue.hasError()) {
             return calculatedValue.getError();

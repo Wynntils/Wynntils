@@ -16,7 +16,17 @@ public final class ArgumentParser {
     public static ErrorOr<FunctionArguments> parseArguments(
             FunctionArguments.Builder argumentsBuilder, String rawArgs) {
         if (rawArgs == null || rawArgs.isEmpty()) {
-            return ErrorOr.of(argumentsBuilder.buildWithDefaults());
+            // 1, If there are no arguments, return early.
+            if (argumentsBuilder.getArgumentCount() == 0) {
+                return argumentsBuilder.buildWithValues(List.of());
+            }
+
+            // 2, If there are required arguments, return an error, otherwise return the default arguments.
+            if (argumentsBuilder instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
+                return ErrorOr.of(optionalArgumentBuilder.buildWithDefaults());
+            } else {
+                return ErrorOr.error("Missing required arguments: (%s)".formatted(argumentsBuilder.getArgumentNames()));
+            }
         }
 
         // 1, Split arguments and parse them as expressions
@@ -34,10 +44,10 @@ public final class ArgumentParser {
         }
 
         // 3, Calculate the expressions
-        List<ErrorOr<String>> calculatedExpressions =
+        List<ErrorOr<Object>> calculatedExpressions =
                 parts.stream().map(ErrorOr::getValue).map(Expression::calculate).toList();
 
-        Optional<ErrorOr<String>> optionalCalculationError =
+        Optional<ErrorOr<Object>> optionalCalculationError =
                 calculatedExpressions.stream().filter(ErrorOr::hasError).findFirst();
 
         // 4, If any of the expressions failed to calculate, return the error

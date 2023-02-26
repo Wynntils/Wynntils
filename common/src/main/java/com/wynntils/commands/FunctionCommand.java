@@ -62,7 +62,23 @@ public class FunctionCommand extends Command {
                         .then(Commands.argument("function", StringArgumentType.word())
                                 .suggests(FUNCTION_SUGGESTION_PROVIDER)
                                 .executes(this::helpForFunction)))
+                .then(Commands.literal("test")
+                        .then(Commands.argument("template", StringArgumentType.greedyString())
+                                .executes(this::testExpression))
+                        .build())
                 .executes(this::syntaxError);
+    }
+
+    private int testExpression(CommandContext<CommandSourceStack> context) {
+        String template = context.getArgument("template", String.class);
+
+        String result = Managers.Function.doFormat(template);
+
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Template calculated: \"%s\" -> \"%s\"".formatted(template, result)), false);
+
+        return 1;
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {

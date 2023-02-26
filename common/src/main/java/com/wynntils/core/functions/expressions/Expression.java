@@ -13,5 +13,7 @@ public abstract class Expression {
         this.rawExpression = rawExpression;
     }
 
-    public abstract ErrorOr<String> calculate();
+    public abstract ErrorOr<Object> calculate();
+
+    public abstract ErrorOr<String> calculateFormattedString();
 }
