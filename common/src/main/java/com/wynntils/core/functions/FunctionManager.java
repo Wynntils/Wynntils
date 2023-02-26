@@ -19,6 +19,7 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -278,6 +279,17 @@ public final class FunctionManager extends Manager {
     private void registerAllFunctions() {
         // Generic Functions
 
+        registerFunction(new ConditionalFunctions.IfNumberFunction());
+        registerFunction(new ConditionalFunctions.IfStringFunction());
+
+        registerFunction(new LogicFunctions.EqualsFunction());
+        registerFunction(new LogicFunctions.LessThanFunction());
+        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.MoreThanFunction());
+        registerFunction(new LogicFunctions.MoreThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.NotEqualsFunction());
+        registerFunction(new LogicFunctions.NotFunction());
+
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
         registerFunction(new MathFunctions.IntegerFunction());
@@ -287,14 +299,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.RoundFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
-
-        registerFunction(new LogicFunctions.EqualsFunction());
-        registerFunction(new LogicFunctions.LessThanFunction());
-        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
-        registerFunction(new LogicFunctions.MoreThanFunction());
-        registerFunction(new LogicFunctions.MoreThanOrEqualsFunction());
-        registerFunction(new LogicFunctions.NotEqualsFunction());
-        registerFunction(new LogicFunctions.NotFunction());
 
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
