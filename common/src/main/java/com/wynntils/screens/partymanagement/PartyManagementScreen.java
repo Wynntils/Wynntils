@@ -7,6 +7,7 @@ package com.wynntils.screens.partymanagement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
@@ -30,7 +31,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PartyManagementScreen extends Screen implements TextboxScreen {
+public final class PartyManagementScreen extends WynntilsScreen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
@@ -57,7 +58,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     @Override
-    public void init() {
+    public void doInit() {
         refreshAll();
         // region Invite input and button
         this.addRenderableWidget(
@@ -108,7 +109,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
 
         boolean inParty = Models.Party.isInParty();
@@ -124,7 +125,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
 
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // region Invite field header
         FontRenderer.getInstance()
