@@ -282,6 +282,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 
+        registerFunction(new LogicFunctions.AndFunction());
         registerFunction(new LogicFunctions.EqualsFunction());
         registerFunction(new LogicFunctions.LessThanFunction());
         registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
@@ -289,6 +290,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.MoreThanOrEqualsFunction());
         registerFunction(new LogicFunctions.NotEqualsFunction());
         registerFunction(new LogicFunctions.NotFunction());
+        registerFunction(new LogicFunctions.OrFunction());
 
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
