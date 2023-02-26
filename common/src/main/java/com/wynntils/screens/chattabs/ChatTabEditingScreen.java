@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.user.ChatTabsFeature;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -30,7 +31,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class ChatTabEditingScreen extends Screen implements TextboxScreen {
+public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -66,7 +67,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         // region Name
         this.addRenderableWidget(
                 nameInput = new TextInputBoxWidget(
@@ -208,9 +209,9 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // Name
         FontRenderer.getInstance()
