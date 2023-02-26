@@ -34,9 +34,9 @@ public enum MiscStatKind {
     STEALING("Stealing", StatUnit.PERCENT, "emeraldStealing"),
     XP_BONUS("XP Bonus", StatUnit.PERCENT, "xpBonus"),
     LOOT_BONUS("Loot Bonus", StatUnit.PERCENT, "lootBonus"),
-    LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality"),
-    GATHER_XP_BONUS("Gather XP Bonus", StatUnit.PERCENT, "gatherXpBonus"),
-    GATHER_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed");
+    LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),
+    GATHER_XP_BONUS("Gather XP Bonus", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
+    GATHER_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED");
     // (The last three are currently only found on crafted gear)
 
     private final String displayName;

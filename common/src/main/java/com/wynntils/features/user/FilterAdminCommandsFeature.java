@@ -16,11 +16,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class FilterAdminCommandsFeature extends UserFeature {
     private static final Set<String> FILTERED_COMMANDS = Set.of(
             "bungee",
+            "change",
             "connect",
             "galert",
             "gcountdown",
             "glist",
             "gsend",
+            "lobby",
             "perms",
             "pfind",
             "plist",

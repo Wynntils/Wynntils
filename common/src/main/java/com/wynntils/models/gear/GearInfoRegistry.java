@@ -24,19 +24,19 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
-import com.wynntils.models.gear.type.GearMaterial;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.ItemObtainInfo;
-import com.wynntils.models.gear.type.ItemObtainType;
 import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ItemMaterial;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
@@ -60,23 +60,19 @@ public class GearInfoRegistry {
     private static final List<String> INVALID_ENTRIES = List.of("default");
 
     private List<GearMajorId> allMajorIds = List.of();
-    private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = Map.of();
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public GearInfoRegistry() {
         WynntilsMod.registerEventListener(this);
+
         reloadData();
     }
 
     public void reloadData() {
         // We trigger reload of all data by starting by downloading major IDs
         loadMajorIds();
-    }
-
-    public List<ItemObtainInfo> getObtainInfo(String name) {
-        return itemObtainMap.get(name);
     }
 
     public GearInfo getFromDisplayName(String gearName) {
@@ -98,13 +94,12 @@ public class GearInfoRegistry {
 
     @SubscribeEvent
     public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
-        if (event.getUrlId() == UrlId.DATA_STATIC_MAJOR_IDS) {
-            // After major IDs, we can load the obtain info
-            loadObtainInfo();
-            return;
-        }
-        if (event.getUrlId() == UrlId.DATA_STATIC_ITEM_OBTAIN) {
-            // After obtain info, we can load the gear DB
+        UrlId urlId = event.getUrlId();
+        if (urlId == UrlId.DATA_STATIC_MAJOR_IDS || urlId == UrlId.DATA_STATIC_ITEM_OBTAIN) {
+            // We need both major IDs and obtain info to be able to load gears
+            if (allMajorIds.isEmpty()) return;
+            if (!Models.WynnItem.hasObtainInfo()) return;
+
             loadGearRegistry();
             return;
         }
@@ -121,22 +116,11 @@ public class GearInfoRegistry {
         });
     }
 
-    private void loadObtainInfo() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
-        dl.handleReader(reader -> {
-            Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
-                    .create();
-            itemObtainMap = gson.fromJson(reader, obtainType);
-        });
-    }
-
     private void loadGearRegistry() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
         dl.handleReader(reader -> {
             Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds, itemObtainMap))
+                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer(allMajorIds))
                     .create();
             WynncraftGearInfoResponse gearInfoResponse = gson.fromJson(reader, WynncraftGearInfoResponse.class);
 
@@ -177,11 +161,9 @@ public class GearInfoRegistry {
 
     private static final class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
         private final List<GearMajorId> allMajorIds;
-        private final Map<String, List<ItemObtainInfo>> itemObtainMap;
 
-        private GearInfoDeserializer(List<GearMajorId> allMajorIds, Map<String, List<ItemObtainInfo>> itemObtainMap) {
+        private GearInfoDeserializer(List<GearMajorId> allMajorIds) {
             this.allMajorIds = allMajorIds;
-            this.itemObtainMap = itemObtainMap;
         }
 
         @Override
@@ -240,8 +222,8 @@ public class GearInfoRegistry {
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
             GearRestrictions restrictions = parseRestrictions(json);
-            GearMaterial material = parseMaterial(json, type);
-            List<ItemObtainInfo> obtainCrowdSourced = itemObtainMap.get(name);
+            ItemMaterial material = parseMaterial(json, type);
+            List<ItemObtainInfo> obtainCrowdSourced = Models.WynnItem.getObtainInfo(name);
             List<ItemObtainInfo> obtainInfo =
                     obtainCrowdSourced == null ? new ArrayList<>() : new ArrayList<>(obtainCrowdSourced);
 
@@ -298,16 +280,22 @@ public class GearInfoRegistry {
             return GearRestrictions.fromString(restrictions);
         }
 
-        private GearMaterial parseMaterial(JsonObject json, GearType type) {
+        private ItemMaterial parseMaterial(JsonObject json, GearType type) {
             return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
         }
 
-        private GearMaterial parseArmorType(JsonObject json, GearType gearType) {
+        private ItemMaterial parseArmorType(JsonObject json, GearType gearType) {
             // We might have a specified material (like a carved pumpkin or mob head),
             // if so this takes precedence
             String material = JsonUtils.getNullableJsonString(json, "material");
             if (material != null) {
                 return parseOtherMaterial(json, gearType);
+            }
+
+            // Some helmets are player heads
+            String skin = JsonUtils.getNullableJsonString(json, "skin");
+            if (skin != null) {
+                return ItemMaterial.fromPlayerHeadTexture(skin);
             }
 
             String materialType =
@@ -328,21 +316,21 @@ public class GearInfoRegistry {
                 }
             }
 
-            return GearMaterial.fromArmorType(materialType, gearType, color);
+            return ItemMaterial.fromArmorType(materialType, gearType, color);
         }
 
-        private GearMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
+        private ItemMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
             String material = JsonUtils.getNullableJsonString(json, "material");
             if (material == null) {
                 // We're screwed. The best we can do is to give a generic default representation
                 // for this gear type
-                return GearMaterial.fromGearType(gearType);
+                return ItemMaterial.fromGearType(gearType);
             }
 
             String[] materialArray = material.split(":");
             int itemTypeCode = Integer.parseInt(materialArray[0]);
             int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-            return GearMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+            return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
         }
 
         private GearRequirements parseRequirements(JsonObject json, GearType type) {
@@ -499,20 +487,5 @@ public class GearInfoRegistry {
 
     protected static class WynncraftGearInfoResponse {
         protected List<GearInfo> items;
-    }
-
-    private static final class ItemObtainInfoDeserializer implements JsonDeserializer<ItemObtainInfo> {
-        @Override
-        public ItemObtainInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
-                throws JsonParseException {
-            JsonObject json = jsonElement.getAsJsonObject();
-            String sourceTypeStr = json.get("type").getAsString();
-            ItemObtainType sourceType = ItemObtainType.fromApiName(sourceTypeStr);
-            String name = JsonUtils.getNullableJsonString(json, "name");
-
-            // FIXME: We are ignoring the details field for now...
-
-            return new ItemObtainInfo(sourceType, Optional.ofNullable(name));
-        }
     }
 }

@@ -6,22 +6,37 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.RenderLayerRegistrationEvent;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerRenderer.class)
-public abstract class PlayerRendererMixin extends EntityRenderer<Player> {
-    protected PlayerRendererMixin(EntityRendererProvider.Context context) {
-        super(context);
+public abstract class PlayerRendererMixin
+        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+    protected PlayerRendererMixin(Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
+        super(context, entityModel, f);
+    }
+
+    @Inject(
+            method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V",
+            at = @At("RETURN"))
+    private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
+        RenderLayerRegistrationEvent event =
+                EventFactory.onRenderLayerRegistration((PlayerRenderer) (Object) this, context, bl);
+        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : event.getRegisteredLayers()) {
+            this.addLayer(layer);
+        }
     }
 
     @Inject(

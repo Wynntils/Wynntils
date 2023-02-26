@@ -10,9 +10,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.ServicePoi;
 import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -34,55 +36,58 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class CompassCommand extends Command {
-
-    private final SuggestionProvider<CommandSourceStack> shareTargetSuggestionProvider =
+    private static final SuggestionProvider<CommandSourceStack> SHARE_TARGET_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    () -> {
-                        List<String> suggestions = new ArrayList<>();
-                        suggestions.add("party");
-                        suggestions.add("guild");
-
-                        suggestions.addAll(McUtils.mc().level.players().stream()
-                                .map(Player::getScoreboardName)
-                                .collect(Collectors.toSet()));
-
-                        return suggestions.iterator();
-                    },
+                    Stream.concat(
+                            Stream.of("party", "guild"),
+                            McUtils.mc().level.players().stream().map(Player::getScoreboardName)),
                     builder);
 
+    public static final SuggestionProvider<CommandSourceStack> TERRITORY_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(Models.Territory.getTerritoryNames(), builder);
+
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("compass")
+    public String getCommandName() {
+        return "compass";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Set your compass to various targets";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
                 .then(Commands.literal("at")
-                        .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAtVec3))
-                        .build())
+                        .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAtVec3)))
                 .then(Commands.literal("share")
                         .then(Commands.literal("location")
                                 .then(Commands.argument("target", StringArgumentType.word())
-                                        .suggests(shareTargetSuggestionProvider)
+                                        .suggests(SHARE_TARGET_SUGGESTION_PROVIDER)
                                         .executes(this::shareLocation)))
                         .then(Commands.argument("target", StringArgumentType.word())
-                                .suggests(shareTargetSuggestionProvider)
+                                .suggests(SHARE_TARGET_SUGGESTION_PROVIDER)
                                 .executes(this::shareCompass)))
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
-                                .executes(this::compassService))
-                        .build())
+                                .executes(this::compassService)))
                 .then(Commands.literal("place")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests(LocateCommand.PLACES_SUGGESTION_PROVIDER)
-                                .executes(this::compassPlace))
-                        .build())
+                                .executes(this::compassPlace)))
+                .then(Commands.literal("territory")
+                        .then(Commands.argument("territory", StringArgumentType.greedyString())
+                                .suggests(TERRITORY_SUGGESTION_PROVIDER)
+                                .executes(this::territory)))
                 .then(Commands.literal("npc")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .executes(this::notImplemented))
-                        .build())
+                                .executes(this::notImplemented)))
                 .then(Commands.literal("other")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .executes(this::notImplemented))
-                        .build())
-                .then(Commands.literal("clear").executes(this::compassClear).build())
+                                .executes(this::notImplemented)))
+                .then(Commands.literal("clear").executes(this::compassClear))
                 .then(Commands.argument("location", StringArgumentType.greedyString())
                         .executes(this::compassAtString))
                 .executes(this::syntaxError);
@@ -210,9 +215,34 @@ public class CompassCommand extends Command {
 
         Models.Compass.setCompassLocation(place.getLocation().asLocation());
 
-        MutableComponent response = Component.literal("Setting compass to " + place.getName() + " at ")
-                .withStyle(ChatFormatting.AQUA);
+        MutableComponent response =
+                Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
+        context.getSource().sendSuccess(response, false);
+        return 1;
+    }
+
+    // this is shared by TerritoryCommand
+    public int territory(CommandContext<CommandSourceStack> context) {
+        String territoryArg = context.getArgument("territory", String.class);
+
+        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(territoryArg);
+
+        if (territoryProfile == null) {
+            context.getSource()
+                    .sendFailure(Component.literal("Can't find territory '" + territoryArg + "'")
+                            .withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        PoiLocation location = territoryProfile.getCenterLocation();
+
+        Models.Compass.setCompassLocation(location.asLocation());
+
+        MutableComponent response = Component.literal(
+                        "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")
+                .withStyle(ChatFormatting.AQUA);
+        response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -230,7 +260,7 @@ public class CompassCommand extends Command {
         return 0;
     }
 
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
+    public int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
     }
