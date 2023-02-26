@@ -1,9 +1,21 @@
+## [0.0.2-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.234...v0.0.2-alpha.235) (2023-02-26)
+
+
+### Bug Fixes
+
+* Improve coordinate parser and command expansion ([#1204](https://github.com/Wynntils/Artemis/issues/1204)) ([ae3b4b2](https://github.com/Wynntils/Artemis/commit/ae3b4b2ec293d88362369a136edfe728bf5f312e))
+
 ## [0.0.2-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.233...v0.0.2-alpha.234) (2023-02-26)
 
 
 ### Bug Fixes
 
 * Fix elytra rendering logic ([#1203](https://github.com/Wynntils/Artemis/issues/1203)) ([ec93882](https://github.com/Wynntils/Artemis/commit/ec938828fa68bd4b5db7e62f1bf9c79a7f660ea1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.234 [skip ci] ([0828485](https://github.com/Wynntils/Artemis/commit/08284852064732358edb8b7201e4da0b30a9aefa))
 
 ## [0.0.2-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.232...v0.0.2-alpha.233) (2023-02-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.231 [skip ci] ([9314e4d](https://github.com/Wynntils/Artemis/commit/9314e4d5476d021f5c25ea4611051260bc6071b0))
-
-## [0.0.2-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.229...v0.0.2-alpha.230) (2023-02-25)
-
-
-### Bug Fixes
-
-* Map data were missing on dev version ([#1199](https://github.com/Wynntils/Artemis/issues/1199)) ([21696bc](https://github.com/Wynntils/Artemis/commit/21696bc026e90d3e6341c2811917101c2ae655cb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.230 [skip ci] ([ce4508a](https://github.com/Wynntils/Artemis/commit/ce4508aceb8eae60eb24a0cb9a19b9798419750c))
 
