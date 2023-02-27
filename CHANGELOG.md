@@ -1,9 +1,21 @@
+## [0.0.2-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.240...v0.0.2-alpha.241) (2023-02-27)
+
+
+### New Features
+
+* Add search in Misc Bucket ([#1213](https://github.com/Wynntils/Artemis/issues/1213)) ([b0c3ae7](https://github.com/Wynntils/Artemis/commit/b0c3ae734ecf1a4f0a1c83dc7c37de55cba8e975))
+
 ## [0.0.2-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.239...v0.0.2-alpha.240) (2023-02-27)
 
 
 ### Bug Fixes
 
 * totems not clearing on world switch ([#1212](https://github.com/Wynntils/Artemis/issues/1212)) ([2632eaa](https://github.com/Wynntils/Artemis/commit/2632eaa5f3c316a4974a8036a2858fe145b7d4a7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.240 [skip ci] ([aa7ea8c](https://github.com/Wynntils/Artemis/commit/aa7ea8c61dec55ca559e9092408946daa68f55e8))
 
 ## [0.0.2-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.238...v0.0.2-alpha.239) (2023-02-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.237 [skip ci] ([315d24e](https://github.com/Wynntils/Artemis/commit/315d24ef8d72741e265404ce7f06dcc85ba34efc))
-
-## [0.0.2-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.235...v0.0.2-alpha.236) (2023-02-26)
-
-
-### Bug Fixes
-
-* At least print the major ID name, even if formatting is off ([#1202](https://github.com/Wynntils/Artemis/issues/1202)) ([663ecf8](https://github.com/Wynntils/Artemis/commit/663ecf84cf29315f3de8aa34164899dea38dc808))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.236 [skip ci] ([07955d4](https://github.com/Wynntils/Artemis/commit/07955d48b1bb6accff26045c3391fa18e27f555a))
 
