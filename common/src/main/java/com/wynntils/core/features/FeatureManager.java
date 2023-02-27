@@ -81,6 +81,7 @@ import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.map.MinimapFeature;
+import com.wynntils.features.user.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.user.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
@@ -142,6 +143,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new BeaconBeamFeature());
