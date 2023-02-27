@@ -1,9 +1,21 @@
+## [0.0.2-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.242...v0.0.2-alpha.243) (2023-02-27)
+
+
+### Bug Fixes
+
+* Party management scaling improvements ([#1174](https://github.com/Wynntils/Artemis/issues/1174)) ([b4bfe1e](https://github.com/Wynntils/Artemis/commit/b4bfe1e6b7f7583c4fa7710ec8682573ac4b48bb))
+
 ## [0.0.2-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.241...v0.0.2-alpha.242) (2023-02-27)
 
 
 ### New Features
 
 * Arrow Shield tracking ([#1211](https://github.com/Wynntils/Artemis/issues/1211)) ([c293e55](https://github.com/Wynntils/Artemis/commit/c293e55618df893200ac6ffd4bdc4869c48947a6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.242 [skip ci] ([b9f0fcc](https://github.com/Wynntils/Artemis/commit/b9f0fcc98066c2a649dd50e0c3f4b2a23ac8a271))
 
 ## [0.0.2-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.240...v0.0.2-alpha.241) (2023-02-27)
 
@@ -36,16 +48,4 @@
 
 * Make it clearer for developers when i18n is missing ([#1210](https://github.com/Wynntils/Artemis/issues/1210)) ([bf13728](https://github.com/Wynntils/Artemis/commit/bf13728e1b4ed338f829216b4576b33af0bab4e5))
 * **release:** v0.0.2-alpha.239 [skip ci] ([4215e57](https://github.com/Wynntils/Artemis/commit/4215e57b9db6c8c3d5ac44af5632f7623adb43ed))
-
-## [0.0.2-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.237...v0.0.2-alpha.238) (2023-02-26)
-
-
-### Bug Fixes
-
-* Add crash protection for a number of screens ([#1209](https://github.com/Wynntils/Artemis/issues/1209)) ([401da8a](https://github.com/Wynntils/Artemis/commit/401da8a2ed4862a6bf59f2ea8078f29e28e0b1cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.238 [skip ci] ([46d57fd](https://github.com/Wynntils/Artemis/commit/46d57fd3ed2bdd278b68a2090e8faf4bc4765ad0))
 
