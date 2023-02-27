@@ -643,6 +643,8 @@
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.textShadow.name": "Text Shadow",
   "feature.wynntils.preventTradesDuels.name": "Prevent Trades & Duels",
+  "feature.wynntils.preventTradesDuels.onlyWhileFighting.description": "Should the prevention only take place when you have killed a mob the last 30 seconds?",
+  "feature.wynntils.preventTradesDuels.onlyWhileFighting.name": "Only While Fighting",
   "feature.wynntils.questBook.name": "Quest Book Analysis",
   "feature.wynntils.questInfoOverlay.autoTrackQuestCoordinates.description": "Should waypoints automatically be set for quest coordinates?",
   "feature.wynntils.questInfoOverlay.autoTrackQuestCoordinates.name": "Auto Track Quest Coordinates",
