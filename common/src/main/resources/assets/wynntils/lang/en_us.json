@@ -43,7 +43,7 @@
   "feature.wynntils.autoApplyResourcePack.name": "Auto Apply Resource Pack",
   "feature.wynntils.autoApplyResourcePack.packHash.description": "Last Wynncraft Pack Hash",
   "feature.wynntils.autoApplyResourcePack.packHash.name": "Pack Hash",
-  "feature.wynntils.autoJoinParty.name": "Autojoin Parties",
+  "feature.wynntils.autoJoinParty.name": "Auto Join Parties",
   "feature.wynntils.autoJoinParty.onlyFriends.description": "Should we only autojoin party invites from friends?",
   "feature.wynntils.autoJoinParty.onlyFriends.name": "Only autojoin friends' parties",
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
