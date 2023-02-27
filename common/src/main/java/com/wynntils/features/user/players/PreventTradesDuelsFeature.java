@@ -21,10 +21,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.PLAYERS)
 public class PreventTradesDuelsFeature extends UserFeature {
-    private static final int FIGHTING_CUTOFF = 30; // 30 seconds
-
     @Config
     public boolean onlyWhileFighting = true;
+
+    @Config
+    public int fightingTimeCutoff = 15; // 15 seconds is default
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
@@ -40,7 +41,7 @@ public class PreventTradesDuelsFeature extends UserFeature {
         // FIXME: A better metric would be to track the last time we dealt damage. When we implement
         // a DPS tracker, use that instead here.
         int timeSinceLastFight = (int) ((System.currentTimeMillis() - Models.CombatXp.getLastXpGainTimestamp()) / 1000);
-        if (onlyWhileFighting && timeSinceLastFight >= FIGHTING_CUTOFF) return;
+        if (onlyWhileFighting && timeSinceLastFight >= fightingTimeCutoff) return;
 
         if (!shouldBlockClick(player, itemStack, target)) return;
 
@@ -49,7 +50,7 @@ public class PreventTradesDuelsFeature extends UserFeature {
 
         if (onlyWhileFighting) {
             Managers.Notification.queueMessage(
-                    "Trade/Duel blocked for " + (FIGHTING_CUTOFF - timeSinceLastFight) + " s");
+                    "Trade/Duel blocked for " + (fightingTimeCutoff - timeSinceLastFight) + " s");
         }
     }
 
