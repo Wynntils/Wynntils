@@ -37,6 +37,8 @@ public class PreventTradesDuelsFeature extends UserFeature {
     }
 
     private void handlePlayerClick(Event event, Player player, ItemStack itemStack, Entity target) {
+        // FIXME: A better metric would be to track the last time we dealt damage. When we implement
+        // a DPS tracker, use that instead here.
         int timeSinceLastFight = (int) ((System.currentTimeMillis() - Models.CombatXp.getLastXpGainTimestamp()) / 1000);
         if (onlyWhileFighting && timeSinceLastFight >= FIGHTING_CUTOFF) return;
 
