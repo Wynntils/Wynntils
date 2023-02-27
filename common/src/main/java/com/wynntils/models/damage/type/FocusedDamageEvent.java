@@ -6,12 +6,12 @@ package com.wynntils.models.damage.type;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public abstract class DamageEvent extends Event {
+public abstract class FocusedDamageEvent extends Event {
     private final String mobName;
     private final String mobElementals;
     private final int health;
 
-    protected DamageEvent(String mobName, String mobElementals, int health) {
+    protected FocusedDamageEvent(String mobName, String mobElementals, int health) {
         this.mobName = mobName;
         this.mobElementals = mobElementals;
         this.health = health;
@@ -29,13 +29,13 @@ public abstract class DamageEvent extends Event {
         return health;
     }
 
-    public static final class MobFocused extends DamageEvent {
+    public static final class MobFocused extends FocusedDamageEvent {
         public MobFocused(String mobName, String mobElementals, int health) {
             super(mobName, mobElementals, health);
         }
     }
 
-    public static final class MobDamaged extends DamageEvent {
+    public static final class MobDamaged extends FocusedDamageEvent {
         private final int oldHealth;
 
         public MobDamaged(String mobName, String mobElementals, int currentHealth, int oldHealth) {
