@@ -1,8 +1,16 @@
+## [0.0.2-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.244...v0.0.2-alpha.245) (2023-02-27)
+
+
+### New Features
+
+* Auto-join party invites ([#1215](https://github.com/Wynntils/Artemis/issues/1215)) ([0caac88](https://github.com/Wynntils/Artemis/commit/0caac885c8512da3596607b8ad84745b0fcb6756))
+
 ## [0.0.2-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.243...v0.0.2-alpha.244) (2023-02-27)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.244 [skip ci] ([ccaad0a](https://github.com/Wynntils/Artemis/commit/ccaad0a3f3a3d209568bf6a1b4e1e7ae8307b102))
 * Throw AssertionError so missing i18n is caught ([#1216](https://github.com/Wynntils/Artemis/issues/1216)) ([41a7441](https://github.com/Wynntils/Artemis/commit/41a74411328236dc7f01a7c868260ba9b1bb61f6))
 
 ## [0.0.2-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.242...v0.0.2-alpha.243) (2023-02-27)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.241 [skip ci] ([9d0ec03](https://github.com/Wynntils/Artemis/commit/9d0ec03a434c4dfbbb0788dead87450b0d4977bd))
-
-## [0.0.2-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.239...v0.0.2-alpha.240) (2023-02-27)
-
-
-### Bug Fixes
-
-* totems not clearing on world switch ([#1212](https://github.com/Wynntils/Artemis/issues/1212)) ([2632eaa](https://github.com/Wynntils/Artemis/commit/2632eaa5f3c316a4974a8036a2858fe145b7d4a7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.240 [skip ci] ([aa7ea8c](https://github.com/Wynntils/Artemis/commit/aa7ea8c61dec55ca559e9092408946daa68f55e8))
 
