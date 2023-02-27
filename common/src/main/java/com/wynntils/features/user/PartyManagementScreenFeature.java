@@ -78,6 +78,7 @@ public class PartyManagementScreenFeature extends UserFeature {
     private void reloadScreenWidgets() {
         if (partyManagementScreen == null) return;
 
+        partyManagementScreen.reloadCreateLeaveButton();
         partyManagementScreen.reloadMembersWidgets();
         partyManagementScreen.reloadSuggestedPlayersWidgets();
     }
