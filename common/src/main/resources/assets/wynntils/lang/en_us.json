@@ -113,6 +113,8 @@
   "feature.wynntils.containerSearch.filterInGuildBank.name": "Search Bar in Guild Bank",
   "feature.wynntils.containerSearch.filterInGuildMemberList.description": "Should there be a search widget in the guild member list?",
   "feature.wynntils.containerSearch.filterInGuildMemberList.name": "Search Bar in Guild Members",
+  "feature.wynntils.containerSearch.filterInMiscBucket.description": "Should there be a search widget in the misc bucket in your housing plot?",
+  "feature.wynntils.containerSearch.filterInMiscBucket.name": "Search Bar in Misc Bucket",
   "feature.wynntils.containerSearch.highlightColor.description": "What color should the highlight circles be?",
   "feature.wynntils.containerSearch.highlightColor.name": "Highlight color",
   "feature.wynntils.containerSearch.name": "Container Search Highlight",
