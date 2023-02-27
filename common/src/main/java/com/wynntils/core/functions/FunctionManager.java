@@ -265,6 +265,13 @@ public final class FunctionManager extends Manager {
 
     private void registerFunction(Function<?> function) {
         functions.add(function);
+
+        if (function.getTranslatedName().startsWith("function.wynntils.")) {
+            WynntilsMod.error("Fix i18n for " + function.getClass().getSimpleName());
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                System.exit(1);
+            }
+        }
     }
 
     private void registerAllFunctions() {
