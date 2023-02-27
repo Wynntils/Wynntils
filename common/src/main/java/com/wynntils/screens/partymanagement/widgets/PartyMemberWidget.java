@@ -29,28 +29,43 @@ public class PartyMemberWidget extends AbstractWidget {
     private final Button promoteButton;
     private final Button kickButton;
     private final Button disbandButton;
+    private final float GRID_DIVISIONS;
 
-    public PartyMemberWidget(int x, int y, int width, int height, String playerName, boolean isOffline) {
-        super(x, y, width, height, Component.literal(playerName));
+    public PartyMemberWidget(
+            float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
+        super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;
+        this.GRID_DIVISIONS = gridDivisions;
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
-                .pos(this.getX() + 240, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 16)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 20))
+                                        - (this.getX() + (this.width / GRID_DIVISIONS * 16)))
+                                - 2,
+                        20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
-                .pos(this.getX() + 292, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
+                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                                - 2,
+                        20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
-                .pos(this.getX() + 292, this.getY())
-                .size(50, 20)
+                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
+                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                                - 2,
+                        20)
                 .build();
         if (playerName.equals(Models.Party.getPartyLeader())) {
             this.promoteButton.active = false;
@@ -61,15 +76,41 @@ public class PartyMemberWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
                 (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getY() + (this.height / 2) - 8,
+                8,
+                16,
+                16,
+                8,
+                8,
+                8,
+                8,
+                64,
+                64);
         // hat rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 1, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getY() + (this.height / 2) - 8,
+                1,
+                16,
+                16,
+                40,
+                8,
+                8,
+                8,
+                64,
+                64);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -91,8 +132,8 @@ public class PartyMemberWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         formattedPlayerName,
-                        this.getX() + 36,
-                        this.getY() + 8,
+                        this.getX() + (this.width / GRID_DIVISIONS * 3),
+                        this.getY() + this.height / 2,
                         color,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
