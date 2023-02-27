@@ -1,9 +1,17 @@
+## [0.0.2-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.239...v0.0.2-alpha.240) (2023-02-27)
+
+
+### Bug Fixes
+
+* totems not clearing on world switch ([#1212](https://github.com/Wynntils/Artemis/issues/1212)) ([2632eaa](https://github.com/Wynntils/Artemis/commit/2632eaa5f3c316a4974a8036a2858fe145b7d4a7))
+
 ## [0.0.2-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.238...v0.0.2-alpha.239) (2023-02-27)
 
 
 ### Miscellaneous Chores
 
 * Make it clearer for developers when i18n is missing ([#1210](https://github.com/Wynntils/Artemis/issues/1210)) ([bf13728](https://github.com/Wynntils/Artemis/commit/bf13728e1b4ed338f829216b4576b33af0bab4e5))
+* **release:** v0.0.2-alpha.239 [skip ci] ([4215e57](https://github.com/Wynntils/Artemis/commit/4215e57b9db6c8c3d5ac44af5632f7623adb43ed))
 
 ## [0.0.2-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.237...v0.0.2-alpha.238) (2023-02-26)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.236 [skip ci] ([07955d4](https://github.com/Wynntils/Artemis/commit/07955d48b1bb6accff26045c3391fa18e27f555a))
-
-## [0.0.2-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.234...v0.0.2-alpha.235) (2023-02-26)
-
-
-### Bug Fixes
-
-* Improve coordinate parser and command expansion ([#1204](https://github.com/Wynntils/Artemis/issues/1204)) ([ae3b4b2](https://github.com/Wynntils/Artemis/commit/ae3b4b2ec293d88362369a136edfe728bf5f312e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.235 [skip ci] ([415fd4c](https://github.com/Wynntils/Artemis/commit/415fd4cb712121a1c709645540c9cb456c72cd1c))
 
