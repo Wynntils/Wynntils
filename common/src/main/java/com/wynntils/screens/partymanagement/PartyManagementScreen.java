@@ -7,6 +7,7 @@ package com.wynntils.screens.partymanagement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.LegendButton;
@@ -32,7 +33,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PartyManagementScreen extends Screen implements TextboxScreen {
+public final class PartyManagementScreen extends WynntilsScreen implements TextboxScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
@@ -83,10 +84,10 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
      */
 
     @Override
-    public void init() {
-        dividedHeight = this.height / GRID_DIVISIONS;
-        dividedWidth = this.width / GRID_DIVISIONS;
+    public void doInit() {
         mgmtButtonWidth = (int) (dividedWidth * 8) - 2; // -2 for spacing
+        dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
         refreshAll();
         // region Invite input and button
         inviteInput = new TextInputBoxWidget(
@@ -131,9 +132,9 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        dividedHeight = this.height / GRID_DIVISIONS;
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
         renderBackground(poseStack);
 
         boolean inParty = Models.Party.isInParty();
@@ -148,7 +149,7 @@ public final class PartyManagementScreen extends Screen implements TextboxScreen
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
 
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // region debug dividers
         // to make positioning easier, we will split the screen into GRID_DIVISIONS parts horizontally and vertically
