@@ -69,7 +69,9 @@ public final class PartyModel extends Model {
 
     private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
 
-    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party.\\.");
+    private static final Pattern PARTY_INVITED = Pattern.compile("§eYou have been invited to join (.*)'s? party\\.");
+
+    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
@@ -204,6 +206,15 @@ public final class PartyModel extends Model {
             WynntilsMod.info("Player has been promoted to party leader.");
 
             partyLeader = McUtils.player().getName().getString();
+            return true;
+        }
+
+        matcher = PARTY_INVITED.matcher(coded);
+        if (matcher.matches()) {
+            String inviter = matcher.group(1);
+            WynntilsMod.info("Player has been invited to party by " + inviter);
+
+            WynntilsMod.postEvent(new PartyEvent.Invited(inviter));
             return true;
         }
 
@@ -394,6 +405,13 @@ public final class PartyModel extends Model {
      */
     public void partyCreate() {
         McUtils.sendCommand("party create");
+    }
+
+    /**
+     * Join another players party
+     */
+    public void partyJoin(String playerName) {
+        McUtils.sendCommand("party join " + playerName);
     }
 
     /**

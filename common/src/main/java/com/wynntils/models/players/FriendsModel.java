@@ -178,6 +178,10 @@ public final class FriendsModel extends Model {
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
 
+    public boolean isFriend(String playerName) {
+        return friends.contains(playerName);
+    }
+
     public Set<String> getFriends() {
         return friends;
     }
