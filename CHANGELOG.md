@@ -1,9 +1,21 @@
+## [0.0.2-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.241...v0.0.2-alpha.242) (2023-02-27)
+
+
+### New Features
+
+* Arrow Shield tracking ([#1211](https://github.com/Wynntils/Artemis/issues/1211)) ([c293e55](https://github.com/Wynntils/Artemis/commit/c293e55618df893200ac6ffd4bdc4869c48947a6))
+
 ## [0.0.2-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.240...v0.0.2-alpha.241) (2023-02-27)
 
 
 ### New Features
 
 * Add search in Misc Bucket ([#1213](https://github.com/Wynntils/Artemis/issues/1213)) ([b0c3ae7](https://github.com/Wynntils/Artemis/commit/b0c3ae734ecf1a4f0a1c83dc7c37de55cba8e975))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.241 [skip ci] ([9d0ec03](https://github.com/Wynntils/Artemis/commit/9d0ec03a434c4dfbbb0788dead87450b0d4977bd))
 
 ## [0.0.2-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.239...v0.0.2-alpha.240) (2023-02-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.238 [skip ci] ([46d57fd](https://github.com/Wynntils/Artemis/commit/46d57fd3ed2bdd278b68a2090e8faf4bc4765ad0))
-
-## [0.0.2-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.236...v0.0.2-alpha.237) (2023-02-26)
-
-
-### Bug Fixes
-
-* NPE in party management screen ([#1208](https://github.com/Wynntils/Artemis/issues/1208)) ([dfe43ee](https://github.com/Wynntils/Artemis/commit/dfe43ee5515cc330d492d56f0712cab8e8906fed))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.237 [skip ci] ([315d24e](https://github.com/Wynntils/Artemis/commit/315d24ef8d72741e265404ce7f06dcc85ba34efc))
 
