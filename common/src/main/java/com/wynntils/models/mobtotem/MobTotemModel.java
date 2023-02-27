@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.HashMap;
@@ -68,6 +69,11 @@ public class MobTotemModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         e.getEntityIds().forEach(mobTotems::remove);
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        mobTotems.clear();
     }
 
     public List<MobTotem> getMobTotems() {
