@@ -1,9 +1,21 @@
+## [0.0.2-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.238...v0.0.2-alpha.239) (2023-02-27)
+
+
+### Miscellaneous Chores
+
+* Make it clearer for developers when i18n is missing ([#1210](https://github.com/Wynntils/Artemis/issues/1210)) ([bf13728](https://github.com/Wynntils/Artemis/commit/bf13728e1b4ed338f829216b4576b33af0bab4e5))
+
 ## [0.0.2-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.237...v0.0.2-alpha.238) (2023-02-26)
 
 
 ### Bug Fixes
 
 * Add crash protection for a number of screens ([#1209](https://github.com/Wynntils/Artemis/issues/1209)) ([401da8a](https://github.com/Wynntils/Artemis/commit/401da8a2ed4862a6bf59f2ea8078f29e28e0b1cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.238 [skip ci] ([46d57fd](https://github.com/Wynntils/Artemis/commit/46d57fd3ed2bdd278b68a2090e8faf4bc4765ad0))
 
 ## [0.0.2-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.236...v0.0.2-alpha.237) (2023-02-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.235 [skip ci] ([415fd4c](https://github.com/Wynntils/Artemis/commit/415fd4cb712121a1c709645540c9cb456c72cd1c))
-
-## [0.0.2-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.233...v0.0.2-alpha.234) (2023-02-26)
-
-
-### Bug Fixes
-
-* Fix elytra rendering logic ([#1203](https://github.com/Wynntils/Artemis/issues/1203)) ([ec93882](https://github.com/Wynntils/Artemis/commit/ec938828fa68bd4b5db7e62f1bf9c79a7f660ea1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.234 [skip ci] ([0828485](https://github.com/Wynntils/Artemis/commit/08284852064732358edb8b7201e4da0b30a9aefa))
 
