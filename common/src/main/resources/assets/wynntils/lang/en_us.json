@@ -1055,7 +1055,7 @@
   "screens.wynntils.partyManagementGui.kickOfflineButton": "Kick Offline",
   "screens.wynntils.partyManagementGui.leader": "Leader",
   "screens.wynntils.partyManagementGui.leavePartyButton": "Leave Party",
-  "screens.wynntils.partyManagementGui.legend": "Legend",
+  "screens.wynntils.partyManagementGui.legend": "Legend:",
   "screens.wynntils.partyManagementGui.name": "Name",
   "screens.wynntils.partyManagementGui.offline": "Offline",
   "screens.wynntils.partyManagementGui.promote": "Promote",
