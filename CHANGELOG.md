@@ -1,9 +1,21 @@
+## [0.0.2-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.243...v0.0.2-alpha.244) (2023-02-27)
+
+
+### Miscellaneous Chores
+
+* Throw AssertionError so missing i18n is caught ([#1216](https://github.com/Wynntils/Artemis/issues/1216)) ([41a7441](https://github.com/Wynntils/Artemis/commit/41a74411328236dc7f01a7c868260ba9b1bb61f6))
+
 ## [0.0.2-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.242...v0.0.2-alpha.243) (2023-02-27)
 
 
 ### Bug Fixes
 
 * Party management scaling improvements ([#1174](https://github.com/Wynntils/Artemis/issues/1174)) ([b4bfe1e](https://github.com/Wynntils/Artemis/commit/b4bfe1e6b7f7583c4fa7710ec8682573ac4b48bb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.243 [skip ci] ([42832b0](https://github.com/Wynntils/Artemis/commit/42832b0e2b071872b6564ce3d710baa80c736cf6))
 
 ## [0.0.2-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.241...v0.0.2-alpha.242) (2023-02-27)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.240 [skip ci] ([aa7ea8c](https://github.com/Wynntils/Artemis/commit/aa7ea8c61dec55ca559e9092408946daa68f55e8))
-
-## [0.0.2-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.238...v0.0.2-alpha.239) (2023-02-27)
-
-
-### Miscellaneous Chores
-
-* Make it clearer for developers when i18n is missing ([#1210](https://github.com/Wynntils/Artemis/issues/1210)) ([bf13728](https://github.com/Wynntils/Artemis/commit/bf13728e1b4ed338f829216b4576b33af0bab4e5))
-* **release:** v0.0.2-alpha.239 [skip ci] ([4215e57](https://github.com/Wynntils/Artemis/commit/4215e57b9db6c8c3d5ac44af5632f7623adb43ed))
 
