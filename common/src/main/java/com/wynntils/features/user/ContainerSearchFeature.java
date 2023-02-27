@@ -39,6 +39,9 @@ public class ContainerSearchFeature extends UserFeature {
     public boolean filterInBank = true;
 
     @Config
+    public boolean filterInMiscBucket = true;
+
+    @Config
     public boolean filterInGuildBank = true;
 
     @Config
@@ -144,12 +147,16 @@ public class ContainerSearchFeature extends UserFeature {
             return SearchableContainerType.BANK;
         }
 
+        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket) {
+            return SearchableContainerType.MISC_BUCKET;
+        }
+
         if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank) {
-            return SearchableContainerType.BANK;
+            return SearchableContainerType.GUILD_BANK;
         }
 
         if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList) {
-            return SearchableContainerType.BANK;
+            return SearchableContainerType.MEMBER_LIST;
         }
 
         return null;
