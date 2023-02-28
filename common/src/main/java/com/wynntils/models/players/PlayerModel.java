@@ -141,8 +141,10 @@ public final class PlayerModel extends Model {
                     WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
 
                     users.put(uuid, user);
-                    loadCosmeticTextures(uuid, user);
                     fetching.remove(uuid);
+
+                    // Make sure texture loading is done on client thread
+                    Managers.TickScheduler.scheduleNextTick(() -> loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;
@@ -192,8 +194,13 @@ public final class PlayerModel extends Model {
     }
 
     private void clearTextureCache() {
-        cosmeticTextures.forEach((uuid, array) -> Arrays.stream(array)
-                .forEach(l -> McUtils.mc().getTextureManager().release(l)));
+        for (ResourceLocation[] locations : cosmeticTextures.values()) {
+            // Make sure texture unloading is done on client thread
+            Arrays.stream(locations).forEach(l -> {
+                Managers.TickScheduler.scheduleNextTick(
+                        () -> McUtils.mc().getTextureManager().release(l));
+            });
+        }
         cosmeticTextures.clear();
     }
 
