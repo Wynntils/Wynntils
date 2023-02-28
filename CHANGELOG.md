@@ -1,9 +1,21 @@
+## [0.0.2-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.248...v0.0.2-alpha.249) (2023-02-28)
+
+
+### Bug Fixes
+
+* Fix a (rather unlikely) race at startup time ([#1221](https://github.com/Wynntils/Artemis/issues/1221)) ([a44f15c](https://github.com/Wynntils/Artemis/commit/a44f15c5eb01d163c87d8e72c517cf54c53733ec))
+
 ## [0.0.2-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.247...v0.0.2-alpha.248) (2023-02-28)
 
 
 ### Bug Fixes
 
 * Net manager events are now sent on the main thread ([#1219](https://github.com/Wynntils/Artemis/issues/1219)) ([5b759b7](https://github.com/Wynntils/Artemis/commit/5b759b7e34de21648f077571e14d53f452719ccb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.248 [skip ci] ([914662c](https://github.com/Wynntils/Artemis/commit/914662cb62e70954c8d82d3fb8221ff73967c217))
 
 ## [0.0.2-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.246...v0.0.2-alpha.247) (2023-02-28)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.245 [skip ci] ([70fe22e](https://github.com/Wynntils/Artemis/commit/70fe22e1b14412db127c8f4e35469dc3b886b940))
-
-## [0.0.2-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.243...v0.0.2-alpha.244) (2023-02-27)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.244 [skip ci] ([ccaad0a](https://github.com/Wynntils/Artemis/commit/ccaad0a3f3a3d209568bf6a1b4e1e7ae8307b102))
-* Throw AssertionError so missing i18n is caught ([#1216](https://github.com/Wynntils/Artemis/issues/1216)) ([41a7441](https://github.com/Wynntils/Artemis/commit/41a74411328236dc7f01a7c868260ba9b1bb61f6))
 
