@@ -1,9 +1,21 @@
+## [0.0.2-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.247...v0.0.2-alpha.248) (2023-02-28)
+
+
+### Bug Fixes
+
+* Net manager events are now sent on the main thread ([#1219](https://github.com/Wynntils/Artemis/issues/1219)) ([5b759b7](https://github.com/Wynntils/Artemis/commit/5b759b7e34de21648f077571e14d53f452719ccb))
+
 ## [0.0.2-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.246...v0.0.2-alpha.247) (2023-02-28)
 
 
 ### Bug Fixes
 
 * Do not try to auto join party if already in party ([#1222](https://github.com/Wynntils/Artemis/issues/1222)) ([d6d25bb](https://github.com/Wynntils/Artemis/commit/d6d25bb6b7fce11ea594ec001cdd10944ff18ef9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.247 [skip ci] ([acdec83](https://github.com/Wynntils/Artemis/commit/acdec83897ee44b3d25e38002865bf90dcc15ccf))
 
 ## [0.0.2-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.245...v0.0.2-alpha.246) (2023-02-28)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.2-alpha.244 [skip ci] ([ccaad0a](https://github.com/Wynntils/Artemis/commit/ccaad0a3f3a3d209568bf6a1b4e1e7ae8307b102))
 * Throw AssertionError so missing i18n is caught ([#1216](https://github.com/Wynntils/Artemis/issues/1216)) ([41a7441](https://github.com/Wynntils/Artemis/commit/41a74411328236dc7f01a7c868260ba9b1bb61f6))
-
-## [0.0.2-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.242...v0.0.2-alpha.243) (2023-02-27)
-
-
-### Bug Fixes
-
-* Party management scaling improvements ([#1174](https://github.com/Wynntils/Artemis/issues/1174)) ([b4bfe1e](https://github.com/Wynntils/Artemis/commit/b4bfe1e6b7f7583c4fa7710ec8682573ac4b48bb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.243 [skip ci] ([42832b0](https://github.com/Wynntils/Artemis/commit/42832b0e2b071872b6564ce3d710baa80c736cf6))
 
