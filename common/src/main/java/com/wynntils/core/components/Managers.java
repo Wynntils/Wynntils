@@ -25,7 +25,9 @@ import com.wynntils.core.splashes.SplashManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
-    public static final UrlManager Url = new UrlManager();
+    // We need TickScheduler to send out the loaded events on the main thread
+    public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
+    public static final UrlManager Url = new UrlManager(TickScheduler);
 
     public static final ChatTabManager ChatTab = new ChatTabManager();
     public static final CommandManager Command = new CommandManager();
@@ -35,7 +37,6 @@ public final class Managers {
     public static final FunctionManager Function = new FunctionManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
-    public static final TickSchedulerManager TickScheduler = new TickSchedulerManager();
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
