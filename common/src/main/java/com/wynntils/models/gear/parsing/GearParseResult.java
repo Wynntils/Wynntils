@@ -15,6 +15,7 @@ import java.util.List;
 public record GearParseResult(
         GearTier tier,
         GearType gearType,
+        int level,
         List<StatActualValue> identifications,
         List<Powder> powders,
         int rerolls,

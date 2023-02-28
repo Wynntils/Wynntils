@@ -4,9 +4,22 @@
  */
 package com.wynntils.models.items.items.game;
 
-public class XpPotionItem extends GameItem {
+import com.wynntils.models.items.properties.LeveledItemProperty;
+
+public class XpPotionItem extends GameItem implements LeveledItemProperty {
+    private final int level;
+
+    public XpPotionItem(int level) {
+        this.level = level;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
     @Override
     public String toString() {
-        return "XpPotionItem{}";
+        return "XpPotionItem{" + "level=" + level + '}';
     }
 }

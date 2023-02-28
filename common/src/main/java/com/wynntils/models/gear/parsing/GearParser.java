@@ -20,6 +20,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public final class GearParser {
     public static GearParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
+        int level = 0;
         int tierCount = 0;
         int durabilityMax = 0;
         GearTier tier = null;
@@ -59,7 +61,6 @@ public final class GearParser {
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
             String coded = ComponentUtils.getCoded(loreLine);
             String normalizedCoded = WynnUtils.normalizeBadString(coded);
 
@@ -104,6 +105,13 @@ public final class GearParser {
                 continue;
             }
 
+            // Look for level requirements (needed for crafted gear)
+            Matcher levelMatcher = WynnItemMatchers.LEVEL_MATCHER.matcher(normalizedCoded);
+            if (levelMatcher.matches()) {
+                level = Integer.parseInt(levelMatcher.group(1));
+                continue;
+            }
+
             Matcher setBonusMatcher = SET_BONUS_PATTEN.matcher(normalizedCoded);
             if (setBonusMatcher.matches()) {
                 // Any stat lines that follow from now on belongs to the Set Bonus
@@ -142,7 +150,8 @@ public final class GearParser {
             }
         }
 
-        return new GearParseResult(tier, gearType, identifications, powders, tierCount, tierCount, durabilityMax);
+        return new GearParseResult(
+                tier, gearType, level, identifications, powders, tierCount, tierCount, durabilityMax);
     }
 
     public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -189,7 +198,7 @@ public final class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearParseResult(gearInfo.tier(), null, identifications, powders, rerolls, 0, 0);
+        return new GearParseResult(gearInfo.tier(), null, 0, identifications, powders, rerolls, 0, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

@@ -22,6 +22,9 @@ import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
+    // https://regexr.com/798o0
+    public static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: (\\d+)$");
+
     private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
@@ -139,5 +142,12 @@ public final class WynnItemMatchers {
                             GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
         }
         return null;
+    }
+
+    public static Integer getLevelReq(ItemStack itemStack, int startLineNum) {
+        Matcher levelMatcher = LoreUtils.matchLoreLine(itemStack, startLineNum, LEVEL_MATCHER);
+        if (!levelMatcher.matches()) return null;
+
+        return Integer.parseInt(levelMatcher.group(1));
     }
 }

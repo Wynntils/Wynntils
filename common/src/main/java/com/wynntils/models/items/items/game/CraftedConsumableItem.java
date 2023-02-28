@@ -6,15 +6,19 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.UsesItemPropery;
 import com.wynntils.utils.type.CappedValue;
 
-public class CraftedConsumableItem extends GameItem implements UsesItemPropery, GearTierItemProperty {
+public class CraftedConsumableItem extends GameItem
+        implements UsesItemPropery, GearTierItemProperty, LeveledItemProperty {
     private final String name;
+    private final int level;
     private final CappedValue uses;
 
-    public CraftedConsumableItem(String name, CappedValue uses) {
+    public CraftedConsumableItem(String name, int level, CappedValue uses) {
         this.name = name;
+        this.level = level;
         this.uses = uses;
     }
 
@@ -22,16 +26,23 @@ public class CraftedConsumableItem extends GameItem implements UsesItemPropery, 
         return name;
     }
 
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
+    @Override
     public CappedValue getUses() {
         return uses;
     }
 
+    @Override
     public GearTier getGearTier() {
         return GearTier.CRAFTED;
     }
 
     @Override
     public String toString() {
-        return "CraftedConsumableItem{" + "name='" + name + '\'' + ", uses=" + uses + '}';
+        return "CraftedConsumableItem{" + "name='" + name + '\'' + ", level=" + level + ", uses=" + uses + '}';
     }
 }
