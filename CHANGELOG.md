@@ -1,9 +1,21 @@
+## [0.0.2-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.245...v0.0.2-alpha.246) (2023-02-28)
+
+
+### Bug Fixes
+
+* Fixed typos in en_US.json ([#1217](https://github.com/Wynntils/Artemis/issues/1217)) ([2034474](https://github.com/Wynntils/Artemis/commit/203447464301c7be6388cc9b902b273d59fe60b0))
+
 ## [0.0.2-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.244...v0.0.2-alpha.245) (2023-02-27)
 
 
 ### New Features
 
 * Auto-join party invites ([#1215](https://github.com/Wynntils/Artemis/issues/1215)) ([0caac88](https://github.com/Wynntils/Artemis/commit/0caac885c8512da3596607b8ad84745b0fcb6756))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.245 [skip ci] ([70fe22e](https://github.com/Wynntils/Artemis/commit/70fe22e1b14412db127c8f4e35469dc3b886b940))
 
 ## [0.0.2-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.243...v0.0.2-alpha.244) (2023-02-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.242 [skip ci] ([b9f0fcc](https://github.com/Wynntils/Artemis/commit/b9f0fcc98066c2a649dd50e0c3f4b2a23ac8a271))
-
-## [0.0.2-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.240...v0.0.2-alpha.241) (2023-02-27)
-
-
-### New Features
-
-* Add search in Misc Bucket ([#1213](https://github.com/Wynntils/Artemis/issues/1213)) ([b0c3ae7](https://github.com/Wynntils/Artemis/commit/b0c3ae734ecf1a4f0a1c83dc7c37de55cba8e975))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.241 [skip ci] ([9d0ec03](https://github.com/Wynntils/Artemis/commit/9d0ec03a434c4dfbbb0788dead87450b0d4977bd))
 
