@@ -1,9 +1,21 @@
+## [0.0.2-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.246...v0.0.2-alpha.247) (2023-02-28)
+
+
+### Bug Fixes
+
+* Do not try to auto join party if already in party ([#1222](https://github.com/Wynntils/Artemis/issues/1222)) ([d6d25bb](https://github.com/Wynntils/Artemis/commit/d6d25bb6b7fce11ea594ec001cdd10944ff18ef9))
+
 ## [0.0.2-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.245...v0.0.2-alpha.246) (2023-02-28)
 
 
 ### Bug Fixes
 
 * Fixed typos in en_US.json ([#1217](https://github.com/Wynntils/Artemis/issues/1217)) ([2034474](https://github.com/Wynntils/Artemis/commit/203447464301c7be6388cc9b902b273d59fe60b0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.246 [skip ci] ([689b65e](https://github.com/Wynntils/Artemis/commit/689b65eb1d7a31196392a9a5b22996b4b3b6e89c))
 
 ## [0.0.2-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.244...v0.0.2-alpha.245) (2023-02-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.243 [skip ci] ([42832b0](https://github.com/Wynntils/Artemis/commit/42832b0e2b071872b6564ce3d710baa80c736cf6))
-
-## [0.0.2-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.241...v0.0.2-alpha.242) (2023-02-27)
-
-
-### New Features
-
-* Arrow Shield tracking ([#1211](https://github.com/Wynntils/Artemis/issues/1211)) ([c293e55](https://github.com/Wynntils/Artemis/commit/c293e55618df893200ac6ffd4bdc4869c48947a6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.242 [skip ci] ([b9f0fcc](https://github.com/Wynntils/Artemis/commit/b9f0fcc98066c2a649dd50e0c3f4b2a23ac8a271))
 
