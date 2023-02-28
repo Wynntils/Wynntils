@@ -258,7 +258,8 @@ public final class WynntilsMod {
         Managers.Function.init();
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
-                Managers.Feature.getFeatures().size(), Managers.Function.getFunctions().size());
+                Managers.Feature.getFeatures().size(),
+                Managers.Function.getFunctions().size());
         initCompleted = true;
     }
 

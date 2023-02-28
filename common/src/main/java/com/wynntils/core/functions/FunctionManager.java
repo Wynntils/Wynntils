@@ -283,8 +283,10 @@ public final class FunctionManager extends Manager {
     private void registerFunction(Function<?> function) {
         functions.add(function);
 
-        assert !function.getTranslatedName().startsWith("function.wynntils.") : "Fix i18n name for function " + function.getClass().getSimpleName();
-        assert !function.getDescription().startsWith("function.wynntils.") : "Fix i18n description for function " + function.getClass().getSimpleName();
+        assert !function.getTranslatedName().startsWith("function.wynntils.")
+                : "Fix i18n name for function " + function.getClass().getSimpleName();
+        assert !function.getDescription().startsWith("function.wynntils.")
+                : "Fix i18n description for function " + function.getClass().getSimpleName();
     }
 
     private void registerAllFunctions() {
