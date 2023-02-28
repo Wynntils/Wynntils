@@ -13,6 +13,7 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,7 +23,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -37,56 +37,75 @@ public class ExtendedItemCountFeature extends UserFeature {
     @Config
     public boolean hotbarTextOverlayEnabled = true;
 
-    // The text needs to be drawn on top of everything, so make sure we get the event
-    // last
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderSlot(SlotRenderEvent.Post e) {
+    private TextRenderTask countRenderTask;
+
+    // First we must check if we should draw our own count, and thus request vanilla to normal count
+    @SubscribeEvent
+    public void onRenderSlotPre(SlotRenderEvent.Pre e) {
         if (!inventoryTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        countRenderTask = getCountRenderTask(e.getSlot().getItem());
+    }
+
+    @SubscribeEvent
+    public void onRenderHotbarSlotPre(HotbarSlotRenderEvent.Pre e) {
+        if (!hotbarTextOverlayEnabled) return;
+
+        countRenderTask = getCountRenderTask(e.getStack());
+    }
+
+    // Then we can actually draw the text, which needs to be drawn on top of everything,
+    // so make sure we get the event after e.g. gear box icons
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onRenderSlotPost(SlotRenderEvent.Post e) {
+        if (countRenderTask == null) return;
+
+        drawTextOverlay(countRenderTask, e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        countRenderTask = null;
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
-        if (!hotbarTextOverlayEnabled) return;
+    public void onRenderHotbarSlotPost(HotbarSlotRenderEvent.Post e) {
+        if (countRenderTask == null) return;
 
-        drawTextOverlay(e.getStack(), e.getX(), e.getY());
+        drawTextOverlay(countRenderTask, e.getStack(), e.getX(), e.getY());
+        countRenderTask = null;
     }
 
-    private void drawTextOverlay(ItemStack item, int slotX, int slotY) {
+    private TextRenderTask getCountRenderTask(ItemStack item) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
-        if (wynnItemOpt.isEmpty()) return;
+        if (wynnItemOpt.isEmpty()) return null;
 
-        Pair<Integer, CustomColor> countInfo = getCountString(wynnItemOpt.get());
-        if (countInfo == null) return;
+        WynnItem wynnItem = wynnItemOpt.get();
 
-        Integer count = countInfo.a();
-        CustomColor countColor = countInfo.b();
+        int count;
+        CustomColor countColor;
+        if (wynnItem instanceof LeveledItemProperty leveledItem && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            count = leveledItem.getLevel();
+            countColor = CommonColors.WHITE;
+        } else if (wynnItem instanceof CountedItemProperty countedItem && countedItem.hasCount()) {
+            count = countedItem.getCount();
+            countColor = countedItem.getCountColor();
+        } else {
+            return null;
+        }
 
-        // This is a bit ugly; would rather we hid the drawing but that was tricky to do
-        // with mixins...
-        item.setCount(1);
+        // Request mixin to hide vanilla count
+        wynnItem.getCache().store(WynnItemCache.HIDE_COUNT_KEY, true);
 
         TextRenderSetting style = TextRenderSetting.DEFAULT
                 .withCustomColor(countColor)
                 .withHorizontalAlignment(HorizontalAlignment.Right);
-        TextRenderTask task = new TextRenderTask(String.valueOf(count), style);
+        return new TextRenderTask(String.valueOf(count), style);
+    }
 
+    private void drawTextOverlay(TextRenderTask task, ItemStack itemStack, int slotX, int slotY) {
         PoseStack poseStack = new PoseStack();
         poseStack.translate(0, 0, 310); // gear box overlays are drawn at z301, so draw slightly above
         FontRenderer.getInstance().renderText(poseStack, slotX + 17, slotY + 9, task);
-    }
 
-    private Pair<Integer, CustomColor> getCountString(WynnItem wynnItem) {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && wynnItem instanceof LeveledItemProperty leveledItem) {
-            return Pair.of(leveledItem.getLevel(), CommonColors.WHITE);
-        }
-
-        if (wynnItem instanceof CountedItemProperty countedItem) {
-            if (!countedItem.hasCount()) return null;
-            return Pair.of(countedItem.getCount(), countedItem.getCountColor());
-        }
-
-        return null;
+        // Restore vanilla count rendering
+        WynnItem wynnItem = Models.Item.getWynnItem(itemStack).get();
+        wynnItem.getCache().store(WynnItemCache.HIDE_COUNT_KEY, false);
     }
 }
