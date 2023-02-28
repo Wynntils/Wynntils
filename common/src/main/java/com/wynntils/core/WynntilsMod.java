@@ -253,11 +253,12 @@ public final class WynntilsMod {
     }
 
     private static void initFeatures() {
-        // Init all features. Now resources (i.e I18n) are available.
+        // Init all features and functions. Now resources (i.e I18n) are available.
         Managers.Feature.init();
+        Managers.Function.init();
         LOGGER.info(
-                "Wynntils: {} features are now loaded and ready",
-                Managers.Feature.getFeatures().size());
+                "Wynntils: {} features and {} functions are now loaded and ready",
+                Managers.Feature.getFeatures().size(), Managers.Function.getFunctions().size());
         initCompleted = true;
     }
 
