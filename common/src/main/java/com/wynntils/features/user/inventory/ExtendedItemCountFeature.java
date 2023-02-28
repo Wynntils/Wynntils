@@ -80,7 +80,8 @@ public class ExtendedItemCountFeature extends UserFeature {
 
         int count;
         CustomColor countColor;
-        if (wynnItem instanceof LeveledItemProperty leveledItem && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+        if (wynnItem instanceof LeveledItemProperty leveledItem
+                && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
             count = leveledItem.getLevel();
             countColor = CommonColors.WHITE;
         } else if (wynnItem instanceof CountedItemProperty countedItem && countedItem.hasCount()) {

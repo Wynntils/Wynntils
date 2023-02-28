@@ -51,7 +51,8 @@ public abstract class ItemRendererMixin {
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
-    private String renderGuiItemDecorations(String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
+    private String renderGuiItemDecorations(
+            String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return text;
 
