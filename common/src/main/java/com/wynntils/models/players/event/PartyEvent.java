@@ -18,6 +18,22 @@ public abstract class PartyEvent extends Event {
     public static class Listed extends PartyEvent {}
 
     /**
+     * Fired when someone invites you to their party
+     * @field playerName the name of the player who invited your
+     */
+    public static class Invited extends PartyEvent {
+        private final String playerName;
+
+        public Invited(String playerName) {
+            this.playerName = playerName;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
+    }
+
+    /**
      * Fired upon someone else joining the user's party
      * @field playerName the name of the player who joined
      */
