@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.bossbar;
 
-import com.wynntils.mc.mixin.LerpingBossEventAccessor;
+import com.wynntils.mc.mixin.accessors.LerpingBossEventAccessor;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

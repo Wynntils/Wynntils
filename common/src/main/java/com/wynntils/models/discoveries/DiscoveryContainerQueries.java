@@ -145,8 +145,8 @@ public class DiscoveryContainerQueries {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                ItemStack item = container.items().get(slot);
-                DiscoveryInfo discoveryInfo = DiscoveryInfo.parseFromItemStack(item);
+                ItemStack itemStack = container.items().get(slot);
+                DiscoveryInfo discoveryInfo = DiscoveryInfo.parseFromItemStack(itemStack);
                 if (discoveryInfo == null) continue;
 
                 newDiscoveries.add(discoveryInfo);

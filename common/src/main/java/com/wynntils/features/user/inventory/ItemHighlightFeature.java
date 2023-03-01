@@ -165,14 +165,14 @@ public class ItemHighlightFeature extends UserFeature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!hotbarHighlightEnabled) return;
 
-        CustomColor color = getHighlightColor(e.getStack(), true);
+        CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
         RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
     }
 
-    private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
 
         WynnItem wynnItem = wynnItemOpt.get();
