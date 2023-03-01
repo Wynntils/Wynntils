@@ -1,9 +1,21 @@
+## [0.0.2-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.254...v0.0.2-alpha.255) (2023-03-01)
+
+
+### Bug Fixes
+
+* Strange ordering in party mgmt screen ([#1229](https://github.com/Wynntils/Artemis/issues/1229)) ([19e60ad](https://github.com/Wynntils/Artemis/commit/19e60ad0e23cf583d0d13ee22f22f9a71e676578))
+
 ## [0.0.2-alpha.254](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.253...v0.0.2-alpha.254) (2023-03-01)
 
 
 ### Bug Fixes
 
 * /thankyou command argument confirmed ([#1227](https://github.com/Wynntils/Artemis/issues/1227)) ([98120fb](https://github.com/Wynntils/Artemis/commit/98120fbc4df6a61061827c76ac263da40b03e455))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.254 [skip ci] ([507a6fd](https://github.com/Wynntils/Artemis/commit/507a6fd4fe7df42decf5655f51b6ef3fc8062326))
 
 ## [0.0.2-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.252...v0.0.2-alpha.253) (2023-03-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.251 [skip ci] ([d65ebb5](https://github.com/Wynntils/Artemis/commit/d65ebb5731d510f7459bc98033a9ff39f6481a5e))
-
-## [0.0.2-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.249...v0.0.2-alpha.250) (2023-03-01)
-
-
-### Code Refactoring
-
-* Consistently call ItemStack variables "itemStack" ([#1234](https://github.com/Wynntils/Artemis/issues/1234)) ([63c49ea](https://github.com/Wynntils/Artemis/commit/63c49eaa545e4dcb33c6e13ae0de07a765c8ccc0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.250 [skip ci] ([be3524c](https://github.com/Wynntils/Artemis/commit/be3524ccc0aea594c8a5d5286e80e7760a943839))
 
