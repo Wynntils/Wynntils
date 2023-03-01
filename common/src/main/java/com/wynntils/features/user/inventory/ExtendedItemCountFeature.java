@@ -27,29 +27,24 @@ public class ExtendedItemCountFeature extends UserFeature {
     public boolean inventoryTextOverlayEnabled = true;
 
     @Config
-    public boolean hotbarTextOverlayEnabled = false;
+    public boolean hotbarTextOverlayEnabled = true;
 
-    private boolean shouldReplaceCount;
+    private boolean isInventory;
 
     @SubscribeEvent
     public void onRenderSlotPre(SlotRenderEvent.Pre e) {
-        if (!inventoryTextOverlayEnabled) return;
-
-        shouldReplaceCount = true;
+        isInventory = true;
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlotPre(HotbarSlotRenderEvent.Pre e) {
-        if (!hotbarTextOverlayEnabled) return;
-
-        shouldReplaceCount = true;
+        isInventory = false;
     }
 
     @SubscribeEvent
     public void onItemCountOverlay(ItemCountOverlayEvent event) {
-        if (!shouldReplaceCount) return;
-
-        shouldReplaceCount = false;
+        if (isInventory && !inventoryTextOverlayEnabled) return;
+        if (!isInventory && !hotbarTextOverlayEnabled) return;
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;
@@ -59,7 +54,8 @@ public class ExtendedItemCountFeature extends UserFeature {
         int count;
         CustomColor countColor;
         if (wynnItem instanceof LeveledItemProperty leveledItem
-                && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+                && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
+                && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));
         } else if (wynnItem instanceof CountedItemProperty countedItem && countedItem.hasCount()) {
             event.setCountString(String.valueOf(countedItem.getCount()));

@@ -20,7 +20,6 @@ import com.wynntils.utils.type.Pair;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
