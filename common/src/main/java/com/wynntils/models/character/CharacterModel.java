@@ -66,7 +66,7 @@ public final class CharacterModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN =
-            Pattern.compile("(.+?§7 ??(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
+            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
@@ -251,7 +251,7 @@ public final class CharacterModel extends Model {
             Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect);
             if (!m.find()) continue;
 
-            // See comment at TAB_EFFECT_PATTERN definition for format description of these
+            // See comment at STATUS_EFFECT_PATTERN definition for format description of these
             String prefix = m.group(1);
             String name = m.group(2);
             String displayedTime = m.group(3);
