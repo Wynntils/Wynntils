@@ -21,7 +21,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@StartDisabled
 @FeatureInfo(category = FeatureCategory.CHAT)
 public class ChatTimestampFeature extends UserFeature {
     @Config
