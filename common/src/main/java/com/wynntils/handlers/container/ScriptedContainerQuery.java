@@ -203,9 +203,9 @@ public final class ScriptedContainerQuery {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ItemStack item = container.items().get(slotNum);
-                if (!item.is(expectedItemType)
-                        || !item.getDisplayName().getString().equals(expectedItemName)) return false;
+                ItemStack itemStack = container.items().get(slotNum);
+                if (!itemStack.is(expectedItemType)
+                        || !itemStack.getDisplayName().getString().equals(expectedItemName)) return false;
 
                 ContainerUtils.clickOnSlot(
                         slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());

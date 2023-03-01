@@ -12,10 +12,10 @@ import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.TerritoryInfo;
-import com.wynntils.models.territories.TerritoryStorage;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -51,8 +51,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         // Buttons have to be added in reverse order (right to left) so they don't overlap
 
@@ -133,7 +133,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
                 && !GuildMapFeature.INSTANCE.openGuildMapKeybind.getKeyMapping().isDown()) {
             this.onClose();

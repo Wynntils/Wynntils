@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
@@ -36,22 +35,37 @@ public class FeatureCommand extends Command {
                     builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("feature")
-                .then(this.buildListNode())
-                .then(this.enableFeatureNode())
-                .then(this.disableFeatureNode())
-                .then(this.reloadFeatureNode())
+    public String getCommandName() {
+        return "feature";
+    }
+
+    @Override
+    public String getDescription() {
+        return "List and manage Wynntils features";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("list").executes(this::listFeatures))
+                .then(Commands.literal("enable")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::enableFeature)))
+                .then(Commands.literal("disable")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::disableFeature)))
+                .then(Commands.literal("reload")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::reloadFeature)))
                 .executes(this::syntaxError);
     }
 
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
-        return 0;
-    }
-
-    private LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return Commands.literal("list").executes(this::listFeatures).build();
+    private static boolean isVisible(Feature feature) {
+        if (!(feature instanceof DebugFeature)) return true;
+        return WynntilsMod.isDevelopmentEnvironment();
     }
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
@@ -109,19 +123,6 @@ public class FeatureCommand extends Command {
         return 1;
     }
 
-    private static boolean isVisible(Feature feature) {
-        if (!(feature instanceof DebugFeature)) return true;
-        return WynntilsMod.isDevelopmentEnvironment();
-    }
-
-    private LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
-        return Commands.literal("enable")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::enableFeature))
-                .build();
-    }
-
     private int enableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
@@ -161,14 +162,6 @@ public class FeatureCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> disableFeatureNode() {
-        return Commands.literal("disable")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::disableFeature))
-                .build();
-    }
-
     private int disableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
@@ -206,14 +199,6 @@ public class FeatureCommand extends Command {
                         false);
 
         return 1;
-    }
-
-    private LiteralCommandNode<CommandSourceStack> reloadFeatureNode() {
-        return Commands.literal("reload")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::reloadFeature))
-                .build();
     }
 
     private int reloadFeature(CommandContext<CommandSourceStack> context) {
@@ -260,5 +245,10 @@ public class FeatureCommand extends Command {
                         false);
 
         return 1;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }

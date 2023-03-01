@@ -13,7 +13,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
-import com.wynntils.features.user.HadesFeature;
+import com.wynntils.features.user.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;

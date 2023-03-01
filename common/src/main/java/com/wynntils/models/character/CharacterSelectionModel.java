@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -75,11 +76,11 @@ public final class CharacterSelectionModel extends Model {
 
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
-            ItemStack item = items.get(i);
-            String itemName = ComponentUtils.getCoded(item.getHoverName());
+            ItemStack itemStack = items.get(i);
+            String itemName = ComponentUtils.getCoded(itemStack.getHoverName());
             Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName);
             if (classItemMatcher.matches()) {
-                ClassInfo classInfo = getClassInfoFromItem(item, i, classItemMatcher.group(1));
+                ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
                 classInfoList.add(classInfo);
                 continue;
             }
@@ -96,13 +97,13 @@ public final class CharacterSelectionModel extends Model {
         }
     }
 
-    private ClassInfo getClassInfoFromItem(ItemStack item, int slot, String className) {
+    private ClassInfo getClassInfoFromItem(ItemStack itemStack, int slot, String className) {
         ClassType classType = null;
         int level = 0;
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (String line : LoreUtils.getLore(item)) {
+        for (String line : LoreUtils.getLore(itemStack)) {
             Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
 
             if (matcher.matches()) {
@@ -138,7 +139,7 @@ public final class CharacterSelectionModel extends Model {
             }
         }
 
-        return new ClassInfo(className, item, slot, classType, level, xp, soulPoints, finishedQuests);
+        return new ClassInfo(className, itemStack, slot, classType, level, xp, soulPoints, finishedQuests);
     }
 
     public void playWithCharacter(int slot) {

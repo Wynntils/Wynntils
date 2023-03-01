@@ -9,13 +9,18 @@ import net.minecraft.client.resources.language.I18n;
 
 public enum FeatureCategory {
     UNCATEGORIZED,
+    CHAT,
+    COMBAT,
+    COMMANDS,
     GLOBAL,
     INVENTORY,
     MAP,
     OVERLAYS,
     PLAYERS,
     REDIRECTS,
-    TOOLTIPS;
+    TOOLTIPS,
+    UI,
+    WYNNTILS;
 
     FeatureCategory() {
         assert !toString().startsWith("core.wynntils");

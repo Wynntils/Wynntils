@@ -8,11 +8,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.PointerType;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.IconPoi;
 import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.Poi;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -23,6 +23,7 @@ import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
@@ -30,12 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class AbstractMapScreen extends Screen {
+public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
 
@@ -81,7 +81,7 @@ public abstract class AbstractMapScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(

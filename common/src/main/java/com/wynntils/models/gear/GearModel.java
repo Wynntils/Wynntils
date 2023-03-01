@@ -7,24 +7,20 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.ElementModel;
-import com.wynntils.models.gear.parsing.GearParseResult;
-import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.ItemObtainInfo;
-import com.wynntils.models.gear.type.ItemObtainType;
-import com.wynntils.models.ingredients.profile.IngredientProfile;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
+import com.wynntils.models.wynnitem.WynnItemModel;
+import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -50,8 +46,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(ElementModel elementModel, StatModel statModel) {
-        super(List.of(statModel));
+    public GearModel(ElementModel elementModel, StatModel statModel, WynnItemModel wynnItemModel) {
+        super(List.of(elementModel, statModel, wynnItemModel));
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
@@ -83,7 +79,7 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack, gearInfo);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo);
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
@@ -92,13 +88,13 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
-        GearParseResult result = GearParser.parseInternalRolls(gearInfo, itemData);
+        WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack, null);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
@@ -127,18 +123,5 @@ public final class GearModel extends Model {
 
     public Stream<GearInfo> getAllGearInfos() {
         return gearInfoRegistry.getGearInfoStream();
-    }
-
-    public List<ItemObtainInfo> getObtainInfo(String name) {
-        return gearInfoRegistry.getObtainInfo(name);
-    }
-
-    // FIXME: This really belongs in IngredientModel, but it is not available yet in the main branch
-    public List<ItemObtainInfo> getIngredientObtainInfos(IngredientProfile ingredientProfile) {
-        List<ItemObtainInfo> obtainInfo = Models.Gear.getObtainInfo(ingredientProfile.getDisplayName());
-        if (obtainInfo == null) {
-            return List.of(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
-        }
-        return obtainInfo;
     }
 }

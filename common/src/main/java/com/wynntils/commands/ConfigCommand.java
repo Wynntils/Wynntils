@@ -56,6 +56,7 @@ public class ConfigCommand extends Command {
                                 .orElse(Collections.emptyIterator());
                     },
                     builder);
+
     private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
@@ -95,18 +96,23 @@ public class ConfigCommand extends Command {
                     builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("config")
+    public String getCommandName() {
+        return "config";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Read and manipulate Wynntils settings";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
                 .then(this.buildGetConfigNode())
                 .then(this.buildSetConfigNode())
                 .then(this.buildResetConfigNode())
                 .then(this.buildReloadConfigNode())
                 .executes(this::syntaxError);
-    }
-
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
-        return 0;
     }
 
     private LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
@@ -680,5 +686,10 @@ public class ConfigCommand extends Command {
                         .append(Component.literal(config.getDescription())))
                 .append("\n");
         return response;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }
