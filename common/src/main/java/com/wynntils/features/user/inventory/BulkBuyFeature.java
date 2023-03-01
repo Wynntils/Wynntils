@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.WynntilsMod;
@@ -8,12 +12,15 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,11 +28,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class BulkBuyFeature extends UserFeature {
@@ -57,16 +59,17 @@ public class BulkBuyFeature extends UserFeature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (!isBulkBuyable(McUtils.player().containerMenu, event.getItemStack())) return;
 
-        List<Component> tooltips;
-        if (!KeyboardUtils.isShiftDown()) {
-            tooltips = LoreUtils.appendTooltip(event.getItemStack(), event.getTooltips(), List.of(
-                    Component.translatable("feature.wynntils.bulkBuy.bulkBuyLore", bulkBuyAmount).withStyle(ChatFormatting.GRAY)
-            ));
-        } else {
-            tooltips = LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), List.of(
-                    Component.translatable("feature.wynntils.bulkBuy.bulkBuyLoreShifting", bulkBuyAmount).withStyle(BULK_BUY_ACTIVE_COLOR)
-            ));
-        }
+        List<Component> tooltips = (!KeyboardUtils.isShiftDown())
+                ? LoreUtils.appendTooltip(
+                        event.getItemStack(),
+                        event.getTooltips(),
+                        List.of(Component.translatable("feature.wynntils.bulkBuy.bulkBuyLore", bulkBuyAmount)
+                                .withStyle(ChatFormatting.GRAY)))
+                : LoreUtils.appendTooltip(
+                        event.getItemStack(),
+                        replacePrices(event.getTooltips()),
+                        List.of(Component.translatable("feature.wynntils.bulkBuy.bulkBuyLoreShifting", bulkBuyAmount)
+                                .withStyle(BULK_BUY_ACTIVE_COLOR)));
 
         event.setTooltips(tooltips);
     }
