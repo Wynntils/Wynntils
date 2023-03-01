@@ -37,7 +37,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.mc.event.ItemTooltipFlags;
+import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -398,12 +398,12 @@ public final class EventFactory {
         return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
     }
 
-    public static ItemTooltipFlags.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
-        return post(new ItemTooltipFlags.Advanced(itemStack, flags));
+    public static ItemTooltipFlagsEvent.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
+        return post(new ItemTooltipFlagsEvent.Advanced(itemStack, flags));
     }
 
-    public static ItemTooltipFlags.Mask onTooltipFlagsMask(ItemStack itemStack, int mask) {
-        return post(new ItemTooltipFlags.Mask(itemStack, mask));
+    public static ItemTooltipFlagsEvent.Mask onTooltipFlagsMask(ItemStack itemStack, int mask) {
+        return post(new ItemTooltipFlagsEvent.Mask(itemStack, mask));
     }
 
     // endregion
