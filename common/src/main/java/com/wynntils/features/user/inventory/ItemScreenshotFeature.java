@@ -77,7 +77,7 @@ public class ItemScreenshotFeature extends UserFeature {
     }
 
     private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
-        ItemStack stack = hoveredSlot.getItem();
+        ItemStack itemStack = hoveredSlot.getItem();
         List<Component> tooltip = new ArrayList<>(itemTooltip);
         removeLoreTooltipLines(tooltip);
 
@@ -123,8 +123,8 @@ public class ItemScreenshotFeature extends UserFeature {
 
         if (saveToDisk) {
             // First try to save it to disk
-            String itemNameForFile = WynnUtils.normalizeBadString(
-                            ComponentUtils.stripFormatting(stack.getHoverName().getString()))
+            String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
+                            itemStack.getHoverName().getString()))
                     .replaceAll("[/ ]", "_");
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
@@ -134,7 +134,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
                 McUtils.sendMessageToClient(Component.translatable(
                                 "feature.wynntils.itemScreenshot.save.message",
-                                stack.getHoverName(),
+                                itemStack.getHoverName(),
                                 Component.literal(outputfile.getName())
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -143,7 +143,7 @@ public class ItemScreenshotFeature extends UserFeature {
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
                 McUtils.sendMessageToClient(Component.translatable(
-                                "feature.wynntils.itemScreenshot.save.error", stack.getHoverName(), filename)
+                                "feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename)
                         .withStyle(ChatFormatting.RED));
             }
 

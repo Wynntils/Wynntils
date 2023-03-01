@@ -77,8 +77,8 @@ public class ContainerSearchFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        ItemStack item = e.getSlot().getItem();
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        ItemStack itemStack = e.getSlot().getItem();
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
         Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
@@ -183,14 +183,15 @@ public class ContainerSearchFeature extends UserFeature {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
-        for (ItemStack item : screen.getMenu().getItems()) {
-            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+        for (ItemStack itemStack : screen.getMenu().getItems()) {
+            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
-            if (playerItems.contains(item)) continue;
+            if (playerItems.contains(itemStack)) continue;
 
-            String name = ComponentUtils.getUnformatted(item.getHoverName()).toLowerCase(Locale.ROOT);
+            String name =
+                    ComponentUtils.getUnformatted(itemStack.getHoverName()).toLowerCase(Locale.ROOT);
 
-            boolean filtered = !search.isEmpty() && name.contains(search) && item.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;

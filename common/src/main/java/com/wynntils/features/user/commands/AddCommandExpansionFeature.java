@@ -97,7 +97,6 @@ public class AddCommandExpansionFeature extends UserFeature {
         root.addChild(literal("skiptutorial").build());
         root.addChild(literal("tracking").build());
         root.addChild(literal("use").build());
-        root.addChild(literal("thankyou").build()); // arguments not confirmed
 
         // There is also a command "server" but it is reserved for those with admin permissions
         // only, so don't include it here.
@@ -329,6 +328,11 @@ public class AddCommandExpansionFeature extends UserFeature {
         // first option is 0; not really supposed to be run by users
         root.addChild(literal("dialogue")
                 .then(argument("option", IntegerArgumentType.integer()))
+                .build());
+
+        // not really supposed to be run by users
+        root.addChild(literal("thankyou")
+                .then(argument("player", EntityArgument.players()).suggests(PLAYER_NAME_SUGGESTION_PROVIDER))
                 .build());
 
         // "renameitem" aliases

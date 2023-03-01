@@ -33,7 +33,7 @@ public class DurabilityArcFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!renderDurabilityArcHotbar) return;
-        drawDurabilityArc(e.getStack(), e.getX(), e.getY(), true);
+        drawDurabilityArc(e.getItemStack(), e.getX(), e.getY(), true);
     }
 
     @SubscribeEvent
@@ -42,8 +42,8 @@ public class DurabilityArcFeature extends UserFeature {
         drawDurabilityArc(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
-    private void drawDurabilityArc(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private void drawDurabilityArc(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof DurableItemProperty durableItem)) return;
 

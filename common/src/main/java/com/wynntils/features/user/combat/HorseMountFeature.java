@@ -49,9 +49,9 @@ public class HorseMountFeature extends UserFeature {
     public void onUseItem(UseItemEvent event) {
         if (!guaranteedMount) return;
 
-        ItemStack item = McUtils.player().getMainHandItem();
+        ItemStack itemStack = McUtils.player().getMainHandItem();
 
-        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(item);
+        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
         if (wynnItem.isPresent() && wynnItem.get() instanceof HorseItem) {
             mountHorse();

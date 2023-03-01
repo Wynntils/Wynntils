@@ -29,9 +29,9 @@ public class TerritoryDefenseMessageFeature extends UserFeature {
                 ATTACK_SCREEN_TITLE.matcher(McUtils.mc().screen.getTitle().getString());
         if (!titleMatcher.matches()) return;
 
-        ItemStack item = event.getHoveredSlot().getItem();
+        ItemStack itemStack = event.getHoveredSlot().getItem();
 
-        for (Component tooltipLine : LoreUtils.getTooltipLines(item)) {
+        for (Component tooltipLine : LoreUtils.getTooltipLines(itemStack)) {
             String unformatted = ComponentUtils.getUnformatted(tooltipLine);
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {
