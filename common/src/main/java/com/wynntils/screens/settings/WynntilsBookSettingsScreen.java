@@ -270,7 +270,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
-        ;
 
         configurableListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
         if (configListScrollButton != null) {

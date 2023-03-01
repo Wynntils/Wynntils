@@ -32,8 +32,8 @@ public class ProfessionModel extends Model {
 
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
 
-    public ProfessionModel(CharacterModel Character) {
-        super(List.of(Character));
+    public ProfessionModel(CharacterModel characterModel) {
+        super(List.of(characterModel));
     }
 
     @SubscribeEvent

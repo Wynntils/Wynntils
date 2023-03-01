@@ -290,7 +290,7 @@ public final class CharacterModel extends Model {
     private void updateCharacterId() {
         ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
 
-        LinkedList<String> soulLore = LoreUtils.getLore(soulPointItem);
+        List<String> soulLore = LoreUtils.getLore(soulPointItem);
 
         String id = "";
         for (String line : soulLore) {
