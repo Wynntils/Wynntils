@@ -4,39 +4,28 @@
  */
 package com.wynntils.utils;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
 public final class MathUtils {
+    private static final Map<Character, Integer> ROMAN_NUMERALS_MAP =
+            Map.of('I', 1, 'V', 5, 'X', 10, 'L', 50, 'C', 100, 'D', 500, 'M', 1000);
 
-    private static final Map<Integer, Integer> romanNumeralsMap = new HashMap<>();
-    private static final TreeMap<Integer, String> intToRomanMap = new TreeMap<>();
-
-    static {
-        romanNumeralsMap.put((int) 'I', 1);
-        romanNumeralsMap.put((int) 'V', 5);
-        romanNumeralsMap.put((int) 'X', 10);
-        romanNumeralsMap.put((int) 'L', 50);
-        romanNumeralsMap.put((int) 'C', 100);
-        romanNumeralsMap.put((int) 'D', 500);
-        romanNumeralsMap.put((int) 'M', 1000);
-
-        intToRomanMap.put(1000, "M");
-        intToRomanMap.put(900, "CM");
-        intToRomanMap.put(500, "D");
-        intToRomanMap.put(400, "CD");
-        intToRomanMap.put(100, "C");
-        intToRomanMap.put(90, "XC");
-        intToRomanMap.put(50, "L");
-        intToRomanMap.put(40, "XL");
-        intToRomanMap.put(10, "X");
-        intToRomanMap.put(9, "IX");
-        intToRomanMap.put(5, "V");
-        intToRomanMap.put(4, "IV");
-        intToRomanMap.put(1, "I");
-    }
+    private static final TreeMap<Integer, String> INT_TO_ROMAN_MAP = new TreeMap<>(Map.ofEntries(
+            Map.entry(1000, "M"),
+            Map.entry(900, "CM"),
+            Map.entry(500, "D"),
+            Map.entry(400, "CD"),
+            Map.entry(100, "C"),
+            Map.entry(90, "XC"),
+            Map.entry(50, "L"),
+            Map.entry(40, "XL"),
+            Map.entry(10, "X"),
+            Map.entry(9, "IX"),
+            Map.entry(5, "V"),
+            Map.entry(4, "IV"),
+            Map.entry(1, "I")));
 
     public static float lerp(float a, float b, float t) {
         return a + (b - a) * t;
@@ -80,15 +69,18 @@ public final class MathUtils {
                 .replace("CD", "CCCC")
                 .replace("CM", "DCCCC");
 
-        return normalized.chars().map(c -> romanNumeralsMap.getOrDefault(c, 0)).sum();
+        return normalized
+                .chars()
+                .map(c -> ROMAN_NUMERALS_MAP.getOrDefault(c, 0))
+                .sum();
     }
 
     public static String toRoman(int number) {
-        int l = intToRomanMap.floorKey(number);
+        int l = INT_TO_ROMAN_MAP.floorKey(number);
         if (number == l) {
-            return intToRomanMap.get(number);
+            return INT_TO_ROMAN_MAP.get(number);
         }
-        return intToRomanMap.get(l) + toRoman(number - l);
+        return INT_TO_ROMAN_MAP.get(l) + toRoman(number - l);
     }
 
     public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {

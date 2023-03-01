@@ -6,7 +6,7 @@ package com.wynntils.screens.characterselector.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.character.ClassInfo;
+import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.colors.CommonColors;
