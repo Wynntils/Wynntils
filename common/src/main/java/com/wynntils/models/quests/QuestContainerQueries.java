@@ -67,8 +67,8 @@ public class QuestContainerQueries {
                 // Very first slot is chat history
                 if (slot == 0) continue;
 
-                ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, false);
+                ItemStack itemStack = container.items().get(slot);
+                QuestInfo questInfo = QuestInfoParser.parseItemStack(itemStack, page, false);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -123,8 +123,8 @@ public class QuestContainerQueries {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, true);
+                ItemStack itemStack = container.items().get(slot);
+                QuestInfo questInfo = QuestInfoParser.parseItemStack(itemStack, page, true);
                 if (questInfo == null) continue;
 
                 if (questInfo.isTracked()) {
@@ -176,9 +176,9 @@ public class QuestContainerQueries {
                 // Very first slot is chat history
                 if (slot == 0) continue;
 
-                ItemStack item = container.items().get(slot);
+                ItemStack itemStack = container.items().get(slot);
 
-                String questName = QuestInfoParser.getQuestName(item);
+                String questName = QuestInfoParser.getQuestName(itemStack);
                 if (Objects.equals(questName, questInfo.getName())) {
                     ContainerUtils.clickOnSlot(
                             slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
