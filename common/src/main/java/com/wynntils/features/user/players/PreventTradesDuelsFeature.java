@@ -35,9 +35,9 @@ public class PreventTradesDuelsFeature extends UserFeature {
         event.setCanceled(true);
     }
 
-    private boolean shouldBlockClick(Player player, ItemStack item, Entity target) {
+    private boolean shouldBlockClick(Player player, ItemStack itemStack, Entity target) {
         return player.isShiftKeyDown()
-                && WynnItemMatchers.isWeapon(item)
+                && WynnItemMatchers.isWeapon(itemStack)
                 && target instanceof Player p
                 && Models.Player.isLocalPlayer(p);
     }

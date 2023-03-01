@@ -12,13 +12,13 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkinUtils {
-    public static void setPlayerHeadSkin(ItemStack stack, String textureString) {
+    public static void setPlayerHeadSkin(ItemStack itemStack, String textureString) {
         // If this starts being done repeatedly for the same texture string, we should cache
         // the UUID.
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
         gameProfile.getProperties().put("textures", new Property("textures", textureString, ""));
 
-        CompoundTag compoundTag = stack.getOrCreateTag();
+        CompoundTag compoundTag = itemStack.getOrCreateTag();
         compoundTag.put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), gameProfile));
     }
 }
