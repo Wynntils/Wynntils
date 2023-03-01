@@ -8,8 +8,6 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.elements.ElementModel;
-import com.wynntils.models.gear.parsing.GearParseResult;
-import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -17,6 +15,8 @@ import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
+import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +79,7 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack, gearInfo);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo);
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
@@ -88,13 +88,13 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
-        GearParseResult result = GearParser.parseInternalRolls(gearInfo, itemData);
+        WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
-        GearParseResult result = GearParser.parseItemStack(itemStack, null);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
