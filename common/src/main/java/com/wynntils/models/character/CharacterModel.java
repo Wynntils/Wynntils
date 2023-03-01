@@ -60,11 +60,13 @@ public final class CharacterModel extends Model {
      * Note: Buffs like "+190 Main Attack Damage" will have the +190 be considered as part of the name.
      * Buffs like "17% Frenzy" will have the 17% be considered as part of the prefix.
      * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
+     * <p>
+     * https://regexr.com/7999h
      *
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN =
-            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
+            Pattern.compile("(.+?§7 ??(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
     private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
 
