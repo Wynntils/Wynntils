@@ -14,13 +14,13 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public final class StringUtils {
-    private static final String[] suffixes = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
-    private static final DecimalFormat fractionalFormat = new DecimalFormat("#.#");
+    private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
+    private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *
-     * <p>e.g. "1, 2, 3,, 4," for delimiter "," -> returns a list of "1", "2", "3", "4"
+     * <p>e.g. "1, 2, 3, 4," for delimiter "," -> returns a list of "1", "2", "3", "4"
      */
     public static List<String> parseStringToList(String input, String delimiter) {
         List<String> result = new ArrayList<>();
@@ -70,12 +70,12 @@ public final class StringUtils {
         if (value < 0.75) return "0";
 
         int suffix = 0;
-        while (suffix < suffixes.length && value >= 750) {
+        while (suffix < SUFFIXES.length && value >= 750) {
             value /= 1000;
             ++suffix;
         }
 
-        return fractionalFormat.format(value) + suffixes[suffix];
+        return FRACTIONAL_FORMAT.format(value) + SUFFIXES[suffix];
     }
 
     /**

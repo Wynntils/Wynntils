@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
-import com.wynntils.utils.mc.PlayerInfoUtils;
+import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -36,7 +36,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
-        ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
+        ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
 
         // head
         BufferedRenderUtils.drawTexturedRect(

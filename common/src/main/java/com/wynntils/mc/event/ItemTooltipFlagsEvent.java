@@ -8,14 +8,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.Event;
 
-public abstract class ItemTooltipFlags extends Event {
+public abstract class ItemTooltipFlagsEvent extends Event {
     private final ItemStack itemStack;
 
-    protected ItemTooltipFlags(ItemStack itemStack) {
+    protected ItemTooltipFlagsEvent(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public static final class Advanced extends ItemTooltipFlags {
+    public static final class Advanced extends ItemTooltipFlagsEvent {
         private TooltipFlag flags;
 
         public Advanced(ItemStack itemStack, TooltipFlag flags) {
@@ -32,7 +32,7 @@ public abstract class ItemTooltipFlags extends Event {
         }
     }
 
-    public static final class Mask extends ItemTooltipFlags {
+    public static final class Mask extends ItemTooltipFlagsEvent {
         private int mask;
 
         public Mask(ItemStack itemStack, int mask) {
