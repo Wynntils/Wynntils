@@ -1,9 +1,21 @@
+## [0.0.2-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.255...v0.0.2-alpha.256) (2023-03-01)
+
+
+### Bug Fixes
+
+* minor tab list spacing issue ([#1228](https://github.com/Wynntils/Artemis/issues/1228)) ([2b27c9d](https://github.com/Wynntils/Artemis/commit/2b27c9d4fb66d3f52e1eb32abd631b6b2ba0e9cd))
+
 ## [0.0.2-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.254...v0.0.2-alpha.255) (2023-03-01)
 
 
 ### Bug Fixes
 
 * Strange ordering in party mgmt screen ([#1229](https://github.com/Wynntils/Artemis/issues/1229)) ([19e60ad](https://github.com/Wynntils/Artemis/commit/19e60ad0e23cf583d0d13ee22f22f9a71e676578))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.255 [skip ci] ([14310ea](https://github.com/Wynntils/Artemis/commit/14310eaae8998887a900efa8a0c717a2d72874ac))
 
 ## [0.0.2-alpha.254](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.253...v0.0.2-alpha.254) (2023-03-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.252 [skip ci] ([912a153](https://github.com/Wynntils/Artemis/commit/912a153101cb5c9fc2b03e3fa52399ebd4651d39))
-
-## [0.0.2-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.250...v0.0.2-alpha.251) (2023-03-01)
-
-
-### Code Refactoring
-
-* Misc cleanups, moving files, follow name standards ([#1233](https://github.com/Wynntils/Artemis/issues/1233)) ([5211a48](https://github.com/Wynntils/Artemis/commit/5211a48ebc88cfa17a6343a44f0ad90b177ce04c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.251 [skip ci] ([d65ebb5](https://github.com/Wynntils/Artemis/commit/d65ebb5731d510f7459bc98033a9ff39f6481a5e))
 
