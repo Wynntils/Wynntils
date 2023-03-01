@@ -47,10 +47,7 @@ public class CraftedConsumableItem extends GameItem implements UsesItemPropery, 
     }
 
     public boolean isHealing() {
-        return getEffects().stream()
-                .filter(e -> e.type().equals("Heal"))
-                .findFirst()
-                .isPresent();
+        return getEffects().stream().anyMatch(e -> e.type().equals("Heal"));
     }
 
     @Override
