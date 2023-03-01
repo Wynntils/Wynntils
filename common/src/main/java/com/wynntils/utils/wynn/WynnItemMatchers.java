@@ -5,15 +5,12 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -22,46 +19,9 @@ import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
-    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-
-    public static boolean isHealingPotion(ItemStack itemStack) {
-        if (!isConsumable(itemStack)) return false;
-        if (itemStack.getHoverName().getString().contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                || itemStack.getHoverName().getString().contains(ChatFormatting.RED + "Potion of Healing")) return true;
-
-        boolean isCraftedPotion = false;
-        boolean hasHealEffect = false;
-        ListTag lore = LoreUtils.getLoreTagElseEmpty(itemStack);
-        for (Tag tag : lore) {
-            String unformattedLoreLine = ComponentUtils.getUnformatted(tag.getAsString());
-
-            if (unformattedLoreLine == null) continue;
-
-            if (unformattedLoreLine.equals("Crafted Potion")) {
-                isCraftedPotion = true;
-            } else if (unformattedLoreLine.startsWith("- Heal:")) {
-                hasHealEffect = true;
-            }
-        }
-
-        return isCraftedPotion && hasHealEffect;
-    }
-
-    private static boolean isConsumable(ItemStack itemStack) {
-        if (itemStack.isEmpty()) return false;
-
-        // consumables are either a potion or a diamond axe for crafteds
-        // to ensure an axe item is really a consumable, make sure it has the right name color
-        if (itemStack.getItem() != Items.POTION
-                && !(itemStack.getItem() == Items.DIAMOND_AXE
-                        && itemStack.getHoverName().getString().startsWith(ChatFormatting.DARK_AQUA.toString())))
-            return false;
-
-        return consumableNameMatcher(itemStack.getHoverName()).matches();
-    }
 
     public static boolean isGearBox(ItemStack itemStack) {
         return (itemStack.getItem() == Items.STONE_SHOVEL
@@ -104,10 +64,6 @@ public final class WynnItemMatchers {
 
     private static Matcher durabilityLineMatcher(Component text) {
         return DURABILITY_PATTERN.matcher(text.getString());
-    }
-
-    private static Matcher consumableNameMatcher(Component text) {
-        return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
     }
 
     public static CappedValue getDurability(ItemStack itemStack) {
