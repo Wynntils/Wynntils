@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = FeatureInfo.Stability.STABLE, category = FeatureCategory.TOOLTIPS)
+@FeatureInfo(category = FeatureCategory.TOOLTIPS)
 public class ItemCompareFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind toggleCompareModeKeyBind =

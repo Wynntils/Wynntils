@@ -8,12 +8,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
+@FeatureInfo(category = FeatureCategory.TOOLTIPS)
 public class TooltipVanillaHideFeature extends UserFeature {
     @Config
     public boolean hideAdvanced = true;

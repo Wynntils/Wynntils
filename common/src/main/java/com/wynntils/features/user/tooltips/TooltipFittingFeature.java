@@ -9,7 +9,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -20,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.TOOLTIPS)
+@FeatureInfo(category = FeatureCategory.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
     @Config
     public float universalScale = 1f;

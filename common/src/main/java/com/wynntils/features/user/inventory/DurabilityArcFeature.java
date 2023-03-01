@@ -9,7 +9,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -22,7 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
+@FeatureInfo(category = FeatureCategory.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
     @Config
     public boolean renderDurabilityArcInventories = true;
