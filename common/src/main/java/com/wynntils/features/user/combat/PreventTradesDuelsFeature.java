@@ -25,7 +25,7 @@ public class PreventTradesDuelsFeature extends UserFeature {
     public boolean onlyWhileFighting = true;
 
     @Config
-    public int fightingTimeCutoff = 15; // 15 seconds is default
+    public int fightingTimeCutoff = 15; // seconds
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
@@ -38,9 +38,8 @@ public class PreventTradesDuelsFeature extends UserFeature {
     }
 
     private void handlePlayerClick(Event event, Player player, ItemStack itemStack, Entity target) {
-        // FIXME: A better metric would be to track the last time we dealt damage. When we implement
-        // a DPS tracker, use that instead here.
-        int timeSinceLastFight = (int) ((System.currentTimeMillis() - Models.CombatXp.getLastXpGainTimestamp()) / 1000);
+        int timeSinceLastFight =
+                (int) ((System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp()) / 1000);
         if (onlyWhileFighting && timeSinceLastFight >= fightingTimeCutoff) return;
 
         if (!shouldBlockClick(player, itemStack, target)) return;
