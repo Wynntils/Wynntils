@@ -20,6 +20,7 @@ import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
+import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
@@ -38,13 +39,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
     @Config
-    public boolean powderTierEnabled = true;
+    public boolean amplifierTierEnabled = true;
 
     @Config
-    public boolean powderTierRomanNumerals = true;
+    public boolean amplifierTierRomanNumerals = true;
 
     @Config
-    public TextShadow powderTierShadow = TextShadow.OUTLINE;
+    public TextShadow amplifierTierShadow = TextShadow.OUTLINE;
+
+    @Config
+    public boolean dungeonKeyEnabled = true;
+
+    @Config
+    public TextShadow dungeonKeyShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean emeraldPouchTierEnabled = true;
@@ -65,25 +72,28 @@ public class ItemTextOverlayFeature extends UserFeature {
     public TextShadow gatheringToolTierShadow = TextShadow.OUTLINE;
 
     @Config
-    public boolean teleportScrollEnabled = true;
+    public boolean horseTierEnabled = true;
 
     @Config
-    public TextShadow teleportScrollShadow = TextShadow.OUTLINE;
+    public boolean horseTierRomanNumerals = true;
 
     @Config
-    public boolean dungeonKeyEnabled = true;
+    public TextShadow horseTierShadow = TextShadow.OUTLINE;
 
     @Config
-    public TextShadow dungeonKeyShadow = TextShadow.OUTLINE;
+    public boolean hotbarTextOverlayEnabled = true;
 
     @Config
-    public boolean amplifierTierEnabled = true;
+    public boolean inventoryTextOverlayEnabled = true;
 
     @Config
-    public boolean amplifierTierRomanNumerals = true;
+    public boolean powderTierEnabled = true;
 
     @Config
-    public TextShadow amplifierTierShadow = TextShadow.OUTLINE;
+    public boolean powderTierRomanNumerals = true;
+
+    @Config
+    public TextShadow powderTierShadow = TextShadow.OUTLINE;
 
     @Config
     public boolean skillIconEnabled = true;
@@ -92,10 +102,10 @@ public class ItemTextOverlayFeature extends UserFeature {
     public TextShadow skillIconShadow = TextShadow.OUTLINE;
 
     @Config
-    public boolean inventoryTextOverlayEnabled = true;
+    public boolean teleportScrollEnabled = true;
 
     @Config
-    public boolean hotbarTextOverlayEnabled = true;
+    public TextShadow teleportScrollShadow = TextShadow.OUTLINE;
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {
@@ -148,6 +158,9 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
+        }
+        if (wynnItem instanceof HorseItem horseItem) {
+            return new HorseOverlay(horseItem);
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
@@ -268,6 +281,29 @@ public class ItemTextOverlayFeature extends UserFeature {
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(gatheringToolTierShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+        }
+    }
+
+    private final class HorseOverlay implements TextOverlayInfo {
+        private final HorseItem item;
+
+        private HorseOverlay(HorseItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return horseTierEnabled;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            String text = valueToString(item.getTier(), horseTierRomanNumerals);
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
+                    .withTextShadow(horseTierShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
