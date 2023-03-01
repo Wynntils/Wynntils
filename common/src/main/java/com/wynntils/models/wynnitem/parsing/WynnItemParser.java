@@ -118,7 +118,7 @@ public final class WynnItemParser {
                 continue;
             }
 
-            // Look for level requirements (needed for crafted gear)
+            // Look for level requirements
             Matcher levelMatcher = MIN_LEVEL_PATTERN.matcher(normalizedCoded);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
