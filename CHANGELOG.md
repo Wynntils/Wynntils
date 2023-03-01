@@ -1,9 +1,21 @@
+## [0.0.2-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.252...v0.0.2-alpha.253) (2023-03-01)
+
+
+### Code Refactoring
+
+* Move LerpingBossEventAccessor to the right place ([#1230](https://github.com/Wynntils/Artemis/issues/1230)) ([7198cca](https://github.com/Wynntils/Artemis/commit/7198cca1c644f9093e7cd61be8713ab4bbcc848a))
+
 ## [0.0.2-alpha.252](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.251...v0.0.2-alpha.252) (2023-03-01)
 
 
 ### Code Refactoring
 
 * Rename event to end in Event ([#1231](https://github.com/Wynntils/Artemis/issues/1231)) ([9f768cc](https://github.com/Wynntils/Artemis/commit/9f768cc05daa52cb55dd3542d838f789060e4adc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.252 [skip ci] ([912a153](https://github.com/Wynntils/Artemis/commit/912a153101cb5c9fc2b03e3fa52399ebd4651d39))
 
 ## [0.0.2-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.250...v0.0.2-alpha.251) (2023-03-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.249 [skip ci] ([dca3067](https://github.com/Wynntils/Artemis/commit/dca3067e42b56b9b695bd22d6c42982ab42dadd9))
-
-## [0.0.2-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.247...v0.0.2-alpha.248) (2023-02-28)
-
-
-### Bug Fixes
-
-* Net manager events are now sent on the main thread ([#1219](https://github.com/Wynntils/Artemis/issues/1219)) ([5b759b7](https://github.com/Wynntils/Artemis/commit/5b759b7e34de21648f077571e14d53f452719ccb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.248 [skip ci] ([914662c](https://github.com/Wynntils/Artemis/commit/914662cb62e70954c8d82d3fb8221ff73967c217))
 
