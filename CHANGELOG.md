@@ -1,9 +1,21 @@
+## [0.0.2-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.250...v0.0.2-alpha.251) (2023-03-01)
+
+
+### Code Refactoring
+
+* Misc cleanups, moving files, follow name standards ([#1233](https://github.com/Wynntils/Artemis/issues/1233)) ([5211a48](https://github.com/Wynntils/Artemis/commit/5211a48ebc88cfa17a6343a44f0ad90b177ce04c))
+
 ## [0.0.2-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.249...v0.0.2-alpha.250) (2023-03-01)
 
 
 ### Code Refactoring
 
 * Consistently call ItemStack variables "itemStack" ([#1234](https://github.com/Wynntils/Artemis/issues/1234)) ([63c49ea](https://github.com/Wynntils/Artemis/commit/63c49eaa545e4dcb33c6e13ae0de07a765c8ccc0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.250 [skip ci] ([be3524c](https://github.com/Wynntils/Artemis/commit/be3524ccc0aea594c8a5d5286e80e7760a943839))
 
 ## [0.0.2-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.248...v0.0.2-alpha.249) (2023-02-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.247 [skip ci] ([acdec83](https://github.com/Wynntils/Artemis/commit/acdec83897ee44b3d25e38002865bf90dcc15ccf))
-
-## [0.0.2-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.245...v0.0.2-alpha.246) (2023-02-28)
-
-
-### Bug Fixes
-
-* Fixed typos in en_US.json ([#1217](https://github.com/Wynntils/Artemis/issues/1217)) ([2034474](https://github.com/Wynntils/Artemis/commit/203447464301c7be6388cc9b902b273d59fe60b0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.246 [skip ci] ([689b65e](https://github.com/Wynntils/Artemis/commit/689b65eb1d7a31196392a9a5b22996b4b3b6e89c))
 
