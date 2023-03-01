@@ -85,9 +85,9 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
 
     @Override
     public void doInit() {
-        mgmtButtonWidth = (int) (dividedWidth * 8) - 2; // -2 for spacing
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
+        mgmtButtonWidth = (int) (dividedWidth * 8) - 2; // -2 for spacing
         refreshAll();
         // region Invite input and button
         inviteInput = new TextInputBoxWidget(

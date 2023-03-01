@@ -41,11 +41,11 @@ public class ExtendedItemCountFeature extends UserFeature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getStack(), e.getX(), e.getY());
+        drawTextOverlay(e.getItemStack(), e.getX(), e.getY());
     }
 
-    private void drawTextOverlay(ItemStack item, int slotX, int slotY) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private void drawTextOverlay(ItemStack itemStack, int slotX, int slotY) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof CountedItemProperty countedItem)) return;
 
@@ -53,7 +53,7 @@ public class ExtendedItemCountFeature extends UserFeature {
         int count = countedItem.getCount();
         // This is a bit ugly; would rather we hid the drawing but that was tricky to do
         // with mixins...
-        item.setCount(1);
+        itemStack.setCount(1);
 
         TextRenderSetting style = TextRenderSetting.DEFAULT
                 .withCustomColor(countedItem.getCountColor())

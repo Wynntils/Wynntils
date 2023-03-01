@@ -15,7 +15,7 @@ import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
-import com.wynntils.models.players.cosmetics.CosmeticInfo;
+import com.wynntils.models.players.type.CosmeticInfo;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.model.ElytraModel;
 import net.minecraft.client.model.PlayerModel;

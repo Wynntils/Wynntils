@@ -75,6 +75,7 @@ public final class PartyModel extends Model {
     // endregion
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
+    private long lastPartyRequest = 0; // The last time the client requested party data
     private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
 
     private boolean inParty; // Whether the player is in a party
@@ -319,13 +320,20 @@ public final class PartyModel extends Model {
 
     /**
      * Sends "/party list" to Wynncraft and waits for the response.
+     * (!) Skips if the last request was less than 250ms ago.
      * When the response is received, partyMembers and partyLeader will be updated.
      * After that, the offlineMembers list will be updated from scoreboard data.
      */
     public void requestData() {
         if (McUtils.player() == null) return;
 
+        if (System.currentTimeMillis() - lastPartyRequest < 250) {
+            WynntilsMod.info("Skipping party list request because it was requested less than 250ms ago.");
+            return;
+        }
+
         expectingPartyMessage = true;
+        lastPartyRequest = System.currentTimeMillis();
         McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }

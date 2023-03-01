@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.handlers.chat.NpcDialogueType;
@@ -22,6 +24,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
+@FeatureInfo(category = FeatureCategory.UNCATEGORIZED)
 public class TranslationFeature extends UserFeature {
     @Config
     public String languageName = "";

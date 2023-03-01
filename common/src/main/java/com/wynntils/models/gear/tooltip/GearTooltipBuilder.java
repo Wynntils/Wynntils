@@ -6,11 +6,11 @@ package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.parsing.GearParser;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -110,12 +110,12 @@ public final class GearTooltipBuilder {
             String codedLine = WynnUtils.normalizeBadString(ComponentUtils.getCoded(loreLine));
 
             if (!footerStarted) {
-                Matcher setBonusMatcher = GearParser.SET_BONUS_PATTEN.matcher(codedLine);
+                Matcher setBonusMatcher = WynnItemParser.SET_BONUS_PATTEN.matcher(codedLine);
                 if (setBonusMatcher.matches()) {
                     headerEnded = true;
                     footerStarted = true;
                 } else {
-                    Matcher matcher = GearParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
+                    Matcher matcher = WynnItemParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
                     if (matcher.matches()) {
                         String statName = matcher.group(6);
 

@@ -44,6 +44,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
+        if (overlay == null) return;
 
         if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);

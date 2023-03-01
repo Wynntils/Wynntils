@@ -14,7 +14,15 @@ public class StatusEffect {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
-        this.fullName = getPrefix() + " " + getName() + " " + getDisplayedTime();
+        // Don't add extra spaces
+        // Sometimes, " §7" will be parsed as part of the prefix, in an attempt to keep the name field
+        // as a proper unformatted string
+        // The two differing examples I have for this are Archer's Windy Feet and Warrior's Boiling Blood cooldown
+        if (getPrefix().endsWith(" ") || getPrefix().endsWith(" §7")) {
+            this.fullName = getPrefix() + getName() + " " + getDisplayedTime();
+        } else {
+            this.fullName = getPrefix() + " " + getName() + " " + getDisplayedTime();
+        }
     }
 
     /**
