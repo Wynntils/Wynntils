@@ -5,13 +5,21 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.items.properties.UsesItemPropery;
+import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 
 public class ManaPotionItem extends GameItem implements UsesItemPropery {
+    private final List<ItemEffect> effects;
     private final CappedValue uses;
 
-    public ManaPotionItem(CappedValue uses) {
+    public ManaPotionItem(List<ItemEffect> effects, CappedValue uses) {
+        this.effects = effects;
         this.uses = uses;
+    }
+
+    public List<ItemEffect> getEffects() {
+        return effects;
     }
 
     @Override
@@ -21,6 +29,6 @@ public class ManaPotionItem extends GameItem implements UsesItemPropery {
 
     @Override
     public String toString() {
-        return "ManaPotionItem{" + "uses=" + uses + '}';
+        return "ManaPotionItem{" + "effects=" + effects + ", uses=" + uses + '}';
     }
 }

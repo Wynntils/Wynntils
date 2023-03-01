@@ -8,6 +8,8 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.items.game.SkillPotionItem;
+import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +29,8 @@ public final class SkillPotionAnnotator implements ItemAnnotator {
         int maxUses = Integer.parseInt(matcher.group(3));
         Skill skill = Skill.fromString(skillName);
 
-        return new SkillPotionItem(skill, new CappedValue(uses, maxUses));
+        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
+
+        return new SkillPotionItem(skill, parseResult.effects(), new CappedValue(uses, maxUses));
     }
 }

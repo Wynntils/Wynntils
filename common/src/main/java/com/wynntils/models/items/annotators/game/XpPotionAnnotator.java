@@ -7,6 +7,8 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.XpPotionItem;
+import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +21,8 @@ public final class XpPotionAnnotator implements ItemAnnotator {
         Matcher matcher = XP_POTION_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        return new XpPotionItem();
+        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
+
+        return new XpPotionItem(parseResult.effects());
     }
 }
