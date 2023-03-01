@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
