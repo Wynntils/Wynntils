@@ -1,9 +1,21 @@
+## [0.0.2-alpha.252](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.251...v0.0.2-alpha.252) (2023-03-01)
+
+
+### Code Refactoring
+
+* Rename event to end in Event ([#1231](https://github.com/Wynntils/Artemis/issues/1231)) ([9f768cc](https://github.com/Wynntils/Artemis/commit/9f768cc05daa52cb55dd3542d838f789060e4adc))
+
 ## [0.0.2-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.250...v0.0.2-alpha.251) (2023-03-01)
 
 
 ### Code Refactoring
 
 * Misc cleanups, moving files, follow name standards ([#1233](https://github.com/Wynntils/Artemis/issues/1233)) ([5211a48](https://github.com/Wynntils/Artemis/commit/5211a48ebc88cfa17a6343a44f0ad90b177ce04c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.251 [skip ci] ([d65ebb5](https://github.com/Wynntils/Artemis/commit/d65ebb5731d510f7459bc98033a9ff39f6481a5e))
 
 ## [0.0.2-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.249...v0.0.2-alpha.250) (2023-03-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.248 [skip ci] ([914662c](https://github.com/Wynntils/Artemis/commit/914662cb62e70954c8d82d3fb8221ff73967c217))
-
-## [0.0.2-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.246...v0.0.2-alpha.247) (2023-02-28)
-
-
-### Bug Fixes
-
-* Do not try to auto join party if already in party ([#1222](https://github.com/Wynntils/Artemis/issues/1222)) ([d6d25bb](https://github.com/Wynntils/Artemis/commit/d6d25bb6b7fce11ea594ec001cdd10944ff18ef9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.247 [skip ci] ([acdec83](https://github.com/Wynntils/Artemis/commit/acdec83897ee44b3d25e38002865bf90dcc15ccf))
 
