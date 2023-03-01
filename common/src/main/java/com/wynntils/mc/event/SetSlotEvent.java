@@ -13,12 +13,12 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class SetSlotEvent extends Event {
     private final Container container;
     private final int slot;
-    protected ItemStack item;
+    protected ItemStack itemStack;
 
-    protected SetSlotEvent(Container container, int slot, ItemStack item) {
+    protected SetSlotEvent(Container container, int slot, ItemStack itemStack) {
         this.container = container;
         this.slot = slot;
-        this.item = item;
+        this.itemStack = itemStack;
     }
 
     public Container getContainer() {
@@ -29,18 +29,18 @@ public abstract class SetSlotEvent extends Event {
         return slot;
     }
 
-    public ItemStack getItem() {
-        return item;
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     @Cancelable
     public static class Pre extends SetSlotEvent {
-        public Pre(Container container, int slot, ItemStack item) {
-            super(container, slot, item);
+        public Pre(Container container, int slot, ItemStack itemStack) {
+            super(container, slot, itemStack);
         }
 
-        public void setItem(ItemStack item) {
-            this.item = item;
+        public void setItemStack(ItemStack itemStack) {
+            this.itemStack = itemStack;
         }
     }
 

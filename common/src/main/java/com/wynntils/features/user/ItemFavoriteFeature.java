@@ -45,9 +45,9 @@ public class ItemFavoriteFeature extends UserFeature {
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
-            ItemStack stack = items.get(i);
+            ItemStack itemStack = items.get(i);
 
-            if (isFavorited(stack)) {
+            if (isFavorited(itemStack)) {
                 McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
