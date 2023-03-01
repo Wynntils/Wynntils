@@ -7,7 +7,7 @@ package com.wynntils.models.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.features.user.map.MinimapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
-import com.wynntils.utils.mc.PlayerInfoUtils;
+import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +42,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
                 2);
 
         // head
-        ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
+        ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
         BufferedRenderUtils.drawTexturedRect(
                 poseStack,
                 bufferSource,

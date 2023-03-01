@@ -33,8 +33,8 @@ public class HorseModel extends Model {
     public int findHorseSlotNum() {
         Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum <= 44; slotNum++) {
-            ItemStack stack = inventory.getItem(slotNum);
-            if (getHorseItem(stack) != null) {
+            ItemStack itemStack = inventory.getItem(slotNum);
+            if (getHorseItem(itemStack) != null) {
                 return slotNum;
             }
         }

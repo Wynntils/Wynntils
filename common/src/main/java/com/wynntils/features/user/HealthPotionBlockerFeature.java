@@ -43,8 +43,8 @@ public class HealthPotionBlockerFeature extends UserFeature {
     }
 
     private Component getBlockResponse() {
-        ItemStack stack = McUtils.inventory().getSelected();
-        if (!WynnItemMatchers.isHealingPotion(stack)) return null;
+        ItemStack itemStack = McUtils.inventory().getSelected();
+        if (!WynnItemMatchers.isHealingPotion(itemStack)) return null;
 
         if (Models.Character.getCurrentHealth() * 100 < Models.Character.getMaxHealth() * threshold) return null;
 

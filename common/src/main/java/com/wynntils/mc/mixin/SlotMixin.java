@@ -21,12 +21,12 @@ public abstract class SlotMixin {
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
-    private void redirectSetItem(Container container, int slot, ItemStack stack) {
-        SetSlotEvent result = EventFactory.onSetSlotPre(container, slot, stack);
+    private void redirectSetItem(Container container, int slot, ItemStack itemStack) {
+        SetSlotEvent result = EventFactory.onSetSlotPre(container, slot, itemStack);
         if (result.isCanceled()) return;
 
-        container.setItem(slot, result.getItem());
+        container.setItem(slot, result.getItemStack());
 
-        EventFactory.onSetSlotPost(container, slot, stack);
+        EventFactory.onSetSlotPost(container, slot, itemStack);
     }
 }
