@@ -1,9 +1,21 @@
+## [0.0.2-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.260...v0.0.2-alpha.261) (2023-03-01)
+
+
+### Bug Fixes
+
+* Fix cape texture loading issues ([#1226](https://github.com/Wynntils/Artemis/issues/1226)) ([9b1f4dd](https://github.com/Wynntils/Artemis/commit/9b1f4ddb707889340e4fc2793f4985566ce82f49))
+
 ## [0.0.2-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.259...v0.0.2-alpha.260) (2023-03-01)
 
 
 ### Bug Fixes
 
 * Move (almost) all Features into categories ([#1232](https://github.com/Wynntils/Artemis/issues/1232)) ([903f10d](https://github.com/Wynntils/Artemis/commit/903f10df6aa2c69bbe6d85d50af69b5c46397b4b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.260 [skip ci] ([2315f89](https://github.com/Wynntils/Artemis/commit/2315f892c203e8cd9be2e32bbb63d096f178b9e9))
 
 ## [0.0.2-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.258...v0.0.2-alpha.259) (2023-03-01)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.257 [skip ci] ([94dc3ec](https://github.com/Wynntils/Artemis/commit/94dc3ecc3b537a755f1056e2684a1bed29f98148))
-
-## [0.0.2-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.255...v0.0.2-alpha.256) (2023-03-01)
-
-
-### Bug Fixes
-
-* minor tab list spacing issue ([#1228](https://github.com/Wynntils/Artemis/issues/1228)) ([2b27c9d](https://github.com/Wynntils/Artemis/commit/2b27c9d4fb66d3f52e1eb32abd631b6b2ba0e9cd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.256 [skip ci] ([2f8c1fb](https://github.com/Wynntils/Artemis/commit/2f8c1fba44a97e552e9eca75fe65b8c009f9ffbb))
 
