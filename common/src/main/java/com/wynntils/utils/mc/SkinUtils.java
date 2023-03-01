@@ -7,8 +7,12 @@ package com.wynntils.utils.mc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import java.util.UUID;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkinUtils {
@@ -20,5 +24,19 @@ public final class SkinUtils {
 
         CompoundTag compoundTag = itemStack.getOrCreateTag();
         compoundTag.put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), gameProfile));
+    }
+
+    public static ResourceLocation getSkin(UUID uuid) {
+        ClientPacketListener connection = McUtils.mc().getConnection();
+
+        if (connection == null) {
+            return DefaultPlayerSkin.getDefaultSkin(uuid);
+        }
+        PlayerInfo playerInfo = connection.getPlayerInfo(uuid);
+        if (playerInfo == null) {
+            return DefaultPlayerSkin.getDefaultSkin(uuid);
+        }
+
+        return playerInfo.getSkinLocation();
     }
 }
