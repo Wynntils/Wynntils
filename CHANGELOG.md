@@ -1,9 +1,26 @@
+## [0.0.2-alpha.258](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.257...v0.0.2-alpha.258) (2023-03-01)
+
+
+### Bug Fixes
+
+* Regression in roman numerals ([#1236](https://github.com/Wynntils/Artemis/issues/1236)) ([9d80445](https://github.com/Wynntils/Artemis/commit/9d80445bad2c628a0749ea924ee3d4c0e044295f))
+
+
+### New Features
+
+* Potion improvement, incl health potion blocker fixes ([#1235](https://github.com/Wynntils/Artemis/issues/1235)) ([1def2ab](https://github.com/Wynntils/Artemis/commit/1def2ab9924d9739b8e20e51ead2d5a105e7953e))
+
 ## [0.0.2-alpha.257](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.256...v0.0.2-alpha.257) (2023-03-01)
 
 
 ### New Features
 
 * Add horse tier as item text overlay ([#1225](https://github.com/Wynntils/Artemis/issues/1225)) ([79ca68d](https://github.com/Wynntils/Artemis/commit/79ca68da92167b929d4d1d3eb4a7582c06e9913b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.257 [skip ci] ([94dc3ec](https://github.com/Wynntils/Artemis/commit/94dc3ecc3b537a755f1056e2684a1bed29f98148))
 
 ## [0.0.2-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.255...v0.0.2-alpha.256) (2023-03-01)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.254 [skip ci] ([507a6fd](https://github.com/Wynntils/Artemis/commit/507a6fd4fe7df42decf5655f51b6ef3fc8062326))
-
-## [0.0.2-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.252...v0.0.2-alpha.253) (2023-03-01)
-
-
-### Code Refactoring
-
-* Move LerpingBossEventAccessor to the right place ([#1230](https://github.com/Wynntils/Artemis/issues/1230)) ([7198cca](https://github.com/Wynntils/Artemis/commit/7198cca1c644f9093e7cd61be8713ab4bbcc848a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.253 [skip ci] ([ddac5bf](https://github.com/Wynntils/Artemis/commit/ddac5bfdda7ffde0a4c0133dfdaf43a00d7819c6))
 
