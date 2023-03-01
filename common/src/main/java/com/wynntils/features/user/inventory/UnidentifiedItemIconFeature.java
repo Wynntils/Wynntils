@@ -44,12 +44,12 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     @Config
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.Post e) {
         drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onHotbarSlotRender(HotbarSlotRenderEvent.Post e) {
         drawIcon(e.getStack(), e.getX(), e.getY());
     }
@@ -67,7 +67,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 Texture.GEAR_ICONS.resource(),
                 slotX + 2,
                 slotY + 2,
-                301, // items are rendered at 300, draw slightly above
+                400,
                 12,
                 12,
                 textureX,
