@@ -273,7 +273,7 @@ public final class WynntilsMod {
 
     public static Optional<CoreComponent> getComponentFromString(String componentName) {
         return componentMap.values().stream()
-                .flatMap(m -> m.stream())
+                .flatMap(Collection::stream)
                 .filter(c -> c.getShortName().equals(componentName))
                 .findFirst();
     }
