@@ -275,12 +275,20 @@ public final class EventFactory {
         post(new SlotRenderEvent.Pre(screen, slot));
     }
 
+    public static void onSlotRenderCountPre(Screen screen, Slot slot) {
+        post(new SlotRenderEvent.CountPre(screen, slot));
+    }
+
     public static void onSlotRenderPost(Screen screen, Slot slot) {
         post(new SlotRenderEvent.Post(screen, slot));
     }
 
     public static void onHotbarSlotRenderPre(ItemStack itemStack, int x, int y) {
         post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
+    }
+
+    public static void onHotbarSlotRenderCountPre(ItemStack itemStack, int x, int y) {
+        post(new HotbarSlotRenderEvent.CountPre(itemStack, x, y));
     }
 
     public static void onHotbarSlotRenderPost(ItemStack itemStack, int x, int y) {

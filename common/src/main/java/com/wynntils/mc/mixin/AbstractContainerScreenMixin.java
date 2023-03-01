@@ -36,6 +36,17 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
+    private void renderSlotPreCount(PoseStack poseStack, Slot slot, CallbackInfo info) {
+        EventFactory.onSlotRenderCountPre((Screen) (Object) this, slot);
+    }
+
+    @Inject(
+            method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("RETURN"))
     private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
         EventFactory.onSlotRenderPost((Screen) (Object) this, slot);
