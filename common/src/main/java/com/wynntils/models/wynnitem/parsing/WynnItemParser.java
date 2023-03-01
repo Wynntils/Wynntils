@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.parsing;
+package com.wynntils.models.wynnitem.parsing;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,6 +17,7 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearParser {
+public final class WynnItemParser {
     // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|/[35]s)?(?:§r§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
@@ -42,12 +43,20 @@ public final class GearParser {
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
+
+    // Test suite: https://regexr.com/79atu
+    private static final Pattern EFFECT_LINE_PATTERN =
+            Pattern.compile("^§(.)- §r§7(.*): §r§f([+-]?\\d+)(?:§.§.)? ?(.*)$");
+
+    private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
+
     private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
 
     public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
 
-    public static GearParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
+    public static WynnItemParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
+        List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
         int level = 0;
         int tierCount = 0;
@@ -55,6 +64,8 @@ public final class GearParser {
         GearTier tier = null;
         GearType gearType = null;
         boolean setBonusStats = false;
+        boolean parsingEffects = false;
+        String effectsColorCode = "";
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -118,6 +129,38 @@ public final class GearParser {
                 // Maybe these could be collected separately, but for now, ignore them
                 setBonusStats = true;
             }
+
+            // Look for effects (only on consumables)
+            Matcher effectHeaderMatcher = EFFECT_HEADER_PATTERN.matcher(normalizedCoded);
+            if (effectHeaderMatcher.matches()) {
+                effectsColorCode = effectHeaderMatcher.group(1);
+                parsingEffects = true;
+                continue;
+            }
+            if (parsingEffects) {
+                Matcher effectMatcher = EFFECT_LINE_PATTERN.matcher(normalizedCoded);
+                if (effectMatcher.matches()) {
+                    String colorCode = effectMatcher.group(1);
+                    String type = effectMatcher.group(2);
+                    int value = Integer.parseInt(effectMatcher.group(3));
+                    String suffix = effectMatcher.group(4);
+
+                    // A sanity check; otherwise fall through
+                    if (colorCode.equals(effectsColorCode)) {
+                        // If type is "Heal", "Mana" or "Duration", keep it, otherwise
+                        // replace it with the actual effect type
+                        if (type.equals("Effect")) {
+                            type = suffix;
+                        }
+                        effects.add(new ItemEffect(type, value));
+                        continue;
+                    }
+                }
+
+                parsingEffects = false;
+                // fall through
+            }
+
             // Look for identifications
             Matcher statMatcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
             if (statMatcher.matches() && !setBonusStats) {
@@ -150,11 +193,11 @@ public final class GearParser {
             }
         }
 
-        return new GearParseResult(
-                tier, gearType, level, identifications, powders, tierCount, tierCount, durabilityMax);
+        return new WynnItemParseResult(
+                tier, gearType, level, identifications, effects, powders, tierCount, tierCount, durabilityMax);
     }
 
-    public static GearParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
+    public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
         List<StatActualValue> identifications = new ArrayList<>();
 
         if (itemData.has("identifications")) {
@@ -198,7 +241,7 @@ public final class GearParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new GearParseResult(gearInfo.tier(), null, 0, identifications, powders, rerolls, 0, 0);
+        return new WynnItemParseResult(gearInfo.tier(), null, 0, identifications, List.of(), powders, rerolls, 0, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

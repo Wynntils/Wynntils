@@ -49,6 +49,7 @@ public final class FriendsModel extends Model {
     // endregion
 
     private boolean expectingFriendMessage = false;
+    private long lastFriendRequest = 0;
 
     private Set<String> friends;
 
@@ -170,10 +171,21 @@ public final class FriendsModel extends Model {
                 new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
+    /**
+     * Sends "/friend list" to Wynncraft and waits for the response.
+     * (!) Skips if the last request was less than 250ms ago.
+     * When the response is received, friends will be updated.
+     */
     public void requestData() {
         if (McUtils.player() == null) return;
 
+        if (System.currentTimeMillis() - lastFriendRequest < 250) {
+            WynntilsMod.info("Skipping friend list request because it was requested less than 250ms ago.");
+            return;
+        }
+
         expectingFriendMessage = true;
+        lastFriendRequest = System.currentTimeMillis();
         McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
     }
