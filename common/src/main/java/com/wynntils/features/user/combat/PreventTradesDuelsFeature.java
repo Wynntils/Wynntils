@@ -25,7 +25,7 @@ public class PreventTradesDuelsFeature extends UserFeature {
     public boolean onlyWhileFighting = true;
 
     @Config
-    public int fightingTimeCutoff = 15; // seconds
+    public int fightingTimeCutoff = 10; // seconds
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
