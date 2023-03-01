@@ -71,7 +71,7 @@ public final class MathUtils {
 
         return normalized
                 .chars()
-                .map(c -> ROMAN_NUMERALS_MAP.getOrDefault(c, 0))
+                .map(c -> ROMAN_NUMERALS_MAP.getOrDefault((char) c, 0))
                 .sum();
     }
 
