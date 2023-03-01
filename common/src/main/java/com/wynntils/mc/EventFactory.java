@@ -181,8 +181,8 @@ public final class EventFactory {
         return post(new PlayerRenderLayerEvent.Elytra(player));
     }
 
-    public static GroundItemEntityTransformEvent onGroundItemRender(PoseStack poseStack, ItemStack stack) {
-        return post(new GroundItemEntityTransformEvent(poseStack, stack));
+    public static GroundItemEntityTransformEvent onGroundItemRender(PoseStack poseStack, ItemStack itemStack) {
+        return post(new GroundItemEntityTransformEvent(poseStack, itemStack));
     }
 
     public static NametagRenderEvent onNameTagRender(
@@ -258,12 +258,12 @@ public final class EventFactory {
     }
 
     public static ItemTooltipRenderEvent.Pre onItemTooltipRenderPre(
-            PoseStack poseStack, ItemStack stack, List<Component> tooltips, int mouseX, int mouseY) {
-        return post(new ItemTooltipRenderEvent.Pre(poseStack, stack, tooltips, mouseX, mouseY));
+            PoseStack poseStack, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {
+        return post(new ItemTooltipRenderEvent.Pre(poseStack, itemStack, tooltips, mouseX, mouseY));
     }
 
-    public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
-        post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY));
+    public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+        post(new ItemTooltipRenderEvent.Post(poseStack, itemStack, mouseX, mouseY));
     }
 
     public static void onSlotRenderPre(Screen screen, Slot slot) {
@@ -274,12 +274,12 @@ public final class EventFactory {
         post(new SlotRenderEvent.Post(screen, slot));
     }
 
-    public static void onHotbarSlotRenderPre(ItemStack stack, int x, int y) {
-        post(new HotbarSlotRenderEvent.Pre(stack, x, y));
+    public static void onHotbarSlotRenderPre(ItemStack itemStack, int x, int y) {
+        post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
     }
 
-    public static void onHotbarSlotRenderPost(ItemStack stack, int x, int y) {
-        post(new HotbarSlotRenderEvent.Post(stack, x, y));
+    public static void onHotbarSlotRenderPost(ItemStack itemStack, int x, int y) {
+        post(new HotbarSlotRenderEvent.Post(itemStack, x, y));
     }
 
     public static DrawPotionGlintEvent onPotionIsFoil(PotionItem item) {
@@ -371,12 +371,12 @@ public final class EventFactory {
         post(new ContainerCloseEvent.Post());
     }
 
-    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack item) {
-        return post(new SetSlotEvent.Pre(container, slot, item));
+    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack itemStack) {
+        return post(new SetSlotEvent.Pre(container, slot, itemStack));
     }
 
-    public static void onSetSlotPost(Container container, int slot, ItemStack item) {
-        post(new SetSlotEvent.Post(container, slot, item));
+    public static void onSetSlotPost(Container container, int slot, ItemStack itemStack) {
+        post(new SetSlotEvent.Post(container, slot, itemStack));
     }
 
     public static InventoryKeyPressEvent onInventoryKeyPress(
@@ -394,8 +394,8 @@ public final class EventFactory {
         return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
     }
 
-    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack stack) {
-        return post(new ItemTooltipHoveredNameEvent(hoveredName, stack));
+    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack itemStack) {
+        return post(new ItemTooltipHoveredNameEvent(hoveredName, itemStack));
     }
 
     public static ItemTooltipFlagsEvent.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
