@@ -1,9 +1,21 @@
+## [0.0.2-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.259...v0.0.2-alpha.260) (2023-03-01)
+
+
+### Bug Fixes
+
+* Move (almost) all Features into categories ([#1232](https://github.com/Wynntils/Artemis/issues/1232)) ([903f10d](https://github.com/Wynntils/Artemis/commit/903f10df6aa2c69bbe6d85d50af69b5c46397b4b))
+
 ## [0.0.2-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.258...v0.0.2-alpha.259) (2023-03-01)
 
 
 ### New Features
 
 * Introduce DamageModel ([#1218](https://github.com/Wynntils/Artemis/issues/1218)) ([8ad4730](https://github.com/Wynntils/Artemis/commit/8ad4730f11b9a4435b859b7e34ecb8f3405a5c7c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.259 [skip ci] ([b1e6001](https://github.com/Wynntils/Artemis/commit/b1e60013969d149b53628cc319dc69ccbf747929))
 
 ## [0.0.2-alpha.258](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.257...v0.0.2-alpha.258) (2023-03-01)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.256 [skip ci] ([2f8c1fb](https://github.com/Wynntils/Artemis/commit/2f8c1fba44a97e552e9eca75fe65b8c009f9ffbb))
-
-## [0.0.2-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.254...v0.0.2-alpha.255) (2023-03-01)
-
-
-### Bug Fixes
-
-* Strange ordering in party mgmt screen ([#1229](https://github.com/Wynntils/Artemis/issues/1229)) ([19e60ad](https://github.com/Wynntils/Artemis/commit/19e60ad0e23cf583d0d13ee22f22f9a71e676578))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.255 [skip ci] ([14310ea](https://github.com/Wynntils/Artemis/commit/14310eaae8998887a900efa8a0c717a2d72874ac))
 
