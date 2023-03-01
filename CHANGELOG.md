@@ -1,9 +1,21 @@
+## [0.0.2-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.249...v0.0.2-alpha.250) (2023-03-01)
+
+
+### Code Refactoring
+
+* Consistently call ItemStack variables "itemStack" ([#1234](https://github.com/Wynntils/Artemis/issues/1234)) ([63c49ea](https://github.com/Wynntils/Artemis/commit/63c49eaa545e4dcb33c6e13ae0de07a765c8ccc0))
+
 ## [0.0.2-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.248...v0.0.2-alpha.249) (2023-02-28)
 
 
 ### Bug Fixes
 
 * Fix a (rather unlikely) race at startup time ([#1221](https://github.com/Wynntils/Artemis/issues/1221)) ([a44f15c](https://github.com/Wynntils/Artemis/commit/a44f15c5eb01d163c87d8e72c517cf54c53733ec))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.249 [skip ci] ([dca3067](https://github.com/Wynntils/Artemis/commit/dca3067e42b56b9b695bd22d6c42982ab42dadd9))
 
 ## [0.0.2-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.247...v0.0.2-alpha.248) (2023-02-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.246 [skip ci] ([689b65e](https://github.com/Wynntils/Artemis/commit/689b65eb1d7a31196392a9a5b22996b4b3b6e89c))
-
-## [0.0.2-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.244...v0.0.2-alpha.245) (2023-02-27)
-
-
-### New Features
-
-* Auto-join party invites ([#1215](https://github.com/Wynntils/Artemis/issues/1215)) ([0caac88](https://github.com/Wynntils/Artemis/commit/0caac885c8512da3596607b8ad84745b0fcb6756))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.245 [skip ci] ([70fe22e](https://github.com/Wynntils/Artemis/commit/70fe22e1b14412db127c8f4e35469dc3b886b940))
 
