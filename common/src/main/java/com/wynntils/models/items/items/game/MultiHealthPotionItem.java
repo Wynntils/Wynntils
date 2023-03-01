@@ -7,11 +7,11 @@ package com.wynntils.models.items.items.game;
 import com.wynntils.models.items.properties.UsesItemPropery;
 import com.wynntils.utils.type.CappedValue;
 
-public class HealthPotionItem extends GameItem implements UsesItemPropery {
+public class MultiHealthPotionItem extends GameItem implements UsesItemPropery {
     private final int hearts;
     private final CappedValue uses;
 
-    public HealthPotionItem(int hearts, CappedValue uses) {
+    public MultiHealthPotionItem(int hearts, CappedValue uses) {
         this.hearts = hearts;
         this.uses = uses;
     }
@@ -27,6 +27,6 @@ public class HealthPotionItem extends GameItem implements UsesItemPropery {
 
     @Override
     public String toString() {
-        return "HealthPotionItem{" + "hearts=" + hearts + ", uses=" + uses + '}';
+        return "MultiHealthPotionItem{" + "hearts=" + hearts + ", uses=" + uses + '}';
     }
 }
