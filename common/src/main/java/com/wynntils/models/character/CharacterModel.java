@@ -29,6 +29,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -102,6 +103,10 @@ public final class CharacterModel extends Model {
 
     public List<StatusEffect> getStatusEffects() {
         return statusEffects;
+    }
+
+    public CappedValue getHealth() {
+        return new CappedValue(healthSegment.getCurrentHealth(), healthSegment.getMaxHealth());
     }
 
     public int getCurrentHealth() {
