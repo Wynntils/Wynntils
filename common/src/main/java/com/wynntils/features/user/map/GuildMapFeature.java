@@ -13,6 +13,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.type.PointerType;
 import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.MAP)

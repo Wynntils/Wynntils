@@ -5,6 +5,8 @@
 package com.wynntils.features.user;
 
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
@@ -15,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@FeatureInfo(category = FeatureCategory.UNCATEGORIZED)
 public class TerritoryDefenseMessageFeature extends UserFeature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
