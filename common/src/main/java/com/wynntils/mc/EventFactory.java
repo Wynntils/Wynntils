@@ -37,6 +37,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemCountOverlayEvent;
 import com.wynntils.mc.event.ItemTooltipFlags;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -264,6 +265,10 @@ public final class EventFactory {
 
     public static void onItemTooltipRenderPost(PoseStack poseStack, ItemStack stack, int mouseX, int mouseY) {
         post(new ItemTooltipRenderEvent.Post(poseStack, stack, mouseX, mouseY));
+    }
+
+    public static ItemCountOverlayEvent onItemCountRender(ItemStack stack, String countString, int countColor) {
+        return post(new ItemCountOverlayEvent(stack, countString, countColor));
     }
 
     public static void onSlotRenderPre(Screen screen, Slot slot) {

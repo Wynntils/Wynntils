@@ -14,7 +14,6 @@ public class WynnItemCache {
     public static final String TOOLTIP_KEY = "tooltip";
     public static final String SEARCHED_KEY = "searched";
     public static final String FAVORITE_KEY = "favorite";
-    public static final String HIDE_COUNT_KEY = "hide_count";
 
     private final Map<String, Object> cache = new HashMap<>();
 
