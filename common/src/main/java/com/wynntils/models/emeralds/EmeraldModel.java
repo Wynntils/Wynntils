@@ -156,7 +156,7 @@ public final class EmeraldModel extends Model {
         // Subtract the outgoing object from our balance
         adjustBalance(event.getContainer().getItem(event.getSlot()), -1, isInventory);
         // And add the incoming value
-        adjustBalance(event.getItem(), 1, isInventory);
+        adjustBalance(event.getItemStack(), 1, isInventory);
     }
 
     @SubscribeEvent

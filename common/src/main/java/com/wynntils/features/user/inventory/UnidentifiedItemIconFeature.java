@@ -50,11 +50,11 @@ public class UnidentifiedItemIconFeature extends UserFeature {
 
     @SubscribeEvent
     public void onHotbarSlotRender(HotbarSlotRenderEvent.Post e) {
-        drawIcon(e.getStack(), e.getX(), e.getY());
+        drawIcon(e.getItemStack(), e.getX(), e.getY());
     }
 
-    private void drawIcon(ItemStack item, int slotX, int slotY) {
-        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(item, GearBoxItem.class);
+    private void drawIcon(ItemStack itemStack, int slotX, int slotY) {
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
         GearType gearType = gearBoxItemOpt.get().getGearType();

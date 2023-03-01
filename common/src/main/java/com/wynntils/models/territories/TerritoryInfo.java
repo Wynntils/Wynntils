@@ -6,6 +6,7 @@ package com.wynntils.models.territories;
 
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
 import java.util.HashMap;

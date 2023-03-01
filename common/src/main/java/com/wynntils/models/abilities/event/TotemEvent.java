@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.abilities.event;
 
-import com.wynntils.models.abilities.ShamanTotem;
+import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.utils.mc.type.Location;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.Event;

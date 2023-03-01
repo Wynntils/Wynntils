@@ -118,11 +118,11 @@ public class ItemTextOverlayFeature extends UserFeature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private void drawTextOverlay(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
         WynnItem wynnItem = wynnItemOpt.get();
