@@ -13,6 +13,7 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.PlayerInventoryModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
@@ -51,6 +52,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
