@@ -100,11 +100,4 @@ public final class WynnItemMatchers {
         }
         return null;
     }
-
-    public static Integer getLevelReq(ItemStack itemStack, int startLineNum) {
-        Matcher levelMatcher = LoreUtils.matchLoreLine(itemStack, startLineNum, LEVEL_MATCHER);
-        if (!levelMatcher.matches()) return null;
-
-        return Integer.parseInt(levelMatcher.group(1));
-    }
 }

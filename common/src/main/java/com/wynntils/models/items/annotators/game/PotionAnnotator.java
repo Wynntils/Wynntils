@@ -12,7 +12,6 @@ import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -37,10 +36,8 @@ public final class PotionAnnotator implements ItemAnnotator {
             int uses = Integer.parseInt(healingMatcher.group(1));
             int maxUses = Integer.parseInt(healingMatcher.group(2));
 
-            Integer level = WynnItemMatchers.getLevelReq(itemStack, 5);
-            if (level == null) return null;
-
-            return new PotionItem(PotionType.HEALING, level, parseResult.effects(), new CappedValue(uses, maxUses));
+            return new PotionItem(
+                    PotionType.HEALING, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
         }
 
         Matcher manaMatcher = MANA_PATTERN.matcher(potionType);
@@ -48,18 +45,13 @@ public final class PotionAnnotator implements ItemAnnotator {
             int uses = Integer.parseInt(manaMatcher.group(1));
             int maxUses = Integer.parseInt(manaMatcher.group(2));
 
-            Integer level = WynnItemMatchers.getLevelReq(itemStack, 5);
-            if (level == null) return null;
-
-            return new PotionItem(PotionType.MANA, level, parseResult.effects(), new CappedValue(uses, maxUses));
+            return new PotionItem(
+                    PotionType.MANA, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
         }
 
         Matcher xpMatcher = XP_PATTERN.matcher(potionType);
         if (xpMatcher.matches()) {
-            Integer level = WynnItemMatchers.getLevelReq(itemStack, 5);
-            if (level == null) return null;
-
-            return new PotionItem(PotionType.XP, level, parseResult.effects(), new CappedValue(1, 1));
+            return new PotionItem(PotionType.XP, parseResult.level(), parseResult.effects(), new CappedValue(1, 1));
         }
 
         Matcher skillMatcher = SKILL_PATTERN.matcher(potionType);
@@ -69,11 +61,11 @@ public final class PotionAnnotator implements ItemAnnotator {
             int maxUses = Integer.parseInt(skillMatcher.group(3));
             Skill skill = Skill.fromString(skillName);
 
-            Integer level = WynnItemMatchers.getLevelReq(itemStack, 6);
-            if (level == null) return null;
-
             return new PotionItem(
-                    PotionType.fromSkill(skill), level, parseResult.effects(), new CappedValue(uses, maxUses));
+                    PotionType.fromSkill(skill),
+                    parseResult.level(),
+                    parseResult.effects(),
+                    new CappedValue(uses, maxUses));
         }
 
         return null;
