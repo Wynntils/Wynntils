@@ -36,7 +36,7 @@ public class BulkBuyFeature extends UserFeature {
 
     // Test suite: https://regexr.com/7998g
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
-    private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GOLD;
+    private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
@@ -59,28 +59,26 @@ public class BulkBuyFeature extends UserFeature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (!isBulkBuyable(McUtils.player().containerMenu, event.getItemStack())) return;
 
-        List<Component> tooltips = (!KeyboardUtils.isShiftDown())
-                ? LoreUtils.appendTooltip(
-                        event.getItemStack(),
-                        event.getTooltips(),
-                        List.of(Component.translatable("feature.wynntils.bulkBuy.bulkBuyLore", bulkBuyAmount)
-                                .withStyle(ChatFormatting.GRAY)))
-                : LoreUtils.appendTooltip(
-                        event.getItemStack(),
-                        replacePrices(event.getTooltips()),
-                        List.of(Component.translatable("feature.wynntils.bulkBuy.bulkBuyLoreShifting", bulkBuyAmount)
-                                .withStyle(BULK_BUY_ACTIVE_COLOR)));
+        List<Component> tooltips = List.of(
+                Component.literal(""), // Empty line
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount)
+                        .withStyle(BULK_BUY_ACTIVE_COLOR),
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount)
+                        .withStyle(BULK_BUY_ACTIVE_COLOR));
 
-        event.setTooltips(tooltips);
+        event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));
     }
 
     /**
+     * When shift is pressed:
      * Replaces the price in the lore with the bulk buy price.
      * Also replaces the "✔" with a "✖" with a if the user can't afford the bulk buy.
      * @param oldLore Lore of the item that user wants to bulk buy
      * @return New lore with the above replacements
      */
     private List<Component> replacePrices(List<Component> oldLore) {
+        if (!KeyboardUtils.isShiftDown()) return oldLore;
+
         String priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
         Matcher priceMatcher = PRICE_PATTERN.matcher(priceLine);
         if (!priceMatcher.find()) {
