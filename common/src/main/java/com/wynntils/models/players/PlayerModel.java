@@ -196,9 +196,9 @@ public final class PlayerModel extends Model {
     private void clearTextureCache() {
         for (ResourceLocation[] locations : cosmeticTextures.values()) {
             // Make sure texture unloading is done on client thread
-            Arrays.stream(locations).forEach(l -> {
-                Managers.TickScheduler.scheduleNextTick(
-                        () -> McUtils.mc().getTextureManager().release(l));
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                Arrays.stream(locations)
+                        .forEach(l -> McUtils.mc().getTextureManager().release(l));
             });
         }
         cosmeticTextures.clear();
