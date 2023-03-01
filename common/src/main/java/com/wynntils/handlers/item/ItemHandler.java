@@ -37,10 +37,10 @@ public class ItemHandler extends Handler {
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
 
-    public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
-        if (item == null) return Optional.empty();
+    public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
+        if (itemStack == null) return Optional.empty();
 
-        ItemAnnotation annotation = ((ItemStackExtension) item).getAnnotation();
+        ItemAnnotation annotation = ((ItemStackExtension) itemStack).getAnnotation();
         return Optional.ofNullable(annotation);
     }
 
@@ -57,7 +57,7 @@ public class ItemHandler extends Handler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItem());
+        onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -167,14 +167,14 @@ public class ItemHandler extends Handler {
         return WILDCARD_ITEMS.contains(itemStack.getItem());
     }
 
-    private ItemAnnotation calculateAnnotation(ItemStack item, String name) {
+    private ItemAnnotation calculateAnnotation(ItemStack itemStack, String name) {
         long startTime = System.currentTimeMillis();
 
         ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(item, name);
+                annotation = annotator.getAnnotation(itemStack, name);
                 if (annotation != null) {
                     break;
                 }
@@ -182,9 +182,9 @@ public class ItemHandler extends Handler {
                 String annotatorName = annotator.getClass().getSimpleName();
                 WynntilsMod.error("Exception when processing item annotator " + annotatorName, t);
                 WynntilsMod.warn("This annotator will be disabled");
-                WynntilsMod.warn("Problematic item:" + item);
-                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(item.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + item.getTag());
+                WynntilsMod.warn("Problematic item:" + itemStack);
+                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
+                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
                 McUtils.sendMessageToClient(Component.literal("Wynntils error: Item Annotator '" + annotatorName
                                 + "' has crashed and will be disabled. Not all items will be properly parsed.")
                         .withStyle(ChatFormatting.RED));
@@ -207,12 +207,12 @@ public class ItemHandler extends Handler {
         return annotation;
     }
 
-    private void annotate(ItemStack item) {
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
-        ItemAnnotation annotation = calculateAnnotation(item, name);
+    private void annotate(ItemStack itemStack) {
+        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()));
+        ItemAnnotation annotation = calculateAnnotation(itemStack, name);
         if (annotation == null) return;
 
-        updateItem(item, annotation, name);
+        updateItem(itemStack, annotation, name);
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
