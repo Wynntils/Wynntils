@@ -12,8 +12,10 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.elements.type.PotionType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
-import com.wynntils.models.items.items.game.HealthPotionItem;
+import com.wynntils.models.items.items.game.MultiHealthPotionItem;
+import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
@@ -44,15 +46,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
     private boolean checkPotionUse() {
         ItemStack itemStack = McUtils.inventory().getSelected();
-        Optional<HealthPotionItem> potionOpt = Models.Item.asWynnItem(itemStack, HealthPotionItem.class);
-        Optional<CraftedConsumableItem> craftedConsumableOpt =
-                Models.Item.asWynnItem(itemStack, CraftedConsumableItem.class);
-        if (potionOpt.isEmpty() && craftedConsumableOpt.isEmpty()) return false;
-
-        // Check if crafted potion is a health potion
-        if (craftedConsumableOpt.isPresent()) {
-            if (!craftedConsumableOpt.get().isHealing()) return false;
-        }
+        if (!isHealingPotion(itemStack)) return false;
 
         CappedValue health = Models.Character.getHealth();
         int percentage = health.getPercentage();
@@ -66,5 +60,27 @@ public class HealthPotionBlockerFeature extends UserFeature {
         }
 
         return false;
+    }
+
+    private boolean isHealingPotion(ItemStack itemStack) {
+        Optional<MultiHealthPotionItem> healthPotionOpt =
+                Models.Item.asWynnItem(itemStack, MultiHealthPotionItem.class);
+        Optional<PotionItem> potionOpt = Models.Item.asWynnItem(itemStack, PotionItem.class);
+        Optional<CraftedConsumableItem> craftedConsumableOpt =
+                Models.Item.asWynnItem(itemStack, CraftedConsumableItem.class);
+
+        if (healthPotionOpt.isEmpty() && potionOpt.isEmpty() && craftedConsumableOpt.isEmpty()) return false;
+
+        // Check if potion is a healing potion
+        if (potionOpt.isPresent()) {
+            if (potionOpt.get().getType() != PotionType.HEALING) return false;
+        }
+
+        // Check if crafted potion is a health potion
+        if (craftedConsumableOpt.isPresent()) {
+            if (!craftedConsumableOpt.get().isHealing()) return false;
+        }
+
+        return true;
     }
 }

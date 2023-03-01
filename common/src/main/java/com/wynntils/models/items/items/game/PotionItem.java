@@ -4,25 +4,25 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.elements.type.PotionType;
 import com.wynntils.models.items.properties.UsesItemPropery;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
-public class SkillPotionItem extends GameItem implements UsesItemPropery {
-    private final Skill skill;
+public class PotionItem extends GameItem implements UsesItemPropery {
+    private final PotionType type;
     private final List<ItemEffect> effects;
     private final CappedValue uses;
 
-    public SkillPotionItem(Skill skill, List<ItemEffect> effects, CappedValue uses) {
-        this.skill = skill;
+    public PotionItem(PotionType type, List<ItemEffect> effects, CappedValue uses) {
+        this.type = type;
         this.effects = effects;
         this.uses = uses;
     }
 
-    public Skill getSkill() {
-        return skill;
+    public PotionType getType() {
+        return type;
     }
 
     public List<ItemEffect> getEffects() {
@@ -35,6 +35,6 @@ public class SkillPotionItem extends GameItem implements UsesItemPropery {
 
     @Override
     public String toString() {
-        return "SkillPotionItem{" + "skill=" + skill + ", effects=" + effects + ", uses=" + uses + '}';
+        return "PotionItem{" + "type=" + type + ", effects=" + effects + ", uses=" + uses + '}';
     }
 }
