@@ -1,9 +1,21 @@
+## [0.0.2-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.261...v0.0.2-alpha.262) (2023-03-01)
+
+
+### New Features
+
+* bulk buy ([#1188](https://github.com/Wynntils/Artemis/issues/1188)) ([43c75a3](https://github.com/Wynntils/Artemis/commit/43c75a3ae3769fa447addc91cda2295d28db9fe4))
+
 ## [0.0.2-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.260...v0.0.2-alpha.261) (2023-03-01)
 
 
 ### Bug Fixes
 
 * Fix cape texture loading issues ([#1226](https://github.com/Wynntils/Artemis/issues/1226)) ([9b1f4dd](https://github.com/Wynntils/Artemis/commit/9b1f4ddb707889340e4fc2793f4985566ce82f49))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.261 [skip ci] ([3e5b466](https://github.com/Wynntils/Artemis/commit/3e5b46635e9be99caba652648f49407f46de2a3a))
 
 ## [0.0.2-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.259...v0.0.2-alpha.260) (2023-03-01)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.258 [skip ci] ([e95bdc9](https://github.com/Wynntils/Artemis/commit/e95bdc9e0a79a72c676d50f1b33a71073ef0a824))
-
-## [0.0.2-alpha.257](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.256...v0.0.2-alpha.257) (2023-03-01)
-
-
-### New Features
-
-* Add horse tier as item text overlay ([#1225](https://github.com/Wynntils/Artemis/issues/1225)) ([79ca68d](https://github.com/Wynntils/Artemis/commit/79ca68da92167b929d4d1d3eb4a7582c06e9913b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.257 [skip ci] ([94dc3ec](https://github.com/Wynntils/Artemis/commit/94dc3ecc3b537a755f1056e2684a1bed29f98148))
 
