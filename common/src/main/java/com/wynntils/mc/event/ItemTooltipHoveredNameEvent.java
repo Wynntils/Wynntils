@@ -10,11 +10,11 @@ import net.minecraftforge.eventbus.api.Event;
 
 public class ItemTooltipHoveredNameEvent extends Event {
     private Component hoveredName;
-    private final ItemStack stack;
+    private final ItemStack itemStack;
 
-    public ItemTooltipHoveredNameEvent(Component hoveredName, ItemStack stack) {
+    public ItemTooltipHoveredNameEvent(Component hoveredName, ItemStack itemStack) {
         this.hoveredName = hoveredName;
-        this.stack = stack;
+        this.itemStack = itemStack;
     }
 
     public Component getHoveredName() {
@@ -25,7 +25,7 @@ public class ItemTooltipHoveredNameEvent extends Event {
         this.hoveredName = hoveredName;
     }
 
-    public ItemStack getStack() {
-        return stack;
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 }
