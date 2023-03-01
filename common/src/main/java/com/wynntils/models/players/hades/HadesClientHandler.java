@@ -6,7 +6,7 @@ package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.HadesFeature;
+import com.wynntils.features.user.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
