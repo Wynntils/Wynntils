@@ -21,7 +21,6 @@ import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,9 @@ public final class WynnItemParser {
     // Test suite: https://regexr.com/79atu
     private static final Pattern EFFECT_LINE_PATTERN =
             Pattern.compile("^§(.)- §r§7(.*): §r§f([+-]?\\d+)(?:§.§.)? ?(.*)$");
+
+    // Test suite: https://regexr.com/798o0
+    public static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§r§7 Combat Lv. Min: (\\d+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
@@ -117,7 +119,7 @@ public final class WynnItemParser {
             }
 
             // Look for level requirements (needed for crafted gear)
-            Matcher levelMatcher = WynnItemMatchers.LEVEL_MATCHER.matcher(normalizedCoded);
+            Matcher levelMatcher = MIN_LEVEL_PATTERN.matcher(normalizedCoded);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
