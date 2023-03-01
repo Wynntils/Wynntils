@@ -21,8 +21,8 @@ import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
-import com.wynntils.models.items.items.game.SkillPotionItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.MathUtils;
@@ -168,8 +168,8 @@ public class ItemTextOverlayFeature extends UserFeature {
         if (wynnItem instanceof SkillPointItem skillPointItem) {
             return new SkillPointOverlay(skillPointItem);
         }
-        if (wynnItem instanceof SkillPotionItem skillPotionItem) {
-            return new SkillPotionOverlay(skillPotionItem);
+        if (wynnItem instanceof PotionItem potionItem && potionItem.getType().getSkill() != null) {
+            return new SkillPotionOverlay(potionItem);
         }
         if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
             return new TeleportScrollOverlay(teleportScrollItem);
@@ -359,15 +359,15 @@ public class ItemTextOverlayFeature extends UserFeature {
     }
 
     private final class SkillPotionOverlay implements TextOverlayInfo {
-        private final SkillPotionItem item;
+        private final PotionItem item;
 
-        private SkillPotionOverlay(SkillPotionItem item) {
+        private SkillPotionOverlay(PotionItem item) {
             this.item = item;
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            Skill skill = item.getSkill();
+            Skill skill = item.getType().getSkill();
 
             String text = skill.getSymbol();
             TextRenderSetting style = TextRenderSetting.DEFAULT

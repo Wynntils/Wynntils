@@ -12,10 +12,16 @@ import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.elements.type.PotionType;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
+import com.wynntils.models.items.items.game.MultiHealthPotionItem;
+import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.type.CappedValue;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -26,32 +32,55 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
     @SubscribeEvent
     public void onPotionUse(UseItemEvent event) {
-        Component response = getBlockResponse();
-        if (response != null) {
+        if (checkPotionUse()) {
             event.setCanceled(true);
-            Managers.Notification.queueMessage(response);
         }
     }
 
     @SubscribeEvent
-    public void onPotionUseOn(PlayerInteractEvent.RightClickBlock event) {
-        Component response = getBlockResponse();
-        if (response != null) {
+    public void onPotionUseOn(PlayerInteractEvent event) {
+        if (checkPotionUse()) {
             event.setCanceled(true);
-            Managers.Notification.queueMessage(response);
         }
     }
 
-    private Component getBlockResponse() {
+    private boolean checkPotionUse() {
         ItemStack itemStack = McUtils.inventory().getSelected();
-        if (!WynnItemMatchers.isHealingPotion(itemStack)) return null;
+        if (!isHealingPotion(itemStack)) return false;
 
-        if (Models.Character.getCurrentHealth() * 100 < Models.Character.getMaxHealth() * threshold) return null;
+        CappedValue health = Models.Character.getHealth();
+        int percentage = health.getPercentage();
 
-        if (threshold < 100)
-            return Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", threshold)
-                    .withStyle(ChatFormatting.RED);
-        return Component.translatable("feature.wynntils.healthPotionBlocker.healthFull")
-                .withStyle(ChatFormatting.RED);
+        if (percentage >= threshold) {
+            MutableComponent response = (percentage < 100)
+                    ? Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", percentage)
+                    : Component.translatable("feature.wynntils.healthPotionBlocker.healthFull");
+            Managers.Notification.queueMessage(response.withStyle(ChatFormatting.RED));
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isHealingPotion(ItemStack itemStack) {
+        Optional<MultiHealthPotionItem> healthPotionOpt =
+                Models.Item.asWynnItem(itemStack, MultiHealthPotionItem.class);
+        Optional<PotionItem> potionOpt = Models.Item.asWynnItem(itemStack, PotionItem.class);
+        Optional<CraftedConsumableItem> craftedConsumableOpt =
+                Models.Item.asWynnItem(itemStack, CraftedConsumableItem.class);
+
+        if (healthPotionOpt.isEmpty() && potionOpt.isEmpty() && craftedConsumableOpt.isEmpty()) return false;
+
+        // Check if potion is a healing potion
+        if (potionOpt.isPresent()) {
+            if (potionOpt.get().getType() != PotionType.HEALING) return false;
+        }
+
+        // Check if crafted potion is a health potion
+        if (craftedConsumableOpt.isPresent()) {
+            if (!craftedConsumableOpt.get().isHealing()) return false;
+        }
+
+        return true;
     }
 }
