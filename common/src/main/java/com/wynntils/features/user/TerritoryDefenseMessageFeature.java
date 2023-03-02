@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.user;
 
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;

@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.user.combat;
 
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ArmSwingEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

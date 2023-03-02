@@ -6,10 +6,10 @@ package com.wynntils.features.user.tooltips;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.tooltip.GearTooltipStyle;

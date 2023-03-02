@@ -5,10 +5,10 @@
 package com.wynntils.features.user.players;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.gear.type.GearInfo;

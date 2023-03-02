@@ -5,9 +5,9 @@
 package com.wynntils.features.user.redirects;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.mc.ComponentUtils;

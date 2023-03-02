@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.user.ui;
 
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
