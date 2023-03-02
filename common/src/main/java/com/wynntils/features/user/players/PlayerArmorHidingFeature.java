@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user.players;
 
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
-@FeatureInfo(category = FeatureCategory.PLAYERS)
+@ConfigCategory(Category.PLAYERS)
 public class PlayerArmorHidingFeature extends UserFeature {
     @Config
     public boolean hideHelmets = true;

@@ -5,10 +5,10 @@
 package com.wynntils.features.user.redirects;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.REDIRECTS)
+@ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends UserFeature {
     @Config
     public RedirectAction craftedDurability = RedirectAction.REDIRECT;

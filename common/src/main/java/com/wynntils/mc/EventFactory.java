@@ -37,6 +37,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -266,8 +267,16 @@ public final class EventFactory {
         post(new ItemTooltipRenderEvent.Post(poseStack, itemStack, mouseX, mouseY));
     }
 
+    public static ItemCountOverlayRenderEvent onItemCountRender(ItemStack stack, String countString, int countColor) {
+        return post(new ItemCountOverlayRenderEvent(stack, countString, countColor));
+    }
+
     public static void onSlotRenderPre(Screen screen, Slot slot) {
         post(new SlotRenderEvent.Pre(screen, slot));
+    }
+
+    public static void onSlotRenderCountPre(Screen screen, Slot slot) {
+        post(new SlotRenderEvent.CountPre(screen, slot));
     }
 
     public static void onSlotRenderPost(Screen screen, Slot slot) {
@@ -276,6 +285,10 @@ public final class EventFactory {
 
     public static void onHotbarSlotRenderPre(ItemStack itemStack, int x, int y) {
         post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
+    }
+
+    public static void onHotbarSlotRenderCountPre(ItemStack itemStack, int x, int y) {
+        post(new HotbarSlotRenderEvent.CountPre(itemStack, x, y));
     }
 
     public static void onHotbarSlotRenderPost(ItemStack itemStack, int x, int y) {

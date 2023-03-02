@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.features.properties;
+package com.wynntils.core.config;
 
 import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
 
-public enum FeatureCategory {
+public enum Category {
     UNCATEGORIZED,
     CHAT,
     COMBAT,
@@ -22,7 +22,7 @@ public enum FeatureCategory {
     UI,
     WYNNTILS;
 
-    FeatureCategory() {
+    Category() {
         assert !toString().startsWith("core.wynntils");
     }
 

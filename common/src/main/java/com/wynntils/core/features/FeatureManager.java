@@ -7,9 +7,9 @@ package com.wynntils.core.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
@@ -46,6 +46,7 @@ import com.wynntils.features.user.commands.AddCommandExpansionFeature;
 import com.wynntils.features.user.commands.CommandAliasesFeature;
 import com.wynntils.features.user.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.commands.FilterAdminCommandsFeature;
+import com.wynntils.features.user.inventory.BulkBuyFeature;
 import com.wynntils.features.user.inventory.ContainerSearchFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.EmeraldPouchHotkeyFeature;
@@ -149,6 +150,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AutoJoinPartyFeature());
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
+        registerFeature(new BulkBuyFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
@@ -281,8 +283,8 @@ public final class FeatureManager extends Manager {
         }
 
         // set feature category
-        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
+        Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
         feature.setCategory(category);
 
         // register key binds

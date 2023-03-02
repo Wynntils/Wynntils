@@ -52,19 +52,6 @@ public enum SpellType {
     private static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
     private static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
 
-    private static final int[][] MANA_REDUCTION_LEVELS = {
-        {},
-        {68},
-        {41, 105},
-        {29, 68, 129},
-        {23, 51, 89, 147},
-        {19, 41, 68, 105},
-        {16, 34, 55, 82, 118},
-        {14, 29, 47, 68, 94, 129},
-        {12, 26, 41, 58, 79, 105, 139},
-        {11, 23, 36, 51, 68, 89, 114, 147}
-    };
-
     private final ClassType classType;
     private final int spellNumber;
     private final String name;
@@ -81,54 +68,6 @@ public enum SpellType {
 
     public String getName() {
         return name;
-    }
-
-    public int getUnlockLevel(int grade) {
-        int unlockLevel = (spellNumber - 1) * 10 + 1;
-        if (grade == 1) return unlockLevel;
-        if (grade == 2) return unlockLevel + 15;
-        if (grade == 3) return unlockLevel + 35;
-        assert (false);
-        return 0;
-    }
-
-    private int getGrade(int level) {
-        int compareLevel = level - (spellNumber - 1) * 10;
-        if (compareLevel >= 36) {
-            return 3;
-        } else if (compareLevel >= 16) {
-            return 2;
-        } else if (compareLevel >= 1) {
-            return 1;
-        } else {
-            // not unlocked
-            return 0;
-        }
-    }
-
-    private int getUnreducedManaCost(int level) {
-        return startManaCost + (getGrade(level) - 1) * gradeManaChange;
-    }
-
-    public int getManaCost(int level, int intelligenceLevel) {
-        int manaReduction = 0;
-        for (int i : MANA_REDUCTION_LEVELS[getUnreducedManaCost(level) - 1]) {
-            if (intelligenceLevel >= i) {
-                manaReduction++;
-            } else {
-                break;
-            }
-        }
-        return getUnreducedManaCost(level) - manaReduction;
-    }
-
-    public int getNextManaReduction(int level, int intelligenceLevel) {
-        for (int i : MANA_REDUCTION_LEVELS[getUnreducedManaCost(level) - 1]) {
-            if (i > intelligenceLevel) {
-                return i;
-            }
-        }
-        return Integer.MAX_VALUE;
     }
 
     SpellType(ClassType classType, int spellNumber, String name, int startManaCost, int gradeManaChange) {
