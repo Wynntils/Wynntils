@@ -9,10 +9,10 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
@@ -35,7 +35,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
 
     private FeatureState state = FeatureState.UNINITALIZED;
 
-    private FeatureCategory category = FeatureCategory.UNCATEGORIZED;
+    private Category category = Category.UNCATEGORIZED;
 
     public final void init() {
         ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
@@ -192,11 +192,11 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-    public FeatureCategory getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(FeatureCategory category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
