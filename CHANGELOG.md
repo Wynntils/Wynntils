@@ -1,9 +1,21 @@
+## [0.0.2-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.262...v0.0.2-alpha.263) (2023-03-02)
+
+
+### Bug Fixes
+
+* Start with chat timestamps off ([#1237](https://github.com/Wynntils/Artemis/issues/1237)) ([7f2274b](https://github.com/Wynntils/Artemis/commit/7f2274b7976b6fe23e4b172b52bd7add3eb89b41))
+
 ## [0.0.2-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.261...v0.0.2-alpha.262) (2023-03-01)
 
 
 ### New Features
 
 * bulk buy ([#1188](https://github.com/Wynntils/Artemis/issues/1188)) ([43c75a3](https://github.com/Wynntils/Artemis/commit/43c75a3ae3769fa447addc91cda2295d28db9fe4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.262 [skip ci] ([2fe3fb8](https://github.com/Wynntils/Artemis/commit/2fe3fb86c18f94dfa505b251c5ce744a38c1398d))
 
 ## [0.0.2-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.260...v0.0.2-alpha.261) (2023-03-01)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.259 [skip ci] ([b1e6001](https://github.com/Wynntils/Artemis/commit/b1e60013969d149b53628cc319dc69ccbf747929))
-
-## [0.0.2-alpha.258](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.257...v0.0.2-alpha.258) (2023-03-01)
-
-
-### Bug Fixes
-
-* Regression in roman numerals ([#1236](https://github.com/Wynntils/Artemis/issues/1236)) ([9d80445](https://github.com/Wynntils/Artemis/commit/9d80445bad2c628a0749ea924ee3d4c0e044295f))
-
-
-### New Features
-
-* Potion improvement, incl health potion blocker fixes ([#1235](https://github.com/Wynntils/Artemis/issues/1235)) ([1def2ab](https://github.com/Wynntils/Artemis/commit/1def2ab9924d9739b8e20e51ead2d5a105e7953e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.258 [skip ci] ([e95bdc9](https://github.com/Wynntils/Artemis/commit/e95bdc9e0a79a72c676d50f1b33a71073ef0a824))
 
