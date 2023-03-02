@@ -7,11 +7,11 @@ package com.wynntils.features.user.commands;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -24,7 +24,7 @@ import net.minecraft.commands.Commands;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.COMMANDS)
+@ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends UserFeature {
     @Config(visible = false)
     private List<CommandAlias> aliases = new ArrayList<>(List.of(

@@ -29,6 +29,10 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
         WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
 
         return new CraftedConsumableItem(
-                craftedName, parseResult.identifications(), parseResult.effects(), new CappedValue(uses, maxUses));
+                craftedName,
+                parseResult.level(),
+                parseResult.identifications(),
+                parseResult.effects(),
+                new CappedValue(uses, maxUses));
     }
 }

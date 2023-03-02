@@ -13,10 +13,10 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -31,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * https://wynncraft.com/help?guide=commands, from running the commands in-game, and from a
  * list of server commands provided by HeyZeer0.
  */
-@FeatureInfo(category = FeatureCategory.COMMANDS)
+@ConfigCategory(Category.COMMANDS)
 public class AddCommandExpansionFeature extends UserFeature {
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(Models.Player.getAllPlayerNames(), builder);

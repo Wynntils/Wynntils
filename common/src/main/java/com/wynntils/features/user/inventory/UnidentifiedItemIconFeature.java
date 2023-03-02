@@ -6,10 +6,10 @@ package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.gear.type.GearType;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class UnidentifiedItemIconFeature extends UserFeature {
     private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS = Map.ofEntries(
             Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),
@@ -44,16 +44,16 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
     @SubscribeEvent
-    public void onSlotRender(SlotRenderEvent.Post e) {
-        drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+    public void onSlotRender(SlotRenderEvent.CountPre e) {
+        drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
     }
 
     @SubscribeEvent
-    public void onHotbarSlotRender(HotbarSlotRenderEvent.Post e) {
-        drawIcon(e.getItemStack(), e.getX(), e.getY());
+    public void onHotbarSlotRender(HotbarSlotRenderEvent.CountPre e) {
+        drawIcon(e.getItemStack(), e.getX(), e.getY(), 200);
     }
 
-    private void drawIcon(ItemStack itemStack, int slotX, int slotY) {
+    private void drawIcon(ItemStack itemStack, int slotX, int slotY, int z) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
@@ -66,7 +66,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 Texture.GEAR_ICONS.resource(),
                 slotX + 2,
                 slotY + 2,
-                400,
+                z,
                 12,
                 12,
                 textureX,

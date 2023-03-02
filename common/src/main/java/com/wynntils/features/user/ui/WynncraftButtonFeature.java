@@ -9,10 +9,10 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.render.Texture;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
 
-@FeatureInfo(category = FeatureCategory.UI)
+@ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends UserFeature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";

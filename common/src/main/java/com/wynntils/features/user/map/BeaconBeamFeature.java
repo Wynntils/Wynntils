@@ -7,10 +7,10 @@ package com.wynntils.features.user.map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.MAP)
+@ConfigCategory(Category.MAP)
 public class BeaconBeamFeature extends UserFeature {
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;

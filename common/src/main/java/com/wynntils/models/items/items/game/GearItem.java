@@ -8,9 +8,10 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import java.util.Optional;
 
-public class GearItem extends GameItem implements GearTierItemProperty {
+public class GearItem extends GameItem implements GearTierItemProperty, LeveledItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
 
@@ -34,6 +35,11 @@ public class GearItem extends GameItem implements GearTierItemProperty {
     @Override
     public GearTier getGearTier() {
         return gearInfo.tier();
+    }
+
+    @Override
+    public int getLevel() {
+        return gearInfo.requirements().level();
     }
 
     @Override

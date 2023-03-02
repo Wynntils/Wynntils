@@ -36,7 +36,8 @@ public final class PotionAnnotator implements ItemAnnotator {
             int uses = Integer.parseInt(healingMatcher.group(1));
             int maxUses = Integer.parseInt(healingMatcher.group(2));
 
-            return new PotionItem(PotionType.HEALING, parseResult.effects(), new CappedValue(uses, maxUses));
+            return new PotionItem(
+                    PotionType.HEALING, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
         }
 
         Matcher manaMatcher = MANA_PATTERN.matcher(potionType);
@@ -44,12 +45,13 @@ public final class PotionAnnotator implements ItemAnnotator {
             int uses = Integer.parseInt(manaMatcher.group(1));
             int maxUses = Integer.parseInt(manaMatcher.group(2));
 
-            return new PotionItem(PotionType.MANA, parseResult.effects(), new CappedValue(uses, maxUses));
+            return new PotionItem(
+                    PotionType.MANA, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
         }
 
         Matcher xpMatcher = XP_PATTERN.matcher(potionType);
         if (xpMatcher.matches()) {
-            return new PotionItem(PotionType.XP, parseResult.effects(), new CappedValue(1, 1));
+            return new PotionItem(PotionType.XP, parseResult.level(), parseResult.effects(), new CappedValue(1, 1));
         }
 
         Matcher skillMatcher = SKILL_PATTERN.matcher(potionType);
@@ -59,7 +61,11 @@ public final class PotionAnnotator implements ItemAnnotator {
             int maxUses = Integer.parseInt(skillMatcher.group(3));
             Skill skill = Skill.fromString(skillName);
 
-            return new PotionItem(PotionType.fromSkill(skill), parseResult.effects(), new CappedValue(uses, maxUses));
+            return new PotionItem(
+                    PotionType.fromSkill(skill),
+                    parseResult.level(),
+                    parseResult.effects(),
+                    new CappedValue(uses, maxUses));
         }
 
         return null;

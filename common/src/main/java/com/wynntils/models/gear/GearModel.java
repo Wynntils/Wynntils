@@ -98,7 +98,13 @@ public final class GearModel extends Model {
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
-                result.gearType(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+                result.gearType(),
+                result.level(),
+                List.of(),
+                List.of(),
+                result.identifications(),
+                result.powders(),
+                durability);
     }
 
     public GearItem fromEncodedString(String encoded) {
