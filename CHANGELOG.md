@@ -1,9 +1,21 @@
+## [0.0.2-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.263...v0.0.2-alpha.264) (2023-03-02)
+
+
+### Miscellaneous Chores
+
+* Remove pre-2.0 mana calculations ([#1239](https://github.com/Wynntils/Artemis/issues/1239)) ([11afb6a](https://github.com/Wynntils/Artemis/commit/11afb6ac3b4eb9877d784b4c34d358d1cc58a2c3))
+
 ## [0.0.2-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.262...v0.0.2-alpha.263) (2023-03-02)
 
 
 ### Bug Fixes
 
 * Start with chat timestamps off ([#1237](https://github.com/Wynntils/Artemis/issues/1237)) ([7f2274b](https://github.com/Wynntils/Artemis/commit/7f2274b7976b6fe23e4b172b52bd7add3eb89b41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.263 [skip ci] ([dea6eee](https://github.com/Wynntils/Artemis/commit/dea6eee9a18843cbf3aacf7e1f1c472da1e236f8))
 
 ## [0.0.2-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.261...v0.0.2-alpha.262) (2023-03-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.260 [skip ci] ([2315f89](https://github.com/Wynntils/Artemis/commit/2315f892c203e8cd9be2e32bbb63d096f178b9e9))
-
-## [0.0.2-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.258...v0.0.2-alpha.259) (2023-03-01)
-
-
-### New Features
-
-* Introduce DamageModel ([#1218](https://github.com/Wynntils/Artemis/issues/1218)) ([8ad4730](https://github.com/Wynntils/Artemis/commit/8ad4730f11b9a4435b859b7e34ecb8f3405a5c7c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.259 [skip ci] ([b1e6001](https://github.com/Wynntils/Artemis/commit/b1e60013969d149b53628cc319dc69ccbf747929))
 
