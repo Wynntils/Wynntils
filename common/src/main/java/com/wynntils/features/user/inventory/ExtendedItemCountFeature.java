@@ -4,23 +4,22 @@
  */
 package com.wynntils.features.user.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.CountedItemProperty;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.TextRenderSetting;
-import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Optional;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @FeatureInfo(category = FeatureCategory.INVENTORY)
 public class ExtendedItemCountFeature extends UserFeature {
@@ -30,39 +29,37 @@ public class ExtendedItemCountFeature extends UserFeature {
     @Config
     public boolean hotbarTextOverlayEnabled = true;
 
-    @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Post e) {
-        if (!inventoryTextOverlayEnabled) return;
+    private boolean isInventory;
 
-        drawTextOverlay(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+    @SubscribeEvent
+    public void onRenderSlotPre(SlotRenderEvent.Pre e) {
+        isInventory = true;
     }
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
-        if (!hotbarTextOverlayEnabled) return;
-
-        drawTextOverlay(e.getItemStack(), e.getX(), e.getY());
+    public void onRenderHotbarSlotPre(HotbarSlotRenderEvent.Pre e) {
+        isInventory = false;
     }
 
-    private void drawTextOverlay(ItemStack itemStack, int slotX, int slotY) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+    @SubscribeEvent
+    public void onItemCountOverlay(ItemCountOverlayRenderEvent event) {
+        if (isInventory && !inventoryTextOverlayEnabled) return;
+        if (!isInventory && !hotbarTextOverlayEnabled) return;
+
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof CountedItemProperty countedItem)) return;
 
-        if (!countedItem.hasCount()) return;
-        int count = countedItem.getCount();
-        // This is a bit ugly; would rather we hid the drawing but that was tricky to do
-        // with mixins...
-        itemStack.setCount(1);
+        WynnItem wynnItem = wynnItemOpt.get();
 
-        TextRenderSetting style = TextRenderSetting.DEFAULT
-                .withCustomColor(countedItem.getCountColor())
-                .withHorizontalAlignment(HorizontalAlignment.Right);
-
-        TextRenderTask task = new TextRenderTask(Integer.toString(count), style);
-
-        PoseStack poseStack = new PoseStack();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        FontRenderer.getInstance().renderText(poseStack, slotX + 17, slotY + 9, task);
+        int count;
+        CustomColor countColor;
+        if (wynnItem instanceof LeveledItemProperty leveledItem
+                && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
+                && isInventory) {
+            event.setCountString(String.valueOf(leveledItem.getLevel()));
+        } else if (wynnItem instanceof CountedItemProperty countedItem && countedItem.hasCount()) {
+            event.setCountString(String.valueOf(countedItem.getCount()));
+            event.setCountColor(countedItem.getCountColor().asInt());
+        }
     }
 }
