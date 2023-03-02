@@ -7,12 +7,12 @@ package com.wynntils.mc.event;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
-public final class ItemCountOverlayEvent extends Event {
+public final class ItemCountOverlayRenderEvent extends Event {
     private final ItemStack itemStack;
     private String countString;
     private int countColor;
 
-    public ItemCountOverlayEvent(ItemStack itemStack, String countString, int countColor) {
+    public ItemCountOverlayRenderEvent(ItemStack itemStack, String countString, int countColor) {
         this.itemStack = itemStack;
         this.countString = countString;
         this.countColor = countColor;

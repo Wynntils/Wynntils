@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
-import com.wynntils.mc.event.ItemCountOverlayEvent;
+import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -61,7 +61,7 @@ public abstract class ItemRendererMixin {
         String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
-        ItemCountOverlayEvent event = EventFactory.onItemCountRender(itemStack, countString, 0xFFFFFF);
+        ItemCountOverlayRenderEvent event = EventFactory.onItemCountRender(itemStack, countString, 0xFFFFFF);
         // Storing the color in a field assumes this is only called single-threaded by the render thread
         wynntilsCountOverlayColor = event.getCountColor();
 

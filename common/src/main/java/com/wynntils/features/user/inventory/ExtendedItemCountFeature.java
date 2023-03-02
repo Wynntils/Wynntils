@@ -10,7 +10,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.ItemCountOverlayEvent;
+import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.CountedItemProperty;
@@ -42,7 +42,7 @@ public class ExtendedItemCountFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onItemCountOverlay(ItemCountOverlayEvent event) {
+    public void onItemCountOverlay(ItemCountOverlayRenderEvent event) {
         if (isInventory && !inventoryTextOverlayEnabled) return;
         if (!isInventory && !hotbarTextOverlayEnabled) return;
 
