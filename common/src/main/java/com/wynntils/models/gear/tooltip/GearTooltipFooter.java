@@ -27,12 +27,13 @@ public final class GearTooltipFooter {
         List<Component> footer = new ArrayList<>();
 
         // major ids
-        // FIXME: This is not the format Wynncraft uses. We should have a Component
-        // which starts with the major ID name, like this:
-        //  "<+Entropy: >Meteor falls...", and the <> part should be in AQUA.
+        // FIXME: This is not the format Wynncraft uses. The major ID name should be followed
+        // by the lore directly on the same line.
         // To fix this, we need a version af wrapTextBySize() that can take in a Component.
+        // For now, print the name of the major ID on a separate line.
         if (!gearInfo.fixedStats().majorIds().isEmpty()) {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
+                footer.add(Component.literal("+" + majorId.name() + ": ").withStyle(ChatFormatting.AQUA));
                 Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
                         .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
             }

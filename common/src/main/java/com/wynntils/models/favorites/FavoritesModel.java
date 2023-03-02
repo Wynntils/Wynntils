@@ -6,9 +6,9 @@ package com.wynntils.models.favorites;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.ItemFavoriteFeature;
+import com.wynntils.features.user.inventory.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.ingredients.profile.IngredientProfile;
+import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.IngredientItem;
@@ -48,13 +48,13 @@ public final class FavoritesModel extends Model {
         }
 
         if (wynnItem instanceof IngredientItem ingredientItem) {
-            return isFavorite(ingredientItem.getIngredientProfile().getDisplayName());
+            return isFavorite(ingredientItem.getIngredientInfo().name());
         }
 
         if (wynnItem instanceof IngredientPouchItem pouchItem) {
-            for (Pair<IngredientProfile, Integer> ingredientPair : pouchItem.getIngredients()) {
-                IngredientProfile ingredientProfile = ingredientPair.a();
-                if (isFavorite(ingredientProfile.getDisplayName())) {
+            for (Pair<IngredientInfo, Integer> ingredientPair : pouchItem.getIngredients()) {
+                IngredientInfo ingredientProfile = ingredientPair.a();
+                if (isFavorite(ingredientProfile.name())) {
                     return true;
                 }
             }

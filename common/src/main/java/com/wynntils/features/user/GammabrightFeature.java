@@ -8,8 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
@@ -19,7 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(stability = Stability.INVARIABLE)
+@FeatureInfo(category = FeatureCategory.UNCATEGORIZED)
 public class GammabrightFeature extends UserFeature {
     @Config
     private boolean gammabrightEnabled = false;

@@ -11,7 +11,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.GearModel;
-import com.wynntils.models.ingredients.IngredientProfilesModel;
+import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedConsumableAnnotator;
@@ -22,17 +22,15 @@ import com.wynntils.models.items.annotators.game.EmeraldPouchAnnotator;
 import com.wynntils.models.items.annotators.game.GatheringToolAnnotator;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
-import com.wynntils.models.items.annotators.game.HealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
-import com.wynntils.models.items.annotators.game.ManaPotionAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
+import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
+import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
-import com.wynntils.models.items.annotators.game.SkillPotionAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
-import com.wynntils.models.items.annotators.game.XpPotionAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
@@ -49,8 +47,8 @@ public class ItemModel extends Model {
             ElementModel elementModel,
             GearModel gearModel,
             RewardsModel rewardsModel,
-            IngredientProfilesModel ingredientProfilesModel) {
-        super(List.of(elementModel, gearModel, rewardsModel, ingredientProfilesModel));
+            IngredientModel ingredientModel) {
+        super(List.of(elementModel, gearModel, rewardsModel, ingredientModel));
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
@@ -68,14 +66,12 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
-        Handlers.Item.registerAnnotator(new HealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
-        Handlers.Item.registerAnnotator(new ManaPotionAnnotator());
+        Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
+        Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
-        Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
-        Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // GUI handlers
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());

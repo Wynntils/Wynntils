@@ -69,10 +69,13 @@ public final class PartyModel extends Model {
 
     private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
 
-    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party.\\.");
+    private static final Pattern PARTY_INVITED = Pattern.compile("§eYou have been invited to join (.*)'s? party\\.");
+
+    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
+    private long lastPartyRequest = 0; // The last time the client requested party data
     private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
 
     private boolean inParty; // Whether the player is in a party
@@ -207,6 +210,15 @@ public final class PartyModel extends Model {
             return true;
         }
 
+        matcher = PARTY_INVITED.matcher(coded);
+        if (matcher.matches()) {
+            String inviter = matcher.group(1);
+            WynntilsMod.info("Player has been invited to party by " + inviter);
+
+            WynntilsMod.postEvent(new PartyEvent.Invited(inviter));
+            return true;
+        }
+
         matcher = PARTY_KICK_OTHER.matcher(coded);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
@@ -308,13 +320,20 @@ public final class PartyModel extends Model {
 
     /**
      * Sends "/party list" to Wynncraft and waits for the response.
+     * (!) Skips if the last request was less than 250ms ago.
      * When the response is received, partyMembers and partyLeader will be updated.
      * After that, the offlineMembers list will be updated from scoreboard data.
      */
     public void requestData() {
         if (McUtils.player() == null) return;
 
+        if (System.currentTimeMillis() - lastPartyRequest < 250) {
+            WynntilsMod.info("Skipping party list request because it was requested less than 250ms ago.");
+            return;
+        }
+
         expectingPartyMessage = true;
+        lastPartyRequest = System.currentTimeMillis();
         McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
@@ -394,6 +413,13 @@ public final class PartyModel extends Model {
      */
     public void partyCreate() {
         McUtils.sendCommand("party create");
+    }
+
+    /**
+     * Join another players party
+     */
+    public void partyJoin(String playerName) {
+        McUtils.sendCommand("party join " + playerName);
     }
 
     /**
