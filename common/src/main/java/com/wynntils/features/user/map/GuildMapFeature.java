@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.user.map;
 
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -16,7 +16,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.MAP)
+@ConfigCategory(Category.MAP)
 public class GuildMapFeature extends UserFeature {
     public static GuildMapFeature INSTANCE;
 
