@@ -70,7 +70,6 @@ public final class WynnItemParser {
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
             String coded = ComponentUtils.getCoded(loreLine);
             String normalizedCoded = WynnUtils.normalizeBadString(coded);
 

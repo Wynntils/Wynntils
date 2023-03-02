@@ -10,7 +10,7 @@ import com.wynntils.handlers.scoreboard.SegmentMatcher;
 import java.util.Set;
 
 public class PartyScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
+    private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
     @Override
     public Set<SegmentMatcher> getSegmentMatchers() {

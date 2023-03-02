@@ -44,7 +44,7 @@ public final class GearModel extends Model {
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
-    private Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
+    private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
     public GearModel(ElementModel elementModel, StatModel statModel, WynnItemModel wynnItemModel) {
         super(List.of(elementModel, statModel, wynnItemModel));

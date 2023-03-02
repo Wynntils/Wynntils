@@ -451,8 +451,7 @@ public class MinimapFeature extends UserFeature {
         private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
             int grooves = borderType.groovesSize();
-            MapBorderType.BorderInfo borderInfo =
-                    maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
+            BorderInfo borderInfo = maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
             int tx1 = borderInfo.tx1();
             int ty1 = borderInfo.ty1();
             int tx2 = borderInfo.tx2();
@@ -524,7 +523,7 @@ public class MinimapFeature extends UserFeature {
         public BorderInfo circle() {
             return circle;
         }
-
-        public record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
     }
+
+    public record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
 }

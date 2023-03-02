@@ -29,41 +29,41 @@ public class PartyMemberWidget extends AbstractWidget {
     private final Button promoteButton;
     private final Button kickButton;
     private final Button disbandButton;
-    private final float GRID_DIVISIONS;
+    private final float gridDivisions;
 
     public PartyMemberWidget(
             float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
         super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = isOffline;
-        this.GRID_DIVISIONS = gridDivisions;
+        this.gridDivisions = gridDivisions;
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
-                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 16)) + 1, this.getY())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 16)) + 1, this.getY())
                 .size(
-                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 20))
-                                        - (this.getX() + (this.width / GRID_DIVISIONS * 16)))
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 20))
+                                        - (this.getX() + (this.width / this.gridDivisions * 16)))
                                 - 2,
                         20)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
-                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(
-                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
-                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
+                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
                                 - 2,
                         20)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
-                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(
-                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
-                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
+                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
                                 - 2,
                         20)
                 .build();
@@ -85,7 +85,7 @@ public class PartyMemberWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 8,
                 16,
@@ -100,7 +100,7 @@ public class PartyMemberWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 1,
                 16,
@@ -132,7 +132,7 @@ public class PartyMemberWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         formattedPlayerName,
-                        this.getX() + (this.width / GRID_DIVISIONS * 3),
+                        this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         color,
                         HorizontalAlignment.Left,

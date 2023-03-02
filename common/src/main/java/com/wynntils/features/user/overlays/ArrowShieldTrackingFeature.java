@@ -57,7 +57,6 @@ public class ArrowShieldTrackingFeature extends UserFeature {
         @Config
         public TextShadow textShadow = TextShadow.OUTLINE;
 
-        private int charges;
         private TextRenderTask renderTaskCache;
         private TextRenderSetting textRenderSetting;
 
@@ -108,7 +107,7 @@ public class ArrowShieldTrackingFeature extends UserFeature {
                             this.getRenderVerticalAlignment());
         }
 
-        public void updateCharges(int charges) {
+        protected void updateCharges(int charges) {
             if (charges == 0) {
                 renderTaskCache = null;
                 return;
