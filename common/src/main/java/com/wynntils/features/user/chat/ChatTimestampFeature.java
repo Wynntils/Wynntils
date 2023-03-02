@@ -9,6 +9,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@StartDisabled
 @FeatureInfo(category = FeatureCategory.CHAT)
 public class ChatTimestampFeature extends UserFeature {
     @Config
