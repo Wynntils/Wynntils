@@ -383,8 +383,8 @@ public final class EventFactory {
         post(new ContainerCloseEvent.Post());
     }
 
-    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack itemStack) {
-        return post(new SetSlotEvent.Pre(container, slot, itemStack));
+    public static void onSetSlotPre(Container container, int slot, ItemStack itemStack) {
+        post(new SetSlotEvent.Pre(container, slot, itemStack));
     }
 
     public static void onSetSlotPost(Container container, int slot, ItemStack itemStack) {
