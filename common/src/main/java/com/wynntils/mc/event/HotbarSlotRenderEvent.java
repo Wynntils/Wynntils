@@ -36,6 +36,12 @@ public abstract class HotbarSlotRenderEvent extends Event {
         }
     }
 
+    public static class CountPre extends HotbarSlotRenderEvent {
+        public CountPre(ItemStack itemStack, int x, int y) {
+            super(itemStack, x, y);
+        }
+    }
+
     public static class Post extends HotbarSlotRenderEvent {
         public Post(ItemStack itemStack, int x, int y) {
             super(itemStack, x, y);

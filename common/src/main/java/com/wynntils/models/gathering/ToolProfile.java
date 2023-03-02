@@ -16,6 +16,15 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
         return new ToolProfile(toolType, tier);
     }
 
+    public int getLevel() {
+        return tier == 1 ? 1 : 5 + (tier - 2) * 10;
+    }
+
+    @Override
+    public String toString() {
+        return "ToolProfile{" + "toolType=" + toolType + ", tier=" + tier + '}';
+    }
+
     public enum ToolType {
         PICKAXE(ProfessionType.MINING),
         AXE(ProfessionType.WOODCUTTING),
@@ -35,10 +44,5 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
                 return null;
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ToolProfile{" + "toolType=" + toolType + ", tier=" + tier + '}';
     }
 }

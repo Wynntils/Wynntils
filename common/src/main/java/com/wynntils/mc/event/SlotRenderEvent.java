@@ -31,6 +31,12 @@ public abstract class SlotRenderEvent extends Event {
         }
     }
 
+    public static class CountPre extends SlotRenderEvent {
+        public CountPre(Screen screen, Slot slot) {
+            super(screen, slot);
+        }
+    }
+
     public static class Post extends SlotRenderEvent {
         public Post(Screen screen, Slot slot) {
             super(screen, slot);
