@@ -6,10 +6,10 @@ package com.wynntils.features.user.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
@@ -30,7 +30,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class InventoryEmeraldCountFeature extends UserFeature {
     private static final int TEXTURE_SIZE = 28;
 

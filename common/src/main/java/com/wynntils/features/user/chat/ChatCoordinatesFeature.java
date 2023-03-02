@@ -5,9 +5,9 @@
 package com.wynntils.features.user.chat;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.CHAT)
+@ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -6,10 +6,10 @@ package com.wynntils.features.user.combat;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.COMBAT)
+@ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends UserFeature {
     @Config
     public boolean onlyWhileFighting = true;

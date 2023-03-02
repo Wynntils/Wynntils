@@ -7,9 +7,9 @@ package com.wynntils.core.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
@@ -283,8 +283,8 @@ public final class FeatureManager extends Manager {
         }
 
         // set feature category
-        FeatureInfo featureInfo = feature.getClass().getAnnotation(FeatureInfo.class);
-        FeatureCategory category = featureInfo != null ? featureInfo.category() : FeatureCategory.UNCATEGORIZED;
+        ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
+        Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
         feature.setCategory(category);
 
         // register key binds
