@@ -39,6 +39,18 @@ public abstract class GuiMixin {
 
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
+    private void renderSlotCountPre(
+            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+        EventFactory.onHotbarSlotRenderCountPre(itemStack, x, y);
+    }
+
+    @Inject(
+            method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
     private void renderSlotPost(
             int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {

@@ -44,16 +44,16 @@ public class UnidentifiedItemIconFeature extends UserFeature {
     public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
 
     @SubscribeEvent
-    public void onSlotRender(SlotRenderEvent.Post e) {
-        drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+    public void onSlotRender(SlotRenderEvent.CountPre e) {
+        drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
     }
 
     @SubscribeEvent
-    public void onHotbarSlotRender(HotbarSlotRenderEvent.Post e) {
-        drawIcon(e.getItemStack(), e.getX(), e.getY());
+    public void onHotbarSlotRender(HotbarSlotRenderEvent.CountPre e) {
+        drawIcon(e.getItemStack(), e.getX(), e.getY(), 200);
     }
 
-    private void drawIcon(ItemStack itemStack, int slotX, int slotY) {
+    private void drawIcon(ItemStack itemStack, int slotX, int slotY, int z) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
@@ -66,7 +66,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 Texture.GEAR_ICONS.resource(),
                 slotX + 2,
                 slotY + 2,
-                400,
+                z,
                 12,
                 12,
                 textureX,

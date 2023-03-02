@@ -46,6 +46,7 @@ import com.wynntils.features.user.commands.AddCommandExpansionFeature;
 import com.wynntils.features.user.commands.CommandAliasesFeature;
 import com.wynntils.features.user.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.user.commands.FilterAdminCommandsFeature;
+import com.wynntils.features.user.inventory.BulkBuyFeature;
 import com.wynntils.features.user.inventory.ContainerSearchFeature;
 import com.wynntils.features.user.inventory.DurabilityArcFeature;
 import com.wynntils.features.user.inventory.EmeraldPouchHotkeyFeature;
@@ -149,6 +150,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AutoJoinPartyFeature());
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
+        registerFeature(new BulkBuyFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());

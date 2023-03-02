@@ -16,6 +16,7 @@ import java.util.List;
 public record WynnItemParseResult(
         GearTier tier,
         GearType gearType,
+        int level,
         List<StatActualValue> identifications,
         List<ItemEffect> effects,
         List<Powder> powders,
