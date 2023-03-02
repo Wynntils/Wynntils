@@ -6,8 +6,8 @@ package com.wynntils.features.user.chat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -15,7 +15,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.CHAT)
+@ConfigCategory(Category.CHAT)
 public class TradeMarketPriceConversionFeature extends UserFeature {
 
     private static final Pattern PRICE_PATTERN =

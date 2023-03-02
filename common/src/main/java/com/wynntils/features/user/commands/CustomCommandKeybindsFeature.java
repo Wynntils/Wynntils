@@ -6,15 +6,15 @@ package com.wynntils.features.user.commands;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.COMMANDS)
+@ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends UserFeature {
     @Config
     private String keybindCommand1 = "";

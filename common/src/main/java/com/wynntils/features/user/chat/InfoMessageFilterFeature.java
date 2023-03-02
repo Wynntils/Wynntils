@@ -6,15 +6,15 @@ package com.wynntils.features.user.chat;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.CHAT)
+@ConfigCategory(Category.CHAT)
 public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
     private static final Pattern PRE_WELCOME_2 =

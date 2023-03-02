@@ -14,8 +14,8 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -28,7 +28,7 @@ import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.OVERLAYS)
+@ConfigCategory(Category.OVERLAYS)
 public class StatusOverlayFeature extends UserFeature {
     private List<TextRenderTask> renderCache = List.of();
 

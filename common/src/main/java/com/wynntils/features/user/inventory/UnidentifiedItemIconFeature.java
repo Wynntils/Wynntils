@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.gear.type.GearType;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class UnidentifiedItemIconFeature extends UserFeature {
     private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS = Map.ofEntries(
             Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),

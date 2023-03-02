@@ -7,8 +7,8 @@ package com.wynntils.features.user.players;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.PLAYERS)
+@ConfigCategory(Category.PLAYERS)
 public class GearViewerFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind gearViewerKeybind = new KeyBind(

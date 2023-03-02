@@ -8,8 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.tooltip.GearTooltipStyle;
@@ -38,7 +38,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.TOOLTIPS)
+@ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends UserFeature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 

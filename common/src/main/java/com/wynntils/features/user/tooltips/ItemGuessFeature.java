@@ -7,8 +7,8 @@ package com.wynntils.features.user.tooltips;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearInfo;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.TOOLTIPS)
+@ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
     @Config
     public boolean showGuessesPrice = true;

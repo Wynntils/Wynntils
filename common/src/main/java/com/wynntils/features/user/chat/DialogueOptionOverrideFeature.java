@@ -6,14 +6,14 @@ package com.wynntils.features.user.chat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.CHAT)
+@ConfigCategory(Category.CHAT)
 public class DialogueOptionOverrideFeature extends UserFeature {
     @SubscribeEvent
     public void onDialogueKeyPress(KeyInputEvent e) {

@@ -6,8 +6,8 @@ package com.wynntils.features.user.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.COMBAT)
+@ConfigCategory(Category.COMBAT)
 public class MythicBlockerFeature extends UserFeature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

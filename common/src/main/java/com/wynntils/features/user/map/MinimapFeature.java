@@ -15,8 +15,8 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.PlayerMiniMapPoi;
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@FeatureInfo(category = FeatureCategory.MAP)
+@ConfigCategory(Category.MAP)
 public class MinimapFeature extends UserFeature {
     public static MinimapFeature INSTANCE;
 

@@ -6,8 +6,8 @@ package com.wynntils.features.user.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.REDIRECTS)
+@ConfigCategory(Category.REDIRECTS)
 public class BlacksmithRedirectFeature extends UserFeature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
             "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");

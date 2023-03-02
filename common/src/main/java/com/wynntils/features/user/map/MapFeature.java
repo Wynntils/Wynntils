@@ -10,8 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
@@ -41,7 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.MAP)
+@ConfigCategory(Category.MAP)
 public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 

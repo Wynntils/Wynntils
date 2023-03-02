@@ -5,8 +5,8 @@
 package com.wynntils.features.user.ui;
 
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.UI)
+@ConfigCategory(Category.UI)
 public class CosmeticsPreviewFeature extends UserFeature {
     private static final String GEAR_MENU_TITLE = "Gear Skins Menu";
     private static final String GUILD_GEAR_MENU_TITLE = "Guild Cosmetics";

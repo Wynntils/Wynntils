@@ -6,14 +6,14 @@ package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.wynn.InventoryUtils;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class IngredientPouchHotkeyFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind ingredientPouchKeyBind =

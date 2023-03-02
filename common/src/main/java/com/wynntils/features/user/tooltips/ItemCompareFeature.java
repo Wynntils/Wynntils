@@ -7,8 +7,8 @@ package com.wynntils.features.user.tooltips;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.TOOLTIPS)
+@ConfigCategory(Category.TOOLTIPS)
 public class ItemCompareFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind toggleCompareModeKeyBind =

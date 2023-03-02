@@ -15,8 +15,8 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.handlers.bossbar.BossBarProgress;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
@@ -38,7 +38,7 @@ import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.OVERLAYS)
+@ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
 
     @SubscribeEvent

@@ -6,8 +6,8 @@ package com.wynntils.features.user.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
-@FeatureInfo(category = FeatureCategory.REDIRECTS)
+@ConfigCategory(Category.REDIRECTS)
 public class TerritoryMessageRedirectFeature extends UserFeature {
     private static final Pattern TERRITORY_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
 

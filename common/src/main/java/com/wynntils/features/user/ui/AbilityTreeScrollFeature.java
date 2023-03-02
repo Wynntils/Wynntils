@@ -7,8 +7,8 @@ package com.wynntils.features.user.ui;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.UI)
+@ConfigCategory(Category.UI)
 public class AbilityTreeScrollFeature extends UserFeature {
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;

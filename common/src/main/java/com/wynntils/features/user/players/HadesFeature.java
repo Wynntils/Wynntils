@@ -8,11 +8,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.hades.protocol.enums.SocialType;
 
-@FeatureInfo(category = FeatureCategory.PLAYERS)
+@ConfigCategory(Category.PLAYERS)
 public class HadesFeature extends UserFeature {
     public static HadesFeature INSTANCE;
 

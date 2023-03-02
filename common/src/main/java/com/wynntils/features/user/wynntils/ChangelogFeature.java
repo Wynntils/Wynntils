@@ -8,8 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -20,7 +20,7 @@ import java.util.Map;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.WYNNTILS)
+@ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends UserFeature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
     @Config(visible = false)

@@ -8,8 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.UseItemEvent;
@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@FeatureInfo(category = FeatureCategory.COMBAT)
+@ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends UserFeature {
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;

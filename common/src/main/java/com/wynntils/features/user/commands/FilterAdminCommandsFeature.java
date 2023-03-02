@@ -7,15 +7,15 @@ package com.wynntils.features.user.commands;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.CommandsPacketEvent;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.COMMANDS)
+@ConfigCategory(Category.COMMANDS)
 public class FilterAdminCommandsFeature extends UserFeature {
     private static final Set<String> FILTERED_COMMANDS = Set.of(
             "bungee",

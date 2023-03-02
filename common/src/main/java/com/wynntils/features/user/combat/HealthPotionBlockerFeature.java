@@ -8,8 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.Category;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.elements.type.PotionType;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.COMBAT)
+@ConfigCategory(Category.COMBAT)
 public class HealthPotionBlockerFeature extends UserFeature {
     @Config
     public int threshold = 95;
