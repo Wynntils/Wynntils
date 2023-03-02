@@ -32,7 +32,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
-
     private ShamanTotem totem1 = null;
     private Integer pendingTotem1VisibleId = null;
 

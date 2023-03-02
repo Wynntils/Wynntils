@@ -18,7 +18,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends UserFeature {
-
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
         if (!shouldBlockClick(event.getPlayer(), event.getItemStack(), event.getTarget())) return;

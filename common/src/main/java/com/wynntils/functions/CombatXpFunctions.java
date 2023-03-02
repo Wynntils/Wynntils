@@ -11,7 +11,6 @@ import java.util.List;
 
 public class CombatXpFunctions {
     public static class XpPerMinuteRawFunction extends Function<Integer> {
-
         @Override
         public Integer getValue(String argument) {
             return (int) (Models.CombatXp.getRawXpGainInLastMinute().stream()

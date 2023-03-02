@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class SuggestionPlayerWidget extends AbstractWidget {
-
     private final String playerName;
     private final Button inviteButton;
     private final float GRID_DIVISIONS;

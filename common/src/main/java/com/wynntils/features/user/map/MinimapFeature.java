@@ -215,7 +215,6 @@ public class MinimapFeature extends UserFeature {
                 double playerX,
                 double playerZ,
                 BoundingBox textureBoundingBox) {
-
             float sinRotationRadians;
             float cosRotationRadians;
 

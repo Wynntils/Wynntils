@@ -466,7 +466,6 @@ public final class RenderUtils {
             float lineWidth,
             int innerRadius,
             int outerRadius) {
-
         float x2 = x + width;
         float y2 = y + height;
 
@@ -692,7 +691,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForegroundWithColor(
@@ -738,7 +736,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForeground(

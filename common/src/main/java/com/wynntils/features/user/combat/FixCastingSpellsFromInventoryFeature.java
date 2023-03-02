@@ -17,7 +17,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 @ConfigCategory(Category.COMBAT)
 public class FixCastingSpellsFromInventoryFeature extends UserFeature {
-
     @SubscribeEvent
     public void onSetSlot(ArmSwingEvent event) {
         if (event.getActionContext() == ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN

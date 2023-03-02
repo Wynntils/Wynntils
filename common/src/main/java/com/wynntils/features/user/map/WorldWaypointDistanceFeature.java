@@ -41,7 +41,6 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends UserFeature {
-
     @Config
     public CustomColor textColor = CommonColors.WHITE;
 
