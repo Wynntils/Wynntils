@@ -1,9 +1,21 @@
+## [0.0.2-alpha.266](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.265...v0.0.2-alpha.266) (2023-03-02)
+
+
+### Code Refactoring
+
+* Turn @FeatureInfo into @ConfigCategory ([#1240](https://github.com/Wynntils/Artemis/issues/1240)) ([574bf19](https://github.com/Wynntils/Artemis/commit/574bf19d6a57e11ce168c5a5e08b5a0554a9810c))
+
 ## [0.0.2-alpha.265](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.264...v0.0.2-alpha.265) (2023-03-02)
 
 
 ### New Features
 
 * Show item level when pressing shift ([#1224](https://github.com/Wynntils/Artemis/issues/1224)) ([b669f94](https://github.com/Wynntils/Artemis/commit/b669f942bf9f0d113006c57632328779468c9bd9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.265 [skip ci] ([adcf1ac](https://github.com/Wynntils/Artemis/commit/adcf1acd83264f0efc83c8fc62acfa706c88dfad))
 
 ## [0.0.2-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.263...v0.0.2-alpha.264) (2023-03-02)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.262 [skip ci] ([2fe3fb8](https://github.com/Wynntils/Artemis/commit/2fe3fb86c18f94dfa505b251c5ce744a38c1398d))
-
-## [0.0.2-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.260...v0.0.2-alpha.261) (2023-03-01)
-
-
-### Bug Fixes
-
-* Fix cape texture loading issues ([#1226](https://github.com/Wynntils/Artemis/issues/1226)) ([9b1f4dd](https://github.com/Wynntils/Artemis/commit/9b1f4ddb707889340e4fc2793f4985566ce82f49))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.261 [skip ci] ([3e5b466](https://github.com/Wynntils/Artemis/commit/3e5b46635e9be99caba652648f49407f46de2a3a))
 
