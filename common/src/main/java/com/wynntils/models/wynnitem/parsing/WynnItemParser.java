@@ -14,6 +14,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -249,7 +250,10 @@ public final class WynnItemParser {
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
         StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
         if (possibleValue == null) {
-            WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+            if (!(statType instanceof SkillStatType)) {
+                // We know Wynncraft send skill stats as 100%; don't complain about that
+                WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+            }
             return null;
         }
         int value = Math.round(possibleValue.baseValue() * (internalRoll / 100f));
