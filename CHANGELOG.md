@@ -1,8 +1,16 @@
+## [0.0.2-alpha.265](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.264...v0.0.2-alpha.265) (2023-03-02)
+
+
+### New Features
+
+* Show item level when pressing shift ([#1224](https://github.com/Wynntils/Artemis/issues/1224)) ([b669f94](https://github.com/Wynntils/Artemis/commit/b669f942bf9f0d113006c57632328779468c9bd9))
+
 ## [0.0.2-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.263...v0.0.2-alpha.264) (2023-03-02)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.264 [skip ci] ([a43e71f](https://github.com/Wynntils/Artemis/commit/a43e71f556cce52d2c78952e3634c101080b620c))
 * Remove pre-2.0 mana calculations ([#1239](https://github.com/Wynntils/Artemis/issues/1239)) ([11afb6a](https://github.com/Wynntils/Artemis/commit/11afb6ac3b4eb9877d784b4c34d358d1cc58a2c3))
 
 ## [0.0.2-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.262...v0.0.2-alpha.263) (2023-03-02)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.261 [skip ci] ([3e5b466](https://github.com/Wynntils/Artemis/commit/3e5b46635e9be99caba652648f49407f46de2a3a))
-
-## [0.0.2-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.259...v0.0.2-alpha.260) (2023-03-01)
-
-
-### Bug Fixes
-
-* Move (almost) all Features into categories ([#1232](https://github.com/Wynntils/Artemis/issues/1232)) ([903f10d](https://github.com/Wynntils/Artemis/commit/903f10df6aa2c69bbe6d85d50af69b5c46397b4b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.260 [skip ci] ([2315f89](https://github.com/Wynntils/Artemis/commit/2315f892c203e8cd9be2e32bbb63d096f178b9e9))
 
