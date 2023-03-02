@@ -9,14 +9,12 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements ItemStackExtension {
