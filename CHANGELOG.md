@@ -1,8 +1,16 @@
+## [0.0.2-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.272...v0.0.2-alpha.273) (2023-03-03)
+
+
+### Bug Fixes
+
+* Remove use of @Redirect in mixins ([#1247](https://github.com/Wynntils/Artemis/issues/1247)) ([3706879](https://github.com/Wynntils/Artemis/commit/3706879b2f4d462bec78db3b0c91433fb4288036))
+
 ## [0.0.2-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.271...v0.0.2-alpha.272) (2023-03-03)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.272 [skip ci] ([4693a9e](https://github.com/Wynntils/Artemis/commit/4693a9e938b51d80ba3af63bc7a077af6cbccd57))
 * remove leading empty line ([#1242](https://github.com/Wynntils/Artemis/issues/1242)) ([0ab24c0](https://github.com/Wynntils/Artemis/commit/0ab24c0bb2e1ee6537456eb1172502114561ade1))
 
 ## [0.0.2-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.270...v0.0.2-alpha.271) (2023-03-03)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.269 [skip ci] ([acd2b30](https://github.com/Wynntils/Artemis/commit/acd2b3002e078a3aa6b86ed41da4ff09c9ca3ca6))
-
-## [0.0.2-alpha.268](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.267...v0.0.2-alpha.268) (2023-03-03)
-
-
-### Bug Fixes
-
-* A bit fewer warnings ([#1244](https://github.com/Wynntils/Artemis/issues/1244)) ([592e682](https://github.com/Wynntils/Artemis/commit/592e682b97a1c46966fe380e265649d5d90aa68f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.268 [skip ci] ([700d218](https://github.com/Wynntils/Artemis/commit/700d218b64690e29ceb384b440babdb38d542646))
 
