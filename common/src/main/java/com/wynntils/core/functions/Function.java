@@ -7,6 +7,7 @@ package com.wynntils.core.functions;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
@@ -50,5 +51,13 @@ public abstract class Function<T> implements Translatable {
     @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("function.wynntils." + getTranslationKeyName() + "." + keySuffix);
+    }
+
+    public String getArgumentDescription(String argumentName) {
+        return getTranslation("argument." + argumentName);
+    }
+
+    public Class<T> getFunctionType() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

@@ -4,6 +4,9 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -25,13 +28,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin implements ScreenExtension {
     @Unique
-    private TextInputBoxWidget focusedTextInput;
+    private TextInputBoxWidget wynntilsFocusedTextInput;
 
     @Final
     @Shadow
@@ -72,7 +74,7 @@ public abstract class ScreenMixin implements ScreenExtension {
         EventFactory.onScreenCreatedPost(screen, this::addRenderableWidget);
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
             at =
                     @At(
@@ -86,15 +88,19 @@ public abstract class ScreenMixin implements ScreenExtension {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
-            PoseStack poseStack2,
-            ItemStack itemStack,
-            int mouseX2,
-            int mouseY2) {
+            Operation<Void> original,
+            @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre e =
                 EventFactory.onItemTooltipRenderPre(poseStack, itemStack, tooltips, mouseX, mouseY);
         if (e.isCanceled()) return;
-        instance.renderTooltip(
-                e.getPoseStack(), e.getTooltips(), e.getItemStack().getTooltipImage(), e.getMouseX(), e.getMouseY());
+
+        original.call(
+                instance,
+                e.getPoseStack(),
+                e.getTooltips(),
+                e.getItemStack().getTooltipImage(),
+                e.getMouseX(),
+                e.getMouseY());
     }
 
     @Inject(
@@ -119,12 +125,12 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Override
     @Unique
     public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
+        return wynntilsFocusedTextInput;
     }
 
     @Override
     @Unique
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        this.wynntilsFocusedTextInput = focusedTextInput;
     }
 }
