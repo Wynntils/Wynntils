@@ -105,7 +105,7 @@ public class InfoBoxFeature extends UserFeature {
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                cachedLines = Managers.Function.getLinesFromLegacyTemplate(content);
+                cachedLines = Managers.Function.doFormatLines(content);
             }
 
             float renderX = this.getRenderX();
@@ -140,7 +140,7 @@ public class InfoBoxFeature extends UserFeature {
 
             String[] renderedLines;
             if (content.isEmpty()) {
-                renderedLines = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%");
+                renderedLines = Managers.Function.doFormatLines("&cX: {x}, &9Y: {y}, &aZ: {z}");
             } else {
                 renderedLines = cachedLines;
             }

@@ -15,19 +15,9 @@ public final class TemplateParser {
     public static String doFormat(String templateString) {
         List<TemplatePart> parts = parseTemplate(templateString);
 
-        // FIXME: Escaping and colors
-
-        System.out.println("templateString = " + templateString);
-        System.out.println("--S--");
-        for (TemplatePart part : parts) {
-            System.out.println(part.toString());
-        }
-        System.out.println("--E--");
-
         return parts.stream().map(TemplatePart::getValue).collect(Collectors.joining());
     }
 
-    // FIXME: There is no way to escape {} in the template
     private static List<TemplatePart> parseTemplate(String templateString) {
         List<TemplatePart> parts = new ArrayList<>();
 
