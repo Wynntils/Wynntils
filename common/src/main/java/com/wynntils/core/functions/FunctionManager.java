@@ -301,8 +301,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.EqualsFunction());
         registerFunction(new LogicFunctions.LessThanFunction());
         registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
-        registerFunction(new LogicFunctions.MoreThanFunction());
-        registerFunction(new LogicFunctions.MoreThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.GreaterThanFunction());
+        registerFunction(new LogicFunctions.GreaterThanEqualsFunction());
         registerFunction(new LogicFunctions.NotEqualsFunction());
         registerFunction(new LogicFunctions.NotFunction());
         registerFunction(new LogicFunctions.OrFunction());
