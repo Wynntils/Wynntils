@@ -1,9 +1,21 @@
+## [0.0.2-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.271...v0.0.2-alpha.272) (2023-03-03)
+
+
+### Miscellaneous Chores
+
+* remove leading empty line ([#1242](https://github.com/Wynntils/Artemis/issues/1242)) ([0ab24c0](https://github.com/Wynntils/Artemis/commit/0ab24c0bb2e1ee6537456eb1172502114561ade1))
+
 ## [0.0.2-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.270...v0.0.2-alpha.271) (2023-03-03)
 
 
 ### Code Refactoring
 
 * Cleanups suggested by or inspired by IntelliJ ([#1241](https://github.com/Wynntils/Artemis/issues/1241)) ([12fd168](https://github.com/Wynntils/Artemis/commit/12fd168ce2630029c84ae753abd4ac5895e3513d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.271 [skip ci] ([e06712c](https://github.com/Wynntils/Artemis/commit/e06712c38ffbba3f720f9aa39bd3c998400ad761))
 
 ## [0.0.2-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.269...v0.0.2-alpha.270) (2023-03-03)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.268 [skip ci] ([700d218](https://github.com/Wynntils/Artemis/commit/700d218b64690e29ceb384b440babdb38d542646))
-
-## [0.0.2-alpha.267](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.266...v0.0.2-alpha.267) (2023-03-02)
-
-
-### Miscellaneous Chores
-
-* Fix merge error ([407fc32](https://github.com/Wynntils/Artemis/commit/407fc3201f420ecf1e67071f162daddb3cc28af3))
-* **release:** v0.0.2-alpha.267 [skip ci] ([acd0675](https://github.com/Wynntils/Artemis/commit/acd0675b9a2b70c35084cf2eadb23ba217c5fbdb))
 
