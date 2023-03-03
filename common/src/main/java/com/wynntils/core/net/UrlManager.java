@@ -164,7 +164,6 @@ public final class UrlManager extends Manager {
 
             if (urlId.isEmpty()) {
                 // This is a URL we don't know about. Ignore it.
-                WynntilsMod.warn("Unknown URL: " + urlProfile.id);
                 continue;
             }
 
