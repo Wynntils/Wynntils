@@ -132,8 +132,7 @@ public class TerritoryProfile {
     public PoiLocation getCenterLocation() {
         int xMiddle = (this.getStartX() + this.getEndX()) / 2;
         int zMiddle = (this.getStartZ() + this.getEndZ()) / 2;
-        PoiLocation poiLocation = new PoiLocation(xMiddle, 0, zMiddle);
-        return poiLocation;
+        return new PoiLocation(xMiddle, 0, zMiddle);
     }
 
     public boolean insideArea(int playerX, int playerZ) {

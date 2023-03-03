@@ -52,7 +52,7 @@ public class ChatMentionFeature extends UserFeature {
     private Pattern buildPattern() {
         return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
-                        + (aliases.length() > 0 ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
+                        + (!aliases.isEmpty() ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
                 Pattern.CASE_INSENSITIVE);
     }
 

@@ -79,8 +79,6 @@ public final class UrlManager extends Manager {
         loadUrls(Managers.Net);
     }
 
-    public void reloadUrls() {}
-
     private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially
         for (InputStream tryStream : getLocalInputStreams(netManager)) {
