@@ -162,4 +162,8 @@ public class CombatXpModel extends Model {
     public TimedSet<Float> getPercentageXpGainInLastMinute() {
         return percentageXpGainInLastMinute;
     }
+
+    public long getLastXpGainTimestamp() {
+        return rawXpGainInLastMinute.getLastAddedTimestamp();
+    }
 }
