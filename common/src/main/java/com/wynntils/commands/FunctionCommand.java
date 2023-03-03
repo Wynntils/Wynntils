@@ -16,8 +16,8 @@ import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -39,7 +39,12 @@ public class FunctionCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Stream.of("all", "normal", "generic"), builder);
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Arrays.stream(ListType.values())
+                            .map(Enum::name)
+                            .map(s -> s.toLowerCase(Locale.ROOT))
+                            .toList(),
+                    builder);
 
     @Override
     public String getCommandName() {
@@ -55,6 +60,7 @@ public class FunctionCommand extends Command {
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
         return Commands.literal(getCommandName())
                 .then(Commands.literal("list")
+                        .executes(this::listFunctions)
                         .then(Commands.argument("type", StringArgumentType.word())
                                 .suggests(FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER)
                                 .executes(this::listFunctions)))
@@ -99,7 +105,13 @@ public class FunctionCommand extends Command {
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
-        String type = context.getArgument("type", String.class);
+        String type;
+
+        try {
+            type = context.getArgument("type", String.class);
+        } catch (Exception e) {
+            type = "all";
+        }
 
         boolean all = type.equalsIgnoreCase("all");
         boolean onlyGeneric = type.equalsIgnoreCase("generic");
@@ -243,5 +255,11 @@ public class FunctionCommand extends Command {
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
+    }
+
+    private enum ListType {
+        ALL,
+        GENERIC,
+        NORMAL
     }
 }
