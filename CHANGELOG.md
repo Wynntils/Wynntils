@@ -1,9 +1,21 @@
+## [0.0.2-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.270...v0.0.2-alpha.271) (2023-03-03)
+
+
+### Code Refactoring
+
+* Cleanups suggested by or inspired by IntelliJ ([#1241](https://github.com/Wynntils/Artemis/issues/1241)) ([12fd168](https://github.com/Wynntils/Artemis/commit/12fd168ce2630029c84ae753abd4ac5895e3513d))
+
 ## [0.0.2-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.269...v0.0.2-alpha.270) (2023-03-03)
 
 
 ### New Features
 
 * Option to only prevent trade/duel while fighting (damage dealt in the last N seconds) ([#1214](https://github.com/Wynntils/Artemis/issues/1214)) ([1832464](https://github.com/Wynntils/Artemis/commit/183246443dbef8ff0bcd0926953938d29241e7dd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.270 [skip ci] ([3611c76](https://github.com/Wynntils/Artemis/commit/3611c76918ce87acf20121b5f9f08b357a80ebc1))
 
 ## [0.0.2-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.268...v0.0.2-alpha.269) (2023-03-03)
 
@@ -36,16 +48,4 @@
 
 * Fix merge error ([407fc32](https://github.com/Wynntils/Artemis/commit/407fc3201f420ecf1e67071f162daddb3cc28af3))
 * **release:** v0.0.2-alpha.267 [skip ci] ([acd0675](https://github.com/Wynntils/Artemis/commit/acd0675b9a2b70c35084cf2eadb23ba217c5fbdb))
-
-## [0.0.2-alpha.266](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.265...v0.0.2-alpha.266) (2023-03-02)
-
-
-### Code Refactoring
-
-* Turn @FeatureInfo into @ConfigCategory ([#1240](https://github.com/Wynntils/Artemis/issues/1240)) ([574bf19](https://github.com/Wynntils/Artemis/commit/574bf19d6a57e11ce168c5a5e08b5a0554a9810c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.266 [skip ci] ([49b36d0](https://github.com/Wynntils/Artemis/commit/49b36d084dce81557544db8f2a1518bbda879a08))
 
