@@ -131,6 +131,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -520,8 +521,8 @@ public final class EventFactory {
         return post(new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired()));
     }
 
-    public static Event onResourcePackClearEvent(String hash) {
-        return postAlways(new ResourcePackClearEvent(hash));
+    public static Event onResourcePackClearEvent(Pack serverPack) {
+        return postAlways(new ResourcePackClearEvent(serverPack));
     }
 
     public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
