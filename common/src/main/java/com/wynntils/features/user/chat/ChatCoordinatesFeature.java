@@ -28,7 +28,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends UserFeature {
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!Models.WorldState.onWorld()) return;

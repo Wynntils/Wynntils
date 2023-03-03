@@ -40,7 +40,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends UserFeature {
-
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
@@ -135,7 +134,6 @@ public class CustomBarsOverlayFeature extends UserFeature {
         }
 
         protected float getModifiedRenderY(float renderedHeight) {
-
             return switch (this.getRenderVerticalAlignment()) {
                 case Top -> this.getRenderY();
                 case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;

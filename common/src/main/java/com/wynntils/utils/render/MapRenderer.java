@@ -89,7 +89,6 @@ public final class MapRenderer {
             CustomColor pointerColor,
             PointerType pointerType,
             boolean followPlayerRotation) {
-
         if (!followPlayerRotation) {
             poseStack.pushPose();
             RenderUtils.rotatePose(

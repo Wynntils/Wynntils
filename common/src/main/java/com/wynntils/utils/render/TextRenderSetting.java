@@ -16,7 +16,6 @@ public record TextRenderSetting(
         HorizontalAlignment horizontalAlignment,
         VerticalAlignment verticalAlignment,
         TextShadow shadow) {
-
     public static final TextRenderSetting DEFAULT = new TextRenderSetting(
             0, CommonColors.WHITE, HorizontalAlignment.Left, VerticalAlignment.Top, TextShadow.NORMAL);
 

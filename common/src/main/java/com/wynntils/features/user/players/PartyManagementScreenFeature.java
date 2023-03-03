@@ -20,7 +20,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.PLAYERS)
 public class PartyManagementScreenFeature extends UserFeature {
-
     private PartyManagementScreen partyManagementScreen;
 
     @RegisterKeyBind

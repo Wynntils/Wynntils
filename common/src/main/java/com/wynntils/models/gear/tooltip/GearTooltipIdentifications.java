@@ -134,9 +134,8 @@ public final class GearTooltipIdentifications {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(
-                Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, Models.Character.getClassType()))
-                        .withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, currentClass))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }

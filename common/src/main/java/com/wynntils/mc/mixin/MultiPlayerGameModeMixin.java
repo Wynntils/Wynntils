@@ -27,7 +27,6 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
-
         ItemStack itemStack;
         if (slotId >= 0) {
             itemStack = player.containerMenu.getSlot(slotId).getItem();

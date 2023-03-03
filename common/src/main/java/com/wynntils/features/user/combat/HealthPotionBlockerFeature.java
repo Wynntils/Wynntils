@@ -73,14 +73,15 @@ public class HealthPotionBlockerFeature extends UserFeature {
 
         // Check if potion is a healing potion
         if (potionOpt.isPresent()) {
-            if (potionOpt.get().getType() != PotionType.HEALING) return false;
+            return (potionOpt.get().getType() == PotionType.HEALING);
         }
 
         // Check if crafted potion is a health potion
         if (craftedConsumableOpt.isPresent()) {
-            if (!craftedConsumableOpt.get().isHealing()) return false;
+            return craftedConsumableOpt.get().isHealing();
         }
 
+        // Multi health potions are always healing potions
         return true;
     }
 }

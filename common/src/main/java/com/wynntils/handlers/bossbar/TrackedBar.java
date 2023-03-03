@@ -5,7 +5,6 @@
 package com.wynntils.handlers.bossbar;
 
 import com.wynntils.mc.mixin.accessors.LerpingBossEventAccessor;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -19,8 +18,6 @@ public class TrackedBar {
 
     protected int current = 0;
     protected int max = 0;
-
-    protected UUID uuid = null;
 
     public TrackedBar(Pattern pattern) {
         this.pattern = pattern;
@@ -48,10 +45,6 @@ public class TrackedBar {
 
     public LerpingBossEvent getEvent() {
         return event;
-    }
-
-    public UUID getUuid() {
-        return event.getId();
     }
 
     void reset() {

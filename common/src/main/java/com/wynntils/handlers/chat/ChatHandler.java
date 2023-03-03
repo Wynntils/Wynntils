@@ -309,7 +309,6 @@ public final class ChatHandler extends Handler {
      * message entirely.
      */
     private Component postChatLine(Component message, String codedMessage, MessageType messageType) {
-
         String plainText = message.getString();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between

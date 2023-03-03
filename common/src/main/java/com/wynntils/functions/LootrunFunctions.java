@@ -10,7 +10,6 @@ import java.util.List;
 
 public class LootrunFunctions {
     public static class DryStreakFunction extends Function<Integer> {
-
         @Override
         public Integer getValue(String argument) {
             return DataStorageFeature.INSTANCE.dryCount;
@@ -23,7 +22,6 @@ public class LootrunFunctions {
     }
 
     public static class DryBoxesFunction extends Function<Integer> {
-
         @Override
         public Integer getValue(String argument) {
             return DataStorageFeature.INSTANCE.dryBoxes;
