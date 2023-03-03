@@ -67,15 +67,15 @@ public final class MathFunctions {
     public static class DivideFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    / arguments.getArgument("second").getDoubleValue();
+            return arguments.getArgument("divident").getDoubleValue()
+                    / arguments.getArgument("divisor").getDoubleValue();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+                    new FunctionArguments.Argument<>("divident", Number.class, null),
+                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -87,15 +87,15 @@ public final class MathFunctions {
     public static class ModuloFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    % arguments.getArgument("second").getDoubleValue();
+            return arguments.getArgument("divident").getDoubleValue()
+                    % arguments.getArgument("divisor").getDoubleValue();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+                    new FunctionArguments.Argument<>("divident", Number.class, null),
+                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -108,15 +108,15 @@ public final class MathFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Math.pow(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
+                    arguments.getArgument("base").getDoubleValue(),
+                    arguments.getArgument("exponent").getDoubleValue());
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+                    new FunctionArguments.Argument<>("base", Number.class, null),
+                    new FunctionArguments.Argument<>("exponent", Number.class, null)));
         }
 
         @Override

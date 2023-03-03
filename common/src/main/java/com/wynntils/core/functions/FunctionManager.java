@@ -177,7 +177,7 @@ public final class FunctionManager extends Manager {
 
     // region Template formatting
 
-    public String doFormat(String templateString) {
+    private String doFormat(String templateString) {
         return TemplateParser.doFormat(templateString);
     }
 
@@ -271,6 +271,12 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for function " + function.getClass().getSimpleName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for function " + function.getClass().getSimpleName();
+        for (FunctionArguments.Argument argument :
+                function.getArgumentsBuilder().getArguments()) {
+            assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
+                    : "Fix i18n argument description for function "
+                            + function.getClass().getSimpleName();
+        }
     }
 
     private void registerAllFunctions() {

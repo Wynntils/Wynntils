@@ -25,7 +25,8 @@ public final class ArgumentParser {
             if (argumentsBuilder instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
                 return ErrorOr.of(optionalArgumentBuilder.buildWithDefaults());
             } else {
-                return ErrorOr.error("Missing required arguments: (%s)".formatted(argumentsBuilder.getArgumentNames()));
+                return ErrorOr.error(
+                        "Missing required arguments: (%s)".formatted(argumentsBuilder.getArgumentNamesString()));
             }
         }
 
