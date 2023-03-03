@@ -1,9 +1,21 @@
+## [0.0.2-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.268...v0.0.2-alpha.269) (2023-03-03)
+
+
+### Bug Fixes
+
+* Stop warning about unknown URLs at startup ([#1243](https://github.com/Wynntils/Artemis/issues/1243)) ([599f0a0](https://github.com/Wynntils/Artemis/commit/599f0a0b3737b812882274b434dc198d76436330))
+
 ## [0.0.2-alpha.268](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.267...v0.0.2-alpha.268) (2023-03-03)
 
 
 ### Bug Fixes
 
 * A bit fewer warnings ([#1244](https://github.com/Wynntils/Artemis/issues/1244)) ([592e682](https://github.com/Wynntils/Artemis/commit/592e682b97a1c46966fe380e265649d5d90aa68f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.268 [skip ci] ([700d218](https://github.com/Wynntils/Artemis/commit/700d218b64690e29ceb384b440babdb38d542646))
 
 ## [0.0.2-alpha.267](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.266...v0.0.2-alpha.267) (2023-03-02)
 
@@ -36,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.265 [skip ci] ([adcf1ac](https://github.com/Wynntils/Artemis/commit/adcf1acd83264f0efc83c8fc62acfa706c88dfad))
-
-## [0.0.2-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.263...v0.0.2-alpha.264) (2023-03-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.264 [skip ci] ([a43e71f](https://github.com/Wynntils/Artemis/commit/a43e71f556cce52d2c78952e3634c101080b620c))
-* Remove pre-2.0 mana calculations ([#1239](https://github.com/Wynntils/Artemis/issues/1239)) ([11afb6a](https://github.com/Wynntils/Artemis/commit/11afb6ac3b4eb9877d784b4c34d358d1cc58a2c3))
 
