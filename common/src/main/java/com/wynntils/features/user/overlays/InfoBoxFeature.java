@@ -29,7 +29,6 @@ import net.minecraft.client.resources.language.I18n;
 
 @ConfigCategory(Category.OVERLAYS)
 public class InfoBoxFeature extends UserFeature {
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox1Overlay = new InfoBoxOverlay(1);
 

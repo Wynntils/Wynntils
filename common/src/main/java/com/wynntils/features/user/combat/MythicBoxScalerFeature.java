@@ -15,7 +15,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends UserFeature {
-
     @Config
     private float scale = 1.5f;
 

@@ -70,7 +70,6 @@ public abstract class RenderLevelEvent extends Event {
     }
 
     public static class Post extends RenderLevelEvent {
-
         public Post(
                 LevelRenderer levelRenderer,
                 PoseStack poseStack,

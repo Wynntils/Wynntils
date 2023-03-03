@@ -8,7 +8,6 @@ import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Locale;
 
 public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
-
     public static ToolProfile fromString(String toolTypeName, int tier) {
         ToolType toolType = ToolType.fromString(toolTypeName);
         if (toolType == null) return null;

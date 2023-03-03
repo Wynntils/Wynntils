@@ -51,7 +51,6 @@ public abstract class PlayerRendererMixin
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-
         if (EventFactory.onNameTagRender(
                         entity,
                         displayName,

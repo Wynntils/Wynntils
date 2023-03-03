@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AbbreviateMobHealthFeature extends UserFeature {
-
     private static final Pattern MOB_HEALTH_PATTERN = Pattern.compile("(.*§c)(\\d+)(§4❤.*)");
 
     @SubscribeEvent

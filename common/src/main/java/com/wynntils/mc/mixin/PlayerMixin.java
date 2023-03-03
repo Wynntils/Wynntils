@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin {
-
     @WrapWithCondition(
             method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
             at =

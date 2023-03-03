@@ -142,7 +142,6 @@ public final class StatListOrderer {
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
-
         return Map.of(
                 StatListOrdering.DEFAULT,
                 createDefaultOrdering(miscStats, defenceStats, damageStats, spellStats),

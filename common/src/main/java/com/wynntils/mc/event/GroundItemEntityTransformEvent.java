@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
 public class GroundItemEntityTransformEvent extends Event {
-
     private final PoseStack poseStack;
     private final ItemStack itemStack;
 

@@ -17,7 +17,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class TradeMarketPriceConversionFeature extends UserFeature {
-
     private static final Pattern PRICE_PATTERN =
             Pattern.compile("^§6Type the price in emeralds or type 'cancel' to cancel:$");
     private static final Pattern TRADE_MARKET_PATTERN = Pattern.compile("^What would you like to sell\\?$");

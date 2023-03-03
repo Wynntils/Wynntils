@@ -23,7 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class PartyMemberWidget extends AbstractWidget {
-
     private final String playerName;
     private final boolean isOffline;
     private final Button promoteButton;
