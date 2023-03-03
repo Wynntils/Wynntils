@@ -19,6 +19,8 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.ConditionalFunctions;
+import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
@@ -291,6 +293,19 @@ public final class FunctionManager extends Manager {
 
     private void registerAllFunctions() {
         // Generic Functions
+
+        registerFunction(new ConditionalFunctions.IfNumberFunction());
+        registerFunction(new ConditionalFunctions.IfStringFunction());
+
+        registerFunction(new LogicFunctions.AndFunction());
+        registerFunction(new LogicFunctions.EqualsFunction());
+        registerFunction(new LogicFunctions.LessThanFunction());
+        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.GreaterThanFunction());
+        registerFunction(new LogicFunctions.GreaterThanEqualsFunction());
+        registerFunction(new LogicFunctions.NotEqualsFunction());
+        registerFunction(new LogicFunctions.NotFunction());
+        registerFunction(new LogicFunctions.OrFunction());
 
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());

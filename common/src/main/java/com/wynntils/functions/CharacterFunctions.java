@@ -37,24 +37,24 @@ public class CharacterFunctions {
         }
     }
 
-    public static class BpsFunction extends Function<Float> {
+    public static class BpsFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
+        public Double getValue(FunctionArguments arguments) {
             LocalPlayer player = McUtils.player();
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             double dY = player.getY() - player.yOld;
-            return (float) Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
+            return Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
         }
     }
 
-    public static class BpsXzFunction extends Function<Float> {
+    public static class BpsXzFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
+        public Double getValue(FunctionArguments arguments) {
             LocalPlayer player = McUtils.player();
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
-            return (float) Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
+            return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
         }
     }
 
@@ -155,21 +155,21 @@ public class CharacterFunctions {
         }
     }
 
-    public static class HealthPctFunction extends Function<Float> {
+    public static class HealthPctFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
+        public Double getValue(FunctionArguments arguments) {
             int currentHealth = Models.Character.getCurrentHealth();
             int maxHealth = Models.Character.getMaxHealth();
-            return ((float) currentHealth / maxHealth * 100.0f);
+            return (currentHealth / maxHealth * 100.0d);
         }
     }
 
-    public static class ManaPctFunction extends Function<Float> {
+    public static class ManaPctFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
+        public Double getValue(FunctionArguments arguments) {
             int currentMana = Models.Character.getCurrentMana();
             int maxMana = Models.Character.getMaxMana();
-            return ((float) currentMana / maxMana * 100.0f);
+            return (currentMana / maxMana * 100.0d);
         }
     }
 }

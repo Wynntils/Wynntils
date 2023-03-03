@@ -43,12 +43,9 @@ public class CombatXpFunctions {
     public static class XpPercentagePerMinuteFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            // Round to 2 decimal places
-            return Math.round(Models.CombatXp.getPercentageXpGainInLastMinute().stream()
-                                    .mapToDouble(Float::doubleValue)
-                                    .sum()
-                            * 100.0)
-                    / 100.0;
+            return Models.CombatXp.getPercentageXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum();
         }
 
         @Override
@@ -76,10 +73,10 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpRawFunction extends Function<Float> {
+    public static class XpRawFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
-            return Models.CombatXp.getCurrentXp();
+        public Double getValue(FunctionArguments arguments) {
+            return (double) Models.CombatXp.getCurrentXp();
         }
     }
 
@@ -97,10 +94,10 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpPctFunction extends Function<Float> {
+    public static class XpPctFunction extends Function<Double> {
         @Override
-        public Float getValue(FunctionArguments arguments) {
-            return Models.CombatXp.getXpProgress() * 100.0f;
+        public Double getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXpProgress() * 100.0d;
         }
     }
 }
