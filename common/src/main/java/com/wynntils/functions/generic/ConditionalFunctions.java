@@ -9,7 +9,7 @@ import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.util.List;
 
 public class ConditionalFunctions {
-    public static class IfStringFunction extends GenericFunction<Object> {
+    private abstract static class IfFunctionBase extends GenericFunction<Object> {
         @Override
         public Object getValue(FunctionArguments arguments) {
             if (arguments.getArgument("condition").getBooleanValue()) {
@@ -18,7 +18,9 @@ public class ConditionalFunctions {
                 return arguments.getArgument("ifFalse").getValue();
             }
         }
+    }
 
+    public static class IfStringFunction extends IfFunctionBase {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
@@ -33,16 +35,7 @@ public class ConditionalFunctions {
         }
     }
 
-    public static class IfNumberFunction extends GenericFunction<Object> {
-        @Override
-        public Object getValue(FunctionArguments arguments) {
-            if (arguments.getArgument("condition").getBooleanValue()) {
-                return arguments.getArgument("ifTrue").getValue();
-            } else {
-                return arguments.getArgument("ifFalse").getValue();
-            }
-        }
-
+    public static class IfNumberFunction extends IfFunctionBase {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
