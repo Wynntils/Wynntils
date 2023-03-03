@@ -5,6 +5,7 @@
 package com.wynntils.core.functions.arguments;
 
 import com.wynntils.utils.type.ErrorOr;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,8 +53,12 @@ public final class FunctionArguments {
             return ErrorOr.of(new FunctionArguments(this.arguments));
         }
 
-        public String getArgumentNames() {
+        public String getArgumentNamesString() {
             return arguments.stream().map(Argument::getName).collect(Collectors.joining("; "));
+        }
+
+        public List<Argument> getArguments() {
+            return Collections.unmodifiableList(arguments);
         }
 
         public int getArgumentCount() {

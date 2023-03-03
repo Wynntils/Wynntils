@@ -11,8 +11,12 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.GenericFunction;
+import com.wynntils.core.functions.arguments.FunctionArguments;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -34,6 +38,14 @@ public class FunctionCommand extends Command {
                             .map(Function::getName),
                     builder);
 
+    private static final SuggestionProvider<CommandSourceStack> FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Arrays.stream(ListType.values())
+                            .map(Enum::name)
+                            .map(s -> s.toLowerCase(Locale.ROOT))
+                            .toList(),
+                    builder);
+
     @Override
     public String getCommandName() {
         return "function";
@@ -47,7 +59,11 @@ public class FunctionCommand extends Command {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
         return Commands.literal(getCommandName())
-                .then(Commands.literal("list").executes(this::listFunctions))
+                .then(Commands.literal("list")
+                        .executes(this::listFunctions)
+                        .then(Commands.argument("type", StringArgumentType.word())
+                                .suggests(FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER)
+                                .executes(this::listFunctions)))
                 .then(Commands.literal("enable")
                         .then(Commands.argument("function", StringArgumentType.word())
                                 .suggests(CRASHED_FUNCTION_SUGGESTION_PROVIDER)
@@ -55,9 +71,9 @@ public class FunctionCommand extends Command {
                 .then(Commands.literal("get")
                         .then(Commands.argument("function", StringArgumentType.word())
                                 .suggests(FUNCTION_SUGGESTION_PROVIDER)
-                                .executes(this::getValue))
-                        .then(Commands.argument("argument", StringArgumentType.greedyString())
-                                .executes(this::getValue)))
+                                .executes(this::getValue)
+                                .then(Commands.argument("argument", StringArgumentType.greedyString())
+                                        .executes(this::getValue))))
                 .then(Commands.literal("help")
                         .then(Commands.argument("function", StringArgumentType.word())
                                 .suggests(FUNCTION_SUGGESTION_PROVIDER)
@@ -72,26 +88,52 @@ public class FunctionCommand extends Command {
     private int testExpression(CommandContext<CommandSourceStack> context) {
         String template = context.getArgument("template", String.class);
 
-        String result = Managers.Function.doFormat(template);
+        String[] result = Managers.Function.doFormatLines(template);
+
+        String resultString = String.join(
+                ", ",
+                Arrays.stream(result)
+                        .map(s -> "\"" + s + "\"" + ChatFormatting.RESET)
+                        .toArray(String[]::new));
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Template calculated: \"%s\" -> \"%s\"".formatted(template, result)), false);
+                        Component.literal("Template calculated: \"%s\" -> [%s]".formatted(template, resultString)),
+                        false);
 
         return 1;
     }
 
     private int listFunctions(CommandContext<CommandSourceStack> context) {
+        String type;
+
+        try {
+            type = context.getArgument("type", String.class);
+        } catch (Exception e) {
+            type = "all";
+        }
+
+        boolean all = type.equalsIgnoreCase("all");
+        boolean onlyGeneric = type.equalsIgnoreCase("generic");
+        boolean onlyNormal = type.equalsIgnoreCase("normal");
+
         List<Function<?>> functions = Managers.Function.getFunctions().stream()
-                .sorted(Comparator.comparing(Function::getName))
+                .filter(function -> all
+                        || (onlyNormal && !(function instanceof GenericFunction<?>))
+                        || (onlyGeneric && function instanceof GenericFunction<?>))
+                .sorted(Comparator.comparing(function -> function instanceof GenericFunction<?>)
+                        .thenComparing(o -> ((Function) o).getName()))
                 .toList();
 
-        MutableComponent response = Component.literal("Available functions:").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal(
+                        onlyGeneric ? "Available generic functions: " : "Available functions:")
+                .withStyle(ChatFormatting.AQUA);
 
         for (Function<?> function : functions) {
             MutableComponent functionComponent = Component.literal("\n - ").withStyle(ChatFormatting.GRAY);
 
-            functionComponent.append(Component.literal(function.getName()).withStyle(ChatFormatting.YELLOW));
+            functionComponent.append(Component.literal(function.getName())
+                    .withStyle(function instanceof GenericFunction<?> ? ChatFormatting.GOLD : ChatFormatting.YELLOW));
             if (!function.getAliases().isEmpty()) {
                 String aliasList = String.join(", ", function.getAliases());
 
@@ -178,11 +220,34 @@ public class FunctionCommand extends Command {
 
         Function<?> function = functionOptional.get();
 
-        String helpText = function.getDescription();
+        MutableComponent helpComponent = Component.empty();
 
-        Component response = Component.literal(function.getName() + ": ")
+        helpComponent.append(ChatFormatting.GRAY + "Type: " + ChatFormatting.WHITE
+                + (function instanceof GenericFunction<?> ? "Generic" : "Normal") + "\n");
+        helpComponent.append(
+                ChatFormatting.GRAY + "Description: " + ChatFormatting.WHITE + function.getDescription() + "\n");
+        helpComponent.append(ChatFormatting.GRAY + "Aliases:" + ChatFormatting.WHITE + " ["
+                + String.join(", ", function.getAliases()) + "]\n");
+        helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
+                + function.getFunctionType().getSimpleName() + "\n");
+        helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("
+                + (function.getArgumentsBuilder() instanceof FunctionArguments.OptionalArgumentBuilder
+                        ? "Optional"
+                        : "Required")
+                + ")");
+
+        for (FunctionArguments.Argument argument :
+                function.getArgumentsBuilder().getArguments()) {
+            helpComponent.append("\n - " + ChatFormatting.YELLOW + argument.getName() + " ("
+                    + argument.getType().getSimpleName() + ")" + ChatFormatting.WHITE + ": "
+                    + function.getArgumentDescription(argument.getName()));
+        }
+
+        Component response = Component.literal("Function Manual: ")
                 .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal(helpText).withStyle(ChatFormatting.WHITE));
+                .append(Component.literal(function.getName() + "\n").withStyle(ChatFormatting.BOLD))
+                .append(helpComponent.withStyle(ChatFormatting.WHITE));
+
         context.getSource().sendSuccess(response, false);
         return 1;
     }
@@ -190,5 +255,11 @@ public class FunctionCommand extends Command {
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
+    }
+
+    private enum ListType {
+        ALL,
+        GENERIC,
+        NORMAL
     }
 }
