@@ -91,11 +91,9 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -322,18 +320,16 @@ public final class EventFactory {
     // endregion
 
     // region Screen Events
-    public static void onScreenCreatedPost(Screen screen, Consumer<AbstractWidget> addButton) {
-        if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
-        } else if (screen instanceof PauseScreen pauseMenuScreen) {
-            post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
-        }
+    public static void onTitleScreenCreatedPost(TitleScreen titleScreen) {
+        postAlways(new TitleScreenInitEvent.Post(titleScreen));
     }
 
-    public static void onScreenCreatedPre(Screen screen, Consumer<AbstractWidget> addButton) {
-        if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent.Pre(titleScreen, addButton));
-        }
+    public static void onPauseScreenCreatedPost(PauseScreen pauseMenuScreen) {
+        post(new PauseMenuInitEvent(pauseMenuScreen));
+    }
+
+    public static void onTitleScreenCreatedPre(TitleScreen titleScreen) {
+        postAlways(new TitleScreenInitEvent.Pre(titleScreen));
     }
 
     public static void onScreenOpenedPost(Screen screen) {

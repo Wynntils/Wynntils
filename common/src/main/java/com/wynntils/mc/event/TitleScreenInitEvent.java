@@ -4,38 +4,30 @@
  */
 package com.wynntils.mc.event;
 
-import java.util.function.Consumer;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on initialization of {@link TitleScreen} */
 public abstract class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
-    private final Consumer<AbstractWidget> addButton;
 
-    protected TitleScreenInitEvent(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
+    protected TitleScreenInitEvent(TitleScreen titleScreen) {
         this.titleScreen = titleScreen;
-        this.addButton = addButton;
     }
 
     public TitleScreen getTitleScreen() {
         return titleScreen;
     }
 
-    public Consumer<AbstractWidget> getAddButton() {
-        return addButton;
-    }
-
-    public static class Pre extends TitleScreenInitEvent {
-        public Pre(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
-            super(titleScreen, addButton);
+    public static final class Pre extends TitleScreenInitEvent {
+        public Pre(TitleScreen titleScreen) {
+            super(titleScreen);
         }
     }
 
-    public static class Post extends TitleScreenInitEvent {
-        public Post(TitleScreen titleScreen, Consumer<AbstractWidget> addButton) {
-            super(titleScreen, addButton);
+    public static final class Post extends TitleScreenInitEvent {
+        public Post(TitleScreen titleScreen) {
+            super(titleScreen);
         }
     }
 }
