@@ -22,19 +22,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
     // https://regexr.com/7968a
-    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile(
-            "^(?:§4-(\\d+) ❤ )?(?:§e-(\\d+) ✦ )?(?:§2-(\\d+) ✤ )?(?:§b-(\\d+) ❉ )?(?:§f-(\\d+) ❋ )?(?:§c-(\\d+) ✹ )?$");
+    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[24bcef]-(\\d+) ([❤✦✤❉❋✹]) )");
 
     // https://regexr.com/7965g
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*)§r - §c(\\d+)§4❤(?:§r - §7(.*)§7)?$");
-
-    private static final List<DamageType> LABEL_ELEMENT_ORDER = List.of(
-            DamageType.NEUTRAL,
-            DamageType.THUNDER,
-            DamageType.EARTH,
-            DamageType.WATER,
-            DamageType.AIR,
-            DamageType.FIRE);
 
     private final DamageBar damageBar = new DamageBar();
 
@@ -57,15 +48,16 @@ public final class DamageModel extends Model {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
         Matcher matcher = DAMAGE_LABEL_PATTERN.matcher(event.getName());
-        if (!matcher.matches()) return;
+        if (!matcher.find()) return;
 
         Map<DamageType, Integer> damages = new HashMap<>();
-        for (int i = 0; i < LABEL_ELEMENT_ORDER.size(); i++) {
-            String damageStr = matcher.group(i + 1);
-            if (damageStr == null) continue;
+        // Restart finding from the beginning
+        matcher.reset();
+        while (matcher.find()) {
+            int damage = Integer.parseInt(matcher.group(1));
+            DamageType damageType = DamageType.fromSymbol(matcher.group(2));
 
-            int damage = Integer.parseInt(damageStr);
-            damages.put(LABEL_ELEMENT_ORDER.get(i), damage);
+            damages.put(damageType, damage);
         }
 
         WynntilsMod.postEvent(new DamageDealtEvent(damages));
