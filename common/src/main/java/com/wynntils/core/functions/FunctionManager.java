@@ -48,7 +48,6 @@ public final class FunctionManager extends Manager {
 
     public FunctionManager() {
         super(List.of());
-        registerAllFunctions();
     }
 
     public List<Function<?>> getFunctions() {
@@ -272,8 +271,24 @@ public final class FunctionManager extends Manager {
     }
     // endregion
 
+    public void init() {
+        try {
+            registerAllFunctions();
+        } catch (AssertionError ae) {
+            WynntilsMod.error("Fix i18n for functions", ae);
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                System.exit(1);
+            }
+        }
+    }
+
     private void registerFunction(Function<?> function) {
         functions.add(function);
+
+        assert !function.getTranslatedName().startsWith("function.wynntils.")
+                : "Fix i18n name for function " + function.getClass().getSimpleName();
+        assert !function.getDescription().startsWith("function.wynntils.")
+                : "Fix i18n description for function " + function.getClass().getSimpleName();
     }
 
     private void registerAllFunctions() {

@@ -23,6 +23,7 @@ import com.wynntils.features.statemanaged.LootrunFeature;
 import com.wynntils.features.user.AbbreviateMobHealthFeature;
 import com.wynntils.features.user.AddCommandExpansionFeature;
 import com.wynntils.features.user.AutoApplyResourcePackFeature;
+import com.wynntils.features.user.AutoJoinPartyFeature;
 import com.wynntils.features.user.BeaconBeamFeature;
 import com.wynntils.features.user.BombBellTrackingFeature;
 import com.wynntils.features.user.ChangelogFeature;
@@ -81,6 +82,7 @@ import com.wynntils.features.user.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.user.map.GuildMapFeature;
 import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.features.user.map.MinimapFeature;
+import com.wynntils.features.user.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.user.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
@@ -142,8 +144,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new AbilityTreeScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoJoinPartyFeature());
         registerFeature(new BeaconBeamFeature());
         registerFeature(new BlacksmithRedirectFeature());
         registerFeature(new BombBellTrackingFeature());
@@ -249,6 +253,11 @@ public final class FeatureManager extends Manager {
 
         try {
             initializeFeature(feature);
+        } catch (AssertionError ae) {
+            WynntilsMod.error("Fix i18n for " + feature.getClass().getSimpleName(), ae);
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                System.exit(1);
+            }
         } catch (Throwable exception) {
             // Log and fail gracefully, don't make other features fail to init
             WynntilsMod.error(
