@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Scoreboard.class)
 public abstract class ScoreboardMixin {
-
     @Shadow
     public Map<String, Map<Objective, Score>> playerScores;
 

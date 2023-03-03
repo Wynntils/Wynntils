@@ -13,6 +13,7 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
+import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
@@ -31,7 +32,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
-
     private ShamanTotem totem1 = null;
     private Integer pendingTotem1VisibleId = null;
 

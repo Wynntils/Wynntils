@@ -32,15 +32,29 @@ public abstract class GuiMixin {
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("HEAD"))
-    private void renderSlotPre(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
-        EventFactory.onHotbarSlotRenderPre(stack, x, y);
+    private void renderSlotPre(
+            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+        EventFactory.onHotbarSlotRenderPre(itemStack, x, y);
+    }
+
+    @Inject(
+            method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
+    private void renderSlotCountPre(
+            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+        EventFactory.onHotbarSlotRenderCountPre(itemStack, x, y);
     }
 
     @Inject(
             method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
-    private void renderSlotPost(int x, int y, float ticks, Player player, ItemStack stack, int i, CallbackInfo info) {
-        EventFactory.onHotbarSlotRenderPost(stack, x, y);
+    private void renderSlotPost(
+            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+        EventFactory.onHotbarSlotRenderPost(itemStack, x, y);
     }
 
     // This does not work on Forge. See ForgeIngameGuiMixin for replacement.

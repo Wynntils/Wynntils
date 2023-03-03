@@ -5,11 +5,10 @@
 package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -29,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
     @Config
     public boolean normalHighlightEnabled = true;
@@ -165,14 +164,14 @@ public class ItemHighlightFeature extends UserFeature {
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!hotbarHighlightEnabled) return;
 
-        CustomColor color = getHighlightColor(e.getStack(), true);
+        CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
         RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
     }
 
-    private CustomColor getHighlightColor(ItemStack item, boolean hotbarHighlight) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
 
         WynnItem wynnItem = wynnItemOpt.get();

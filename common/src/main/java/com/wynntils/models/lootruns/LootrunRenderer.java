@@ -200,7 +200,6 @@ public final class LootrunRenderer {
 
     private static void renderTexturedLootrunPoints(
             PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
-
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);

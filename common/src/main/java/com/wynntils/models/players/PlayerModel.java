@@ -43,7 +43,7 @@ public final class PlayerModel extends Model {
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
-    private Map<UUID, String> nameMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());
@@ -141,8 +141,10 @@ public final class PlayerModel extends Model {
                     WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
 
                     users.put(uuid, user);
-                    loadCosmeticTextures(uuid, user);
                     fetching.remove(uuid);
+
+                    // Make sure texture loading is done on client thread
+                    Managers.TickScheduler.scheduleNextTick(() -> loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;
@@ -192,8 +194,13 @@ public final class PlayerModel extends Model {
     }
 
     private void clearTextureCache() {
-        cosmeticTextures.forEach((uuid, array) -> Arrays.stream(array)
-                .forEach(l -> McUtils.mc().getTextureManager().release(l)));
+        for (ResourceLocation[] locations : cosmeticTextures.values()) {
+            // Make sure texture unloading is done on client thread
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                Arrays.stream(locations)
+                        .forEach(l -> McUtils.mc().getTextureManager().release(l));
+            });
+        }
         cosmeticTextures.clear();
     }
 

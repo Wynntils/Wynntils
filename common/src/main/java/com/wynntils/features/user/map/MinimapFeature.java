@@ -8,15 +8,15 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.PlayerMiniMapPoi;
@@ -34,6 +34,7 @@ import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
@@ -43,7 +44,7 @@ import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@FeatureInfo(category = FeatureCategory.MAP)
+@ConfigCategory(Category.MAP)
 public class MinimapFeature extends UserFeature {
     public static MinimapFeature INSTANCE;
 
@@ -214,7 +215,6 @@ public class MinimapFeature extends UserFeature {
                 double playerX,
                 double playerZ,
                 BoundingBox textureBoundingBox) {
-
             float sinRotationRadians;
             float cosRotationRadians;
 
@@ -450,8 +450,7 @@ public class MinimapFeature extends UserFeature {
         private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.texture();
             int grooves = borderType.groovesSize();
-            MapBorderType.BorderInfo borderInfo =
-                    maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
+            BorderInfo borderInfo = maskType == MapMaskType.Circle ? borderType.circle() : borderType.square();
             int tx1 = borderInfo.tx1();
             int ty1 = borderInfo.ty1();
             int tx2 = borderInfo.tx2();
@@ -491,4 +490,39 @@ public class MinimapFeature extends UserFeature {
         Rectangular,
         Circle
     }
+
+    public enum MapBorderType {
+        Gilded(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
+        Paper(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
+        Wynn(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
+        private final Texture texture;
+        private final BorderInfo square;
+        private final BorderInfo circle;
+        private final int groovesSize;
+
+        MapBorderType(Texture texture, BorderInfo square, BorderInfo circle, int groovesSize) {
+            this.texture = texture;
+            this.square = square;
+            this.circle = circle;
+            this.groovesSize = groovesSize;
+        }
+
+        public Texture texture() {
+            return texture;
+        }
+
+        public int groovesSize() {
+            return groovesSize;
+        }
+
+        public BorderInfo square() {
+            return square;
+        }
+
+        public BorderInfo circle() {
+            return circle;
+        }
+    }
+
+    public record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
 }

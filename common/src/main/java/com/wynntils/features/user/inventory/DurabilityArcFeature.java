@@ -5,11 +5,10 @@
 package com.wynntils.features.user.inventory;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
-import com.wynntils.core.features.properties.FeatureInfo.Stability;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -22,7 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(stability = Stability.STABLE, category = FeatureCategory.INVENTORY)
+@ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
     @Config
     public boolean renderDurabilityArcInventories = true;
@@ -33,7 +32,7 @@ public class DurabilityArcFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!renderDurabilityArcHotbar) return;
-        drawDurabilityArc(e.getStack(), e.getX(), e.getY(), true);
+        drawDurabilityArc(e.getItemStack(), e.getX(), e.getY(), true);
     }
 
     @SubscribeEvent
@@ -42,8 +41,8 @@ public class DurabilityArcFeature extends UserFeature {
         drawDurabilityArc(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
-    private void drawDurabilityArc(ItemStack item, int slotX, int slotY, boolean hotbar) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(item);
+    private void drawDurabilityArc(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (!(wynnItemOpt.get() instanceof DurableItemProperty durableItem)) return;
 

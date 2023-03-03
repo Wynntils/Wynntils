@@ -10,7 +10,6 @@ import com.wynntils.models.map.type.DisplayPriority;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface Poi {
-
     PoiLocation getLocation();
 
     /**

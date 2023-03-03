@@ -9,13 +9,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
-import com.wynntils.models.players.cosmetics.CosmeticInfo;
+import com.wynntils.models.players.type.CosmeticInfo;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.model.ElytraModel;
 import net.minecraft.client.model.PlayerModel;
@@ -34,7 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.PLAYERS)
+@ConfigCategory(Category.PLAYERS)
 public class WynntilsCosmeticsFeature extends UserFeature {
     @Config
     public boolean renderOwnCape = true;
@@ -111,7 +111,6 @@ public class WynntilsCosmeticsFeature extends UserFeature {
     }
 
     private static final class WynntilsCapeLayer extends WynntilsLayer {
-
         private WynntilsCapeLayer(
                 RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent,
                 WynntilsCosmeticsFeature parent) {

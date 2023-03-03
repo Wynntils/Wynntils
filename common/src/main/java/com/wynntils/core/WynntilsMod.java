@@ -51,7 +51,7 @@ public final class WynntilsMod {
     private static IEventBus eventBus;
     private static File modJar;
     private static boolean initCompleted = false;
-    private static Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
+    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
 
     public static ModLoader getModLoader() {
         return modLoader;

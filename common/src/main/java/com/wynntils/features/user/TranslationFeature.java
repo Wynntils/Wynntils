@@ -6,7 +6,9 @@ package com.wynntils.features.user;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.net.translation.TranslationManager;
@@ -22,6 +24,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
+@ConfigCategory(Category.UNCATEGORIZED)
 public class TranslationFeature extends UserFeature {
     @Config
     public String languageName = "";

@@ -119,7 +119,7 @@ public final class BufferedRenderUtils {
 
     public static void drawRectBorders(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x1,
             float y1,
@@ -169,7 +169,6 @@ public final class BufferedRenderUtils {
             float z,
             float width,
             float height) {
-
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
@@ -210,7 +209,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             float x,
             float y,
@@ -330,7 +329,7 @@ public final class BufferedRenderUtils {
      */
     public static void drawColoredProgressBar(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -342,7 +341,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
@@ -441,7 +439,7 @@ public final class BufferedRenderUtils {
      */
     public static void drawProgressBar(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,
@@ -452,7 +450,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
@@ -574,7 +571,7 @@ public final class BufferedRenderUtils {
      */
     public static void createMask(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,

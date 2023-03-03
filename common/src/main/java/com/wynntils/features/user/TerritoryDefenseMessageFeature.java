@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.user;
 
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -15,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@ConfigCategory(Category.UNCATEGORIZED)
 public class TerritoryDefenseMessageFeature extends UserFeature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
@@ -26,9 +29,9 @@ public class TerritoryDefenseMessageFeature extends UserFeature {
                 ATTACK_SCREEN_TITLE.matcher(McUtils.mc().screen.getTitle().getString());
         if (!titleMatcher.matches()) return;
 
-        ItemStack item = event.getHoveredSlot().getItem();
+        ItemStack itemStack = event.getHoveredSlot().getItem();
 
-        for (Component tooltipLine : LoreUtils.getTooltipLines(item)) {
+        for (Component tooltipLine : LoreUtils.getTooltipLines(itemStack)) {
             String unformatted = ComponentUtils.getUnformatted(tooltipLine);
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {

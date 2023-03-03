@@ -10,7 +10,6 @@ import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ArmSwingEvent extends Event {
-
     private final ArmSwingContext actionContext;
 
     private final InteractionHand hand;

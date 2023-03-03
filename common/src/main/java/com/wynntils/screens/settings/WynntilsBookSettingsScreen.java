@@ -7,11 +7,11 @@ package com.wynntils.screens.settings;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.properties.FeatureCategory;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -270,7 +270,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
-        ;
 
         configurableListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
         if (configListScrollButton != null) {
@@ -333,7 +332,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         configurables.clear();
         configurableScrollOffset = 0;
 
-        FeatureCategory oldCategory = null;
+        Category oldCategory = null;
 
         List<Feature> featureList = Managers.Feature.getFeatures().stream()
                 .filter(feature -> searchMatches(feature)

@@ -21,7 +21,6 @@ public record FixedStats(
         List<GearMajorId> majorIds,
         List<Pair<DamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences) {
-
     public int getSkillBonus(Skill skill) {
         for (Pair<Skill, Integer> skillBonusValue : skillBonuses) {
             if (skillBonusValue.key() == skill) {

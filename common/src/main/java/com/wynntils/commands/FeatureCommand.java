@@ -11,11 +11,11 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.DebugFeature;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -77,7 +77,7 @@ public class FeatureCommand extends Command {
         MutableComponent response =
                 Component.literal("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
-        FeatureCategory lastCategory = null;
+        Category lastCategory = null;
 
         for (Feature feature : features) {
             Class<?> superclass = feature.getClass().getSuperclass();

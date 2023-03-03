@@ -11,7 +11,6 @@ import com.wynntils.models.items.items.game.HorseItem;
 import java.util.List;
 
 public class HorseFunctions {
-
     public static class HorseLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

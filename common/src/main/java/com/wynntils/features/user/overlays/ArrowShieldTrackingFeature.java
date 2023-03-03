@@ -6,15 +6,15 @@ package com.wynntils.features.user.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.abilities.event.ArrowShieldEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -28,7 +28,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.OVERLAYS)
+@ConfigCategory(Category.OVERLAYS)
 public class ArrowShieldTrackingFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ArrowShieldTrackerOverlay arrowShieldTrackerOverlay = new ArrowShieldTrackerOverlay();
@@ -57,7 +57,6 @@ public class ArrowShieldTrackingFeature extends UserFeature {
         @Config
         public TextShadow textShadow = TextShadow.OUTLINE;
 
-        private int charges;
         private TextRenderTask renderTaskCache;
         private TextRenderSetting textRenderSetting;
 
@@ -108,7 +107,7 @@ public class ArrowShieldTrackingFeature extends UserFeature {
                             this.getRenderVerticalAlignment());
         }
 
-        public void updateCharges(int charges) {
+        protected void updateCharges(int charges) {
             if (charges == 0) {
                 renderTaskCache = null;
                 return;
