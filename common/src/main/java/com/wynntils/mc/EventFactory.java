@@ -138,6 +138,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -411,8 +412,8 @@ public final class EventFactory {
     }
 
     public static ContainerClickEvent onContainerClickEvent(
-            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
+            AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int buttonNum) {
+        return post(new ContainerClickEvent(containerMenu, slotNum, clickType, buttonNum));
     }
 
     public static ItemTooltipFlagsEvent.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
