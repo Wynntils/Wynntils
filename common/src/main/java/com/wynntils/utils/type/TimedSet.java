@@ -4,8 +4,10 @@
  */
 package com.wynntils.utils.type;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -38,6 +40,13 @@ public class TimedSet<T> implements Iterable<T> {
 
     public void put(T entry) {
         entries.add(new TimedEntry(entry, System.currentTimeMillis() + timeJump));
+    }
+
+    public long getLastAddedTimestamp() {
+        Optional<TimedEntry> latest = entries.stream().max(Comparator.comparing(e -> e.expiration));
+        if (latest.isEmpty()) return 0;
+
+        return latest.get().expiration - timeJump;
     }
 
     public void clear() {
