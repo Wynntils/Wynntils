@@ -32,10 +32,10 @@ public class ItemHandler extends Handler {
     private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
 
     private final List<ItemAnnotator> annotators = new ArrayList<>();
-    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
-    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingCounts = new HashMap<>();
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
-    private List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
+    private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
         if (itemStack == null) return Optional.empty();
