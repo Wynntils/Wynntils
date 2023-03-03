@@ -155,7 +155,7 @@ public class LogicFunctions {
         }
     }
 
-    public static class GreaterThanEqualsFunction extends GenericFunction<Boolean> {
+    public static class GreaterThanOrEqualsFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return arguments.getArgument("first").getDoubleValue()

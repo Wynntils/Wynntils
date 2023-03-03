@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -182,57 +181,38 @@ public final class FunctionManager extends Manager {
         return TemplateParser.doFormat(templateString);
     }
 
-    // endregion
+    public String[] doFormatLines(String templateString) {
+        StringBuilder resultBuilder = new StringBuilder();
 
-    // region Legacy formatting
+        // Iterate though the string and escape characters
+        // that are prefixed with `\`, remove the `\` and add it to the result
 
-    public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
-        List<Function<?>> dependencies = new ArrayList<>();
+        for (int i = 0; i < templateString.length(); i++) {
+            char c = templateString.charAt(i);
+            if (c == '\\') {
+                if (i + 1 < templateString.length()) {
+                    char nextChar = templateString.charAt(i + 1);
 
-        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
-        while (m.find()) {
-            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
-                // %variable%
-                Function<?> function = forName(m.group(1)).get();
-                dependencies.add(function);
-            }
-        }
+                    resultBuilder.append(doEscapeFormat(nextChar));
+                    i++;
 
-        return dependencies;
-    }
-
-    public String[] getLinesFromLegacyTemplate(String renderableText) {
-        StringBuilder builder = new StringBuilder(renderableText.length() + 10);
-        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
-        while (m.find()) {
-            String replacement = null;
-            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
-                // %variable%
-                Function<?> function = forName(m.group(1)).get();
-
-                FunctionArguments.Builder arguments = function.getArgumentsBuilder();
-
-                if (arguments instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
-                    replacement =
-                            getStringFunctionValue(function, optionalArgumentBuilder.buildWithDefaults(), false, 2);
-                } else {
-                    // This is to be removed with legacy formatting all together
-                    replacement = "Function needs arguments.";
+                    continue;
                 }
-
-            } else if (m.group(2) != null) {
-                // \escape
-                replacement = doEscapeFormat(m.group(2));
-            }
-            if (replacement == null) {
-                replacement = m.group(0);
             }
 
-            m.appendReplacement(builder, replacement);
+            resultBuilder.append(c);
         }
-        m.appendTail(builder);
 
-        return parseColorCodes(builder.toString()).split("\n");
+        // Parse color codes before calculating the templates
+        String escapedTemplate = parseColorCodes(resultBuilder.toString());
+
+        String calculatedString = doFormat(escapedTemplate);
+
+        // Turn escaped {} (`\[\` and `\]\`) back into real {}
+        calculatedString = calculatedString.replace("\\[\\", "{");
+        calculatedString = calculatedString.replace("\\]\\", "}");
+
+        return calculatedString.split("\n");
     }
 
     private String parseColorCodes(String toProcess) {
@@ -255,20 +235,22 @@ public final class FunctionManager extends Manager {
         return sb.toString();
     }
 
-    private String doEscapeFormat(String escaped) {
+    private String doEscapeFormat(char escaped) {
         return switch (escaped) {
-            case "\\" -> "\\\\";
-            case "n" -> "\n";
-            case "%" -> "%";
-            case "§" -> "&";
-            case "E" -> EmeraldUnits.EMERALD.getSymbol();
-            case "B" -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
-            case "L" -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
-            case "M" -> "✺";
-            case "H" -> "❤";
+            case '\\' -> "\\\\";
+            case 'n' -> "\n";
+            case '{' -> "\\[\\";
+            case '}' -> "\\]\\";
+            case '§' -> "&";
+            case 'E' -> EmeraldUnits.EMERALD.getSymbol();
+            case 'B' -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
+            case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
+            case 'M' -> "✺";
+            case 'H' -> "❤";
             default -> null;
         };
     }
+
     // endregion
 
     public void init() {
@@ -302,7 +284,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.LessThanFunction());
         registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
         registerFunction(new LogicFunctions.GreaterThanFunction());
-        registerFunction(new LogicFunctions.GreaterThanEqualsFunction());
+        registerFunction(new LogicFunctions.GreaterThanOrEqualsFunction());
         registerFunction(new LogicFunctions.NotEqualsFunction());
         registerFunction(new LogicFunctions.NotFunction());
         registerFunction(new LogicFunctions.OrFunction());
