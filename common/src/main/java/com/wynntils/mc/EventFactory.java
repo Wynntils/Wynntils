@@ -6,6 +6,7 @@ package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
@@ -93,6 +94,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -240,11 +242,21 @@ public final class EventFactory {
     }
 
     public static RenderEvent.Pre onRenderHearthsPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar));
+        RenderEvent.Pre event = post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        return event;
     }
 
     public static RenderEvent.Pre onRenderFoodPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
+        RenderEvent.Pre event = post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        return event;
     }
 
     public static void onContainerRender(
