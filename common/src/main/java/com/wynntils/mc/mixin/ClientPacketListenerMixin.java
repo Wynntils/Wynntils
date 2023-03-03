@@ -308,13 +308,16 @@ public abstract class ClientPacketListenerMixin {
             @Local PlayerChatMessage playerChatMessage,
             @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
+
+        // Currently, Wynncraft does not have any Player chat messages so this code
+        // is not really used
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+        if (result.isMessageChanged()) {
             // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
@@ -343,7 +346,7 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.content())) {
+        if (result.isMessageChanged()) {
             this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
             ci.cancel();
         }
