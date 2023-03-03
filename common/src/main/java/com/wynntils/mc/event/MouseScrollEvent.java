@@ -7,7 +7,6 @@ package com.wynntils.mc.event;
 import net.minecraftforge.eventbus.api.Event;
 
 public class MouseScrollEvent extends Event {
-
     private final double windowPointer;
     private final double xOffset;
     private final double yOffset;

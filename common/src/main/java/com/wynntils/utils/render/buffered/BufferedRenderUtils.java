@@ -169,7 +169,6 @@ public final class BufferedRenderUtils {
             float z,
             float width,
             float height) {
-
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
@@ -342,7 +341,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
@@ -452,7 +450,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);

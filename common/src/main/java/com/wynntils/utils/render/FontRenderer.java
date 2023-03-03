@@ -92,7 +92,6 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x1;

@@ -111,7 +111,6 @@ public class WynntilsCosmeticsFeature extends UserFeature {
     }
 
     private static final class WynntilsCapeLayer extends WynntilsLayer {
-
         private WynntilsCapeLayer(
                 RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent,
                 WynntilsCosmeticsFeature parent) {

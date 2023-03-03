@@ -54,7 +54,6 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     public final void initOverlays() {
         Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
         for (Field overlayField : overlayFields) {
-
             try {
                 Object fieldValue = FieldUtils.readField(overlayField, this, true);
 

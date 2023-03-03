@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface TranslationService {
-
     /**
      * Translate a message from English to the target language, as described by a two-letter 639-1
      * language code. The response can be executed asynchronously. The message can contain html,

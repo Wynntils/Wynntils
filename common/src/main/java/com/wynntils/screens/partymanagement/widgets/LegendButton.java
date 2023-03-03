@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class LegendButton extends WynntilsButton {
-
     public LegendButton(int x, int y) {
         super(x, y, 20, 20, Component.literal("?"));
         this.setTooltip(Tooltip.create(Component.literal("")

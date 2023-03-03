@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class LobbyUptimeFeature extends UserFeature {
-
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);
