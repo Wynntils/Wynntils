@@ -23,19 +23,19 @@ import net.minecraft.resources.ResourceLocation;
 public class SuggestionPlayerWidget extends AbstractWidget {
     private final String playerName;
     private final Button inviteButton;
-    private final float GRID_DIVISIONS;
+    private final float gridDivisions;
 
     public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
         super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
-        this.GRID_DIVISIONS = gridDivisions;
+        this.gridDivisions = gridDivisions;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
-                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(
-                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
-                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
+                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
                                 - 2,
                         20)
                 .build();
@@ -51,7 +51,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 8,
                 16,
@@ -65,7 +65,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 8,
                 16,
@@ -82,7 +82,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         playerName,
-                        this.getX() + (this.width / GRID_DIVISIONS * 3),
+                        this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         CommonColors.GREEN,
                         HorizontalAlignment.Left,

@@ -7,7 +7,6 @@ package com.wynntils.utils.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -26,7 +25,6 @@ public final class FontRenderer {
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
-    private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
     private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();

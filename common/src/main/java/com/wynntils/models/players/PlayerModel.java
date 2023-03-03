@@ -43,7 +43,7 @@ public final class PlayerModel extends Model {
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
-    private Map<UUID, String> nameMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());

@@ -40,8 +40,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     private final Player player;
     private final Scoreboard scoreboard;
-    private PlayerTeam gearViewerTeam;
-    private PlayerTeam oldTeam;
+    private final PlayerTeam gearViewerTeam;
+    private final PlayerTeam oldTeam;
     private ViewPlayerStatsButton viewPlayerStatsButton;
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
