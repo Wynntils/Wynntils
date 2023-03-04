@@ -5,41 +5,42 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.McUtils;
 
 public class MinecraftFunctions {
     public static class XFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return McUtils.player().getBlockX();
         }
     }
 
     public static class YFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return McUtils.player().getBlockY();
         }
     }
 
     public static class ZFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return McUtils.player().getBlockZ();
         }
     }
 
-    public static class DirFunction extends Function<Float> {
+    public static class DirFunction extends Function<Double> {
         @Override
-        public Float getValue(String argument) {
-            return McUtils.player().getYRot();
+        public Double getValue(FunctionArguments arguments) {
+            return (double) McUtils.player().getYRot();
         }
     }
 
     public static class FpsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return MinecraftAccessor.getFps();
         }
     }
