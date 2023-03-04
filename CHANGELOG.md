@@ -1,9 +1,21 @@
+## [0.0.2-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.282...v0.0.2-alpha.283) (2023-03-04)
+
+
+### Bug Fixes
+
+* Fix pouch functions and held item function returns int ([#1261](https://github.com/Wynntils/Artemis/issues/1261)) ([4b8d43d](https://github.com/Wynntils/Artemis/commit/4b8d43df9b71535978d3c8a65baabcbfae33a5d8))
+
 ## [0.0.2-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.281...v0.0.2-alpha.282) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Fix cape texture loading (hopefully) ([#1263](https://github.com/Wynntils/Artemis/issues/1263)) ([83de718](https://github.com/Wynntils/Artemis/commit/83de718c2cf4aaca1e4d6dd3e670db0251c682e0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.282 [skip ci] ([d9d6b7e](https://github.com/Wynntils/Artemis/commit/d9d6b7e6c08d8fdaf2d957f60b8efe5fbd1bab12))
 
 ## [0.0.2-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.280...v0.0.2-alpha.281) (2023-03-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.279 [skip ci] ([92ec7f3](https://github.com/Wynntils/Artemis/commit/92ec7f3ba38fa9ab23a54432fa69c5ec5170aa4d))
-
-## [0.0.2-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.277...v0.0.2-alpha.278) (2023-03-04)
-
-
-### Bug Fixes
-
-* Context-aware argument parsing should also know if we are in a string ([#1258](https://github.com/Wynntils/Artemis/issues/1258)) ([9642ffe](https://github.com/Wynntils/Artemis/commit/9642ffe9fe1f34f33abfb69fb8c083eaa60c9118))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.278 [skip ci] ([d20f850](https://github.com/Wynntils/Artemis/commit/d20f850c4e763f8c0b19409fe0cc865f008a2be4))
 
