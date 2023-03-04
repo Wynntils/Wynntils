@@ -5,14 +5,13 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.features.statemanaged.DataStorageFeature;
 import java.util.List;
 
 public class LootrunFunctions {
     public static class DryStreakFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return DataStorageFeature.INSTANCE.dryCount;
         }
 
@@ -24,7 +23,7 @@ public class LootrunFunctions {
 
     public static class DryBoxesFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return DataStorageFeature.INSTANCE.dryBoxes;
         }
 
