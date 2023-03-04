@@ -155,7 +155,7 @@ public final class FunctionManager extends Manager {
                     return String.valueOf(number.intValue());
                 }
 
-                DecimalFormat decimalFormat = new DecimalFormat("#." + "0".repeat(decimals));
+                DecimalFormat decimalFormat = new DecimalFormat("0." + "0".repeat(decimals));
                 return decimalFormat.format(number);
             }
         }
@@ -307,6 +307,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());

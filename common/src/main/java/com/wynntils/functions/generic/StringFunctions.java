@@ -24,6 +24,24 @@ public class StringFunctions {
         }
     }
 
+    public static class StringFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return arguments.getArgument("value").getValue().toString();
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument("value", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("str");
+        }
+    }
+
     public static class ConcatFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

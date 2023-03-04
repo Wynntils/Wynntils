@@ -17,7 +17,7 @@ public abstract class GenericFunction<T> extends Function<T> {
     public abstract FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder();
 
     @Override
-    public FunctionArguments.Builder getArgumentsBuilder() {
+    public final FunctionArguments.Builder getArgumentsBuilder() {
         return getRequiredArgumentsBuilder();
     }
 
