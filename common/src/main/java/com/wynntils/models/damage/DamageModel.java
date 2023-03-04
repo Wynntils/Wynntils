@@ -12,9 +12,11 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.damage.type.FocusedDamageEvent;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.utils.type.TimedSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -28,6 +30,8 @@ public final class DamageModel extends Model {
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*)§r - §c(\\d+)§4❤(?:§r - §7(.*)§7)?$");
 
     private final DamageBar damageBar = new DamageBar();
+
+    private final TimedSet<Integer> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
     private String focusedMobName;
     private String focusedMobElementals;
@@ -61,7 +65,27 @@ public final class DamageModel extends Model {
         }
 
         WynntilsMod.postEvent(new DamageDealtEvent(damages));
+
+        int damageSum = damages.values().stream().mapToInt(Integer::intValue).sum();
+        areaDamageSet.put(damageSum);
+
         lastDamageDealtTimestamp = System.currentTimeMillis();
+    }
+
+    public int getAreaDamagePerSecond() {
+        return areaDamageSet.getEntries().stream()
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getExpiration()) <= 1000L)
+                .mapToInt(TimedSet.TimedEntry::getEntry)
+                .sum();
+    }
+
+    public double getAverageAreaDamagePerSecond(int seconds) {
+        return areaDamageSet.getEntries().stream()
+                        .filter(timedEntry ->
+                                (System.currentTimeMillis() - timedEntry.getExpiration()) <= seconds * 1000L)
+                        .mapToInt(TimedSet.TimedEntry::getEntry)
+                        .sum()
+                / (double) seconds;
     }
 
     public final class DamageBar extends TrackedBar {
