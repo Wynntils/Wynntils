@@ -1,9 +1,21 @@
+## [0.0.2-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.280...v0.0.2-alpha.281) (2023-03-04)
+
+
+### Bug Fixes
+
+* Fix multiple issue with command mixin ([#1250](https://github.com/Wynntils/Artemis/issues/1250)) ([96b161e](https://github.com/Wynntils/Artemis/commit/96b161e488a637ede2d492bda7c0ab9ad8a9f013))
+
 ## [0.0.2-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.279...v0.0.2-alpha.280) (2023-03-04)
 
 
 ### Bug Fixes
 
 * More mixin fixin'  ([#1249](https://github.com/Wynntils/Artemis/issues/1249)) ([a73e99b](https://github.com/Wynntils/Artemis/commit/a73e99be187539b9237e3d4006f30a2206fbd93b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.280 [skip ci] ([9fe3ed4](https://github.com/Wynntils/Artemis/commit/9fe3ed4468e99877c867fa793f3d242b10c922be))
 
 ## [0.0.2-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.278...v0.0.2-alpha.279) (2023-03-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.277 [skip ci] ([85c1c8e](https://github.com/Wynntils/Artemis/commit/85c1c8e3c22ee052775c57bf32035d8cad6ac6bb))
-
-## [0.0.2-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.275...v0.0.2-alpha.276) (2023-03-04)
-
-
-### Bug Fixes
-
-* Fix If's generic not working in help command ([#1256](https://github.com/Wynntils/Artemis/issues/1256)) ([038950b](https://github.com/Wynntils/Artemis/commit/038950ba303cb8811149208717b297c178be73c5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.276 [skip ci] ([64aba33](https://github.com/Wynntils/Artemis/commit/64aba3341b37224b06e76fd84fc5840e5f06388f))
 
