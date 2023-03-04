@@ -1,9 +1,21 @@
+## [0.0.2-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.276...v0.0.2-alpha.277) (2023-03-04)
+
+
+### Bug Fixes
+
+* Text box cursor now behaves much closer to expectations ([#1255](https://github.com/Wynntils/Artemis/issues/1255)) ([e375eba](https://github.com/Wynntils/Artemis/commit/e375ebad00de45353c15380324e03b9144b2064e))
+
 ## [0.0.2-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.275...v0.0.2-alpha.276) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Fix If's generic not working in help command ([#1256](https://github.com/Wynntils/Artemis/issues/1256)) ([038950b](https://github.com/Wynntils/Artemis/commit/038950ba303cb8811149208717b297c178be73c5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.276 [skip ci] ([64aba33](https://github.com/Wynntils/Artemis/commit/64aba3341b37224b06e76fd84fc5840e5f06388f))
 
 ## [0.0.2-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.274...v0.0.2-alpha.275) (2023-03-04)
 
@@ -38,12 +50,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.273 [skip ci] ([1948c06](https://github.com/Wynntils/Artemis/commit/1948c06e729def06a7b560310a371bfac8b7f684))
-
-## [0.0.2-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.271...v0.0.2-alpha.272) (2023-03-03)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.272 [skip ci] ([4693a9e](https://github.com/Wynntils/Artemis/commit/4693a9e938b51d80ba3af63bc7a077af6cbccd57))
-* remove leading empty line ([#1242](https://github.com/Wynntils/Artemis/issues/1242)) ([0ab24c0](https://github.com/Wynntils/Artemis/commit/0ab24c0bb2e1ee6537456eb1172502114561ade1))
 
