@@ -1,9 +1,21 @@
+## [0.0.2-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.287...v0.0.2-alpha.288) (2023-03-04)
+
+
+### New Features
+
+* Add AreaDamagePerSecondFunction and AreaDamageAverageFunction ([#1262](https://github.com/Wynntils/Artemis/issues/1262)) ([27b95e1](https://github.com/Wynntils/Artemis/commit/27b95e13c0a70b334009d0ea4f2e62f8be706334))
+
 ## [0.0.2-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.286...v0.0.2-alpha.287) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Display default values for functions with arguments in help ([#1264](https://github.com/Wynntils/Artemis/issues/1264)) ([f157c96](https://github.com/Wynntils/Artemis/commit/f157c96fb79eaa5a6deae915657e677dd9df8d75))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.287 [skip ci] ([493dae8](https://github.com/Wynntils/Artemis/commit/493dae8f6090eb2ce970aff5fe296d2e84e12e11))
 
 ## [0.0.2-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.285...v0.0.2-alpha.286) (2023-03-04)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.284 [skip ci] ([e41def3](https://github.com/Wynntils/Artemis/commit/e41def3c206a2e804c8efc3b5c648cf2daa62e80))
-
-## [0.0.2-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.282...v0.0.2-alpha.283) (2023-03-04)
-
-
-### Bug Fixes
-
-* Fix pouch functions and held item function returns int ([#1261](https://github.com/Wynntils/Artemis/issues/1261)) ([4b8d43d](https://github.com/Wynntils/Artemis/commit/4b8d43df9b71535978d3c8a65baabcbfae33a5d8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.283 [skip ci] ([a296f64](https://github.com/Wynntils/Artemis/commit/a296f644b853a51d0385fbc7a8565024c9f68caf))
 
