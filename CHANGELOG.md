@@ -1,9 +1,21 @@
+## [0.0.2-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.279...v0.0.2-alpha.280) (2023-03-04)
+
+
+### Bug Fixes
+
+* More mixin fixin'  ([#1249](https://github.com/Wynntils/Artemis/issues/1249)) ([a73e99b](https://github.com/Wynntils/Artemis/commit/a73e99be187539b9237e3d4006f30a2206fbd93b))
+
 ## [0.0.2-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.278...v0.0.2-alpha.279) (2023-03-04)
 
 
 ### New Features
 
 * Add StringEquals, ParseInt, ParseDouble :) ([#1259](https://github.com/Wynntils/Artemis/issues/1259)) ([505216b](https://github.com/Wynntils/Artemis/commit/505216b8210b5d2fedb79daa599b6e3c57949221))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.279 [skip ci] ([92ec7f3](https://github.com/Wynntils/Artemis/commit/92ec7f3ba38fa9ab23a54432fa69c5ec5170aa4d))
 
 ## [0.0.2-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.277...v0.0.2-alpha.278) (2023-03-04)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.276 [skip ci] ([64aba33](https://github.com/Wynntils/Artemis/commit/64aba3341b37224b06e76fd84fc5840e5f06388f))
-
-## [0.0.2-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.274...v0.0.2-alpha.275) (2023-03-04)
-
-
-### Miscellaneous Chores
-
-* Build new release ([#1254](https://github.com/Wynntils/Artemis/issues/1254)) ([7c9e1cf](https://github.com/Wynntils/Artemis/commit/7c9e1cf642c378bd7cfaca3ed4dc1c701bcef73b))
-* **release:** v0.0.2-alpha.275 [skip ci] ([c5b35bd](https://github.com/Wynntils/Artemis/commit/c5b35bd5353c018aaf2a7ea24b331f8ced983dac))
 
