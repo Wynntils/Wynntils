@@ -6,7 +6,8 @@ package com.wynntils.mc.mixin;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ResourcePackClearEvent;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.resources.DownloadedPackSource;
@@ -37,12 +38,14 @@ public abstract class DownloadedPackSourceMixin {
                         .hash(Hashing.sha1())
                         .toString();
 
-                if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
+                ResourcePackClearEvent event = new ResourcePackClearEvent(hash);
+                MixinHelper.postAlways(event);
+                if (event.isCanceled()) {
                     cir.setReturnValue(CompletableFuture.completedFuture(null));
                     cir.cancel();
                 }
             } else {
-                EventFactory.onResourcePackClearEvent(null);
+                MixinHelper.postAlways(new ResourcePackClearEvent(null));
             }
         } catch (IOException e) {
             // ignored

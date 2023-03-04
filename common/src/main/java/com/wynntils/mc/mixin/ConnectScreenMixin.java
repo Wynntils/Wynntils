@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ConnectionEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.multiplayer.ServerData;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ConnectScreenMixin {
     @Inject(method = "connect", at = @At("HEAD"))
     private void connectPre(Minecraft minecraft, ServerAddress serverAddress, ServerData serverData, CallbackInfo ci) {
-        EventFactory.onConnect(serverAddress.getHost(), serverAddress.getPort());
+        String host = serverAddress.getHost();
+        MixinHelper.postAlways(new ConnectionEvent.ConnectedEvent(host, serverAddress.getPort()));
     }
 }

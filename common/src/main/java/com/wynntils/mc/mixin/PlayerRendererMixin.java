@@ -5,8 +5,10 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,9 +34,8 @@ public abstract class PlayerRendererMixin
             method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V",
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
-        RenderLayerRegistrationEvent event =
-                EventFactory.onRenderLayerRegistration((PlayerRenderer) (Object) this, context, bl);
-        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : event.getRegisteredLayers()) {
+        MixinHelper.postAlways(new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl));
+        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl).getRegisteredLayers()) {
             this.addLayer(layer);
         }
     }
@@ -51,14 +52,8 @@ public abstract class PlayerRendererMixin
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        if (EventFactory.onNameTagRender(
-                        entity,
-                        displayName,
-                        matrixStack,
-                        buffer,
-                        packedLight,
-                        this.entityRenderDispatcher,
-                        this.getFont())
+        if (MixinHelper.post(new NametagRenderEvent(
+                        entity, displayName, matrixStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont()))
                 .isCanceled()) {
             ci.cancel();
         }

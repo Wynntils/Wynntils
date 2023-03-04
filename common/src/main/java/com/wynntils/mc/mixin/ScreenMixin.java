@@ -8,17 +8,25 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.PauseMenuInitEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
+import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -64,14 +72,21 @@ public abstract class ScreenMixin implements ScreenExtension {
     private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        EventFactory.onScreenCreatedPre(screen, this::addRenderableWidget);
+        if (screen instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenInitEvent.Pre(titleScreen, this::addRenderableWidget));
+        }
     }
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        EventFactory.onScreenCreatedPost(screen, this::addRenderableWidget);
+        Consumer<AbstractWidget> addButton = this::addRenderableWidget;
+        if (screen instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
+        } else if (screen instanceof PauseScreen pauseMenuScreen) {
+            MixinHelper.post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
+        }
     }
 
     @WrapOperation(
@@ -91,7 +106,7 @@ public abstract class ScreenMixin implements ScreenExtension {
             Operation<Void> original,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre e =
-                EventFactory.onItemTooltipRenderPre(poseStack, itemStack, tooltips, mouseX, mouseY);
+                MixinHelper.post(new ItemTooltipRenderEvent.Pre(poseStack, itemStack, tooltips, mouseX, mouseY));
         if (e.isCanceled()) return;
 
         original.call(
@@ -107,19 +122,19 @@ public abstract class ScreenMixin implements ScreenExtension {
             method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("RETURN"))
     private void renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
-        EventFactory.onItemTooltipRenderPost(poseStack, itemStack, mouseX, mouseY);
+        MixinHelper.post(new ItemTooltipRenderEvent.Post(poseStack, itemStack, mouseX, mouseY));
     }
 
     @Inject(
             method = "rebuildWidgets",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInit(CallbackInfo ci) {
-        EventFactory.onScreenInit((Screen) (Object) this);
+        MixinHelper.post(new ScreenInitEvent((Screen) (Object) this));
     }
 
     @Inject(method = "render", at = @At("RETURN"))
     private void onScreenRenderPost(PoseStack poseStack, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        EventFactory.onScreenRenderPost((Screen) (Object) this, poseStack, mouseX, mouseY, partialTick);
+        MixinHelper.post(new ScreenRenderEvent((Screen) (Object) this, poseStack, mouseX, mouseY, partialTick));
     }
 
     @Override

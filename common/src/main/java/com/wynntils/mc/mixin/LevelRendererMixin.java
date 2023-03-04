@@ -7,7 +7,9 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
@@ -41,8 +43,8 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLevelPost(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderLevelEvent.Post(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 
     @Inject(at = @At("HEAD"), method = "renderLevel")
@@ -56,8 +58,8 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLevelPre(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderLevelEvent.Pre(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 
     @ModifyExpressionValue(
@@ -91,7 +93,7 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderTileLast(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderTileLevelLastEvent(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 }
