@@ -42,7 +42,6 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
-import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
@@ -404,8 +403,8 @@ public final class EventFactory {
         post(new ContainerCloseEvent.Post());
     }
 
-    public static SetSlotEvent onSetSlotPre(Container container, int slot, ItemStack itemStack) {
-        return post(new SetSlotEvent.Pre(container, slot, itemStack));
+    public static void onSetSlotPre(Container container, int slot, ItemStack itemStack) {
+        post(new SetSlotEvent.Pre(container, slot, itemStack));
     }
 
     public static void onSetSlotPost(Container container, int slot, ItemStack itemStack) {
@@ -425,10 +424,6 @@ public final class EventFactory {
     public static ContainerClickEvent onContainerClickEvent(
             int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
         return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
-    }
-
-    public static ItemTooltipHoveredNameEvent onGetHoverName(Component hoveredName, ItemStack itemStack) {
-        return post(new ItemTooltipHoveredNameEvent(hoveredName, itemStack));
     }
 
     public static ItemTooltipFlagsEvent.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
