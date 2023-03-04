@@ -8,10 +8,10 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.Event;
 
-public class CommandsPacketEvent extends Event {
+public class CommandsAddedEvent extends Event {
     private RootCommandNode<SharedSuggestionProvider> root;
 
-    public CommandsPacketEvent(RootCommandNode<SharedSuggestionProvider> root) {
+    public CommandsAddedEvent(RootCommandNode<SharedSuggestionProvider> root) {
         this.root = root;
     }
 

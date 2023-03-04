@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.ui;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -14,8 +16,11 @@ import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import net.minecraft.client.resources.DownloadedPackSource;
+import net.minecraft.server.packs.FilePackResources;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,9 +49,19 @@ public class AutoApplyResourcePackFeature extends UserFeature {
     public void onResourceClear(ResourcePackClearEvent event) {
         if (appliedHash.isEmpty()) return;
 
-        if (Objects.equals(event.getHash(), appliedHash)) {
-            event.setCanceled(true);
-            return;
+        try (PackResources packResources = event.getServerPack().open()) {
+            if (packResources instanceof FilePackResources filePackResources) {
+                String hash = Files.asByteSource(filePackResources.file)
+                        .hash(Hashing.sha1())
+                        .toString();
+
+                if (Objects.equals(hash, appliedHash)) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            // ignored
         }
 
         appliedHash = "";

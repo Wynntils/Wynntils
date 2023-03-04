@@ -9,7 +9,8 @@ import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.util.List;
 
 public class ConditionalFunctions {
-    private abstract static class IfFunctionBase extends GenericFunction<Object> {
+    // NOTE: This class' generic type is only used in the superclass's getFunctionType() method.
+    private abstract static class IfFunctionBase<T> extends GenericFunction<Object> {
         @Override
         public Object getValue(FunctionArguments arguments) {
             if (arguments.getArgument("condition").getBooleanValue()) {
@@ -20,7 +21,7 @@ public class ConditionalFunctions {
         }
     }
 
-    public static class IfStringFunction extends IfFunctionBase {
+    public static class IfStringFunction extends IfFunctionBase<String> {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
@@ -35,7 +36,7 @@ public class ConditionalFunctions {
         }
     }
 
-    public static class IfNumberFunction extends IfFunctionBase {
+    public static class IfNumberFunction extends IfFunctionBase<Number> {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(

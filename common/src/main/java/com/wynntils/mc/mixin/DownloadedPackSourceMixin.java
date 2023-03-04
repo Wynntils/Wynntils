@@ -4,15 +4,11 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 import com.wynntils.mc.EventFactory;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.resources.DownloadedPackSource;
-import net.minecraft.server.packs.FilePackResources;
-import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.repository.Pack;
+import net.minecraftforge.eventbus.api.Event;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,26 +22,12 @@ public abstract class DownloadedPackSourceMixin {
 
     @Inject(method = "clearServerPack", at = @At("HEAD"), cancellable = true)
     private void onClearServerPackPre(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        if (serverPack == null) {
-            return;
-        }
+        if (serverPack == null) return;
 
-        try (PackResources packResources = this.serverPack.open()) {
-            // We can calculate this here as this is always going to be posted anyway
-            if (packResources instanceof FilePackResources filePackResources) {
-                String hash = Files.asByteSource(filePackResources.file)
-                        .hash(Hashing.sha1())
-                        .toString();
-
-                if (EventFactory.onResourcePackClearEvent(hash).isCanceled()) {
-                    cir.setReturnValue(CompletableFuture.completedFuture(null));
-                    cir.cancel();
-                }
-            } else {
-                EventFactory.onResourcePackClearEvent(null);
-            }
-        } catch (IOException e) {
-            // ignored
+        Event event = EventFactory.onResourcePackClearEvent(serverPack);
+        if (event.isCanceled()) {
+            cir.setReturnValue(CompletableFuture.completedFuture(null));
+            cir.cancel();
         }
     }
 }

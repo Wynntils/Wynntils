@@ -10,10 +10,9 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -117,7 +116,7 @@ public abstract class ClientPacketListenerMixin {
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
+        CommandsAddedEvent event = EventFactory.onCommandsAdded(root);
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
@@ -308,13 +307,16 @@ public abstract class ClientPacketListenerMixin {
             @Local PlayerChatMessage playerChatMessage,
             @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
+
+        // Currently, Wynncraft does not have any Player chat messages so this code
+        // is not really used
         ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
         if (result.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+        if (result.isMessageChanged()) {
             // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
@@ -343,7 +345,7 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.content())) {
+        if (result.isMessageChanged()) {
             this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
             ci.cancel();
         }

@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
@@ -43,12 +44,10 @@ public class WynncraftButtonFeature extends UserFeature {
         ServerData wynncraftServer = new ServerData("Wynncraft", connectToLobby ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
+        TitleScreen titleScreen = e.getTitleScreen();
         WynncraftButton wynncraftButton = new WynncraftButton(
-                e.getTitleScreen(),
-                wynncraftServer,
-                e.getTitleScreen().width / 2 + 104,
-                e.getTitleScreen().height / 4 + 48 + 24);
-        e.getAddButton().accept(wynncraftButton);
+                titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24);
+        titleScreen.addRenderableWidget(wynncraftButton);
     }
 
     private static class WynncraftButton extends Button {
