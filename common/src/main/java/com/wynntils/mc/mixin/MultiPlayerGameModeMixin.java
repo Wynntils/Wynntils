@@ -13,7 +13,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,14 +26,9 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
-        ItemStack itemStack;
-        if (slotId >= 0) {
-            itemStack = player.containerMenu.getSlot(slotId).getItem();
-        } else {
-            itemStack = ItemStack.EMPTY;
-        }
+        if (containerId != player.containerMenu.containerId) return;
 
-        if (EventFactory.onContainerClickEvent(containerId, slotId, itemStack, clickType, slotId)
+        if (EventFactory.onContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton)
                 .isCanceled()) {
             ci.cancel();
         }

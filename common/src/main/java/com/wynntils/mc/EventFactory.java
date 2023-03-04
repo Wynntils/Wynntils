@@ -6,6 +6,7 @@ package com.wynntils.mc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
@@ -90,10 +91,9 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -131,12 +131,14 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -240,11 +242,21 @@ public final class EventFactory {
     }
 
     public static RenderEvent.Pre onRenderHearthsPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar));
+        RenderEvent.Pre event = post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.HealthBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        return event;
     }
 
     public static RenderEvent.Pre onRenderFoodPre(PoseStack poseStack, Window window) {
-        return post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
+        RenderEvent.Pre event = post(new RenderEvent.Pre(poseStack, 0, window, RenderEvent.ElementType.FoodBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        return event;
     }
 
     public static void onContainerRender(
@@ -310,18 +322,16 @@ public final class EventFactory {
     // endregion
 
     // region Screen Events
-    public static void onScreenCreatedPost(Screen screen, Consumer<AbstractWidget> addButton) {
-        if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
-        } else if (screen instanceof PauseScreen pauseMenuScreen) {
-            post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
-        }
+    public static void onTitleScreenCreatedPost(TitleScreen titleScreen) {
+        postAlways(new TitleScreenInitEvent.Post(titleScreen));
     }
 
-    public static void onScreenCreatedPre(Screen screen, Consumer<AbstractWidget> addButton) {
-        if (screen instanceof TitleScreen titleScreen) {
-            postAlways(new TitleScreenInitEvent.Pre(titleScreen, addButton));
-        }
+    public static void onPauseScreenCreatedPost(PauseScreen pauseMenuScreen) {
+        post(new PauseMenuInitEvent(pauseMenuScreen));
+    }
+
+    public static void onTitleScreenCreatedPre(TitleScreen titleScreen) {
+        postAlways(new TitleScreenInitEvent.Pre(titleScreen));
     }
 
     public static void onScreenOpenedPost(Screen screen) {
@@ -402,8 +412,8 @@ public final class EventFactory {
     }
 
     public static ContainerClickEvent onContainerClickEvent(
-            int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        return post(new ContainerClickEvent(containerId, slotNum, itemStack, clickType, buttonNum));
+            AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int buttonNum) {
+        return post(new ContainerClickEvent(containerMenu, slotNum, clickType, buttonNum));
     }
 
     public static ItemTooltipFlagsEvent.Advanced onTooltipFlagsAdvanced(ItemStack itemStack, TooltipFlag flags) {
@@ -512,8 +522,8 @@ public final class EventFactory {
         return post(new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired()));
     }
 
-    public static Event onResourcePackClearEvent(String hash) {
-        return postAlways(new ResourcePackClearEvent(hash));
+    public static Event onResourcePackClearEvent(Pack serverPack) {
+        return postAlways(new ResourcePackClearEvent(serverPack));
     }
 
     public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
