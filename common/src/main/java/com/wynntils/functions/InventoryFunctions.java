@@ -107,7 +107,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return 27 - pouchItem.getCount();
+                return 27 - pouchItem.getIngredients().size();
             }
 
             return -1;
@@ -115,7 +115,7 @@ public class InventoryFunctions {
 
         @Override
         public List<String> getAliases() {
-            return List.of("pouch_open");
+            return List.of("pouch_open", "pouch_free");
         }
     }
 
@@ -127,7 +127,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return pouchItem.getCount();
+                return pouchItem.getIngredients().size();
             }
 
             return -1;
