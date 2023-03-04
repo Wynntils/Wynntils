@@ -7,7 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;

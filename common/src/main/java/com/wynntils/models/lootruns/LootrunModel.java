@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
