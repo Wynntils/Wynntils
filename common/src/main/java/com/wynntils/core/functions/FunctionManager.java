@@ -305,6 +305,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
 
+        registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatFunction());
 
         // Regular Functions

@@ -23,4 +23,19 @@ public class StringFunctions {
                     List.of(new FunctionArguments.Argument("value", Number.class, null)));
         }
     }
+
+    public static class ConcatFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return arguments.getArgument("first").getStringValue()
+                    + arguments.getArgument("second").getStringValue();
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument("first", String.class, null),
+                    new FunctionArguments.Argument("second", String.class, null)));
+        }
+    }
 }
