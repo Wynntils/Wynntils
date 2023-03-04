@@ -1,9 +1,21 @@
+## [0.0.2-alpha.284](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.283...v0.0.2-alpha.284) (2023-03-04)
+
+
+### Code Refactoring
+
+* Move features.* to features, skipping user/debug/statemanaged split ([#1257](https://github.com/Wynntils/Artemis/issues/1257)) ([07a9c66](https://github.com/Wynntils/Artemis/commit/07a9c665b5f3c967c3219d94024d0f2a65bdb464))
+
 ## [0.0.2-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.282...v0.0.2-alpha.283) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Fix pouch functions and held item function returns int ([#1261](https://github.com/Wynntils/Artemis/issues/1261)) ([4b8d43d](https://github.com/Wynntils/Artemis/commit/4b8d43df9b71535978d3c8a65baabcbfae33a5d8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.283 [skip ci] ([a296f64](https://github.com/Wynntils/Artemis/commit/a296f644b853a51d0385fbc7a8565024c9f68caf))
 
 ## [0.0.2-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.281...v0.0.2-alpha.282) (2023-03-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.280 [skip ci] ([9fe3ed4](https://github.com/Wynntils/Artemis/commit/9fe3ed4468e99877c867fa793f3d242b10c922be))
-
-## [0.0.2-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.278...v0.0.2-alpha.279) (2023-03-04)
-
-
-### New Features
-
-* Add StringEquals, ParseInt, ParseDouble :) ([#1259](https://github.com/Wynntils/Artemis/issues/1259)) ([505216b](https://github.com/Wynntils/Artemis/commit/505216b8210b5d2fedb79daa599b6e3c57949221))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.279 [skip ci] ([92ec7f3](https://github.com/Wynntils/Artemis/commit/92ec7f3ba38fa9ab23a54432fa69c5ec5170aa4d))
 
