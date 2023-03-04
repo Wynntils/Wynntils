@@ -18,21 +18,14 @@ import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,49 +36,22 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Unique
     private TextInputBoxWidget wynntilsFocusedTextInput;
 
-    @Final
-    @Shadow
-    private List<GuiEventListener> children;
-
-    @Final
-    @Shadow
-    private List<NarratableEntry> narratables;
-
-    @Final
-    @Shadow
-    public List<Renderable> renderables;
-
-    // Making this public is required for the mixin, use this with caution anywhere else
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T renderable) {
-        renderables.add(renderable);
-        return addWidget(renderable);
-    }
-
-    // Making this public is required for the mixin, use this with caution anywhere else
-    public <T extends GuiEventListener & NarratableEntry> T addWidget(T listener) {
-        children.add(listener);
-        narratables.add(listener);
-        return listener;
-    }
-
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
     private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
+        if (!(screen instanceof TitleScreen titleScreen)) return;
 
-        if (screen instanceof TitleScreen titleScreen) {
-            MixinHelper.postAlways(new TitleScreenInitEvent.Pre(titleScreen, this::addRenderableWidget));
-        }
+        MixinHelper.postAlways(new TitleScreenInitEvent.Pre(titleScreen));
     }
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
     private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
-        Consumer<AbstractWidget> addButton = this::addRenderableWidget;
         if (screen instanceof TitleScreen titleScreen) {
-            MixinHelper.postAlways(new TitleScreenInitEvent.Post(titleScreen, addButton));
+            MixinHelper.postAlways(new TitleScreenInitEvent.Post(titleScreen));
         } else if (screen instanceof PauseScreen pauseMenuScreen) {
-            MixinHelper.post(new PauseMenuInitEvent(pauseMenuScreen, addButton));
+            MixinHelper.post(new PauseMenuInitEvent(pauseMenuScreen));
         }
     }
 

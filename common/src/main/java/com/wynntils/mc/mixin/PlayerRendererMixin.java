@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,7 +34,8 @@ public abstract class PlayerRendererMixin
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
         MixinHelper.postAlways(new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl));
-        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl).getRegisteredLayers()) {
+        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer :
+                new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl).getRegisteredLayers()) {
             this.addLayer(layer);
         }
     }
@@ -53,7 +53,13 @@ public abstract class PlayerRendererMixin
             int packedLight,
             CallbackInfo ci) {
         if (MixinHelper.post(new NametagRenderEvent(
-                        entity, displayName, matrixStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont()))
+                        entity,
+                        displayName,
+                        matrixStack,
+                        buffer,
+                        packedLight,
+                        this.entityRenderDispatcher,
+                        this.getFont()))
                 .isCanceled()) {
             ci.cancel();
         }

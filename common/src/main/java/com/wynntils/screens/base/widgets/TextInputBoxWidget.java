@@ -6,6 +6,7 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -61,7 +62,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (oldWidget != null) {
             this.textBoxInput = oldWidget.textBoxInput;
-            this.cursorPosition = oldWidget.cursorPosition;
+            setCursorPosition(oldWidget.cursorPosition);
             this.renderColor = oldWidget.renderColor;
         }
     }
@@ -79,7 +80,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
 
-        String renderedText = getRenderedText(this.width - 4);
+        String renderedText = getRenderedText(this.width - 8);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -111,9 +112,9 @@ public class TextInputBoxWidget extends AbstractWidget {
                     (textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition));
         } else {
             // This case, the input is too long, only render text that fits, and is closest to cursor
-            StringBuilder builder = new StringBuilder(cursorChar);
+            StringBuilder builder = new StringBuilder();
 
-            int stringPosition = Math.min(textBoxInput.length() - 1, cursorPosition);
+            int stringPosition = cursorPosition - 1;
 
             while (font.width(builder.toString()) < maxTextWidth - cursorWidth && stringPosition >= 0) {
                 builder.append(textBoxInput.charAt(stringPosition));
@@ -122,8 +123,9 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
 
             builder.reverse();
+            builder.append(cursorChar);
 
-            stringPosition = cursorPosition + 1;
+            stringPosition = cursorPosition;
 
             while (font.width(builder.toString()) < maxTextWidth - cursorWidth
                     && stringPosition < this.textBoxInput.length()) {
@@ -134,6 +136,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             renderedText = builder.toString();
         }
+
         return renderedText;
     }
 
@@ -164,7 +167,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         textBoxInput = textBoxInput.substring(0, cursorPosition) + codePoint + textBoxInput.substring(cursorPosition);
-        cursorPosition = Math.min(textBoxInput.length(), cursorPosition + 1);
+        setCursorPosition(cursorPosition + 1);
         this.onUpdateConsumer.accept(this.getTextBoxInput());
         return true;
     }
@@ -203,7 +206,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             textBoxInput =
                     textBoxInput.substring(0, Math.max(0, cursorPosition - 1)) + textBoxInput.substring(cursorPosition);
-            cursorPosition = Math.max(0, cursorPosition - 1);
+            setCursorPosition(cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
             return true;
         }
@@ -226,22 +229,22 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
             if (Screen.hasControlDown()) {
-                cursorPosition = 0;
+                setCursorPosition(0);
                 return true;
             }
 
-            cursorPosition = Math.max(0, cursorPosition - 1);
+            setCursorPosition(cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
             return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
             if (Screen.hasControlDown()) {
-                cursorPosition = textBoxInput.length();
+                setCursorPosition(textBoxInput.length());
                 return true;
             }
 
-            cursorPosition = Math.min(textBoxInput.length(), cursorPosition + 1);
+            setCursorPosition(cursorPosition + 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
             return true;
         }
@@ -274,8 +277,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public void setTextBoxInput(String textBoxInput) {
         this.textBoxInput = textBoxInput;
-        this.cursorPosition = this.textBoxInput.length();
+        setCursorPosition(textBoxInput.length());
+
         this.onUpdateConsumer.accept(this.textBoxInput);
+    }
+
+    public void setCursorPosition(int cursorPosition) {
+        this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
     private char getCursorChar() {

@@ -4,9 +4,10 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -22,7 +23,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
@@ -58,18 +58,38 @@ public abstract class GuiMixin {
         MixinHelper.post(new HotbarSlotRenderEvent.Post(itemStack, x, y));
     }
 
-    // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
+    // This does not work on Forge. See ForgeGuiMixin for replacement.
     @Inject(method = "render", at = @At("HEAD"))
     private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Pre(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }
 
-    // This does not work on Forge. See ForgeIngameGuiMixin for replacement.
+    // This does not work on Forge. See ForgeGuiMixin for replacement.
     @Inject(method = "render", at = @At("RETURN"))
     private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Post(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
+    }
+
+    // This does not work on Forge. See ForgeGuiMixin for replacement.
+    @WrapOperation(
+            method = "Lnet/minecraft/client/gui/Gui;renderPlayerHealth(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int onRenderFood(Gui instance, LivingEntity entity, Operation<Integer> original) {
+        RenderEvent.Pre event = MixinHelper.post(
+                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
+
+        // Return a non-zero value to cancel rendering
+        if (event.isCanceled()) return 1;
+
+        return original.call(instance, entity);
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
@@ -102,33 +122,5 @@ public abstract class GuiMixin {
         }
 
         RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
-    }
-
-    // This doesn't work on forge. See ForgeIngameGuiMixin for replacement.
-    // As getVehicleMaxHearts is a private method and is only used by two methods, we can safely override it.
-    // This is strange, but it is still better than redirecting...
-    // NOTE: This mixin depends on the fact that we always cancel `renderVehicleHealth` with `onVehicleHealthRender`. If
-    // we remove that, this mixin will be called twice, making the event be posted twice in 1 render.
-    @Inject(method = "getVehicleMaxHearts", at = @At("HEAD"), cancellable = true)
-    private void onRenderFoodPre(LivingEntity mountEntity, CallbackInfoReturnable<Integer> cir) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
-
-        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
-
-        if (event.isCanceled()) {
-            cir.setReturnValue(1);
-            cir.cancel();
-        }
-    }
-
-    // On fabric/quilt, we can just cancel this. Wynncraft does not use vehicle health in any meaningful way.
-    // This does not work on forge. See ForgeIngameGui for replacement.
-    @Inject(method = "renderVehicleHealth", at = @At("HEAD"), cancellable = true)
-    private void onVehicleHealthRender(PoseStack poseStack, CallbackInfo ci) {
-        // FIXME: What if managers are not loaded? We should send event!
-        if (Managers.Connection.onServer()) {
-            ci.cancel();
-        }
     }
 }

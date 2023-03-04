@@ -14,7 +14,7 @@ import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -35,7 +35,6 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -43,9 +42,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
@@ -142,7 +139,7 @@ public abstract class ClientPacketListenerMixin {
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsPacketEvent event = MixinHelper.post(new CommandsPacketEvent(root));
+        CommandsAddedEvent event = MixinHelper.post(new CommandsAddedEvent(root));
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
@@ -227,7 +224,8 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new MenuEvent.MenuClosedEvent(packet.getContainerId())).isCanceled()) {
+        if (MixinHelper.post(new MenuEvent.MenuClosedEvent(packet.getContainerId()))
+                .isCanceled()) {
             ci.cancel();
         }
     }
@@ -359,13 +357,16 @@ public abstract class ClientPacketListenerMixin {
             @Local PlayerChatMessage playerChatMessage,
             @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
+
+        // Currently, Wynncraft does not have any Player chat messages so this code
+        // is not really used
         ChatPacketReceivedEvent result = MixinHelper.post(new ChatPacketReceivedEvent.Player(packet.unsignedContent()));
         if (result.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+        if (result.isMessageChanged()) {
             // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
@@ -397,7 +398,7 @@ public abstract class ClientPacketListenerMixin {
             return;
         }
 
-        if (!Objects.equals(event.getMessage(), packet.content())) {
+        if (event.isMessageChanged()) {
             this.minecraft.getChatListener().handleSystemMessage(event.getMessage(), packet.overlay());
             ci.cancel();
         }

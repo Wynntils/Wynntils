@@ -13,13 +13,11 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,14 +31,9 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
-        ItemStack itemStack;
-        if (slotId >= 0) {
-            itemStack = player.containerMenu.getSlot(slotId).getItem();
-        } else {
-            itemStack = ItemStack.EMPTY;
-        }
+        if (containerId != player.containerMenu.containerId) return;
 
-        if (MixinHelper.post(new ContainerClickEvent(containerId, slotId, itemStack, clickType, slotId))
+        if (MixinHelper.post(new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton))
                 .isCanceled()) {
             ci.cancel();
         }
@@ -52,7 +45,8 @@ public abstract class MultiPlayerGameModeMixin {
             InteractionHand hand,
             BlockHitResult result,
             CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
+        PlayerInteractEvent.RightClickBlock event =
+                new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
         if (MixinHelper.post(event).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
