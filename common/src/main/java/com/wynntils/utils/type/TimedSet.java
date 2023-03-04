@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.type;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -72,6 +73,12 @@ public class TimedSet<T> implements Iterable<T> {
         return StreamSupport.stream(this.spliterator(), false);
     }
 
+    public Set<TimedEntry> getEntries() {
+        if (autoClear) releaseEntries();
+
+        return Collections.unmodifiableSet(entries);
+    }
+
     private class TimedSetIterator implements Iterator<T> {
         private final Iterator<TimedEntry> original = entries.iterator();
 
@@ -86,7 +93,7 @@ public class TimedSet<T> implements Iterable<T> {
         }
     }
 
-    private final class TimedEntry {
+    public final class TimedEntry {
         final T entry;
         final long expiration;
 
@@ -99,7 +106,7 @@ public class TimedSet<T> implements Iterable<T> {
             return expiration;
         }
 
-        private T getEntry() {
+        public T getEntry() {
             return entry;
         }
 

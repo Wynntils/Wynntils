@@ -31,7 +31,7 @@ public final class DamageModel extends Model {
 
     private final DamageBar damageBar = new DamageBar();
 
-    private final TimedSet<Integer> areaDamagePerSecondSet = new TimedSet<>(1, TimeUnit.SECONDS, true);
+    private final TimedSet<Integer> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
     private String focusedMobName;
     private String focusedMobElementals;
@@ -65,13 +65,27 @@ public final class DamageModel extends Model {
         }
 
         WynntilsMod.postEvent(new DamageDealtEvent(damages));
-        areaDamagePerSecondSet.put(
-                damages.values().stream().mapToInt(Integer::intValue).sum());
+
+        int damageSum = damages.values().stream().mapToInt(Integer::intValue).sum();
+        areaDamageSet.put(damageSum);
+
         lastDamageDealtTimestamp = System.currentTimeMillis();
     }
 
     public int getAreaDamagePerSecond() {
-        return areaDamagePerSecondSet.stream().mapToInt(Integer::intValue).sum();
+        return areaDamageSet.getEntries().stream()
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getExpiration()) <= 1000L)
+                .mapToInt(TimedSet.TimedEntry::getEntry)
+                .sum();
+    }
+
+    public double getAverageAreaDamagePerSecond(int seconds) {
+        return areaDamageSet.getEntries().stream()
+                        .filter(timedEntry ->
+                                (System.currentTimeMillis() - timedEntry.getExpiration()) <= seconds * 1000L)
+                        .mapToInt(TimedSet.TimedEntry::getEntry)
+                        .sum()
+                / (double) seconds;
     }
 
     public final class DamageBar extends TrackedBar {
