@@ -107,7 +107,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return 27 - pouchItem.getCount();
+                return 27 - pouchItem.getIngredients().size();
             }
 
             return -1;
@@ -115,7 +115,7 @@ public class InventoryFunctions {
 
         @Override
         public List<String> getAliases() {
-            return List.of("pouch_open");
+            return List.of("pouch_open", "pouch_free");
         }
     }
 
@@ -127,7 +127,7 @@ public class InventoryFunctions {
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return pouchItem.getCount();
+                return pouchItem.getIngredients().size();
             }
 
             return -1;
@@ -139,18 +139,18 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemCurrentDurabilityFunction extends Function<String> {
+    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().current());
+                return durableItem.getDurability().current();
             }
 
-            return "";
+            return -1;
         }
 
         @Override
@@ -159,18 +159,18 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemMaxDurabilityFunction extends Function<String> {
+    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
 
             if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().max());
+                return durableItem.getDurability().max();
             }
 
-            return "";
+            return -1;
         }
 
         @Override
