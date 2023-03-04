@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
-import com.wynntils.features.user.players.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;

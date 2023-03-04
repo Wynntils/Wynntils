@@ -5,7 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;

@@ -7,7 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.statemanaged.DataStorageFeature;
+import com.wynntils.features.wynntils.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
