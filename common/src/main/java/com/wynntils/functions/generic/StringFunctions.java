@@ -56,4 +56,65 @@ public class StringFunctions {
                     new FunctionArguments.Argument("second", String.class, null)));
         }
     }
+
+    public static class StringEqualsFunction extends GenericFunction<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return arguments
+                    .getArgument("first")
+                    .getStringValue()
+                    .equals(arguments.getArgument("second").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument("first", String.class, null),
+                    new FunctionArguments.Argument("second", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("eq_str");
+        }
+    }
+
+    public static class ParseIntegerFunction extends GenericFunction<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            try {
+                return Integer.parseInt(arguments.getArgument("value").getStringValue());
+            } catch (NumberFormatException ignored) {
+                return 0;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument("value", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("parse_int");
+        }
+    }
+
+    public static class ParseDoubleFunction extends GenericFunction<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            try {
+                return Double.parseDouble(arguments.getArgument("value").getStringValue());
+            } catch (NumberFormatException ignored) {
+                return 0.0d;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument("value", String.class, null)));
+        }
+    }
 }

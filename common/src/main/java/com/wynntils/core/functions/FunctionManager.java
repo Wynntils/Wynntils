@@ -307,6 +307,9 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.ParseDoubleFunction());
+        registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
