@@ -1,9 +1,21 @@
+## [0.0.2-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.281...v0.0.2-alpha.282) (2023-03-04)
+
+
+### Bug Fixes
+
+* Fix cape texture loading (hopefully) ([#1263](https://github.com/Wynntils/Artemis/issues/1263)) ([83de718](https://github.com/Wynntils/Artemis/commit/83de718c2cf4aaca1e4d6dd3e670db0251c682e0))
+
 ## [0.0.2-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.280...v0.0.2-alpha.281) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Fix multiple issue with command mixin ([#1250](https://github.com/Wynntils/Artemis/issues/1250)) ([96b161e](https://github.com/Wynntils/Artemis/commit/96b161e488a637ede2d492bda7c0ab9ad8a9f013))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.281 [skip ci] ([944413c](https://github.com/Wynntils/Artemis/commit/944413ce1dc5cd3eb134ecb94b53d85743c3714b))
 
 ## [0.0.2-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.279...v0.0.2-alpha.280) (2023-03-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.278 [skip ci] ([d20f850](https://github.com/Wynntils/Artemis/commit/d20f850c4e763f8c0b19409fe0cc865f008a2be4))
-
-## [0.0.2-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.276...v0.0.2-alpha.277) (2023-03-04)
-
-
-### Bug Fixes
-
-* Text box cursor now behaves much closer to expectations ([#1255](https://github.com/Wynntils/Artemis/issues/1255)) ([e375eba](https://github.com/Wynntils/Artemis/commit/e375ebad00de45353c15380324e03b9144b2064e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.277 [skip ci] ([85c1c8e](https://github.com/Wynntils/Artemis/commit/85c1c8e3c22ee052775c57bf32035d8cad6ac6bb))
 
