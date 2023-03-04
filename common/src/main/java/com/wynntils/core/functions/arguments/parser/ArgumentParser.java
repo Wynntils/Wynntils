@@ -61,7 +61,10 @@ public final class ArgumentParser {
                 calculatedExpressions.stream().map(ErrorOr::getValue).toList());
     }
 
-    // This method handles splitting arguments in a "context-aware" way
+    // This method handles splitting arguments in a "context-aware" way:
+    //      This means that we need to handle nested expressions, indicated by parentheses
+    //      The catch is that we need to handle strings with parantheses, which should not count as nesting
+    //      Escaped string characters should also be handled
     // For example, the following string: "(test;test2;other_function(test4;test5))" should be parsed as ->
     // ["test;test2;other_function(test4;test5)"]
     private static List<String> splitArguments(String rawArgs) {
@@ -69,18 +72,29 @@ public final class ArgumentParser {
 
         int paranthesesDepth = 0;
         int processedIndex = 0;
+        boolean inString = false;
+
+        char previous = ' ';
 
         for (int i = 0; i < rawArgs.length(); i++) {
             char current = rawArgs.charAt(i);
 
-            if (current == '(') {
-                paranthesesDepth++;
-            } else if (current == ')') {
-                paranthesesDepth--;
-            } else if (current == ';' && paranthesesDepth == 0) {
-                arguments.add(rawArgs.substring(processedIndex, i));
-                processedIndex = i + 1;
+            if (current == '"' && previous != '\\') {
+                inString = !inString;
+            } else {
+                if (inString) continue;
+
+                if (current == '(') {
+                    paranthesesDepth++;
+                } else if (current == ')') {
+                    paranthesesDepth--;
+                } else if (current == ';' && paranthesesDepth == 0) {
+                    arguments.add(rawArgs.substring(processedIndex, i));
+                    processedIndex = i + 1;
+                }
             }
+
+            previous = current;
         }
 
         arguments.add(rawArgs.substring(processedIndex));
