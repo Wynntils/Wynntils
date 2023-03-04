@@ -10,7 +10,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Objects;
@@ -117,7 +117,7 @@ public abstract class ClientPacketListenerMixin {
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
+        CommandsAddedEvent event = EventFactory.onCommandsAdded(root);
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher

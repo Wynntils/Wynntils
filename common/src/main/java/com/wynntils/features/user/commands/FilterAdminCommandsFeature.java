@@ -9,7 +9,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -38,7 +38,7 @@ public class FilterAdminCommandsFeature extends UserFeature {
             "wynnproxy");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onCommandPacket(CommandsPacketEvent event) {
+    public void onCommandPacket(CommandsAddedEvent event) {
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
         RootCommandNode<SharedSuggestionProvider> newRoot = new RootCommandNode<>();

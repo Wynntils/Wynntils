@@ -7,6 +7,8 @@ package com.wynntils.mc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -22,7 +24,8 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -91,6 +94,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
@@ -367,6 +371,22 @@ public final class EventFactory {
 
     // endregion
 
+    // region Command Events
+    public static CommandSentEvent onCommandSent(String command, boolean signed) {
+        return post(new CommandSentEvent(command, signed));
+    }
+
+    public static CommandSuggestionsEvent onCommandSuggestions(
+            CompletableFuture<Suggestions> serverSuggestions, StringReader command, int cursor) {
+        return post(new CommandSuggestionsEvent(serverSuggestions, command, cursor));
+    }
+
+    public static CommandsAddedEvent onCommandsAdded(RootCommandNode<SharedSuggestionProvider> root) {
+        return post(new CommandsAddedEvent(root));
+    }
+
+    // endregion
+
     // region Container Events
     public static void onChestMenuQuickMove(int containerId) {
         post(new ChestMenuQuickMoveEvent(containerId));
@@ -480,10 +500,6 @@ public final class EventFactory {
         return post(new ChatSentEvent(message));
     }
 
-    public static CommandSentEvent onCommandSent(String command, boolean signed) {
-        return post(new CommandSentEvent(command, signed));
-    }
-
     public static ChatPacketReceivedEvent onPlayerChatReceived(Component message) {
         return post(new ChatPacketReceivedEvent.Player(message));
     }
@@ -519,10 +535,6 @@ public final class EventFactory {
 
     public static Event onResourcePackClearEvent(String hash) {
         return postAlways(new ResourcePackClearEvent(hash));
-    }
-
-    public static CommandsPacketEvent onCommandsPacket(RootCommandNode<SharedSuggestionProvider> root) {
-        return post(new CommandsPacketEvent(root));
     }
 
     public static SetPlayerTeamEvent onSetPlayerTeam(ClientboundSetPlayerTeamPacket packet) {

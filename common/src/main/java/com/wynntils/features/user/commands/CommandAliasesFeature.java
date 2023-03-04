@@ -7,13 +7,14 @@ package com.wynntils.features.user.commands;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -49,8 +51,8 @@ public class CommandAliasesFeature extends UserFeature {
     }
 
     @SubscribeEvent
-    public void onCommandPacket(CommandsPacketEvent event) {
-        RootCommandNode root = event.getRoot();
+    public void onCommandsAdded(CommandsAddedEvent event) {
+        RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
         for (CommandAlias commandAlias : aliases) {
             for (String alias : commandAlias.getAliases()) {
@@ -61,7 +63,7 @@ public class CommandAliasesFeature extends UserFeature {
                     builder.then(Commands.literal(parts[i]));
                 }
 
-                root.addChild(builder.build());
+                Managers.Command.addNode(root, builder.build());
             }
         }
     }

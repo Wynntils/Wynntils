@@ -4,31 +4,24 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.core.components.Managers;
+import com.wynntils.mc.EventFactory;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.gui.components.CommandSuggestions;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CommandSuggestions.class)
 public abstract class CommandSuggestionsMixin {
-    @Shadow
-    @Final
-    EditBox input;
-
-    private ParseResults<CommandSourceStack> clientParse;
-
-    @Redirect(
+    @WrapOperation(
             method = "updateCommandInfo",
             at =
                     @At(
@@ -36,27 +29,15 @@ public abstract class CommandSuggestionsMixin {
                             target =
                                     "Lcom/mojang/brigadier/CommandDispatcher;getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;",
                             remap = false))
-    private CompletableFuture<Suggestions> redirectSuggestions(
+    private CompletableFuture<Suggestions> onCompletionSuggestions(
             CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
             ParseResults<SharedSuggestionProvider> serverParse,
-            int cursor) {
-        return Managers.Command.getCompletionSuggestions(
-                input.getValue(), serverDispatcher, clientParse, serverParse, cursor);
-    }
+            int cursor,
+            Operation<CompletableFuture<Suggestions>> original,
+            @Local StringReader stringReader) {
+        CompletableFuture<Suggestions> serverSuggestions = original.call(serverDispatcher, serverParse, cursor);
 
-    @Redirect(
-            method = "updateCommandInfo",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lcom/mojang/brigadier/CommandDispatcher;parse(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;",
-                            remap = false))
-    private ParseResults<SharedSuggestionProvider> redirectParse(
-            CommandDispatcher<SharedSuggestionProvider> serverDispatcher, StringReader command, Object source) {
-        CommandDispatcher<CommandSourceStack> clientDispatcher = Managers.Command.getClientDispatcher();
-        clientParse = clientDispatcher.parse(command, Managers.Command.getSource());
-
-        return serverDispatcher.parse(command, (SharedSuggestionProvider) source);
+        CommandSuggestionsEvent event = EventFactory.onCommandSuggestions(serverSuggestions, stringReader, cursor);
+        return event.getSuggestions();
     }
 }
