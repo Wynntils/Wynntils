@@ -1,9 +1,21 @@
+## [0.0.2-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.273...v0.0.2-alpha.274) (2023-03-04)
+
+
+### New Features
+
+* Introduce the new functions system ([#1206](https://github.com/Wynntils/Artemis/issues/1206)) ([76b3546](https://github.com/Wynntils/Artemis/commit/76b35469b34b23334dcf1a9cf5bf7677dec08af6)), closes [#1175](https://github.com/Wynntils/Artemis/issues/1175) [#1179](https://github.com/Wynntils/Artemis/issues/1179) [#1181](https://github.com/Wynntils/Artemis/issues/1181) [#1184](https://github.com/Wynntils/Artemis/issues/1184) [#1207](https://github.com/Wynntils/Artemis/issues/1207) [#1246](https://github.com/Wynntils/Artemis/issues/1246) [#1248](https://github.com/Wynntils/Artemis/issues/1248) [#1251](https://github.com/Wynntils/Artemis/issues/1251)
+
 ## [0.0.2-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.272...v0.0.2-alpha.273) (2023-03-03)
 
 
 ### Bug Fixes
 
 * Remove use of @Redirect in mixins ([#1247](https://github.com/Wynntils/Artemis/issues/1247)) ([3706879](https://github.com/Wynntils/Artemis/commit/3706879b2f4d462bec78db3b0c91433fb4288036))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.273 [skip ci] ([1948c06](https://github.com/Wynntils/Artemis/commit/1948c06e729def06a7b560310a371bfac8b7f684))
 
 ## [0.0.2-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.271...v0.0.2-alpha.272) (2023-03-03)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.270 [skip ci] ([3611c76](https://github.com/Wynntils/Artemis/commit/3611c76918ce87acf20121b5f9f08b357a80ebc1))
-
-## [0.0.2-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.268...v0.0.2-alpha.269) (2023-03-03)
-
-
-### Bug Fixes
-
-* Stop warning about unknown URLs at startup ([#1243](https://github.com/Wynntils/Artemis/issues/1243)) ([599f0a0](https://github.com/Wynntils/Artemis/commit/599f0a0b3737b812882274b434dc198d76436330))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.269 [skip ci] ([acd2b30](https://github.com/Wynntils/Artemis/commit/acd2b3002e078a3aa6b86ed41da4ff09c9ca3ca6))
 
