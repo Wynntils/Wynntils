@@ -816,6 +816,8 @@
   "function.wynntils.alchemismLevel.name": "Alchemism",
   "function.wynntils.alchemismPercentage.description": "Your current alchemism percentage",
   "function.wynntils.alchemismPercentage.name": "Alchemism % [Pct]",
+  "function.wynntils.areaDamagePerSecond.description": "The damage you dealt in your area in the last second",
+  "function.wynntils.areaDamagePerSecond.name": "Area Damage Per Second",
   "function.wynntils.armouringLevel.description": "Your current armouring level",
   "function.wynntils.armouringLevel.name": "Armoring",
   "function.wynntils.armouringPercentage.description": "Your current armouring percentage",

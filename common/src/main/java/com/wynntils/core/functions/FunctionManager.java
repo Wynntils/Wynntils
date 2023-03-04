@@ -10,6 +10,7 @@ import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.core.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
 import com.wynntils.functions.CharacterFunctions;
+import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
@@ -331,6 +332,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.SoulpointTimerFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
+
+        registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
 
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
