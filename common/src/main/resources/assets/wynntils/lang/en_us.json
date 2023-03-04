@@ -971,6 +971,8 @@
   "function.wynntils.horseTier.name": "Horse Tier",
   "function.wynntils.horseXp.description": "Your horse's current XP",
   "function.wynntils.horseXp.name": "Horse XP",
+  "function.wynntils.id.description": "Your character's ID",
+  "function.wynntils.id.name": "ID",
   "function.wynntils.ingredientPouchOpenSlots.description": "How many slots are currently open in your ingredient pouch.",
   "function.wynntils.ingredientPouchOpenSlots.name": "Ingredient Pouch Open Slots",
   "function.wynntils.ingredientPouchUsedSlots.description": "How many slots are currently used in your ingredient pouch.",

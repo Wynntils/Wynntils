@@ -319,6 +319,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());

@@ -172,4 +172,11 @@ public class CharacterFunctions {
             return (currentMana / maxMana * 100.0d);
         }
     }
+
+    public static class IdFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Character.getId();
+        }
+    }
 }
