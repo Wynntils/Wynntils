@@ -1,9 +1,21 @@
+## [0.0.2-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.277...v0.0.2-alpha.278) (2023-03-04)
+
+
+### Bug Fixes
+
+* Context-aware argument parsing should also know if we are in a string ([#1258](https://github.com/Wynntils/Artemis/issues/1258)) ([9642ffe](https://github.com/Wynntils/Artemis/commit/9642ffe9fe1f34f33abfb69fb8c083eaa60c9118))
+
 ## [0.0.2-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.276...v0.0.2-alpha.277) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Text box cursor now behaves much closer to expectations ([#1255](https://github.com/Wynntils/Artemis/issues/1255)) ([e375eba](https://github.com/Wynntils/Artemis/commit/e375ebad00de45353c15380324e03b9144b2064e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.277 [skip ci] ([85c1c8e](https://github.com/Wynntils/Artemis/commit/85c1c8e3c22ee052775c57bf32035d8cad6ac6bb))
 
 ## [0.0.2-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.275...v0.0.2-alpha.276) (2023-03-04)
 
@@ -38,16 +50,4 @@
 * **release:** v0.0.2-alpha.274 [skip ci] ([dd2632d](https://github.com/Wynntils/Artemis/commit/dd2632d28f98b29ce477e8e1ab1ba56d0952c252))
 * **release:** v0.0.2-alpha.274 [skip ci] ([9f2908e](https://github.com/Wynntils/Artemis/commit/9f2908e2005bcb88900bc5e8270dadac7ba0d51a))
 * **release:** v0.0.2-alpha.275 [skip ci] ([e799d41](https://github.com/Wynntils/Artemis/commit/e799d41f9ca865a56a8db4d9d839e4fefd4fac7c))
-
-## [0.0.2-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.272...v0.0.2-alpha.273) (2023-03-03)
-
-
-### Bug Fixes
-
-* Remove use of @Redirect in mixins ([#1247](https://github.com/Wynntils/Artemis/issues/1247)) ([3706879](https://github.com/Wynntils/Artemis/commit/3706879b2f4d462bec78db3b0c91433fb4288036))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.273 [skip ci] ([1948c06](https://github.com/Wynntils/Artemis/commit/1948c06e729def06a7b560310a371bfac8b7f684))
 
