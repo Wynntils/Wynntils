@@ -1,9 +1,17 @@
+## [0.0.2-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.286...v0.0.2-alpha.287) (2023-03-04)
+
+
+### Bug Fixes
+
+* Display default values for functions with arguments in help ([#1264](https://github.com/Wynntils/Artemis/issues/1264)) ([f157c96](https://github.com/Wynntils/Artemis/commit/f157c96fb79eaa5a6deae915657e677dd9df8d75))
+
 ## [0.0.2-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.285...v0.0.2-alpha.286) (2023-03-04)
 
 
 ### Miscellaneous Chores
 
 * Bump MixinExtras and Parchment ([#1266](https://github.com/Wynntils/Artemis/issues/1266)) ([d339725](https://github.com/Wynntils/Artemis/commit/d33972599313711087c66a38e9e42f8dec2e79e2))
+* **release:** v0.0.2-alpha.286 [skip ci] ([c26c836](https://github.com/Wynntils/Artemis/commit/c26c8367c246fb84dd8766d6922b0f4427877fb4))
 
 ## [0.0.2-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.284...v0.0.2-alpha.285) (2023-03-04)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.283 [skip ci] ([a296f64](https://github.com/Wynntils/Artemis/commit/a296f644b853a51d0385fbc7a8565024c9f68caf))
-
-## [0.0.2-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.281...v0.0.2-alpha.282) (2023-03-04)
-
-
-### Bug Fixes
-
-* Fix cape texture loading (hopefully) ([#1263](https://github.com/Wynntils/Artemis/issues/1263)) ([83de718](https://github.com/Wynntils/Artemis/commit/83de718c2cf4aaca1e4d6dd3e670db0251c682e0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.282 [skip ci] ([d9d6b7e](https://github.com/Wynntils/Artemis/commit/d9d6b7e6c08d8fdaf2d957f60b8efe5fbd1bab12))
 
