@@ -50,7 +50,7 @@ public class InfoBoxFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox7Overlay = new InfoBoxOverlay(
             7,
-            "{x:0} {y:0} {z:0}",
+            "%x% %y% %z%",
             new OverlayPosition(
                     160, 20, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
             HorizontalAlignment.Center,
@@ -105,7 +105,7 @@ public class InfoBoxFeature extends UserFeature {
 
             if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
                 lastUpdate = System.nanoTime();
-                cachedLines = Managers.Function.doFormatLines(content);
+                cachedLines = Managers.Function.getLinesFromLegacyTemplate(content);
             }
 
             float renderX = this.getRenderX();
@@ -140,7 +140,7 @@ public class InfoBoxFeature extends UserFeature {
 
             String[] renderedLines;
             if (content.isEmpty()) {
-                renderedLines = Managers.Function.doFormatLines("&cX: {x}, &9Y: {y}, &aZ: {z}");
+                renderedLines = Managers.Function.getLinesFromLegacyTemplate("&cX: %x%, &9Y: %y%, &aZ: %z%");
             } else {
                 renderedLines = cachedLines;
             }

@@ -6,7 +6,6 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
@@ -20,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 public class InventoryFunctions {
     public static class EmeraldStringFunction extends Function<String> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public String getValue(String argument) {
             return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory());
         }
 
@@ -32,7 +31,7 @@ public class InventoryFunctions {
 
     public static class LiquidEmeraldFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             int ems = Models.Emerald.getAmountInInventory();
             return ems / 4096;
         }
@@ -45,7 +44,7 @@ public class InventoryFunctions {
 
     public static class EmeraldBlockFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             int ems = Models.Emerald.getAmountInInventory();
             return (ems % 4096) / 64;
         }
@@ -58,7 +57,7 @@ public class InventoryFunctions {
 
     public static class EmeraldsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return Models.Emerald.getAmountInInventory() % 64;
         }
 
@@ -70,14 +69,14 @@ public class InventoryFunctions {
 
     public static class MoneyFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return Models.Emerald.getAmountInInventory();
         }
     }
 
     public static class InventoryFreeFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return Models.PlayerInventory.getOpenInvSlots();
         }
 
@@ -89,7 +88,7 @@ public class InventoryFunctions {
 
     public static class InventoryUsedFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             return Models.PlayerInventory.getUsedInvSlots();
         }
 
@@ -101,7 +100,7 @@ public class InventoryFunctions {
 
     public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             ItemStack itemStack = McUtils.inventory().items.get(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
@@ -121,7 +120,7 @@ public class InventoryFunctions {
 
     public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Integer getValue(String argument) {
             ItemStack itemStack = McUtils.inventory().items.get(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
@@ -141,7 +140,7 @@ public class InventoryFunctions {
 
     public static class HeldItemCurrentDurabilityFunction extends Function<String> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
@@ -161,7 +160,7 @@ public class InventoryFunctions {
 
     public static class HeldItemMaxDurabilityFunction extends Function<String> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public String getValue(String argument) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
             Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);

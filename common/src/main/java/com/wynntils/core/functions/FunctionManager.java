@@ -6,9 +6,6 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.functions.arguments.FunctionArguments;
-import com.wynntils.core.functions.arguments.parser.ArgumentParser;
-import com.wynntils.core.functions.templates.parser.TemplateParser;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
@@ -19,20 +16,16 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.WorldFunctions;
-import com.wynntils.functions.generic.ConditionalFunctions;
-import com.wynntils.functions.generic.LogicFunctions;
-import com.wynntils.functions.generic.MathFunctions;
-import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.ErrorOr;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -48,6 +41,7 @@ public final class FunctionManager extends Manager {
 
     public FunctionManager() {
         super(List.of());
+        registerAllFunctions();
     }
 
     public List<Function<?>> getFunctions() {
@@ -85,13 +79,13 @@ public final class FunctionManager extends Manager {
         return false;
     }
 
-    private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {
+    private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
         if (crashedFunctions.contains(function)) {
             return Optional.empty();
         }
 
         try {
-            Object value = function.getValue(arguments);
+            Object value = function.getValue(argument);
             return Optional.ofNullable(value);
         } catch (Throwable throwable) {
             WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
@@ -105,115 +99,132 @@ public final class FunctionManager extends Manager {
         return Optional.empty();
     }
 
-    // region String value calculations
-
     public Component getSimpleValueString(
-            Function<?> function, String rawArguments, ChatFormatting color, boolean includeName) {
+            Function<?> function, String argument, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : Component.literal("");
 
-        ErrorOr<FunctionArguments> errorOrArguments =
-                ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
-
-        if (errorOrArguments.hasError()) {
-            return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
-        }
-
-        Optional<Object> value = getFunctionValueSafely(function, errorOrArguments.getValue());
+        Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
             return header.append(Component.literal("??"));
         }
 
-        String formattedValue = format(value.get(), false, 2);
+        String formattedValue = format(value.get());
 
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    public String getStringFunctionValue(
-            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
-        Optional<Object> value = getFunctionValueSafely(function, arguments);
+    private String getRawValueString(Function<?> function, String argument) {
+        Optional<Object> value = getFunctionValueSafely(function, argument);
         if (value.isEmpty()) {
             return "??";
         }
 
-        return format(value.get(), formatted, decimals);
+        return format(value.get());
     }
 
-    private String format(Object value, boolean formatted, int decimals) {
-        if (value instanceof Number number) {
-            if (formatted) {
-                // French locale has NBSP
-                // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
-                NumberFormat instance = NumberFormat.getInstance();
-                instance.setMinimumFractionDigits(decimals);
-                instance.setMaximumFractionDigits(decimals);
-
-                return instance.format(number).replaceAll("\u00A0", " ");
-            } else {
-                if (decimals == 0) {
-                    return String.valueOf(number.intValue());
-                }
-
-                DecimalFormat decimalFormat = new DecimalFormat("#." + "0".repeat(decimals));
-                return decimalFormat.format(number);
-            }
-        }
-
+    private String format(Object value) {
         return value.toString();
     }
 
-    // endregion
-
-    // region Raw value calculations
-    // These are needed for getting a function value without converting its type to a string
-
-    public ErrorOr<Object> getRawFunctionValue(Function<?> function, FunctionArguments arguments) {
-        Optional<Object> value = getFunctionValueSafely(function, arguments);
-        return value.map(ErrorOr::of)
-                .orElseGet(() -> ErrorOr.error("Failed to get value of function: " + function.getName()));
+    /**
+     * Return a string, based on the template, with values filled in from the referenced
+     * functions.
+     */
+    public Component getStringFromTemplate(String template) {
+        // FIXME: implement template parser
+        return Component.literal(template);
     }
 
-    // endregion
-
-    // region Template formatting
-
-    private String doFormat(String templateString) {
-        return TemplateParser.doFormat(templateString);
+    /**
+     * Return a list of all functions referenced in a template string
+     */
+    public List<Function<?>> getFunctionsInTemplate(String template) {
+        // FIXME: implement template parser
+        return List.of();
     }
 
-    public String[] doFormatLines(String templateString) {
-        StringBuilder resultBuilder = new StringBuilder();
+    public <T> void doFormat(
+            String format,
+            Consumer<T> consumer,
+            java.util.function.Function<String, T> mapper,
+            Map<String, T> infoVariableMap) {
+        Set<String> infoVariables = infoVariableMap.keySet();
 
-        // Iterate though the string and escape characters
-        // that are prefixed with `\`, remove the `\` and add it to the result
-
-        for (int i = 0; i < templateString.length(); i++) {
-            char c = templateString.charAt(i);
-            if (c == '\\') {
-                if (i + 1 < templateString.length()) {
-                    char nextChar = templateString.charAt(i + 1);
-
-                    resultBuilder.append(doEscapeFormat(nextChar));
-                    i++;
-
-                    continue;
-                }
+        int index = 0;
+        // TODO: Can we get away with less calculations since we now have asymmetric delimiters?
+        while (index < format.length()) {
+            int indexStartOfNextVariable = format.indexOf('{', index);
+            if (indexStartOfNextVariable == -1) {
+                break;
             }
 
-            resultBuilder.append(c);
+            int indexEndOfNextVariable = format.indexOf('}', indexStartOfNextVariable + 1);
+            if (indexEndOfNextVariable == -1) {
+                break;
+            }
+
+            if (index != indexStartOfNextVariable) { // update none done too
+                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
+            }
+
+            String toMatch = format.substring(indexStartOfNextVariable + 1, indexEndOfNextVariable);
+
+            for (String infoVariable : infoVariables) {
+                if (!toMatch.equals(infoVariable)) {
+                    continue;
+                }
+
+                index = indexEndOfNextVariable + 1; // skip ending }
+                consumer.accept(infoVariableMap.get(infoVariable));
+                break;
+            }
         }
 
-        // Parse color codes before calculating the templates
-        String escapedTemplate = parseColorCodes(resultBuilder.toString());
+        consumer.accept(mapper.apply(format.substring(index)));
+    }
 
-        String calculatedString = doFormat(escapedTemplate);
+    // region Legacy formatting
 
-        // Turn escaped {} (`\[\` and `\]\`) back into real {}
-        calculatedString = calculatedString.replace("\\[\\", "{");
-        calculatedString = calculatedString.replace("\\]\\", "}");
+    public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
+        List<Function<?>> dependencies = new ArrayList<>();
 
-        return calculatedString.split("\n");
+        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
+        while (m.find()) {
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
+                // %variable%
+                Function<?> function = forName(m.group(1)).get();
+                dependencies.add(function);
+            }
+        }
+
+        return dependencies;
+    }
+
+    public String[] getLinesFromLegacyTemplate(String renderableText) {
+        StringBuilder builder = new StringBuilder(renderableText.length() + 10);
+        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
+        while (m.find()) {
+            String replacement = null;
+            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
+                // %variable%
+                Function<?> function = forName(m.group(1)).get();
+
+                replacement = getRawValueString(function, "");
+            } else if (m.group(2) != null) {
+                // \escape
+                replacement = doEscapeFormat(m.group(2));
+            }
+            if (replacement == null) {
+                replacement = m.group(0);
+            }
+
+            m.appendReplacement(builder, replacement);
+        }
+        m.appendTail(builder);
+
+        return parseColorCodes(builder.toString()).split("\n");
     }
 
     private String parseColorCodes(String toProcess) {
@@ -236,78 +247,27 @@ public final class FunctionManager extends Manager {
         return sb.toString();
     }
 
-    private String doEscapeFormat(char escaped) {
+    private String doEscapeFormat(String escaped) {
         return switch (escaped) {
-            case '\\' -> "\\\\";
-            case 'n' -> "\n";
-            case '{' -> "\\[\\";
-            case '}' -> "\\]\\";
-            case 'E' -> EmeraldUnits.EMERALD.getSymbol();
-            case 'B' -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
-            case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
-            case 'M' -> "✺";
-            case 'H' -> "❤";
-            default -> String.valueOf(escaped);
+            case "\\" -> "\\\\";
+            case "n" -> "\n";
+            case "%" -> "%";
+            case "§" -> "&";
+            case "E" -> EmeraldUnits.EMERALD.getSymbol();
+            case "B" -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
+            case "L" -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
+            case "M" -> "✺";
+            case "H" -> "❤";
+            default -> null;
         };
     }
-
     // endregion
-
-    public void init() {
-        try {
-            registerAllFunctions();
-        } catch (AssertionError ae) {
-            WynntilsMod.error("Fix i18n for functions", ae);
-            if (WynntilsMod.isDevelopmentEnvironment()) {
-                System.exit(1);
-            }
-        }
-    }
 
     private void registerFunction(Function<?> function) {
         functions.add(function);
-
-        assert !function.getTranslatedName().startsWith("function.wynntils.")
-                : "Fix i18n name for function " + function.getClass().getSimpleName();
-        assert !function.getDescription().startsWith("function.wynntils.")
-                : "Fix i18n description for function " + function.getClass().getSimpleName();
-        for (FunctionArguments.Argument argument :
-                function.getArgumentsBuilder().getArguments()) {
-            assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
-                    : "Fix i18n argument description for function "
-                            + function.getClass().getSimpleName();
-        }
     }
 
     private void registerAllFunctions() {
-        // Generic Functions
-
-        registerFunction(new ConditionalFunctions.IfNumberFunction());
-        registerFunction(new ConditionalFunctions.IfStringFunction());
-
-        registerFunction(new LogicFunctions.AndFunction());
-        registerFunction(new LogicFunctions.EqualsFunction());
-        registerFunction(new LogicFunctions.LessThanFunction());
-        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
-        registerFunction(new LogicFunctions.GreaterThanFunction());
-        registerFunction(new LogicFunctions.GreaterThanOrEqualsFunction());
-        registerFunction(new LogicFunctions.NotEqualsFunction());
-        registerFunction(new LogicFunctions.NotFunction());
-        registerFunction(new LogicFunctions.OrFunction());
-
-        registerFunction(new MathFunctions.AddFunction());
-        registerFunction(new MathFunctions.DivideFunction());
-        registerFunction(new MathFunctions.IntegerFunction());
-        registerFunction(new MathFunctions.ModuloFunction());
-        registerFunction(new MathFunctions.MultiplyFunction());
-        registerFunction(new MathFunctions.PowerFunction());
-        registerFunction(new MathFunctions.RoundFunction());
-        registerFunction(new MathFunctions.SquareRootFunction());
-        registerFunction(new MathFunctions.SubtractFunction());
-
-        registerFunction(new StringFunctions.FormatFunction());
-
-        // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
 
