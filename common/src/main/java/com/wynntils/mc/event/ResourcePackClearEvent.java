@@ -4,18 +4,19 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ResourcePackClearEvent extends Event {
-    private final String hash;
+    private final Pack serverPack;
 
-    public ResourcePackClearEvent(String hash) {
-        this.hash = hash;
+    public ResourcePackClearEvent(Pack serverPack) {
+        this.serverPack = serverPack;
     }
 
-    public String getHash() {
-        return hash;
+    public Pack getServerPack() {
+        return serverPack;
     }
 }

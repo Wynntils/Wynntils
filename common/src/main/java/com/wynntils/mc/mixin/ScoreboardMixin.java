@@ -25,6 +25,8 @@ public abstract class ScoreboardMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
+        // We need to replace Vanilla's HashMap with a concurrent hash map
+        // This should be a safe maneuver to do in the constructor
         this.playerScores = Maps.newConcurrentMap();
     }
 
