@@ -1,21 +1,15 @@
-## [0.0.2-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.274...v0.0.2-alpha.275) (2023-03-04)
-
-
-### Reverts
-
-* Revert "feat: Introduce the new functions system (#1206)" ([161d002](https://github.com/Wynntils/Artemis/commit/161d002ccb70018785b01d07787b3dfeccc57d72)), closes [#1206](https://github.com/Wynntils/Artemis/issues/1206)
-
 ## [0.0.2-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.273...v0.0.2-alpha.274) (2023-03-04)
-
-
-### New Features
-
-* Introduce the new functions system ([#1206](https://github.com/Wynntils/Artemis/issues/1206)) ([76b3546](https://github.com/Wynntils/Artemis/commit/76b35469b34b23334dcf1a9cf5bf7677dec08af6)), closes [#1175](https://github.com/Wynntils/Artemis/issues/1175) [#1179](https://github.com/Wynntils/Artemis/issues/1179) [#1181](https://github.com/Wynntils/Artemis/issues/1181) [#1184](https://github.com/Wynntils/Artemis/issues/1184) [#1207](https://github.com/Wynntils/Artemis/issues/1207) [#1246](https://github.com/Wynntils/Artemis/issues/1246) [#1248](https://github.com/Wynntils/Artemis/issues/1248) [#1251](https://github.com/Wynntils/Artemis/issues/1251)
 
 
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.274 [skip ci] ([9f2908e](https://github.com/Wynntils/Artemis/commit/9f2908e2005bcb88900bc5e8270dadac7ba0d51a))
+* **release:** v0.0.2-alpha.275 [skip ci] ([e799d41](https://github.com/Wynntils/Artemis/commit/e799d41f9ca865a56a8db4d9d839e4fefd4fac7c))
+
+
+### New Features
+
+* Introduce the new functions system ([#1253](https://github.com/Wynntils/Artemis/issues/1253)) ([60b8ad6](https://github.com/Wynntils/Artemis/commit/60b8ad6943d91869b33a2a4e22df88e4f7d9810b))
 
 ## [0.0.2-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.272...v0.0.2-alpha.273) (2023-03-03)
 
@@ -48,4 +42,16 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.271 [skip ci] ([e06712c](https://github.com/Wynntils/Artemis/commit/e06712c38ffbba3f720f9aa39bd3c998400ad761))
+
+## [0.0.2-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.269...v0.0.2-alpha.270) (2023-03-03)
+
+
+### New Features
+
+* Option to only prevent trade/duel while fighting (damage dealt in the last N seconds) ([#1214](https://github.com/Wynntils/Artemis/issues/1214)) ([1832464](https://github.com/Wynntils/Artemis/commit/183246443dbef8ff0bcd0926953938d29241e7dd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.270 [skip ci] ([3611c76](https://github.com/Wynntils/Artemis/commit/3611c76918ce87acf20121b5f9f08b357a80ebc1))
 
