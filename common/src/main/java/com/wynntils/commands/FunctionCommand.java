@@ -222,6 +222,9 @@ public class FunctionCommand extends Command {
 
         MutableComponent helpComponent = Component.empty();
 
+        boolean isArgumentOptional =
+                function.getArgumentsBuilder() instanceof FunctionArguments.OptionalArgumentBuilder;
+
         helpComponent.append(ChatFormatting.GRAY + "Type: " + ChatFormatting.WHITE
                 + (function instanceof GenericFunction<?> ? "Generic" : "Normal") + "\n");
         helpComponent.append(
@@ -231,16 +234,22 @@ public class FunctionCommand extends Command {
         helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
                 + function.getFunctionType().getSimpleName() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("
-                + (function.getArgumentsBuilder() instanceof FunctionArguments.OptionalArgumentBuilder
-                        ? "Optional"
-                        : "Required")
+                + (isArgumentOptional ? "Optional" : "Required")
                 + ")");
 
         for (FunctionArguments.Argument argument :
                 function.getArgumentsBuilder().getArguments()) {
-            helpComponent.append("\n - " + ChatFormatting.YELLOW + argument.getName() + " ("
-                    + argument.getType().getSimpleName() + ")" + ChatFormatting.WHITE + ": "
-                    + function.getArgumentDescription(argument.getName()));
+            String type = isArgumentOptional
+                    ? "(%s, default: %s)"
+                            .formatted(
+                                    argument.getType().getSimpleName(),
+                                    argument.getDefaultValue().toString())
+                    : ("(" + argument.getType().getSimpleName() + ")");
+
+            String argumentDescription = "\n - " + ChatFormatting.YELLOW + argument.getName() + " " + type
+                    + ChatFormatting.WHITE + ": " + function.getArgumentDescription(argument.getName());
+
+            helpComponent.append(argumentDescription);
         }
 
         Component response = Component.literal("Function Manual: ")
