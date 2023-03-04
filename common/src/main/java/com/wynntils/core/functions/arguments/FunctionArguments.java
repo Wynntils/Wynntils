@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// FIXME: Expose this to user and add i18n
 public final class FunctionArguments {
     private final List<Argument> arguments;
     private final Map<String, Argument> lookupMap;

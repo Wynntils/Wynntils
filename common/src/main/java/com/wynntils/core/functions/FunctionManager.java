@@ -242,13 +242,12 @@ public final class FunctionManager extends Manager {
             case 'n' -> "\n";
             case '{' -> "\\[\\";
             case '}' -> "\\]\\";
-            case '§' -> "&";
             case 'E' -> EmeraldUnits.EMERALD.getSymbol();
             case 'B' -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
             case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
             case 'M' -> "✺";
             case 'H' -> "❤";
-            default -> null;
+            default -> String.valueOf(escaped);
         };
     }
 
