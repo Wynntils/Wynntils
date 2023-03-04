@@ -42,8 +42,7 @@ public class BulkBuyFeature extends UserFeature {
     public void onSlotClicked(ContainerClickEvent e) {
         if (!KeyboardUtils.isShiftDown()) return;
 
-        if (e.getContainerId() != McUtils.player().containerMenu.containerId) return;
-        AbstractContainerMenu container = McUtils.player().containerMenu;
+        AbstractContainerMenu container = e.getContainerMenu();
 
         if (!isBulkBuyable(container, e.getItemStack())) return;
 
