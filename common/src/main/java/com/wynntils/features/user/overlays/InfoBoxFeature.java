@@ -50,7 +50,7 @@ public class InfoBoxFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
     private final Overlay infoBox7Overlay = new InfoBoxOverlay(
             7,
-            "%x% %y% %z%",
+            "{x:0} {y:0} {z:0}",
             new OverlayPosition(
                     160, 20, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft),
             HorizontalAlignment.Center,
