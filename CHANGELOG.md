@@ -1,9 +1,21 @@
+## [0.0.2-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.278...v0.0.2-alpha.279) (2023-03-04)
+
+
+### New Features
+
+* Add StringEquals, ParseInt, ParseDouble :) ([#1259](https://github.com/Wynntils/Artemis/issues/1259)) ([505216b](https://github.com/Wynntils/Artemis/commit/505216b8210b5d2fedb79daa599b6e3c57949221))
+
 ## [0.0.2-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.277...v0.0.2-alpha.278) (2023-03-04)
 
 
 ### Bug Fixes
 
 * Context-aware argument parsing should also know if we are in a string ([#1258](https://github.com/Wynntils/Artemis/issues/1258)) ([9642ffe](https://github.com/Wynntils/Artemis/commit/9642ffe9fe1f34f33abfb69fb8c083eaa60c9118))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.278 [skip ci] ([d20f850](https://github.com/Wynntils/Artemis/commit/d20f850c4e763f8c0b19409fe0cc865f008a2be4))
 
 ## [0.0.2-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.276...v0.0.2-alpha.277) (2023-03-04)
 
@@ -36,18 +48,4 @@
 
 * Build new release ([#1254](https://github.com/Wynntils/Artemis/issues/1254)) ([7c9e1cf](https://github.com/Wynntils/Artemis/commit/7c9e1cf642c378bd7cfaca3ed4dc1c701bcef73b))
 * **release:** v0.0.2-alpha.275 [skip ci] ([c5b35bd](https://github.com/Wynntils/Artemis/commit/c5b35bd5353c018aaf2a7ea24b331f8ced983dac))
-
-## [0.0.2-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.273...v0.0.2-alpha.274) (2023-03-04)
-
-
-### New Features
-
-* Introduce the new functions system ([#1253](https://github.com/Wynntils/Artemis/issues/1253)) ([60b8ad6](https://github.com/Wynntils/Artemis/commit/60b8ad6943d91869b33a2a4e22df88e4f7d9810b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.274 [skip ci] ([dd2632d](https://github.com/Wynntils/Artemis/commit/dd2632d28f98b29ce477e8e1ab1ba56d0952c252))
-* **release:** v0.0.2-alpha.274 [skip ci] ([9f2908e](https://github.com/Wynntils/Artemis/commit/9f2908e2005bcb88900bc5e8270dadac7ba0d51a))
-* **release:** v0.0.2-alpha.275 [skip ci] ([e799d41](https://github.com/Wynntils/Artemis/commit/e799d41f9ca865a56a8db4d9d839e4fefd4fac7c))
 
