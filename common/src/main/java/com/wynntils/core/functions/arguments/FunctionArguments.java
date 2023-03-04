@@ -34,14 +34,14 @@ public final class FunctionArguments {
 
         public ErrorOr<FunctionArguments> buildWithValues(List<Object> values) {
             if (values.size() != this.arguments.size()) {
-                return ErrorOr.error("Invalid number of arguments.");
+                return ErrorOr.error("Invalid number of arguments");
             }
 
             for (int i = 0; i < this.arguments.size(); i++) {
                 Argument argument = this.arguments.get(i);
 
                 if (!argument.getType().isAssignableFrom(values.get(i).getClass())) {
-                    return ErrorOr.error("Invalid argument type: \"%s\" is not a %s."
+                    return ErrorOr.error("Invalid argument type: \"%s\" is not a %s"
                             .formatted(
                                     values.get(i).toString(), argument.getType().getSimpleName()));
                 }
