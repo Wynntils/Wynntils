@@ -1,9 +1,21 @@
+## [0.0.2-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.285...v0.0.2-alpha.286) (2023-03-04)
+
+
+### Miscellaneous Chores
+
+* Bump MixinExtras and Parchment ([#1266](https://github.com/Wynntils/Artemis/issues/1266)) ([d339725](https://github.com/Wynntils/Artemis/commit/d33972599313711087c66a38e9e42f8dec2e79e2))
+
 ## [0.0.2-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.284...v0.0.2-alpha.285) (2023-03-04)
 
 
 ### New Features
 
 * Add more aliases for GreaterThanFunction and GreaterThanOrEqualsFunction ([#1260](https://github.com/Wynntils/Artemis/issues/1260)) ([23de9b0](https://github.com/Wynntils/Artemis/commit/23de9b0661822d48fabed1b79cc3b958a424302c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.285 [skip ci] ([01acf3b](https://github.com/Wynntils/Artemis/commit/01acf3b3c647430bf1656bd7881a3acfba294f19))
 
 ## [0.0.2-alpha.284](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.283...v0.0.2-alpha.284) (2023-03-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.282 [skip ci] ([d9d6b7e](https://github.com/Wynntils/Artemis/commit/d9d6b7e6c08d8fdaf2d957f60b8efe5fbd1bab12))
-
-## [0.0.2-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.280...v0.0.2-alpha.281) (2023-03-04)
-
-
-### Bug Fixes
-
-* Fix multiple issue with command mixin ([#1250](https://github.com/Wynntils/Artemis/issues/1250)) ([96b161e](https://github.com/Wynntils/Artemis/commit/96b161e488a637ede2d492bda7c0ab9ad8a9f013))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.281 [skip ci] ([944413c](https://github.com/Wynntils/Artemis/commit/944413ce1dc5cd3eb134ecb94b53d85743c3714b))
 
