@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
@@ -54,9 +55,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     private ScrollButton configurableListScrollButton;
     private ScrollButton configListScrollButton;
 
-    // FIXME: Suboptimal to have both selected variables, but we need big changes to fix that
-    private Feature selectedFeature = null;
-    private Overlay selectedOverlay = null;
+    private Configurable selected = null;
 
     private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
@@ -75,6 +74,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
     @Override
     protected void doInit() {
+        reloadConfigButtons();
+
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new GeneralSettingsButton(
@@ -117,7 +118,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         renderButtons(poseStack, mouseX, mouseY, partialTick);
 
-        if (selectedFeature != null || selectedOverlay != null) {
+        if (selected != null) {
             renderConfigTitle(poseStack);
         }
 
@@ -127,10 +128,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     private void renderConfigTitle(PoseStack poseStack) {
         String name = "";
         boolean enabled = false;
-        if (selectedOverlay != null) {
+        if (selected instanceof Overlay selectedOverlay) {
             enabled = selectedOverlay.isEnabled();
             name = selectedOverlay.getTranslatedName();
-        } else if (selectedFeature != null) {
+        } else if (selected instanceof Feature selectedFeature) {
             enabled = selectedFeature.isEnabled();
             name = selectedFeature.getTranslatedName();
         }
@@ -399,24 +400,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         configs.clear();
         configScrollOffset = 0;
 
-        if (selectedFeature == null && selectedOverlay == null) {
+        if (selected == null) {
             configListScrollButton = null;
             return;
         }
 
-        List<ConfigHolder> configsOptions;
-
-        if (selectedFeature != null) {
-            configsOptions = selectedFeature.getVisibleConfigOptions().stream()
-                    .sorted(Comparator.comparing(
-                            configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
-                    .toList();
-        } else {
-            configsOptions = selectedOverlay.getVisibleConfigOptions().stream()
-                    .sorted(Comparator.comparing(
-                            configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
-                    .toList();
-        }
+        List<ConfigHolder> configsOptions = selected.getVisibleConfigOptions().stream()
+                .sorted(Comparator.comparing(
+                        configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
+                .toList();
 
         for (int i = 0; i < configsOptions.size(); i++) {
             ConfigHolder config = configsOptions.get(i);
@@ -448,24 +440,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         return (this.width - Texture.SETTING_BACKGROUND.width()) / 2f;
     }
 
-    public Feature getSelectedFeature() {
-        return selectedFeature;
+    public Configurable getSelected() {
+        return selected;
     }
 
-    public void setSelectedFeature(Feature selectedFeature) {
-        this.selectedFeature = selectedFeature;
-        this.selectedOverlay = null;
+    public void setSelected(Configurable selected) {
+        this.selected = selected;
         reloadConfigButtons();
-    }
-
-    public void setSelectedOverlay(Overlay selectedOverlay) {
-        this.selectedOverlay = selectedOverlay;
-        this.selectedFeature = null;
-        reloadConfigButtons();
-    }
-
-    public Overlay getSelectedOverlay() {
-        return selectedOverlay;
     }
 
     @Override
