@@ -11,7 +11,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.CommandSuggestionsEvent;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.gui.components.CommandSuggestions;
@@ -37,7 +37,8 @@ public abstract class CommandSuggestionsMixin {
             @Local StringReader stringReader) {
         CompletableFuture<Suggestions> serverSuggestions = original.call(serverDispatcher, serverParse, cursor);
 
-        CommandSuggestionsEvent event = EventFactory.onCommandSuggestions(serverSuggestions, stringReader, cursor);
+        CommandSuggestionsEvent event =
+                MixinHelper.post(new CommandSuggestionsEvent(serverSuggestions, stringReader, cursor));
         return event.getSuggestions();
     }
 }

@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ChestMenuMixin {
     @Inject(method = "quickMoveStack", at = @At("HEAD"))
     private void onQuickMoveStack(Player player, int index, CallbackInfoReturnable<ItemStack> cir) {
-        EventFactory.onChestMenuQuickMove(((ChestMenu) (Object) this).containerId);
+        MixinHelper.post(new ChestMenuQuickMoveEvent(((ChestMenu) (Object) this).containerId));
     }
 }

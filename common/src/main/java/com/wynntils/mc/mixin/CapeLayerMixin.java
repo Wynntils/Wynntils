@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
@@ -33,6 +34,6 @@ public abstract class CapeLayerMixin {
             float netHeadYaw,
             float headPitch,
             CallbackInfo ci) {
-        if (EventFactory.onCapeRender(livingEntity).isCanceled()) ci.cancel();
+        if (MixinHelper.post(new PlayerRenderLayerEvent.Cape(livingEntity)).isCanceled()) ci.cancel();
     }
 }

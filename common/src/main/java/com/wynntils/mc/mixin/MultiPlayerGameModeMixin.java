@@ -4,7 +4,12 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,7 +33,7 @@ public abstract class MultiPlayerGameModeMixin {
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
         if (containerId != player.containerMenu.containerId) return;
 
-        if (EventFactory.onContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton)
+        if (MixinHelper.post(new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton))
                 .isCanceled()) {
             ci.cancel();
         }
@@ -40,8 +45,9 @@ public abstract class MultiPlayerGameModeMixin {
             InteractionHand hand,
             BlockHitResult result,
             CallbackInfoReturnable<InteractionResult> cir) {
-        if (EventFactory.onRightClickBlock(player, hand, result.getBlockPos(), result)
-                .isCanceled()) {
+        PlayerInteractEvent.RightClickBlock event =
+                new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
+        if (MixinHelper.post(event).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -49,7 +55,7 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
     private void useItemPre(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (EventFactory.onUseItem(player, McUtils.mc().level, hand).isCanceled()) {
+        if (MixinHelper.post(new UseItemEvent(player, McUtils.mc().level, hand)).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -62,7 +68,8 @@ public abstract class MultiPlayerGameModeMixin {
             EntityHitResult ray,
             InteractionHand hand,
             CallbackInfoReturnable<InteractionResult> cir) {
-        if (EventFactory.onInteractAt(player, hand, target, ray).isCanceled()) {
+        PlayerInteractEvent.InteractAt event = new PlayerInteractEvent.InteractAt(player, hand, target, ray);
+        if (MixinHelper.post(event).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -71,7 +78,8 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void interact(
             Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (EventFactory.onInteract(player, hand, target).isCanceled()) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+        if (MixinHelper.post(event).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -79,7 +87,7 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     private void attack(Player player, Entity target, CallbackInfo ci) {
-        if (EventFactory.onAttack(player, target).isCanceled()) {
+        if (MixinHelper.post(new PlayerAttackEvent(player, target)).isCanceled()) {
             ci.cancel();
         }
     }
@@ -94,6 +102,6 @@ public abstract class MultiPlayerGameModeMixin {
                             target =
                                     "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void ensureHasSentCarriedItem(CallbackInfo ci) {
-        EventFactory.onChangeCarriedItemEvent();
+        MixinHelper.post(new ChangeCarriedItemEvent());
     }
 }
