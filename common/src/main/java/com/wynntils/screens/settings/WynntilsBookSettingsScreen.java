@@ -74,6 +74,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
     @Override
     protected void doInit() {
+        reloadConfigButtons();
+
         this.addRenderableWidget(searchWidget);
 
         this.addRenderableWidget(new GeneralSettingsButton(
