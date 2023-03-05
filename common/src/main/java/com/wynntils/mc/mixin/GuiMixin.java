@@ -59,14 +59,14 @@ public abstract class GuiMixin {
     }
 
     // This does not work on Forge. See ForgeGuiMixin for replacement.
-    @Inject(method = "render", at = @At("HEAD"))
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"))
     private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Pre(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }
 
     // This does not work on Forge. See ForgeGuiMixin for replacement.
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("RETURN"))
     private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Post(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
@@ -74,7 +74,7 @@ public abstract class GuiMixin {
 
     // This does not work on Forge. See ForgeGuiMixin for replacement.
     @WrapOperation(
-            method = "Lnet/minecraft/client/gui/Gui;renderPlayerHealth(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+            method = "renderPlayerHealth(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -96,7 +96,7 @@ public abstract class GuiMixin {
         return original.call(instance, entity);
     }
 
-    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At("HEAD"), cancellable = true)
     private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
         RenderEvent.Pre event =
                 new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair);
@@ -106,7 +106,11 @@ public abstract class GuiMixin {
         }
     }
 
-    @Inject(method = "renderHearts", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void onRenderHeartsPre(
             PoseStack poseStack,
             Player player,

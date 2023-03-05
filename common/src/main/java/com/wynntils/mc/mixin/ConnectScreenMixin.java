@@ -17,7 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ConnectScreen.class)
 public abstract class ConnectScreenMixin {
-    @Inject(method = "connect", at = @At("HEAD"))
+    @Inject(
+            method =
+                    "connect(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/multiplayer/resolver/ServerAddress;Lnet/minecraft/client/multiplayer/ServerData;)V",
+            at = @At("HEAD"))
     private void connectPre(Minecraft minecraft, ServerAddress serverAddress, ServerData serverData, CallbackInfo ci) {
         MixinHelper.postAlways(new ConnectionEvent.ConnectedEvent(serverAddress.getHost(), serverAddress.getPort()));
     }

@@ -107,7 +107,7 @@ public abstract class ClientPacketListenerMixin {
         return McUtils.mc().isSameThread();
     }
 
-    @Inject(method = "sendChat", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendChat(Ljava/lang/String;)V", at = @At("HEAD"), cancellable = true)
     private void onChatPre(String string, CallbackInfo ci) {
         ChatSentEvent event = new ChatSentEvent(string);
         MixinHelper.post(event);
@@ -116,7 +116,7 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendCommand(Ljava/lang/String;)V", at = @At("HEAD"), cancellable = true)
     private void onSignedCommandPre(String string, CallbackInfo ci) {
         CommandSentEvent event = new CommandSentEvent(string, true);
         MixinHelper.post(event);
@@ -125,7 +125,7 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendUnsignedCommand(Ljava/lang/String;)Z", at = @At("HEAD"), cancellable = true)
     private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
         CommandSentEvent event = new CommandSentEvent(command, false);
         MixinHelper.post(event);
@@ -153,7 +153,9 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    @Inject(
+            method = "handlePlayerInfoUpdate(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket;)V",
+            at = @At("RETURN"))
     private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         if (!MixinHelper.onWynncraft()) return;
@@ -175,7 +177,9 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    @Inject(
+            method = "handlePlayerInfoRemove(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoRemovePacket;)V",
+            at = @At("RETURN"))
     private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         if (!MixinHelper.onWynncraft()) return;
@@ -287,7 +291,9 @@ public abstract class ClientPacketListenerMixin {
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
 
-    @Inject(method = "handleContainerSetSlot", at = @At("HEAD"))
+    @Inject(
+            method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
+            at = @At("HEAD"))
     private void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -310,7 +316,9 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handleSetExperience", at = @At("RETURN"))
+    @Inject(
+            method = "handleSetExperience(Lnet/minecraft/network/protocol/game/ClientboundSetExperiencePacket;)V",
+            at = @At("RETURN"))
     private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -333,7 +341,10 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "handleSetSpawn(Lnet/minecraft/network/protocol/game/ClientboundSetDefaultSpawnPositionPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -379,7 +390,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method = "handlePlayerChat",
+            method = "handlePlayerChat(Lnet/minecraft/network/protocol/game/ClientboundPlayerChatPacket;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -416,7 +427,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method = "handleSystemChat",
+            method = "handleSystemChat(Lnet/minecraft/network/protocol/game/ClientboundSystemChatPacket;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -442,7 +453,10 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "handleSetScore(Lnet/minecraft/network/protocol/game/ClientboundSetScorePacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -460,7 +474,10 @@ public abstract class ClientPacketListenerMixin {
         MixinHelper.post(new ConnectionEvent.DisconnectedEvent());
     }
 
-    @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
+    @Inject(
+            method =
+                    "handleUpdateAdvancementsPacket(Lnet/minecraft/network/protocol/game/ClientboundUpdateAdvancementsPacket;)V",
+            at = @At("RETURN"))
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
