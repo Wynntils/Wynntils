@@ -1,9 +1,21 @@
+## [0.0.2-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.289...v0.0.2-alpha.290) (2023-03-05)
+
+
+### Bug Fixes
+
+* Do not return null in horse functions ([#1265](https://github.com/Wynntils/Artemis/issues/1265)) ([8d8d629](https://github.com/Wynntils/Artemis/commit/8d8d629a26c08d4bdaf718a10851b854321518dd))
+
 ## [0.0.2-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.288...v0.0.2-alpha.289) (2023-03-05)
 
 
 ### Code Refactoring
 
 * Remove the EventFactory ([#1267](https://github.com/Wynntils/Artemis/issues/1267)) ([c053fc8](https://github.com/Wynntils/Artemis/commit/c053fc88e0f3ed8d77723fe3faec44f17da48cef))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.289 [skip ci] ([05ee1ff](https://github.com/Wynntils/Artemis/commit/05ee1ff1ed708e57f743be2246edd19266dc0981))
 
 ## [0.0.2-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.287...v0.0.2-alpha.288) (2023-03-04)
 
@@ -36,16 +48,4 @@
 
 * Bump MixinExtras and Parchment ([#1266](https://github.com/Wynntils/Artemis/issues/1266)) ([d339725](https://github.com/Wynntils/Artemis/commit/d33972599313711087c66a38e9e42f8dec2e79e2))
 * **release:** v0.0.2-alpha.286 [skip ci] ([c26c836](https://github.com/Wynntils/Artemis/commit/c26c8367c246fb84dd8766d6922b0f4427877fb4))
-
-## [0.0.2-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.284...v0.0.2-alpha.285) (2023-03-04)
-
-
-### New Features
-
-* Add more aliases for GreaterThanFunction and GreaterThanOrEqualsFunction ([#1260](https://github.com/Wynntils/Artemis/issues/1260)) ([23de9b0](https://github.com/Wynntils/Artemis/commit/23de9b0661822d48fabed1b79cc3b958a424302c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.285 [skip ci] ([01acf3b](https://github.com/Wynntils/Artemis/commit/01acf3b3c647430bf1656bd7881a3acfba294f19))
 
