@@ -56,6 +56,14 @@ public abstract class TextOverlay extends Overlay {
         renderTemplate(poseStack, bufferSource, getTemplate());
     }
 
+    @Override
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        if (!Models.WorldState.onWorld()) return;
+
+        renderTemplate(poseStack, bufferSource, getPreviewTemplate());
+    }
+
     protected void renderTemplate(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template) {
         if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
             lastUpdate = System.currentTimeMillis();
@@ -85,6 +93,8 @@ public abstract class TextOverlay extends Overlay {
     }
 
     public abstract String getTemplate();
+
+    public abstract String getPreviewTemplate();
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {}

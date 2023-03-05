@@ -4,9 +4,6 @@
  */
 package com.wynntils.features.overlays;
 
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -19,7 +16,6 @@ import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 @ConfigCategory(Category.OVERLAYS)
@@ -91,11 +87,8 @@ public class InfoBoxFeature extends UserFeature {
         }
 
         @Override
-        public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!Models.WorldState.onWorld()) return;
-
-            renderTemplate(poseStack, bufferSource, "&cX: {x:0}, &9Y: {y:0}, &aZ: {z:0}");
+        public String getPreviewTemplate() {
+            return "&cX: {x:0}, &9Y: {y:0}, &aZ: {z:0}";
         }
 
         @Override
