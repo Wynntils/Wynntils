@@ -1,9 +1,26 @@
+## [0.0.2-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.291...v0.0.2-alpha.292) (2023-03-05)
+
+
+### Bug Fixes
+
+* Fix CHAMPION, YT (and maybe Mod) join redirect ([#1268](https://github.com/Wynntils/Artemis/issues/1268)) ([ae0f117](https://github.com/Wynntils/Artemis/commit/ae0f1173e8d3a32198fbc23cc387e2d534543493))
+
+
+### New Features
+
+* Better function suggestion provider and clickable ([#1272](https://github.com/Wynntils/Artemis/issues/1272)) ([575619d](https://github.com/Wynntils/Artemis/commit/575619df799485bbaefca25f6f599802015a191a))
+
 ## [0.0.2-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.290...v0.0.2-alpha.291) (2023-03-05)
 
 
 ### Code Refactoring
 
 * Cleanups after the EventFactory removal ([#1269](https://github.com/Wynntils/Artemis/issues/1269)) ([28a939d](https://github.com/Wynntils/Artemis/commit/28a939d400b97100df164bfb38ef332a6f0ebf79))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.291 [skip ci] ([7c275db](https://github.com/Wynntils/Artemis/commit/7c275db07025d87e9ee3f24eaf03aa8c90f2b975))
 
 ## [0.0.2-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.289...v0.0.2-alpha.290) (2023-03-05)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.288 [skip ci] ([6991887](https://github.com/Wynntils/Artemis/commit/699188798a9d95aa6cf31839e65f5c7906d6bc3d))
-
-## [0.0.2-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.286...v0.0.2-alpha.287) (2023-03-04)
-
-
-### Bug Fixes
-
-* Display default values for functions with arguments in help ([#1264](https://github.com/Wynntils/Artemis/issues/1264)) ([f157c96](https://github.com/Wynntils/Artemis/commit/f157c96fb79eaa5a6deae915657e677dd9df8d75))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.287 [skip ci] ([493dae8](https://github.com/Wynntils/Artemis/commit/493dae8f6090eb2ce970aff5fe296d2e84e12e11))
 
