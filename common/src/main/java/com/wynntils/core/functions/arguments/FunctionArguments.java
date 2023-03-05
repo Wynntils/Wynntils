@@ -127,6 +127,10 @@ public final class FunctionArguments {
             return this.value == null ? this.defaultValue : this.value;
         }
 
+        public T getDefaultValue() {
+            return this.defaultValue;
+        }
+
         public Boolean getBooleanValue() {
             return (Boolean) this.getValue();
         }
