@@ -1,9 +1,21 @@
+## [0.0.2-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.288...v0.0.2-alpha.289) (2023-03-05)
+
+
+### Code Refactoring
+
+* Remove the EventFactory ([#1267](https://github.com/Wynntils/Artemis/issues/1267)) ([c053fc8](https://github.com/Wynntils/Artemis/commit/c053fc88e0f3ed8d77723fe3faec44f17da48cef))
+
 ## [0.0.2-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.287...v0.0.2-alpha.288) (2023-03-04)
 
 
 ### New Features
 
 * Add AreaDamagePerSecondFunction and AreaDamageAverageFunction ([#1262](https://github.com/Wynntils/Artemis/issues/1262)) ([27b95e1](https://github.com/Wynntils/Artemis/commit/27b95e13c0a70b334009d0ea4f2e62f8be706334))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.288 [skip ci] ([6991887](https://github.com/Wynntils/Artemis/commit/699188798a9d95aa6cf31839e65f5c7906d6bc3d))
 
 ## [0.0.2-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.286...v0.0.2-alpha.287) (2023-03-04)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.285 [skip ci] ([01acf3b](https://github.com/Wynntils/Artemis/commit/01acf3b3c647430bf1656bd7881a3acfba294f19))
-
-## [0.0.2-alpha.284](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.283...v0.0.2-alpha.284) (2023-03-04)
-
-
-### Code Refactoring
-
-* Move features.* to features, skipping user/debug/statemanaged split ([#1257](https://github.com/Wynntils/Artemis/issues/1257)) ([07a9c66](https://github.com/Wynntils/Artemis/commit/07a9c665b5f3c967c3219d94024d0f2a65bdb464))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.284 [skip ci] ([e41def3](https://github.com/Wynntils/Artemis/commit/e41def3c206a2e804c8efc3b5c648cf2daa62e80))
 
