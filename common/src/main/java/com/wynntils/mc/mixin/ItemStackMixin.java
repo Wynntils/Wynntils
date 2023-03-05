@@ -46,6 +46,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
         ItemStack itemStack = (ItemStack) (Object) this;
         ItemTooltipFlagsEvent.Advanced event = new ItemTooltipFlagsEvent.Advanced(itemStack, flags);
         MixinHelper.post(event);
+
         return event.getFlags();
     }
 

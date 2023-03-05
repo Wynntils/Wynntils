@@ -156,6 +156,8 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
     private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+        if (!MixinHelper.onWynncraft()) return;
+
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.newEntries()) {
             GameProfile profile = entry.profile();
             MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.getId(), profile.getName()));
@@ -176,6 +178,8 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
     private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+        if (!MixinHelper.onWynncraft()) return;
+
         for (UUID uuid : packet.profileIds()) {
             MixinHelper.post(new PlayerInfoEvent.PlayerLogOutEvent(uuid));
         }
@@ -186,6 +190,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new PlayerInfoFooterChangedEvent(packet.getFooter().getString()));
     }
 
@@ -218,6 +223,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleOpenScreenPre(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MenuEvent.MenuOpenedEvent event =
                 new MenuEvent.MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId());
         MixinHelper.post(event);
@@ -232,6 +238,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MenuEvent.MenuClosedEvent event = new MenuEvent.MenuClosedEvent(packet.getContainerId());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -246,6 +253,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         ContainerSetContentEvent event = new ContainerSetContentEvent.Pre(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
         MixinHelper.post(event);
@@ -274,6 +282,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new ContainerSetContentEvent.Post(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
@@ -281,6 +290,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleContainerSetSlot", at = @At("HEAD"))
     private void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new ContainerSetSlotEvent(
                 packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
     }
@@ -291,6 +301,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         SetPlayerTeamEvent event =
                 new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
         MixinHelper.post(event);
@@ -302,6 +313,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetExperience", at = @At("RETURN"))
     private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new SetXpEvent(
                 packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
     }
@@ -313,6 +325,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         SetEntityPassengersEvent event = new SetEntityPassengersEvent(packet.getVehicle());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -323,6 +336,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -342,6 +356,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setTitleTextPre(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         TitleSetTextEvent event = new TitleSetTextEvent(packet.getText());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -355,6 +370,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setSubtitleTextPre(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         SubtitleSetTextEvent event = new SubtitleSetTextEvent(packet.getText());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -409,6 +425,7 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         Component message = packet.content();
         ChatPacketReceivedEvent event = packet.overlay()
                 ? new ChatPacketReceivedEvent.GameInfo(message)
@@ -428,6 +445,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
                 packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
         MixinHelper.post(event);
@@ -445,6 +463,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new AdvancementUpdateEvent(
                 packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
     }
@@ -454,6 +473,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleUpdateMobEffectPost(ClientboundUpdateMobEffectPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+        if (!MixinHelper.onWynncraft()) return;
+
         MixinHelper.post(new MobEffectEvent.Update(
                 McUtils.mc().level.getEntity(packet.getEntityId()),
                 packet.getEffect(),
@@ -466,6 +487,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleRemoveMobEffectPost(ClientboundRemoveMobEffectPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new MobEffectEvent.Remove(packet.getEntity(McUtils.mc().level), packet.getEffect()));
     }
 
@@ -474,6 +496,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new AddEntityEvent(packet));
     }
 
@@ -482,6 +505,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"))
     private void handleSetEntityDataPre(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new SetEntityDataEvent(packet));
     }
 
@@ -490,6 +514,7 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleRemoveEntities(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
+
         MixinHelper.post(new RemoveEntitiesEvent(packet));
     }
 }

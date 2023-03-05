@@ -40,6 +40,8 @@ public abstract class ElytraLayerMixin<T extends LivingEntity, M extends EntityM
 
         PlayerRenderLayerEvent.Elytra event = new PlayerRenderLayerEvent.Elytra(player);
         MixinHelper.post(event);
-        if (event.isCanceled()) ci.cancel();
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

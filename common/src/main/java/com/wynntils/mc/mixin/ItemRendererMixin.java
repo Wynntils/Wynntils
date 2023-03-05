@@ -46,9 +46,9 @@ public abstract class ItemRendererMixin {
             int combinedOverlay,
             BakedModel model,
             CallbackInfo ci) {
-        if (transformType == ItemTransforms.TransformType.GROUND) {
-            MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, itemStack));
-        }
+        if (transformType != ItemTransforms.TransformType.GROUND) return;
+
+        MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, itemStack));
     }
 
     @ModifyVariable(
@@ -59,6 +59,8 @@ public abstract class ItemRendererMixin {
             argsOnly = true)
     private String renderGuiItemDecorations(
             String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
+        if (!MixinHelper.onWynncraft()) return text;
+
         String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 

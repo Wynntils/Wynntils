@@ -45,7 +45,10 @@ public abstract class LivingEntityRendererMixin {
         LivingEntityRenderTranslucentCheckEvent event =
                 new LivingEntityRenderTranslucentCheckEvent(translucent, livingEntity, translucent ? 0.15f : 1f);
         MixinHelper.post(event);
+
+        // Save translucence value for later use
         wynntilsTranslucence = event.getTranslucence();
+
         return original.call(instance, livingEntity, bodyVisible, event.isTranslucent(), glowing);
     }
 
