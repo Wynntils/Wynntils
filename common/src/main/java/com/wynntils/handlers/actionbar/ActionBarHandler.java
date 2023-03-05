@@ -7,6 +7,7 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import java.util.ArrayList;
 import java.util.Arrays;

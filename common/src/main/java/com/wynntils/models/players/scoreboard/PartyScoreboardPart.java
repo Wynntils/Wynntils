@@ -6,7 +6,7 @@ package com.wynntils.models.players.scoreboard;
 
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.Set;
 
 public class PartyScoreboardPart implements ScoreboardPart {

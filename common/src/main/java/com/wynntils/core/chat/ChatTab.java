@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.chat;
 
-import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import java.util.Objects;
 import java.util.Set;

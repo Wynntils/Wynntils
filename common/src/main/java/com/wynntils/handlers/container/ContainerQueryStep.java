@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.container;
 
+import com.wynntils.handlers.container.type.ContainerContent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 
