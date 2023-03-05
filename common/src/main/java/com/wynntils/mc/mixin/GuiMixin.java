@@ -96,6 +96,16 @@ public abstract class GuiMixin {
         return original.call(instance, entity);
     }
 
+    @Inject(method = "renderVehicleHealth(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+    at = @At("HEAD"), cancellable = true)
+    private void onRenderVehicleHealth(PoseStack poseStack, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        // On Wynncraft we always cancel vehicle health; it has no purpose and it interfers
+        // with our foodbar event above
+        ci.cancel();
+    }
+
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
         RenderEvent.Pre event =
