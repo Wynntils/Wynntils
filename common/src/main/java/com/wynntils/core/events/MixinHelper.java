@@ -10,17 +10,20 @@ import net.minecraftforge.eventbus.api.Event;
 
 public final class MixinHelper {
     public static <T extends Event> T post(T event) {
-        if (Managers.Connection.onServer()) {
-            WynntilsMod.postEvent(event);
-        }
+        if (!onWynncraft()) return event;
+
+        WynntilsMod.postEvent(event);
         return event;
+    }
+
+    public static boolean onWynncraft() {
+        return Managers.Connection.onServer();
     }
 
     /**
      * Post event without checking if we are connected to a Wynncraft server
      */
-    public static <T extends Event> T postAlways(T event) {
+    public static void postAlways(Event event) {
         WynntilsMod.postEvent(event);
-        return event;
     }
 }

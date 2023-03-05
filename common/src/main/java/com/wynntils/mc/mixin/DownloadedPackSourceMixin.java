@@ -25,7 +25,8 @@ public abstract class DownloadedPackSourceMixin {
     private void onClearServerPackPre(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         if (serverPack == null) return;
 
-        Event event = MixinHelper.postAlways(new ResourcePackClearEvent(serverPack));
+        Event event = new ResourcePackClearEvent(serverPack);
+        MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             cir.setReturnValue(CompletableFuture.completedFuture(null));
             cir.cancel();

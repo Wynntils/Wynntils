@@ -34,7 +34,8 @@ public abstract class PlayerRendererMixin
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
         RenderLayerRegistrationEvent event =
-                MixinHelper.postAlways(new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl));
+                new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl);
+        MixinHelper.postAlways(event);
         for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : event.getRegisteredLayers()) {
             this.addLayer(layer);
         }
