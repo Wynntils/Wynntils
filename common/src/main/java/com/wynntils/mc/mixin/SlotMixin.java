@@ -6,7 +6,8 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.SetSlotEvent;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +23,10 @@ public abstract class SlotMixin {
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
     private void onSetItem(Container container, int slot, ItemStack itemStack, Operation<Void> original) {
-        EventFactory.onSetSlotPre(container, slot, itemStack);
+        MixinHelper.post(new SetSlotEvent.Pre(container, slot, itemStack));
 
         original.call(container, slot, itemStack);
 
-        EventFactory.onSetSlotPost(container, slot, itemStack);
+        MixinHelper.post(new SetSlotEvent.Post(container, slot, itemStack));
     }
 }

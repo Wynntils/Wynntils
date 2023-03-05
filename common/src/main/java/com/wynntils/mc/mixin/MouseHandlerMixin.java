@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.MouseScrollEvent;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +17,6 @@ public abstract class MouseHandlerMixin {
 
     @Inject(method = "onScroll", at = @At("HEAD"))
     private void onScroll(long windowPointer, double xOffset, double yOffset, CallbackInfo ci) {
-        EventFactory.onMouseScroll(windowPointer, xOffset, yOffset);
+        MixinHelper.post(new MouseScrollEvent((double) windowPointer, xOffset, yOffset));
     }
 }

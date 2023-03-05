@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ResourcePackClearEvent;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.resources.DownloadedPackSource;
 import net.minecraft.server.packs.repository.Pack;
@@ -24,7 +25,7 @@ public abstract class DownloadedPackSourceMixin {
     private void onClearServerPackPre(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         if (serverPack == null) return;
 
-        Event event = EventFactory.onResourcePackClearEvent(serverPack);
+        Event event = MixinHelper.postAlways(new ResourcePackClearEvent(serverPack));
         if (event.isCanceled()) {
             cir.setReturnValue(CompletableFuture.completedFuture(null));
             cir.cancel();

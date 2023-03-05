@@ -4,8 +4,11 @@
  */
 package com.wynntils.forge.mixins;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.RenderEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -22,17 +25,25 @@ public abstract class ForgeGuiMixin extends Gui {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void onRenderGuiPre(PoseStack poseStack, float partialTick, CallbackInfo ci) {
-        EventFactory.onRenderGuiPre(poseStack, partialTick, this.minecraft.getWindow());
+        MixinHelper.post(
+                new RenderEvent.Pre(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }
 
     @Inject(method = "render", at = @At("RETURN"))
     private void onRenderGuiPost(PoseStack poseStack, float partialTick, CallbackInfo ci) {
-        EventFactory.onRenderGuiPost(poseStack, partialTick, this.minecraft.getWindow());
+        MixinHelper.post(
+                new RenderEvent.Post(poseStack, partialTick, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }
 
     @Inject(method = "renderFood", at = @At("HEAD"), cancellable = true, remap = false)
     private void onRenderFoodPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
-        if (EventFactory.onRenderFoodPre(poseStack, this.minecraft.getWindow()).isCanceled()) {
+        RenderEvent.Pre event = MixinHelper.post(
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -40,7 +51,13 @@ public abstract class ForgeGuiMixin extends Gui {
     // The render food mixin above does not get called when riding a horse, we need this as a replacement.
     @Inject(method = "renderHealthMount", at = @At("HEAD"), cancellable = true, remap = false)
     private void onRenderHealthMountPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
-        if (EventFactory.onRenderFoodPre(poseStack, this.minecraft.getWindow()).isCanceled()) {
+        RenderEvent.Pre event = MixinHelper.post(
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+
+        if (Managers.Connection.onServer()) {
+            RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION); // we have to reset shader texture
+        }
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

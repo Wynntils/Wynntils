@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
@@ -37,6 +38,6 @@ public abstract class ElytraLayerMixin<T extends LivingEntity, M extends EntityM
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (EventFactory.onElytraRender(player).isCanceled()) ci.cancel();
+        if (MixinHelper.post(new PlayerRenderLayerEvent.Elytra(player)).isCanceled()) ci.cancel();
     }
 }
