@@ -23,10 +23,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends Overlay {
-    @Config
+    @Config(key = "overlay.wynntils.textOverlay.textShadow")
     public TextShadow textShadow = TextShadow.OUTLINE;
 
-    @Config
+    @Config(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
     public float secondsPerRecalculation = 0.5f;
 
     protected String[] cachedLines;
