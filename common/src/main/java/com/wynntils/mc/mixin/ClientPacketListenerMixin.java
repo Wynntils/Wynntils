@@ -42,9 +42,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.core.Position;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
@@ -226,7 +224,8 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new MenuEvent.MenuClosedEvent(packet.getContainerId())).isCanceled()) {
+        if (MixinHelper.post(new MenuEvent.MenuClosedEvent(packet.getContainerId()))
+                .isCanceled()) {
             ci.cancel();
         }
     }

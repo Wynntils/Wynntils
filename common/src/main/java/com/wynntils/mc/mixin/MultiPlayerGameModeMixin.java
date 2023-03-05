@@ -13,7 +13,6 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +45,8 @@ public abstract class MultiPlayerGameModeMixin {
             InteractionHand hand,
             BlockHitResult result,
             CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.RightClickBlock event = new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
+        PlayerInteractEvent.RightClickBlock event =
+                new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
         if (MixinHelper.post(event).isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();

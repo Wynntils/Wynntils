@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -54,7 +53,13 @@ public abstract class PlayerRendererMixin
             int packedLight,
             CallbackInfo ci) {
         if (MixinHelper.post(new NametagRenderEvent(
-                        entity, displayName, matrixStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont()))
+                        entity,
+                        displayName,
+                        matrixStack,
+                        buffer,
+                        packedLight,
+                        this.entityRenderDispatcher,
+                        this.getFont()))
                 .isCanceled()) {
             ci.cancel();
         }
