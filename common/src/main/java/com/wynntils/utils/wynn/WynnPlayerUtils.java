@@ -28,6 +28,14 @@ public final class WynnPlayerUtils {
                 primaryColor = ChatFormatting.YELLOW;
                 secondaryColor = ChatFormatting.GOLD;
             }
+            case "Mod" -> {
+                primaryColor = ChatFormatting.GOLD;
+                secondaryColor = ChatFormatting.YELLOW;
+            }
+            case "YT" -> {
+                primaryColor = ChatFormatting.LIGHT_PURPLE;
+                secondaryColor = ChatFormatting.DARK_PURPLE;
+            }
             default -> {
                 // Should not happen
                 primaryColor = ChatFormatting.DARK_GRAY;
