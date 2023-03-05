@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.AbstractConfigurable;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
@@ -55,7 +55,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     private ScrollButton configurableListScrollButton;
     private ScrollButton configListScrollButton;
 
-    private AbstractConfigurable selected = null;
+    private Configurable selected = null;
 
     private int configurableScrollOffset = 0;
     private int configScrollOffset = 0;
@@ -440,11 +440,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         return (this.width - Texture.SETTING_BACKGROUND.width()) / 2f;
     }
 
-    public AbstractConfigurable getSelected() {
+    public Configurable getSelected() {
         return selected;
     }
 
-    public void setSelected(AbstractConfigurable selected) {
+    public void setSelected(Configurable selected) {
         this.selected = selected;
         reloadConfigButtons();
     }

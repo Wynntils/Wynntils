@@ -5,7 +5,7 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.AbstractConfigurable;
+import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -20,9 +20,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
-    private final AbstractConfigurable configurable;
+    private final Configurable configurable;
 
-    public ConfigurableButton(int x, int y, int width, int height, AbstractConfigurable configurable) {
+    public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
         super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
         this.configurable = configurable;
     }
