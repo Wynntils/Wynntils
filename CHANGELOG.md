@@ -1,3 +1,10 @@
+## [0.0.2-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.292...v0.0.2-alpha.293) (2023-03-05)
+
+
+### New Features
+
+* Add HeldItemTypeFunction ([#1271](https://github.com/Wynntils/Artemis/issues/1271)) ([d11f1be](https://github.com/Wynntils/Artemis/commit/d11f1beafe5f21728fa5e9d527253f516c74568f))
+
 ## [0.0.2-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.291...v0.0.2-alpha.292) (2023-03-05)
 
 
@@ -9,6 +16,11 @@
 ### New Features
 
 * Better function suggestion provider and clickable ([#1272](https://github.com/Wynntils/Artemis/issues/1272)) ([575619d](https://github.com/Wynntils/Artemis/commit/575619df799485bbaefca25f6f599802015a191a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.292 [skip ci] ([176d24f](https://github.com/Wynntils/Artemis/commit/176d24f5cd9e0bfcd01819680553b5b364e19a3e))
 
 ## [0.0.2-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.290...v0.0.2-alpha.291) (2023-03-05)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.289 [skip ci] ([05ee1ff](https://github.com/Wynntils/Artemis/commit/05ee1ff1ed708e57f743be2246edd19266dc0981))
-
-## [0.0.2-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.287...v0.0.2-alpha.288) (2023-03-04)
-
-
-### New Features
-
-* Add AreaDamagePerSecondFunction and AreaDamageAverageFunction ([#1262](https://github.com/Wynntils/Artemis/issues/1262)) ([27b95e1](https://github.com/Wynntils/Artemis/commit/27b95e13c0a70b334009d0ea4f2e62f8be706334))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.288 [skip ci] ([6991887](https://github.com/Wynntils/Artemis/commit/699188798a9d95aa6cf31839e65f5c7906d6bc3d))
 
