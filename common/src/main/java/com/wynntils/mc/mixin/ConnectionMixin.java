@@ -22,15 +22,18 @@ public abstract class ConnectionMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void channelRead0Pre(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
-        if (MixinHelper.postAlways(new PacketEvent.PacketReceivedEvent<>(packet))
-                .isCanceled()) {
+        PacketEvent.PacketReceivedEvent<? extends Packet<?>> event = new PacketEvent.PacketReceivedEvent<>(packet);
+        MixinHelper.postAlways(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
     private void sendPre(Packet<?> packet, PacketSendListener sendListener, CallbackInfo ci) {
-        if (MixinHelper.postAlways(new PacketEvent.PacketSentEvent<>(packet)).isCanceled()) {
+        PacketEvent.PacketSentEvent<? extends Packet<?>> event = new PacketEvent.PacketSentEvent<>(packet);
+        MixinHelper.postAlways(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

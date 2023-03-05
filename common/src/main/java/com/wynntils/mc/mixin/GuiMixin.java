@@ -8,7 +8,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -82,12 +81,14 @@ public abstract class GuiMixin {
                             target =
                                     "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
     private int onRenderFood(Gui instance, LivingEntity entity, Operation<Integer> original) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+        if (!MixinHelper.onWynncraft()) return original.call(instance, entity);
 
-        if (Managers.Connection.onServer()) {
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
-        }
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+        MixinHelper.post(event);
+
+        // we have to reset shader texture
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 
         // Return a non-zero value to cancel rendering
         if (event.isCanceled()) return 1;
@@ -97,9 +98,10 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
-        if (MixinHelper.post(new RenderEvent.Pre(
-                        poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair))
-                .isCanceled()) {
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -118,12 +120,15 @@ public abstract class GuiMixin {
             int l,
             boolean bl,
             CallbackInfo ci) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HealthBar));
+        if (!MixinHelper.onWynncraft()) return;
 
-        if (Managers.Connection.onServer()) {
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
-        }
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HealthBar);
+        MixinHelper.post(event);
+
+        // we have to reset shader texture
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+
         if (event.isCanceled()) {
             ci.cancel();
         }

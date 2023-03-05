@@ -35,6 +35,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, A extends 
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (MixinHelper.post(new PlayerRenderLayerEvent.Armor(player, slot)).isCanceled()) ci.cancel();
+        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(player, slot);
+        MixinHelper.post(event);
+        if (event.isCanceled()) ci.cancel();
     }
 }

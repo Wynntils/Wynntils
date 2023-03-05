@@ -16,8 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ChatScreenMixin {
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (MixinHelper.post(new ChatScreenKeyTypedEvent(keyCode, scanCode, modifiers))
-                .isCanceled()) {
+        ChatScreenKeyTypedEvent event = new ChatScreenKeyTypedEvent(keyCode, scanCode, modifiers);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             cir.setReturnValue(true);
             cir.cancel();
         }

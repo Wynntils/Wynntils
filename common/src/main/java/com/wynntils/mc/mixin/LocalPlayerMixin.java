@@ -20,7 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LocalPlayerMixin {
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
-        if (MixinHelper.post(new DropHeldItemEvent(fullStack)).isCanceled()) {
+        DropHeldItemEvent event = new DropHeldItemEvent(fullStack);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -30,7 +32,9 @@ public abstract class LocalPlayerMixin {
     private void onSendMessage(Component component, CallbackInfo ci) {
         if ((Object) this != McUtils.player()) return;
 
-        if (MixinHelper.post(new ClientsideMessageEvent(component)).isCanceled()) {
+        ClientsideMessageEvent event = new ClientsideMessageEvent(component);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
