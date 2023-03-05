@@ -6,11 +6,10 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -18,9 +17,6 @@ import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -57,6 +53,9 @@ public class InfoBoxFeature extends UserFeature {
             0);
 
     public static class InfoBoxOverlay extends TextOverlay {
+        @Config
+        public String content = "";
+
         private final int id;
 
         protected InfoBoxOverlay(int id) {
@@ -87,44 +86,17 @@ public class InfoBoxFeature extends UserFeature {
         }
 
         @Override
+        public String getTemplate() {
+            return content;
+        }
+
+        @Override
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             if (!Models.WorldState.onWorld()) return;
 
-            // FIXME: We do re-calculate this on render, but this is preview only, and fixing this would need a lot of
-            //        architectural changes at the moment
-
-            String[] renderedLines;
-            if (content.isEmpty()) {
-                renderedLines = Managers.Function.doFormatLines("&cX: {x}, &9Y: {y}, &aZ: {z}");
-            } else {
-                renderedLines = cachedLines;
-            }
-
-            float renderX = this.getRenderX();
-            float renderY = this.getRenderY();
-            for (String line : renderedLines) {
-                BufferedFontRenderer.getInstance()
-                        .renderAlignedTextInBox(
-                                poseStack,
-                                bufferSource,
-                                line,
-                                renderX,
-                                renderX + this.getWidth(),
-                                renderY,
-                                renderY + this.getHeight(),
-                                0,
-                                CommonColors.WHITE,
-                                this.getRenderHorizontalAlignment(),
-                                this.getRenderVerticalAlignment(),
-                                this.textShadow);
-
-                renderY += FontRenderer.getInstance().getFont().lineHeight;
-            }
+            renderTemplate(poseStack, bufferSource, "&cX: {x:0}, &9Y: {y:0}, &aZ: {z:0}");
         }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {}
 
         @Override
         public String getTranslatedName() {

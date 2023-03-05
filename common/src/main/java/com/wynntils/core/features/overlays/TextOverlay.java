@@ -27,23 +27,20 @@ public abstract class TextOverlay extends Overlay {
     public TextShadow textShadow = TextShadow.OUTLINE;
 
     @Config
-    public String content = "";
-
-    @Config
     public float secondsPerRecalculation = 0.5f;
 
     protected String[] cachedLines;
     protected long lastUpdate = 0;
 
-    public TextOverlay(OverlayPosition position, float width, float height) {
+    protected TextOverlay(OverlayPosition position, float width, float height) {
         super(position, width, height);
     }
 
-    public TextOverlay(OverlayPosition position, OverlaySize size) {
+    protected TextOverlay(OverlayPosition position, OverlaySize size) {
         super(position, size);
     }
 
-    public TextOverlay(
+    protected TextOverlay(
             OverlayPosition position,
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
@@ -56,9 +53,13 @@ public abstract class TextOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        if (System.nanoTime() - lastUpdate > secondsPerRecalculation * 1e+9) {
-            lastUpdate = System.nanoTime();
-            cachedLines = Managers.Function.doFormatLines(content);
+        renderTemplate(poseStack, bufferSource, getTemplate());
+    }
+
+    protected void renderTemplate(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
+            lastUpdate = System.currentTimeMillis();
+            cachedLines = Managers.Function.doFormatLines(template);
         }
 
         float renderX = this.getRenderX();
@@ -82,6 +83,8 @@ public abstract class TextOverlay extends Overlay {
             renderY += FontRenderer.getInstance().getFont().lineHeight;
         }
     }
+
+    public abstract String getTemplate();
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {}
