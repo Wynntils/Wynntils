@@ -1,9 +1,21 @@
+## [0.0.2-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.294...v0.0.2-alpha.295) (2023-03-05)
+
+
+### Bug Fixes
+
+* Fix regression with hearts showing in mana bar while riding ([#1275](https://github.com/Wynntils/Artemis/issues/1275)) ([5a7a1ed](https://github.com/Wynntils/Artemis/commit/5a7a1edf12460e5868c9f4aa52d465a953fb4209))
+
 ## [0.0.2-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.293...v0.0.2-alpha.294) (2023-03-05)
 
 
 ### Bug Fixes
 
 * Setting screen now properly handles config changes  ([#1270](https://github.com/Wynntils/Artemis/issues/1270)) ([52cbec3](https://github.com/Wynntils/Artemis/commit/52cbec3312f4852bab4517c51d18636884611eb4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.294 [skip ci] ([996a246](https://github.com/Wynntils/Artemis/commit/996a246325e3e002fc47d935f894f2739ba20c68))
 
 ## [0.0.2-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.292...v0.0.2-alpha.293) (2023-03-05)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.291 [skip ci] ([7c275db](https://github.com/Wynntils/Artemis/commit/7c275db07025d87e9ee3f24eaf03aa8c90f2b975))
-
-## [0.0.2-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.289...v0.0.2-alpha.290) (2023-03-05)
-
-
-### Bug Fixes
-
-* Do not return null in horse functions ([#1265](https://github.com/Wynntils/Artemis/issues/1265)) ([8d8d629](https://github.com/Wynntils/Artemis/commit/8d8d629a26c08d4bdaf718a10851b854321518dd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.290 [skip ci] ([68c016c](https://github.com/Wynntils/Artemis/commit/68c016c41d02638e27ff34109d05369c419352c1))
 
