@@ -178,4 +178,28 @@ public class InventoryFunctions {
             return List.of("max_held_durability");
         }
     }
+
+    public static class HeldItemTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+
+            if (itemInHand == null) {
+                return "NONE";
+            }
+
+            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemInHand);
+
+            if (wynnItem.isEmpty()) {
+                return "NONE";
+            }
+
+            return wynnItem.get().getClass().getSimpleName();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_type");
+        }
+    }
 }

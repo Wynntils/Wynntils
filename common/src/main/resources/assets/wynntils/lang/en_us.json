@@ -976,6 +976,8 @@
   "function.wynntils.heldItemCurrentDurability.name": "Held Item Current Durability",
   "function.wynntils.heldItemMaxDurability.description": "Max durability of the item in your hand",
   "function.wynntils.heldItemMaxDurability.name": "Held Item Max Durability",
+  "function.wynntils.heldItemType.description": "Type of the item in your hand",
+  "function.wynntils.heldItemType.name": "Held Item Type",
   "function.wynntils.horseLevel.description": "Your horse's current level",
   "function.wynntils.horseLevel.name": "Horse Level",
   "function.wynntils.horseLevelMax.description": "Your horse's maximum level",
