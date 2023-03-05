@@ -1,9 +1,21 @@
+## [0.0.2-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.293...v0.0.2-alpha.294) (2023-03-05)
+
+
+### Bug Fixes
+
+* Setting screen now properly handles config changes  ([#1270](https://github.com/Wynntils/Artemis/issues/1270)) ([52cbec3](https://github.com/Wynntils/Artemis/commit/52cbec3312f4852bab4517c51d18636884611eb4))
+
 ## [0.0.2-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.292...v0.0.2-alpha.293) (2023-03-05)
 
 
 ### New Features
 
 * Add HeldItemTypeFunction ([#1271](https://github.com/Wynntils/Artemis/issues/1271)) ([d11f1be](https://github.com/Wynntils/Artemis/commit/d11f1beafe5f21728fa5e9d527253f516c74568f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.293 [skip ci] ([7c007b7](https://github.com/Wynntils/Artemis/commit/7c007b7c3cc46a9acb4fdf7f9c53584b744c6d89))
 
 ## [0.0.2-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.291...v0.0.2-alpha.292) (2023-03-05)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.290 [skip ci] ([68c016c](https://github.com/Wynntils/Artemis/commit/68c016c41d02638e27ff34109d05369c419352c1))
-
-## [0.0.2-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.288...v0.0.2-alpha.289) (2023-03-05)
-
-
-### Code Refactoring
-
-* Remove the EventFactory ([#1267](https://github.com/Wynntils/Artemis/issues/1267)) ([c053fc8](https://github.com/Wynntils/Artemis/commit/c053fc88e0f3ed8d77723fe3faec44f17da48cef))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.289 [skip ci] ([05ee1ff](https://github.com/Wynntils/Artemis/commit/05ee1ff1ed708e57f743be2246edd19266dc0981))
 
