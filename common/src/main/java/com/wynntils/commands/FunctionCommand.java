@@ -14,14 +14,17 @@ import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,7 +32,12 @@ import net.minecraft.network.chat.MutableComponent;
 public class FunctionCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> FUNCTION_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.Function.getFunctions().stream().map(Function::getName), builder);
+                    Stream.concat(
+                            Managers.Function.getFunctions().stream().map(Function::getName),
+                            Managers.Function.getFunctions().stream()
+                                    .map(Function::getAliases)
+                                    .flatMap(Collection::stream)),
+                    builder);
 
     private static final SuggestionProvider<CommandSourceStack> CRASHED_FUNCTION_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
@@ -132,8 +140,14 @@ public class FunctionCommand extends Command {
         for (Function<?> function : functions) {
             MutableComponent functionComponent = Component.literal("\n - ").withStyle(ChatFormatting.GRAY);
 
-            functionComponent.append(Component.literal(function.getName())
-                    .withStyle(function instanceof GenericFunction<?> ? ChatFormatting.GOLD : ChatFormatting.YELLOW));
+            functionComponent
+                    .append(Component.literal(function.getName())
+                            .withStyle(
+                                    function instanceof GenericFunction<?>
+                                            ? ChatFormatting.GOLD
+                                            : ChatFormatting.YELLOW))
+                    .withStyle(style -> style.withClickEvent(
+                            new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/function help " + function.getName())));
             if (!function.getAliases().isEmpty()) {
                 String aliasList = String.join(", ", function.getAliases());
 
