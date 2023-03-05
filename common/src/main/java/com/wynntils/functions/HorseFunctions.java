@@ -15,7 +15,9 @@ public class HorseFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
+
+            if (horse == null) return -1;
+
             return horse.getLevel().current();
         }
 
@@ -29,7 +31,9 @@ public class HorseFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
+
+            if (horse == null) return -1;
+
             return horse.getLevel().max();
         }
 
@@ -43,7 +47,9 @@ public class HorseFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
+
+            if (horse == null) return -1;
+
             return horse.getXp();
         }
 
@@ -57,7 +63,9 @@ public class HorseFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
+
+            if (horse == null) return -1;
+
             return horse.getTier();
         }
 
@@ -71,9 +79,11 @@ public class HorseFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
+
+            if (horse == null) return "";
+
             String name = horse.getName();
-            return (name.isEmpty()) ? null : name;
+            return (name.isEmpty()) ? "" : name;
         }
 
         @Override
