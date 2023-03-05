@@ -30,10 +30,12 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
     private void setScreenPre(Screen screen, CallbackInfo ci) {
-        if (screen != null) {
-            if (MixinHelper.post(new ScreenOpenedEvent.Pre(screen)).isCanceled()) {
-                ci.cancel();
-            }
+        if (screen == null) return;
+
+        ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
         }
     }
 

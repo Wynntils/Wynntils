@@ -34,6 +34,10 @@ public abstract class CapeLayerMixin {
             float netHeadYaw,
             float headPitch,
             CallbackInfo ci) {
-        if (MixinHelper.post(new PlayerRenderLayerEvent.Cape(livingEntity)).isCanceled()) ci.cancel();
+        PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(livingEntity);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

@@ -25,7 +25,8 @@ public abstract class EntityLookupMixin {
 
     @Inject(method = "add(Lnet/minecraft/world/level/entity/EntityAccess;)V", at = @At("HEAD"), cancellable = true)
     private void addPre(EntityAccess entityAccess, CallbackInfo ci) {
-        AddEntityLookupEvent event = MixinHelper.post(new AddEntityLookupEvent(entityAccess.getUUID(), byUuid));
+        AddEntityLookupEvent event = new AddEntityLookupEvent(entityAccess.getUUID(), byUuid);
+        MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }

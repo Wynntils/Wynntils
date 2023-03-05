@@ -34,7 +34,8 @@ public abstract class PlayerRendererMixin
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
         RenderLayerRegistrationEvent event =
-                MixinHelper.postAlways(new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl));
+                new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl);
+        MixinHelper.postAlways(event);
         for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : event.getRegisteredLayers()) {
             this.addLayer(layer);
         }
@@ -52,15 +53,10 @@ public abstract class PlayerRendererMixin
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        if (MixinHelper.post(new NametagRenderEvent(
-                        entity,
-                        displayName,
-                        matrixStack,
-                        buffer,
-                        packedLight,
-                        this.entityRenderDispatcher,
-                        this.getFont()))
-                .isCanceled()) {
+        NametagRenderEvent event = new NametagRenderEvent(
+                entity, displayName, matrixStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
