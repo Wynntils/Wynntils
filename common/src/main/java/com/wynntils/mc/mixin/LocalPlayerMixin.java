@@ -4,7 +4,9 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -18,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LocalPlayerMixin {
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
-        if (EventFactory.onDropPre(fullStack).isCanceled()) {
+        if (MixinHelper.post(new DropHeldItemEvent(fullStack)).isCanceled()) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -28,7 +30,7 @@ public abstract class LocalPlayerMixin {
     private void onSendMessage(Component component, CallbackInfo ci) {
         if ((Object) this != McUtils.player()) return;
 
-        if (EventFactory.onClientsideMessage(component).isCanceled()) {
+        if (MixinHelper.post(new ClientsideMessageEvent(component)).isCanceled()) {
             ci.cancel();
         }
     }

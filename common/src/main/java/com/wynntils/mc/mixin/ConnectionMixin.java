@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PacketEvent;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
@@ -21,14 +22,15 @@ public abstract class ConnectionMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void channelRead0Pre(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
-        if (EventFactory.onPacketReceived(packet).isCanceled()) {
+        if (MixinHelper.postAlways(new PacketEvent.PacketReceivedEvent<>(packet))
+                .isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
     private void sendPre(Packet<?> packet, PacketSendListener sendListener, CallbackInfo ci) {
-        if (EventFactory.onPacketSent(packet).isCanceled()) {
+        if (MixinHelper.postAlways(new PacketEvent.PacketSentEvent<>(packet)).isCanceled()) {
             ci.cancel();
         }
     }

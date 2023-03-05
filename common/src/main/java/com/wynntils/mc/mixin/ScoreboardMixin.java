@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.google.common.collect.Maps;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PlayerTeamEvent;
 import java.util.Map;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
@@ -35,13 +36,13 @@ public abstract class ScoreboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        if (EventFactory.onRemovePlayerFromTeam(username, playerTeam).isCanceled()) {
+        if (MixinHelper.post(new PlayerTeamEvent.Removed(username, playerTeam)).isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "addPlayerToTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)Z", at = @At("RETURN"))
     private void addPlayerToTeamPost(String username, PlayerTeam playerTeam, CallbackInfoReturnable<Boolean> cir) {
-        EventFactory.onAddPlayerToTeam(username, playerTeam);
+        MixinHelper.post(new PlayerTeamEvent.Added(username, playerTeam));
     }
 }

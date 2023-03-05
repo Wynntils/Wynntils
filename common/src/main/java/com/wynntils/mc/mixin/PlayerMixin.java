@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ public abstract class PlayerMixin {
                             target =
                                     "Lnet/minecraft/world/entity/player/Player;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean onSwingInInventoryScreen(Player player, InteractionHand hand) {
-        return !EventFactory.onArmSwing(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand)
+        return !MixinHelper.post(new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand))
                 .isCanceled();
     }
 }

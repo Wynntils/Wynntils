@@ -5,8 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getHideFlags()I"))
     private int redirectGetHideFlags(int original) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Mask event = EventFactory.onTooltipFlagsMask(itemStack, original);
+        ItemTooltipFlagsEvent.Mask event = MixinHelper.post(new ItemTooltipFlagsEvent.Mask(itemStack, original));
 
         return event.getMask();
     }
@@ -43,7 +43,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             argsOnly = true)
     private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Advanced event = EventFactory.onTooltipFlagsAdvanced(itemStack, flags);
+        ItemTooltipFlagsEvent.Advanced event = MixinHelper.post(new ItemTooltipFlagsEvent.Advanced(itemStack, flags));
         return event.getFlags();
     }
 

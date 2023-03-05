@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
@@ -42,7 +42,8 @@ public abstract class LivingEntityRendererMixin {
             boolean translucent,
             boolean glowing,
             Operation<RenderType> original) {
-        LivingEntityRenderTranslucentCheckEvent event = EventFactory.onTranslucentCheck(translucent, livingEntity);
+        LivingEntityRenderTranslucentCheckEvent event = MixinHelper.post(
+                new LivingEntityRenderTranslucentCheckEvent(translucent, livingEntity, translucent ? 0.15f : 1f));
         wynntilsTranslucence = event.getTranslucence();
         return original.call(instance, livingEntity, bodyVisible, event.isTranslucent(), glowing);
     }
