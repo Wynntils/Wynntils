@@ -5,8 +5,7 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -21,9 +20,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
-    private final Configurable configurable;
+    private final AbstractConfigurable configurable;
 
-    public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
+    public ConfigurableButton(int x, int y, int width, int height, AbstractConfigurable configurable) {
         super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
         this.configurable = configurable;
     }
@@ -33,9 +32,7 @@ public class ConfigurableButton extends WynntilsButton {
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            if (bookSettingsScreen.getSelectedFeature() == configurable) {
-                color = CommonColors.GRAY;
-            } else if (bookSettingsScreen.getSelectedOverlay() == configurable) {
+            if (bookSettingsScreen.getSelected() == configurable) {
                 color = CommonColors.GRAY;
             }
         }
@@ -57,11 +54,7 @@ public class ConfigurableButton extends WynntilsButton {
     @Override
     public void onPress() {
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            if (configurable instanceof Feature feature) {
-                bookSettingsScreen.setSelectedFeature(feature);
-            } else if (configurable instanceof Overlay overlay) {
-                bookSettingsScreen.setSelectedOverlay(overlay);
-            }
+            bookSettingsScreen.setSelected(configurable);
         }
     }
 }
