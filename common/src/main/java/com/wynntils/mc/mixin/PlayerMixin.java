@@ -22,7 +22,8 @@ public abstract class PlayerMixin {
                             target =
                                     "Lnet/minecraft/world/entity/player/Player;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean onSwingInInventoryScreen(Player player, InteractionHand hand) {
-        return !MixinHelper.post(new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand))
-                .isCanceled();
+        ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand);
+        MixinHelper.post(event);
+        return !event.isCanceled();
     }
 }

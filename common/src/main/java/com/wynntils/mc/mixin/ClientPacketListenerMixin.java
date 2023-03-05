@@ -109,22 +109,27 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(method = "sendChat", at = @At("HEAD"), cancellable = true)
     private void onChatPre(String string, CallbackInfo ci) {
-        ChatSentEvent result = MixinHelper.post(new ChatSentEvent(string));
-        if (result.isCanceled()) {
+        ChatSentEvent event = new ChatSentEvent(string);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
     private void onSignedCommandPre(String string, CallbackInfo ci) {
-        if (MixinHelper.post(new CommandSentEvent(string, true)).isCanceled()) {
+        CommandSentEvent event = new CommandSentEvent(string, true);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
     private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
-        if (MixinHelper.post(new CommandSentEvent(command, false)).isCanceled()) {
+        CommandSentEvent event = new CommandSentEvent(command, false);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             // Return true here, to signal to MC that we handled the command.
             cir.setReturnValue(true);
             cir.cancel();
@@ -139,7 +144,8 @@ public abstract class ClientPacketListenerMixin {
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsAddedEvent event = MixinHelper.post(new CommandsAddedEvent(root));
+        CommandsAddedEvent event = new CommandsAddedEvent(root);
+        MixinHelper.post(event);
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
@@ -188,8 +194,9 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void handleResourcePackPre(ClientboundResourcePackPacket packet, CallbackInfo ci) {
-        if (MixinHelper.post(new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired()))
-                .isCanceled()) {
+        ResourcePackEvent event = new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             this.send(ServerboundResourcePackPacket.Action.SUCCESSFULLY_LOADED);
             ci.cancel();
         }
@@ -211,9 +218,10 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleOpenScreenPre(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(
-                        new MenuEvent.MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId()))
-                .isCanceled()) {
+        MenuEvent.MenuOpenedEvent event =
+                new MenuEvent.MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -224,8 +232,9 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new MenuEvent.MenuClosedEvent(packet.getContainerId()))
-                .isCanceled()) {
+        MenuEvent.MenuClosedEvent event = new MenuEvent.MenuClosedEvent(packet.getContainerId());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -237,8 +246,9 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ContainerSetContentEvent event = MixinHelper.post(new ContainerSetContentEvent.Pre(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+        ContainerSetContentEvent event = new ContainerSetContentEvent.Pre(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
+        MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
@@ -281,9 +291,10 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new SetPlayerTeamEvent(
-                        ((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName()))
-                .isCanceled()) {
+        SetPlayerTeamEvent event =
+                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -302,7 +313,9 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new SetEntityPassengersEvent(packet.getVehicle())).isCanceled()) {
+        SetEntityPassengersEvent event = new SetEntityPassengersEvent(packet.getVehicle());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -310,7 +323,9 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new SetSpawnEvent(packet.getPos())).isCanceled()) {
+        SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
 
             // Signal loading complete to the loading screen,
@@ -327,7 +342,9 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setTitleTextPre(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new TitleSetTextEvent(packet.getText())).isCanceled()) {
+        TitleSetTextEvent event = new TitleSetTextEvent(packet.getText());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -338,7 +355,9 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setSubtitleTextPre(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new SubtitleSetTextEvent(packet.getText())).isCanceled()) {
+        SubtitleSetTextEvent event = new SubtitleSetTextEvent(packet.getText());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -360,13 +379,14 @@ public abstract class ClientPacketListenerMixin {
 
         // Currently, Wynncraft does not have any Player chat messages so this code
         // is not really used
-        ChatPacketReceivedEvent result = MixinHelper.post(new ChatPacketReceivedEvent.Player(packet.unsignedContent()));
-        if (result.isCanceled()) {
+        ChatPacketReceivedEvent event = new ChatPacketReceivedEvent.Player(packet.unsignedContent());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (result.isMessageChanged()) {
+        if (event.isMessageChanged()) {
             // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
@@ -408,9 +428,10 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (MixinHelper.post(new ScoreboardSetScoreEvent(
-                        packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod()))
-                .isCanceled()) {
+        ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
+                packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

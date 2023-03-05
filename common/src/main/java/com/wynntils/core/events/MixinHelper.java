@@ -9,15 +9,14 @@ import com.wynntils.core.components.Managers;
 import net.minecraftforge.eventbus.api.Event;
 
 public final class MixinHelper {
-    public static <T extends Event> T post(T event) {
-        if (!onWynncraft()) return event;
-
-        WynntilsMod.postEvent(event);
-        return event;
-    }
-
     public static boolean onWynncraft() {
         return Managers.Connection.onServer();
+    }
+
+    public static void post(Event event) {
+        if (!onWynncraft()) return;
+
+        WynntilsMod.postEvent(event);
     }
 
     /**

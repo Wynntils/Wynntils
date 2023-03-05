@@ -38,8 +38,9 @@ public abstract class CustomHeadLayerMixin<T extends LivingEntity> {
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (MixinHelper.post(new PlayerRenderLayerEvent.Armor(player, EquipmentSlot.HEAD))
-                .isCanceled()) {
+        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(player, EquipmentSlot.HEAD);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

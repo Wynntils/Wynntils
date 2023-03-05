@@ -59,8 +59,9 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
     private void keyPressedPre(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (MixinHelper.post(new InventoryKeyPressEvent(keyCode, scanCode, modifiers, this.hoveredSlot))
-                .isCanceled()) {
+        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, this.hoveredSlot);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -68,8 +69,9 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (MixinHelper.post(new InventoryMouseClickedEvent(mouseX, mouseY, button, this.hoveredSlot))
-                .isCanceled()) {
+        InventoryMouseClickedEvent event = new InventoryMouseClickedEvent(mouseX, mouseY, button, this.hoveredSlot);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -77,7 +79,9 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
     private void onCloseContainerPre(CallbackInfo ci) {
-        if (MixinHelper.post(new ContainerCloseEvent.Pre()).isCanceled()) {
+        ContainerCloseEvent.Pre event = new ContainerCloseEvent.Pre();
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

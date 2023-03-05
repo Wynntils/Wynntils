@@ -37,8 +37,8 @@ public abstract class CommandSuggestionsMixin {
             @Local StringReader stringReader) {
         CompletableFuture<Suggestions> serverSuggestions = original.call(serverDispatcher, serverParse, cursor);
 
-        CommandSuggestionsEvent event =
-                MixinHelper.post(new CommandSuggestionsEvent(serverSuggestions, stringReader, cursor));
+        CommandSuggestionsEvent event = new CommandSuggestionsEvent(serverSuggestions, stringReader, cursor);
+        MixinHelper.post(event);
         return event.getSuggestions();
     }
 }

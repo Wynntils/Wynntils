@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class PotionItemMixin {
     @ModifyReturnValue(method = "isFoil(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"))
     private boolean isFoilPre(boolean original) {
-        DrawPotionGlintEvent event = MixinHelper.post(new DrawPotionGlintEvent((PotionItem) (Object) this));
+        DrawPotionGlintEvent event = new DrawPotionGlintEvent((PotionItem) (Object) this);
+        MixinHelper.post(event);
         if (event.isCanceled()) {
             return false;
         }

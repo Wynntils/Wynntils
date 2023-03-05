@@ -82,8 +82,9 @@ public abstract class GuiMixin {
                             target =
                                     "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
     private int onRenderFood(Gui instance, LivingEntity entity, Operation<Integer> original) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+        MixinHelper.post(event);
 
         if (Managers.Connection.onServer()) {
             RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture
@@ -97,9 +98,10 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
-        if (MixinHelper.post(new RenderEvent.Pre(
-                        poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair))
-                .isCanceled()) {
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -118,8 +120,9 @@ public abstract class GuiMixin {
             int l,
             boolean bl,
             CallbackInfo ci) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HealthBar));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HealthBar);
+        MixinHelper.post(event);
 
         if (Managers.Connection.onServer()) {
             RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION); // we have to reset shader texture

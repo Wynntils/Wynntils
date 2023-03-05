@@ -38,6 +38,8 @@ public abstract class ElytraLayerMixin<T extends LivingEntity, M extends EntityM
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (MixinHelper.post(new PlayerRenderLayerEvent.Elytra(player)).isCanceled()) ci.cancel();
+        PlayerRenderLayerEvent.Elytra event = new PlayerRenderLayerEvent.Elytra(player);
+        MixinHelper.post(event);
+        if (event.isCanceled()) ci.cancel();
     }
 }

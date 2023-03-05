@@ -62,8 +62,8 @@ public abstract class ItemRendererMixin {
         String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
-        ItemCountOverlayRenderEvent event =
-                MixinHelper.post(new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF));
+        ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF);
+        MixinHelper.post(event);
         // Storing the color in a field assumes this is only called single-threaded by the render thread
         wynntilsCountOverlayColor = event.getCountColor();
 

@@ -37,8 +37,9 @@ public abstract class ForgeGuiMixin extends Gui {
 
     @Inject(method = "renderFood", at = @At("HEAD"), cancellable = true, remap = false)
     private void onRenderFoodPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+        MixinHelper.post(event);
 
         if (Managers.Connection.onServer()) {
             RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION); // we have to reset shader texture
@@ -51,8 +52,9 @@ public abstract class ForgeGuiMixin extends Gui {
     // The render food mixin above does not get called when riding a horse, we need this as a replacement.
     @Inject(method = "renderHealthMount", at = @At("HEAD"), cancellable = true, remap = false)
     private void onRenderHealthMountPre(int width, int height, PoseStack poseStack, CallbackInfo ci) {
-        RenderEvent.Pre event = MixinHelper.post(
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+        MixinHelper.post(event);
 
         if (Managers.Connection.onServer()) {
             RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION); // we have to reset shader texture

@@ -30,7 +30,8 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getHideFlags()I"))
     private int redirectGetHideFlags(int original) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Mask event = MixinHelper.post(new ItemTooltipFlagsEvent.Mask(itemStack, original));
+        ItemTooltipFlagsEvent.Mask event = new ItemTooltipFlagsEvent.Mask(itemStack, original);
+        MixinHelper.post(event);
 
         return event.getMask();
     }
@@ -43,7 +44,8 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             argsOnly = true)
     private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Advanced event = MixinHelper.post(new ItemTooltipFlagsEvent.Advanced(itemStack, flags));
+        ItemTooltipFlagsEvent.Advanced event = new ItemTooltipFlagsEvent.Advanced(itemStack, flags);
+        MixinHelper.post(event);
         return event.getFlags();
     }
 

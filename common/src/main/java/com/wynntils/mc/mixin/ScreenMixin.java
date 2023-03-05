@@ -71,17 +71,18 @@ public abstract class ScreenMixin implements ScreenExtension {
             int mouseY,
             Operation<Void> original,
             @Local(argsOnly = true) ItemStack itemStack) {
-        ItemTooltipRenderEvent.Pre e =
-                MixinHelper.post(new ItemTooltipRenderEvent.Pre(poseStack, itemStack, tooltips, mouseX, mouseY));
-        if (e.isCanceled()) return;
+        ItemTooltipRenderEvent.Pre event =
+                new ItemTooltipRenderEvent.Pre(poseStack, itemStack, tooltips, mouseX, mouseY);
+        MixinHelper.post(event);
+        if (event.isCanceled()) return;
 
         original.call(
                 instance,
-                e.getPoseStack(),
-                e.getTooltips(),
-                e.getItemStack().getTooltipImage(),
-                e.getMouseX(),
-                e.getMouseY());
+                event.getPoseStack(),
+                event.getTooltips(),
+                event.getItemStack().getTooltipImage(),
+                event.getMouseX(),
+                event.getMouseY());
     }
 
     @Inject(

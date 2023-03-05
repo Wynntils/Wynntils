@@ -36,7 +36,9 @@ public abstract class ScoreboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        if (MixinHelper.post(new PlayerTeamEvent.Removed(username, playerTeam)).isCanceled()) {
+        PlayerTeamEvent.Removed event = new PlayerTeamEvent.Removed(username, playerTeam);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
