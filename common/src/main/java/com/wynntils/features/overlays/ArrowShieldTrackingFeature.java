@@ -26,6 +26,10 @@ public class ArrowShieldTrackingFeature extends UserFeature {
     public static class ArrowShieldTrackerOverlay extends TextOverlay {
         private static final String ARROW_SYMBOL = " ⬈"; // leading space is on purpose
 
+        private static final String TEMPLATE =
+                "{IF_STRING(GT(ARROW_SHIELD_COUNT; 0); CONCAT(\"Arrow Shield: \"; REPEAT(\"%s\"; ARROW_SHIELD_COUNT)); \"\")}"
+                        .formatted(ARROW_SYMBOL);
+
         @Config
         public CustomColor textColor = CommonColors.LIGHT_BLUE;
 
@@ -47,8 +51,7 @@ public class ArrowShieldTrackingFeature extends UserFeature {
 
         @Override
         public String getTemplate() {
-            return "{IF_STRING(GT(ARROW_SHIELD_COUNT; 0); CONCAT(\"Arrow Shield: \"; REPEAT(\"%s\"; ARROW_SHIELD_COUNT)); \"\")}"
-                    .formatted(ARROW_SYMBOL);
+            return TEMPLATE;
         }
 
         @Override

@@ -40,6 +40,8 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     }
 
     public static class ShamanMaskOverlay extends TextOverlay {
+        private static final String TEMPLATE = "{shaman_mask} mask";
+
         @Config
         public boolean displayNone = false;
 
@@ -68,7 +70,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
         @Override
         public String getTemplate() {
-            return "{shaman_mask} mask";
+            return TEMPLATE;
         }
 
         @Override

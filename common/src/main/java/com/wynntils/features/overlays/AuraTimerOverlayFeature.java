@@ -50,6 +50,9 @@ public class AuraTimerOverlayFeature extends UserFeature {
     }
 
     public static class AuraTimerOverlay extends TextOverlay {
+        private static final String TEMPLATE =
+                "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
+
         @Config
         public CustomColor textColor = CommonColors.ORANGE;
 
@@ -78,7 +81,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
 
         @Override
         public String getTemplate() {
-            return "{IF_STRING(MTE(AURA_TIMER; 0); CONCAT(CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1)); \"s\"); \"\")}";
+            return TEMPLATE;
         }
 
         @Override

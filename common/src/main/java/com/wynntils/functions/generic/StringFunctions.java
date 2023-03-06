@@ -52,8 +52,9 @@ public class StringFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", String.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument("first", String.class, null),
+                    new FunctionArguments.Argument("second", String.class, null)));
         }
     }
 
@@ -69,8 +70,8 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", String.class, null),
-                    new FunctionArguments.Argument<>("second", String.class, null)));
+                    new FunctionArguments.Argument("first", String.class, null),
+                    new FunctionArguments.Argument("second", String.class, null)));
         }
 
         @Override
@@ -92,7 +93,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", String.class, null)));
+                    List.of(new FunctionArguments.Argument("value", String.class, null)));
         }
 
         @Override
