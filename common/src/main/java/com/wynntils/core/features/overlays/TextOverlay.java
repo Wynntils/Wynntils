@@ -12,6 +12,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -83,13 +84,17 @@ public abstract class TextOverlay extends Overlay {
                             renderY,
                             renderY + this.getHeight(),
                             0,
-                            CommonColors.WHITE,
+                            this.getRenderColor(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
                             this.textShadow);
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
         }
+    }
+
+    public CustomColor getRenderColor() {
+        return CommonColors.WHITE;
     }
 
     public abstract String getTemplate();

@@ -32,12 +32,24 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("seconds", Integer.class, 10)));
+                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override
         public List<String> getAliases() {
             return List.of("adavg");
+        }
+    }
+
+    public static class ArrowShieldCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArrowShield.getArrowShieldCharge();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("arrow_shield");
         }
     }
 }

@@ -272,7 +272,7 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for function " + function.getClass().getSimpleName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for function " + function.getClass().getSimpleName();
-        for (FunctionArguments.Argument argument :
+        for (FunctionArguments.Argument<?> argument :
                 function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
                     : "Fix i18n argument description for function "
@@ -310,6 +310,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.RepeatFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
@@ -335,6 +336,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
+        registerFunction(new CombatFunctions.ArrowShieldCountFunction());
 
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());

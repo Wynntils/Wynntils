@@ -20,7 +20,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("value", Number.class, null)));
+                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
         }
     }
 
@@ -33,7 +33,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("value", Number.class, null)));
+                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
         }
 
         @Override
@@ -52,7 +52,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument("first", String.class, null),
+                    new FunctionArguments.Argument<>("first", String.class, null),
                     new FunctionArguments.Argument("second", String.class, null)));
         }
     }
@@ -69,8 +69,8 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument("first", String.class, null),
-                    new FunctionArguments.Argument("second", String.class, null)));
+                    new FunctionArguments.Argument<>("first", String.class, null),
+                    new FunctionArguments.Argument<>("second", String.class, null)));
         }
 
         @Override
@@ -92,7 +92,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("value", String.class, null)));
+                    List.of(new FunctionArguments.Argument<>("value", String.class, null)));
         }
 
         @Override
@@ -114,7 +114,24 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("value", String.class, null)));
+                    List.of(new FunctionArguments.Argument<>("value", String.class, null)));
+        }
+    }
+
+    public static class RepeatFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String value = arguments.getArgument("value").getStringValue();
+            int times = arguments.getArgument("count").getIntegerValue();
+
+            return String.valueOf(value).repeat(Math.max(0, times));
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("count", Integer.class, null)));
         }
     }
 }

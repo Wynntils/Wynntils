@@ -112,6 +112,10 @@ public class ArrowShieldModel extends Model {
         removeShield();
     }
 
+    public int getArrowShieldCharge() {
+        return spawnedArrowIds == null ? 0 : spawnedArrowIds.size();
+    }
+
     private void registerShield() {
         spawnedArrowIds = collectedArrowIds;
         collectedArrowIds = null;
