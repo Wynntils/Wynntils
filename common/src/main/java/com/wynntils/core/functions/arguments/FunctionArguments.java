@@ -153,11 +153,6 @@ public final class FunctionArguments {
         }
 
         public CappedValue getCappedValue() {
-            if (this.type == Number.class) {
-                int val = ((Number) this.getValue()).intValue();
-                return new CappedValue(val, val);
-            }
-
             return (CappedValue) this.getValue();
         }
 
