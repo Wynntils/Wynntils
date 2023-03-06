@@ -164,7 +164,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((Models.CombatXp.getXpLevel() >= questInfo.getLevel()
+            tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
                     .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))

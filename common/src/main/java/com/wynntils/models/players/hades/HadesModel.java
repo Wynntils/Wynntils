@@ -201,38 +201,28 @@ public final class HadesModel extends Model {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            if (lastSentStatus != null
-                    && lastSentStatus.equals(
-                            pX,
-                            pY,
-                            pZ,
-                            Models.Character.getCurrentHealth(),
-                            Models.Character.getMaxHealth(),
-                            Models.Character.getCurrentMana(),
-                            Models.Character.getMaxMana())) {
-                tickCountUntilUpdate = 1;
-                return;
+            PlayerStatus newStatus =
+                    new PlayerStatus(pX, pY, pZ, Models.Character.getHealth(), Models.Character.getMana());
+
+            if (lastSentStatus != null) {
+                if (lastSentStatus.equals(newStatus)) {
+                    tickCountUntilUpdate = 1;
+                    return;
+                }
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
 
-            lastSentStatus = new PlayerStatus(
-                    pX,
-                    pY,
-                    pZ,
-                    Models.Character.getCurrentHealth(),
-                    Models.Character.getMaxHealth(),
-                    Models.Character.getCurrentMana(),
-                    Models.Character.getMaxMana());
+            lastSentStatus = newStatus;
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
                     lastSentStatus.y(),
                     lastSentStatus.z(),
-                    lastSentStatus.health(),
-                    lastSentStatus.maxHealth(),
-                    lastSentStatus.mana(),
-                    lastSentStatus.maxMana()));
+                    lastSentStatus.health().current(),
+                    lastSentStatus.health().max(),
+                    lastSentStatus.mana().current(),
+                    lastSentStatus.mana().max()));
         }
     }
 

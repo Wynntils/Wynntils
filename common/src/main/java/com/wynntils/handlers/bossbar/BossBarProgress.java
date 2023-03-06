@@ -4,4 +4,6 @@
  */
 package com.wynntils.handlers.bossbar;
 
-public record BossBarProgress(int current, int max, float progress) {}
+import com.wynntils.utils.type.CappedValue;
+
+public record BossBarProgress(CappedValue value, float progress) {}

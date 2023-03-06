@@ -34,6 +34,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -126,7 +127,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
             BossBarProgress barProgress = progress();
 
-            String text = String.format("%s %s %s", barProgress.current(), icon(), barProgress.max());
+            String text = String.format(
+                    "%s %s %s",
+                    barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
             float progress = (flip ? -1 : 1) * barProgress.progress();
@@ -226,9 +229,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.Character.getCurrentHealth();
-            int max = Models.Character.getMaxHealth();
-            return new BossBarProgress(current, max, current / (float) max);
+            CappedValue health = Models.Character.getHealth();
+            return new BossBarProgress(health, (float) health.getProgress());
         }
 
         @Override
@@ -362,9 +364,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarProgress progress() {
-            int current = Models.Character.getCurrentMana();
-            int max = Models.Character.getMaxMana();
-            return new BossBarProgress(current, max, current / (float) max);
+            CappedValue mana = Models.Character.getMana();
+            return new BossBarProgress(mana, (float) mana.getProgress());
         }
 
         @Override
