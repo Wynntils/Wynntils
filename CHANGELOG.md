@@ -1,9 +1,22 @@
+## [0.0.2-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.295...v0.0.2-alpha.296) (2023-03-06)
+
+
+### Code Refactoring
+
+* Consistently use full mixin method signatures ([#1276](https://github.com/Wynntils/Artemis/issues/1276)) ([6566d6f](https://github.com/Wynntils/Artemis/commit/6566d6f2f39b3de2128550982b01b8409bd51f15))
+* Move more classes to type packages ([#1274](https://github.com/Wynntils/Artemis/issues/1274)) ([d50fc81](https://github.com/Wynntils/Artemis/commit/d50fc8158c20169dc6ed56745ade3e052640884b))
+
 ## [0.0.2-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.294...v0.0.2-alpha.295) (2023-03-05)
 
 
 ### Bug Fixes
 
 * Fix regression with hearts showing in mana bar while riding ([#1275](https://github.com/Wynntils/Artemis/issues/1275)) ([5a7a1ed](https://github.com/Wynntils/Artemis/commit/5a7a1edf12460e5868c9f4aa52d465a953fb4209))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.295 [skip ci] ([31de7ae](https://github.com/Wynntils/Artemis/commit/31de7aea0214fc497198ff6cbacc81fdf160efcc))
 
 ## [0.0.2-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.293...v0.0.2-alpha.294) (2023-03-05)
 
@@ -45,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.292 [skip ci] ([176d24f](https://github.com/Wynntils/Artemis/commit/176d24f5cd9e0bfcd01819680553b5b364e19a3e))
-
-## [0.0.2-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.290...v0.0.2-alpha.291) (2023-03-05)
-
-
-### Code Refactoring
-
-* Cleanups after the EventFactory removal ([#1269](https://github.com/Wynntils/Artemis/issues/1269)) ([28a939d](https://github.com/Wynntils/Artemis/commit/28a939d400b97100df164bfb38ef332a6f0ebf79))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.291 [skip ci] ([7c275db](https://github.com/Wynntils/Artemis/commit/7c275db07025d87e9ee3f24eaf03aa8c90f2b975))
 
