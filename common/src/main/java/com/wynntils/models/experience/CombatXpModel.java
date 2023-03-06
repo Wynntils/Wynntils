@@ -13,6 +13,7 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +35,7 @@ public class CombatXpModel extends Model {
         6087120, 6685120, 7352800, 8080800, 8725600, 9578400, 10545600, 11585600, 12740000, 14418250, 16280000,
         21196500, 23315500, 25649000, 249232940
     };
+    private static final int MAX_LEVEL = 106;
 
     private float lastTickXp = 0;
     private int trackedLevel = 0;
@@ -48,7 +50,7 @@ public class CombatXpModel extends Model {
     }
 
     @SubscribeEvent
-    public void onExperienceGain(CombatXpGainEvent event) {
+    public void onXpGain(CombatXpGainEvent event) {
         rawXpGainInLastMinute.put(event.getGainedXpRaw());
         percentageXpGainInLastMinute.put(event.getGainedXpPercentage());
     }
@@ -65,21 +67,21 @@ public class CombatXpModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         // We don't want to track XP before we've even got a packet to set our level
-        if (getXpLevel() == 0) return;
+        if (McUtils.player().experienceLevel == 0) return;
 
         // On first world join, we get all our current XP points (the currently gained amount for the next level), but
         // we only care about actual gains
         if (!firstJoinHappened) {
-            lastTickXp = getCurrentXp();
+            lastTickXp = getCurrentXpAsFloat();
             firstJoinHappened = true;
             return;
         }
 
-        float newTickXp = getCurrentXp();
+        float newTickXp = getCurrentXpAsFloat();
 
         if (newTickXp == lastTickXp) return;
 
-        int newLevel = getXpLevel();
+        int newLevel = getCombatLevel().current();
 
         if (trackedLevel == 0) {
             trackedLevel = newLevel;
@@ -130,22 +132,22 @@ public class CombatXpModel extends Model {
         WynntilsMod.postEvent(new CombatXpGainEvent(gainedXP, percentChange));
     }
 
-    public float getCurrentXp() {
+    public CappedValue getCombatLevel() {
+        return new CappedValue(McUtils.player().experienceLevel, MAX_LEVEL);
+    }
+
+    public CappedValue getXp() {
+        return new CappedValue((int) getCurrentXpAsFloat(), getXpPointsNeededToLevelUp());
+    }
+
+    private float getCurrentXpAsFloat() {
         // We calculate our level in points by seeing how far we've progress towards our
         // current XP level's max
-        return getXpProgress() * getXpPointsNeededToLevelUp();
+        return McUtils.player().experienceProgress * getXpPointsNeededToLevelUp();
     }
 
-    public float getXpProgress() {
-        return McUtils.player().experienceProgress;
-    }
-
-    public int getXpLevel() {
-        return McUtils.player().experienceLevel;
-    }
-
-    public int getXpPointsNeededToLevelUp() {
-        int levelIndex = getXpLevel() - 1;
+    private int getXpPointsNeededToLevelUp() {
+        int levelIndex = McUtils.player().experienceLevel - 1;
         if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
             return Integer.MAX_VALUE;
         }

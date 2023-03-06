@@ -110,8 +110,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         case Bottom -> this.getHeight() - renderedHeight;
                     };
 
-            final String text =
-                    guildObjective.getGoal() + ": " + guildObjective.getScore() + "/" + guildObjective.getMaxScore();
+            final String text = guildObjective.asObjectiveString();
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,

@@ -17,8 +17,9 @@ public final class FocusBar extends TrackedBar {
     @Override
     public void onUpdateName(Matcher match) {
         try {
-            current = Integer.parseInt(match.group(1));
-            max = Integer.parseInt(match.group(2));
+            int current = Integer.parseInt(match.group(1));
+            int max = Integer.parseInt(match.group(2));
+            updateValue(current, max);
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
                     "Failed to parse current and max for focus bar (%s out of %s)", match.group(1), match.group(2)));

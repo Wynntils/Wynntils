@@ -17,8 +17,9 @@ public final class CorruptedBar extends TrackedBar {
     @Override
     public void onUpdateName(Matcher match) {
         try {
-            current = Integer.parseInt(match.group(1));
-            max = 100;
+            int current = Integer.parseInt(match.group(1));
+            int max = 100;
+            updateValue(current, max);
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
                     "Failed to parse current and max for corrupted bar (%s out of %s)",

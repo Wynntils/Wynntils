@@ -86,7 +86,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 healthTexture.getTextureY1(),
                 81,
                 healthTexture.getTextureY2(),
-                (float) user.getHealth() / user.getMaxHealth());
+                (float) user.getHealth().getProgress());
 
         // name
         Font font = FontRenderer.getInstance().getFont();

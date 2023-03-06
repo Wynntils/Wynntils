@@ -47,19 +47,19 @@ public class LowHealthVignetteFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        float healthPercent = (float) Models.Character.getCurrentHealth() / Models.Character.getMaxHealth();
+        float healthProgress = (float) Models.Character.getHealth().getProgress();
         float threshold = lowHealthPercentage / 100f;
         shouldRender = false;
 
-        if (healthPercent > threshold) return;
+        if (healthProgress > threshold) return;
         shouldRender = true;
 
         switch (healthVignetteEffect) {
             case Pulse -> {
                 animation = (animation + animationSpeed) % 40;
-                value = threshold - healthPercent * INTENSITY + 0.01f * Math.abs(20 - animation);
+                value = threshold - healthProgress * INTENSITY + 0.01f * Math.abs(20 - animation);
             }
-            case Growing -> value = MathUtils.map(healthPercent, 0, threshold, INTENSITY, 0.1f);
+            case Growing -> value = MathUtils.map(healthProgress, 0, threshold, INTENSITY, 0.1f);
             case Static -> value = INTENSITY;
         }
     }

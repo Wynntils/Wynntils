@@ -11,6 +11,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,8 @@ public class InventoryFunctions {
     public static class InventoryFreeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getOpenInvSlots();
+            CappedValue usedSlots = Models.PlayerInventory.getUsedSlots();
+            return usedSlots.max() - usedSlots.current();
         }
 
         @Override
@@ -90,7 +92,7 @@ public class InventoryFunctions {
     public static class InventoryUsedFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getUsedInvSlots();
+            return Models.PlayerInventory.getUsedSlots().current();
         }
 
         @Override
