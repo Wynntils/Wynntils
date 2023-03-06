@@ -204,11 +204,9 @@ public final class HadesModel extends Model {
             PlayerStatus newStatus =
                     new PlayerStatus(pX, pY, pZ, Models.Character.getHealth(), Models.Character.getMana());
 
-            if (lastSentStatus != null) {
-                if (lastSentStatus.equals(newStatus)) {
-                    tickCountUntilUpdate = 1;
-                    return;
-                }
+            if (newStatus.equals(lastSentStatus)) {
+                tickCountUntilUpdate = 1;
+                return;
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
