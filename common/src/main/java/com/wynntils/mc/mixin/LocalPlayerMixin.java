@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
-    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "drop(Z)Z", at = @At("HEAD"), cancellable = true)
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
         DropHeldItemEvent event = new DropHeldItemEvent(fullStack);
         MixinHelper.post(event);
@@ -28,7 +28,7 @@ public abstract class LocalPlayerMixin {
         }
     }
 
-    @Inject(method = "sendSystemMessage", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendSystemMessage(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"), cancellable = true)
     private void onSendMessage(Component component, CallbackInfo ci) {
         if ((Object) this != McUtils.player()) return;
 

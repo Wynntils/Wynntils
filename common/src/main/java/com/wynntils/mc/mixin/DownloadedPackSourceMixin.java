@@ -21,7 +21,7 @@ public abstract class DownloadedPackSourceMixin {
     @Shadow
     private Pack serverPack;
 
-    @Inject(method = "clearServerPack", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "clearServerPack()Ljava/util/concurrent/CompletableFuture;", at = @At("HEAD"), cancellable = true)
     private void onClearServerPackPre(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         if (serverPack == null) return;
 
