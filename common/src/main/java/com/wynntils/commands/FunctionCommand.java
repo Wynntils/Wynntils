@@ -253,12 +253,18 @@ public class FunctionCommand extends Command {
 
         for (FunctionArguments.Argument argument :
                 function.getArgumentsBuilder().getArguments()) {
-            String type = isArgumentOptional
-                    ? "(%s, default: %s)"
-                            .formatted(
-                                    argument.getType().getSimpleName(),
-                                    argument.getDefaultValue().toString())
-                    : ("(" + argument.getType().getSimpleName() + ")");
+            String type;
+
+            if (isArgumentOptional) {
+                type = "(%s, default: %s)"
+                        .formatted(
+                                argument.getType().getSimpleName(),
+                                argument.getDefaultValue().toString());
+            } else if (argument instanceof FunctionArguments.ListArgument<?>) {
+                type = "(List<" + argument.getType().getSimpleName() + ">)";
+            } else {
+                type = ("(" + argument.getType().getSimpleName() + ")");
+            }
 
             String argumentDescription = "\n - " + ChatFormatting.YELLOW + argument.getName() + " " + type
                     + ChatFormatting.WHITE + ": " + function.getArgumentDescription(argument.getName());

@@ -68,30 +68,30 @@ public class LogicFunctions {
     public static class AndFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getBooleanValue()
-                    && arguments.getArgument("second").getBooleanValue();
+            List<Boolean> values = arguments.getArgument("values").asList().getValues();
+
+            return values.stream().allMatch(Boolean::booleanValue);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Boolean.class, null),
-                    new FunctionArguments.Argument<>("second", Boolean.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument("values", Boolean.class)));
         }
     }
 
     public static class OrFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getBooleanValue()
-                    || arguments.getArgument("second").getBooleanValue();
+            List<Boolean> values = arguments.getArgument("values").asList().getValues();
+
+            return values.stream().anyMatch(Boolean::booleanValue);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Boolean.class, null),
-                    new FunctionArguments.Argument<>("second", Boolean.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument("values", Boolean.class)));
         }
     }
 
