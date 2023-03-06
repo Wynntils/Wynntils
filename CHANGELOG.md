@@ -1,9 +1,21 @@
+## [0.0.2-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.297...v0.0.2-alpha.298) (2023-03-06)
+
+
+### Code Refactoring
+
+* Use CappedValue everywhere in models where it makes sense ([#1277](https://github.com/Wynntils/Artemis/issues/1277)) ([7d6c709](https://github.com/Wynntils/Artemis/commit/7d6c7091618382a63eac6f6994b789181d4f5d81))
+
 ## [0.0.2-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.296...v0.0.2-alpha.297) (2023-03-06)
 
 
 ### New Features
 
 * Overlay Refactor Part 1: Introduce TextOverlay ([#1273](https://github.com/Wynntils/Artemis/issues/1273)) ([22c3468](https://github.com/Wynntils/Artemis/commit/22c3468821b3e99438aea89cf22025927ed69310))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.297 [skip ci] ([e083876](https://github.com/Wynntils/Artemis/commit/e0838765f57c275c3aa233a2ac79bf0b5f5e62d3))
 
 ## [0.0.2-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.295...v0.0.2-alpha.296) (2023-03-06)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.294 [skip ci] ([996a246](https://github.com/Wynntils/Artemis/commit/996a246325e3e002fc47d935f894f2739ba20c68))
-
-## [0.0.2-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.292...v0.0.2-alpha.293) (2023-03-05)
-
-
-### New Features
-
-* Add HeldItemTypeFunction ([#1271](https://github.com/Wynntils/Artemis/issues/1271)) ([d11f1be](https://github.com/Wynntils/Artemis/commit/d11f1beafe5f21728fa5e9d527253f516c74568f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.293 [skip ci] ([7c007b7](https://github.com/Wynntils/Artemis/commit/7c007b7c3cc46a9acb4fdf7f9c53584b744c6d89))
 
