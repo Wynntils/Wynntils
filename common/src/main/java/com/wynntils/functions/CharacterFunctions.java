@@ -16,7 +16,7 @@ public class CharacterFunctions {
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getSoulPoints();
+            return Models.Character.getSoulPoints().current();
         }
 
         @Override
@@ -28,7 +28,7 @@ public class CharacterFunctions {
     public static class SoulpointMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getMaxSoulPoints();
+            return Models.Character.getSoulPoints().max();
         }
 
         @Override
@@ -130,46 +130,42 @@ public class CharacterFunctions {
     public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getCurrentMana();
+            return Models.Character.getMana().current();
         }
     }
 
     public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getMaxMana();
+            return Models.Character.getMana().max();
         }
     }
 
     public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getCurrentHealth();
+            return Models.Character.getHealth().current();
         }
     }
 
     public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Character.getMaxHealth();
+            return Models.Character.getHealth().max();
         }
     }
 
     public static class HealthPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            int currentHealth = Models.Character.getCurrentHealth();
-            int maxHealth = Models.Character.getMaxHealth();
-            return (currentHealth / maxHealth * 100.0d);
+            return Models.Character.getHealth().getPercentage();
         }
     }
 
     public static class ManaPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            int currentMana = Models.Character.getCurrentMana();
-            int maxMana = Models.Character.getMaxMana();
-            return (currentMana / maxMana * 100.0d);
+            return Models.Character.getMana().getPercentage();
         }
     }
 

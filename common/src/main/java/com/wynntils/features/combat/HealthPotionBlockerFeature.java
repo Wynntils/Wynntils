@@ -49,7 +49,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
         if (!isHealingPotion(itemStack)) return false;
 
         CappedValue health = Models.Character.getHealth();
-        int percentage = health.getPercentage();
+        int percentage = health.getPercentageInt();
 
         if (percentage >= threshold) {
             MutableComponent response = (percentage < 100)

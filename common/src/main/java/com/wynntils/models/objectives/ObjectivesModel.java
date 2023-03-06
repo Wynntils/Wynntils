@@ -57,7 +57,7 @@ public class ObjectivesModel extends Model {
             personalObjectives.add(parsed);
         } else {
             // Objective progress updated
-            objective.get().setScore(parsed.getScore());
+            objective.get().setCurrentScore(parsed.getScore().current());
         }
 
         if (personalObjectives.size() > 3) {
@@ -75,7 +75,7 @@ public class ObjectivesModel extends Model {
     void updateGuildObjective(WynnObjective parsed) {
         if (guildObjective != null && guildObjective.isSameObjective(parsed)) {
             // Objective progress updated
-            guildObjective.setScore(parsed.getScore());
+            guildObjective.setCurrentScore(parsed.getScore().current());
             return;
         }
 

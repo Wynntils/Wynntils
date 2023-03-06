@@ -56,7 +56,7 @@ public class CombatXpFunctions {
     public static class LevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CombatXp.getXpLevel();
+            return Models.CombatXp.getCombatLevel().current();
         }
 
         @Override
@@ -68,35 +68,35 @@ public class CombatXpFunctions {
     public static class XpFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return StringUtils.integerToShortString((int) Models.CombatXp.getCurrentXp());
+            return StringUtils.integerToShortString(Models.CombatXp.getXp().current());
         }
     }
 
-    public static class XpRawFunction extends Function<Double> {
+    public static class XpRawFunction extends Function<Integer> {
         @Override
-        public Double getValue(FunctionArguments arguments) {
-            return (double) Models.CombatXp.getCurrentXp();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp().current();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return StringUtils.integerToShortString(Models.CombatXp.getXpPointsNeededToLevelUp());
+            return StringUtils.integerToShortString(Models.CombatXp.getXp().max());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CombatXp.getXpPointsNeededToLevelUp();
+            return Models.CombatXp.getXp().max();
         }
     }
 
     public static class XpPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CombatXp.getXpProgress() * 100.0d;
+            return Models.CombatXp.getXp().getPercentage();
         }
     }
 }
