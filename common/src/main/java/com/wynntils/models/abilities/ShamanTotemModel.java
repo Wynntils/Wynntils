@@ -240,7 +240,7 @@ public class ShamanTotemModel extends Model {
      * Resets all three totem variables.
      */
     private void removeAllTotems() {
-        for (int i = 1; i < MAX_TOTEM_COUNT; i++) {
+        for (int i = 1; i <= MAX_TOTEM_COUNT; i++) {
             removeTotem(i);
         }
 
