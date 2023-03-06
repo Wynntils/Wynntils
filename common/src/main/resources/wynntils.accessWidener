@@ -54,7 +54,6 @@ extendable class net/minecraft/world/item/ItemStack
 extendable method net/minecraft/client/gui/components/AbstractSelectionList getEntryAtPosition (DD)Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 extendable method net/minecraft/client/gui/screens/Screen init (Lnet/minecraft/client/Minecraft;II)V
 mutable field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
-mutable field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
