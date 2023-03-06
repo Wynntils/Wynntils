@@ -36,12 +36,8 @@ public record CappedValue(int current, int max) {
         return (double) current / max;
     }
 
-    public String getProgressString() {
-        return current + "/" + max;
-    }
-
     @Override
     public String toString() {
-        return "[" + current + "/" + max + "]";
+        return current + "/" + max;
     }
 }
