@@ -11,7 +11,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
@@ -42,11 +41,11 @@ public class DurabilityArcFeature extends UserFeature {
     }
 
     private void drawDurabilityArc(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof DurableItemProperty durableItem)) return;
+        Optional<DurableItemProperty> durableItemOpt =
+                Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+        if (durableItemOpt.isEmpty()) return;
 
-        CappedValue durability = durableItem.getDurability();
+        CappedValue durability = durableItemOpt.get().getDurability();
 
         // calculate color of arc
         float durabilityFraction = (float) durability.current() / durability.max();

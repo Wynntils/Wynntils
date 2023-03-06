@@ -143,6 +143,38 @@ public final class MathFunctions {
         }
     }
 
+    public static class MaxFunction extends GenericFunction<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Math.max(
+                    arguments.getArgument("first").getDoubleValue(),
+                    arguments.getArgument("second").getDoubleValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("first", Number.class, null),
+                    new FunctionArguments.Argument<>("second", Number.class, null)));
+        }
+    }
+
+    public static class MinFunction extends GenericFunction<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Math.min(
+                    arguments.getArgument("first").getDoubleValue(),
+                    arguments.getArgument("second").getDoubleValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("first", Number.class, null),
+                    new FunctionArguments.Argument<>("second", Number.class, null)));
+        }
+    }
+
     public static class RoundFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -169,6 +201,11 @@ public final class MathFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("int");
         }
     }
 }

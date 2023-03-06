@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.functions.arguments;
 
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.Collections;
 import java.util.List;
@@ -89,7 +90,7 @@ public final class FunctionArguments {
 
     public static final class Argument<T> {
         private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES =
-                List.of(String.class, Integer.class, Double.class, Number.class, Boolean.class);
+                List.of(String.class, Integer.class, Double.class, Number.class, CappedValue.class, Boolean.class);
 
         private final String name;
         private final Class<T> type;
@@ -149,6 +150,15 @@ public final class FunctionArguments {
             }
 
             return (Double) this.getValue();
+        }
+
+        public CappedValue getCappedValue() {
+            if (this.type == Number.class) {
+                int val = ((Number) this.getValue()).intValue();
+                return new CappedValue(val, val);
+            }
+
+            return (CappedValue) this.getValue();
         }
 
         public String getStringValue() {

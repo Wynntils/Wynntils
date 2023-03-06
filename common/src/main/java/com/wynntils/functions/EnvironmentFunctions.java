@@ -6,6 +6,8 @@ package com.wynntils.functions;
 
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.utils.SystemUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -13,6 +15,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class EnvironmentFunctions {
+    public static class CappedMemFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return new CappedValue(SystemUtils.getMemUsed(), SystemUtils.getMemMax());
+        }
+    }
+
     public static class ClockFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -31,10 +40,10 @@ public class EnvironmentFunctions {
         }
     }
 
-    public static class MemMaxFunction extends Function<Long> {
+    public static class MemMaxFunction extends Function<Integer> {
         @Override
-        public Long getValue(FunctionArguments arguments) {
-            return Runtime.getRuntime().maxMemory() / (1024 * 1024);
+        public Integer getValue(FunctionArguments arguments) {
+            return SystemUtils.getMemMax();
         }
 
         @Override
@@ -43,10 +52,10 @@ public class EnvironmentFunctions {
         }
     }
 
-    public static class MemUsedFunction extends Function<Long> {
+    public static class MemUsedFunction extends Function<Integer> {
         @Override
-        public Long getValue(FunctionArguments arguments) {
-            return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
+        public Integer getValue(FunctionArguments arguments) {
+            return SystemUtils.getMemUsed();
         }
 
         @Override
@@ -58,11 +67,8 @@ public class EnvironmentFunctions {
     public static class MemPctFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            long max = Runtime.getRuntime().maxMemory() / (1024 * 1024);
-            long used =
-                    (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
 
-            return (int) (((float) used / max) * 100f);
+            return (int) (((float) SystemUtils.getMemUsed() / SystemUtils.getMemMax()) * 100f);
         }
 
         @Override

@@ -11,6 +11,15 @@ public record CappedValue(int current, int max) {
         return new CappedValue(newCurrent, max);
     }
 
+    /** Return true iff the current value is equal to the max value */
+    public boolean isAtCap() {
+        return current == max;
+    }
+    /** Return the difference between the current and the max value */
+    public int getRemaining() {
+        return max - current;
+    }
+
     /** Return the current value as a percentage of max, in 0..100, rounded
      * to the nearest integer */
     public int getPercentageInt() {

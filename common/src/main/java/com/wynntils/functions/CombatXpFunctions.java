@@ -8,9 +8,24 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class CombatXpFunctions {
+    public static class CappedLevelFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getCombatLevel();
+        }
+    }
+
+    public static class CappedXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp();
+        }
+    }
+
     public static class XpPerMinuteRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
