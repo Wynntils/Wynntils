@@ -44,10 +44,10 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public long getLastAddedTimestamp() {
-        Optional<TimedEntry> latest = entries.stream().max(Comparator.comparing(e -> e.expiration));
+        Optional<TimedEntry> latest = entries.stream().max(Comparator.comparing(e -> e.getExpiration()));
         if (latest.isEmpty()) return 0;
 
-        return latest.get().expiration - timeJump;
+        return latest.get().getExpiration() - timeJump;
     }
 
     public void clear() {
