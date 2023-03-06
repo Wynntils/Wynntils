@@ -6,15 +6,14 @@ package com.wynntils.models.character.actionbar;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
+import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ManaSegment implements ActionBarSegment {
     private static final Pattern MANA_PATTERN = Pattern.compile("§b✺ ([0-9]+)/([0-9]+)");
 
-    private int currentMana = -1;
-    private int maxMana = -1;
-
+    private CappedValue mana = CappedValue.EMPTY;
     private boolean hidden;
 
     @Override
@@ -33,21 +32,19 @@ public class ManaSegment implements ActionBarSegment {
     }
 
     private void updateMana(Matcher matcher) {
-        currentMana = Integer.parseInt(matcher.group(1));
-        maxMana = Integer.parseInt(matcher.group(2));
+        int currentMana = Integer.parseInt(matcher.group(1));
+        int maxMana = Integer.parseInt(matcher.group(2));
+
+        mana = new CappedValue(currentMana, maxMana);
+    }
+
+    public CappedValue getMana() {
+        return mana;
     }
 
     @Override
     public ActionBarPosition getPosition() {
         return ActionBarPosition.RIGHT;
-    }
-
-    public int getCurrentMana() {
-        return currentMana;
-    }
-
-    public int getMaxMana() {
-        return maxMana;
     }
 
     public boolean isHidden() {

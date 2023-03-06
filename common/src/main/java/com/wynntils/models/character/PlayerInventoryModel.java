@@ -10,13 +10,14 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Objects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
-    private int openSlots = 0;
+    private int emptySlots = 0;
 
     public PlayerInventoryModel() {
         super(List.of());
@@ -50,18 +51,14 @@ public final class PlayerInventoryModel extends Model {
     }
 
     private void updateCache() {
-        openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
+        emptySlots = InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
     private void resetCache() {
-        openSlots = 0;
+        emptySlots = 0;
     }
 
-    public int getOpenInvSlots() {
-        return openSlots;
-    }
-
-    public int getUsedInvSlots() {
-        return 28 - openSlots;
+    public CappedValue getUsedSlots() {
+        return new CappedValue(28 - emptySlots, 28);
     }
 }

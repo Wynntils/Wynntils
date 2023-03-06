@@ -105,23 +105,11 @@ public final class CharacterModel extends Model {
     }
 
     public CappedValue getHealth() {
-        return new CappedValue(healthSegment.getCurrentHealth(), healthSegment.getMaxHealth());
+        return healthSegment.getHealth();
     }
 
-    public int getCurrentHealth() {
-        return healthSegment.getCurrentHealth();
-    }
-
-    public int getMaxHealth() {
-        return healthSegment.getMaxHealth();
-    }
-
-    public int getCurrentMana() {
-        return manaSegment.getCurrentMana();
-    }
-
-    public int getMaxMana() {
-        return manaSegment.getMaxMana();
+    public CappedValue getMana() {
+        return manaSegment.getMana();
     }
 
     public float getPowderSpecialCharge() {
@@ -143,10 +131,11 @@ public final class CharacterModel extends Model {
     /**
      * Return the maximum number of soul points the character can currently have
      */
-    public int getMaxSoulPoints() {
+    private int getMaxSoulPoints() {
         // FIXME: If player is veteran, we should always return 15
-        int maxIfNotVeteran = 10 + MathUtils.clamp(Models.CombatXp.getXpLevel() / 15, 0, 5);
-        if (getSoulPoints() > maxIfNotVeteran) {
+        int maxIfNotVeteran =
+                10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
+        if (getCurrentSoulPoints() > maxIfNotVeteran) {
             return 15;
         }
         return maxIfNotVeteran;
@@ -155,13 +144,18 @@ public final class CharacterModel extends Model {
     /**
      * Return the current number of soul points of the character, or -1 if unable to determine
      */
-    public int getSoulPoints() {
+    private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
         if (soulPoints.getItem() != Items.NETHER_STAR) {
             return -1;
         }
 
         return soulPoints.getCount();
+    }
+
+    public CappedValue getSoulPoints() {
+        // FIXME: We should be able to cache this
+        return new CappedValue(getCurrentSoulPoints(), getMaxSoulPoints());
     }
 
     /**

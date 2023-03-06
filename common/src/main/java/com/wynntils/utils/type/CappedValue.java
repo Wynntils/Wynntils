@@ -7,12 +7,32 @@ package com.wynntils.utils.type;
 public record CappedValue(int current, int max) {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
 
-    public int getPercentage() {
-        return Math.round((float) current / max * 100.0f);
+    public CappedValue withCurrent(int newCurrent) {
+        return new CappedValue(newCurrent, max);
+    }
+
+    /** Return the current value as a percentage of max, in 0..100, rounded
+     * to the nearest integer */
+    public int getPercentageInt() {
+        return Math.round((float) getPercentage());
+    }
+
+    /** Return the current value as a percentage of max, in 0..100.0 */
+    public double getPercentage() {
+        return getProgress() * 100.0;
+    }
+
+    /** Return the current value as a proportion of max, in 0..1 */
+    public double getProgress() {
+        return (double) current / max;
+    }
+
+    public String getProgressString() {
+        return current + "/" + max;
     }
 
     @Override
     public String toString() {
-        return "[" + current + "/" + max + ']';
+        return "[" + current + "/" + max + "]";
     }
 }

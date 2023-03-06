@@ -100,7 +100,7 @@ public final class GearTooltipHeader {
         }
         int level = requirements.level();
         if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getXpLevel() >= level;
+            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
             header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
             requirementsCount++;
         }
