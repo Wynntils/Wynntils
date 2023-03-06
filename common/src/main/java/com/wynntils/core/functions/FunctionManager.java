@@ -338,7 +338,6 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
-        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
 
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
@@ -408,6 +407,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.WoodcuttingPercentageFunction());
         registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
+
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.ShamanMaskFunction());
 
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());

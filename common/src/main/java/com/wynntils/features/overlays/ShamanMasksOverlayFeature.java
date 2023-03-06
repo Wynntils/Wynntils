@@ -10,19 +10,16 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,10 +39,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
         }
     }
 
-    public static class ShamanMaskOverlay extends Overlay {
-        @Config
-        public String maskDisplay = "%mask% mask";
-
+    public static class ShamanMaskOverlay extends TextOverlay {
         @Config
         public boolean displayNone = false;
 
@@ -69,34 +63,17 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
             if (currentMaskType == ShamanMaskType.NONE && !displayNone) return;
 
-            renderMaskString(poseStack, bufferSource, currentMaskType);
+            super.render(poseStack, bufferSource, partialTicks, window);
         }
 
         @Override
-        public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            renderMaskString(poseStack, bufferSource, ShamanMaskType.AWAKENED);
+        public String getTemplate() {
+            return "{shaman_mask} mask";
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {}
-
-        private void renderMaskString(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ShamanMaskType currentMaskType) {
-            BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
-                            maskDisplay.replace("%mask%", currentMaskType.getName()),
-                            this.getRenderX(),
-                            this.getRenderX() + this.getWidth(),
-                            this.getRenderY(),
-                            this.getRenderY() + this.getHeight(),
-                            0,
-                            CustomColor.fromChatFormatting(currentMaskType.getColor()),
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment(),
-                            TextShadow.OUTLINE);
+        public String getPreviewTemplate() {
+            return ShamanMaskType.AWAKENED.getName() + " mask";
         }
     }
 }

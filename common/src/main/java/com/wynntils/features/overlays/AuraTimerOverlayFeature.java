@@ -78,7 +78,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
 
         @Override
         public String getTemplate() {
-            return "Aura: {AURA_TIMER:1}s";
+            return "{IF_STRING(MTE(AURA_TIMER; 0); CONCAT(CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1)); \"s\"); \"\")}";
         }
 
         @Override
