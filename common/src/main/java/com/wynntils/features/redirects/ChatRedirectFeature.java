@@ -9,9 +9,9 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.handlers.chat.MessageType;
-import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.wynn.WynnPlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -469,10 +469,10 @@ public class ChatRedirectFeature extends UserFeature {
     }
 
     private class LoginRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§.\\[§r§.([A-Z+]+)§r§.\\] §r§.(.*)§r§. has just logged in!$");
-        private static final Pattern BACKGROUND_PATTERN =
-                Pattern.compile("^(?:§r§8)?\\[§r§7([A-Z+]+)§r§8\\] §r§7(.*)§r§8 has just logged in!$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§.\\[§r(§.)+\\|?(§.)*(?<rank>[A-Z+]+)§r(§.)+\\|?(§.)*\\] §r§.(?<name>.*)§r§. has just logged in!$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
+                "^(?:§r§8)?\\[§r(§.)+\\|?(§.)*(?<rank>[A-Z+]+)§r(§.)+\\|?(§.)*\\] §r§7(?<name>.*)§r§8 has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -491,8 +491,8 @@ public class ChatRedirectFeature extends UserFeature {
 
         @Override
         protected String getNotification(Matcher matcher) {
-            String rank = matcher.group(1);
-            String playerName = matcher.group(2);
+            String rank = matcher.group("rank");
+            String playerName = matcher.group("name");
 
             return ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName;
         }

@@ -16,7 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChestMenu.class)
 public abstract class ChestMenuMixin {
-    @Inject(method = "quickMoveStack", at = @At("HEAD"))
+    @Inject(
+            method = "quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;",
+            at = @At("HEAD"))
     private void onQuickMoveStack(Player player, int index, CallbackInfoReturnable<ItemStack> cir) {
         MixinHelper.post(new ChestMenuQuickMoveEvent(((ChestMenu) (Object) this).containerId));
     }

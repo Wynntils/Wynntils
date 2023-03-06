@@ -39,13 +39,13 @@ public abstract class MinecraftMixin {
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick()V", at = @At("HEAD"))
     private void tickPost(CallbackInfo ci) {
         MixinHelper.post(new TickEvent());
         MixinHelper.postAlways(new TickAlwaysEvent());
     }
 
-    @Inject(method = "resizeDisplay", at = @At("RETURN"))
+    @Inject(method = "resizeDisplay()V", at = @At("RETURN"))
     private void resizeDisplayPost(CallbackInfo ci) {
         MixinHelper.postAlways(new DisplayResizeEvent());
     }

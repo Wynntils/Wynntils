@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.bossbar;
 
+import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.mc.mixin.accessors.LerpingBossEventAccessor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
