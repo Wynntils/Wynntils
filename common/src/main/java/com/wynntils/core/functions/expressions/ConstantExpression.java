@@ -4,17 +4,19 @@
  */
 package com.wynntils.core.functions.expressions;
 
+import com.google.common.collect.ImmutableMap;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class ConstantExpression extends Expression {
-    private static final Map<Class<?>, Function<String, Optional<Object>>> CONSTANT_EXPRESSION_PARSERS = Map.of(
-            String.class, ConstantExpression::markedStringParser,
-            Integer.class, ConstantExpression::intParser,
-            Double.class, ConstantExpression::doubleParser,
-            Boolean.class, ConstantExpression::booleanParser);
+    private static final Map<Class<?>, Function<String, Optional<Object>>> CONSTANT_EXPRESSION_PARSERS =
+            ImmutableMap.of(
+                    String.class, ConstantExpression::markedStringParser,
+                    Integer.class, ConstantExpression::intParser,
+                    Double.class, ConstantExpression::doubleParser,
+                    Boolean.class, ConstantExpression::booleanParser);
 
     private final Object value;
 
