@@ -106,7 +106,7 @@ public class ItemModel extends Model {
         Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
-        if (wynnItem.getClass().isAssignableFrom(clazz)) return Optional.empty();
+        if (!clazz.isAssignableFrom(wynnItem.getClass())) return Optional.empty();
 
         return Optional.of((T) wynnItem);
     }
