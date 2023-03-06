@@ -67,10 +67,7 @@ public abstract class TextOverlay extends Overlay {
 
     protected void renderTemplate(
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template, float textScale) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
-            lastUpdate = System.currentTimeMillis();
-            cachedLines = Managers.Function.doFormatLines(template);
-        }
+        updateCachedLines(template);
 
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
@@ -93,6 +90,17 @@ public abstract class TextOverlay extends Overlay {
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
         }
+    }
+
+    protected void updateCachedLines(String template) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
+            lastUpdate = System.currentTimeMillis();
+            cachedLines = calculateTemplateValue(template);
+        }
+    }
+
+    protected String[] calculateTemplateValue(String template) {
+        return Managers.Function.doFormatLines(template);
     }
 
     public CustomColor getRenderColor() {

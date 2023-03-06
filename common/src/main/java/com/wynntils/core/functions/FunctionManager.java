@@ -36,16 +36,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -410,6 +406,10 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
+        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
+        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
+        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
 
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());

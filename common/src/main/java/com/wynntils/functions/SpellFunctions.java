@@ -7,7 +7,10 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.abilities.type.ShamanTotem;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
 public class SpellFunctions {
@@ -42,6 +45,95 @@ public class SpellFunctions {
             return new FunctionArguments.OptionalArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("isColored", Boolean.class, true),
                     new FunctionArguments.Argument<>("useShortName", Boolean.class, false)));
+        }
+    }
+
+    public static class ShamanTotemStateFunction extends Function<String> {
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) {
+                return "";
+            }
+
+            return shamanTotem.getState().toString().toUpperCase(Locale.ROOT);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class ShamanTotemLocationFunction extends Function<String> {
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) {
+                return "";
+            }
+
+            return shamanTotem.getLocation().toString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class ShamanTotemTimeLeftFunction extends Function<Integer> {
+
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) {
+                return 0;
+            }
+
+            return shamanTotem.getTime();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class ShamanTotemDistanceFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) {
+                return 0d;
+            }
+
+            return McUtils.player()
+                    .position()
+                    .distanceTo(shamanTotem.getLocation().toVec3());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
         }
     }
 }
