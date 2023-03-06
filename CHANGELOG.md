@@ -1,9 +1,21 @@
+## [0.0.2-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.298...v0.0.2-alpha.299) (2023-03-06)
+
+
+### Bug Fixes
+
+* Don't cancel BossHealthUpdateEvents unless necessary ([#1280](https://github.com/Wynntils/Artemis/issues/1280)) ([56d2d77](https://github.com/Wynntils/Artemis/commit/56d2d77588ba774859ad6c66aebe85ac32db5591))
+
 ## [0.0.2-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.297...v0.0.2-alpha.298) (2023-03-06)
 
 
 ### Code Refactoring
 
 * Use CappedValue everywhere in models where it makes sense ([#1277](https://github.com/Wynntils/Artemis/issues/1277)) ([7d6c709](https://github.com/Wynntils/Artemis/commit/7d6c7091618382a63eac6f6994b789181d4f5d81))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.298 [skip ci] ([9688b93](https://github.com/Wynntils/Artemis/commit/9688b93854d2fdba643d0f3338a6b40bb17f0d6e))
 
 ## [0.0.2-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.296...v0.0.2-alpha.297) (2023-03-06)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.295 [skip ci] ([31de7ae](https://github.com/Wynntils/Artemis/commit/31de7aea0214fc497198ff6cbacc81fdf160efcc))
-
-## [0.0.2-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.293...v0.0.2-alpha.294) (2023-03-05)
-
-
-### Bug Fixes
-
-* Setting screen now properly handles config changes  ([#1270](https://github.com/Wynntils/Artemis/issues/1270)) ([52cbec3](https://github.com/Wynntils/Artemis/commit/52cbec3312f4852bab4517c51d18636884611eb4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.294 [skip ci] ([996a246](https://github.com/Wynntils/Artemis/commit/996a246325e3e002fc47d935f894f2739ba20c68))
 
