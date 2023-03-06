@@ -6,8 +6,8 @@ package com.wynntils.models.discoveries;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.container.ContainerContent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;

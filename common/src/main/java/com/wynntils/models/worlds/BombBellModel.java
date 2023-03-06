@@ -6,6 +6,7 @@ package com.wynntils.models.worlds;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.List;

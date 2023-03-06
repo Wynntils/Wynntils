@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.worlds.BombInfo;
+import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import java.util.Arrays;
 import java.util.Comparator;

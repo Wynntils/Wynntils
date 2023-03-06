@@ -7,7 +7,7 @@ package com.wynntils.models.territories;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.Set;
 
 public class GuildAttackScoreboardPart implements ScoreboardPart {

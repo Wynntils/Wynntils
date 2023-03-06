@@ -6,6 +6,7 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
