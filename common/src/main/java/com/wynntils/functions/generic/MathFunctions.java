@@ -27,20 +27,15 @@ public final class MathFunctions {
     public static class SubtractFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").asList().getValues();
-
-            if (values.size() == 1) {
-                return values.get(0).doubleValue();
-            }
-
-            return values.get(0).doubleValue()
-                    - values.stream().skip(1).mapToDouble(Number::doubleValue).sum();
+            return arguments.getArgument("first").getDoubleValue()
+                    - arguments.getArgument("second").getDoubleValue();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument("values", Number.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("first", Number.class, null),
+                    new FunctionArguments.Argument<>("second", Number.class, null)));
         }
 
         @Override
