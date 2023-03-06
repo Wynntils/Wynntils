@@ -45,15 +45,15 @@ public class StringFunctions {
     public static class ConcatFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getStringValue()
-                    + arguments.getArgument("second").getStringValue();
+            List<String> values = arguments.getArgument("values").asList().getValues();
+
+            return String.join("", values);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument("first", String.class, null),
-                    new FunctionArguments.Argument("second", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument<>("values", String.class)));
         }
     }
 
