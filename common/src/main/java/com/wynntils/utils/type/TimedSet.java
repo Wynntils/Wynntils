@@ -40,7 +40,7 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public void put(T entry) {
-        entries.add(new TimedEntry(entry, System.currentTimeMillis() + timeJump));
+        entries.add(new TimedEntry(entry, System.currentTimeMillis(), timeJump));
     }
 
     public long getLastAddedTimestamp() {
@@ -95,15 +95,21 @@ public class TimedSet<T> implements Iterable<T> {
 
     public final class TimedEntry {
         final T entry;
-        final long expiration;
+        final long creation;
+        final long duration;
 
-        private TimedEntry(T entry, long expiration) {
+        private TimedEntry(T entry, long creation, long duration) {
             this.entry = entry;
-            this.expiration = expiration;
+            this.creation = creation;
+            this.duration = duration;
         }
 
         public long getExpiration() {
-            return expiration;
+            return creation + duration;
+        }
+
+        public long getCreation() {
+            return creation;
         }
 
         public T getEntry() {
@@ -111,7 +117,7 @@ public class TimedSet<T> implements Iterable<T> {
         }
 
         private boolean shouldRelease() {
-            return System.currentTimeMillis() >= expiration;
+            return System.currentTimeMillis() >= getExpiration();
         }
     }
 }

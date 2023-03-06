@@ -74,7 +74,7 @@ public final class DamageModel extends Model {
 
     public int getAreaDamagePerSecond() {
         return areaDamageSet.getEntries().stream()
-                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getExpiration()) <= 1000L)
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= 1000L)
                 .mapToInt(TimedSet.TimedEntry::getEntry)
                 .sum();
     }
@@ -82,7 +82,7 @@ public final class DamageModel extends Model {
     public double getAverageAreaDamagePerSecond(int seconds) {
         return areaDamageSet.getEntries().stream()
                         .filter(timedEntry ->
-                                (System.currentTimeMillis() - timedEntry.getExpiration()) <= seconds * 1000L)
+                                (System.currentTimeMillis() - timedEntry.getCreation()) <= seconds * 1000L)
                         .mapToInt(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
