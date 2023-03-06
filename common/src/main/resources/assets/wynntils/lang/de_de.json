@@ -67,7 +67,6 @@
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.name": "Textschatten",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.name": "Textschatten",
-  "feature.wynntils.infoBox.overlay.infoBox.textShadow.name": "Textschatten",
   "feature.wynntils.infoMessageFilter.name": "Info Nachrichten Filter",
   "feature.wynntils.lowHealthVignette.color.name": "Vignetten-Farbe",
   "feature.wynntils.map.name": "Karte",
@@ -89,5 +88,6 @@
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "Textschatten",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.worldWaypointDistance.textShadow.name": "Textschatten",
+  "overlay.wynntils.textOverlay.textShadow.name": "Textschatten",
   "screens.wynntils.overlaySelection.overlays": "Overlays"
 }
