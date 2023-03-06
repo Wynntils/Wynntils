@@ -32,7 +32,10 @@ public abstract class LevelRendererMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(at = @At("TAIL"), method = "renderLevel")
+    @Inject(
+            at = @At("TAIL"),
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderLevelPost(
             PoseStack poseStack,
             float partialTick,
@@ -47,7 +50,10 @@ public abstract class LevelRendererMixin {
                 this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 
-    @Inject(at = @At("HEAD"), method = "renderLevel")
+    @Inject(
+            at = @At("HEAD"),
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderLevelPre(
             PoseStack poseStack,
             float partialTick,
@@ -63,7 +69,8 @@ public abstract class LevelRendererMixin {
     }
 
     @ModifyExpressionValue(
-            method = "renderLevel",
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"))
     private int modifyOutlineColor(int original, @Local Entity entity) {
         EntityExtension entityExt = (EntityExtension) entity;
@@ -82,7 +89,8 @@ public abstract class LevelRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                             ordinal = 2),
-            method = "renderLevel")
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderTilePost(
             PoseStack poseStack,
             float partialTick,

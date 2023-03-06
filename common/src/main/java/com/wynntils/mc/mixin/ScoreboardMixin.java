@@ -24,7 +24,7 @@ public abstract class ScoreboardMixin {
     @Shadow
     public Map<String, Map<Objective, Score>> playerScores;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>()V", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
         // We need to replace Vanilla's HashMap with a concurrent hash map
         // This should be a safe maneuver to do in the constructor

@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(CommandSuggestions.class)
 public abstract class CommandSuggestionsMixin {
     @WrapOperation(
-            method = "updateCommandInfo",
+            method = "updateCommandInfo()V",
             at =
                     @At(
                             value = "INVOKE",

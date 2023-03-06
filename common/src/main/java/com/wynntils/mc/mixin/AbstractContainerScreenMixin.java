@@ -67,7 +67,7 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
     private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         InventoryMouseClickedEvent event = new InventoryMouseClickedEvent(mouseX, mouseY, button, this.hoveredSlot);
         MixinHelper.post(event);
@@ -77,7 +77,7 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
-    @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "onClose()V", at = @At("HEAD"), cancellable = true)
     private void onCloseContainerPre(CallbackInfo ci) {
         ContainerCloseEvent.Pre event = new ContainerCloseEvent.Pre();
         MixinHelper.post(event);
@@ -86,7 +86,7 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
-    @Inject(method = "onClose", at = @At("RETURN"))
+    @Inject(method = "onClose()V", at = @At("RETURN"))
     private void onCloseContainerPost(CallbackInfo ci) {
         MixinHelper.post(new ContainerCloseEvent.Post());
     }

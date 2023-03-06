@@ -28,7 +28,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
-    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
         if (containerId != player.containerMenu.containerId) return;
@@ -40,7 +44,11 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
-    @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;",
+            at = @At("HEAD"),
+            cancellable = true)
     private void useItemOnPre(
             LocalPlayer player,
             InteractionHand hand,
@@ -55,7 +63,11 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
-    @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "useItem(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+            at = @At("HEAD"),
+            cancellable = true)
     private void useItemPre(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         UseItemEvent event = new UseItemEvent(player, McUtils.mc().level, hand);
         MixinHelper.post(event);
@@ -65,7 +77,11 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
-    @Inject(method = "interactAt", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+            at = @At("HEAD"),
+            cancellable = true)
     private void interactAt(
             Player player,
             Entity target,
@@ -80,7 +96,11 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
-    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method =
+                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+            at = @At("HEAD"),
+            cancellable = true)
     private void interact(
             Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
@@ -91,7 +111,10 @@ public abstract class MultiPlayerGameModeMixin {
         }
     }
 
-    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "attack(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void attack(Player player, Entity target, CallbackInfo ci) {
         PlayerAttackEvent event = new PlayerAttackEvent(player, target);
         MixinHelper.post(event);
@@ -103,7 +126,7 @@ public abstract class MultiPlayerGameModeMixin {
     // As of 1.19.3, this seems to be the only method which sends carried item update packets to the server.
     // Please look into this and confirm this is still the case, in future versions.
     @Inject(
-            method = "ensureHasSentCarriedItem",
+            method = "ensureHasSentCarriedItem()V",
             at =
                     @At(
                             value = "INVOKE",

@@ -93,13 +93,13 @@ public abstract class ScreenMixin implements ScreenExtension {
     }
 
     @Inject(
-            method = "rebuildWidgets",
+            method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInit(CallbackInfo ci) {
         MixinHelper.post(new ScreenInitEvent((Screen) (Object) this));
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void onScreenRenderPost(PoseStack poseStack, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         MixinHelper.post(new ScreenRenderEvent((Screen) (Object) this, poseStack, mouseX, mouseY, partialTick));
     }
