@@ -1,9 +1,21 @@
+## [0.0.2-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.302...v0.0.2-alpha.303) (2023-03-06)
+
+
+### Bug Fixes
+
+* Fix area damage functions ([#1284](https://github.com/Wynntils/Artemis/issues/1284)) ([d83e8a8](https://github.com/Wynntils/Artemis/commit/d83e8a807b6c34e94e7958df322842f2e86c4bdb))
+
 ## [0.0.2-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.301...v0.0.2-alpha.302) (2023-03-06)
 
 
 ### New Features
 
 * Introduce ListArgument type to all functions that can make use of it ([#1283](https://github.com/Wynntils/Artemis/issues/1283)) ([e00465b](https://github.com/Wynntils/Artemis/commit/e00465bbff4aa7d5cba9469cb51871afe30838fd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.302 [skip ci] ([ee2d48d](https://github.com/Wynntils/Artemis/commit/ee2d48d1d7b5da90dbce7f30b048e2048243d30c))
 
 ## [0.0.2-alpha.301](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.300...v0.0.2-alpha.301) (2023-03-06)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.299 [skip ci] ([4dc27b3](https://github.com/Wynntils/Artemis/commit/4dc27b394f268b98cae77b6d97f0f3203eb22ba0))
-
-## [0.0.2-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.297...v0.0.2-alpha.298) (2023-03-06)
-
-
-### Code Refactoring
-
-* Use CappedValue everywhere in models where it makes sense ([#1277](https://github.com/Wynntils/Artemis/issues/1277)) ([7d6c709](https://github.com/Wynntils/Artemis/commit/7d6c7091618382a63eac6f6994b789181d4f5d81))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.298 [skip ci] ([9688b93](https://github.com/Wynntils/Artemis/commit/9688b93854d2fdba643d0f3338a6b40bb17f0d6e))
 
