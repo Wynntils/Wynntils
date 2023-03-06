@@ -40,16 +40,4 @@ public class CombatFunctions {
             return List.of("adavg");
         }
     }
-
-    public static class ArrowShieldCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ArrowShield.getArrowShieldCharge();
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("arrow_shield");
-        }
-    }
 }

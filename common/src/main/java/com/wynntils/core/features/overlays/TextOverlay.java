@@ -54,7 +54,7 @@ public abstract class TextOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getTemplate());
+        renderTemplate(poseStack, bufferSource, getTemplate(), getTextScale());
     }
 
     @Override
@@ -62,10 +62,11 @@ public abstract class TextOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getPreviewTemplate());
+        renderTemplate(poseStack, bufferSource, getPreviewTemplate(), getTextScale());
     }
 
-    protected void renderTemplate(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template) {
+    protected void renderTemplate(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template, float textScale) {
         if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
             lastUpdate = System.currentTimeMillis();
             cachedLines = Managers.Function.doFormatLines(template);
@@ -87,7 +88,8 @@ public abstract class TextOverlay extends Overlay {
                             this.getRenderColor(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
-                            this.textShadow);
+                            this.textShadow,
+                            textScale);
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
         }
@@ -95,6 +97,10 @@ public abstract class TextOverlay extends Overlay {
 
     public CustomColor getRenderColor() {
         return CommonColors.WHITE;
+    }
+
+    public float getTextScale() {
+        return 1f;
     }
 
     public abstract String getTemplate();

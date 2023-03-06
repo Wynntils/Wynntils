@@ -19,6 +19,8 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
@@ -336,7 +338,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
-        registerFunction(new CombatFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
 
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
@@ -408,5 +410,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
+
+        registerFunction(new WarFunctions.AuraTimerFunction());
     }
 }

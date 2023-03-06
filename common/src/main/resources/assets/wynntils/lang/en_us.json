@@ -823,6 +823,8 @@
   "function.wynntils.armouringPercentage.name": "Armouring % [Pct]",
   "function.wynntils.arrowShieldCount.description": "The amount of arrow shield charges you have",
   "function.wynntils.arrowShieldCount.name": "Arrow Shield Count",
+  "function.wynntils.auraTimer.description": "The time left before aura strikes",
+  "function.wynntils.auraTimer.name": "Aura Timer",
   "function.wynntils.bps.description": "Player speed in blocks per second",
   "function.wynntils.bps.name": "Player Speed",
   "function.wynntils.bpsXz.description": "Player speed in blocks per second without the change in the y coordinates",
