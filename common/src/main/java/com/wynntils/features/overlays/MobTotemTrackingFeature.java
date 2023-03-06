@@ -27,7 +27,7 @@ public class MobTotemTrackingFeature extends UserFeature {
 
     public static class MobTotemTimerOverlay extends TextOverlay {
         private static final String TEMPLATE =
-                "{MOB_TOTEM_OWNER(%d)}'s Mob Totem [{MOB_TOTEM_DISTANCE_TO_PLAYER(%d):0} m] ({MOB_TOTEM_TIME_LEFT(%d)})";
+                "{MOB_TOTEM_OWNER(%d)}'s Mob Totem [{MOB_TOTEM_DISTANCE(%d):0} m] ({MOB_TOTEM_TIME_LEFT(%d)})";
 
         protected MobTotemTimerOverlay() {
             super(

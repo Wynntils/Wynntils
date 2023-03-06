@@ -80,7 +80,7 @@ public class WorldFunctions {
         }
     }
 
-    public static class MobTotemDistanceToPlayerFunction extends Function<Double> {
+    public static class MobTotemDistanceFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Models.MobTotem.getMobTotem(

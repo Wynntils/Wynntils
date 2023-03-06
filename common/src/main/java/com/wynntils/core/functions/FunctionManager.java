@@ -316,7 +316,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
-        registerFunction(new WorldFunctions.MobTotemDistanceToPlayerFunction());
+        registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
 
