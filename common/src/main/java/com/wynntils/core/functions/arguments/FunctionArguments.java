@@ -9,6 +9,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class FunctionArguments {
@@ -34,12 +35,41 @@ public final class FunctionArguments {
         }
 
         public ErrorOr<FunctionArguments> buildWithValues(List<Object> values) {
-            if (values.size() != this.arguments.size()) {
+            if (arguments.stream()
+                            .filter(argument -> argument instanceof ListArgument<?>)
+                            .count()
+                    > 1) {
+                throw new IllegalArgumentException("Only one list argument is allowed.");
+            }
+
+            boolean hasListArgument = arguments.stream().anyMatch(argument -> argument instanceof ListArgument<?>);
+            if (hasListArgument && !(arguments.get(arguments.size() - 1) instanceof ListArgument<?>)) {
+                throw new IllegalArgumentException("List argument needs to be the last argument.");
+            }
+
+            if (!hasListArgument && values.size() != this.arguments.size()) {
                 return ErrorOr.error("Invalid number of arguments");
             }
 
             for (int i = 0; i < this.arguments.size(); i++) {
                 Argument argument = this.arguments.get(i);
+
+                if (argument instanceof ListArgument<?> listArgument) {
+                    List<Object> listValues = values.subList(i, values.size());
+
+                    Optional<Object> nonMatchingValue = listValues.stream()
+                            .filter(value -> !argument.getType().isAssignableFrom(value.getClass()))
+                            .findFirst();
+                    if (nonMatchingValue.isPresent()) {
+                        return ErrorOr.error("Invalid argument type in list argument: \"%s\" is not a %s"
+                                .formatted(
+                                        nonMatchingValue.get(),
+                                        argument.getType().getSimpleName()));
+                    }
+
+                    listArgument.setValues(listValues);
+                    break;
+                }
 
                 if (!argument.getType().isAssignableFrom(values.get(i).getClass())) {
                     return ErrorOr.error("Invalid argument type: \"%s\" is not a %s"
@@ -81,6 +111,10 @@ public final class FunctionArguments {
 
         public OptionalArgumentBuilder(List<Argument> arguments) {
             super(arguments);
+
+            if (arguments.stream().anyMatch(argument -> argument instanceof ListArgument<?>)) {
+                throw new IllegalArgumentException("List arguments are not supported for optional arguments.");
+            }
         }
 
         public FunctionArguments buildWithDefaults() {
@@ -88,7 +122,7 @@ public final class FunctionArguments {
         }
     }
 
-    public static final class Argument<T> {
+    public static class Argument<T> {
         private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES =
                 List.of(String.class, Integer.class, Double.class, Number.class, CappedValue.class, Boolean.class);
 
@@ -158,6 +192,24 @@ public final class FunctionArguments {
 
         public String getStringValue() {
             return (String) this.getValue();
+        }
+
+        public <U> ListArgument<U> asList() {
+            return (ListArgument<U>) this;
+        }
+    }
+
+    public static class ListArgument<T> extends Argument<T> {
+        public ListArgument(String name, Class<T> type) {
+            super(name, type, null);
+        }
+
+        public void setValues(List<Object> values) {
+            this.setValue(values.stream().map(value -> (T) value).collect(Collectors.toList()));
+        }
+
+        public List<T> getValues() {
+            return (List<T>) this.getValue();
         }
     }
 }
