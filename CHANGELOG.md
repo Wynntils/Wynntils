@@ -1,9 +1,17 @@
+## [0.0.2-alpha.301](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.300...v0.0.2-alpha.301) (2023-03-06)
+
+
+### Bug Fixes
+
+* Fix Integer-Double constant parsing order in functions ([#1282](https://github.com/Wynntils/Artemis/issues/1282)) ([a692435](https://github.com/Wynntils/Artemis/commit/a692435c649737ed58d033e740ed207d9a8763ca))
+
 ## [0.0.2-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.299...v0.0.2-alpha.300) (2023-03-06)
 
 
 ### Miscellaneous Chores
 
 * Refactor ShamanTotemModel to remove all duplicated code ([#1279](https://github.com/Wynntils/Artemis/issues/1279)) ([9977530](https://github.com/Wynntils/Artemis/commit/9977530acde21ce0a00f758f96fc72eac976e115))
+* **release:** v0.0.2-alpha.300 [skip ci] ([c2dac55](https://github.com/Wynntils/Artemis/commit/c2dac552478c8655a31987a7fd8224e4d91fb3fe))
 
 ## [0.0.2-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.298...v0.0.2-alpha.299) (2023-03-06)
 
@@ -40,17 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.297 [skip ci] ([e083876](https://github.com/Wynntils/Artemis/commit/e0838765f57c275c3aa233a2ac79bf0b5f5e62d3))
-
-## [0.0.2-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.295...v0.0.2-alpha.296) (2023-03-06)
-
-
-### Code Refactoring
-
-* Consistently use full mixin method signatures ([#1276](https://github.com/Wynntils/Artemis/issues/1276)) ([6566d6f](https://github.com/Wynntils/Artemis/commit/6566d6f2f39b3de2128550982b01b8409bd51f15))
-* Move more classes to type packages ([#1274](https://github.com/Wynntils/Artemis/issues/1274)) ([d50fc81](https://github.com/Wynntils/Artemis/commit/d50fc8158c20169dc6ed56745ade3e052640884b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.296 [skip ci] ([e7d750a](https://github.com/Wynntils/Artemis/commit/e7d750a0252c20d304356dcb15cf788b2671bd8e))
 
