@@ -29,7 +29,10 @@ public abstract class ConnectionMixin {
         }
     }
 
-    @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void sendPre(Packet<?> packet, PacketSendListener sendListener, CallbackInfo ci) {
         PacketEvent.PacketSentEvent<? extends Packet<?>> event = new PacketEvent.PacketSentEvent<>(packet);
         MixinHelper.postAlways(event);
