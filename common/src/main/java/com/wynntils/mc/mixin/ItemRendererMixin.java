@@ -30,7 +30,8 @@ public abstract class ItemRendererMixin {
     private int wynntilsCountOverlayColor;
 
     @Inject(
-            method = "render",
+            method =
+                    "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
             at =
                     @At(
                             target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",

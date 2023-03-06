@@ -25,7 +25,7 @@ public abstract class BossHealthOverlayMixin {
     @Shadow
     public Map<UUID, LerpingBossEvent> events;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;)V", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
         events = Maps.newConcurrentMap();
     }

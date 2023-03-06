@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;

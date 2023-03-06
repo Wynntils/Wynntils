@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.chat.event;
 
-import com.wynntils.handlers.chat.NpcDialogueType;
+import com.wynntils.handlers.chat.type.NpcDialogueType;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
