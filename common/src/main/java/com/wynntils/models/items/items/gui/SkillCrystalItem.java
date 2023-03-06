@@ -6,10 +6,10 @@ package com.wynntils.models.items.items.gui;
 
 import com.wynntils.models.items.properties.CountedItemProperty;
 
-public class SoulPointItem extends GuiItem implements CountedItemProperty {
+public class SkillCrystalItem extends GuiItem implements CountedItemProperty {
     private final int count;
 
-    public SoulPointItem(int count) {
+    public SkillCrystalItem(int count) {
         this.count = count;
     }
 
@@ -19,7 +19,12 @@ public class SoulPointItem extends GuiItem implements CountedItemProperty {
     }
 
     @Override
+    public boolean hasCount() {
+        return count != 0;
+    }
+
+    @Override
     public String toString() {
-        return "SoulPointItem{" + "count=" + count + '}';
+        return "SkillCrystalItem{" + "count=" + count + '}';
     }
 }
