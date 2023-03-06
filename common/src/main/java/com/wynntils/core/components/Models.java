@@ -38,9 +38,9 @@ import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.StatModel;
-import com.wynntils.models.territories.AuraTimerModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
+import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
@@ -48,7 +48,7 @@ import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
-    public static final AuraTimerModel AuraTimer = new AuraTimerModel();
+    public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();

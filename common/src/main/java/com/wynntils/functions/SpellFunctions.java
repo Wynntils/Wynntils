@@ -33,11 +33,12 @@ public class SpellFunctions {
                     ? Models.ShamanMask.getCurrentMaskType().getColor()
                     : ChatFormatting.WHITE;
 
-            if (arguments.getArgument("useShortName").getBooleanValue()) {
-                return color + Models.ShamanMask.getCurrentMaskType().getAlias();
-            }
+            Boolean useShortName = arguments.getArgument("useShortName").getBooleanValue();
+            String name = useShortName
+                    ? Models.ShamanMask.getCurrentMaskType().getAlias()
+                    : Models.ShamanMask.getCurrentMaskType().getName();
 
-            return color + Models.ShamanMask.getCurrentMaskType().getName();
+            return color + name;
         }
 
         @Override

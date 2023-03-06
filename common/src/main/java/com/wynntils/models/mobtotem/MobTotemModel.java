@@ -11,9 +11,9 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.type.Location;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +25,7 @@ public class MobTotemModel extends Model {
     private static final Pattern MOB_TOTEM_TIMER = Pattern.compile("^§c§l([0-9]+:[0-9]+)$");
     private static final double TOTEM_COORDINATE_DIFFERENCE = 0.2d;
 
-    private final HashMap<Integer, MobTotem> mobTotems = new HashMap<>();
+    private final Map<Integer, MobTotem> mobTotems = new LinkedHashMap<>();
 
     public MobTotemModel(WorldStateModel worldState) {
         super(List.of(worldState));
@@ -75,9 +75,7 @@ public class MobTotemModel extends Model {
     }
 
     public List<MobTotem> getMobTotems() {
-        return mobTotems.values().stream()
-                .sorted(Comparator.comparing(MobTotem::getDistanceToPlayer))
-                .toList();
+        return mobTotems.values().stream().toList();
     }
 
     public MobTotem getMobTotem(int index) {

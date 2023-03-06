@@ -12,7 +12,7 @@ public class WarFunctions {
     public static class AuraTimerFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.AuraTimer.getRemainingTimeUntilAura() / 1000d;
+            return Models.TowerAuraTimer.getRemainingTimeUntilAura() / 1000d;
         }
     }
 }
