@@ -19,7 +19,6 @@ import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
@@ -125,28 +124,10 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         @Override
         protected String[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
-                    .map(this::getFormattedTotemText)
+                    .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
                     .map(s -> s.split("\n"))
                     .flatMap(Arrays::stream)
                     .toArray(String[]::new);
-        }
-
-        private String getFormattedTotemText(String line) {
-            String maxFitting = RenderedStringUtils.getMaxFittingText(
-                    line, this.getWidth(), FontRenderer.getInstance().getFont());
-
-            if (maxFitting.contains("[")
-                    && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
-                String color = "";
-
-                if (line.startsWith("§")) {
-                    color = line.substring(0, 2);
-                }
-
-                return line.replaceFirst(" \\[", "\n" + color + "[");
-            } else { // Fits fine, give normal lines
-                return line;
-            }
         }
     }
 
