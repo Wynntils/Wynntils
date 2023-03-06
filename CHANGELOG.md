@@ -1,3 +1,10 @@
+## [0.0.2-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.296...v0.0.2-alpha.297) (2023-03-06)
+
+
+### New Features
+
+* Overlay Refactor Part 1: Introduce TextOverlay ([#1273](https://github.com/Wynntils/Artemis/issues/1273)) ([22c3468](https://github.com/Wynntils/Artemis/commit/22c3468821b3e99438aea89cf22025927ed69310))
+
 ## [0.0.2-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.295...v0.0.2-alpha.296) (2023-03-06)
 
 
@@ -5,6 +12,11 @@
 
 * Consistently use full mixin method signatures ([#1276](https://github.com/Wynntils/Artemis/issues/1276)) ([6566d6f](https://github.com/Wynntils/Artemis/commit/6566d6f2f39b3de2128550982b01b8409bd51f15))
 * Move more classes to type packages ([#1274](https://github.com/Wynntils/Artemis/issues/1274)) ([d50fc81](https://github.com/Wynntils/Artemis/commit/d50fc8158c20169dc6ed56745ade3e052640884b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.296 [skip ci] ([e7d750a](https://github.com/Wynntils/Artemis/commit/e7d750a0252c20d304356dcb15cf788b2671bd8e))
 
 ## [0.0.2-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.294...v0.0.2-alpha.295) (2023-03-05)
 
@@ -41,21 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.293 [skip ci] ([7c007b7](https://github.com/Wynntils/Artemis/commit/7c007b7c3cc46a9acb4fdf7f9c53584b744c6d89))
-
-## [0.0.2-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.291...v0.0.2-alpha.292) (2023-03-05)
-
-
-### Bug Fixes
-
-* Fix CHAMPION, YT (and maybe Mod) join redirect ([#1268](https://github.com/Wynntils/Artemis/issues/1268)) ([ae0f117](https://github.com/Wynntils/Artemis/commit/ae0f1173e8d3a32198fbc23cc387e2d534543493))
-
-
-### New Features
-
-* Better function suggestion provider and clickable ([#1272](https://github.com/Wynntils/Artemis/issues/1272)) ([575619d](https://github.com/Wynntils/Artemis/commit/575619df799485bbaefca25f6f599802015a191a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.292 [skip ci] ([176d24f](https://github.com/Wynntils/Artemis/commit/176d24f5cd9e0bfcd01819680553b5b364e19a3e))
 
