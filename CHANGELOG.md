@@ -1,9 +1,21 @@
+## [0.0.2-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.312...v0.0.2-alpha.313) (2023-03-07)
+
+
+### Code Refactoring
+
+* Change renderButton to renderWidget in our WynntilsButton ([#1296](https://github.com/Wynntils/Artemis/issues/1296)) ([26f2eef](https://github.com/Wynntils/Artemis/commit/26f2eef2077f1170d93d8151bf11c1b9055904fe))
+
 ## [0.0.2-alpha.312](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.311...v0.0.2-alpha.312) (2023-03-07)
 
 
 ### Bug Fixes
 
 * Make memUsed no longer overflow ([#1295](https://github.com/Wynntils/Artemis/issues/1295)) ([3b9ec2d](https://github.com/Wynntils/Artemis/commit/3b9ec2daa0ebea4d0c5af0b576e1bcbfd6f7b562))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.312 [skip ci] ([1bce77b](https://github.com/Wynntils/Artemis/commit/1bce77bc366ed91f0fb2ecba9b2bc659a767489c))
 
 ## [0.0.2-alpha.311](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.310...v0.0.2-alpha.311) (2023-03-07)
 
@@ -50,16 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.309 [skip ci] ([0197509](https://github.com/Wynntils/Artemis/commit/0197509e8271f3c2282b758fdcc1886cb908948b))
-
-## [0.0.2-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.307...v0.0.2-alpha.308) (2023-03-07)
-
-
-### Bug Fixes
-
-* Fix TrackedBar crash ([#1289](https://github.com/Wynntils/Artemis/issues/1289)) ([3b9aec0](https://github.com/Wynntils/Artemis/commit/3b9aec021550aea8349561ed59b7ca45bbe2378c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.308 [skip ci] ([aa308a5](https://github.com/Wynntils/Artemis/commit/aa308a5c44b384425ba8b267ccd38bd867514182))
 
