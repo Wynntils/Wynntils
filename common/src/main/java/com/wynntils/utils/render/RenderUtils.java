@@ -623,12 +623,13 @@ public final class RenderUtils {
                 BORDER_END,
                 BORDER_END);
         RenderSystem.enableDepthTest();
-        RenderSystem.disableTexture();
+        // FIXME: 1.19.4
+        //        RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
+        // RenderSystem.enableTexture();
 
         // text
         MultiBufferSource.BufferSource bufferSource =
@@ -770,7 +771,7 @@ public final class RenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
+        // RenderSystem.enableTexture();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture.resource());
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
@@ -820,7 +821,7 @@ public final class RenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
+        // RenderSystem.enableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -882,7 +883,7 @@ public final class RenderUtils {
             int textureY2) {
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
+        // RenderSystem.enableTexture();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture.resource());
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
