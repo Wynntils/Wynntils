@@ -5,7 +5,6 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -18,20 +17,15 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -180,10 +174,6 @@ public final class RenderUtils {
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
     }
 
-    public static void drawRect(CustomColor color, float x, float y, float z, float width, float height) {
-        drawRect(new PoseStack(), color, x, y, z, width, height);
-    }
-
     public static void drawRect(
             PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();
@@ -328,6 +318,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            PoseStack poseStack,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -338,7 +329,7 @@ public final class RenderUtils {
             int textureWidth,
             int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(),
+                poseStack,
                 tex,
                 color,
                 x,
@@ -405,8 +396,15 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius, 0);
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float fill,
+            int innerRadius,
+            int outerRadius) {
+        drawArc(poseStack, color, x, y, z, fill, innerRadius, outerRadius, 0);
     }
 
     public static void drawArc(
@@ -942,59 +940,8 @@ public final class RenderUtils {
         poseStack.translate(-centerX, -centerZ, 0);
     }
 
-    // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
-    public static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
-        BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
-
-        McUtils.mc()
-                .getItemRenderer()
-                .textureManager
-                .getTexture(InventoryMenu.BLOCK_ATLAS)
-                .setFilter(false, false);
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        PoseStack poseStack = RenderSystem.getModelViewStack();
-        poseStack.pushPose();
-        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().ITEM_COUNT_BLIT_OFFSET));
-        poseStack.translate(8.0, 8.0, 0.0);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        poseStack.scale(scale, scale, 0);
-
-        RenderSystem.applyModelViewMatrix();
-        PoseStack poseStack2 = new PoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean modelUsesBlockLighting = bakedModel.usesBlockLight();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupForFlatItems();
-        }
-
-        McUtils.mc()
-                .getItemRenderer()
-                .render(
-                        itemStack,
-                        ItemDisplayContext.GUI,
-                        false,
-                        poseStack2,
-                        bufferSource,
-                        15728880,
-                        OverlayTexture.NO_OVERLAY,
-                        bakedModel);
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupFor3DItems();
-        }
-
-        poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
+    public static void renderItem(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+        McUtils.mc().getItemRenderer().renderGuiItem(poseStack, itemStack, x, y);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
@@ -1051,7 +998,6 @@ public final class RenderUtils {
             matrixStack.mulPose(dispatcher.cameraOrientation());
             matrixStack.scale(-0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
             Matrix4f matrix4f = matrixStack.last().pose();
-            Font.DisplayMode displayMode = sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
 
             font.drawInBatch(
                     nametag,
@@ -1061,7 +1007,7 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    displayMode,
+                    sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL,
                     backgroundColor,
                     packedLight);
             if (!sneaking) {

@@ -43,7 +43,7 @@ public abstract class GuiMixin {
             ItemStack itemStack,
             int i,
             CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
+        MixinHelper.post(new HotbarSlotRenderEvent.Pre(poseStack, itemStack, x, y));
     }
 
     @Inject(
@@ -63,7 +63,7 @@ public abstract class GuiMixin {
             ItemStack itemStack,
             int i,
             CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.CountPre(itemStack, x, y));
+        MixinHelper.post(new HotbarSlotRenderEvent.CountPre(poseStack, itemStack, x, y));
     }
 
     @Inject(
@@ -79,7 +79,7 @@ public abstract class GuiMixin {
             ItemStack itemStack,
             int i,
             CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Post(itemStack, x, y));
+        MixinHelper.post(new HotbarSlotRenderEvent.Post(poseStack, itemStack, x, y));
     }
 
     // This does not work on Forge. See ForgeGuiMixin for replacement.

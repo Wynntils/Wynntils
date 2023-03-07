@@ -36,7 +36,7 @@ public abstract class AbstractContainerScreenMixin {
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("HEAD"))
     private void renderSlotPre(PoseStack poseStack, Slot slot, CallbackInfo info) {
-        MixinHelper.post(new SlotRenderEvent.Pre((Screen) (Object) this, slot));
+        MixinHelper.post(new SlotRenderEvent.Pre(poseStack, (Screen) (Object) this, slot));
     }
 
     @Inject(
@@ -47,14 +47,14 @@ public abstract class AbstractContainerScreenMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
     private void renderSlotPreCount(PoseStack poseStack, Slot slot, CallbackInfo info) {
-        MixinHelper.post(new SlotRenderEvent.CountPre((Screen) (Object) this, slot));
+        MixinHelper.post(new SlotRenderEvent.CountPre(poseStack, (Screen) (Object) this, slot));
     }
 
     @Inject(
             method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("RETURN"))
     private void renderSlotPost(PoseStack poseStack, Slot slot, CallbackInfo info) {
-        MixinHelper.post(new SlotRenderEvent.Post((Screen) (Object) this, slot));
+        MixinHelper.post(new SlotRenderEvent.Post(poseStack, (Screen) (Object) this, slot));
     }
 
     @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true)
