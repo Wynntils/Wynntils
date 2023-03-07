@@ -1,3 +1,10 @@
+## [0.0.2-alpha.311](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.310...v0.0.2-alpha.311) (2023-03-07)
+
+
+### New Features
+
+* Make player in gear viewer follow mouse ([#1290](https://github.com/Wynntils/Artemis/issues/1290)) ([b2ceb2d](https://github.com/Wynntils/Artemis/commit/b2ceb2d1dfe33f4880035e0da3fa4472814ff858))
+
 ## [0.0.2-alpha.310](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.309...v0.0.2-alpha.310) (2023-03-07)
 
 
@@ -9,6 +16,11 @@
 ### New Features
 
 * Cosmetics preview follows mouse and got a background ([#1291](https://github.com/Wynntils/Artemis/issues/1291)) ([d17b0cc](https://github.com/Wynntils/Artemis/commit/d17b0cceaca3891af8ee874ac8093a7a3324c7cb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.310 [skip ci] ([fe2d932](https://github.com/Wynntils/Artemis/commit/fe2d932acb2ff92d85d2f3389890f92798e7846b))
 
 ## [0.0.2-alpha.309](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.308...v0.0.2-alpha.309) (2023-03-07)
 
@@ -50,16 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.307 [skip ci] ([b2cad78](https://github.com/Wynntils/Artemis/commit/b2cad7837f0365ec349e5d3ab46a0d500ca23b8f))
-
-## [0.0.2-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.305...v0.0.2-alpha.306) (2023-03-07)
-
-
-### New Features
-
-* Introduce capped functions ([#1281](https://github.com/Wynntils/Artemis/issues/1281)) ([a0694c2](https://github.com/Wynntils/Artemis/commit/a0694c2a0d0a594676e3c7e60a10cec41e9ffc73))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.306 [skip ci] ([2270d27](https://github.com/Wynntils/Artemis/commit/2270d27b549efaaca6c1b4c416ee5b6459523d56))
 
