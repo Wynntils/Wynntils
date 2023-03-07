@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.utils.render.FontRenderer;
 import net.minecraft.client.gui.Font;
 
 public final class RenderedStringUtils {
@@ -54,5 +55,31 @@ public final class RenderedStringUtils {
             renderedText = builder.toString();
         }
         return renderedText;
+    }
+
+    public static String trySplitOptimally(String line, float maxWidth) {
+        String maxFitting = RenderedStringUtils.getMaxFittingText(
+                line, maxWidth, FontRenderer.getInstance().getFont());
+
+        if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
+            String color = "";
+
+            if (line.startsWith("§")) {
+                color = line.substring(0, 2);
+            }
+
+            return line.replaceFirst(" \\[", "\n" + color + "[");
+        } else if (maxFitting.contains("(")
+                && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
+            String color = "";
+
+            if (line.startsWith("§")) {
+                color = line.substring(0, 2);
+            }
+
+            return line.replaceFirst(" \\(", "\n" + color + "(");
+        } else { // Fits fine, give normal lines
+            return line;
+        }
     }
 }

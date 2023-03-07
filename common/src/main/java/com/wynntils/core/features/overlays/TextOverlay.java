@@ -12,6 +12,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -53,7 +54,7 @@ public abstract class TextOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getTemplate());
+        renderTemplate(poseStack, bufferSource, getTemplate(), getTextScale());
     }
 
     @Override
@@ -61,14 +62,12 @@ public abstract class TextOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getPreviewTemplate());
+        renderTemplate(poseStack, bufferSource, getPreviewTemplate(), getTextScale());
     }
 
-    protected void renderTemplate(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
-            lastUpdate = System.currentTimeMillis();
-            cachedLines = Managers.Function.doFormatLines(template);
-        }
+    protected void renderTemplate(
+            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template, float textScale) {
+        updateCachedLines(template);
 
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
@@ -83,13 +82,33 @@ public abstract class TextOverlay extends Overlay {
                             renderY,
                             renderY + this.getHeight(),
                             0,
-                            CommonColors.WHITE,
+                            this.getRenderColor(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
-                            this.textShadow);
+                            this.textShadow,
+                            textScale);
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
         }
+    }
+
+    protected void updateCachedLines(String template) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
+            lastUpdate = System.currentTimeMillis();
+            cachedLines = calculateTemplateValue(template);
+        }
+    }
+
+    protected String[] calculateTemplateValue(String template) {
+        return Managers.Function.doFormatLines(template);
+    }
+
+    public CustomColor getRenderColor() {
+        return CommonColors.WHITE;
+    }
+
+    public float getTextScale() {
+        return 1f;
     }
 
     public abstract String getTemplate();
