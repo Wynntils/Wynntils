@@ -1,9 +1,21 @@
+## [0.0.2-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.303...v0.0.2-alpha.304) (2023-03-07)
+
+
+### New Features
+
+* Add count to unused ability and skill point items ([#1286](https://github.com/Wynntils/Artemis/issues/1286)) ([64ada18](https://github.com/Wynntils/Artemis/commit/64ada18326634aeda7cd2b5c19e760cc1385dfa3))
+
 ## [0.0.2-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.302...v0.0.2-alpha.303) (2023-03-06)
 
 
 ### Bug Fixes
 
 * Fix area damage functions ([#1284](https://github.com/Wynntils/Artemis/issues/1284)) ([d83e8a8](https://github.com/Wynntils/Artemis/commit/d83e8a807b6c34e94e7958df322842f2e86c4bdb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.303 [skip ci] ([6450bff](https://github.com/Wynntils/Artemis/commit/6450bff7aaea87f68ad4c1b63aca78e6b26764a9))
 
 ## [0.0.2-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.301...v0.0.2-alpha.302) (2023-03-06)
 
@@ -36,16 +48,4 @@
 
 * Refactor ShamanTotemModel to remove all duplicated code ([#1279](https://github.com/Wynntils/Artemis/issues/1279)) ([9977530](https://github.com/Wynntils/Artemis/commit/9977530acde21ce0a00f758f96fc72eac976e115))
 * **release:** v0.0.2-alpha.300 [skip ci] ([c2dac55](https://github.com/Wynntils/Artemis/commit/c2dac552478c8655a31987a7fd8224e4d91fb3fe))
-
-## [0.0.2-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.298...v0.0.2-alpha.299) (2023-03-06)
-
-
-### Bug Fixes
-
-* Don't cancel BossHealthUpdateEvents unless necessary ([#1280](https://github.com/Wynntils/Artemis/issues/1280)) ([56d2d77](https://github.com/Wynntils/Artemis/commit/56d2d77588ba774859ad6c66aebe85ac32db5591))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.299 [skip ci] ([4dc27b3](https://github.com/Wynntils/Artemis/commit/4dc27b394f268b98cae77b6d97f0f3203eb22ba0))
 
