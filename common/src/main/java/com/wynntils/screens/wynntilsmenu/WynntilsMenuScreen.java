@@ -216,7 +216,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         int posX = (int) (translationX + Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
         int posY = (int) (translationY + Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - mouseY, McUtils.player());
+        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - 50 - mouseY, McUtils.player());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
