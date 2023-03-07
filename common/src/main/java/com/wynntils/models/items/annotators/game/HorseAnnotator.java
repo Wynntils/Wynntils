@@ -43,6 +43,6 @@ public final class HorseAnnotator implements ItemAnnotator {
         Matcher nameMatcher = LoreUtils.matchLoreLine(itemStack, 5, HORSE_NAME_PATTERN);
         String horseName = nameMatcher.matches() ? nameMatcher.group(1) : null;
 
-        return new HorseItem(tier, new CappedValue(level, maxLevel), xp, horseName);
+        return new HorseItem(tier, new CappedValue(level, maxLevel), new CappedValue(xp, 100), horseName);
     }
 }

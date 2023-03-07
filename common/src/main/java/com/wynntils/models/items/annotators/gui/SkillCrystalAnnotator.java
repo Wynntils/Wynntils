@@ -6,24 +6,24 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.items.items.gui.DailyRewardItem;
+import com.wynntils.models.items.items.gui.SkillCrystalItem;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
-    private static final String DAILY_REWARD_NAME = "§6§lDaily Reward";
-    private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §r§f(\\d+)x$");
+public final class SkillCrystalAnnotator implements ItemAnnotator {
+    private static final String SKILL_CRYSTAL_NAME = "§2§lSkill Crystal";
+    private static final Pattern SKILL_POINTS_PATTERN = Pattern.compile("^§7You have §r§a(\\d+)§r§7 skill points$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        if (!name.equals(DAILY_REWARD_NAME)) return null;
+        if (!name.equals(SKILL_CRYSTAL_NAME)) return null;
 
-        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, STREAK_PATTERN);
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 1, SKILL_POINTS_PATTERN);
         if (!matcher.matches()) return null;
 
         int count = Integer.parseInt(matcher.group(1));
-        return new DailyRewardItem(count);
+        return new SkillCrystalItem(count);
     }
 }

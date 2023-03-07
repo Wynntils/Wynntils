@@ -56,11 +56,11 @@ public final class WynnObjective {
 
     @Override
     public String toString() {
-        return goal + score.toString();
+        return goal + score;
     }
 
     public String asObjectiveString() {
-        return this.getGoal() + ": " + getScore().getProgressString();
+        return this.getGoal() + ": " + getScore();
     }
 
     private void updateTimestamp() {

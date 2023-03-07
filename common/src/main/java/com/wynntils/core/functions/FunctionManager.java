@@ -22,6 +22,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
@@ -140,7 +141,9 @@ public final class FunctionManager extends Manager {
     }
 
     private String format(Object value, boolean formatted, int decimals) {
-        if (value instanceof Number number) {
+        if (value instanceof Integer integer && !formatted) {
+            return String.valueOf(integer);
+        } else if (value instanceof Number number) {
             if (formatted) {
                 // French locale has NBSP
                 // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
@@ -281,6 +284,13 @@ public final class FunctionManager extends Manager {
     private void registerAllFunctions() {
         // Generic Functions
 
+        registerFunction(new CappedFunctions.AtCapFunction());
+        registerFunction(new CappedFunctions.CapFunction());
+        registerFunction(new CappedFunctions.CappedFunction());
+        registerFunction(new CappedFunctions.CurrentFunction());
+        registerFunction(new CappedFunctions.PercentageFunction());
+        registerFunction(new CappedFunctions.RemainingFunction());
+
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 
@@ -297,6 +307,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
         registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.MaxFunction());
+        registerFunction(new MathFunctions.MinFunction());
         registerFunction(new MathFunctions.ModuloFunction());
         registerFunction(new MathFunctions.MultiplyFunction());
         registerFunction(new MathFunctions.PowerFunction());
@@ -322,6 +334,9 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedManaFunction());
+        registerFunction(new CharacterFunctions.CappedSoulPointsFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
@@ -339,6 +354,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
 
+        registerFunction(new CombatXpFunctions.CappedLevelFunction());
+        registerFunction(new CombatXpFunctions.CappedXpFunction());
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
         registerFunction(new CombatXpFunctions.XpPctFunction());
@@ -349,12 +366,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.XpReqFunction());
         registerFunction(new CombatXpFunctions.XpReqRawFunction());
 
+        registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
+        registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
@@ -368,6 +389,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
+        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
+        registerFunction(new HorseFunctions.CappedHorseXpFunction());
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());

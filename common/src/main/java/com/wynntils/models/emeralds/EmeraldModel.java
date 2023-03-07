@@ -11,7 +11,6 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.ItemModel;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -205,11 +204,11 @@ public final class EmeraldModel extends Model {
     }
 
     private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof EmeraldValuedItemProperty valuedItem)) return;
+        Optional<EmeraldValuedItemProperty> valuedItemOpt =
+                Models.Item.asWynnItemPropery(itemStack, EmeraldValuedItemProperty.class);
+        if (valuedItemOpt.isEmpty()) return;
 
-        int adjustValue = valuedItem.getEmeraldValue() * multiplier;
+        int adjustValue = valuedItemOpt.get().getEmeraldValue() * multiplier;
         if (isInventory) {
             inventoryEmeralds += adjustValue;
         } else {
