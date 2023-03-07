@@ -1,9 +1,21 @@
+## [0.0.2-alpha.307](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.306...v0.0.2-alpha.307) (2023-03-07)
+
+
+### New Features
+
+* Overlay Refactor Part 2: Port all compatible overlays to TextOverlay ([#1278](https://github.com/Wynntils/Artemis/issues/1278)) ([69892bd](https://github.com/Wynntils/Artemis/commit/69892bd325c1df38cb8356118367c8190c1998de))
+
 ## [0.0.2-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.305...v0.0.2-alpha.306) (2023-03-07)
 
 
 ### New Features
 
 * Introduce capped functions ([#1281](https://github.com/Wynntils/Artemis/issues/1281)) ([a0694c2](https://github.com/Wynntils/Artemis/commit/a0694c2a0d0a594676e3c7e60a10cec41e9ffc73))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.306 [skip ci] ([2270d27](https://github.com/Wynntils/Artemis/commit/2270d27b549efaaca6c1b4c416ee5b6459523d56))
 
 ## [0.0.2-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.304...v0.0.2-alpha.305) (2023-03-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.303 [skip ci] ([6450bff](https://github.com/Wynntils/Artemis/commit/6450bff7aaea87f68ad4c1b63aca78e6b26764a9))
-
-## [0.0.2-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.301...v0.0.2-alpha.302) (2023-03-06)
-
-
-### New Features
-
-* Introduce ListArgument type to all functions that can make use of it ([#1283](https://github.com/Wynntils/Artemis/issues/1283)) ([e00465b](https://github.com/Wynntils/Artemis/commit/e00465bbff4aa7d5cba9469cb51871afe30838fd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.302 [skip ci] ([ee2d48d](https://github.com/Wynntils/Artemis/commit/ee2d48d1d7b5da90dbce7f30b048e2048243d30c))
 
