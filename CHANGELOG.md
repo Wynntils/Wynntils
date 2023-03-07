@@ -1,9 +1,21 @@
+## [0.0.2-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.305...v0.0.2-alpha.306) (2023-03-07)
+
+
+### New Features
+
+* Introduce capped functions ([#1281](https://github.com/Wynntils/Artemis/issues/1281)) ([a0694c2](https://github.com/Wynntils/Artemis/commit/a0694c2a0d0a594676e3c7e60a10cec41e9ffc73))
+
 ## [0.0.2-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.304...v0.0.2-alpha.305) (2023-03-07)
 
 
 ### Bug Fixes
 
 * Item guess prices were wrong for legendary and fabled items ([#1287](https://github.com/Wynntils/Artemis/issues/1287)) ([1703e0d](https://github.com/Wynntils/Artemis/commit/1703e0dea3ca3fe63c1b6ed308abed5d1a2acde1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.305 [skip ci] ([aba64a6](https://github.com/Wynntils/Artemis/commit/aba64a65dc5e3c6280170d0d5ece4093ca0b3c10))
 
 ## [0.0.2-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.303...v0.0.2-alpha.304) (2023-03-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.302 [skip ci] ([ee2d48d](https://github.com/Wynntils/Artemis/commit/ee2d48d1d7b5da90dbce7f30b048e2048243d30c))
-
-## [0.0.2-alpha.301](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.300...v0.0.2-alpha.301) (2023-03-06)
-
-
-### Bug Fixes
-
-* Fix Integer-Double constant parsing order in functions ([#1282](https://github.com/Wynntils/Artemis/issues/1282)) ([a692435](https://github.com/Wynntils/Artemis/commit/a692435c649737ed58d033e740ed207d9a8763ca))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.301 [skip ci] ([84eaf53](https://github.com/Wynntils/Artemis/commit/84eaf53bb0fde98ab6cd6dcf80a5a4253ce1eada))
 
