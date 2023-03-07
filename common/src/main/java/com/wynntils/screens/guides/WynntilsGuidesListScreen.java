@@ -82,7 +82,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"));
 

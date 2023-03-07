@@ -124,7 +124,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         float posX = this.width / 2f;
         float posY = this.height / 2f;
 
-        InventoryScreen.renderEntityInInventory((int) posX, (int) posY + 32, 30, 0, 0, player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                new PoseStack(), (int) posX, (int) posY + 32, 30, 0, 0, player);
     }
 
     @Override

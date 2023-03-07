@@ -15,6 +15,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.io.IOException;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
@@ -66,8 +67,8 @@ public class WynncraftButtonFeature extends UserFeature {
         }
 
         @Override
-        public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
-            super.renderButton(matrices, mouseX, mouseY, partialTicks);
+        public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+            super.renderWidget(matrices, mouseX, mouseY, partialTicks);
 
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
@@ -163,7 +164,7 @@ public class WynncraftButtonFeature extends UserFeature {
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
         private synchronized void loadServerIcon(ResourceLocation destination) {
-            String iconString = server.getIconB64();
+            String iconString = WynnUtils.encodeBase64(server.getIconBytes());
             // failed to ping server or icon wasn't sent
             if (iconString == null) {
                 WynntilsMod.warn("Unable to load icon");
@@ -171,7 +172,7 @@ public class WynncraftButtonFeature extends UserFeature {
                 return;
             }
 
-            try (NativeImage nativeImage = NativeImage.fromBase64(iconString)) {
+            try (NativeImage nativeImage = NativeImage.read(WynnUtils.decodeBase64(iconString))) {
                 Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 

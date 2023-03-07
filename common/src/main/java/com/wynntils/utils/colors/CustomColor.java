@@ -100,7 +100,7 @@ public class CustomColor {
 
         float vh = ((h % 1 + 1) * 6) % 6;
 
-        int vi = Mth.fastFloor(vh);
+        int vi = Mth.floor(vh);
         float v1 = v * (1 - s);
         float v2 = v * (1 - s * (vh - vi));
         float v3 = v * (1 - s * (1 - (vh - vi)));

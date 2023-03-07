@@ -156,7 +156,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
             McUtils.mc()
                     .getItemRenderer()
-                    .renderGuiItem(EmeraldUnits.values()[i].getItemStack(), x + renderX + 6, y + renderY + 6);
+                    .renderGuiItem(
+                            poseStack, EmeraldUnits.values()[i].getItemStack(), x + renderX + 6, y + renderY + 6);
 
             poseStack.pushPose();
             poseStack.translate(0, 0, 200);

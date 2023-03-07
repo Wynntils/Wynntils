@@ -9,6 +9,7 @@ import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunPath;
+import com.wynntils.utils.wynn.WynnUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ public final class LootrunCompiler {
         ChunkPos lastChunkPos = null;
         for (int i = 0; i < locationsList.points().size(); i++) {
             Vec3 location = locationsList.points().get(i).vec3();
-            ChunkPos currentChunkPos = new ChunkPos(Mth.fastFloor(location.x()) >> 4, Mth.fastFloor(location.z()) >> 4);
+            ChunkPos currentChunkPos = new ChunkPos(Mth.floor(location.x()) >> 4, Mth.floor(location.z()) >> 4);
             if (!currentChunkPos.equals(lastChunkPos)) {
                 if (lastChunkPos != null
                         && location.distanceTo(locationsList.points().get(i - 1).vec3()) < 32) {
@@ -199,7 +200,7 @@ public final class LootrunCompiler {
     private static Long2ObjectMap<List<LootrunNote>> getNotes(List<LootrunNote> notes) {
         Long2ObjectMap<List<LootrunNote>> result = new Long2ObjectOpenHashMap<>();
         for (LootrunNote note : notes) {
-            ChunkPos chunk = new ChunkPos(new BlockPos(note.position()));
+            ChunkPos chunk = new ChunkPos(WynnUtils.newBlockPos(note.position()));
             List<LootrunNote> notesChunk = result.computeIfAbsent(chunk.toLong(), (chunkPos) -> new ArrayList<>());
             notesChunk.add(note);
         }

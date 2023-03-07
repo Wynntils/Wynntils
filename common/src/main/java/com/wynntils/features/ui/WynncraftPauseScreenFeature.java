@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class WynncraftPauseScreenFeature extends UserFeature {
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
-        //FIXME: 1.19.4 -- restore!
+        // FIXME: 1.19.4 -- restore!
 
         /*
         PauseScreen pauseScreen = event.getPauseScreen();

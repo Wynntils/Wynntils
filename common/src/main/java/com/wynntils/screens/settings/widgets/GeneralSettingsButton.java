@@ -33,7 +33,7 @@ public class GeneralSettingsButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
                 CommonColors.BLACK,

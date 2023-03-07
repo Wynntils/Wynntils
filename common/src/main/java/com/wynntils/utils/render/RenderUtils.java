@@ -23,7 +23,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
@@ -32,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -963,7 +963,7 @@ public final class RenderUtils {
 
         PoseStack poseStack = RenderSystem.getModelViewStack();
         poseStack.pushPose();
-        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().blitOffset));
+        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().ITEM_COUNT_BLIT_OFFSET));
         poseStack.translate(8.0, 8.0, 0.0);
         poseStack.scale(1.0F, -1.0F, 1.0F);
         poseStack.scale(16.0F, 16.0F, 16.0F);
@@ -983,7 +983,7 @@ public final class RenderUtils {
                 .getItemRenderer()
                 .render(
                         itemStack,
-                        ItemTransforms.TransformType.GUI,
+                        ItemDisplayContext.GUI,
                         false,
                         poseStack2,
                         bufferSource,
@@ -1056,6 +1056,7 @@ public final class RenderUtils {
             matrixStack.mulPose(dispatcher.cameraOrientation());
             matrixStack.scale(-0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
             Matrix4f matrix4f = matrixStack.last().pose();
+            Font.DisplayMode displayMode = sneaking ? Font.DisplayMode.NORMAL : Font.DisplayMode.SEE_THROUGH;
 
             font.drawInBatch(
                     nametag,
@@ -1065,11 +1066,12 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    !sneaking,
+                    displayMode,
                     backgroundColor,
                     packedLight);
             if (!sneaking) {
-                font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
+                font.drawInBatch(
+                        nametag, xOffset, 0f, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
             }
 
             matrixStack.popPose();

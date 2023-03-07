@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
@@ -13,6 +14,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Quaternionf;
 
 @ConfigCategory(Category.UI)
 public class CosmeticsPreviewFeature extends UserFeature {
@@ -26,11 +28,12 @@ public class CosmeticsPreviewFeature extends UserFeature {
 
         if (title.equals(GEAR_MENU_TITLE) || title.equals(GUILD_GEAR_MENU_TITLE)) {
             InventoryScreen.renderEntityInInventory(
+                    new PoseStack(),
                     screen.leftPos + screen.imageWidth + 20,
                     screen.topPos + screen.imageHeight / 2,
                     30,
-                    0,
-                    0,
+                    new Quaternionf(),
+                    new Quaternionf(),
                     McUtils.player());
         }
     }

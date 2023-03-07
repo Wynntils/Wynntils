@@ -30,6 +30,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import org.joml.Quaternionf;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -131,7 +132,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.LIST_BACKGROUND.width(),
                 Texture.LIST_BACKGROUND.height());
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
@@ -337,7 +338,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
@@ -355,7 +356,13 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         int scale = this.height / 4;
         InventoryScreen.renderEntityInInventory(
-                (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+                new PoseStack(),
+                (int) (this.width * 0.6f),
+                (int) (this.height * 0.85f),
+                scale,
+                new Quaternionf(),
+                new Quaternionf(),
+                McUtils.player());
     }
 
     private void setScrollOffset(int delta) {
