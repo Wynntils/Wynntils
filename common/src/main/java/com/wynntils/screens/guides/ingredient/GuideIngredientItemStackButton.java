@@ -36,7 +36,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
         float actualX = screen.getTranslationX() + getX();
