@@ -88,6 +88,7 @@
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "Textschatten",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.worldWaypointDistance.textShadow.name": "Textschatten",
+  "function.wynntils.auraTimer.name": "Aura Timers",
   "overlay.wynntils.textOverlay.textShadow.name": "Textschatten",
   "screens.wynntils.overlaySelection.overlays": "Overlays"
 }
