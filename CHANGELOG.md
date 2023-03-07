@@ -1,3 +1,15 @@
+## [0.0.2-alpha.310](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.309...v0.0.2-alpha.310) (2023-03-07)
+
+
+### Bug Fixes
+
+* Fix sus inheritance in TextInputBoxWidget hierarchy ([#1292](https://github.com/Wynntils/Artemis/issues/1292)) ([2cf1dfe](https://github.com/Wynntils/Artemis/commit/2cf1dfe20526099b2ed9bea24e90844b8a32f92b))
+
+
+### New Features
+
+* Cosmetics preview follows mouse and got a background ([#1291](https://github.com/Wynntils/Artemis/issues/1291)) ([d17b0cc](https://github.com/Wynntils/Artemis/commit/d17b0cceaca3891af8ee874ac8093a7a3324c7cb))
+
 ## [0.0.2-alpha.309](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.308...v0.0.2-alpha.309) (2023-03-07)
 
 
@@ -9,6 +21,11 @@
 ### Code Refactoring
 
 * Use our MathUtils instead of Mth ([#1294](https://github.com/Wynntils/Artemis/issues/1294)) ([56f8c0f](https://github.com/Wynntils/Artemis/commit/56f8c0f28b80e0c174ba08150cc23707c5cb061b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.309 [skip ci] ([0197509](https://github.com/Wynntils/Artemis/commit/0197509e8271f3c2282b758fdcc1886cb908948b))
 
 ## [0.0.2-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.307...v0.0.2-alpha.308) (2023-03-07)
 
@@ -45,16 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.306 [skip ci] ([2270d27](https://github.com/Wynntils/Artemis/commit/2270d27b549efaaca6c1b4c416ee5b6459523d56))
-
-## [0.0.2-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.304...v0.0.2-alpha.305) (2023-03-07)
-
-
-### Bug Fixes
-
-* Item guess prices were wrong for legendary and fabled items ([#1287](https://github.com/Wynntils/Artemis/issues/1287)) ([1703e0d](https://github.com/Wynntils/Artemis/commit/1703e0dea3ca3fe63c1b6ed308abed5d1a2acde1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.305 [skip ci] ([aba64a6](https://github.com/Wynntils/Artemis/commit/aba64a65dc5e3c6280170d0d5ece4093ca0b3c10))
 
