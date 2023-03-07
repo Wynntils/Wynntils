@@ -1,9 +1,21 @@
+## [0.0.2-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.307...v0.0.2-alpha.308) (2023-03-07)
+
+
+### Bug Fixes
+
+* Fix TrackedBar crash ([#1289](https://github.com/Wynntils/Artemis/issues/1289)) ([3b9aec0](https://github.com/Wynntils/Artemis/commit/3b9aec021550aea8349561ed59b7ca45bbe2378c))
+
 ## [0.0.2-alpha.307](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.306...v0.0.2-alpha.307) (2023-03-07)
 
 
 ### New Features
 
 * Overlay Refactor Part 2: Port all compatible overlays to TextOverlay ([#1278](https://github.com/Wynntils/Artemis/issues/1278)) ([69892bd](https://github.com/Wynntils/Artemis/commit/69892bd325c1df38cb8356118367c8190c1998de))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.307 [skip ci] ([b2cad78](https://github.com/Wynntils/Artemis/commit/b2cad7837f0365ec349e5d3ab46a0d500ca23b8f))
 
 ## [0.0.2-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.305...v0.0.2-alpha.306) (2023-03-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.304 [skip ci] ([ba71143](https://github.com/Wynntils/Artemis/commit/ba71143044df175fba15aa513da340552d057a0d))
-
-## [0.0.2-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.302...v0.0.2-alpha.303) (2023-03-06)
-
-
-### Bug Fixes
-
-* Fix area damage functions ([#1284](https://github.com/Wynntils/Artemis/issues/1284)) ([d83e8a8](https://github.com/Wynntils/Artemis/commit/d83e8a807b6c34e94e7958df322842f2e86c4bdb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.303 [skip ci] ([6450bff](https://github.com/Wynntils/Artemis/commit/6450bff7aaea87f68ad4c1b63aca78e6b26764a9))
 
