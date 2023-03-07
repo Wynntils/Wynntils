@@ -13,7 +13,6 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.UseItemEvent;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -50,14 +49,11 @@ public class HorseMountFeature extends UserFeature {
         if (!guaranteedMount) return;
 
         ItemStack itemStack = McUtils.player().getMainHandItem();
+        Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
+        if (horseItemOpt.isEmpty()) return;
 
-        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-        if (wynnItem.isPresent() && wynnItem.get() instanceof HorseItem) {
-            mountHorse();
-
-            event.setCanceled(true);
-        }
+        mountHorse();
+        event.setCanceled(true);
     }
 
     private void mountHorse() {
