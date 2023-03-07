@@ -81,7 +81,7 @@ public final class BufferedFontRenderer {
                     false,
                     poseStack.last().pose(),
                     bufferSource,
-                    Font.DisplayMode.NORMAL,
+                    Font.DisplayMode.SEE_THROUGH,
                     0,
                     0xF000F0,
                     font.isBidirectional());
@@ -93,7 +93,7 @@ public final class BufferedFontRenderer {
                     true,
                     poseStack.last().pose(),
                     bufferSource,
-                    Font.DisplayMode.NORMAL,
+                    Font.DisplayMode.SEE_THROUGH,
                     0,
                     0xF000F0,
                     font.isBidirectional());
@@ -158,7 +158,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0,
                         font.isBidirectional());
