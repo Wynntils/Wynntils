@@ -19,6 +19,8 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
@@ -35,16 +37,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -275,7 +273,7 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for function " + function.getClass().getSimpleName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for function " + function.getClass().getSimpleName();
-        for (FunctionArguments.Argument argument :
+        for (FunctionArguments.Argument<?> argument :
                 function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
                     : "Fix i18n argument description for function "
@@ -322,12 +320,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.RepeatFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
+        registerFunction(new WorldFunctions.MobTotemCountFunction());
+        registerFunction(new WorldFunctions.MobTotemDistanceFunction());
+        registerFunction(new WorldFunctions.MobTotemOwnerFunction());
+        registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
@@ -428,7 +431,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
 
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.ShamanMaskFunction());
+        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
+        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
+        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
+
+        registerFunction(new WarFunctions.AuraTimerFunction());
     }
 }

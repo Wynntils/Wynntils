@@ -277,4 +277,12 @@ public class ShamanTotemModel extends Model {
     public List<ShamanTotem> getActiveTotems() {
         return Arrays.stream(totems).filter(Objects::nonNull).toList();
     }
+
+    public ShamanTotem getTotem(int totemNumber) {
+        if (totemNumber < 1 || totemNumber > MAX_TOTEM_COUNT) {
+            return null;
+        }
+
+        return totems[totemNumber - 1];
+    }
 }

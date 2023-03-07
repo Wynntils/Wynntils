@@ -35,9 +35,9 @@ public class MobTotem {
         this.timerString = timerString;
     }
 
-    public int getDistanceToPlayer() {
+    public double getDistanceToPlayer() {
         // y() - 4 because the entity is 4 blocks above the ground
-        return (int) Math.sqrt(McUtils.player().distanceToSqr(new Vec3(location.x(), location.y() - 4, location.z())));
+        return Math.sqrt(McUtils.player().distanceToSqr(new Vec3(location.x(), location.y() - 4, location.z())));
     }
 
     public double getLookAngleDiff() {
