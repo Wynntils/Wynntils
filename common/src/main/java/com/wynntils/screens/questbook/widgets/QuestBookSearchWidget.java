@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -16,7 +15,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Objects;
 import java.util.function.Consumer;
-import net.minecraft.client.Minecraft;
 
 public class QuestBookSearchWidget extends SearchWidget {
     public QuestBookSearchWidget(
@@ -25,8 +23,17 @@ public class QuestBookSearchWidget extends SearchWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                Texture.QUEST_BOOK_SEARCH.resource(),
+                this.getX(),
+                this.getY(),
+                0,
+                this.width,
+                this.height,
+                Texture.QUEST_BOOK_SEARCH.width(),
+                Texture.QUEST_BOOK_SEARCH.height());
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
@@ -43,19 +50,5 @@ public class QuestBookSearchWidget extends SearchWidget {
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
-    }
-
-    @Override
-    protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.QUEST_BOOK_SEARCH.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                Texture.QUEST_BOOK_SEARCH.width(),
-                Texture.QUEST_BOOK_SEARCH.height());
     }
 }
