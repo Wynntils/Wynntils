@@ -9,8 +9,6 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// NOTE: As the package suggests, this is model is related to guild wars' Aura.
-//       Not to be confused with the aura spell.
 public class TowerAuraTimerModel extends Model {
     private static final int AURA_PROC_MS = 3200;
     private static final String AURA_TITLE = "§4§n/!\\§7 Tower §6Aura";
