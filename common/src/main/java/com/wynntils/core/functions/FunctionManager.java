@@ -19,7 +19,10 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
@@ -34,16 +37,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -142,7 +141,9 @@ public final class FunctionManager extends Manager {
     }
 
     private String format(Object value, boolean formatted, int decimals) {
-        if (value instanceof Number number) {
+        if (value instanceof Integer integer && !formatted) {
+            return String.valueOf(integer);
+        } else if (value instanceof Number number) {
             if (formatted) {
                 // French locale has NBSP
                 // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
@@ -272,7 +273,7 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for function " + function.getClass().getSimpleName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for function " + function.getClass().getSimpleName();
-        for (FunctionArguments.Argument argument :
+        for (FunctionArguments.Argument<?> argument :
                 function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
                     : "Fix i18n argument description for function "
@@ -282,6 +283,13 @@ public final class FunctionManager extends Manager {
 
     private void registerAllFunctions() {
         // Generic Functions
+
+        registerFunction(new CappedFunctions.AtCapFunction());
+        registerFunction(new CappedFunctions.CapFunction());
+        registerFunction(new CappedFunctions.CappedFunction());
+        registerFunction(new CappedFunctions.CurrentFunction());
+        registerFunction(new CappedFunctions.PercentageFunction());
+        registerFunction(new CappedFunctions.RemainingFunction());
 
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
@@ -299,6 +307,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
         registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.MaxFunction());
+        registerFunction(new MathFunctions.MinFunction());
         registerFunction(new MathFunctions.ModuloFunction());
         registerFunction(new MathFunctions.MultiplyFunction());
         registerFunction(new MathFunctions.PowerFunction());
@@ -310,15 +320,23 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.RepeatFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
+        registerFunction(new WorldFunctions.MobTotemCountFunction());
+        registerFunction(new WorldFunctions.MobTotemDistanceFunction());
+        registerFunction(new WorldFunctions.MobTotemOwnerFunction());
+        registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedManaFunction());
+        registerFunction(new CharacterFunctions.CappedSoulPointsFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
@@ -336,6 +354,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
 
+        registerFunction(new CombatXpFunctions.CappedLevelFunction());
+        registerFunction(new CombatXpFunctions.CappedXpFunction());
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
         registerFunction(new CombatXpFunctions.XpPctFunction());
@@ -346,12 +366,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.XpReqFunction());
         registerFunction(new CombatXpFunctions.XpReqRawFunction());
 
+        registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
+        registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
@@ -365,6 +389,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
+        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
+        registerFunction(new HorseFunctions.CappedHorseXpFunction());
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
@@ -405,7 +431,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
 
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.ShamanMaskFunction());
+        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
+        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
+        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
+
+        registerFunction(new WarFunctions.AuraTimerFunction());
     }
 }

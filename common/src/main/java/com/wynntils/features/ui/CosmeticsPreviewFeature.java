@@ -11,14 +11,16 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.joml.Quaternionf;
 
 @ConfigCategory(Category.UI)
 public class CosmeticsPreviewFeature extends UserFeature {
-    private static final String GEAR_MENU_TITLE = "Gear Skins Menu";
+    private static final String WEAPON_COSMETICS_TITLE = "Weapon Cosmetics";
+    private static final String HELMET_COSMETICS_TITLE = "Helmet Cosmetics";
     private static final String GUILD_GEAR_MENU_TITLE = "Guild Cosmetics";
 
     @SubscribeEvent
@@ -26,14 +28,22 @@ public class CosmeticsPreviewFeature extends UserFeature {
         AbstractContainerScreen<?> screen = event.getScreen();
         String title = ComponentUtils.getUnformatted(screen.getTitle());
 
-        if (title.equals(GEAR_MENU_TITLE) || title.equals(GUILD_GEAR_MENU_TITLE)) {
-            InventoryScreen.renderEntityInInventory(
-                    new PoseStack(),
-                    screen.leftPos + screen.imageWidth + 20,
-                    screen.topPos + screen.imageHeight / 2,
+        if (title.equals(WEAPON_COSMETICS_TITLE)
+                || title.equals(HELMET_COSMETICS_TITLE)
+                || title.equals(GUILD_GEAR_MENU_TITLE)) {
+            int posX = screen.leftPos + screen.imageWidth + 20;
+            int posY = screen.topPos + screen.imageHeight / 2;
+
+            PoseStack poseStack = new PoseStack();
+            RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
+
+            InventoryScreen.renderEntityInInventoryFollowsMouse(
+                    poseStack,
+                    posX + 20,
+                    posY,
                     30,
-                    new Quaternionf(),
-                    new Quaternionf(),
+                    posX - event.getMouseX(),
+                    posY - 50 - event.getMouseY(),
                     McUtils.player());
         }
     }

@@ -115,17 +115,17 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         super.doRender(poseStack, mouseX, mouseY, partialTick);
         this.renderTooltip(poseStack, mouseX, mouseY);
 
-        renderPlayerModel();
+        renderPlayerModel(poseStack, mouseX, mouseY);
 
         viewPlayerStatsButton.render(poseStack, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel() {
-        float posX = this.width / 2f;
-        float posY = this.height / 2f;
+    private void renderPlayerModel(PoseStack poseStack, int mouseX, int mouseY) {
+        int posX = (int) (this.width / 2f);
+        int posY = (int) (this.height / 2f) + 32;
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                new PoseStack(), (int) posX, (int) posY + 32, 30, 0, 0, player);
+                poseStack, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
     }
 
     @Override

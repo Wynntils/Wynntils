@@ -32,7 +32,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument("seconds", Integer.class, 10)));
+                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override

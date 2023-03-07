@@ -8,17 +8,38 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class HorseFunctions {
+    public static class CappedHorseLevelFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return CappedValue.EMPTY;
+
+            return horse.get().getLevel();
+        }
+    }
+
+    public static class CappedHorseXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return CappedValue.EMPTY;
+
+            return horse.get().getXp();
+        }
+    }
+
     public static class HorseLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            HorseItem horse = Models.Horse.getHorse();
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
 
-            if (horse == null) return -1;
-
-            return horse.getLevel().current();
+            return horse.get().getLevel().current();
         }
 
         @Override
@@ -30,11 +51,10 @@ public class HorseFunctions {
     public static class HorseLevelMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            HorseItem horse = Models.Horse.getHorse();
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
 
-            if (horse == null) return -1;
-
-            return horse.getLevel().max();
+            return horse.get().getLevel().max();
         }
 
         @Override
@@ -46,11 +66,10 @@ public class HorseFunctions {
     public static class HorseXpFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            HorseItem horse = Models.Horse.getHorse();
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
 
-            if (horse == null) return -1;
-
-            return horse.getXp();
+            return horse.get().getXp().current();
         }
 
         @Override
@@ -62,11 +81,10 @@ public class HorseFunctions {
     public static class HorseTierFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            HorseItem horse = Models.Horse.getHorse();
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
 
-            if (horse == null) return -1;
-
-            return horse.getTier();
+            return horse.get().getTier();
         }
 
         @Override
@@ -78,11 +96,10 @@ public class HorseFunctions {
     public static class HorseNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            HorseItem horse = Models.Horse.getHorse();
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return "";
 
-            if (horse == null) return "";
-
-            String name = horse.getName();
+            String name = horse.get().getName();
             return (name.isEmpty()) ? "" : name;
         }
 

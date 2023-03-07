@@ -8,11 +8,33 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.player.LocalPlayer;
 
 public class CharacterFunctions {
+    public static class CappedManaFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Character.getMana();
+        }
+    }
+
+    public static class CappedHealthFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Character.getHealth();
+        }
+    }
+
+    public static class CappedSoulPointsFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Character.getSoulPoints();
+        }
+    }
+
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
