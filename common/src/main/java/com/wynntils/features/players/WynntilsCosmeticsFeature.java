@@ -16,6 +16,7 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
 import com.wynntils.models.players.type.CosmeticInfo;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.model.ElytraModel;
 import net.minecraft.client.model.PlayerModel;
@@ -136,32 +137,34 @@ public class WynntilsCosmeticsFeature extends UserFeature {
 
             poseStack.pushPose();
             poseStack.translate(0.0f, 0.0f, 0.125f);
-            double xOffset = Mth.lerp(partialTick, player.xCloakO, player.xCloak)
-                    - Mth.lerp(partialTick, player.xo, player.getX());
-            double yOffset = Mth.lerp(partialTick, player.yCloakO, player.yCloak)
-                    - Mth.lerp(partialTick, player.yo, player.getY());
-            double zOffset = Mth.lerp(partialTick, player.zCloakO, player.zCloak)
-                    - Mth.lerp(partialTick, player.zo, player.getZ());
+            double xOffset = MathUtils.lerp(player.xCloakO, player.xCloak, partialTick)
+                    - MathUtils.lerp(player.xo, player.getX(), partialTick);
+            double yOffset = MathUtils.lerp(player.yCloakO, player.yCloak, partialTick)
+                    - MathUtils.lerp(player.yo, player.getY(), partialTick);
+            double zOffset = MathUtils.lerp(player.zCloakO, player.zCloak, partialTick)
+                    - MathUtils.lerp(player.zo, player.getZ(), partialTick);
 
             float rotation = player.yBodyRotO + (player.yBodyRot - player.yBodyRotO);
-            double rotationSin = Mth.sin(rotation * ((float) Math.PI / 180));
-            double rotationCos = -Mth.cos(rotation * ((float) Math.PI / 180));
+            float rotRadians = rotation / 360 * Mth.TWO_PI;
+            double rotationSin = Mth.sin(rotRadians);
+            double rotationCos = -Mth.cos(rotRadians);
 
             float capeX = (float) (xOffset * rotationSin + zOffset * rotationCos) * 100.0f;
-            capeX = Mth.clamp(capeX, 0.0f, 150.0f);
+            capeX = MathUtils.clamp(capeX, 0.0f, 150.0f);
             if (capeX < 0.0f) {
                 capeX = 0.0f;
             }
 
-            float capeY = (float) Mth.clamp(yOffset * 10f, -6.0f, 32.0f);
-            float bobOffset = Mth.lerp(partialTick, player.oBob, player.bob);
-            capeY += Mth.sin(Mth.lerp(partialTick, player.walkDistO, player.walkDist) * 6.0f) * 32.0f * bobOffset;
+            float capeY = MathUtils.clamp((float) yOffset * 10f, -6.0f, 32.0f);
+            float bobOffset = MathUtils.lerp(player.oBob, player.bob, partialTick);
+            float dist = MathUtils.lerp(player.walkDistO, player.walkDist, partialTick);
+            capeY += Mth.sin(dist * 6.0f) * 32.0f * bobOffset;
             if (player.isCrouching()) {
                 capeY += 25.0f;
             }
 
             float capeZ = (float) (xOffset * rotationCos - zOffset * rotationSin) * 100.0f;
-            capeZ = Mth.clamp(capeZ, -20.0f, 20.0f);
+            capeZ = MathUtils.clamp(capeZ, -20.0f, 20.0f);
 
             poseStack.mulPose(Axis.XP.rotationDegrees(6.0f + capeX / 2.0f + capeY));
             poseStack.mulPose(Axis.ZP.rotationDegrees(capeZ / 2.0f));
