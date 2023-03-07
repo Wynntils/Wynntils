@@ -6,6 +6,7 @@ package com.wynntils.core.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,8 +17,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.features.overlays.OverlayGroup;
 import com.wynntils.utils.FileUtils;
+import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -35,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -49,6 +54,9 @@ public final class ConfigManager extends Manager {
             .serializeNulls()
             .create();
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
+
+    private static final List<ConfigHolder> OVERLAY_GROUP_CONFIG_HOLDERS = new ArrayList<>();
+    private static final List<OverlayGroupHolder> OVERLAY_GROUP_FIELDS = new ArrayList<>();
 
     private File userConfig;
     private JsonObject configObject;
@@ -66,6 +74,8 @@ public final class ConfigManager extends Manager {
     }
 
     public void registerFeature(Feature feature) {
+        registerOverlayGroups(feature);
+
         for (Overlay overlay : feature.getOverlays()) {
             registerConfigOptions(overlay);
         }
@@ -73,11 +83,35 @@ public final class ConfigManager extends Manager {
         registerConfigOptions(feature);
     }
 
+    private void registerOverlayGroups(Feature feature) {
+        List<OverlayGroupHolder> holders = Stream.of(feature.getClass().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(OverlayGroup.class))
+                .map(field -> new OverlayGroupHolder(
+                        field, feature, field.getAnnotation(OverlayGroup.class).instances()))
+                .toList();
+
+        OVERLAY_GROUP_FIELDS.addAll(holders);
+        feature.addOverlayGroups(holders);
+
+        for (OverlayGroupHolder holder : holders) {
+            holder.initGroup(
+                    IntStream.rangeClosed(1, holder.getDefaultCount()).boxed().toList());
+
+            List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
+                    .map(this::getConfigOptions)
+                    .flatMap(List::stream)
+                    .toList();
+
+            holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
+
+            OVERLAY_GROUP_CONFIG_HOLDERS.addAll(overlayHolders);
+        }
+    }
+
     private void registerConfigOptions(Configurable configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);
-        loadConfigOptions(configOptions, false);
         CONFIG_HOLDERS.addAll(configOptions);
     }
 
@@ -123,16 +157,48 @@ public final class ConfigManager extends Manager {
     }
 
     public void loadAllConfigOptions() {
-        loadConfigOptions(CONFIG_HOLDERS, true);
+        loadConfigOptions(true, true);
     }
 
-    private void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
+    public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");
             return; // nothing to load from
         }
 
-        for (ConfigHolder holder : holders) {
+        // We have to set up the overlay groups first, so that the overlays' configs can be loaded
+        List<ConfigHolder> oldOverlayHolders = new ArrayList<>(OVERLAY_GROUP_CONFIG_HOLDERS);
+        OVERLAY_GROUP_CONFIG_HOLDERS.clear();
+
+        JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, "overlayGroups");
+
+        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
+            if (initOverlayGroups) {
+                JsonArray ids = JsonUtils.getNullableJsonArray(overlayGroups, holder.getConfigKey());
+
+                List<Integer> idList = overlayGroups.has(holder.getConfigKey())
+                        ? ids.asList().stream().map(JsonElement::getAsInt).toList()
+                        : IntStream.rangeClosed(1, holder.getDefaultCount())
+                                .boxed()
+                                .toList();
+
+                holder.initGroup(idList);
+            }
+
+            List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
+                    .map(this::getConfigOptions)
+                    .flatMap(List::stream)
+                    .toList();
+
+            holder.getOverlays().forEach(overlay -> overlay.removeConfigOptions(oldOverlayHolders));
+            holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
+
+            holder.getParent().initOverlayGroups();
+
+            OVERLAY_GROUP_CONFIG_HOLDERS.addAll(overlayHolders);
+        }
+
+        for (ConfigHolder holder : getConfigHolderList()) {
             // option hasn't been saved to config
             if (!configObject.has(holder.getJsonName())) {
                 if (resetIfNotFound) {
@@ -146,6 +212,16 @@ public final class ConfigManager extends Manager {
             Object value = CONFIG_GSON.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
+
+        // Newly created group overlays need to be enabled
+        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
+            holder.getParent().enableOverlays();
+        }
+    }
+
+    private static List<ConfigHolder> getConfigHolderList() {
+        return Stream.concat(CONFIG_HOLDERS.stream(), OVERLAY_GROUP_CONFIG_HOLDERS.stream())
+                .toList();
     }
 
     public void saveConfig() {
@@ -156,7 +232,7 @@ public final class ConfigManager extends Manager {
 
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
-        for (ConfigHolder holder : CONFIG_HOLDERS) {
+        for (ConfigHolder holder : getConfigHolderList()) {
             if (!holder.valueChanged()) continue; // only save options that have been set by the user
             Object value = holder.getValue();
 
@@ -168,6 +244,20 @@ public final class ConfigManager extends Manager {
         holderJson.add(
                 Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME,
                 configObject.get(Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME));
+
+        // Save overlay groups
+        JsonObject overlayGroups = new JsonObject();
+        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
+            JsonArray ids = new JsonArray();
+
+            holder.getOverlays().stream()
+                    .map(overlay -> ((DynamicOverlay) overlay).getId())
+                    .forEach(ids::add);
+
+            overlayGroups.add(holder.getConfigKey(), ids);
+        }
+
+        holderJson.add("overlayGroups", overlayGroups);
 
         saveConfigToDisk(holderJson);
     }
@@ -194,7 +284,7 @@ public final class ConfigManager extends Manager {
 
             // create json object, with entry for each option of each container
             JsonObject holderJson = new JsonObject();
-            for (ConfigHolder holder : CONFIG_HOLDERS) {
+            for (ConfigHolder holder : getConfigHolderList()) {
                 Object value = holder.getDefaultValue();
 
                 JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
@@ -261,7 +351,7 @@ public final class ConfigManager extends Manager {
     }
 
     public Stream<ConfigHolder> getConfigHolders() {
-        return CONFIG_HOLDERS.stream();
+        return getConfigHolderList().stream();
     }
 
     public Object deepCopy(Object value, Type fieldType) {

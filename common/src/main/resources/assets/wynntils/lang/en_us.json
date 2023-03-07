@@ -567,6 +567,7 @@
   "feature.wynntils.map.servicePoiMinZoom.description": "At what zoom level should service pois show? Set this to -1 to always show without fading.",
   "feature.wynntils.map.servicePoiMinZoom.name": "Service Poi Min Zoom",
   "feature.wynntils.minimap.name": "Minimaps",
+  "feature.wynntils.minimap.overlay.coordinate.name": "Coordinates",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "What style should the minimap border have?",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "Minimap Border Type",
   "feature.wynntils.minimap.overlay.minimap.description": "Minimap that displays region surrounding player",

@@ -11,13 +11,16 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.OverlayGroupHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.features.overlays.OverlayGroup;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -32,6 +35,9 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final List<Overlay> overlays = new ArrayList<>();
+
+    private final List<OverlayGroupHolder> overlayGroups = new ArrayList<>();
+    private final List<Overlay> groupedOverlayInstances = new ArrayList<>();
 
     private FeatureState state = FeatureState.UNINITALIZED;
 
@@ -62,7 +68,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                Managers.Overlay.registerOverlay(overlay, annotation, this);
+                Managers.Overlay.registerOverlay(overlay, annotation.renderType(), annotation.renderAt(), this);
                 overlays.add(overlay);
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
@@ -70,6 +76,46 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
                 WynntilsMod.error("Unable to get field " + overlayField, e);
             }
         }
+    }
+
+    public final void initOverlayGroups() {
+        // Unregister old instances
+        for (Overlay groupedOverlay : groupedOverlayInstances) {
+            Managers.Overlay.unregisterOverlay(groupedOverlay);
+        }
+
+        groupedOverlayInstances.clear();
+
+        // Go on with discovering the new ones
+        Field[] groupFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayGroup.class);
+
+        for (Field groupField : groupFields) {
+            try {
+                Object fieldValue = FieldUtils.readField(groupField, this, true);
+                OverlayGroup annotation = groupField.getAnnotation(OverlayGroup.class);
+
+                if (!(fieldValue instanceof List<?> list)) {
+                    throw new RuntimeException("A non overlay group field was marked with OverlayGroup annotation.");
+                }
+
+                for (Overlay overlay : (List<Overlay>) list) {
+                    Managers.Overlay.registerOverlay(overlay, annotation.renderType(), annotation.renderAt(), this);
+                    groupedOverlayInstances.add(overlay);
+
+                    assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
+                }
+            } catch (IllegalAccessException e) {
+                WynntilsMod.error("Unable to get field " + groupField, e);
+            }
+        }
+    }
+
+    public final void addOverlayGroups(List<OverlayGroupHolder> groups) {
+        overlayGroups.addAll(groups);
+    }
+
+    public List<OverlayGroupHolder> getOverlayGroups() {
+        return overlayGroups;
     }
 
     /**
@@ -88,7 +134,12 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     }
 
     public List<Overlay> getOverlays() {
-        return overlays;
+        return Stream.concat(overlays.stream(), groupedOverlayInstances.stream())
+                .toList();
+    }
+
+    public final void enableOverlays() {
+        Managers.Overlay.enableOverlays(this.getOverlays(), false);
     }
 
     /** Gets the name of a feature */
@@ -137,7 +188,9 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         if (isListener) {
             WynntilsMod.registerEventListener(this);
         }
-        Managers.Overlay.enableOverlays(this.overlays, false);
+
+        enableOverlays();
+
         for (KeyBind keyBind : keyBinds) {
             Managers.KeyBind.registerKeybind(keyBind);
         }
@@ -163,7 +216,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
         if (isListener) {
             WynntilsMod.unregisterEventListener(this);
         }
-        Managers.Overlay.disableOverlays(this.overlays);
+        Managers.Overlay.disableOverlays(this.getOverlays());
         for (KeyBind keyBind : keyBinds) {
             Managers.KeyBind.unregisterKeybind(keyBind);
         }

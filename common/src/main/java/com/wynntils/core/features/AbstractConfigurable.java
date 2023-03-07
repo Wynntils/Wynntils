@@ -20,6 +20,11 @@ public abstract class AbstractConfigurable implements Configurable {
     }
 
     @Override
+    public void removeConfigOptions(List<ConfigHolder> options) {
+        configOptions.removeAll(options);
+    }
+
+    @Override
     public final List<ConfigHolder> getVisibleConfigOptions() {
         return configOptions.stream().filter(c -> c.getMetadata().visible()).collect(Collectors.toList());
     }

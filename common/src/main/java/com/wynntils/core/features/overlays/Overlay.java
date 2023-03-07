@@ -102,7 +102,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return this.getClass().getSimpleName();
     }
 
-    private Class<?> getDeclaringClass() {
+    protected Class<?> getDeclaringClass() {
         return this.getClass().getDeclaringClass();
     }
 
@@ -129,7 +129,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             return this.isUserEnabled();
         }
 
-        return Managers.Overlay.getOverlayInfo(this).enabled();
+        // FIXME: This is bad, we need to get the annotation's enabled value
+        return true;
     }
 
     public final boolean isParentEnabled() {

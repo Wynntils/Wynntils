@@ -74,7 +74,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
     @Override
     protected void doInit() {
-        reloadConfigButtons();
+        reloadConfigurableButtons();
 
         this.addRenderableWidget(searchWidget);
 
@@ -385,6 +385,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 1,
                 this::scrollConfigurableList,
                 CustomColor.NONE);
+
+        if (selected != null) {
+            Feature newSelected = featureList.stream()
+                    .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
+                    .findFirst()
+                    .orElse(null);
+
+            setSelected(newSelected);
+        }
     }
 
     public boolean configOptionContains(ConfigHolder configHolder) {
