@@ -86,7 +86,7 @@ public abstract class ItemRendererMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/Font;drawInBatch(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;ZII)I"))
+                                    "Lnet/minecraft/client/gui/Font;drawInBatch(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"))
     private int changeCountOverlayColor(
             Font instance,
             String text,
@@ -96,7 +96,7 @@ public abstract class ItemRendererMixin {
             boolean dropShadow,
             Matrix4f matrix,
             MultiBufferSource bufferSource,
-            boolean transparent,
+            Font.DisplayMode displayMode,
             int backgroundColor,
             int packedLightCoords,
             Operation<Integer> original) {
@@ -109,7 +109,7 @@ public abstract class ItemRendererMixin {
                 dropShadow,
                 matrix,
                 bufferSource,
-                transparent,
+                displayMode,
                 backgroundColor,
                 packedLightCoords);
     }
