@@ -14,9 +14,9 @@ import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.WynnUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +165,7 @@ public final class LootrunRenderer {
             BlockPos lastBlockPos = null;
 
             for (ColoredPoint point : locationsInRoute.points()) {
-                BlockPos blockPos = WynnUtils.newBlockPos(point.vec3());
+                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
                     if (!toRender.points().isEmpty()) {
@@ -225,7 +225,7 @@ public final class LootrunRenderer {
 
             for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
                 ColoredPoint point = locationsInRoute.points().get(i);
-                BlockPos blockPos = WynnUtils.newBlockPos(point.vec3());
+                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
 
                 ColoredPoint end = locationsInRoute
                         .points()

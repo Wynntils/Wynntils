@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.lootruns.type;
 
-import com.wynntils.utils.wynn.WynnUtils;
+import com.wynntils.utils.mc.PosUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -33,8 +33,8 @@ public enum BlockValidness {
     }
 
     private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
-        BlockPos minPos = WynnUtils.newBlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
-        BlockPos maxPos = WynnUtils.newBlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
+        BlockPos minPos = PosUtils.newBlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
+        BlockPos maxPos = PosUtils.newBlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
 
         return BlockPos.betweenClosed(minPos, maxPos);
     }

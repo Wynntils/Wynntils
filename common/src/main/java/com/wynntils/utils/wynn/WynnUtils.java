@@ -25,14 +25,6 @@ public final class WynnUtils {
                 .trim();
     }
 
-    public static BlockPos newBlockPos(double x, double y, double z) {
-        return new BlockPos((int) x, (int) y, (int) z);
-    }
-
-    public static BlockPos newBlockPos(Vec3 vec3) {
-        return new BlockPos((int) vec3.x, (int) vec3.y, (int) vec3.z);
-    }
-
     public static String encodeBase64(byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
     }

@@ -24,7 +24,7 @@ import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.WynnUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
@@ -229,7 +229,7 @@ public final class LootrunModel extends Model {
         List<LootrunNote> notes = current.notes();
         for (int i = 0; i < notes.size(); i++) {
             LootrunNote note = notes.get(i);
-            if (pos.equals(WynnUtils.newBlockPos(note.position()))) {
+            if (pos.equals(PosUtils.newBlockPos(note.position()))) {
                 return notes.remove(i);
             }
         }
