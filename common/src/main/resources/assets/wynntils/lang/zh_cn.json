@@ -680,6 +680,7 @@
   "function.wynntils.alchemismLevel.name": "炼金术",
   "function.wynntils.armouringLevel.description": "您的装甲製造阶级",
   "function.wynntils.armouringLevel.name": "装甲手艺",
+  "function.wynntils.auraTimer.name": "公会塔光环定时器叠加层",
   "function.wynntils.bps.description": " 您的块每秒速度",
   "function.wynntils.bps.name": "速度",
   "function.wynntils.bpsXz.description": "您的块每秒速度，不忽略垂直的动的部分",
