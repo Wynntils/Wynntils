@@ -9,7 +9,8 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("quilt")
-include("forge")
+// FIXME:1.19.4: Restore quilt and forge
+// include("quilt")
+// include("forge")
 
 rootProject.name = "Wynntils"
