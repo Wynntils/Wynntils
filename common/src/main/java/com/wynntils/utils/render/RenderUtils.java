@@ -1051,7 +1051,7 @@ public final class RenderUtils {
             matrixStack.mulPose(dispatcher.cameraOrientation());
             matrixStack.scale(-0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
             Matrix4f matrix4f = matrixStack.last().pose();
-            Font.DisplayMode displayMode = sneaking ? Font.DisplayMode.NORMAL : Font.DisplayMode.SEE_THROUGH;
+            Font.DisplayMode displayMode = sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
 
             font.drawInBatch(
                     nametag,
