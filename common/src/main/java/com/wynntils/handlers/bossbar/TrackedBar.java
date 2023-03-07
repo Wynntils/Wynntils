@@ -16,7 +16,7 @@ public class TrackedBar {
 
     private boolean rendered = true;
     private LerpingBossEvent event = null;
-    private CappedValue value;
+    private CappedValue value = CappedValue.EMPTY;
 
     public TrackedBar(Pattern pattern) {
         this.pattern = pattern;
