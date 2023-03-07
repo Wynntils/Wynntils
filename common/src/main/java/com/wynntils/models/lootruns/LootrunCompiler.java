@@ -9,6 +9,7 @@ import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunPath;
+import com.wynntils.utils.MathUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
@@ -168,7 +168,8 @@ public final class LootrunCompiler {
         ChunkPos lastChunkPos = null;
         for (int i = 0; i < locationsList.points().size(); i++) {
             Vec3 location = locationsList.points().get(i).vec3();
-            ChunkPos currentChunkPos = new ChunkPos(Mth.fastFloor(location.x()) >> 4, Mth.fastFloor(location.z()) >> 4);
+            ChunkPos currentChunkPos =
+                    new ChunkPos(MathUtils.floor(location.x()) >> 4, MathUtils.floor(location.z()) >> 4);
             if (!currentChunkPos.equals(lastChunkPos)) {
                 if (lastChunkPos != null
                         && location.distanceTo(locationsList.points().get(i - 1).vec3()) < 32) {
