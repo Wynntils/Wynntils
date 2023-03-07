@@ -1,9 +1,21 @@
+## [0.0.2-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.304...v0.0.2-alpha.305) (2023-03-07)
+
+
+### Bug Fixes
+
+* Item guess prices were wrong for legendary and fabled items ([#1287](https://github.com/Wynntils/Artemis/issues/1287)) ([1703e0d](https://github.com/Wynntils/Artemis/commit/1703e0dea3ca3fe63c1b6ed308abed5d1a2acde1))
+
 ## [0.0.2-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.303...v0.0.2-alpha.304) (2023-03-07)
 
 
 ### New Features
 
 * Add count to unused ability and skill point items ([#1286](https://github.com/Wynntils/Artemis/issues/1286)) ([64ada18](https://github.com/Wynntils/Artemis/commit/64ada18326634aeda7cd2b5c19e760cc1385dfa3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.304 [skip ci] ([ba71143](https://github.com/Wynntils/Artemis/commit/ba71143044df175fba15aa513da340552d057a0d))
 
 ## [0.0.2-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.302...v0.0.2-alpha.303) (2023-03-06)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.301 [skip ci] ([84eaf53](https://github.com/Wynntils/Artemis/commit/84eaf53bb0fde98ab6cd6dcf80a5a4253ce1eada))
-
-## [0.0.2-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.299...v0.0.2-alpha.300) (2023-03-06)
-
-
-### Miscellaneous Chores
-
-* Refactor ShamanTotemModel to remove all duplicated code ([#1279](https://github.com/Wynntils/Artemis/issues/1279)) ([9977530](https://github.com/Wynntils/Artemis/commit/9977530acde21ce0a00f758f96fc72eac976e115))
-* **release:** v0.0.2-alpha.300 [skip ci] ([c2dac55](https://github.com/Wynntils/Artemis/commit/c2dac552478c8655a31987a7fd8224e4d91fb3fe))
 
