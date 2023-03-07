@@ -31,30 +31,54 @@ public abstract class GuiMixin {
     private Minecraft minecraft;
 
     @Inject(
-            method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+            method =
+                    "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("HEAD"))
     private void renderSlotPre(
-            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+            PoseStack poseStack,
+            int x,
+            int y,
+            float ticks,
+            Player player,
+            ItemStack itemStack,
+            int i,
+            CallbackInfo info) {
         MixinHelper.post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
     }
 
     @Inject(
-            method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+            method =
+                    "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
+                                    "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
     private void renderSlotCountPre(
-            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+            PoseStack poseStack,
+            int x,
+            int y,
+            float ticks,
+            Player player,
+            ItemStack itemStack,
+            int i,
+            CallbackInfo info) {
         MixinHelper.post(new HotbarSlotRenderEvent.CountPre(itemStack, x, y));
     }
 
     @Inject(
-            method = "renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+            method =
+                    "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
     private void renderSlotPost(
-            int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
+            PoseStack poseStack,
+            int x,
+            int y,
+            float ticks,
+            Player player,
+            ItemStack itemStack,
+            int i,
+            CallbackInfo info) {
         MixinHelper.post(new HotbarSlotRenderEvent.Post(itemStack, x, y));
     }
 

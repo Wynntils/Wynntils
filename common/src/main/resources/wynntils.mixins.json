@@ -31,7 +31,6 @@
     "MultiPlayerGameModeMixin",
     "PlayerMixin",
     "PlayerRendererMixin",
-    "PotionItemMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
