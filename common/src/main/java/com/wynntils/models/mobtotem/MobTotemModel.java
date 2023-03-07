@@ -11,6 +11,7 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.type.Location;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,9 @@ public class MobTotemModel extends Model {
     }
 
     public List<MobTotem> getMobTotems() {
-        return mobTotems.values().stream().toList();
+        return mobTotems.values().stream()
+                .sorted(Comparator.comparing(MobTotem::getOwner))
+                .toList();
     }
 
     public MobTotem getMobTotem(int index) {
