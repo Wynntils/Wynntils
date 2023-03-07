@@ -8,20 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
-import com.wynntils.screens.maps.GuildMapScreen;
-import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
-import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.GridWidget;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -29,6 +16,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class WynncraftPauseScreenFeature extends UserFeature {
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
+        //FIXME: 1.19.4 -- restore!
+
+        /*
         PauseScreen pauseScreen = event.getPauseScreen();
 
         Optional<Renderable> gridOpt = pauseScreen.renderables.stream()
@@ -125,6 +115,8 @@ public class WynncraftPauseScreenFeature extends UserFeature {
         pauseScreen.children.addAll(oldChildren);
         pauseScreen.renderables.addAll(oldRenderables);
         pauseScreen.narratables.addAll(oldNarratables);
+
+         */
     }
 
     private Button replaceButtonFunction(Button widget, Component component, Button.OnPress onPress) {
