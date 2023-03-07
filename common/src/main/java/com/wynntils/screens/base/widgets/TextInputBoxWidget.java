@@ -78,7 +78,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         poseStack.translate(this.getX(), this.getY(), 0);
 
-        this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
+        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
 
         String renderedText = getRenderedText(this.width - 8);
 
@@ -138,12 +139,6 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         return renderedText;
-    }
-
-    @Override
-    protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
     }
 
     @Override
