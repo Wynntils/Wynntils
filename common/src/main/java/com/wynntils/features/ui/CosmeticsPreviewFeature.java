@@ -42,7 +42,7 @@ public class CosmeticsPreviewFeature extends UserFeature {
                     posX + 20,
                     posY,
                     30,
-                    posX - event.getMouseX(),
+                    posX + 20 - event.getMouseX(),
                     posY - 50 - event.getMouseY(),
                     McUtils.player());
         }
