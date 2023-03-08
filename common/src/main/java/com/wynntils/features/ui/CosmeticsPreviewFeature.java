@@ -37,7 +37,8 @@ public class CosmeticsPreviewFeature extends Feature {
             PoseStack poseStack = new PoseStack();
             RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
 
-            InventoryScreen.renderEntityInInventory(
+            InventoryScreen.renderEntityInInventoryFollowsMouse(
+                    poseStack,
                     posX + 20,
                     posY,
                     30,
