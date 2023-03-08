@@ -1,6 +1,5 @@
 accessWidener v2 named
 
-accessible class net/minecraft/client/gui/components/GridWidget$CellInhabitant
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
@@ -12,10 +11,6 @@ accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/com
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/Checkbox selected Z
-accessible field net/minecraft/client/gui/components/GridWidget cellInhabitants Ljava/util/List;
-accessible field net/minecraft/client/gui/components/GridWidget children Ljava/util/List;
-accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant column I
-accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant row I
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
