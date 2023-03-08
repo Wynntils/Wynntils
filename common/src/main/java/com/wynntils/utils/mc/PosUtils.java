@@ -9,10 +9,10 @@ import net.minecraft.world.phys.Vec3;
 
 public final class PosUtils {
     public static BlockPos newBlockPos(double x, double y, double z) {
-        return new BlockPos((int) x, (int) y, (int) z);
+        return BlockPos.containing(x, y, z);
     }
 
     public static BlockPos newBlockPos(Vec3 vec3) {
-        return new BlockPos((int) vec3.x, (int) vec3.y, (int) vec3.z);
+        return BlockPos.containing(vec3);
     }
 }
