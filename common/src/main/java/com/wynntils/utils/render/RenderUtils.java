@@ -1082,11 +1082,12 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    !sneaking,
+                    sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL,
                     backgroundColor,
                     packedLight);
             if (!sneaking) {
-                font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
+                font.drawInBatch(
+                        nametag, xOffset, 0f, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
             }
 
             matrixStack.popPose();
