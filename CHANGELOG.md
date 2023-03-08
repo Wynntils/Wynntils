@@ -1,9 +1,21 @@
+## [0.0.2-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.317...v0.0.2-alpha.318) (2023-03-08)
+
+
+### Code Refactoring
+
+* Round BlockPos coordinates to integers ([#1298](https://github.com/Wynntils/Artemis/issues/1298)) ([ab5b5a1](https://github.com/Wynntils/Artemis/commit/ab5b5a1eaed3818d834eba1caa641ec6c817b513))
+
 ## [0.0.2-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.316...v0.0.2-alpha.317) (2023-03-08)
 
 
 ### Code Refactoring
 
 * Do base64 decoding ourselves of server icon ([#1299](https://github.com/Wynntils/Artemis/issues/1299)) ([cf30f39](https://github.com/Wynntils/Artemis/commit/cf30f39a2bbe90b5d720c4710d687584543138d1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.317 [skip ci] ([6d9e3a9](https://github.com/Wynntils/Artemis/commit/6d9e3a98b261e922d3a44833bf9ca5074b0d72d3))
 
 ## [0.0.2-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.315...v0.0.2-alpha.316) (2023-03-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.314 [skip ci] ([6c42049](https://github.com/Wynntils/Artemis/commit/6c4204992306562b9a79de38d2304f3312dc7753))
-
-## [0.0.2-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.312...v0.0.2-alpha.313) (2023-03-07)
-
-
-### Code Refactoring
-
-* Change renderButton to renderWidget in our WynntilsButton ([#1296](https://github.com/Wynntils/Artemis/issues/1296)) ([26f2eef](https://github.com/Wynntils/Artemis/commit/26f2eef2077f1170d93d8151bf11c1b9055904fe))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.313 [skip ci] ([27ddba8](https://github.com/Wynntils/Artemis/commit/27ddba8bdd60b31805855296bb83d1aa1219dcf6))
 
