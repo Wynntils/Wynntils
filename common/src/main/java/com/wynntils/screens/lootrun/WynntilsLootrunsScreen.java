@@ -146,7 +146,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(poseStack, I18n.get("screens.wynntils.lootruns.noLootruns"));

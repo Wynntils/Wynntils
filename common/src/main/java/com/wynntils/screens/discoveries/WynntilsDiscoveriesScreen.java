@@ -235,7 +235,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoDiscoveries(poseStack);

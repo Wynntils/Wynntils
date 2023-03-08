@@ -201,7 +201,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY);
+        renderWidgets(poseStack, mouseX, mouseY);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
@@ -281,7 +281,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
         int buttonCount = buttons.size();
 
         poseStack.pushPose();

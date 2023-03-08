@@ -55,7 +55,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();

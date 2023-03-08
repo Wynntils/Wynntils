@@ -116,7 +116,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         renderScrollArea(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (selected != null) {
             renderConfigTitle(poseStack);
@@ -154,7 +154,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         poseStack.popPose();
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         int adjustedMouseX = mouseX - (int) getTranslationX();
         int adjustedMouseY = mouseY - (int) getTranslationY();
 
