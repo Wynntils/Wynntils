@@ -61,7 +61,7 @@ subprojects {
         mappings loom.layered() {
             officialMojangMappings()
             // FIXME:1.19.4: Restore parchment
-            // parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+            parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}@zip")
         }
     }
 }
