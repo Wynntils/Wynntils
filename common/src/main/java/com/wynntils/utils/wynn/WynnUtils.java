@@ -4,11 +4,6 @@
  */
 package com.wynntils.utils.wynn;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.StringUtils;
 
 public final class WynnUtils {

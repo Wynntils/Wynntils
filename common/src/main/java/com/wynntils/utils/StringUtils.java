@@ -141,6 +141,7 @@ public final class StringUtils {
     public static ByteBuffer decodeBase64(String base64) {
         if (base64 == null) return null;
 
-        return Base64.getDecoder().decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
+        return Base64.getDecoder()
+                .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
     }
 }
