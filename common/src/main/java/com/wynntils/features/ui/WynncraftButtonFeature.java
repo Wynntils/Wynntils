@@ -15,7 +15,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.render.Texture;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -167,7 +166,7 @@ public class WynncraftButtonFeature extends Feature {
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
         private synchronized void loadServerIcon(ResourceLocation destination) {
-            ByteBuffer iconBytes = StringUtils.decodeBase64(server.getIconB64());
+            ByteBuffer iconBytes = ByteBuffer.wrap(server.getIconBytes());
             // failed to ping server or icon wasn't sent
             if (iconBytes == null) {
                 WynntilsMod.warn("Unable to load icon");
@@ -188,7 +187,7 @@ public class WynncraftButtonFeature extends Feature {
                     });
                 }
             } catch (IOException e) {
-                WynntilsMod.error("Unable to convert image from base64: " + server.getIconB64(), e);
+                WynntilsMod.error("Unable to read server image: " + server, e);
                 serverIconLocation = FALLBACK;
             }
         }
