@@ -135,7 +135,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         renderScrollButton(poseStack);
 
-        renderPlayer();
+        renderPlayer(poseStack);
 
         if (selected == null) return;
 
@@ -347,7 +347,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         }
     }
 
-    private void renderPlayer() {
+    private void renderPlayer(PoseStack poseStack) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();

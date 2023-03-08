@@ -49,11 +49,9 @@ public class ClassInfoButton extends WynntilsButton {
                 Texture.CHARACTER_BUTTON.height());
 
         float itemScale = this.height * 0.03f;
-        RenderUtils.renderGuiItem(
-                classInfo.itemStack(),
-                (int) (this.getX() + this.width * 0.038f * itemScale),
-                (int) (this.getY() + this.height * 0.12f * itemScale),
-                itemScale);
+        int x = (int) (this.getX() + this.width * 0.038f * itemScale);
+        int y = (int) (this.getY() + this.height * 0.12f * itemScale);
+        RenderUtils.renderItem(0, 0, classInfo.itemStack(), x, y);
 
         poseStack.pushPose();
         poseStack.translate(this.getX() + this.width * 0.25f, this.getY() + this.height * 0.16f, 0f);

@@ -34,10 +34,16 @@ public class CosmeticsPreviewFeature extends UserFeature {
             int posX = screen.leftPos + screen.imageWidth + 20;
             int posY = screen.topPos + screen.imageHeight / 2;
 
-            RenderUtils.drawTexturedRect(new PoseStack(), Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
+            PoseStack poseStack = new PoseStack();
+            RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
 
             InventoryScreen.renderEntityInInventory(
-                    posX + 20, posY, 30, posX - event.getMouseX(), posY - 50 - event.getMouseY(), McUtils.player());
+                    posX + 20,
+                    posY,
+                    30,
+                    posX + 20 - event.getMouseX(),
+                    posY - 50 - event.getMouseY(),
+                    McUtils.player());
         }
     }
 }

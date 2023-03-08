@@ -39,21 +39,19 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
-        float actualX = screen.getTranslationX() + getX();
-        float actualY = screen.getTranslationY() + getY();
-
         RenderUtils.drawTexturedRectWithColor(
+                poseStack,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(1f),
-                actualX - 1,
-                actualY - 1,
+                getX() - 1,
+                getY() - 1,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+        RenderUtils.renderItem(screen.getTranslationX(), screen.getTranslationY(), itemStack, getX(), getY());
 
         String unformattedName = itemStack.getIngredientInfo().name();
         if (Models.Favorites.isFavorite(unformattedName)) {

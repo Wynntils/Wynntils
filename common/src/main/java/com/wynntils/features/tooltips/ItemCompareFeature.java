@@ -50,7 +50,7 @@ public class ItemCompareFeature extends UserFeature {
     public void onRenderSlot(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
         if (slot.getItem() == comparedItem) {
-            RenderUtils.drawArc(CommonColors.LIGHT_BLUE, slot.x, slot.y, 200, 1, 6, 8);
+            RenderUtils.drawArc(event.getPoseStack(), CommonColors.LIGHT_BLUE, slot.x, slot.y, 200, 1, 6, 8);
         }
     }
 
