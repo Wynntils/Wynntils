@@ -8,7 +8,16 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
+import com.wynntils.screens.maps.GuildMapScreen;
+import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
+import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -16,41 +25,24 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class WynncraftPauseScreenFeature extends UserFeature {
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
-        // FIXME: 1.19.4 -- restore!
-
-        /*
         PauseScreen pauseScreen = event.getPauseScreen();
-
-        Optional<Renderable> gridOpt = pauseScreen.renderables.stream()
-                .filter(x -> x instanceof GridWidget)
-                .findFirst();
-        if (gridOpt.isEmpty()) return;
-
-        GridWidget grid = (GridWidget) gridOpt.get();
-
-        List<Button> replacedButtons = new ArrayList<>();
-
-        for (GridWidget.CellInhabitant child : grid.cellInhabitants) {
-            if (child.child instanceof Button) {
-                replacedButtons.add((Button) child.child);
-            }
-        }
+        List<Renderable> renderables = new ArrayList<>(pauseScreen.renderables);
 
         Button territoryMap = replaceButtonFunction(
-                replacedButtons.get(1),
+                (Button) renderables.get(1),
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.territoryMap.name")
                         .withStyle(ChatFormatting.DARK_AQUA),
                 (button) -> McUtils.mc().setScreen(GuildMapScreen.create()));
-        replacedButtons.set(1, territoryMap);
+        renderables.set(1, territoryMap);
 
         Button wynntilsMenu = replaceButtonFunction(
-                replacedButtons.get(2),
+                (Button) renderables.get(2),
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
                 (button) -> McUtils.mc().setScreen(WynntilsMenuScreen.create()));
-        replacedButtons.set(2, wynntilsMenu);
+        renderables.set(2, wynntilsMenu);
 
         Button classSelection = replaceButtonFunction(
-                replacedButtons.get(3),
+                (Button) renderables.get(3),
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.classSelectionButton.name"),
                 (button) -> {
                     McUtils.mc().setScreen(null);
@@ -58,10 +50,10 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                     McUtils.sendCommand("class");
                 });
 
-        replacedButtons.set(3, classSelection);
+        renderables.set(3, classSelection);
 
         Button hub = replaceButtonFunction(
-                replacedButtons.get(4),
+                (Button) renderables.get(4),
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.hubButton.name"),
                 (button) -> {
                     McUtils.mc().setScreen(null);
@@ -69,54 +61,15 @@ public class WynncraftPauseScreenFeature extends UserFeature {
                     McUtils.sendCommand("hub");
                 });
 
-        replacedButtons.set(4, hub);
+        renderables.set(4, hub);
 
-        GridWidget newGridWidget = new GridWidget();
+        event.getPauseScreen().clearWidgets();
 
-        // Inject back non-buttons to grid
-        for (GridWidget.CellInhabitant child : grid.cellInhabitants) {
-            if (!(child.child instanceof Button)) {
-                newGridWidget.addChild(child.child, child.row, child.column);
+        for (Renderable renderable : renderables) {
+            if (renderable instanceof AbstractWidget widget) {
+                event.getPauseScreen().addRenderableWidget(widget);
             }
         }
-
-        // Inject back buttons to grid
-        int buttonIndex = 0;
-        List<GridWidget.CellInhabitant> cellInhabitants = grid.cellInhabitants;
-        for (GridWidget.CellInhabitant child : cellInhabitants) {
-            if (child.child instanceof Button) {
-                newGridWidget.addChild(replacedButtons.get(buttonIndex), child.row, child.column);
-                buttonIndex++;
-            }
-        }
-
-        // Inject back children if they were not cell inhabitants
-        // This is needed for compatability with other mods that inject children directly
-        for (AbstractWidget child : grid.children) {
-            if (grid.cellInhabitants.stream().noneMatch(cellInhabitant -> cellInhabitant.child.equals(child))) {
-                newGridWidget.children.add(child);
-            }
-        }
-
-        // Remove old grid, add back new
-        pauseScreen.removeWidget(grid);
-
-        // This is weird, but ModMenu assumes the grid widget is the first one in the list
-        List<GuiEventListener> oldChildren = new ArrayList<>(pauseScreen.children);
-        List<Renderable> oldRenderables = new ArrayList<>(pauseScreen.renderables);
-        List<NarratableEntry> oldNarratables = new ArrayList<>(pauseScreen.narratables);
-
-        pauseScreen.clearWidgets();
-
-        pauseScreen.children.add(newGridWidget);
-        pauseScreen.renderables.add(newGridWidget);
-        pauseScreen.narratables.add(newGridWidget);
-
-        pauseScreen.children.addAll(oldChildren);
-        pauseScreen.renderables.addAll(oldRenderables);
-        pauseScreen.narratables.addAll(oldNarratables);
-
-         */
     }
 
     private Button replaceButtonFunction(Button widget, Component component, Button.OnPress onPress) {
