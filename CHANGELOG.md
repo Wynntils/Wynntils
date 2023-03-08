@@ -1,9 +1,21 @@
+## [0.0.2-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.316...v0.0.2-alpha.317) (2023-03-08)
+
+
+### Code Refactoring
+
+* Do base64 decoding ourselves of server icon ([#1299](https://github.com/Wynntils/Artemis/issues/1299)) ([cf30f39](https://github.com/Wynntils/Artemis/commit/cf30f39a2bbe90b5d720c4710d687584543138d1))
+
 ## [0.0.2-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.315...v0.0.2-alpha.316) (2023-03-08)
 
 
 ### Code Refactoring
 
 * Be better at passing poseStacks around ([#1300](https://github.com/Wynntils/Artemis/issues/1300)) ([fafaaa5](https://github.com/Wynntils/Artemis/commit/fafaaa5c1fe4e58cf3ce5b752c85b786cc040047))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.316 [skip ci] ([be65b8e](https://github.com/Wynntils/Artemis/commit/be65b8e5ef952b8a31d5d5e279f0b864db19d805))
 
 ## [0.0.2-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.314...v0.0.2-alpha.315) (2023-03-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.313 [skip ci] ([27ddba8](https://github.com/Wynntils/Artemis/commit/27ddba8bdd60b31805855296bb83d1aa1219dcf6))
-
-## [0.0.2-alpha.312](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.311...v0.0.2-alpha.312) (2023-03-07)
-
-
-### Bug Fixes
-
-* Make memUsed no longer overflow ([#1295](https://github.com/Wynntils/Artemis/issues/1295)) ([3b9ec2d](https://github.com/Wynntils/Artemis/commit/3b9ec2daa0ebea4d0c5af0b576e1bcbfd6f7b562))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.312 [skip ci] ([1bce77b](https://github.com/Wynntils/Artemis/commit/1bce77bc366ed91f0fb2ecba9b2bc659a767489c))
 
