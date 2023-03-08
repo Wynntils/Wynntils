@@ -5,6 +5,7 @@
 package com.wynntils.utils.mc.type;
 
 import com.wynntils.models.map.PoiLocation;
+import com.wynntils.utils.mc.PosUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
@@ -93,7 +94,7 @@ public class Location extends Vector3d implements Position {
     }
 
     public BlockPos toBlockPos() {
-        return new BlockPos(x, y, z);
+        return PosUtils.newBlockPos(x, y, z);
     }
 
     public Vec3 toVec3() {

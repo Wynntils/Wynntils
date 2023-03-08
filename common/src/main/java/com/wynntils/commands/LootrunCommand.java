@@ -18,6 +18,7 @@ import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
@@ -113,7 +114,7 @@ public class LootrunCommand extends Command {
             return 0;
         }
 
-        BlockPos start = new BlockPos(startingPoint);
+        BlockPos start = PosUtils.newBlockPos(startingPoint);
         context.getSource()
                 .sendSuccess(
                         Component.translatable(
@@ -228,7 +229,7 @@ public class LootrunCommand extends Command {
         } else {
             MutableComponent component = Component.translatable("feature.wynntils.lootrunUtils.listNoteHeader");
             for (LootrunNote note : notes) {
-                BlockPos pos = new BlockPos(note.position());
+                BlockPos pos = PosUtils.newBlockPos(note.position());
                 String posString = pos.toShortString();
 
                 component
