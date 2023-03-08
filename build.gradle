@@ -60,7 +60,6 @@ subprojects {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         mappings loom.layered() {
             officialMojangMappings()
-            // FIXME:1.19.4: Restore parchment
             parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}@zip")
         }
     }
