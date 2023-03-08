@@ -5,7 +5,6 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -18,20 +17,15 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -955,68 +949,8 @@ public final class RenderUtils {
         poseStack.translate(-centerX, -centerZ, 0);
     }
 
-    // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
-    private static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
-        BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
-
-        McUtils.mc()
-                .getItemRenderer()
-                .textureManager
-                .getTexture(InventoryMenu.BLOCK_ATLAS)
-                .setFilter(false, false);
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        PoseStack poseStack = RenderSystem.getModelViewStack();
-        poseStack.pushPose();
-        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().blitOffset));
-        poseStack.translate(8.0, 8.0, 0.0);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        poseStack.scale(scale, scale, 0);
-
-        RenderSystem.applyModelViewMatrix();
-        PoseStack poseStack2 = new PoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean modelUsesBlockLighting = bakedModel.usesBlockLight();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupForFlatItems();
-        }
-
-        McUtils.mc()
-                .getItemRenderer()
-                .render(
-                        itemStack,
-                        ItemTransforms.TransformType.GUI,
-                        false,
-                        poseStack2,
-                        bufferSource,
-                        15728880,
-                        OverlayTexture.NO_OVERLAY,
-                        bakedModel);
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupFor3DItems();
-        }
-
-        poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
-    }
-
-    public static void renderItem(float translationX, float translationY, ItemStack itemStack, int x, int y) {
-        renderItem(translationX, translationY, itemStack, x, y, 1.0f);
-    }
-
-    public static void renderItem(
-            float translationX, float translationY, ItemStack itemStack, int x, int y, float itemScale) {
-        renderGuiItem(itemStack, x + (int) translationX, y + (int) translationY, itemScale);
+    public static void renderItem(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+        McUtils.mc().getItemRenderer().renderGuiItem(poseStack, itemStack, x, y);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
