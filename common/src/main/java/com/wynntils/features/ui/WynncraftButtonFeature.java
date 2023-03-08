@@ -69,8 +69,8 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderButton(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
-            super.renderButton(matrices, mouseX, mouseY, partialTicks);
+        public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+            super.renderWidget(matrices, mouseX, mouseY, partialTicks);
 
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
