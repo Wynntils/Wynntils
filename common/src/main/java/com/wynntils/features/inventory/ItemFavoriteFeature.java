@@ -5,7 +5,6 @@
 package com.wynntils.features.inventory;
 
 import com.google.common.reflect.TypeToken;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -88,7 +87,7 @@ public class ItemFavoriteFeature extends UserFeature {
 
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {
         RenderUtils.drawScalingTexturedRect(
-                new PoseStack(),
+                event.getPoseStack(),
                 Texture.FAVORITE.resource(),
                 event.getSlot().x + 10,
                 event.getSlot().y,

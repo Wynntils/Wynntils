@@ -180,10 +180,6 @@ public final class RenderUtils {
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
     }
 
-    public static void drawRect(CustomColor color, float x, float y, float z, float width, float height) {
-        drawRect(new PoseStack(), color, x, y, z, width, height);
-    }
-
     public static void drawRect(
             PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();
@@ -328,6 +324,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            PoseStack poseStack,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -338,7 +335,7 @@ public final class RenderUtils {
             int textureWidth,
             int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(),
+                poseStack,
                 tex,
                 color,
                 x,
@@ -405,8 +402,15 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius, 0);
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float fill,
+            int innerRadius,
+            int outerRadius) {
+        drawArc(poseStack, color, x, y, z, fill, innerRadius, outerRadius, 0);
     }
 
     public static void drawArc(
@@ -948,7 +952,7 @@ public final class RenderUtils {
     }
 
     // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
-    public static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
+    private static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
         BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
 
         McUtils.mc()
@@ -1000,6 +1004,10 @@ public final class RenderUtils {
 
         poseStack.popPose();
         RenderSystem.applyModelViewMatrix();
+    }
+
+    public static void renderItem(float translationX, float translationY, ItemStack itemStack, int x, int y) {
+        renderGuiItem(itemStack, x + (int) translationX, y + (int) translationY, 1.0f);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {

@@ -111,17 +111,17 @@ public class ItemTextOverlayFeature extends UserFeature {
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getItemStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -138,12 +138,13 @@ public class ItemTextOverlayFeature extends UserFeature {
             return;
         }
 
-        PoseStack poseStack = new PoseStack();
+        poseStack.pushPose();
         poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
         poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
         FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
+        poseStack.popPose();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {

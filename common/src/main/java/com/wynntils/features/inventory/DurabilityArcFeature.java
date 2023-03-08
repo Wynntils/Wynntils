@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -31,16 +32,16 @@ public class DurabilityArcFeature extends UserFeature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
         if (!renderDurabilityArcHotbar) return;
-        drawDurabilityArc(e.getItemStack(), e.getX(), e.getY(), true);
+        drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!renderDurabilityArcInventories) return;
-        drawDurabilityArc(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
-    private void drawDurabilityArc(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -53,6 +54,6 @@ public class DurabilityArcFeature extends UserFeature {
         CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
         // draw
-        RenderUtils.drawArc(color, slotX, slotY, hotbar ? 0 : 200, durabilityFraction, 6, 8);
+        RenderUtils.drawArc(poseStack, color, slotX, slotY, hotbar ? 0 : 200, durabilityFraction, 6, 8);
     }
 }

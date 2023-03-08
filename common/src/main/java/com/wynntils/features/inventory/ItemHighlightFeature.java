@@ -149,6 +149,7 @@ public class ItemHighlightFeature extends UserFeature {
         if (color == CustomColor.NONE) return;
 
         RenderUtils.drawTexturedRectWithColor(
+                e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(inventoryOpacity),
                 e.getSlot().x - 1,
@@ -167,7 +168,7 @@ public class ItemHighlightFeature extends UserFeature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        RenderUtils.drawRect(color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
+        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
