@@ -1,9 +1,21 @@
+## [0.0.2-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.315...v0.0.2-alpha.316) (2023-03-08)
+
+
+### Code Refactoring
+
+* Be better at passing poseStacks around ([#1300](https://github.com/Wynntils/Artemis/issues/1300)) ([fafaaa5](https://github.com/Wynntils/Artemis/commit/fafaaa5c1fe4e58cf3ce5b752c85b786cc040047))
+
 ## [0.0.2-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.314...v0.0.2-alpha.315) (2023-03-08)
 
 
 ### Code Refactoring
 
 * For consistency, rename renderButtons to renderWidgets also ([#1301](https://github.com/Wynntils/Artemis/issues/1301)) ([af3169a](https://github.com/Wynntils/Artemis/commit/af3169a8a6af3f8971956c538a0d1409d6b80b30))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.315 [skip ci] ([4bdf0e6](https://github.com/Wynntils/Artemis/commit/4bdf0e67e3e2a4a635aaefa2e56eda9ee648e5bd))
 
 ## [0.0.2-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.313...v0.0.2-alpha.314) (2023-03-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.312 [skip ci] ([1bce77b](https://github.com/Wynntils/Artemis/commit/1bce77bc366ed91f0fb2ecba9b2bc659a767489c))
-
-## [0.0.2-alpha.311](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.310...v0.0.2-alpha.311) (2023-03-07)
-
-
-### New Features
-
-* Make player in gear viewer follow mouse ([#1290](https://github.com/Wynntils/Artemis/issues/1290)) ([b2ceb2d](https://github.com/Wynntils/Artemis/commit/b2ceb2d1dfe33f4880035e0da3fa4472814ff858))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.311 [skip ci] ([421e109](https://github.com/Wynntils/Artemis/commit/421e109dd7019d79a34dcf9f4238fd960e23c969))
 
