@@ -1,9 +1,21 @@
+## [0.0.2-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.313...v0.0.2-alpha.314) (2023-03-08)
+
+
+### Code Refactoring
+
+* Widget classes should not implement render ([#1302](https://github.com/Wynntils/Artemis/issues/1302)) ([5f9d4cc](https://github.com/Wynntils/Artemis/commit/5f9d4cc31b84e56e8cadc343f0775da5463d3fcd))
+
 ## [0.0.2-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.312...v0.0.2-alpha.313) (2023-03-07)
 
 
 ### Code Refactoring
 
 * Change renderButton to renderWidget in our WynntilsButton ([#1296](https://github.com/Wynntils/Artemis/issues/1296)) ([26f2eef](https://github.com/Wynntils/Artemis/commit/26f2eef2077f1170d93d8151bf11c1b9055904fe))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.313 [skip ci] ([27ddba8](https://github.com/Wynntils/Artemis/commit/27ddba8bdd60b31805855296bb83d1aa1219dcf6))
 
 ## [0.0.2-alpha.312](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.311...v0.0.2-alpha.312) (2023-03-07)
 
@@ -45,21 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.310 [skip ci] ([fe2d932](https://github.com/Wynntils/Artemis/commit/fe2d932acb2ff92d85d2f3389890f92798e7846b))
-
-## [0.0.2-alpha.309](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.308...v0.0.2-alpha.309) (2023-03-07)
-
-
-### Bug Fixes
-
-* Fix mouse following for mini character in Wynntils menu ([#1293](https://github.com/Wynntils/Artemis/issues/1293)) ([691cf53](https://github.com/Wynntils/Artemis/commit/691cf53b4979a08836f4ead6cbb366c86b06d937))
-
-
-### Code Refactoring
-
-* Use our MathUtils instead of Mth ([#1294](https://github.com/Wynntils/Artemis/issues/1294)) ([56f8c0f](https://github.com/Wynntils/Artemis/commit/56f8c0f28b80e0c174ba08150cc23707c5cb061b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.309 [skip ci] ([0197509](https://github.com/Wynntils/Artemis/commit/0197509e8271f3c2282b758fdcc1886cb908948b))
 
