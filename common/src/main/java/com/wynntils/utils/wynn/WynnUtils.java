@@ -24,12 +24,4 @@ public final class WynnUtils {
         return StringUtils.replaceEach(input, new String[] {"ÀÀÀ", "À", "֎", "’"}, new String[] {" ", "", "", "'"})
                 .trim();
     }
-
-    public static String encodeBase64(byte[] bytes) {
-        return Base64.getEncoder().encodeToString(bytes);
-    }
-
-    public static ByteBuffer decodeBase64(String iconString) {
-        return Base64.getDecoder().decode(ByteBuffer.wrap(iconString.getBytes(StandardCharsets.UTF_8)));
-    }
 }
