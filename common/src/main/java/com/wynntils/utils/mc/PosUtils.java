@@ -12,11 +12,11 @@ import net.minecraft.world.phys.Vec3;
 
 public final class PosUtils {
     public static BlockPos newBlockPos(double x, double y, double z) {
-        return new BlockPos((int) x, (int) y, (int) z);
+        return BlockPos.containing(x, y, z);
     }
 
     public static BlockPos newBlockPos(Position position) {
-        return new BlockPos((int) position.x(), (int) position.y(), (int) position.z());
+        return BlockPos.containing(position);
     }
 
     public static Position newPosition(Entity entity) {
