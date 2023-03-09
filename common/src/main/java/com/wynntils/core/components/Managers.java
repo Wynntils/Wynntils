@@ -40,7 +40,6 @@ public final class Managers {
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
-    public static final StorageManager Storage = new StorageManager();
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
@@ -49,6 +48,7 @@ public final class Managers {
     public static final NetManager Net = new NetManager(Url);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final SplashManager Splash = new SplashManager(Net);
+    public static final StorageManager Storage = new StorageManager(Json);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
 }

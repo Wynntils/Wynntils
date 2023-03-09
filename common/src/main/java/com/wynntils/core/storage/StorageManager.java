@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -38,8 +39,8 @@ public final class StorageManager extends Manager {
     private long lastPersisted;
     private boolean scheduledPersist;
 
-    public StorageManager() {
-        super(List.of());
+    public StorageManager(JsonManager jsonManager) {
+        super(List.of(jsonManager));
         userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
     }
 
