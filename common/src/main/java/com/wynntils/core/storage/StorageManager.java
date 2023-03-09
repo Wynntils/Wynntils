@@ -58,7 +58,9 @@ public final class StorageManager extends Manager {
                 storages.put(jsonName, storage);
 
                 Type typeOverride = Managers.Json.findFieldTypeOverride(storageable, storageField);
-                storageTypes.put(storage, typeOverride != null ? typeOverride : storage.getType());
+                storageTypes.put(
+                        storage,
+                        typeOverride != null ? typeOverride : storage.get().getClass());
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
