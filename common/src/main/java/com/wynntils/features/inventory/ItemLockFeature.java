@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
@@ -46,7 +48,7 @@ public class ItemLockFeature extends UserFeature {
     private final Map<String, Set<Integer>> classSlotLockMap = new HashMap<>();
 
     @TypeOverride
-    private final Type classSlotLockMapType = new TypeToken<HashMap<String, Set<Integer>>>() {}.getType();
+    private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
     @Config
     public boolean blockAllActionsOnLockedItems = false;

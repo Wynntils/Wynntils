@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -38,7 +39,7 @@ public class ItemFavoriteFeature extends UserFeature {
     public Set<String> favoriteItems = new HashSet<>();
 
     @TypeOverride
-    private final Type favoriteItemsType = new TypeToken<Set<String>>() {}.getType();
+    private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
