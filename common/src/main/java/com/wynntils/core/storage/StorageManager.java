@@ -13,6 +13,8 @@ import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,6 +33,7 @@ public final class StorageManager extends Manager {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     private final Map<String, Storage> storages = new TreeMap<>();
+    private final Map<Storage, Type> storageTypes = new HashMap<>();
 
     private long lastPersisted;
     private boolean scheduledPersist;
@@ -52,6 +55,9 @@ public final class StorageManager extends Manager {
                 Storage storage = (Storage) FieldUtils.readField(storageField, storageable, true);
                 String jsonName = baseName + "." + storageField.getName();
                 storages.put(jsonName, storage);
+
+                Type typeOverride = Managers.Json.findFieldTypeOverride(storageable, storageField);
+                storageTypes.put(storage, typeOverride != null ? typeOverride : storage.getType());
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -92,7 +98,7 @@ public final class StorageManager extends Manager {
 
             // read value and update option
             JsonElement jsonElem = storageJson.get(jsonName);
-            Object value = Managers.Json.GSON.fromJson(jsonElem, storage.getType());
+            Object value = Managers.Json.GSON.fromJson(jsonElem, storageTypes.get(storage));
             storage.set(value);
         });
     }
@@ -101,7 +107,7 @@ public final class StorageManager extends Manager {
         JsonObject storageJson = new JsonObject();
 
         storages.forEach((jsonName, storage) -> {
-            JsonElement jsonElem = Managers.Json.GSON.toJsonTree(storage.get(), storage.getType());
+            JsonElement jsonElem = Managers.Json.GSON.toJsonTree(storage.get(), storageTypes.get(storage));
             storageJson.add(jsonName, jsonElem);
         });
 
