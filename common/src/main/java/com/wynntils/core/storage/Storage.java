@@ -7,10 +7,12 @@ package com.wynntils.core.storage;
 import com.wynntils.core.components.Managers;
 
 public class Storage<T> {
+    private final Class<? extends T> type;
     private T value;
 
     public Storage(T value) {
         this.value = value;
+        type = (Class<? extends T>) value.getClass();
     }
 
     public T get() {
@@ -20,5 +22,9 @@ public class Storage<T> {
     public void store(T value) {
         this.value = value;
         Managers.Storage.persist(this);
+    }
+
+    public Class<? extends T> getType() {
+        return type;
     }
 }
