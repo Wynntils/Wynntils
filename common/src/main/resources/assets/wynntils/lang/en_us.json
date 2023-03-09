@@ -259,6 +259,7 @@
   "feature.wynntils.healthPotionBlocker.threshold.name": "Threshold (%%)",
   "feature.wynntils.healthPotionBlocker.thresholdReached": "Already at %s%% of your max health!",
   "feature.wynntils.hidePotionGlint.name": "Hide Potion Glint",
+  "feature.wynntils.replaceRecipeBook.name": "Replace Recipe Book",
   "feature.wynntils.horseMount.alreadyRiding": "You are already riding a horse.",
   "feature.wynntils.horseMount.guaranteedMount.description": "Should you be guaranteed to mount your horse when right-clicking?",
   "feature.wynntils.horseMount.guaranteedMount.name": "Guaranteed Mount",
