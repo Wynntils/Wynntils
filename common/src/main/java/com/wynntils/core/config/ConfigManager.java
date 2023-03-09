@@ -8,8 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -17,26 +15,22 @@ import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class ConfigManager extends Manager {
@@ -50,18 +44,20 @@ public final class ConfigManager extends Manager {
             .create();
     private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
 
-    private File userConfig;
+    private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(ConfigUpfixerManager upfixer) {
-        super(List.of(upfixer));
+    public ConfigManager(ConfigUpfixerManager configUpfixerManager, JsonManager jsonManager) {
+        super(List.of(configUpfixerManager, jsonManager));
+
+        userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
 
         // First, we load the config file
-        loadConfigFile();
+        configObject = Managers.Json.loadPreciousJson(userConfig);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (upfixer.runUpfixers(configObject)) {
-            saveConfigToDisk(configObject);
+        if (configUpfixerManager.runUpfixers(configObject)) {
+            Managers.Json.savePreciousJson(userConfig, configObject);
         }
     }
 
@@ -81,48 +77,8 @@ public final class ConfigManager extends Manager {
         CONFIG_HOLDERS.addAll(configOptions);
     }
 
-    public void loadConfigFile() {
-        // create config directory if necessary
-        FileUtils.mkdir(CONFIGS);
-
-        // set up config file based on uuid, load it if it exists
-        userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
-        if (!userConfig.exists()) {
-            FileUtils.createNewFile(userConfig);
-            configObject = new JsonObject();
-            return;
-        }
-
-        try {
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfig), StandardCharsets.UTF_8);
-            JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
-            reader.close();
-            if (!fileElement.isJsonObject()) {
-                // invalid config file
-
-                // Copy old config file to a backup, with a random part in the name to make sure we do not overwrite it
-                FileUtils.copyFile(
-                        userConfig,
-                        new File(
-                                CONFIGS,
-                                "invalid_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
-                                        + RandomStringUtils.random(5) + "_" + userConfig.getName()));
-                FileUtils.deleteFile(userConfig);
-                FileUtils.createNewFile(userConfig);
-                configObject = new JsonObject();
-
-                return;
-            }
-
-            configObject = fileElement.getAsJsonObject();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to load user config file!", e);
-
-            configObject = new JsonObject();
-        }
-    }
-
-    public void loadAllConfigOptions() {
+    public void reloadConfiguration() {
+        configObject = Managers.Json.loadPreciousJson(userConfig);
         loadConfigOptions(CONFIG_HOLDERS, true);
     }
 
@@ -169,20 +125,7 @@ public final class ConfigManager extends Manager {
                 Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME,
                 configObject.get(Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME));
 
-        saveConfigToDisk(holderJson);
-    }
-
-    private void saveConfigToDisk(JsonObject configObject) {
-        try {
-            // write json to file
-            OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-
-            CONFIG_GSON.toJson(configObject, fileWriter);
-            fileWriter.close();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!", e);
-        }
+        Managers.Json.savePreciousJson(userConfig, holderJson);
     }
 
     public void saveDefaultConfig() {

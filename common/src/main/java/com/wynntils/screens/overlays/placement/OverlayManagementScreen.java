@@ -501,8 +501,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void reloadConfigForOverlay() {
-        Managers.Config.loadConfigFile();
-        Managers.Config.loadAllConfigOptions();
+        Managers.Config.reloadConfiguration();
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
