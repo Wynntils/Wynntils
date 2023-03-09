@@ -46,8 +46,7 @@ public final class JsonManager extends Manager {
     public Type findFieldTypeOverride(Object parent, Field field) {
         Optional<Field> typeField = Arrays.stream(
                         FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                .filter(f ->
-                        f.getType() == Type.class && f.getName().equals(field.getName() + "Type"))
+                .filter(f -> f.getType() == Type.class && f.getName().equals(field.getName() + "Type"))
                 .findFirst();
 
         if (typeField.isPresent()) {
