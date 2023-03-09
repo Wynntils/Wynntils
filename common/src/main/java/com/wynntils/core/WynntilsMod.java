@@ -256,6 +256,7 @@ public final class WynntilsMod {
         // Init all features and functions. Now resources (i.e I18n) are available.
         Managers.Feature.init();
         Managers.Function.init();
+        Managers.Storage.restorePersisted();
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),

@@ -22,6 +22,7 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
+import com.wynntils.core.storage.StorageManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -37,6 +38,7 @@ public final class Managers {
     public static final FunctionManager Function = new FunctionManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
+    public static final StorageManager Storage = new StorageManager();
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible

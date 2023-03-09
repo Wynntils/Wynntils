@@ -311,6 +311,7 @@ public final class FeatureManager extends Manager {
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
         Managers.Config.registerFeature(feature);
+        Managers.Storage.registerStorageable(feature);
 
         // initialize & enable
         feature.init();
