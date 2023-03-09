@@ -16,10 +16,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.lang.reflect.Type;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -28,15 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends UserFeature {
-    public static ItemFavoriteFeature INSTANCE;
-
-    // This should really move to FavoritesModel, but for now, models cannot have configs
-    @Config(visible = false)
-    public Set<String> favoriteItems = new TreeSet<>();
-
-    @TypeOverride
-    private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();
-
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
