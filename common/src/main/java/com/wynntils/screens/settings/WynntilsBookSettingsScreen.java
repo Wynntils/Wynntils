@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -387,7 +388,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 CustomColor.NONE);
 
         if (selected != null) {
-            Feature newSelected = featureList.stream()
+            Stream<Configurable> configurablesList = Stream.concat(
+                    Managers.Feature.getFeatures().stream(),
+                    Managers.Feature.getFeatures().stream()
+                            .map(Feature::getOverlays)
+                            .map(overlays -> (Configurable) overlays));
+
+            Configurable newSelected = configurablesList
                     .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
                     .findFirst()
                     .orElse(null);
