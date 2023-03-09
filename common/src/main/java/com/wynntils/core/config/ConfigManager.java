@@ -90,6 +90,8 @@ public final class ConfigManager extends Manager {
                         field, feature, field.getAnnotation(OverlayGroup.class).instances()))
                 .toList();
 
+        if (holders.isEmpty()) return;
+
         OVERLAY_GROUP_FIELDS.addAll(holders);
         feature.addOverlayGroups(holders);
 
