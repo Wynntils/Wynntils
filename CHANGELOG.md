@@ -1,9 +1,21 @@
+## [0.0.2-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.318...v0.0.2-alpha.319) (2023-03-09)
+
+
+### New Features
+
+* Show overlay for Seaskipper destinations and prices ([#1304](https://github.com/Wynntils/Artemis/issues/1304)) ([ed54d6a](https://github.com/Wynntils/Artemis/commit/ed54d6a41b16d79809d49d8bb13817a0a15fd7e6))
+
 ## [0.0.2-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.317...v0.0.2-alpha.318) (2023-03-08)
 
 
 ### Code Refactoring
 
 * Round BlockPos coordinates to integers ([#1298](https://github.com/Wynntils/Artemis/issues/1298)) ([ab5b5a1](https://github.com/Wynntils/Artemis/commit/ab5b5a1eaed3818d834eba1caa641ec6c817b513))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.318 [skip ci] ([e1889ea](https://github.com/Wynntils/Artemis/commit/e1889ea6595ddd3fba4d24f1c1e3f148f239cd34))
 
 ## [0.0.2-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.316...v0.0.2-alpha.317) (2023-03-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.315 [skip ci] ([4bdf0e6](https://github.com/Wynntils/Artemis/commit/4bdf0e67e3e2a4a635aaefa2e56eda9ee648e5bd))
-
-## [0.0.2-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.313...v0.0.2-alpha.314) (2023-03-08)
-
-
-### Code Refactoring
-
-* Widget classes should not implement render ([#1302](https://github.com/Wynntils/Artemis/issues/1302)) ([5f9d4cc](https://github.com/Wynntils/Artemis/commit/5f9d4cc31b84e56e8cadc343f0775da5463d3fcd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.314 [skip ci] ([6c42049](https://github.com/Wynntils/Artemis/commit/6c4204992306562b9a79de38d2304f3312dc7753))
 
