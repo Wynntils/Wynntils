@@ -45,7 +45,7 @@ public class ItemLockFeature extends UserFeature {
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
     @Config(visible = false)
-    private final Map<String, Set<Integer>> classSlotLockMap = new HashMap<>();
+    private final Map<String, Set<Integer>> classSlotLockMap = new TreeMap<>();
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
@@ -63,7 +63,7 @@ public class ItemLockFeature extends UserFeature {
         // Don't render lock on ability tree slots
         if (Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        for (Integer slotId : classSlotLockMap.getOrDefault(Models.Character.getId(), Set.of())) {
+        for (Integer slotId : classSlotLockMap.getOrDefault(Models.Character.getId(), new TreeSet<>())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -100,7 +100,7 @@ public class ItemLockFeature extends UserFeature {
         }
 
         if (classSlotLockMap
-                .getOrDefault(Models.Character.getId(), Set.of())
+                .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -115,7 +115,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
-                .getOrDefault(Models.Character.getId(), Set.of())
+                .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
         }
@@ -137,7 +137,7 @@ public class ItemLockFeature extends UserFeature {
     private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        classSlotLockMap.putIfAbsent(Models.Character.getId(), new HashSet<>());
+        classSlotLockMap.putIfAbsent(Models.Character.getId(), new TreeSet<>());
 
         Set<Integer> classSet = classSlotLockMap.get(Models.Character.getId());
 
