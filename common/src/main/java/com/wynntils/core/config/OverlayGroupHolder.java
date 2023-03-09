@@ -77,10 +77,10 @@ public class OverlayGroupHolder {
 
     public void initGroup(List<Integer> ids) {
         try {
-            List overlays = ReflectionUtils.createListWithType(overlayClass);
+            List<Overlay> overlays = (List<Overlay>) ReflectionUtils.createListWithType(overlayClass);
 
             for (Integer id : ids) {
-                overlays.add(overlayClass.getConstructor(int.class).newInstance(id));
+                overlays.add((Overlay) overlayClass.getConstructor(int.class).newInstance(id));
             }
 
             FieldUtils.writeField(field, parent, overlays, true);
