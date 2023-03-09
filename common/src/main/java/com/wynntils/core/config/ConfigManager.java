@@ -160,6 +160,20 @@ public final class ConfigManager extends Manager {
         loadConfigOptions(true, true);
     }
 
+    // Info: The purpose of initOverlayGroups is to use the config system in a way that is really "hacky".
+    //       Overlay group initialization needs:
+    //          1, Overlay instances to be loaded (at init, the default number of instances, then the number defined in
+    //             configObject)
+    //          2, We need to handle dynamic overlays' configs as regular configs, so that they can be loaded from the
+    //             config file
+    //       The problem is that the config system "save" is used to remove unused configs, and that "load" is used to
+    //       init dynamic overlay instances.
+    //
+    //       This really becomes a problem when modifying overlay group sizes at runtime.
+    //       We want to do 4 things: Save new overlay group size, init overlay instances, load configs, and remove
+    //       unused configs.
+    //       This means we need to save - load - save, which we should not do. initOverlayGroups is the solution to
+    //       this, for now.
     public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
         if (configObject == null) {
             WynntilsMod.error("Tried to load configs when configObject is null.");
