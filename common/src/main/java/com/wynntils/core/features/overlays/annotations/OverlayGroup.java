@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.overlays;
+package com.wynntils.core.features.overlays.annotations;
 
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.mc.event.RenderEvent;

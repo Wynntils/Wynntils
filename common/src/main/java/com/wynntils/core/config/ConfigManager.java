@@ -19,7 +19,7 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.features.overlays.OverlayGroup;
+import com.wynntils.core.features.overlays.annotations.OverlayGroup;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
