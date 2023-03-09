@@ -24,7 +24,12 @@ public class Storage<T> {
         Managers.Storage.persist(this);
     }
 
-    public Class<? extends T> getType() {
+    // This must only be called by StorageManager when restoring value from disk
+    void set(T value) {
+        this.value = value;
+    }
+
+    Class<? extends T> getType() {
         return type;
     }
 }
