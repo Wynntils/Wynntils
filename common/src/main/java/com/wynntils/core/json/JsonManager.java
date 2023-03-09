@@ -64,56 +64,65 @@ public final class JsonManager extends Manager {
         return GSON.fromJson(GSON.toJson(value), fieldType);
     }
 
+    /**
+     * Write a json object to a file, taking care to preserve the file against corruption since
+     * it contains precious data.
+     */
     public void savePreciousJson(File jsonFile, JsonObject jsonObject) {
-        // create file if necessary
-        if (!jsonFile.exists()) {
-            FileUtils.createNewFile(jsonFile);
+        FileUtils.mkdir(jsonFile.getParentFile());
+
+        if (jsonFile.exists()) {
+            File backupFile = new File(jsonFile.getPath() + ".bak");
+            // Remove old backup (if anyy), and move current json file to backup
+            FileUtils.deleteFile(backupFile);
+            FileUtils.moveFile(jsonFile, backupFile);
         }
 
-        // FIXME: Make backup first!
-        try {
-            // write json to file
-            OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8);
-
+        try (OutputStreamWriter fileWriter =
+                new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8)) {
             GSON.toJson(jsonObject, fileWriter);
-            fileWriter.close();
         } catch (IOException e) {
             WynntilsMod.error("Failed to save json file " + jsonFile, e);
         }
     }
 
+    /**
+     * Load a json object from a file. If the file is broken it is replaced with an empty file, taking care
+     * to preserve the broken file since it contains precious data.
+     */
     public JsonObject loadPreciousJson(File jsonFile) {
-        JsonObject storageJson;
-
-        // create directory if necessary
         FileUtils.mkdir(jsonFile.getParentFile());
 
         if (!jsonFile.exists()) {
-            FileUtils.createNewFile(jsonFile);
-            return new JsonObject();
+            return createEmptyFile(jsonFile);
         }
 
-        try {
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
             JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
-            reader.close();
-            if (!fileElement.isJsonObject()) {
-                // invalid json file
-                WynntilsMod.error("Error in json file " + jsonFile.getPath());
 
-                return handleInvalidFile(jsonFile);
+            if (fileElement.isJsonObject()) {
+                // success
+                return fileElement.getAsJsonObject();
             }
 
-            return fileElement.getAsJsonObject();
+            // invalid json file; fall through to error case
+            WynntilsMod.error("Error in json file " + jsonFile.getPath());
         } catch (JsonParseException | IOException e) {
+            // invalid or unreadable json file; fall through to error case
             WynntilsMod.error("Failed to load or parse json file " + jsonFile.getPath(), e);
-
-            return handleInvalidFile(jsonFile);
         }
+
+        handleInvalidFile(jsonFile);
+        return createEmptyFile(jsonFile);
     }
 
-    private JsonObject handleInvalidFile(File jsonFile) {
+    private JsonObject createEmptyFile(File jsonFile) {
+        JsonObject storageJson = new JsonObject();
+        savePreciousJson(jsonFile, storageJson);
+        return storageJson;
+    }
+
+    private void handleInvalidFile(File jsonFile) {
         File dir = jsonFile.getParentFile();
 
         // Copy old  file to a backup, with a random part in the name to make sure we do not overwrite it
@@ -124,8 +133,5 @@ public final class JsonManager extends Manager {
                         "invalid_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
                                 + RandomStringUtils.randomAlphanumeric(5) + "_" + jsonFile.getName()));
         FileUtils.deleteFile(jsonFile);
-        FileUtils.createNewFile(jsonFile);
-
-        return new JsonObject();
     }
 }
