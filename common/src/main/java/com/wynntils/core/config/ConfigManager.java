@@ -85,11 +85,6 @@ public final class ConfigManager extends Manager {
     }
 
     private void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {
-        if (configObject == null) {
-            WynntilsMod.error("Tried to load configs when configObject is null.");
-            return; // nothing to load from
-        }
-
         for (ConfigHolder holder : holders) {
             // option hasn't been saved to config
             if (!configObject.has(holder.getJsonName())) {
@@ -107,11 +102,6 @@ public final class ConfigManager extends Manager {
     }
 
     public void saveConfig() {
-        // create file if necessary
-        if (!userConfig.exists()) {
-            FileUtils.createNewFile(userConfig);
-        }
-
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
         for (ConfigHolder holder : CONFIG_HOLDERS) {
