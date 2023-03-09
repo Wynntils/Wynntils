@@ -19,9 +19,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -121,31 +119,13 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, holderJson);
     }
 
-    private Type findFieldTypeOverride(Configurable parent, Field configField) {
-        Optional<Field> typeField = Arrays.stream(
-                        FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                .filter(field ->
-                        field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
-                .findFirst();
-
-        if (typeField.isPresent()) {
-            try {
-                return (Type) FieldUtils.readField(typeField.get(), parent, true);
-            } catch (IllegalAccessException e) {
-                WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
-            }
-        }
-
-        return null;
-    }
-
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
 
-            Type typeOverride = findFieldTypeOverride(parent, configField);
+            Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
             ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
