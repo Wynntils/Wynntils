@@ -24,6 +24,7 @@ import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
+import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -165,6 +166,9 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
+        }
+        if (wynnItem instanceof SeaskipperDestinationItem seaskipperDestinationItem) {
+            return new SeaskipperDestinationOverlay(seaskipperDestinationItem);
         }
         if (wynnItem instanceof SkillPointItem skillPointItem) {
             return new SkillPointOverlay(skillPointItem);
@@ -331,6 +335,30 @@ public class ItemTextOverlayFeature extends UserFeature {
                     TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(powderTierShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
+        }
+    }
+
+    private final class SeaskipperDestinationOverlay implements TextOverlayInfo {
+        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+
+        private final SeaskipperDestinationItem item;
+
+        private SeaskipperDestinationOverlay(SeaskipperDestinationItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return teleportScrollEnabled;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            String text = item.getShorthand();
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
         }
     }
 
