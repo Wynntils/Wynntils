@@ -101,7 +101,7 @@ public final class JsonManager extends Manager {
                 new File(
                         dir,
                         "invalid_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
-                                + RandomStringUtils.random(5) + "_" + jsonFile.getName()));
+                                + RandomStringUtils.randomAlphanumeric(5) + "_" + jsonFile.getName()));
         FileUtils.deleteFile(jsonFile);
         FileUtils.createNewFile(jsonFile);
 
