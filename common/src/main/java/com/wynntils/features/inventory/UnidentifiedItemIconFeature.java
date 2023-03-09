@@ -45,15 +45,15 @@ public class UnidentifiedItemIconFeature extends UserFeature {
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
-        drawIcon(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
+        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
     }
 
     @SubscribeEvent
     public void onHotbarSlotRender(HotbarSlotRenderEvent.CountPre e) {
-        drawIcon(e.getItemStack(), e.getX(), e.getY(), 200);
+        drawIcon(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), 200);
     }
 
-    private void drawIcon(ItemStack itemStack, int slotX, int slotY, int z) {
+    private void drawIcon(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, int z) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
 
@@ -62,7 +62,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
         int textureX = TEXTURE_COORDS.get(gearType).a();
         int textureY = TEXTURE_COORDS.get(gearType).b();
         RenderUtils.drawTexturedRect(
-                new PoseStack(),
+                poseStack,
                 Texture.GEAR_ICONS.resource(),
                 slotX + 2,
                 slotY + 2,

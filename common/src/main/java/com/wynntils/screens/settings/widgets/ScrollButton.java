@@ -47,7 +47,7 @@ public class ScrollButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (maxScroll == 0) return;
 
         if (scrollAreaColor != CustomColor.NONE) {

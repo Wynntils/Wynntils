@@ -29,7 +29,7 @@ public class ChatTabButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (tab == null) return;
 
         RenderUtils.drawRect(

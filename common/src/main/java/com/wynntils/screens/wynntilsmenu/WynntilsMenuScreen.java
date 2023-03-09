@@ -201,7 +201,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY);
+        renderWidgets(poseStack, mouseX, mouseY);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
@@ -216,7 +216,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         int posX = (int) (translationX + Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
         int posY = (int) (translationY + Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - mouseY, McUtils.player());
+        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - 50 - mouseY, McUtils.player());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -281,7 +281,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
         int buttonCount = buttons.size();
 
         poseStack.pushPose();

@@ -40,7 +40,7 @@ public final class SystemUtils {
     }
 
     public static int getMemUsed() {
-        return (int) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
+        return (int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
     }
 
     public static int getMemMax() {
