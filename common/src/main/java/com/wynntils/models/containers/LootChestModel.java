@@ -7,7 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.storage.Storage;
+import com.wynntils.features.wynntils.DataStorageFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
@@ -21,21 +21,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
-    private Storage<Integer> dryCount = new Storage<>(0);
-    private Storage<Integer> dryBoxes = new Storage<>(0);
-
     private int nextExpectedLootContainerId = -2;
 
     public LootChestModel(ContainerModel containerModel) {
         super(List.of(containerModel));
-    }
-
-    public int getDryCount() {
-        return dryCount.get();
-    }
-
-    public Integer getDryBoxes() {
-        return dryBoxes.get();
     }
 
     @SubscribeEvent
@@ -43,7 +32,7 @@ public final class LootChestModel extends Model {
         if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
-            dryCount.store(dryCount.get() + 1);
+            DataStorageFeature.INSTANCE.dryCount++;
             Managers.Config.saveConfig();
         }
     }
@@ -60,10 +49,10 @@ public final class LootChestModel extends Model {
         GearTier gearTier = GearTier.fromComponent(itemStack.getHoverName());
 
         if (gearTier == GearTier.MYTHIC) {
-            dryBoxes.store(0);
-            dryCount.store(0);
+            DataStorageFeature.INSTANCE.dryBoxes = 0;
+            DataStorageFeature.INSTANCE.dryCount = 0;
         } else {
-            dryBoxes.store(dryBoxes.get() + 1);
+            DataStorageFeature.INSTANCE.dryBoxes += 1;
         }
 
         Managers.Config.saveConfig();
