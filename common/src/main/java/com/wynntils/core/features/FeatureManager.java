@@ -232,7 +232,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
-        // Load configs for grouped overlays
+        // Load configs for all features
         Managers.Config.loadAllConfigOptions();
 
         // save/create config file after loading all features' options
