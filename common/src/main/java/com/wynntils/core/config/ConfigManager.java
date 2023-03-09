@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -42,7 +44,7 @@ public final class ConfigManager extends Manager {
             .setPrettyPrinting()
             .serializeNulls()
             .create();
-    private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
+    private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
 
     private final File userConfig;
     private JsonObject configObject;
@@ -79,7 +81,7 @@ public final class ConfigManager extends Manager {
 
     public void reloadConfiguration() {
         configObject = Managers.Json.loadPreciousJson(userConfig);
-        loadConfigOptions(CONFIG_HOLDERS, true);
+        loadConfigOptions(CONFIG_HOLDERS.stream().toList(), true);
     }
 
     private void loadConfigOptions(List<ConfigHolder> holders, boolean resetIfNotFound) {

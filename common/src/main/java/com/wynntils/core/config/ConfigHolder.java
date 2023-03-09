@@ -19,7 +19,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigHolder {
+public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Configurable parent;
     private final Field field;
     private final Type fieldType;
@@ -185,5 +185,10 @@ public class ConfigHolder {
 
         // couldn't parse value
         return null;
+    }
+
+    @Override
+    public int compareTo(ConfigHolder other) {
+        return getJsonName().compareTo(other.getJsonName());
     }
 }
