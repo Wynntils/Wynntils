@@ -108,7 +108,6 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsQuestBookFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
-import com.wynntils.features.wynntils.DataStorageFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.utils.mc.McUtils;
@@ -137,7 +136,6 @@ public final class FeatureManager extends Manager {
 
         // always on
         registerFeature(new LootrunFeature());
-        registerFeature(new DataStorageFeature());
 
         // user
         registerFeature(new AbbreviateMobHealthFeature());

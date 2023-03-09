@@ -4,9 +4,11 @@
  */
 package com.wynntils.models.favorites;
 
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.inventory.ItemFavoriteFeature;
+import com.wynntils.core.json.TypeOverride;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
@@ -16,12 +18,19 @@ import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class FavoritesModel extends Model {
+    private final Storage<Set<String>> favoriteItems = new Storage<>(new TreeSet<>());
+
+    @TypeOverride
+    private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();
+
     private int revision = 1;
 
     public FavoritesModel() {
@@ -29,7 +38,7 @@ public final class FavoritesModel extends Model {
     }
 
     public boolean isFavorite(String unformattedName) {
-        return getFavoriteItems().contains(unformattedName);
+        return favoriteItems.get().contains(unformattedName);
     }
 
     public boolean isFavorite(Component component) {
@@ -72,12 +81,14 @@ public final class FavoritesModel extends Model {
     }
 
     public void addFavorite(String unformattedName) {
-        getFavoriteItems().add(unformattedName);
+        favoriteItems.get().add(unformattedName);
+        favoriteItems.touched();
         revision++;
     }
 
     public void removeFavorite(String unformattedName) {
-        getFavoriteItems().remove(unformattedName);
+        favoriteItems.get().remove(unformattedName);
+        favoriteItems.touched();
         revision++;
     }
 
@@ -92,10 +103,5 @@ public final class FavoritesModel extends Model {
     // Used to track changes in the set of favorites
     public int getRevision() {
         return revision;
-    }
-
-    private Set<String> getFavoriteItems() {
-        // This is a hack to allow saving of favorites in the config
-        return ItemFavoriteFeature.INSTANCE.favoriteItems;
     }
 }
