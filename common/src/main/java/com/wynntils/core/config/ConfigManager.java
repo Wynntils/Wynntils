@@ -4,8 +4,6 @@
  */
 package com.wynntils.core.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
@@ -16,16 +14,10 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.json.JsonManager;
-import com.wynntils.utils.FileUtils;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,11 +31,6 @@ public final class ConfigManager extends Manager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
-    private static final Gson CONFIG_GSON = new GsonBuilder()
-            .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .setPrettyPrinting()
-            .serializeNulls()
-            .create();
     private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
 
     private final File userConfig;
@@ -96,7 +83,7 @@ public final class ConfigManager extends Manager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value = CONFIG_GSON.fromJson(holderJson, holder.getType());
+            Object value = Managers.Json.GSON.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
     }
@@ -108,7 +95,7 @@ public final class ConfigManager extends Manager {
             if (!holder.valueChanged()) continue; // only save options that have been set by the user
             Object value = holder.getValue();
 
-            JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
+            JsonElement holderElement = Managers.Json.GSON.toJsonTree(value);
             holderJson.add(holder.getJsonName(), holderElement);
         }
 
@@ -126,7 +113,7 @@ public final class ConfigManager extends Manager {
         for (ConfigHolder holder : CONFIG_HOLDERS) {
             Object value = holder.getDefaultValue();
 
-            JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
+            JsonElement holderElement = Managers.Json.GSON.toJsonTree(value);
             holderJson.add(holder.getJsonName(), holderElement);
         }
 
@@ -184,9 +171,5 @@ public final class ConfigManager extends Manager {
 
     public Stream<ConfigHolder> getConfigHolders() {
         return CONFIG_HOLDERS.stream();
-    }
-
-    public Object deepCopy(Object value, Type fieldType) {
-        return CONFIG_GSON.fromJson(CONFIG_GSON.toJson(value), fieldType);
     }
 }
