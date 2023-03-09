@@ -18,5 +18,10 @@ public abstract class Model extends CoreComponent {
         // those listed in the dependencies, due to bootstrapping ordering
     }
 
+    @Override
+    protected String getComponentType() {
+        return "Model";
+    }
+
     public void reloadData() {}
 }

@@ -234,6 +234,7 @@ public final class WynntilsMod {
                     try {
                         CoreComponent component = (CoreComponent) field.get(null);
                         WynntilsMod.registerEventListener(component);
+                        Managers.Storage.registerStorageable(component);
                         components.add(component);
                     } catch (IllegalAccessException e) {
                         WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
