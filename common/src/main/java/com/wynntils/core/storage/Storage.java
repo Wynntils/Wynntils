@@ -19,6 +19,10 @@ public class Storage<T> {
 
     public void store(T value) {
         this.value = value;
+        touched();
+    }
+
+    public void touched() {
         Managers.Storage.persist(this);
     }
 

@@ -4,13 +4,10 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -19,11 +16,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.lang.reflect.Type;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -32,15 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends UserFeature {
-    public static ItemFavoriteFeature INSTANCE;
-
-    // This should really move to FavoritesModel, but for now, models cannot have configs
-    @Config(visible = false)
-    public Set<String> favoriteItems = new HashSet<>();
-
-    @TypeOverride
-    private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();
-
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
