@@ -131,7 +131,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (dialogues.isEmpty()) {
             renderNoDialoguesHelper(poseStack);
@@ -239,7 +239,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         }
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();

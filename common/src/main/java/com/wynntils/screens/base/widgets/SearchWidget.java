@@ -14,7 +14,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Objects;
 import java.util.function.Consumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
@@ -28,8 +27,17 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBg(poseStack, McUtils.mc(), mouseX, mouseY);
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRectBorders(
+                poseStack,
+                CommonColors.GRAY,
+                this.getX(),
+                this.getY(),
+                this.getX() + this.width,
+                this.getY() + this.height,
+                0,
+                1f);
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
@@ -46,20 +54,6 @@ public class SearchWidget extends TextInputBoxWidget {
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
-    }
-
-    @Override
-    protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
-        RenderUtils.drawRectBorders(
-                poseStack,
-                CommonColors.GRAY,
-                this.getX(),
-                this.getY(),
-                this.getX() + this.width,
-                this.getY() + this.height,
-                0,
-                1f);
     }
 
     @Override

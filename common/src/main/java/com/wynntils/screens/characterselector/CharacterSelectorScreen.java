@@ -131,11 +131,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.LIST_BACKGROUND.width(),
                 Texture.LIST_BACKGROUND.height());
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
-        renderPlayer();
+        renderPlayer(poseStack);
 
         if (selected == null) return;
 
@@ -337,7 +337,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
@@ -347,7 +347,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         }
     }
 
-    private void renderPlayer() {
+    private void renderPlayer(PoseStack poseStack) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();

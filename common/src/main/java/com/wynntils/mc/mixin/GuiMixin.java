@@ -35,7 +35,8 @@ public abstract class GuiMixin {
             at = @At("HEAD"))
     private void renderSlotPre(
             int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Pre(itemStack, x, y));
+        PoseStack poseStack = new PoseStack();
+        MixinHelper.post(new HotbarSlotRenderEvent.Pre(poseStack, itemStack, x, y));
     }
 
     @Inject(
@@ -47,7 +48,8 @@ public abstract class GuiMixin {
                                     "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
     private void renderSlotCountPre(
             int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.CountPre(itemStack, x, y));
+        PoseStack poseStack = new PoseStack();
+        MixinHelper.post(new HotbarSlotRenderEvent.CountPre(poseStack, itemStack, x, y));
     }
 
     @Inject(
@@ -55,7 +57,8 @@ public abstract class GuiMixin {
             at = @At("RETURN"))
     private void renderSlotPost(
             int x, int y, float ticks, Player player, ItemStack itemStack, int i, CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Post(itemStack, x, y));
+        PoseStack poseStack = new PoseStack();
+        MixinHelper.post(new HotbarSlotRenderEvent.Post(poseStack, itemStack, x, y));
     }
 
     // This does not work on Forge. See ForgeGuiMixin for replacement.

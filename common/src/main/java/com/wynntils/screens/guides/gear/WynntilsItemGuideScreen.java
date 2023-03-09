@@ -80,7 +80,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
 
         renderItemsHeader(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 

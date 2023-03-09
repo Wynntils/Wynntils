@@ -23,7 +23,7 @@ public class DiscoveryProgressButton extends WynntilsButton implements TooltipPr
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture texture = isSecretDiscoveryButton ? Texture.SECRET_DISCOVERIES_ICON : Texture.DISCOVERIES_ICON;
 
         if (this.isHovered) {

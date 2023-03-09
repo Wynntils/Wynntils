@@ -84,7 +84,7 @@ public class ContainerSearchFeature extends UserFeature {
         Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
         if (result == null || !result) return;
 
-        RenderUtils.drawArc(highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+        RenderUtils.drawArc(e.getPoseStack(), highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
 
     @SubscribeEvent

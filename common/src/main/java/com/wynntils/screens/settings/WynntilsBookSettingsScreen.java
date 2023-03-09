@@ -116,7 +116,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         renderScrollArea(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (selected != null) {
             renderConfigTitle(poseStack);
@@ -154,7 +154,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         poseStack.popPose();
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         int adjustedMouseX = mouseX - (int) getTranslationX();
         int adjustedMouseY = mouseY - (int) getTranslationY();
 
@@ -162,7 +162,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             renderable.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
         }
 
-        configurableListScrollButton.renderButton(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        configurableListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
 
         for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
                 i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
@@ -172,7 +172,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         }
 
         if (configListScrollButton != null) {
-            configListScrollButton.renderButton(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+            configListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
         }
 
         // Reverse iteration for so tooltip Z levels are correct when rendering

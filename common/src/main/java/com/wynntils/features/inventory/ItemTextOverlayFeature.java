@@ -24,6 +24,7 @@ import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
+import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -111,17 +112,17 @@ public class ItemTextOverlayFeature extends UserFeature {
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled) return;
 
-        drawTextOverlay(e.getItemStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -138,12 +139,13 @@ public class ItemTextOverlayFeature extends UserFeature {
             return;
         }
 
-        PoseStack poseStack = new PoseStack();
+        poseStack.pushPose();
         poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
         poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
         FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
+        poseStack.popPose();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {
@@ -164,6 +166,9 @@ public class ItemTextOverlayFeature extends UserFeature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
+        }
+        if (wynnItem instanceof SeaskipperDestinationItem seaskipperDestinationItem) {
+            return new SeaskipperDestinationOverlay(seaskipperDestinationItem);
         }
         if (wynnItem instanceof SkillPointItem skillPointItem) {
             return new SkillPointOverlay(skillPointItem);
@@ -330,6 +335,30 @@ public class ItemTextOverlayFeature extends UserFeature {
                     TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(powderTierShadow);
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
+        }
+    }
+
+    private final class SeaskipperDestinationOverlay implements TextOverlayInfo {
+        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+
+        private final SeaskipperDestinationItem item;
+
+        private SeaskipperDestinationOverlay(SeaskipperDestinationItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return teleportScrollEnabled;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            String text = item.getShorthand();
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow);
+
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
         }
     }
 
