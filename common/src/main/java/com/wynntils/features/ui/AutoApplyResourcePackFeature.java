@@ -8,7 +8,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.storage.Storage;
