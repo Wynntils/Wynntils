@@ -129,8 +129,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             return this.isUserEnabled();
         }
 
-        // FIXME: This is bad, we need to get the annotation's enabled value
-        return true;
+        return Managers.Overlay.getOverlayParent(this).getOverlayInfo(this).enabled();
     }
 
     public final boolean isParentEnabled() {

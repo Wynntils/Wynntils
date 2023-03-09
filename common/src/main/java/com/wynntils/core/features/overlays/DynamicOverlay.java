@@ -61,6 +61,20 @@ public abstract class DynamicOverlay extends Overlay {
         return super.getConfigJsonName() + id;
     }
 
+    @Override
+    public boolean isEnabled() {
+        if (!isParentEnabled()) {
+            return false;
+        }
+
+        if (this.isUserEnabled() != null) {
+            return this.isUserEnabled();
+        }
+
+        // A dynamic overlay is enabled if the parent is enabled and the user has not disabled it
+        return true;
+    }
+
     public int getId() {
         return id;
     }

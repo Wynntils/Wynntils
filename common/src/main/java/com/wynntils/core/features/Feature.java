@@ -19,7 +19,9 @@ import com.wynntils.features.overlays.OverlayGroup;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -34,7 +36,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
-    private final List<Overlay> overlays = new ArrayList<>();
+    private final Map<Overlay, OverlayInfo> overlays = new LinkedHashMap<>();
 
     private final List<OverlayGroupHolder> overlayGroups = new ArrayList<>();
     private final List<Overlay> groupedOverlayInstances = new ArrayList<>();
@@ -69,7 +71,7 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
                 Managers.Overlay.registerOverlay(overlay, annotation.renderType(), annotation.renderAt(), this);
-                overlays.add(overlay);
+                overlays.put(overlay, annotation);
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
             } catch (IllegalAccessException e) {
@@ -134,8 +136,12 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     }
 
     public List<Overlay> getOverlays() {
-        return Stream.concat(overlays.stream(), groupedOverlayInstances.stream())
+        return Stream.concat(overlays.keySet().stream(), groupedOverlayInstances.stream())
                 .toList();
+    }
+
+    public OverlayInfo getOverlayInfo(Overlay overlay) {
+        return overlays.get(overlay);
     }
 
     public final void enableOverlays() {
