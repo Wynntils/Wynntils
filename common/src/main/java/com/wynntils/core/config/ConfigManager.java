@@ -121,30 +121,17 @@ public final class ConfigManager extends Manager {
     }
 
     public void saveDefaultConfig() {
-        try {
-            // create file if necessary
-            if (!DEFAULT_CONFIG.exists()) {
-                FileUtils.createNewFile(DEFAULT_CONFIG);
-            }
+        // create json object, with entry for each option of each container
+        JsonObject holderJson = new JsonObject();
+        for (ConfigHolder holder : CONFIG_HOLDERS) {
+            Object value = holder.getDefaultValue();
 
-            // create json object, with entry for each option of each container
-            JsonObject holderJson = new JsonObject();
-            for (ConfigHolder holder : CONFIG_HOLDERS) {
-                Object value = holder.getDefaultValue();
-
-                JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
-                holderJson.add(holder.getJsonName(), holderElement);
-            }
-
-            // write json to file
-            OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(DEFAULT_CONFIG), StandardCharsets.UTF_8);
-            CONFIG_GSON.toJson(holderJson, fileWriter);
-            fileWriter.close();
-            WynntilsMod.info("Default config file created with " + holderJson.size() + " config values.");
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!", e);
+            JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
+            holderJson.add(holder.getJsonName(), holderElement);
         }
+
+        WynntilsMod.info("Creating default config file with " + holderJson.size() + " config values.");
+        Managers.Json.savePreciousJson(DEFAULT_CONFIG, holderJson);
     }
 
     private Type findFieldTypeOverride(Configurable parent, Field configField) {
