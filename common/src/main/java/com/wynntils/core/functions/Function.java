@@ -57,6 +57,7 @@ public abstract class Function<T> implements Translatable {
         return getTranslation("argument." + argumentName);
     }
 
+    @SuppressWarnings("unchecked")
     public Class<T> getFunctionType() {
         return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
