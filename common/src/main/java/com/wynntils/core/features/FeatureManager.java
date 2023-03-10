@@ -58,6 +58,7 @@ import com.wynntils.features.inventory.ItemHighlightFeature;
 import com.wynntils.features.inventory.ItemLockFeature;
 import com.wynntils.features.inventory.ItemScreenshotFeature;
 import com.wynntils.features.inventory.ItemTextOverlayFeature;
+import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GuildMapFeature;
@@ -193,6 +194,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
+        registerFeature(new HorseMountFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LobbyUptimeFeature());
@@ -200,7 +202,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MobTotemTrackingFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new NpcDialogueOverlayFeature());
@@ -212,6 +213,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
+        registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());
