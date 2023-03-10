@@ -1,9 +1,21 @@
+## [0.0.2-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.322...v0.0.2-alpha.323) (2023-03-10)
+
+
+### Bug Fixes
+
+* Fix OverlayManagementScreen -> OverlaySelectionScreen transition crash ([#1310](https://github.com/Wynntils/Artemis/issues/1310)) ([a1f3384](https://github.com/Wynntils/Artemis/commit/a1f3384c17dc7cf8e967f6b513ff788c5a2140c8))
+
 ## [0.0.2-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.321...v0.0.2-alpha.322) (2023-03-10)
 
 
 ### New Features
 
 * Overlay Refactor Part 3: Dynamic overlays ([#1297](https://github.com/Wynntils/Artemis/issues/1297)) ([2f5cba4](https://github.com/Wynntils/Artemis/commit/2f5cba4de4430a5bc4f6b0bce7a62020820dccac))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.322 [skip ci] ([8540352](https://github.com/Wynntils/Artemis/commit/8540352ada6759f2babf82b72435595b68787c74))
 
 ## [0.0.2-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.320...v0.0.2-alpha.321) (2023-03-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.319 [skip ci] ([98633fc](https://github.com/Wynntils/Artemis/commit/98633fc1b4e4a6ca0ee12ed027d9d1a34c8ddc77))
-
-## [0.0.2-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.317...v0.0.2-alpha.318) (2023-03-08)
-
-
-### Code Refactoring
-
-* Round BlockPos coordinates to integers ([#1298](https://github.com/Wynntils/Artemis/issues/1298)) ([ab5b5a1](https://github.com/Wynntils/Artemis/commit/ab5b5a1eaed3818d834eba1caa641ec6c817b513))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.318 [skip ci] ([e1889ea](https://github.com/Wynntils/Artemis/commit/e1889ea6595ddd3fba4d24f1c1e3f148f239cd34))
 
