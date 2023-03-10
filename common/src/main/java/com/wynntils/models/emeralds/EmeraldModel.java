@@ -46,13 +46,13 @@ public final class EmeraldModel extends Model {
         super(List.of(itemModel));
     }
 
-    public String getFormattedString(int emeralds) {
+    public String getFormattedString(int emeralds, boolean zeros) {
         StringBuilder builder = new StringBuilder();
 
         int[] emeraldAmounts = emeraldsPerUnit(emeralds);
 
         for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
-            if (emeraldAmounts[i] == 0) continue;
+            if (emeraldAmounts[i] == 0 && !zeros) continue;
 
             builder.append(emeraldAmounts[i])
                     .append(EmeraldUnits.values()[i].getSymbol())

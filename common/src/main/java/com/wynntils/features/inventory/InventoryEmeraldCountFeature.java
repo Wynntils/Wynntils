@@ -44,6 +44,9 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     public boolean showContainerEmeraldCount = true;
 
     @Config
+    public boolean showZerosInEmeraldText = false;
+
+    @Config
     public boolean combineInventoryAndContainer = false;
 
     @SubscribeEvent
@@ -98,7 +101,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
-            emeraldText = Models.Emerald.getFormattedString(emeralds);
+            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldText);
         }
 
         FontRenderer.getInstance()
