@@ -471,6 +471,7 @@
   "feature.wynntils.map.servicePoiMinZoom.description": "会显公用事业纪录点的最少放大级是什麽？如果这是 -1 就会总显示纪录点",
   "feature.wynntils.map.servicePoiMinZoom.name": "公用事业纪录点最少放大级",
   "feature.wynntils.minimap.name": "小地图",
+  "feature.wynntils.minimap.overlay.coordinate.name": "座标",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "小地图的边界要如何显示？",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "下地图边界显示样式",
   "feature.wynntils.minimap.overlay.minimap.description": "显示您的环境的小地图",
