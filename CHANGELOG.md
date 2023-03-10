@@ -1,9 +1,21 @@
+## [0.0.2-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.319...v0.0.2-alpha.320) (2023-03-10)
+
+
+### New Features
+
+* Replace recipe book in inventory with item guide ([#1305](https://github.com/Wynntils/Artemis/issues/1305)) ([2384ed3](https://github.com/Wynntils/Artemis/commit/2384ed381eb9f3660797c70a9c5b126e01abfce6))
+
 ## [0.0.2-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.318...v0.0.2-alpha.319) (2023-03-09)
 
 
 ### New Features
 
 * Show overlay for Seaskipper destinations and prices ([#1304](https://github.com/Wynntils/Artemis/issues/1304)) ([ed54d6a](https://github.com/Wynntils/Artemis/commit/ed54d6a41b16d79809d49d8bb13817a0a15fd7e6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.319 [skip ci] ([98633fc](https://github.com/Wynntils/Artemis/commit/98633fc1b4e4a6ca0ee12ed027d9d1a34c8ddc77))
 
 ## [0.0.2-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.317...v0.0.2-alpha.318) (2023-03-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.316 [skip ci] ([be65b8e](https://github.com/Wynntils/Artemis/commit/be65b8e5ef952b8a31d5d5e279f0b864db19d805))
-
-## [0.0.2-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.314...v0.0.2-alpha.315) (2023-03-08)
-
-
-### Code Refactoring
-
-* For consistency, rename renderButtons to renderWidgets also ([#1301](https://github.com/Wynntils/Artemis/issues/1301)) ([af3169a](https://github.com/Wynntils/Artemis/commit/af3169a8a6af3f8971956c538a0d1409d6b80b30))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.315 [skip ci] ([4bdf0e6](https://github.com/Wynntils/Artemis/commit/4bdf0e67e3e2a4a635aaefa2e56eda9ee648e5bd))
 
