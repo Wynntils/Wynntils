@@ -7,7 +7,6 @@ package com.wynntils.screens.chattabs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -107,7 +106,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this,
                         orderInput));
         if (firstSetup && edited != null) {
-            orderInput.setTextBoxInput(Integer.toString(ChatTabsFeature.INSTANCE.chatTabs.indexOf(edited)));
+            orderInput.setTextBoxInput(Integer.toString(Managers.ChatTab.getTabIndex(edited)));
         }
         // endregion
 
@@ -325,34 +324,32 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
     private void saveChatTab() {
         if (edited != null) {
-            ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
+            Managers.ChatTab.removeTab(edited);
         }
 
         int insertIndex = orderInput.getTextBoxInput().isEmpty()
-                ? ChatTabsFeature.INSTANCE.chatTabs.size()
-                : Math.min(ChatTabsFeature.INSTANCE.chatTabs.size(), Integer.parseInt(orderInput.getTextBoxInput()));
+                ? Managers.ChatTab.getTabCount()
+                : Math.min(Managers.ChatTab.getTabCount(), Integer.parseInt(orderInput.getTextBoxInput()));
 
-        ChatTabsFeature.INSTANCE.chatTabs.add(
-                insertIndex,
-                new ChatTab(
-                        nameInput.getTextBoxInput(),
-                        consumingCheckbox.selected(),
-                        autoCommandInput.getTextBoxInput(),
-                        recipientTypeBoxes.stream()
-                                .filter(Checkbox::selected)
-                                .map(box ->
-                                        RecipientType.fromName(box.getMessage().getString()))
-                                .collect(Collectors.toSet()),
-                        filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput()));
+        ChatTab chatTab = new ChatTab(
+                nameInput.getTextBoxInput(),
+                consumingCheckbox.selected(),
+                autoCommandInput.getTextBoxInput(),
+                recipientTypeBoxes.stream()
+                        .filter(Checkbox::selected)
+                        .map(box -> RecipientType.fromName(box.getMessage().getString()))
+                        .collect(Collectors.toSet()),
+                filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
+        Managers.ChatTab.addTab(insertIndex, chatTab);
 
         Managers.Config.saveConfig();
     }
 
     private void deleteChatTab() {
-        ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
+        Managers.ChatTab.removeTab(edited);
         if (Objects.equals(Managers.ChatTab.getFocusedTab(), edited)) {
-            if (!ChatTabsFeature.INSTANCE.chatTabs.isEmpty()) {
-                Managers.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
+            if (!Managers.ChatTab.isTabListEmpty()) {
+                Managers.ChatTab.setFocusedTab(0);
             } else {
                 Managers.ChatTab.setFocusedTab(null);
             }
