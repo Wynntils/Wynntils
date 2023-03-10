@@ -11,8 +11,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.json.TypeOverride;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -35,7 +35,7 @@ public class CommandAliasesFeature extends UserFeature {
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr"))));
 
     @TypeOverride
-    private final Type aliasesType = new TypeToken<List<CommandAlias>>() {}.getType();
+    private final Type aliasesType = new TypeToken<ArrayList<CommandAlias>>() {}.getType();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {

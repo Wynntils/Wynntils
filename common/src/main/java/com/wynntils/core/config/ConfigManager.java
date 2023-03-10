@@ -4,13 +4,9 @@
  */
 package com.wynntils.core.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -20,56 +16,43 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayGroup;
-import com.wynntils.utils.FileUtils;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class ConfigManager extends Manager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
-    private static final Gson CONFIG_GSON = new GsonBuilder()
-            .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .setPrettyPrinting()
-            .serializeNulls()
-            .create();
-    private static final List<ConfigHolder> CONFIG_HOLDERS = new ArrayList<>();
+    private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
 
     private static final List<ConfigHolder> OVERLAY_GROUP_CONFIG_HOLDERS = new ArrayList<>();
     private static final List<OverlayGroupHolder> OVERLAY_GROUP_FIELDS = new ArrayList<>();
 
-    private File userConfig;
+    private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(ConfigUpfixerManager upfixer) {
-        super(List.of(upfixer));
+    public ConfigManager(ConfigUpfixerManager configUpfixerManager, JsonManager jsonManager) {
+        super(List.of(configUpfixerManager, jsonManager));
+
+        userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
 
         // First, we load the config file
-        loadConfigFile();
+        configObject = Managers.Json.loadPreciousJson(userConfig);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (upfixer.runUpfixers(configObject)) {
-            saveConfigToDisk(configObject);
+        if (configUpfixerManager.runUpfixers(configObject)) {
+            Managers.Json.savePreciousJson(userConfig, configObject);
         }
     }
 
@@ -117,48 +100,8 @@ public final class ConfigManager extends Manager {
         CONFIG_HOLDERS.addAll(configOptions);
     }
 
-    public void loadConfigFile() {
-        // create config directory if necessary
-        FileUtils.mkdir(CONFIGS);
-
-        // set up config file based on uuid, load it if it exists
-        userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
-        if (!userConfig.exists()) {
-            FileUtils.createNewFile(userConfig);
-            configObject = new JsonObject();
-            return;
-        }
-
-        try {
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfig), StandardCharsets.UTF_8);
-            JsonElement fileElement = JsonParser.parseReader(new JsonReader(reader));
-            reader.close();
-            if (!fileElement.isJsonObject()) {
-                // invalid config file
-
-                // Copy old config file to a backup, with a random part in the name to make sure we do not overwrite it
-                FileUtils.copyFile(
-                        userConfig,
-                        new File(
-                                CONFIGS,
-                                "invalid_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_"
-                                        + RandomStringUtils.random(5) + "_" + userConfig.getName()));
-                FileUtils.deleteFile(userConfig);
-                FileUtils.createNewFile(userConfig);
-                configObject = new JsonObject();
-
-                return;
-            }
-
-            configObject = fileElement.getAsJsonObject();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to load user config file!", e);
-
-            configObject = new JsonObject();
-        }
-    }
-
-    public void loadAllConfigOptions() {
+    public void reloadConfiguration() {
+        configObject = Managers.Json.loadPreciousJson(userConfig);
         loadConfigOptions(true, true);
     }
 
@@ -177,11 +120,6 @@ public final class ConfigManager extends Manager {
     //       This means we need to save - load - save, which we should not do. initOverlayGroups is the solution to
     //       this, for now.
     public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
-        if (configObject == null) {
-            WynntilsMod.error("Tried to load configs when configObject is null.");
-            return; // nothing to load from
-        }
-
         // We have to set up the overlay groups first, so that the overlays' configs can be loaded
         List<ConfigHolder> oldOverlayHolders = new ArrayList<>(OVERLAY_GROUP_CONFIG_HOLDERS);
         OVERLAY_GROUP_CONFIG_HOLDERS.clear();
@@ -225,7 +163,7 @@ public final class ConfigManager extends Manager {
 
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
-            Object value = CONFIG_GSON.fromJson(holderJson, holder.getType());
+            Object value = Managers.Json.GSON.fromJson(holderJson, holder.getType());
             holder.setValue(value);
         }
 
@@ -241,18 +179,13 @@ public final class ConfigManager extends Manager {
     }
 
     public void saveConfig() {
-        // create file if necessary
-        if (!userConfig.exists()) {
-            FileUtils.createNewFile(userConfig);
-        }
-
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
         for (ConfigHolder holder : getConfigHolderList()) {
             if (!holder.valueChanged()) continue; // only save options that have been set by the user
             Object value = holder.getValue();
 
-            JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
+            JsonElement holderElement = Managers.Json.GSON.toJsonTree(value);
             holderJson.add(holder.getJsonName(), holderElement);
         }
 
@@ -275,65 +208,21 @@ public final class ConfigManager extends Manager {
 
         holderJson.add("overlayGroups", overlayGroups);
 
-        saveConfigToDisk(holderJson);
-    }
-
-    private void saveConfigToDisk(JsonObject configObject) {
-        try {
-            // write json to file
-            OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(userConfig), StandardCharsets.UTF_8);
-
-            CONFIG_GSON.toJson(configObject, fileWriter);
-            fileWriter.close();
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!", e);
-        }
+        Managers.Json.savePreciousJson(userConfig, holderJson);
     }
 
     public void saveDefaultConfig() {
-        try {
-            // create file if necessary
-            if (!DEFAULT_CONFIG.exists()) {
-                FileUtils.createNewFile(DEFAULT_CONFIG);
-            }
+        // create json object, with entry for each option of each container
+        JsonObject holderJson = new JsonObject();
+        for (ConfigHolder holder : getConfigHolderList()) {
+            Object value = holder.getDefaultValue();
 
-            // create json object, with entry for each option of each container
-            JsonObject holderJson = new JsonObject();
-            for (ConfigHolder holder : getConfigHolderList()) {
-                Object value = holder.getDefaultValue();
-
-                JsonElement holderElement = CONFIG_GSON.toJsonTree(value);
-                holderJson.add(holder.getJsonName(), holderElement);
-            }
-
-            // write json to file
-            OutputStreamWriter fileWriter =
-                    new OutputStreamWriter(new FileOutputStream(DEFAULT_CONFIG), StandardCharsets.UTF_8);
-            CONFIG_GSON.toJson(holderJson, fileWriter);
-            fileWriter.close();
-            WynntilsMod.info("Default config file created with " + holderJson.size() + " config values.");
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to save user config file!", e);
-        }
-    }
-
-    private Type findFieldTypeOverride(Configurable parent, Field configField) {
-        Optional<Field> typeField = Arrays.stream(
-                        FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                .filter(field ->
-                        field.getType() == Type.class && field.getName().equals(configField.getName() + "Type"))
-                .findFirst();
-
-        if (typeField.isPresent()) {
-            try {
-                return (Type) FieldUtils.readField(typeField.get(), parent, true);
-            } catch (IllegalAccessException e) {
-                WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
-            }
+            JsonElement holderElement = Managers.Json.GSON.toJsonTree(value);
+            holderJson.add(holder.getJsonName(), holderElement);
         }
 
-        return null;
+        WynntilsMod.info("Creating default config file with " + holderJson.size() + " config values.");
+        Managers.Json.savePreciousJson(DEFAULT_CONFIG, holderJson);
     }
 
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
@@ -342,7 +231,7 @@ public final class ConfigManager extends Manager {
         for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
             Config metadata = configField.getAnnotation(Config.class);
 
-            Type typeOverride = findFieldTypeOverride(parent, configField);
+            Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
             ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
@@ -368,9 +257,5 @@ public final class ConfigManager extends Manager {
 
     public Stream<ConfigHolder> getConfigHolders() {
         return getConfigHolderList().stream();
-    }
-
-    public Object deepCopy(Object value, Type fieldType) {
-        return CONFIG_GSON.fromJson(CONFIG_GSON.toJson(value), fieldType);
     }
 }
