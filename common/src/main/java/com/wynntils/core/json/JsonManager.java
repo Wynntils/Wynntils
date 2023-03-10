@@ -73,7 +73,7 @@ public final class JsonManager extends Manager {
 
         if (jsonFile.exists()) {
             File backupFile = new File(jsonFile.getPath() + ".bak");
-            // Remove old backup (if anyy), and move current json file to backup
+            // Remove old backup (if any), and move current json file to backup
             FileUtils.deleteFile(backupFile);
             FileUtils.moveFile(jsonFile, backupFile);
         }
@@ -125,7 +125,7 @@ public final class JsonManager extends Manager {
     private void handleInvalidFile(File jsonFile) {
         File dir = jsonFile.getParentFile();
 
-        // Copy old  file to a backup, with a random part in the name to make sure we do not overwrite it
+        // Copy old file to a backup, with a random part in the name to make sure we do not overwrite it
         FileUtils.tryCopyFile(
                 jsonFile,
                 new File(
