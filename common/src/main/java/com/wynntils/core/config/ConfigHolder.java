@@ -19,7 +19,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigHolder {
+public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Configurable parent;
     private final Field field;
     private final Type fieldType;
@@ -48,7 +48,7 @@ public class ConfigHolder {
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = Managers.Config.deepCopy(getValue(), this.fieldType);
+        this.defaultValue = Managers.Json.deepCopy(getValue(), this.fieldType);
     }
 
     private Type calculateType(Type typeOverride, Object value, Field field) {
@@ -168,7 +168,7 @@ public class ConfigHolder {
     public void reset() {
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(Managers.Config.deepCopy(defaultValue, this.fieldType));
+        setValue(Managers.Json.deepCopy(defaultValue, this.fieldType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }
@@ -185,5 +185,10 @@ public class ConfigHolder {
 
         // couldn't parse value
         return null;
+    }
+
+    @Override
+    public int compareTo(ConfigHolder other) {
+        return getJsonName().compareTo(other.getJsonName());
     }
 }

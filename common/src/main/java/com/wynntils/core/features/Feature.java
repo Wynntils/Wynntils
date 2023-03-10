@@ -14,6 +14,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.storage.Storageable;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  *
  * <p>Ex: Soul Point Timer
  */
-public abstract class Feature extends AbstractConfigurable implements Translatable, Comparable<Feature> {
+public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
@@ -109,6 +110,11 @@ public abstract class Feature extends AbstractConfigurable implements Translatab
     private String getNameCamelCase() {
         String name = this.getClass().getSimpleName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    @Override
+    public String getStorageJsonName() {
+        return "feature." + getNameCamelCase();
     }
 
     /** Called on init of Feature */

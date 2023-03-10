@@ -193,8 +193,7 @@ public class ConfigCommand extends Command {
     }
 
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        Managers.Config.loadConfigFile();
-        Managers.Config.loadAllConfigOptions();
+        Managers.Config.reloadConfiguration();
         Managers.Config.saveConfig();
 
         context.getSource()
