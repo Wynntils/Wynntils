@@ -5,8 +5,8 @@
 package com.wynntils.models.spells.actionbar;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.handlers.actionbar.ActionBarPosition;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

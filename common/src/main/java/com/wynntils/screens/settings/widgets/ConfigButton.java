@@ -53,7 +53,7 @@ public class ConfigButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
         String displayName = configHolder.getDisplayName();

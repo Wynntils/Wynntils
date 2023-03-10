@@ -53,7 +53,7 @@ public final class WynntilsMod {
     private static IEventBus eventBus;
     private static File modJar;
     private static boolean initCompleted = false;
-    private static Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
+    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -236,6 +236,7 @@ public final class WynntilsMod {
                     try {
                         CoreComponent component = (CoreComponent) field.get(null);
                         WynntilsMod.registerEventListener(component);
+                        Managers.Storage.registerStorageable(component);
                         components.add(component);
                     } catch (IllegalAccessException e) {
                         WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
@@ -259,11 +260,14 @@ public final class WynntilsMod {
     }
 
     private static void initFeatures() {
-        // Init all features. Now resources (i.e I18n) are available.
+        // Init all features and functions. Now resources (i.e I18n) are available.
         Managers.Feature.init();
+        Managers.Function.init();
+        Managers.Storage.restorePersisted();
         LOGGER.info(
-                "Wynntils: {} features are now loaded and ready",
-                Managers.Feature.getFeatures().size());
+                "Wynntils: {} features and {} functions are now loaded and ready",
+                Managers.Feature.getFeatures().size(),
+                Managers.Function.getFunctions().size());
         initCompleted = true;
     }
 

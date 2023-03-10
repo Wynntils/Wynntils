@@ -47,7 +47,7 @@ public class DiscoveryFilterButton extends WynntilsButton implements TooltipProv
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
 
         if (!this.dynamicTexture) {

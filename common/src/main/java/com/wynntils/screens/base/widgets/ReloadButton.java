@@ -27,7 +27,7 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture reloadButton = Texture.RELOAD_BUTTON;
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(

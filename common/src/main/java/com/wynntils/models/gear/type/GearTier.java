@@ -11,14 +11,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, -1, 0),
+    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
     SET(ChatFormatting.GREEN, 8, 1.2f),
-    FABLED(ChatFormatting.RED, 12, 4.5f),
-    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
+    LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
+    FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
+    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f);
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;

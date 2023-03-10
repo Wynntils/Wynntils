@@ -39,6 +39,14 @@ public final class SystemUtils {
         return bufferedimage;
     }
 
+    public static int getMemUsed() {
+        return (int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+    }
+
+    public static int getMemMax() {
+        return (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
+    }
+
     private static final class ClipboardImage implements Transferable {
         private final Image image;
 

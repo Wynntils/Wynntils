@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class BloodPoolBar extends TrackedBar {
+    private int current;
+
     public BloodPoolBar() {
         super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"));
     }
@@ -32,10 +34,11 @@ public final class BloodPoolBar extends TrackedBar {
             int unroundedMax = (int) (current / progress);
             int remainder = unroundedMax % 30;
 
-            max = unroundedMax - remainder;
+            int max = unroundedMax - remainder;
             if (remainder > 15) {
                 max += 30;
             }
+            updateValue(current, max);
         }
     }
 }

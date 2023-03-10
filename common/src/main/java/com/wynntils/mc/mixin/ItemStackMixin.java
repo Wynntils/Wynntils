@@ -4,19 +4,17 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.mc.EventFactory;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
-import com.wynntils.mc.event.ItemTooltipHoveredNameEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements ItemStackExtension {
@@ -26,26 +24,14 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     @Unique
     private String wynntilsOriginalName;
 
-    @Redirect(
-            method =
-                    "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/world/item/ItemStack;getHoverName()Lnet/minecraft/network/chat/Component;"))
-    private Component redirectGetHoveredName(ItemStack instance) {
-        ItemTooltipHoveredNameEvent event = EventFactory.onGetHoverName(instance.getHoverName(), instance);
-        return event.getHoveredName();
-    }
-
-    @Redirect(
+    @ModifyExpressionValue(
             method =
                     "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getHideFlags()I"))
-    private int redirectGetHideFlags(ItemStack instance) {
+    private int redirectGetHideFlags(int original) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Mask event = EventFactory.onTooltipFlagsMask(itemStack, instance.getHideFlags());
+        ItemTooltipFlagsEvent.Mask event = new ItemTooltipFlagsEvent.Mask(itemStack, original);
+        MixinHelper.post(event);
 
         return event.getMask();
     }
@@ -58,7 +44,9 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             argsOnly = true)
     private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Advanced event = EventFactory.onTooltipFlagsAdvanced(itemStack, flags);
+        ItemTooltipFlagsEvent.Advanced event = new ItemTooltipFlagsEvent.Advanced(itemStack, flags);
+        MixinHelper.post(event);
+
         return event.getFlags();
     }
 

@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -18,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CustomHeadLayer.class)
 public abstract class CustomHeadLayerMixin<T extends LivingEntity> {
-
     @Inject(
             method =
                     "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V",
@@ -38,6 +38,10 @@ public abstract class CustomHeadLayerMixin<T extends LivingEntity> {
             CallbackInfo ci) {
         if (!(livingEntity instanceof Player player)) return;
 
-        if (EventFactory.onPlayerArmorRender(player, EquipmentSlot.HEAD).isCanceled()) ci.cancel();
+        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(player, EquipmentSlot.HEAD);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

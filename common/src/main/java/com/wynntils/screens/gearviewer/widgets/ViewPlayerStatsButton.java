@@ -34,8 +34,8 @@ public class ViewPlayerStatsButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderButton(poseStack, mouseX, mouseY, partialTick);
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(poseStack, mouseX, mouseY, partialTick);
 
         if (isHovered) {
             RenderUtils.drawTooltipAt(

@@ -5,6 +5,7 @@
 package com.wynntils.models.players;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -17,7 +18,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public final class PlayerModel extends Model {
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
-    private Map<UUID, String> nameMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());
@@ -84,7 +84,6 @@ public final class PlayerModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            clearTextureCache();
             clearUserCache();
         }
         if (event.getNewState() == WorldState.WORLD) {
@@ -143,8 +142,8 @@ public final class PlayerModel extends Model {
                     users.put(uuid, user);
                     fetching.remove(uuid);
 
-                    // Make sure texture loading is done on client thread
-                    Managers.TickScheduler.scheduleNextTick(() -> loadCosmeticTextures(uuid, user));
+                    // Schedule cape loading for next render tick
+                    RenderSystem.recordRenderCall(() -> loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;
@@ -191,16 +190,6 @@ public final class PlayerModel extends Model {
     private void clearUserCache() {
         users.clear();
         nameMap.clear();
-    }
-
-    private void clearTextureCache() {
-        for (ResourceLocation[] locations : cosmeticTextures.values()) {
-            // Make sure texture unloading is done on client thread
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                Arrays.stream(locations)
-                        .forEach(l -> McUtils.mc().getTextureManager().release(l));
-            });
-        }
         cosmeticTextures.clear();
     }
 

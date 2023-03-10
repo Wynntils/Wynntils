@@ -13,7 +13,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
-import com.wynntils.features.user.players.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
@@ -248,38 +248,26 @@ public final class HadesModel extends Model {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            if (lastSentStatus != null
-                    && lastSentStatus.equals(
-                            pX,
-                            pY,
-                            pZ,
-                            Models.Character.getCurrentHealth(),
-                            Models.Character.getMaxHealth(),
-                            Models.Character.getCurrentMana(),
-                            Models.Character.getMaxMana())) {
+            PlayerStatus newStatus =
+                    new PlayerStatus(pX, pY, pZ, Models.Character.getHealth(), Models.Character.getMana());
+
+            if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
                 return;
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
 
-            lastSentStatus = new PlayerStatus(
-                    pX,
-                    pY,
-                    pZ,
-                    Models.Character.getCurrentHealth(),
-                    Models.Character.getMaxHealth(),
-                    Models.Character.getCurrentMana(),
-                    Models.Character.getMaxMana());
+            lastSentStatus = newStatus;
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
                     lastSentStatus.y(),
                     lastSentStatus.z(),
-                    lastSentStatus.health(),
-                    lastSentStatus.maxHealth(),
-                    lastSentStatus.mana(),
-                    lastSentStatus.maxMana()));
+                    lastSentStatus.health().current(),
+                    lastSentStatus.health().max(),
+                    lastSentStatus.mana().current(),
+                    lastSentStatus.mana().max()));
         }
     }
 

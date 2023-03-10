@@ -38,8 +38,8 @@ public final class OverlayManager extends Manager {
     private final Set<Overlay> enabledOverlays = new HashSet<>();
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
-    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
-    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingCounts = new HashMap<>();
 
     public OverlayManager(CrashReportManager crashReportManager) {
         super(List.of(crashReportManager));

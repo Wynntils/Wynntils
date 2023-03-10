@@ -8,12 +8,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.models.lootruns.type.BlockValidness;
 import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -155,7 +156,7 @@ public final class LootrunRenderer {
             BlockPos lastBlockPos = null;
 
             for (ColoredPoint point : locationsInRoute.points()) {
-                BlockPos blockPos = new BlockPos(point.vec3());
+                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
                     if (!toRender.points().isEmpty()) {
@@ -200,7 +201,6 @@ public final class LootrunRenderer {
 
     private static void renderTexturedLootrunPoints(
             PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
-
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
@@ -216,7 +216,7 @@ public final class LootrunRenderer {
 
             for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
                 ColoredPoint point = locationsInRoute.points().get(i);
-                BlockPos blockPos = new BlockPos(point.vec3());
+                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
 
                 ColoredPoint end = locationsInRoute
                         .points()

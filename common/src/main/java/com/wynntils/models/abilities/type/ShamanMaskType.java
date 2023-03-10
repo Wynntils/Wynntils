@@ -43,6 +43,10 @@ public enum ShamanMaskType {
         return parseString;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
     public String getName() {
         return StringUtils.capitalizeFirst(this.name().toLowerCase(Locale.ROOT));
     }

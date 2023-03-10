@@ -11,7 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public class TerritoryCommand extends Command {
-    private CompassCommand delagate = new CompassCommand();
+    private final CompassCommand delagate = new CompassCommand();
 
     @Override
     public String getCommandName() {

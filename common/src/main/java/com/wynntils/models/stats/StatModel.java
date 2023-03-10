@@ -123,7 +123,6 @@ public final class StatModel extends Model {
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
-
         statTypeRegistry.addAll(miscStats);
         statTypeRegistry.addAll(defenceStats);
         statTypeRegistry.addAll(damageStats);

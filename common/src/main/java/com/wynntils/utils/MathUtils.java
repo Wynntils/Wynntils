@@ -27,20 +27,34 @@ public final class MathUtils {
             Map.entry(4, "IV"),
             Map.entry(1, "I")));
 
-    public static float lerp(float a, float b, float t) {
-        return a + (b - a) * t;
+    public static int floor(float value) {
+        int i = (int) value;
+        return value < (float) i ? i - 1 : i;
     }
 
-    public static double lerp(double a, double b, double t) {
-        return a + (b - a) * t;
+    public static int floor(double value) {
+        int i = (int) value;
+        return value < (double) i ? i - 1 : i;
     }
 
-    public static float inverseLerp(float a, float b, float value) {
-        return (value - a) / (b - a);
+    public static float frac(float number) {
+        return number - (float) floor(number);
     }
 
-    public static double inverseLerp(double a, double b, double value) {
-        return (value - a) / (b - a);
+    public static float lerp(float start, float end, float delta) {
+        return start + (end - start) * delta;
+    }
+
+    public static double lerp(double start, double end, double delta) {
+        return start + (end - start) * delta;
+    }
+
+    public static float inverseLerp(float start, float end, float value) {
+        return (value - start) / (end - start);
+    }
+
+    public static double inverseLerp(double start, double end, double value) {
+        return (value - start) / (end - start);
     }
 
     public static int clamp(int num, int min, int max) {

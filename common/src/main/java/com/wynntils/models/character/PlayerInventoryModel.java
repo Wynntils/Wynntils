@@ -5,24 +5,37 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Objects;
-import net.minecraft.world.inventory.InventoryMenu;
+import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
-    private int openSlots = 0;
+    private static final int MAX_INVENTORY_SLOTS = 28;
+    private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
+
+    private int emptySlots = 0;
 
     public PlayerInventoryModel() {
         super(List.of());
+    }
 
-        resetCache();
+    public CappedValue getInventorySlots() {
+        return new CappedValue(MAX_INVENTORY_SLOTS - emptySlots, MAX_INVENTORY_SLOTS);
+    }
+
+    public CappedValue getIngredientPouchSlots() {
+        return new CappedValue(getUsedIngredientPouchSlots(), MAX_INGREDIENT_POUCH_SLOTS);
     }
 
     @SubscribeEvent
@@ -50,20 +63,21 @@ public final class PlayerInventoryModel extends Model {
         }
     }
 
+    private int getUsedIngredientPouchSlots() {
+        ItemStack itemStack = McUtils.inventory().items.get(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM);
+        Optional<IngredientPouchItem> pouchItemOpt = Models.Item.asWynnItem(itemStack, IngredientPouchItem.class);
+
+        // This should never happen
+        if (pouchItemOpt.isEmpty()) return -1;
+
+        return pouchItemOpt.get().getIngredients().size();
+    }
+
     private void updateCache() {
-        InventoryMenu inventory = McUtils.inventoryMenu();
-        openSlots = InventoryUtils.getEmptySlots(McUtils.inventory());
+        emptySlots = InventoryUtils.getEmptySlots(McUtils.inventory());
     }
 
     private void resetCache() {
-        openSlots = 0;
-    }
-
-    public int getOpenInvSlots() {
-        return openSlots;
-    }
-
-    public int getUsedInvSlots() {
-        return 28 - openSlots;
+        emptySlots = 0;
     }
 }

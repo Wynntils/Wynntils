@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public final class CustomBeaconRenderer {
     public static void renderBeaconBeam(
@@ -32,7 +31,7 @@ public final class CustomBeaconRenderer {
         poseStack.translate(0.5, 0.0, 0.5);
         float f = (float) Math.floorMod(gameTime, 40) + partialTick;
         float g = height < 0 ? f : -f;
-        float h = Mth.frac(g * 0.2F - (float) Mth.floor(g * 0.1F));
+        float h = MathUtils.frac(g * 0.2F - (float) MathUtils.floor(g * 0.1F));
         float red = colors[0];
         float green = colors[1];
         float blue = colors[2];

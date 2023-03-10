@@ -4,9 +4,11 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
@@ -14,18 +16,18 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
     @Shadow
     protected abstract RenderType getRenderType(LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
 
-    // Can't find an impl without saving args
-    private float overrideTranslucence;
+    @Unique
+    private float wynntilsTranslucence;
 
-    @Redirect(
+    @WrapOperation(
             method =
                     "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at =
@@ -38,14 +40,19 @@ public abstract class LivingEntityRendererMixin {
             LivingEntity livingEntity,
             boolean bodyVisible,
             boolean translucent,
-            boolean glowing) {
-        LivingEntityRenderTranslucentCheckEvent event = EventFactory.onTranslucentCheck(translucent, livingEntity);
+            boolean glowing,
+            Operation<RenderType> original) {
+        LivingEntityRenderTranslucentCheckEvent event =
+                new LivingEntityRenderTranslucentCheckEvent(translucent, livingEntity, translucent ? 0.15f : 1f);
+        MixinHelper.post(event);
 
-        overrideTranslucence = event.getTranslucence();
-        return getRenderType(livingEntity, bodyVisible, event.isTranslucent(), glowing);
+        // Save translucence value for later use
+        wynntilsTranslucence = event.getTranslucence();
+
+        return original.call(instance, livingEntity, bodyVisible, event.isTranslucent(), glowing);
     }
 
-    @Redirect(
+    @WrapOperation(
             method =
                     "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at =
@@ -62,7 +69,8 @@ public abstract class LivingEntityRendererMixin {
             float r,
             float g,
             float b,
-            float a) {
-        instance.renderToBuffer(poseStack, consumer, packedLight, packetOverlay, r, g, b, overrideTranslucence);
+            float a,
+            Operation<Void> original) {
+        original.call(instance, poseStack, consumer, packedLight, packetOverlay, r, g, b, wynntilsTranslucence);
     }
 }

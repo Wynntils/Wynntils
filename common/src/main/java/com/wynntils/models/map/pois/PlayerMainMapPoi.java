@@ -5,8 +5,8 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.map.MapFeature;
-import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
+import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -86,7 +86,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 healthTexture.getTextureY1(),
                 81,
                 healthTexture.getTextureY2(),
-                (float) user.getHealth() / user.getMaxHealth());
+                (float) user.getHealth().getProgress());
 
         // name
         Font font = FontRenderer.getInstance().getFont();

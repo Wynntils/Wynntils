@@ -7,7 +7,8 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,7 +30,8 @@ public abstract class ItemRendererMixin {
     private int wynntilsCountOverlayColor;
 
     @Inject(
-            method = "render",
+            method =
+                    "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
             at =
                     @At(
                             target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
@@ -45,9 +47,9 @@ public abstract class ItemRendererMixin {
             int combinedOverlay,
             BakedModel model,
             CallbackInfo ci) {
-        if (transformType == ItemTransforms.TransformType.GROUND) {
-            EventFactory.onGroundItemRender(poseStack, itemStack);
-        }
+        if (transformType != ItemTransforms.TransformType.GROUND) return;
+
+        MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, itemStack));
     }
 
     @ModifyVariable(
@@ -58,10 +60,13 @@ public abstract class ItemRendererMixin {
             argsOnly = true)
     private String renderGuiItemDecorations(
             String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
+        if (!MixinHelper.onWynncraft()) return text;
+
         String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
-        ItemCountOverlayRenderEvent event = EventFactory.onItemCountRender(itemStack, countString, 0xFFFFFF);
+        ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF);
+        MixinHelper.post(event);
         // Storing the color in a field assumes this is only called single-threaded by the render thread
         wynntilsCountOverlayColor = event.getCountColor();
 

@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.scoreboard;
 
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.Set;
 
 /**

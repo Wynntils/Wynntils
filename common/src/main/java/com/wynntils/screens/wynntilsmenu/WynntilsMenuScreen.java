@@ -7,7 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -201,7 +201,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY);
+        renderWidgets(poseStack, mouseX, mouseY);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
@@ -216,7 +216,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         int posX = (int) (translationX + Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
         int posY = (int) (translationY + Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - mouseY, McUtils.player());
+        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - 50 - mouseY, McUtils.player());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -233,7 +233,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .renderAlignedTextInBox(
                         poseStack,
                         Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                + Models.CombatXp.getXpLevel(),
+                                + Models.CombatXp.getCombatLevel().current(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         145,
@@ -281,7 +281,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
         int buttonCount = buttons.size();
 
         poseStack.pushPose();

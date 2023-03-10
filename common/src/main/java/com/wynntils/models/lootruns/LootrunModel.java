@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -24,6 +24,7 @@ import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
@@ -228,7 +229,7 @@ public final class LootrunModel extends Model {
         List<LootrunNote> notes = current.notes();
         for (int i = 0; i < notes.size(); i++) {
             LootrunNote note = notes.get(i);
-            if (pos.equals(new BlockPos(note.position()))) {
+            if (pos.equals(PosUtils.newBlockPos(note.position()))) {
                 return notes.remove(i);
             }
         }

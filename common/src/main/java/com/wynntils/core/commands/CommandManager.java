@@ -9,6 +9,9 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.commands.BombBellCommand;
 import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
@@ -22,6 +25,7 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -50,8 +55,10 @@ public final class CommandManager extends Manager {
         registerAllCommands();
     }
 
-    public CommandDispatcher<CommandSourceStack> getClientDispatcher() {
-        return clientDispatcher;
+    @SuppressWarnings("unchecked")
+    public void addNode(
+            RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
+        root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
     }
 
     private void registerCommand(Command command) {
@@ -69,21 +76,14 @@ public final class CommandManager extends Manager {
         return executeCommand(reader, message);
     }
 
-    public CompletableFuture<Suggestions> getCompletionSuggestions(
-            String cmd,
-            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
-            ParseResults<CommandSourceStack> clientParse,
-            ParseResults<SharedSuggestionProvider> serverParse,
-            int cursor) {
-        StringReader stringReader = new StringReader(cmd);
-        if (stringReader.canRead() && stringReader.peek() == '/') {
-            stringReader.skip();
-        }
+    @SubscribeEvent
+    public void onCommandSuggestions(CommandSuggestionsEvent event) {
+        CompletableFuture<Suggestions> serverSuggestions = event.getSuggestions();
+        StringReader command = event.getCommand();
 
+        ParseResults<CommandSourceStack> clientParse = clientDispatcher.parse(command, getSource());
         CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
-        CompletableFuture<Suggestions> serverSuggestions =
-                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
+                clientDispatcher.getCompletionSuggestions(clientParse, event.getCursor());
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
@@ -91,10 +91,10 @@ public final class CommandManager extends Manager {
             final List<Suggestions> suggestions = new ArrayList<>();
             suggestions.add(clientSuggestions.join());
             suggestions.add(serverSuggestions.join());
-            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
+            result.complete(Suggestions.merge(command.getString(), suggestions));
         });
 
-        return result;
+        event.setSuggestions(result);
     }
 
     public ClientCommandSourceStack getSource() {

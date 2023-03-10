@@ -10,6 +10,9 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
+import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -309,7 +312,6 @@ public final class ChatHandler extends Handler {
      * message entirely.
      */
     private Component postChatLine(Component message, String codedMessage, MessageType messageType) {
-
         String plainText = message.getString();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between

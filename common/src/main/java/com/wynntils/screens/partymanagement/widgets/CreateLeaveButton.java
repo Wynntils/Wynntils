@@ -10,7 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class CreateLeaveButton extends WynntilsButton {
-
     public CreateLeaveButton(int x, int y, int width, int height) {
         super(
                 x,

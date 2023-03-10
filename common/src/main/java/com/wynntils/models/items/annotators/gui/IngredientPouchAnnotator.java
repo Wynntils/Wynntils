@@ -20,24 +20,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements ItemAnnotator {
-    private static final Pattern INGREDIENT_POUCH_PATTERN = Pattern.compile("^§6Ingredient Pouch$");
+    private static final String INGREDIENT_POUCH_NAME = "§6Ingredient Pouch";
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN = Pattern.compile(
             "^§f(\\d+) x (?:§r)?§7([^§]*)(?:§r)?(?:§[3567])? \\[(?:§r)?§([8bde])✫(?:§r)?(§8)?✫(?:§r)?(§8)?✫(?:§r)?§[3567]\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
         if (itemStack.getItem() != Items.DIAMOND_AXE) return null;
-        Matcher matcher = INGREDIENT_POUCH_PATTERN.matcher(name);
-        if (!matcher.matches()) return null;
+        if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<String> lore = LoreUtils.getLore(itemStack);
         for (String line : lore) {
-            Matcher loreMatcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line);
-            if (!loreMatcher.matches()) continue;
-            int count = Integer.parseInt(loreMatcher.group(1));
-            String ingredientName = loreMatcher.group(2);
-            String tierColor = loreMatcher.group(3);
+            Matcher matcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line);
+            if (!matcher.matches()) continue;
+
+            int count = Integer.parseInt(matcher.group(1));
+            String ingredientName = matcher.group(2);
+            String tierColor = matcher.group(3);
 
             int tier = Models.Ingredient.getTierFromColorCode(tierColor);
             IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);

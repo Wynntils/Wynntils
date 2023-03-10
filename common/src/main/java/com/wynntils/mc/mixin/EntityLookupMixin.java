@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +25,8 @@ public abstract class EntityLookupMixin {
 
     @Inject(method = "add(Lnet/minecraft/world/level/entity/EntityAccess;)V", at = @At("HEAD"), cancellable = true)
     private void addPre(EntityAccess entityAccess, CallbackInfo ci) {
-        AddEntityLookupEvent event = EventFactory.onAddEntityLookup(entityAccess.getUUID(), byUuid);
+        AddEntityLookupEvent event = new AddEntityLookupEvent(entityAccess.getUUID(), byUuid);
+        MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }

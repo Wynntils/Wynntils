@@ -5,7 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.map.MinimapFeature;
+import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;

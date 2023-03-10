@@ -21,7 +21,9 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
@@ -32,15 +34,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
+    private static final int MAX_TOTEM_COUNT = 3;
 
-    private ShamanTotem totem1 = null;
-    private Integer pendingTotem1VisibleId = null;
-
-    private ShamanTotem totem2 = null;
-    private Integer pendingTotem2VisibleId = null;
-
-    private ShamanTotem totem3 = null;
-    private Integer pendingTotem3VisibleId = null;
+    private ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
+    private Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
 
     private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;
@@ -75,14 +72,17 @@ public class ShamanTotemModel extends Model {
                     // actually spawns
                     List<ItemStack> inv = new ArrayList<>();
                     totemAS.getArmorSlots().forEach(inv::add);
+
                     if (inv.size() < 4) return;
+
                     ItemStack data = inv.get(3);
                     if (data.getItem() != Items.STONE_SHOVEL) return;
+
                     // This relies on the fact that damage values 28 (Shaman) and 29 (Skyseer) on the stone shovel set
                     // the totem's texture
                     if (data.getDamageValue() != 28 && data.getDamageValue() != 29) return;
-                    // Checks complete, this is a valid totem
 
+                    // Checks complete, this is a valid totem
                     int totemNumber = getNextTotemSlot();
 
                     WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, totemAS));
@@ -95,22 +95,8 @@ public class ShamanTotemModel extends Model {
                             ShamanTotem.TotemState.SUMMONED,
                             new Location(totemAS.position().x, totemAS.position().y, totemAS.position().z));
 
-                    switch (totemNumber) {
-                        case 1 -> {
-                            totem1 = newTotem;
-                            pendingTotem1VisibleId = totemAS.getId();
-                        }
-                        case 2 -> {
-                            totem2 = newTotem;
-                            pendingTotem2VisibleId = totemAS.getId();
-                        }
-                        case 3 -> {
-                            totem3 = newTotem;
-                            pendingTotem3VisibleId = totemAS.getId();
-                        }
-                        default -> throw new IllegalArgumentException(
-                                "totemNumber should be 1, 2, or 3! (totem variable switch in #onTotemSpawn in ShamanTotemTrackingFeature");
-                    }
+                    totems[totemNumber - 1] = newTotem;
+                    pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
                 },
                 3);
     }
@@ -118,7 +104,7 @@ public class ShamanTotemModel extends Model {
     @SubscribeEvent
     public void onTimerSpawn(AddEntityEvent e) {
         // We aren't looking for a new timer, skip
-        if (pendingTotem1VisibleId == null && pendingTotem2VisibleId == null && pendingTotem3VisibleId == null) return;
+        if (Arrays.stream(pendingTotemVisibleIds).allMatch(Objects::isNull)) return;
 
         int entityId = e.getId();
 
@@ -145,30 +131,25 @@ public class ShamanTotemModel extends Model {
                                 possibleTimer.position().y + TOTEM_SEARCH_RADIUS * 5,
                                 possibleTimer.position().z + TOTEM_SEARCH_RADIUS));
 
-        for (ArmorStand as : toCheck) {
+        for (ArmorStand armorStand : toCheck) {
             // Recreate location for each ArmorStand checked for most accurate coordinates
-            Location parsedLocation = new Location(as.position().x, as.position().y, as.position().z);
-            if (pendingTotem1VisibleId != null && as.getId() == pendingTotem1VisibleId) {
-                totem1.setTimerEntityId(entityId);
-                totem1.setLocation(parsedLocation);
-                totem1.setState(ShamanTotem.TotemState.ACTIVE);
-                WynntilsMod.postEvent(new TotemEvent.Activated(1, parsedLocation));
-                pendingTotem1VisibleId = null;
-            } else if (pendingTotem2VisibleId != null && as.getId() == pendingTotem2VisibleId) {
-                totem2.setTimerEntityId(entityId);
-                totem2.setLocation(parsedLocation);
-                totem2.setState(ShamanTotem.TotemState.ACTIVE);
-                WynntilsMod.postEvent(new TotemEvent.Activated(2, parsedLocation));
-                pendingTotem2VisibleId = null;
-            } else if (pendingTotem3VisibleId != null && as.getId() == pendingTotem3VisibleId) {
-                totem3.setTimerEntityId(entityId);
-                totem3.setLocation(parsedLocation);
-                totem3.setState(ShamanTotem.TotemState.ACTIVE);
-                WynntilsMod.postEvent(new TotemEvent.Activated(3, parsedLocation));
-                pendingTotem3VisibleId = null;
-            } else {
-                // No totem slots available?
-                // WynntilsMod.getLogger().warn("Received a new totem {}, but no totem slots are available", entityId);
+            Location parsedLocation =
+                    new Location(armorStand.position().x, armorStand.position().y, armorStand.position().z);
+
+            for (int i = 0; i < pendingTotemVisibleIds.length; i++) {
+                if (pendingTotemVisibleIds[i] != null && armorStand.getId() == pendingTotemVisibleIds[i]) {
+                    ShamanTotem totem = totems[i];
+
+                    totem.setTimerEntityId(entityId);
+                    totem.setLocation(parsedLocation);
+                    totem.setState(ShamanTotem.TotemState.ACTIVE);
+
+                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), parsedLocation));
+
+                    pendingTotemVisibleIds[i] = null;
+
+                    break;
+                }
             }
         }
     }
@@ -192,18 +173,19 @@ public class ShamanTotemModel extends Model {
         int entityId = entity.getId();
         if (getBoundTotem(entityId) == null) return;
 
-        if (totem1 != null && getBoundTotem(entityId) == totem1) {
-            totem1.setTime(parsedTime);
-            totem1.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Updated(1, parsedTime, parsedLocation));
-        } else if (totem2 != null && getBoundTotem(entityId) == totem2) {
-            totem2.setTime(parsedTime);
-            totem2.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Updated(2, parsedTime, parsedLocation));
-        } else if (totem3 != null && getBoundTotem(entityId) == totem3) {
-            totem3.setTime(parsedTime);
-            totem3.setLocation(parsedLocation);
-            WynntilsMod.postEvent(new TotemEvent.Updated(3, parsedTime, parsedLocation));
+        ShamanTotem boundTotem = getBoundTotem(entityId);
+
+        if (boundTotem == null) return;
+
+        for (ShamanTotem totem : totems) {
+            if (boundTotem == totem) {
+                totem.setTime(parsedTime);
+                totem.setLocation(parsedLocation);
+
+                WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, parsedLocation));
+
+                break;
+            }
         }
     }
 
@@ -213,20 +195,12 @@ public class ShamanTotemModel extends Model {
 
         List<Integer> destroyedEntities = e.getEntityIds();
 
-        if (totem1 != null
-                && (destroyedEntities.contains(totem1.getTimerEntityId())
-                        || destroyedEntities.contains(totem1.getVisibleEntityId()))) {
-            removeTotem(1);
-        }
-        if (totem2 != null
-                && (destroyedEntities.contains(totem2.getTimerEntityId())
-                        || destroyedEntities.contains(totem2.getVisibleEntityId()))) {
-            removeTotem(2);
-        }
-        if (totem3 != null
-                && (destroyedEntities.contains(totem3.getTimerEntityId())
-                        || destroyedEntities.contains(totem3.getVisibleEntityId()))) {
-            removeTotem(3);
+        for (ShamanTotem totem : totems) {
+            if (totem != null
+                    && (destroyedEntities.contains(totem.getTimerEntityId())
+                            || destroyedEntities.contains(totem.getVisibleEntityId()))) {
+                removeTotem(totem.getTotemNumber());
+            }
         }
     }
 
@@ -256,50 +230,32 @@ public class ShamanTotemModel extends Model {
      * @param totem The totem to remove. Must be 1, 2, or 3
      */
     private void removeTotem(int totem) {
-        switch (totem) {
-            case 1 -> {
-                WynntilsMod.postEvent(new TotemEvent.Removed(1, totem1));
-                totem1 = null;
-                pendingTotem1VisibleId = null;
-                nextTotemSlot = 1;
-            }
-            case 2 -> {
-                WynntilsMod.postEvent(new TotemEvent.Removed(2, totem2));
-                totem2 = null;
-                pendingTotem2VisibleId = null;
-                if (nextTotemSlot != 1) {
-                    nextTotemSlot = 2; // Only set to 2 if it's not already lower
-                }
-            }
-            case 3 -> {
-                WynntilsMod.postEvent(new TotemEvent.Removed(3, totem3));
-                totem3 = null;
-                pendingTotem3VisibleId = null;
-                if (nextTotemSlot != 1 && nextTotemSlot != 2) {
-                    nextTotemSlot = 3; // Only set to 3 if it's not already lower
-                }
-            }
-            default -> throw new IllegalArgumentException("Totem must be 1, 2, or 3");
-        }
+        WynntilsMod.postEvent(new TotemEvent.Removed(totem, totems[totem - 1]));
+        totems[totem - 1] = null;
+        pendingTotemVisibleIds[totem - 1] = null;
+        nextTotemSlot = totem;
     }
 
     /**
      * Resets all three totem variables.
      */
     private void removeAllTotems() {
-        removeTotem(1);
-        removeTotem(2);
-        removeTotem(3);
+        for (int i = 1; i <= MAX_TOTEM_COUNT; i++) {
+            removeTotem(i);
+        }
+
         nextTotemSlot = 1;
     }
 
     private int getNextTotemSlot() {
         int toReturn = nextTotemSlot;
+
         if (nextTotemSlot == 3) {
             nextTotemSlot = 1;
         } else {
             nextTotemSlot += 1;
         }
+
         return toReturn;
     }
 
@@ -309,23 +265,24 @@ public class ShamanTotemModel extends Model {
      * @return The totem bound to the given timerId, or null if no totem is bound
      */
     private ShamanTotem getBoundTotem(int timerId) {
-        if (totem1 != null && totem1.getTimerEntityId() == timerId) return totem1;
-        if (totem2 != null && totem2.getTimerEntityId() == timerId) return totem2;
-        if (totem3 != null && totem3.getTimerEntityId() == timerId) return totem3;
+        for (ShamanTotem totem : totems) {
+            if (totem != null && totem.getTimerEntityId() == timerId) {
+                return totem;
+            }
+        }
+
         return null;
     }
 
     public List<ShamanTotem> getActiveTotems() {
-        List<ShamanTotem> toReturn = new ArrayList<>();
-        if (totem1 != null) {
-            toReturn.add(totem1);
+        return Arrays.stream(totems).filter(Objects::nonNull).toList();
+    }
+
+    public ShamanTotem getTotem(int totemNumber) {
+        if (totemNumber < 1 || totemNumber > MAX_TOTEM_COUNT) {
+            return null;
         }
-        if (totem2 != null) {
-            toReturn.add(totem2);
-        }
-        if (totem3 != null) {
-            toReturn.add(totem3);
-        }
-        return toReturn;
+
+        return totems[totemNumber - 1];
     }
 }

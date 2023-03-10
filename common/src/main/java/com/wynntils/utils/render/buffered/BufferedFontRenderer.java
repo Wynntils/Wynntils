@@ -182,7 +182,6 @@ public final class BufferedFontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
                     case Left -> x1;
@@ -296,7 +295,7 @@ public final class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,

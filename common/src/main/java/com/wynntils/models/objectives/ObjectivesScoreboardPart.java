@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +35,8 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
     @Override
     public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
         List<WynnObjective> objectives = parseObjectives(newValue).stream()
-                .filter(wynnObjective -> wynnObjective.getScore() < wynnObjective.getMaxScore())
+                .filter(wynnObjective -> wynnObjective.getScore().current()
+                        < wynnObjective.getScore().max())
                 .toList();
 
         if (segmentMatcher == GUILD_OBJECTIVES_MATCHER) {

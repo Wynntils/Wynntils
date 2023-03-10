@@ -6,11 +6,11 @@ package com.wynntils.models.players.scoreboard;
 
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.Set;
 
 public class PartyScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
+    private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
     @Override
     public Set<SegmentMatcher> getSegmentMatchers() {

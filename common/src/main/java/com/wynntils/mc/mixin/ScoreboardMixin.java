@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.google.common.collect.Maps;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PlayerTeamEvent;
 import java.util.Map;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
@@ -20,12 +21,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Scoreboard.class)
 public abstract class ScoreboardMixin {
-
     @Shadow
     public Map<String, Map<Objective, Score>> playerScores;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>()V", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
+        // We need to replace Vanilla's HashMap with a concurrent hash map
+        // This should be a safe maneuver to do in the constructor
         this.playerScores = Maps.newConcurrentMap();
     }
 
@@ -34,13 +36,15 @@ public abstract class ScoreboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void removePlayerFromTeamPre(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        if (EventFactory.onRemovePlayerFromTeam(username, playerTeam).isCanceled()) {
+        PlayerTeamEvent.Removed event = new PlayerTeamEvent.Removed(username, playerTeam);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "addPlayerToTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)Z", at = @At("RETURN"))
     private void addPlayerToTeamPost(String username, PlayerTeam playerTeam, CallbackInfoReturnable<Boolean> cir) {
-        EventFactory.onAddPlayerToTeam(username, playerTeam);
+        MixinHelper.post(new PlayerTeamEvent.Added(username, playerTeam));
     }
 }

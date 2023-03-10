@@ -7,24 +7,23 @@ package com.wynntils.models.items.annotators.gui;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.DailyRewardItem;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
+    private static final String DAILY_REWARD_NAME = "§6§lDaily Reward";
+    private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §r§f(\\d+)x$");
+
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        if (!name.contains("Daily Reward")) return null;
+        if (!name.equals(DAILY_REWARD_NAME)) return null;
 
-        try {
-            // Multiplier line is always on index 3
-            String loreLine =
-                    ComponentUtils.stripFormatting(LoreUtils.getLore(itemStack).get(3));
-            String value = String.valueOf(loreLine.charAt(loreLine.indexOf("Streak Multiplier: ") + 19));
-            int count = Integer.parseInt(value);
-            return new DailyRewardItem(count);
-        } catch (IndexOutOfBoundsException ignored) {
-            return null;
-        }
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, STREAK_PATTERN);
+        if (!matcher.matches()) return null;
+
+        int count = Integer.parseInt(matcher.group(1));
+        return new DailyRewardItem(count);
     }
 }

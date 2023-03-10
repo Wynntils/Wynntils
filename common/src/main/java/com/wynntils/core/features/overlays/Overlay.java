@@ -23,7 +23,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
-
     @Config(key = "overlay.wynntils.overlay.position", visible = false)
     protected OverlayPosition position;
 
