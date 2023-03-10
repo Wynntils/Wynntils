@@ -14,6 +14,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -55,13 +56,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         return barToOverlayMap.get(trackedBar.getClass());
     }
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = RenderState.Replace)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = RenderState.Replace)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

@@ -234,6 +234,9 @@ public final class FeatureManager extends Manager {
         registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
+        // Load configs for all features
+        Managers.Config.reloadConfiguration();
+
         // save/create config file after loading all features' options
         Managers.Config.saveConfig();
 
@@ -314,6 +317,8 @@ public final class FeatureManager extends Manager {
         // this has to be done after the userEnabled handling above, so the default value registers properly
         Managers.Config.registerFeature(feature);
         Managers.Storage.registerStorageable(feature);
+
+        feature.initOverlayGroups();
 
         // initialize & enable
         feature.init();
