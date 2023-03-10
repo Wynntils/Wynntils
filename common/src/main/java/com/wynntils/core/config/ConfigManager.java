@@ -34,6 +34,7 @@ public final class ConfigManager extends Manager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
+    private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
 
     private static final List<ConfigHolder> OVERLAY_GROUP_CONFIG_HOLDERS = new ArrayList<>();
@@ -124,7 +125,7 @@ public final class ConfigManager extends Manager {
         List<ConfigHolder> oldOverlayHolders = new ArrayList<>(OVERLAY_GROUP_CONFIG_HOLDERS);
         OVERLAY_GROUP_CONFIG_HOLDERS.clear();
 
-        JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, "overlayGroups");
+        JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, OVERLAY_GROUPS_JSON_KEY);
 
         for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
             if (initOverlayGroups) {
@@ -206,7 +207,7 @@ public final class ConfigManager extends Manager {
             overlayGroups.add(holder.getConfigKey(), ids);
         }
 
-        holderJson.add("overlayGroups", overlayGroups);
+        holderJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
         Managers.Json.savePreciousJson(userConfig, holderJson);
     }
