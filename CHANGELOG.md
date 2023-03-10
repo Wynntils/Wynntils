@@ -1,9 +1,21 @@
+## [0.0.2-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.321...v0.0.2-alpha.322) (2023-03-10)
+
+
+### New Features
+
+* Overlay Refactor Part 3: Dynamic overlays ([#1297](https://github.com/Wynntils/Artemis/issues/1297)) ([2f5cba4](https://github.com/Wynntils/Artemis/commit/2f5cba4de4430a5bc4f6b0bce7a62020820dccac))
+
 ## [0.0.2-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.320...v0.0.2-alpha.321) (2023-03-10)
 
 
 ### New Features
 
 * Introduce proper persistent data storage ([#1306](https://github.com/Wynntils/Artemis/issues/1306)) ([7cfa626](https://github.com/Wynntils/Artemis/commit/7cfa6266e69fc6b04aeb4b0762c9ad32a7dd8fa9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.321 [skip ci] ([16309db](https://github.com/Wynntils/Artemis/commit/16309dbfd1b7fd2b0095c178792404536c0ea10b))
 
 ## [0.0.2-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.319...v0.0.2-alpha.320) (2023-03-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.318 [skip ci] ([e1889ea](https://github.com/Wynntils/Artemis/commit/e1889ea6595ddd3fba4d24f1c1e3f148f239cd34))
-
-## [0.0.2-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.316...v0.0.2-alpha.317) (2023-03-08)
-
-
-### Code Refactoring
-
-* Do base64 decoding ourselves of server icon ([#1299](https://github.com/Wynntils/Artemis/issues/1299)) ([cf30f39](https://github.com/Wynntils/Artemis/commit/cf30f39a2bbe90b5d720c4710d687584543138d1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.317 [skip ci] ([6d9e3a9](https://github.com/Wynntils/Artemis/commit/6d9e3a98b261e922d3a44833bf9ca5074b0d72d3))
 
