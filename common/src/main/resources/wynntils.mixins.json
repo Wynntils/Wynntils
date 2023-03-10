@@ -18,6 +18,7 @@
     "EntityLookupMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
+    "InventoryScreenMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
