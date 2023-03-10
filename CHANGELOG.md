@@ -1,9 +1,21 @@
+## [0.0.2-alpha.325](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.324...v0.0.2-alpha.325) (2023-03-10)
+
+
+### Bug Fixes
+
+* WynntilsBookSettingsScreen re-init crash ([#1312](https://github.com/Wynntils/Artemis/issues/1312)) ([3803e02](https://github.com/Wynntils/Artemis/commit/3803e0290d96d487440aca146fb7d10289a3753d))
+
 ## [0.0.2-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.323...v0.0.2-alpha.324) (2023-03-10)
 
 
 ### Bug Fixes
 
 * Fix OverlayManagementScreen -> OverlaySelectionScreen transition crash part 2 ([#1311](https://github.com/Wynntils/Artemis/issues/1311)) ([e9367f7](https://github.com/Wynntils/Artemis/commit/e9367f77569d2ed9e269b37c3616ef075b82a356))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.324 [skip ci] ([f2b7d73](https://github.com/Wynntils/Artemis/commit/f2b7d73bef2947250ec749f56620adaf873533b2))
 
 ## [0.0.2-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.322...v0.0.2-alpha.323) (2023-03-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.321 [skip ci] ([16309db](https://github.com/Wynntils/Artemis/commit/16309dbfd1b7fd2b0095c178792404536c0ea10b))
-
-## [0.0.2-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.319...v0.0.2-alpha.320) (2023-03-10)
-
-
-### New Features
-
-* Replace recipe book in inventory with item guide ([#1305](https://github.com/Wynntils/Artemis/issues/1305)) ([2384ed3](https://github.com/Wynntils/Artemis/commit/2384ed381eb9f3660797c70a9c5b126e01abfce6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.320 [skip ci] ([a49715f](https://github.com/Wynntils/Artemis/commit/a49715f5fcc74ec2bee571d784b90de211b1e6ba))
 
