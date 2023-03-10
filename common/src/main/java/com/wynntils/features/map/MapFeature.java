@@ -10,9 +10,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.TypeOverride;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.json.TypeOverride;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -49,7 +49,7 @@ public class MapFeature extends UserFeature {
     public List<CustomPoi> customPois = new ArrayList<>();
 
     @TypeOverride
-    private final Type customPoisType = new TypeToken<List<CustomPoi>>() {}.getType();
+    private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
     @Config
     public float poiFadeAdjustment = 0.4f;

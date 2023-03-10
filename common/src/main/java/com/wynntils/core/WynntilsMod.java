@@ -234,6 +234,7 @@ public final class WynntilsMod {
                     try {
                         CoreComponent component = (CoreComponent) field.get(null);
                         WynntilsMod.registerEventListener(component);
+                        Managers.Storage.registerStorageable(component);
                         components.add(component);
                     } catch (IllegalAccessException e) {
                         WynntilsMod.error("Internal error in " + registryClass.getSimpleName(), e);
@@ -256,6 +257,7 @@ public final class WynntilsMod {
         // Init all features and functions. Now resources (i.e I18n) are available.
         Managers.Feature.init();
         Managers.Function.init();
+        Managers.Storage.restorePersisted();
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
