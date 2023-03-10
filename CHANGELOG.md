@@ -1,9 +1,21 @@
+## [0.0.2-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.320...v0.0.2-alpha.321) (2023-03-10)
+
+
+### New Features
+
+* Introduce proper persistent data storage ([#1306](https://github.com/Wynntils/Artemis/issues/1306)) ([7cfa626](https://github.com/Wynntils/Artemis/commit/7cfa6266e69fc6b04aeb4b0762c9ad32a7dd8fa9))
+
 ## [0.0.2-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.319...v0.0.2-alpha.320) (2023-03-10)
 
 
 ### New Features
 
 * Replace recipe book in inventory with item guide ([#1305](https://github.com/Wynntils/Artemis/issues/1305)) ([2384ed3](https://github.com/Wynntils/Artemis/commit/2384ed381eb9f3660797c70a9c5b126e01abfce6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.320 [skip ci] ([a49715f](https://github.com/Wynntils/Artemis/commit/a49715f5fcc74ec2bee571d784b90de211b1e6ba))
 
 ## [0.0.2-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.318...v0.0.2-alpha.319) (2023-03-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.317 [skip ci] ([6d9e3a9](https://github.com/Wynntils/Artemis/commit/6d9e3a98b261e922d3a44833bf9ca5074b0d72d3))
-
-## [0.0.2-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.315...v0.0.2-alpha.316) (2023-03-08)
-
-
-### Code Refactoring
-
-* Be better at passing poseStacks around ([#1300](https://github.com/Wynntils/Artemis/issues/1300)) ([fafaaa5](https://github.com/Wynntils/Artemis/commit/fafaaa5c1fe4e58cf3ce5b752c85b786cc040047))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.316 [skip ci] ([be65b8e](https://github.com/Wynntils/Artemis/commit/be65b8e5ef952b8a31d5d5e279f0b864db19d805))
 
