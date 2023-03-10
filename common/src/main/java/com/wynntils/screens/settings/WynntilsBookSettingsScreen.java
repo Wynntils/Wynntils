@@ -34,6 +34,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -391,7 +392,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                     Managers.Feature.getFeatures().stream(),
                     Managers.Feature.getFeatures().stream()
                             .map(Feature::getOverlays)
-                            .map(overlays -> (Configurable) overlays));
+                            .flatMap(Collection::stream)
+                            .map(overlay -> (Configurable) overlay));
 
             Configurable newSelected = configurablesList
                     .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
