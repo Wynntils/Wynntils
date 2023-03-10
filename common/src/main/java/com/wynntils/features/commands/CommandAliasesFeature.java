@@ -28,6 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends UserFeature {
+    // FIXME: These should be user visible?
     @Config(visible = false)
     private List<CommandAlias> aliases = new ArrayList<>(List.of(
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
