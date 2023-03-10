@@ -35,7 +35,7 @@ import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.StringUtils;
 
 public class ConfigCommand extends Command {
-    private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
+    private static final SuggestionProvider<CommandSourceStack> UNIT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Stream.concat(
                             Managers.Feature.getFeatures().stream().map(Feature::getShortName),
@@ -45,7 +45,7 @@ public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
-                        String featureName = context.getArgument("feature", String.class);
+                        String featureName = context.getArgument("unit", String.class);
 
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
@@ -60,11 +60,9 @@ public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
-                        String featureName = context.getArgument("feature", String.class);
+                        String configurableName = context.getArgument("unit", String.class);
 
-                        Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
-
-                        return foundFeature
+                        return Managers.Config.getConfigurableFromString(configurableName)
                                 .map(feature -> Managers.Config.getVisibleConfigOptions(feature).stream()
                                         .map(ConfigHolder::getFieldName)
                                         .iterator())
@@ -75,7 +73,7 @@ public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
-                        String featureName = context.getArgument("feature", String.class);
+                        String featureName = context.getArgument("unit", String.class);
                         String overlayName = context.getArgument("overlay", String.class);
 
                         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
@@ -124,8 +122,8 @@ public class ConfigCommand extends Command {
         // /wynntils config get <feature> <field>
         // /wynntils config get <feature> overlay <overlay>
         // /wynntils config get <feature> overlay <overlay> <field>
-        getConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(FEATURE_SUGGESTION_PROVIDER)
+        getConfigArgBuilder.then(Commands.argument("unit", StringArgumentType.word())
+                .suggests(UNIT_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
@@ -146,8 +144,8 @@ public class ConfigCommand extends Command {
 
         // /wynntils config set <feature> <field> <newValue>
         // /wynntils config set <feature> overlay <overlay> <field> <newValue>
-        setConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(FEATURE_SUGGESTION_PROVIDER)
+        setConfigArgBuilder.then(Commands.argument("unit", StringArgumentType.word())
+                .suggests(UNIT_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
@@ -172,8 +170,8 @@ public class ConfigCommand extends Command {
         // /wynntils config reset <feature> <field>
         // /wynntils config reset <feature> overlay <overlay>
         // /wynntils config reset <feature> overlay <overlay> <field>
-        resetConfigArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
-                .suggests(FEATURE_SUGGESTION_PROVIDER)
+        resetConfigArgBuilder.then(Commands.argument("unit", StringArgumentType.word())
+                .suggests(UNIT_SUGGESTION_PROVIDER)
                 .then(Commands.literal("overlay")
                         .then(Commands.argument("overlay", StringArgumentType.word())
                                 .suggests(OVERLAY_SUGGESTION_PROVIDER)
@@ -214,7 +212,7 @@ public class ConfigCommand extends Command {
     }
 
     private int resetOverlayConfigOption(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -242,7 +240,7 @@ public class ConfigCommand extends Command {
     }
 
     private int resetAllOverlayConfigOptions(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String overlayName = context.getArgument("overlay", String.class);
 
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
@@ -263,7 +261,7 @@ public class ConfigCommand extends Command {
     }
 
     private int listAllOverlayConfigs(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String overlayName = context.getArgument("overlay", String.class);
 
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
@@ -290,7 +288,7 @@ public class ConfigCommand extends Command {
     }
 
     private int getSpecificOverlayConfigOption(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -316,7 +314,7 @@ public class ConfigCommand extends Command {
     }
 
     private int changeOverlayConfig(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String overlayName = context.getArgument("overlay", String.class);
         String configName = context.getArgument("config", String.class);
 
@@ -376,7 +374,7 @@ public class ConfigCommand extends Command {
     }
 
     private int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String configName = context.getArgument("config", String.class);
 
         ConfigHolder configHolder = getConfigHolderFromArguments(context, featureName, configName);
@@ -401,16 +399,17 @@ public class ConfigCommand extends Command {
     }
 
     private int listAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
 
-        Feature feature = getFeatureFromArguments(context, featureName);
-        if (feature == null) return 0;
+        Optional<? extends Configurable> configurableOpt = Managers.Config.getConfigurableFromString(featureName);
+        if (configurableOpt.isEmpty()) return 0;
+        Configurable configurable = configurableOpt.get();
 
         MutableComponent response = Component.literal(featureName)
                 .withStyle(ChatFormatting.YELLOW)
                 .append(Component.literal("'s config options:\n").withStyle(ChatFormatting.WHITE));
 
-        for (ConfigHolder config : Managers.Config.getVisibleConfigOptions(feature)) {
+        for (ConfigHolder config : Managers.Config.getVisibleConfigOptions(configurable)) {
             MutableComponent current = getComponentForConfigHolder(config);
 
             current.withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -421,19 +420,21 @@ public class ConfigCommand extends Command {
         }
 
         // list overlays
-        response.append("\n")
-                .append(Component.literal(featureName)
-                        .withStyle(ChatFormatting.YELLOW)
-                        .append(Component.literal("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
+        if (configurable instanceof Feature feature) {
+            response.append("\n")
+                    .append(Component.literal(featureName)
+                            .withStyle(ChatFormatting.YELLOW)
+                            .append(Component.literal("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
 
-        for (Overlay overlay : feature.getOverlays()) {
-            MutableComponent current = getComponentForOverlay(overlay);
+            for (Overlay overlay : feature.getOverlays()) {
+                MutableComponent current = getComponentForOverlay(overlay);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
-                    "/wynntils config set " + featureName + " overlay " + overlay.getShortName() + " ")));
+                current.withStyle(style -> style.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND,
+                        "/wynntils config set " + featureName + " overlay " + overlay.getShortName() + " ")));
 
-            response.append(current);
+                response.append(current);
+            }
         }
 
         context.getSource().sendSuccess(response, false);
@@ -442,7 +443,7 @@ public class ConfigCommand extends Command {
     }
 
     private int changeFeatureConfig(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String configName = context.getArgument("config", String.class);
 
         ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
@@ -501,7 +502,7 @@ public class ConfigCommand extends Command {
     }
 
     private int resetFeatureConfigOption(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
         String configName = context.getArgument("config", String.class);
 
         ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
@@ -527,11 +528,12 @@ public class ConfigCommand extends Command {
     }
 
     private int resetAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        String featureName = context.getArgument("feature", String.class);
+        String featureName = context.getArgument("unit", String.class);
 
-        Feature feature = getFeatureFromArguments(context, featureName);
-        if (feature == null) return 0;
-        Managers.Config.getVisibleConfigOptions(feature).forEach(ConfigHolder::reset);
+        Optional<? extends Configurable> configurableOpt = Managers.Config.getConfigurableFromString(featureName);
+        if (configurableOpt.isEmpty()) return 0;
+
+        Managers.Config.getVisibleConfigOptions(configurableOpt.get()).forEach(ConfigHolder::reset);
 
         Managers.Config.saveConfig();
 
@@ -558,15 +560,12 @@ public class ConfigCommand extends Command {
     }
 
     private ConfigHolder getConfigHolderFromArguments(
-            CommandContext<CommandSourceStack> context, String featureName, String configName) {
-        Configurable configurable = getFeatureFromArguments(context, featureName);
+            CommandContext<CommandSourceStack> context, String configurableName, String configName) {
+        Optional<? extends Configurable> configurableOpt = Managers.Config.getConfigurableFromString(configurableName);
+        if (configurableOpt.isEmpty()) return null;
 
-        if (configurable == null) {
-            configurable = getComponentFromArguments(context, featureName);
-            if (configurable == null) return null;
-        }
-
-        Optional<ConfigHolder> configOptional = Managers.Config.getConfigOptionFromString(configurable, configName);
+        Optional<ConfigHolder> configOptional =
+                Managers.Config.getConfigOptionFromString(configurableOpt.get(), configName);
 
         if (configOptional.isEmpty()) {
             context.getSource()

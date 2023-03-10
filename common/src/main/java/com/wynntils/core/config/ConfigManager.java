@@ -230,6 +230,14 @@ public final class ConfigManager extends Manager {
         return null;
     }
 
+    public Optional<? extends Configurable> getConfigurableFromString(String configurableName) {
+        // Features and components are configurable
+        Optional<Feature> featureOpt = Managers.Feature.getFeatureFromString(configurableName);
+        if (featureOpt.isPresent()) return featureOpt;
+
+        return WynntilsMod.getComponentFromString(configurableName);
+    }
+
     public List<ConfigHolder> getVisibleConfigOptions(Configurable configurable) {
         return configurable.getConfigOptions().stream()
                 .filter(c -> c.getMetadata().visible())

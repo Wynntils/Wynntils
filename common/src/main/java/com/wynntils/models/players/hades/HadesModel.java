@@ -8,10 +8,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.properties.FeatureCategory;
-import com.wynntils.core.features.properties.FeatureInfo;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
 import com.wynntils.features.user.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
@@ -50,7 +50,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@FeatureInfo(category = FeatureCategory.GLOBAL)
+@ConfigCategory(Category.GLOBAL)
 public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
