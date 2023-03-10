@@ -387,12 +387,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             return true;
         }
 
@@ -747,8 +747,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private void setupButtons() {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"), button -> {
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                             onClose();
+                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                         })
                 .pos(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
