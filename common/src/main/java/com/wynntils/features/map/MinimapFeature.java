@@ -15,6 +15,8 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.RenderState;
+import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
@@ -48,8 +50,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MinimapFeature extends UserFeature {
     public static MinimapFeature INSTANCE;
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = OverlayInfo.RenderState.Pre)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
+
+    @OverlayInfo(renderAt = RenderState.Pre, renderType = RenderEvent.ElementType.GUI)
+    private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
@@ -478,6 +483,31 @@ public class MinimapFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
+    }
+
+    public static class CoordinateOverlay extends TextOverlay {
+        protected CoordinateOverlay() {
+            super(
+                    new OverlayPosition(
+                            160,
+                            20,
+                            VerticalAlignment.Top,
+                            HorizontalAlignment.Left,
+                            OverlayPosition.AnchorSection.TopLeft),
+                    new GuiScaledOverlaySize(120, 20),
+                    HorizontalAlignment.Center,
+                    VerticalAlignment.Middle);
+        }
+
+        @Override
+        public String getTemplate() {
+            return "{x:0} {y:0} {z:0}";
+        }
+
+        @Override
+        public String getPreviewTemplate() {
+            return "{x:0} {y:0} {z:0}";
+        }
     }
 
     public enum CompassRenderType {
