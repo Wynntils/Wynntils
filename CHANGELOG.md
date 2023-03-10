@@ -1,9 +1,21 @@
+## [0.0.2-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.323...v0.0.2-alpha.324) (2023-03-10)
+
+
+### Bug Fixes
+
+* Fix OverlayManagementScreen -> OverlaySelectionScreen transition crash part 2 ([#1311](https://github.com/Wynntils/Artemis/issues/1311)) ([e9367f7](https://github.com/Wynntils/Artemis/commit/e9367f77569d2ed9e269b37c3616ef075b82a356))
+
 ## [0.0.2-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.322...v0.0.2-alpha.323) (2023-03-10)
 
 
 ### Bug Fixes
 
 * Fix OverlayManagementScreen -> OverlaySelectionScreen transition crash ([#1310](https://github.com/Wynntils/Artemis/issues/1310)) ([a1f3384](https://github.com/Wynntils/Artemis/commit/a1f3384c17dc7cf8e967f6b513ff788c5a2140c8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.323 [skip ci] ([5d35086](https://github.com/Wynntils/Artemis/commit/5d35086ac60e119a616545c3ba0646d2fac0806a))
 
 ## [0.0.2-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.321...v0.0.2-alpha.322) (2023-03-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.320 [skip ci] ([a49715f](https://github.com/Wynntils/Artemis/commit/a49715f5fcc74ec2bee571d784b90de211b1e6ba))
-
-## [0.0.2-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.318...v0.0.2-alpha.319) (2023-03-09)
-
-
-### New Features
-
-* Show overlay for Seaskipper destinations and prices ([#1304](https://github.com/Wynntils/Artemis/issues/1304)) ([ed54d6a](https://github.com/Wynntils/Artemis/commit/ed54d6a41b16d79809d49d8bb13817a0a15fd7e6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.319 [skip ci] ([98633fc](https://github.com/Wynntils/Artemis/commit/98633fc1b4e4a6ca0ee12ed027d9d1a34c8ddc77))
 
