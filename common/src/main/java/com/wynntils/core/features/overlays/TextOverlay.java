@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 /**
  * An overlay, which main purpose is to display function templates.
  */
-public abstract class TextOverlay extends Overlay {
+public abstract class TextOverlay extends DynamicOverlay {
     @Config(key = "overlay.wynntils.textOverlay.textShadow")
     public TextShadow textShadow = TextShadow.OUTLINE;
 
@@ -34,11 +34,11 @@ public abstract class TextOverlay extends Overlay {
     protected long lastUpdate = 0;
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
-        super(position, width, height);
+        super(position, width, height, 1);
     }
 
     protected TextOverlay(OverlayPosition position, OverlaySize size) {
-        super(position, size);
+        super(position, size, 1);
     }
 
     protected TextOverlay(
@@ -46,7 +46,20 @@ public abstract class TextOverlay extends Overlay {
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        super(position, size, horizontalAlignmentOverride, verticalAlignmentOverride);
+        super(position, size, horizontalAlignmentOverride, verticalAlignmentOverride, 1);
+    }
+
+    protected TextOverlay(
+            OverlayPosition position,
+            OverlaySize size,
+            HorizontalAlignment horizontalAlignmentOverride,
+            VerticalAlignment verticalAlignmentOverride,
+            int id) {
+        super(position, size, horizontalAlignmentOverride, verticalAlignmentOverride, id);
+    }
+
+    protected TextOverlay(int id) {
+        super(id);
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -32,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class OverlayManager extends Manager {
     private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
-    private final Map<Overlay, OverlayInfo> overlayInfoMap = new HashMap<>();
+    private final Map<Overlay, OverlayRenderInfo> overlayInfoMap = new HashMap<>();
     private final Map<Overlay, Feature> overlayParent = new HashMap<>();
 
     private final Set<Overlay> enabledOverlays = new HashSet<>();
@@ -43,12 +42,20 @@ public final class OverlayManager extends Manager {
 
     public OverlayManager(CrashReportManager crashReportManager) {
         super(List.of(crashReportManager));
+
         addCrashCallbacks();
     }
 
-    public void registerOverlay(Overlay overlay, OverlayInfo overlayInfo, Feature parent) {
-        overlayInfoMap.put(overlay, overlayInfo);
+    public void registerOverlay(
+            Overlay overlay, RenderEvent.ElementType elementType, RenderState renderAt, Feature parent) {
+        overlayInfoMap.put(overlay, new OverlayRenderInfo(elementType, renderAt));
         overlayParent.put(overlay, parent);
+    }
+
+    public void unregisterOverlay(Overlay overlay) {
+        overlayInfoMap.remove(overlay);
+        overlayParent.remove(overlay);
+        enabledOverlays.remove(overlay);
     }
 
     public void disableOverlays(List<Overlay> overlays) {
@@ -61,7 +68,9 @@ public final class OverlayManager extends Manager {
         List<Overlay> enabledOverlays = ignoreState
                 ? overlays
                 : overlays.stream().filter(Overlay::isEnabled).toList();
+
         this.enabledOverlays.addAll(enabledOverlays);
+
         enabledOverlays.forEach(
                 overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
@@ -69,18 +78,18 @@ public final class OverlayManager extends Manager {
     @SubscribeEvent
     public void onRenderPre(RenderEvent.Pre event) {
         McUtils.mc().getProfiler().push("preRenOverlay");
-        renderOverlays(event, OverlayInfo.RenderState.Pre);
+        renderOverlays(event, RenderState.Pre);
         McUtils.mc().getProfiler().pop();
     }
 
     @SubscribeEvent
     public void onRenderPost(RenderEvent.Post event) {
         McUtils.mc().getProfiler().push("postRenOverlay");
-        renderOverlays(event, OverlayInfo.RenderState.Post);
+        renderOverlays(event, RenderState.Post);
         McUtils.mc().getProfiler().pop();
     }
 
-    private void renderOverlays(RenderEvent event, OverlayInfo.RenderState renderState) {
+    private void renderOverlays(RenderEvent event, RenderState renderState) {
         boolean testMode = false;
         boolean shouldRender = true;
 
@@ -91,19 +100,19 @@ public final class OverlayManager extends Manager {
 
         List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
-            OverlayInfo annotation = overlayInfoMap.get(overlay);
+            OverlayRenderInfo renderInfo = overlayInfoMap.get(overlay);
 
-            if (annotation.renderType() != event.getType()) {
+            if (renderInfo.elementType() != event.getType()) {
                 continue;
             }
 
-            if (annotation.renderAt() == OverlayInfo.RenderState.Replace) {
-                if (renderState != OverlayInfo.RenderState.Pre) {
+            if (renderInfo.renderState() == RenderState.Replace) {
+                if (renderState != RenderState.Pre) {
                     continue;
                 }
                 event.setCanceled(true);
             } else {
-                if (annotation.renderAt() != renderState) {
+                if (renderInfo.renderState() != renderState) {
                     continue;
                 }
             }
@@ -212,10 +221,6 @@ public final class OverlayManager extends Manager {
         return overlayInfoMap.keySet();
     }
 
-    public OverlayInfo getOverlayInfo(Overlay overlay) {
-        return overlayInfoMap.getOrDefault(overlay, null);
-    }
-
     public Feature getOverlayParent(Overlay overlay) {
         return overlayParent.get(overlay);
     }
@@ -223,4 +228,6 @@ public final class OverlayManager extends Manager {
     public boolean isEnabled(Overlay overlay) {
         return enabledOverlays.contains(overlay);
     }
+
+    private record OverlayRenderInfo(RenderEvent.ElementType elementType, RenderState renderState) {}
 }
