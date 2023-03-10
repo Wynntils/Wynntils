@@ -18,6 +18,6 @@ public class ReplaceRecipeBookFeature extends UserFeature {
     public void onRecipeBookOpen(RecipeBookOpenEvent event) {
         event.setCanceled(true);
 
-        McUtils.mc().setScreen(WynntilsGuidesListScreen.create(McUtils.mc().screen));
+        McUtils.mc().setScreen(WynntilsGuidesListScreen.create());
     }
 }
