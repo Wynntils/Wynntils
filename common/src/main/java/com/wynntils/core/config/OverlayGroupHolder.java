@@ -9,10 +9,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -77,7 +77,7 @@ public class OverlayGroupHolder {
 
     public void initGroup(List<Integer> ids) {
         try {
-            List<Overlay> overlays = (List<Overlay>) ReflectionUtils.createListWithType(overlayClass);
+            List<Overlay> overlays = new ArrayList<>();
 
             for (Integer id : ids) {
                 overlays.add((Overlay) overlayClass.getConstructor(int.class).newInstance(id));
