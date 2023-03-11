@@ -6,7 +6,6 @@ package com.wynntils.core.features;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -34,26 +33,17 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  * <p>Ex: Soul Point Timer
  */
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
-    private ImmutableList<Condition> conditions;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final Map<Overlay, OverlayInfo> overlays = new LinkedHashMap<>();
 
     private final List<OverlayGroupHolder> overlayGroups = new ArrayList<>();
     private final List<Overlay> groupedOverlayInstances = new ArrayList<>();
 
-    private FeatureState state = FeatureState.UNINITALIZED;
+    private FeatureState state = FeatureState.UNINITIALIZED;
 
     private Category category = Category.UNCATEGORIZED;
 
     public final void init() {
-        ImmutableList.Builder<Condition> conditions = new ImmutableList.Builder<>();
-
-        onInit(conditions);
-
-        this.conditions = conditions.build();
-
-        if (!this.conditions.isEmpty()) this.conditions.forEach(Condition::init);
-
         state = FeatureState.DISABLED;
 
         assert !getTranslatedName().startsWith("feature.wynntils.");
@@ -166,9 +156,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         return "feature." + getNameCamelCase();
     }
 
-    /** Called on init of Feature */
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {}
-
     /**
      * Called on enabling of Feature
      */
@@ -183,8 +170,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     /** Called to activate a feature */
     public final void enable() {
         if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
-
-        if (!canEnable()) return;
 
         onEnable();
         state = FeatureState.ENABLED;
@@ -233,15 +218,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         return state == FeatureState.ENABLED;
     }
 
-    /** Whether a feature can be enabled */
-    private boolean canEnable() {
-        for (Condition condition : conditions) {
-            if (!condition.isSatisfied()) return false;
-        }
-
-        return true;
-    }
-
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
@@ -261,22 +237,8 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
                 .result();
     }
 
-    public abstract static class Condition {
-        private boolean satisfied = false;
-
-        protected boolean isSatisfied() {
-            return satisfied;
-        }
-
-        public abstract void init();
-
-        public void setSatisfied(boolean satisfied) {
-            this.satisfied = satisfied;
-        }
-    }
-
     public enum FeatureState {
-        UNINITALIZED,
+        UNINITIALIZED,
         DISABLED,
         ENABLED,
         CRASHED
