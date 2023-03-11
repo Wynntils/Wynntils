@@ -347,14 +347,6 @@ public final class FeatureManager extends Manager {
         for (KeyBind keyBind : feature.getKeyBinds()) {
             Managers.KeyBind.registerKeybind(keyBind);
         }
-
-        // FIXME: I don't think this is needed anymore?
-        //        // Reload configs to load new keybinds
-        //        if (!feature.getKeyBinds().isEmpty()) {
-        //            synchronized (McUtils.options()) {
-        //                McUtils.mc().options.load();
-        //            }
-        //        }
     }
 
     public void disableFeature(Feature feature) {
