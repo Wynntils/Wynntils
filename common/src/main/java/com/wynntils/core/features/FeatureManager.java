@@ -11,9 +11,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.event.FeatureStateChangeEvent;
 import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
@@ -125,8 +124,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
 
-    public FeatureManager(OverlayManager overlay, CrashReportManager crashReportManager) {
-        super(List.of(overlay, crashReportManager));
+    public FeatureManager(CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
+        super(List.of(crashReport, keyBind, overlay));
     }
 
     public void init() {
@@ -264,7 +263,7 @@ public final class FeatureManager extends Manager {
     private void initializeFeature(Feature feature) {
         Class<? extends Feature> featureClass = feature.getClass();
 
-        // instance field
+        // Instance field
         try {
             Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
             if (instanceField != null) instanceField.set(null, feature);
@@ -273,24 +272,15 @@ public final class FeatureManager extends Manager {
             return;
         }
 
-        // set feature category
+        // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
         feature.setCategory(category);
 
-        // register key binds
-        for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {
-            if (!f.getType().equals(KeyBind.class)) continue;
+        // Register key binds
+        Managers.KeyBind.discoverKeyBinds(feature);
 
-            try {
-                KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
-                feature.setupKeyHolder(keyBind);
-            } catch (Exception e) {
-                WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
-            }
-        }
-
-        // determine if feature should be enabled & set default enabled value for user features
+        // Determine if feature should be enabled & set default enabled value for user features
         boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
         if (feature instanceof UserFeature userFeature) {
             userFeature.userEnabled = !startDisabled;
@@ -328,9 +318,7 @@ public final class FeatureManager extends Manager {
 
         Managers.Overlay.enableOverlays(feature);
 
-        for (KeyBind keyBind : feature.getKeyBinds()) {
-            Managers.KeyBind.registerKeybind(keyBind);
-        }
+        Managers.KeyBind.enableFeatureKeyBinds(feature);
     }
 
     public void disableFeature(Feature feature) {
@@ -348,10 +336,7 @@ public final class FeatureManager extends Manager {
 
         WynntilsMod.unregisterEventListener(feature);
 
-        Managers.Overlay.disableOverlays(feature);
-        for (KeyBind keyBind : feature.getKeyBinds()) {
-            Managers.KeyBind.unregisterKeybind(keyBind);
-        }
+        Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 
     public void crashFeature(Feature feature) {

@@ -9,10 +9,7 @@ import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.storage.Storageable;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 /**
@@ -22,20 +19,19 @@ import net.minecraft.client.resources.language.I18n;
  * <p>Ex: Soul Point Timer
  */
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
-    private final List<KeyBind> keyBinds = new ArrayList<>();
-
     private Category category = Category.UNCATEGORIZED;
 
-    /**
-     * Adds a keyBind to the feature. Called from the registry.
-     * @param keyBind KeyBind to add to the feature
-     */
-    public final void setupKeyHolder(KeyBind keyBind) {
-        keyBinds.add(keyBind);
+    public Category getCategory() {
+        return category;
     }
 
-    public List<KeyBind> getKeyBinds() {
-        return keyBinds;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    /** Whether a feature is enabled */
+    public final boolean isEnabled() {
+        return Managers.Feature.getFeatureState(this) == FeatureState.ENABLED;
     }
 
     /** Gets the name of a feature */
@@ -63,21 +59,8 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         return "feature." + getNameCamelCase();
     }
 
-    /** Whether a feature is enabled */
-    public final boolean isEnabled() {
-        return Managers.Feature.getFeatureState(this) == FeatureState.ENABLED;
-    }
-
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 
     @Override
     public int compareTo(Feature other) {
