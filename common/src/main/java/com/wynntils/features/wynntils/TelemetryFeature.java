@@ -13,19 +13,28 @@ import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends UserFeature {
     @Config
-    public boolean crashReports = true;
+    public ConfirmedBoolean crashReports = ConfirmedBoolean.UNCONFIRMED;
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
+        if (crashReports != ConfirmedBoolean.TRUE) return;
+
         String title = "Crashed " + event.getType().toString().toLowerCase(Locale.ROOT) + ": " + event.getName() + "\n";
         String trace = ExceptionUtils.getStackTrace(event.getThrowable());
 
@@ -41,5 +50,41 @@ public class TelemetryFeature extends UserFeature {
                 WynntilsMod.warn("Failed to report crash reported to Athena: " + response);
             }
         });
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent event) {
+        if (event.getNewState() != WorldState.WORLD) return;
+        if (crashReports != ConfirmedBoolean.UNCONFIRMED) return;
+
+        MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
+        component.append(Component.literal("Wynntils can send telemetry data when a component fails.\n"
+                        + "This data does not contain any personal information,\n"
+                        + "but is helpful for developers for fixing bugs in Wynntils.\n")
+                .withStyle(ChatFormatting.GRAY));
+
+        component.append(Component.literal("Click here")
+                .withStyle(ChatFormatting.GREEN)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(style -> style.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.RUN_COMMAND, "/config set TelemetryFeature crashReports true"))));
+        component.append(
+                Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
+
+        component.append(Component.literal("Click here")
+                .withStyle(ChatFormatting.RED)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(style -> style.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.RUN_COMMAND, "/config set TelemetryFeature crashReports false"))));
+        component.append(
+                Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
+
+        McUtils.sendMessageToClient(component);
+    }
+
+    public enum ConfirmedBoolean {
+        FALSE,
+        TRUE,
+        UNCONFIRMED
     }
 }
