@@ -44,6 +44,9 @@ public class InventoryEmeraldCountFeature extends UserFeature {
     public boolean showContainerEmeraldCount = true;
 
     @Config
+    public boolean showZerosInEmeraldCount = false;
+
+    @Config
     public boolean combineInventoryAndContainer = false;
 
     @SubscribeEvent
@@ -74,7 +77,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
             int y = containerScreen.topPos;
             switch (emeraldCountType) {
                 case Text -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
-                case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds);
+                case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount);
             }
         }
 
@@ -84,7 +87,8 @@ public class InventoryEmeraldCountFeature extends UserFeature {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType) {
                     case Text -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
-                    case Texture -> renderTexturedCount(event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds);
+                    case Texture -> renderTexturedCount(
+                            event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount);
                 }
             }
         }
@@ -98,7 +102,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
-            emeraldText = Models.Emerald.getFormattedString(emeralds);
+            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount);
         }
 
         FontRenderer.getInstance()
@@ -116,7 +120,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         poseStack.popPose();
     }
 
-    private void renderTexturedCount(PoseStack poseStack, int x, int y, int emeralds) {
+    private void renderTexturedCount(PoseStack poseStack, int x, int y, int emeralds, boolean appendZeros) {
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
@@ -135,7 +139,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
 
         for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
             String emeraldAmount = emeraldAmounts[i];
-            if (Objects.equals(emeraldAmount, "0")) continue;
+            if (Objects.equals(emeraldAmount, "0") && !appendZeros) continue;
 
             final int renderX = -TEXTURE_SIZE;
             final int renderY = renderedCount * TEXTURE_SIZE;
