@@ -117,9 +117,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
@@ -280,11 +278,6 @@ public final class FeatureManager extends Manager {
         } catch (Exception e) {
             WynntilsMod.error("Failed to create instance object in " + featureClass.getName(), e);
             return;
-        }
-
-        // flag as event listener
-        if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
-            feature.setupEventListener();
         }
 
         // set feature category

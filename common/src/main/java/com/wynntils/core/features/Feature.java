@@ -35,7 +35,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  */
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
-    private boolean isListener = false;
     private final List<KeyBind> keyBinds = new ArrayList<>();
     private final Map<Overlay, OverlayInfo> overlays = new LinkedHashMap<>();
 
@@ -122,13 +121,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     /**
-     * Sets up this feature as an event listener. Called from the registry.
-     */
-    public final void setupEventListener() {
-        this.isListener = true;
-    }
-
-    /**
      * Adds a keyBind to the feature. Called from the registry.
      * @param keyBind KeyBind to add to the feature
      */
@@ -197,9 +189,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         onEnable();
         state = FeatureState.ENABLED;
 
-        if (isListener) {
-            WynntilsMod.registerEventListener(this);
-        }
+        WynntilsMod.registerEventListener(this);
 
         enableOverlays();
 
@@ -225,9 +215,8 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
         state = FeatureState.DISABLED;
 
-        if (isListener) {
-            WynntilsMod.unregisterEventListener(this);
-        }
+        WynntilsMod.unregisterEventListener(this);
+
         Managers.Overlay.disableOverlays(this.getOverlays());
         for (KeyBind keyBind : keyBinds) {
             Managers.KeyBind.unregisterKeybind(keyBind);
