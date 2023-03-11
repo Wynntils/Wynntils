@@ -13,6 +13,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.event.FeatureStateChangeEvent;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -148,8 +149,10 @@ public class ChatTabsFeature extends UserFeature {
                 chatTabs.get((chatTabs.indexOf(Managers.ChatTab.getFocusedTab()) + 1) % chatTabs.size()));
     }
 
-    @Override
-    protected void postEnable() {
+    @SubscribeEvent
+    public void onEnable(FeatureStateChangeEvent.Enabled event) {
+        if (event.getFeature() != this) return;
+
         if (chatTabs.isEmpty()) return;
 
         Managers.ChatTab.setFocusedTab(chatTabs.get(0));

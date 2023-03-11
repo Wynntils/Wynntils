@@ -151,17 +151,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         return "feature." + getNameCamelCase();
     }
 
-    /**
-     * Called on enabling of Feature
-     */
-    protected void onEnable() {}
-
-    /** Called on disabling of Feature */
-    protected void onDisable() {}
-
-    /** Called after successfully enabling a feature, after everything is set up. */
-    protected void postEnable() {}
-
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
         return Managers.Feature.getFeatureState(this) == FeatureState.ENABLED;
