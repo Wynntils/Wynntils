@@ -13,8 +13,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureManager;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.overlays.annotations.OverlayGroup;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.JsonUtils;
@@ -43,18 +45,38 @@ public final class ConfigManager extends Manager {
     private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(ConfigUpfixerManager configUpfixerManager, JsonManager jsonManager) {
-        super(List.of(configUpfixerManager, jsonManager));
+    public ConfigManager(
+            ConfigUpfixerManager configUpfixerManager,
+            JsonManager jsonManager,
+            FeatureManager feature,
+            OverlayManager overlay) {
+        super(List.of(configUpfixerManager, jsonManager, feature, overlay));
 
         userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+    }
 
+    public void init() {
         // First, we load the config file
         configObject = Managers.Json.loadPreciousJson(userConfig);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (configUpfixerManager.runUpfixers(configObject)) {
+        if (Managers.ConfigUpfixer.runUpfixers(configObject)) {
             Managers.Json.savePreciousJson(userConfig, configObject);
         }
+
+        // Register all features and overlays
+        Managers.Feature.getFeatures().forEach(this::registerFeature);
+
+        // Finish off the config init process
+
+        // Load configs for all features
+        Managers.Config.reloadConfiguration();
+
+        // Save config file after loading all configurables' options
+        Managers.Config.saveConfig();
+
+        // Create default config file containing all configurables' options
+        Managers.Config.saveDefaultConfig();
     }
 
     public void registerFeature(Feature feature) {

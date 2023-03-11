@@ -9,7 +9,6 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.features.event.FeatureStateChangeEvent;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
@@ -125,8 +124,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
 
-    public FeatureManager(ConfigManager configManager, CrashReportManager crashReportManager) {
-        super(List.of(configManager, crashReportManager));
+    public FeatureManager(CrashReportManager crashReportManager) {
+        super(List.of(crashReportManager));
     }
 
     public void init() {
@@ -234,15 +233,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
-        // Load configs for all features
-        Managers.Config.reloadConfiguration();
-
-        // save/create config file after loading all features' options
-        Managers.Config.saveConfig();
-
-        // save/create default config file containing all config holders
-        Managers.Config.saveDefaultConfig();
-
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
@@ -310,7 +300,6 @@ public final class FeatureManager extends Manager {
 
         // register & load configs
         // this has to be done after the userEnabled handling above, so the default value registers properly
-        Managers.Config.registerFeature(feature);
         Managers.Storage.registerStorageable(feature);
 
         feature.initOverlayGroups();
