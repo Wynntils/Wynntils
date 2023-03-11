@@ -46,7 +46,15 @@ public class InventoryFunctions {
     public static class EmeraldStringFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory());
+            return Models.Emerald.getFormattedString(
+                    Models.Emerald.getAmountInInventory(),
+                    arguments.getArgument("zeros").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("zeros", Boolean.class, false)));
         }
 
         @Override
