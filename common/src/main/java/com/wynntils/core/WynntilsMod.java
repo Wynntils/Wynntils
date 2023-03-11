@@ -117,7 +117,7 @@ public final class WynntilsMod {
             return;
         }
 
-        feature.crash();
+        Managers.Feature.crashFeature(feature);
 
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");

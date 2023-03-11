@@ -114,14 +114,15 @@ import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
-    private static final List<Feature> FEATURES = new ArrayList<>();
+    private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
 
     public FeatureManager(ConfigManager configManager, CrashReportManager crashReportManager) {
         super(List.of(configManager, crashReportManager));
@@ -252,7 +253,7 @@ public final class FeatureManager extends Manager {
     }
 
     private void registerFeature(Feature feature) {
-        FEATURES.add(feature);
+        FEATURES.put(feature, FeatureState.DISABLED);
 
         try {
             initializeFeature(feature);
@@ -313,20 +314,91 @@ public final class FeatureManager extends Manager {
 
         feature.initOverlayGroups();
 
-        // initialize & enable
-        feature.init();
+        // Assert that the feature name is properly translated
+        assert !feature.getTranslatedName().startsWith("feature.wynntils.");
 
         if (feature instanceof UserFeature userFeature) {
             if (!userFeature.userEnabled) return; // not enabled by user
 
-            userFeature.enable();
+            enableFeature(feature);
         } else if (!startDisabled) {
-            feature.enable();
+            enableFeature(feature);
         }
     }
 
+    public void enableFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
+        }
+
+        FeatureState state = FEATURES.get(feature);
+
+        if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
+
+        feature.onEnable();
+
+        FEATURES.put(feature, FeatureState.ENABLED);
+
+        WynntilsMod.registerEventListener(feature);
+
+        feature.enableOverlays();
+
+        for (KeyBind keyBind : feature.getKeyBinds()) {
+            Managers.KeyBind.registerKeybind(keyBind);
+        }
+
+        // FIXME: I don't think this is needed anymore?
+        //        // Reload configs to load new keybinds
+        //        if (!feature.getKeyBinds().isEmpty()) {
+        //            synchronized (McUtils.options()) {
+        //                McUtils.mc().options.load();
+        //            }
+        //        }
+
+        feature.postEnable();
+    }
+
+    public void disableFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to disable an unregistered feature: " + feature);
+        }
+
+        FeatureState state = FEATURES.get(feature);
+
+        if (state != FeatureState.ENABLED) return;
+
+        feature.onDisable();
+
+        FEATURES.put(feature, FeatureState.DISABLED);
+
+        WynntilsMod.unregisterEventListener(feature);
+
+        Managers.Overlay.disableOverlays(feature.getOverlays());
+        for (KeyBind keyBind : feature.getKeyBinds()) {
+            Managers.KeyBind.unregisterKeybind(keyBind);
+        }
+    }
+
+    public void crashFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
+        }
+
+        disableFeature(feature);
+        FEATURES.put(feature, FeatureState.CRASHED);
+    }
+
+    public FeatureState getFeatureState(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException(
+                    "Feature " + feature + " is not registered, but was was queried for its state");
+        }
+
+        return FEATURES.get(feature);
+    }
+
     public List<Feature> getFeatures() {
-        return FEATURES;
+        return FEATURES.keySet().stream().toList();
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {
@@ -339,7 +411,7 @@ public final class FeatureManager extends Manager {
         Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
             StringBuilder result = new StringBuilder();
 
-            for (Feature feature : FEATURES) {
+            for (Feature feature : FEATURES.keySet()) {
                 if (feature.isEnabled()) {
                     result.append("\n\t\t").append(feature.getTranslatedName());
                 }

@@ -16,7 +16,6 @@ import com.wynntils.core.features.overlays.annotations.OverlayGroup;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.storage.Storageable;
-import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -39,15 +38,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     private final List<OverlayGroupHolder> overlayGroups = new ArrayList<>();
     private final List<Overlay> groupedOverlayInstances = new ArrayList<>();
 
-    private FeatureState state = FeatureState.UNINITIALIZED;
-
     private Category category = Category.UNCATEGORIZED;
-
-    public final void init() {
-        state = FeatureState.DISABLED;
-
-        assert !getTranslatedName().startsWith("feature.wynntils.");
-    }
 
     public final void initOverlays() {
         Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(this.getClass(), OverlayInfo.class);
@@ -118,6 +109,10 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         keyBinds.add(keyBind);
     }
 
+    public List<KeyBind> getKeyBinds() {
+        return keyBinds;
+    }
+
     public List<Overlay> getOverlays() {
         return Stream.concat(overlays.keySet().stream(), groupedOverlayInstances.stream())
                 .toList();
@@ -167,55 +162,9 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     /** Called after successfully enabling a feature, after everything is set up. */
     protected void postEnable() {}
 
-    /** Called to activate a feature */
-    public final void enable() {
-        if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
-
-        onEnable();
-        state = FeatureState.ENABLED;
-
-        WynntilsMod.registerEventListener(this);
-
-        enableOverlays();
-
-        for (KeyBind keyBind : keyBinds) {
-            Managers.KeyBind.registerKeybind(keyBind);
-        }
-
-        // Reload configs to load new keybinds
-        if (!keyBinds.isEmpty()) {
-            synchronized (McUtils.options()) {
-                McUtils.mc().options.load();
-            }
-        }
-
-        postEnable();
-    }
-
-    /** Called for a feature's deactivation */
-    public final void disable() {
-        if (state != FeatureState.ENABLED) return;
-
-        onDisable();
-
-        state = FeatureState.DISABLED;
-
-        WynntilsMod.unregisterEventListener(this);
-
-        Managers.Overlay.disableOverlays(this.getOverlays());
-        for (KeyBind keyBind : keyBinds) {
-            Managers.KeyBind.unregisterKeybind(keyBind);
-        }
-    }
-
-    public final void crash() {
-        disable();
-        state = FeatureState.CRASHED;
-    }
-
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
-        return state == FeatureState.ENABLED;
+        return Managers.Feature.getFeatureState(this) == FeatureState.ENABLED;
     }
 
     /** Used to react to config option updates */
@@ -235,12 +184,5 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
                 .compare(this.getCategory().toString(), other.getCategory().toString())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
-    }
-
-    public enum FeatureState {
-        UNINITIALIZED,
-        DISABLED,
-        ENABLED,
-        CRASHED
     }
 }
