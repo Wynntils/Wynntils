@@ -9,6 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.core.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -100,6 +101,9 @@ public final class FunctionManager extends Manager {
                     .withStyle(ChatFormatting.RED));
 
             crashFunction(function);
+
+            WynntilsMod.postEvent(new WynntilsCrashEvent(
+                    function.getClass().getName(), WynntilsCrashEvent.CrashType.FUNCTION, throwable));
         }
 
         return Optional.empty();

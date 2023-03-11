@@ -11,6 +11,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -136,6 +137,9 @@ public final class OverlayManager extends Manager {
                         .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedOverlays.add(overlay);
+
+                WynntilsMod.postEvent(
+                        new WynntilsCrashEvent(overlay.getClass().getName(), WynntilsCrashEvent.CrashType.OVERLAY, t));
             }
         }
 

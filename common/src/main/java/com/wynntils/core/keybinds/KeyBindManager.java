@@ -9,6 +9,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -29,6 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
     private final Set<KeyBind> keyBinds = ConcurrentHashMap.newKeySet();
+    private Map<KeyBind, String> keyBindId = new ConcurrentHashMap<>();
 
     public KeyBindManager() {
         super(List.of());
@@ -57,7 +60,7 @@ public final class KeyBindManager extends Manager {
         });
     }
 
-    public void registerKeybind(KeyBind toAdd) {
+    public void registerKeybind(KeyBind toAdd, Feature feature, String fieldName) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
@@ -67,6 +70,7 @@ public final class KeyBindManager extends Manager {
 
         synchronized (McUtils.options()) {
             keyBinds.add(toAdd);
+            keyBindId.put(toAdd, feature.getClass().getName() + "." + fieldName);
 
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -84,6 +88,7 @@ public final class KeyBindManager extends Manager {
 
     public void unregisterKeybind(KeyBind toRemove) {
         if (!keyBinds.remove(toRemove)) return;
+        keyBindId.remove(toRemove);
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
 
@@ -130,6 +135,9 @@ public final class KeyBindManager extends Manager {
                                 .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedKeyBinds.add(keyBind);
+
+                WynntilsMod.postEvent(
+                        new WynntilsCrashEvent(keyBindId.get(keyBind), WynntilsCrashEvent.CrashType.KEYBIND, t));
             }
         }
 

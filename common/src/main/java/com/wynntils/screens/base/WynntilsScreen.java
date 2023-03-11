@@ -6,6 +6,7 @@ package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,6 +23,9 @@ public abstract class WynntilsScreen extends Screen {
                         + this.getClass().getSimpleName() + " during " + method + ". Screen forcefully closed.")
                 .withStyle(ChatFormatting.RED));
         McUtils.mc().setScreen(null);
+
+        WynntilsMod.postEvent(
+                new WynntilsCrashEvent(this.getClass().getName(), WynntilsCrashEvent.CrashType.SCREEN, e));
     }
 
     @Override

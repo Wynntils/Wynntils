@@ -111,6 +111,7 @@ import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataStorageFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
+import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
@@ -183,6 +184,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HadesFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
+        registerFeature(new HorseMountFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
@@ -194,7 +196,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LobbyUptimeFeature());
@@ -219,6 +220,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TelemetryFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
@@ -298,7 +300,7 @@ public final class FeatureManager extends Manager {
 
             try {
                 KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
-                feature.setupKeyHolder(keyBind);
+                feature.setupKeyHolder(keyBind, f.getName());
             } catch (Exception e) {
                 WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
             }

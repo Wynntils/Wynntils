@@ -16,6 +16,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -121,6 +122,8 @@ public final class WynntilsMod {
 
         WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
         WynntilsMod.warn("This feature will be disabled");
+        WynntilsMod.postEvent(
+                new WynntilsCrashEvent(feature.getClass().getName(), WynntilsCrashEvent.CrashType.FEATURE, t));
 
         // FIXME: This is a temporary fix for a crash that occurs when an error happens in a client-side message
         //       event, and we send a new message about disabling X feature,
