@@ -300,7 +300,7 @@ public final class FeatureManager extends Manager {
 
             try {
                 KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
-                feature.setupKeyHolder(keyBind, f.getName());
+                feature.setupKeyHolder(f.getName(), keyBind);
             } catch (Exception e) {
                 WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
             }

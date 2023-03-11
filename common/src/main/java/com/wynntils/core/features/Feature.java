@@ -133,7 +133,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
      * Adds a keyBind to the feature. Called from the registry.
      * @param keyBind KeyBind to add to the feature
      */
-    public final void setupKeyHolder(KeyBind keyBind, String fieldName) {
+    public final void setupKeyHolder(String fieldName, KeyBind keyBind) {
         keyBinds.add(Pair.of(fieldName, keyBind));
     }
 
