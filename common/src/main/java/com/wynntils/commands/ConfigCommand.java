@@ -260,7 +260,7 @@ public class ConfigCommand extends Command {
 
         if (overlayGroupHolder == null) return 0;
 
-        int newId = overlayGroupHolder.extendGroup();
+        int newId = Managers.Overlay.extendOverlayGroup(overlayGroupHolder);
 
         Managers.Config.loadConfigOptions(true, false);
         Managers.Config.saveConfig();
@@ -291,7 +291,7 @@ public class ConfigCommand extends Command {
 
         int id = Integer.parseInt(idName);
 
-        overlayGroupHolder.removeId(id);
+        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, id);
 
         Managers.Config.loadConfigOptions(true, false);
         Managers.Config.saveConfig();

@@ -151,6 +151,34 @@ public final class OverlayManager extends Manager {
         recreateGroupOverlaysWithIds(holder, ids);
     }
 
+    public int extendOverlayGroup(OverlayGroupHolder holder) {
+        List<Integer> ids = holder.getOverlays().stream()
+                .map(overlay -> ((DynamicOverlay) overlay).getId())
+                .collect(Collectors.toList());
+        ;
+
+        int newId = 1;
+        while (ids.contains(newId)) {
+            newId++;
+        }
+
+        ids.add(newId);
+
+        recreateGroupOverlaysWithIds(holder, ids);
+
+        return newId;
+    }
+
+    public void removeIdFromOverlayGroup(OverlayGroupHolder holder, int id) {
+        List<Integer> ids = holder.getOverlays().stream()
+                .map(overlay -> ((DynamicOverlay) overlay).getId())
+                .collect(Collectors.toList());
+
+        ids.remove((Integer) id);
+
+        recreateGroupOverlaysWithIds(holder, ids);
+    }
+
     private void recreateGroupOverlaysWithIds(OverlayGroupHolder holder, List<Integer> ids) {
         holder.getOverlays().forEach(this::unregisterOverlay);
 
