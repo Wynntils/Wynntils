@@ -9,30 +9,40 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.OverlayGroupHolder;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.annotations.OverlayGroup;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
     private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
-    private final Map<Overlay, OverlayRenderInfo> overlayInfoMap = new HashMap<>();
-    private final Map<Overlay, Feature> overlayParent = new HashMap<>();
+    private final Map<Feature, List<Overlay>> overlayParentMap = new HashMap<>();
+    private final Map<Overlay, OverlayInfoContainer> overlayInfoMap = new HashMap<>();
+    private final Map<Feature, List<OverlayGroupHolder>> overlayGroupMap = new HashMap<>();
 
     private final Set<Overlay> enabledOverlays = new HashSet<>();
 
@@ -46,34 +56,114 @@ public final class OverlayManager extends Manager {
         addCrashCallbacks();
     }
 
+    // region Initialization and Registration
+
     public void registerOverlay(
-            Overlay overlay, RenderEvent.ElementType elementType, RenderState renderAt, Feature parent) {
-        overlayInfoMap.put(overlay, new OverlayRenderInfo(elementType, renderAt));
-        overlayParent.put(overlay, parent);
+            Overlay overlay,
+            Feature parent,
+            RenderEvent.ElementType elementType,
+            RenderState renderAt,
+            boolean enabledByDefault) {
+        overlayParentMap.putIfAbsent(parent, new LinkedList<>());
+        overlayParentMap.get(parent).add(overlay);
+
+        overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, elementType, renderAt, enabledByDefault));
     }
 
     public void unregisterOverlay(Overlay overlay) {
+        overlayParentMap.get(overlayInfoMap.get(overlay).parent()).remove(overlay);
+
         overlayInfoMap.remove(overlay);
-        overlayParent.remove(overlay);
         enabledOverlays.remove(overlay);
     }
 
-    public void disableOverlays(List<Overlay> overlays) {
-        enabledOverlays.removeIf(overlays::contains);
-        overlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+    public void disableOverlays(Feature parent) {
+        overlayParentMap.getOrDefault(parent, Collections.emptyList()).forEach(this::disableOverlay);
     }
 
-    public void enableOverlays(List<Overlay> overlays, boolean ignoreState) {
-        List<Overlay> enabledOverlays = ignoreState
-                ? overlays
-                : overlays.stream().filter(Overlay::isEnabled).toList();
-
-        this.enabledOverlays.addAll(enabledOverlays);
+    public void disableOverlay(Overlay disabled) {
+        enabledOverlays.remove(disabled);
 
         enabledOverlays.forEach(
                 overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
     }
+
+    public void enableOverlays(Feature parent) {
+        overlayParentMap.getOrDefault(parent, Collections.emptyList()).forEach(this::enableOverlay);
+    }
+
+    public void enableOverlay(Overlay enableOverlay) {
+        if (!enableOverlay.isEnabled()) return;
+
+        this.enabledOverlays.add(enableOverlay);
+
+        enabledOverlays.forEach(
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+    }
+
+    public void discoverOverlays(Feature feature) {
+        Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(feature.getClass(), OverlayInfo.class);
+        for (Field overlayField : overlayFields) {
+            try {
+                Object fieldValue = FieldUtils.readField(overlayField, feature, true);
+
+                if (!(fieldValue instanceof Overlay overlay)) {
+                    throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
+                }
+
+                OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
+                Managers.Overlay.registerOverlay(
+                        overlay, feature, annotation.renderType(), annotation.renderAt(), annotation.enabled());
+
+                assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
+            } catch (IllegalAccessException e) {
+                WynntilsMod.error("Unable to get field " + overlayField, e);
+            }
+        }
+    }
+
+    public void discoverOverlayGroups(Feature feature) {
+        List<OverlayGroupHolder> holders = Stream.of(feature.getClass().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(OverlayGroup.class))
+                .map(field -> {
+                    OverlayGroup annotation = field.getAnnotation(OverlayGroup.class);
+                    return new OverlayGroupHolder(
+                            field, feature, annotation.renderType(), annotation.renderAt(), annotation.instances());
+                })
+                .toList();
+
+        holders.forEach(this::createOverlayGroupWithDefaults);
+
+        overlayGroupMap.put(feature, holders);
+    }
+
+    // endregion
+
+    // region Overlay Groups
+
+    public void createOverlayGroupWithDefaults(OverlayGroupHolder holder) {
+        recreateGroupOverlaysWithIds(
+                holder,
+                IntStream.rangeClosed(1, holder.getDefaultCount()).boxed().toList());
+    }
+
+    public void createOverlayGroupWithIds(OverlayGroupHolder holder, List<Integer> ids) {
+        recreateGroupOverlaysWithIds(holder, ids);
+    }
+
+    private void recreateGroupOverlaysWithIds(OverlayGroupHolder holder, List<Integer> ids) {
+        holder.getOverlays().forEach(this::unregisterOverlay);
+
+        holder.initGroup(ids);
+
+        holder.getOverlays()
+                .forEach(overlay -> registerOverlay(
+                        overlay, holder.getParent(), holder.getElementType(), holder.getRenderState(), true));
+    }
+
+    // endregion
+
+    // region Rendering
 
     @SubscribeEvent
     public void onRenderPre(RenderEvent.Pre event) {
@@ -100,7 +190,7 @@ public final class OverlayManager extends Manager {
 
         List<Overlay> crashedOverlays = new LinkedList<>();
         for (Overlay overlay : enabledOverlays) {
-            OverlayRenderInfo renderInfo = overlayInfoMap.get(overlay);
+            OverlayInfoContainer renderInfo = overlayInfoMap.get(overlay);
 
             if (renderInfo.elementType() != event.getType()) {
                 continue;
@@ -147,6 +237,10 @@ public final class OverlayManager extends Manager {
         }
     }
 
+    // endregion
+
+    // region Profiling
+
     private void logProfilingData(long startTime, Overlay overlay) {
         long endTime = System.currentTimeMillis();
         int timeSpent = (int) (endTime - startTime);
@@ -170,18 +264,9 @@ public final class OverlayManager extends Manager {
         profilingCounts.clear();
     }
 
-    private void addCrashCallbacks() {
-        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> {
-            StringBuilder result = new StringBuilder();
+    // endregion
 
-            for (Overlay overlay : enabledOverlays) {
-                result.append("\n\t\t").append(overlay.getTranslatedName());
-            }
-
-            return result.toString();
-        });
-    }
-
+    // region Sections
     @SubscribeEvent
     public void onResizeEvent(DisplayResizeEvent event) {
         calculateSections();
@@ -209,6 +294,20 @@ public final class OverlayManager extends Manager {
         }
     }
 
+    // endregion
+
+    private void addCrashCallbacks() {
+        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> {
+            StringBuilder result = new StringBuilder();
+
+            for (Overlay overlay : enabledOverlays) {
+                result.append("\n\t\t").append(overlay.getTranslatedName());
+            }
+
+            return result.toString();
+        });
+    }
+
     public SectionCoordinates getSection(OverlayPosition.AnchorSection section) {
         return sections.get(section.getIndex());
     }
@@ -222,12 +321,29 @@ public final class OverlayManager extends Manager {
     }
 
     public Feature getOverlayParent(Overlay overlay) {
-        return overlayParent.get(overlay);
+        return overlayInfoMap.get(overlay).parent();
     }
 
     public boolean isEnabled(Overlay overlay) {
         return enabledOverlays.contains(overlay);
     }
 
-    private record OverlayRenderInfo(RenderEvent.ElementType elementType, RenderState renderState) {}
+    public boolean isEnabledByDefault(Overlay overlay) {
+        return overlayInfoMap.get(overlay).enabledByDefault();
+    }
+
+    public List<OverlayGroupHolder> getOverlayGroups() {
+        return overlayGroupMap.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public List<Overlay> getFeatureOverlays(Feature feature) {
+        return overlayParentMap.getOrDefault(feature, Collections.emptyList());
+    }
+
+    public List<OverlayGroupHolder> getFeatureOverlayGroups(Feature feature) {
+        return overlayGroupMap.getOrDefault(feature, Collections.emptyList());
+    }
+
+    private record OverlayInfoContainer(
+            Feature parent, RenderEvent.ElementType elementType, RenderState renderState, boolean enabledByDefault) {}
 }

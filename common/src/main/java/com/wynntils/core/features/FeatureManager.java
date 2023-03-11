@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.event.FeatureStateChangeEvent;
+import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
@@ -124,8 +125,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
 
-    public FeatureManager(CrashReportManager crashReportManager) {
-        super(List.of(crashReportManager));
+    public FeatureManager(OverlayManager overlay, CrashReportManager crashReportManager) {
+        super(List.of(overlay, crashReportManager));
     }
 
     public void init() {
@@ -295,14 +296,8 @@ public final class FeatureManager extends Manager {
             userFeature.userEnabled = !startDisabled;
         }
 
-        // init overlays before ConfigManager
-        feature.initOverlays();
-
-        // register & load configs
-        // this has to be done after the userEnabled handling above, so the default value registers properly
-        Managers.Storage.registerStorageable(feature);
-
-        feature.initOverlayGroups();
+        Managers.Overlay.discoverOverlays(feature);
+        Managers.Overlay.discoverOverlayGroups(feature);
 
         // Assert that the feature name is properly translated
         assert !feature.getTranslatedName().startsWith("feature.wynntils.");
@@ -331,7 +326,7 @@ public final class FeatureManager extends Manager {
 
         WynntilsMod.registerEventListener(feature);
 
-        feature.enableOverlays();
+        Managers.Overlay.enableOverlays(feature);
 
         for (KeyBind keyBind : feature.getKeyBinds()) {
             Managers.KeyBind.registerKeybind(keyBind);
@@ -353,7 +348,7 @@ public final class FeatureManager extends Manager {
 
         WynntilsMod.unregisterEventListener(feature);
 
-        Managers.Overlay.disableOverlays(feature.getOverlays());
+        Managers.Overlay.disableOverlays(feature);
         for (KeyBind keyBind : feature.getKeyBinds()) {
             Managers.KeyBind.unregisterKeybind(keyBind);
         }
