@@ -6,7 +6,7 @@ package com.wynntils.handlers.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.mod.event.WynntilsCrashEvent;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -180,19 +180,18 @@ public class ItemHandler extends Handler {
                     break;
                 }
             } catch (Throwable t) {
-                String annotatorName = annotator.getClass().getSimpleName();
-                WynntilsMod.error("Exception when processing item annotator " + annotatorName, t);
-                WynntilsMod.warn("This annotator will be disabled");
-                WynntilsMod.warn("Problematic item:" + itemStack);
-                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
-                McUtils.sendMessageToClient(Component.literal("Wynntils error: Item Annotator '" + annotatorName
-                                + "' has crashed and will be disabled. Not all items will be properly parsed.")
-                        .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedAnnotators.add(annotator);
 
-                WynntilsMod.postEvent(new WynntilsCrashEvent(annotator.getClass().getName(), WynntilsCrashEvent.CrashType.ANNOTATOR, t));
+                String annotatorName = annotator.getClass().getSimpleName();
+                WynntilsMod.reportCrash(annotator.getClass().getName(), annotatorName, CrashType.ANNOTATOR, t);
+
+                WynntilsMod.warn("Problematic item:" + itemStack);
+                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
+                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
+
+                McUtils.sendMessageToClient(Component.literal("Not all items will be properly parsed.")
+                        .withStyle(ChatFormatting.RED));
             }
         }
 

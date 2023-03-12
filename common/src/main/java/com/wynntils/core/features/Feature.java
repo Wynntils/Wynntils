@@ -235,7 +235,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         }
     }
 
-    public final void crash() {
+    final void crash() {
         disable();
         state = FeatureState.CRASHED;
     }

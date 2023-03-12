@@ -10,7 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.mod.event.WynntilsCrashEvent;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -22,10 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
@@ -128,16 +126,10 @@ public final class KeyBindManager extends Manager {
             try {
                 checkKeybind.accept(keyBind);
             } catch (Throwable t) {
-                WynntilsMod.error("Exception when handling key bind " + keyBind, t);
-                WynntilsMod.warn("This key bind will be disabled");
-                McUtils.sendMessageToClient(
-                        Component.literal("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
-                                .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedKeyBinds.add(keyBind);
 
-                WynntilsMod.postEvent(
-                        new WynntilsCrashEvent(keyBindId.get(keyBind), WynntilsCrashEvent.CrashType.KEYBIND, t));
+                WynntilsMod.reportCrash(keyBindId.get(keyBind), keyBind.getName(), CrashType.KEYBIND, t);
             }
         }
 

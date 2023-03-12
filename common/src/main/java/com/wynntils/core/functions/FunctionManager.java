@@ -9,7 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.core.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
-import com.wynntils.core.mod.event.WynntilsCrashEvent;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -29,7 +29,6 @@ import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -95,15 +94,10 @@ public final class FunctionManager extends Manager {
             Object value = function.getValue(arguments);
             return Optional.ofNullable(value);
         } catch (Throwable throwable) {
-            WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
-            McUtils.sendMessageToClient(Component.literal(String.format(
-                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
-                    .withStyle(ChatFormatting.RED));
-
             crashFunction(function);
 
-            WynntilsMod.postEvent(new WynntilsCrashEvent(
-                    function.getClass().getName(), WynntilsCrashEvent.CrashType.FUNCTION, throwable));
+            WynntilsMod.reportCrash(
+                    function.getClass().getName(), function.getTranslatedName(), CrashType.FUNCTION, throwable);
         }
 
         return Optional.empty();

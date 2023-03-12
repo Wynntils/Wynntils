@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.mod.event;
 
+import com.wynntils.core.mod.type.CrashType;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WynntilsCrashEvent extends Event {
@@ -27,14 +28,5 @@ public class WynntilsCrashEvent extends Event {
 
     public Throwable getThrowable() {
         return throwable;
-    }
-
-    public enum CrashType {
-        ANNOTATOR,
-        FUNCTION,
-        FEATURE,
-        OVERLAY,
-        KEYBIND,
-        SCREEN
     }
 }
