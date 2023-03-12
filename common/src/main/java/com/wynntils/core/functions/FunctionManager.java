@@ -22,11 +22,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
-import com.wynntils.functions.generic.CappedFunctions;
-import com.wynntils.functions.generic.ConditionalFunctions;
-import com.wynntils.functions.generic.LogicFunctions;
-import com.wynntils.functions.generic.MathFunctions;
-import com.wynntils.functions.generic.StringFunctions;
+import com.wynntils.functions.generic.*;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
@@ -315,6 +311,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.RoundFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
+
+        registerFunction(new RandomFunctions.RandomFunction());
+        registerFunction(new RandomFunctions.RandomMaxFunction());
 
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatFunction());
