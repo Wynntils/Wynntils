@@ -5,7 +5,11 @@
 package com.wynntils.core.chat;
 
 import com.wynntils.core.components.Manager;
+import com.wynntils.features.chat.ChatTabsFeature;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -15,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
@@ -29,6 +34,48 @@ public final class ChatTabManager extends Manager {
 
     public ChatTabManager() {
         super(List.of());
+    }
+
+    private List<ChatTab> getChatTabs() {
+        return ChatTabsFeature.INSTANCE.chatTabs;
+    }
+
+    public Stream<ChatTab> getTabs() {
+        return getChatTabs().stream();
+    }
+
+    public ChatTab getTab(int index) {
+        return getChatTabs().get(index);
+    }
+
+    public int getTabCount() {
+        return getChatTabs().size();
+    }
+
+    public boolean isTabListEmpty() {
+        return getTabCount() == 0;
+    }
+
+    public void addTab(int insertIndex, ChatTab chatTab) {
+        getChatTabs().add(insertIndex, chatTab);
+    }
+
+    public void removeTab(ChatTab chatTab) {
+        getChatTabs().remove(chatTab);
+    }
+
+    public int getTabIndex(ChatTab edited) {
+        return getChatTabs().indexOf(edited);
+    }
+
+    public int getNextFocusedTab() {
+        return (getTabIndex(getFocusedTab()) + 1) % getTabCount();
+    }
+
+    public void resetFocusedTab() {
+        if (!isTabListEmpty()) {
+            setFocusedTab(0);
+        }
     }
 
     @SubscribeEvent
@@ -63,14 +110,8 @@ public final class ChatTabManager extends Manager {
         event.setCanceled(true);
     }
 
-    public void addMessageToTab(ChatTab tab, Component message) {
-        chatTabData.putIfAbsent(tab, new ChatComponent(McUtils.mc()));
-
-        chatTabData.get(tab).addMessage(message);
-
-        if (focusedTab != tab) {
-            unreadMessages.put(tab, true);
-        }
+    public void setFocusedTab(int index) {
+        setFocusedTab(getTab(index));
     }
 
     public void setFocusedTab(ChatTab focused) {
@@ -107,5 +148,85 @@ public final class ChatTabManager extends Manager {
 
     public boolean hasUnreadMessages(ChatTab tab) {
         return unreadMessages.getOrDefault(tab, false);
+    }
+
+    public void matchMessage(ClientsideMessageEvent event) {
+        // Firstly, find the FIRST matching tab with high priority
+        for (ChatTab chatTab : getChatTabs()) {
+            if (!chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getComponent());
+                return;
+            }
+        }
+
+        // Secondly, match ALL tabs with low priority
+        for (ChatTab chatTab : getChatTabs()) {
+            if (chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getComponent());
+            }
+        }
+    }
+
+    public void matchMessage(ChatMessageReceivedEvent event) {
+        // Firstly, find the FIRST matching tab with high priority
+        for (ChatTab chatTab : getChatTabs()) {
+            if (!chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getMessage());
+                return;
+            }
+        }
+
+        // Secondly, match ALL tabs with low priority
+        for (ChatTab chatTab : getChatTabs()) {
+            if (chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getMessage());
+            }
+        }
+    }
+
+    private void addMessageToTab(ChatTab tab, Component message) {
+        chatTabData.putIfAbsent(tab, new ChatComponent(McUtils.mc()));
+
+        chatTabData.get(tab).addMessage(message);
+
+        if (focusedTab != tab) {
+            unreadMessages.put(tab, true);
+        }
+    }
+
+    private boolean matchMessageFromEvent(ChatTab chatTab, ChatMessageReceivedEvent event) {
+        if (chatTab.getFilteredTypes() != null
+                && !chatTab.getFilteredTypes().isEmpty()
+                && !chatTab.getFilteredTypes().contains(event.getRecipientType())) {
+            return false;
+        }
+
+        return chatTab.getCustomRegexString() == null
+                || chatTab.getCustomRegexString().isBlank()
+                || chatTab.getCustomRegex()
+                        .matcher(event.getOriginalCodedMessage())
+                        .matches();
+    }
+
+    private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
+        if (chatTab.getFilteredTypes() != null
+                && !chatTab.getFilteredTypes().isEmpty()
+                && !chatTab.getFilteredTypes().contains(RecipientType.CLIENTSIDE)) {
+            return false;
+        }
+
+        if (chatTab.getCustomRegexString() == null) {
+            return true;
+        }
+
+        return chatTab.getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
     }
 }

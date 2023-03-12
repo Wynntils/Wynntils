@@ -23,11 +23,12 @@ public class Storage<T> {
     }
 
     public void touched() {
-        Managers.Storage.persist(this);
+        Managers.Storage.persist();
     }
 
     // This must only be called by StorageManager when restoring value from disk
-    void set(T value) {
-        this.value = value;
+    @SuppressWarnings("unchecked")
+    void set(Object value) {
+        this.value = (T) value;
     }
 }
