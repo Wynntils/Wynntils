@@ -67,7 +67,6 @@ public class EnvironmentFunctions {
     public static class MemPctFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-
             return (int) (((float) SystemUtils.getMemUsed() / SystemUtils.getMemMax()) * 100f);
         }
 

@@ -36,8 +36,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ShamanTotemModel extends Model {
     private static final int MAX_TOTEM_COUNT = 3;
 
-    private ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
-    private Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
+    private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
+    private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
 
     private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;

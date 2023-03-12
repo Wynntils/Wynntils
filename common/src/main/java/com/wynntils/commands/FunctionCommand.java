@@ -130,7 +130,7 @@ public class FunctionCommand extends Command {
                         || (onlyNormal && !(function instanceof GenericFunction<?>))
                         || (onlyGeneric && function instanceof GenericFunction<?>))
                 .sorted(Comparator.comparing(function -> function instanceof GenericFunction<?>)
-                        .thenComparing(o -> ((Function) o).getName()))
+                        .thenComparing(o -> ((Function<?>) o).getName()))
                 .toList();
 
         MutableComponent response = Component.literal(
@@ -251,7 +251,7 @@ public class FunctionCommand extends Command {
                 + (isArgumentOptional ? "Optional" : "Required")
                 + ")");
 
-        for (FunctionArguments.Argument argument :
+        for (FunctionArguments.Argument<?> argument :
                 function.getArgumentsBuilder().getArguments()) {
             String type;
 

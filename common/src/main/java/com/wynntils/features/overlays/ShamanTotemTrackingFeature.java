@@ -37,13 +37,13 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     public boolean highlightShamanTotems = true;
 
     @Config
-    public static CustomColor firstTotemColor = CommonColors.WHITE;
+    public CustomColor firstTotemColor = CommonColors.WHITE;
 
     @Config
-    public static CustomColor secondTotemColor = CommonColors.BLUE;
+    public CustomColor secondTotemColor = CommonColors.BLUE;
 
     @Config
-    public static CustomColor thirdTotemColor = CommonColors.RED;
+    public CustomColor thirdTotemColor = CommonColors.RED;
 
     private static final int ENTITY_GLOWING_FLAG = 6;
 
@@ -71,18 +71,18 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
         @Config
-        public static TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
+        public TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
 
         @Config
-        public static ChatFormatting firstTotemTextColor = ChatFormatting.WHITE;
+        public ChatFormatting firstTotemTextColor = ChatFormatting.WHITE;
 
         @Config
-        public static ChatFormatting secondTotemTextColor = ChatFormatting.BLUE;
+        public ChatFormatting secondTotemTextColor = ChatFormatting.BLUE;
 
         @Config
-        public static ChatFormatting thirdTotemTextColor = ChatFormatting.RED;
+        public ChatFormatting thirdTotemTextColor = ChatFormatting.RED;
 
-        private static final ChatFormatting[] TOTEM_COLORS = {
+        private final ChatFormatting[] totemColorsArray = {
             firstTotemTextColor, secondTotemTextColor, thirdTotemTextColor
         };
 
@@ -101,7 +101,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         public String getTemplate() {
             return Models.ShamanTotem.getActiveTotems().stream()
                     .filter(Objects::nonNull)
-                    .map(totem -> TOTEM_COLORS[totem.getTotemNumber() - 1]
+                    .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
                             + totemTrackingDetail
                                     .getTemplate()
                                     .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
@@ -113,7 +113,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
             StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < TotemTrackingDetail.values().length; i++) {
-                builder.append(TOTEM_COLORS[i])
+                builder.append(totemColorsArray[i])
                         .append(TotemTrackingDetail.values()[i].getPreviewTemplate())
                         .append("\n");
             }
