@@ -19,14 +19,14 @@ public class RandomFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("min", Integer.class, null),
-                            new FunctionArguments.Argument<>("max", Integer.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("min", Integer.class, null),
+                    new FunctionArguments.Argument<>("max", Integer.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("rand","rnd");
+            return List.of("rand", "rnd");
         }
     }
 
@@ -40,14 +40,14 @@ public class RandomFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("min", Integer.class, null),
-                            new FunctionArguments.Argument<>("max", Integer.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("min", Integer.class, null),
+                    new FunctionArguments.Argument<>("max", Integer.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("rand_max","rndm","rndx");
+            return List.of("rand_max", "rndm", "rndx");
         }
     }
 }
