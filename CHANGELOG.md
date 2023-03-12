@@ -1,3 +1,10 @@
+## [0.0.2-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.326...v0.0.2-alpha.327) (2023-03-12)
+
+
+### Code Refactoring
+
+* Spring cleaning ([#1309](https://github.com/Wynntils/Artemis/issues/1309)) ([da5f32f](https://github.com/Wynntils/Artemis/commit/da5f32f9938e2fa979dd4ee22015f4c391ca259b))
+
 ## [0.0.2-alpha.326](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.325...v0.0.2-alpha.326) (2023-03-12)
 
 
@@ -9,6 +16,11 @@
 ### Code Refactoring
 
 * Refactor ChatTabManager, in preparation for Storage ([#1308](https://github.com/Wynntils/Artemis/issues/1308)) ([2c2dbdc](https://github.com/Wynntils/Artemis/commit/2c2dbdcc059d1a69b63d7bd230e78033add7c7c2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.326 [skip ci] ([10f04c3](https://github.com/Wynntils/Artemis/commit/10f04c3842095ae0b8b504bf4e04284faa58df75))
 
 ## [0.0.2-alpha.325](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.324...v0.0.2-alpha.325) (2023-03-10)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.323 [skip ci] ([5d35086](https://github.com/Wynntils/Artemis/commit/5d35086ac60e119a616545c3ba0646d2fac0806a))
-
-## [0.0.2-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.321...v0.0.2-alpha.322) (2023-03-10)
-
-
-### New Features
-
-* Overlay Refactor Part 3: Dynamic overlays ([#1297](https://github.com/Wynntils/Artemis/issues/1297)) ([2f5cba4](https://github.com/Wynntils/Artemis/commit/2f5cba4de4430a5bc4f6b0bce7a62020820dccac))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.322 [skip ci] ([8540352](https://github.com/Wynntils/Artemis/commit/8540352ada6759f2babf82b72435595b68787c74))
 
