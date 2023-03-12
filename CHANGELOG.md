@@ -1,9 +1,21 @@
+## [0.0.2-alpha.329](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.328...v0.0.2-alpha.329) (2023-03-12)
+
+
+### Bug Fixes
+
+* Do not send crash telemetry during development ([#1319](https://github.com/Wynntils/Artemis/issues/1319)) ([2d83d16](https://github.com/Wynntils/Artemis/commit/2d83d16b8ad654a2c7b46ad9d2518435ad4b74c8))
+
 ## [0.0.2-alpha.328](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.327...v0.0.2-alpha.328) (2023-03-12)
 
 
 ### New Features
 
 * Wynntils Crash Telemetry ([#1315](https://github.com/Wynntils/Artemis/issues/1315)) ([7158626](https://github.com/Wynntils/Artemis/commit/71586260354f71b2425a1f78d5446c0d543db888))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.328 [skip ci] ([fd57296](https://github.com/Wynntils/Artemis/commit/fd57296f3ad8befb16eb21ad520bef8e7c4cad56))
 
 ## [0.0.2-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.326...v0.0.2-alpha.327) (2023-03-12)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.325 [skip ci] ([0b23240](https://github.com/Wynntils/Artemis/commit/0b23240fecd1fc10c48810fb9ebfb3fd3f593b3a))
-
-## [0.0.2-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.323...v0.0.2-alpha.324) (2023-03-10)
-
-
-### Bug Fixes
-
-* Fix OverlayManagementScreen -> OverlaySelectionScreen transition crash part 2 ([#1311](https://github.com/Wynntils/Artemis/issues/1311)) ([e9367f7](https://github.com/Wynntils/Artemis/commit/e9367f77569d2ed9e269b37c3616ef075b82a356))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.324 [skip ci] ([f2b7d73](https://github.com/Wynntils/Artemis/commit/f2b7d73bef2947250ec749f56620adaf873533b2))
 
