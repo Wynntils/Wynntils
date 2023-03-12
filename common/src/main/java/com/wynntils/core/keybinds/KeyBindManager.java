@@ -9,6 +9,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -20,15 +22,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
     private final Set<KeyBind> keyBinds = ConcurrentHashMap.newKeySet();
+    private Map<KeyBind, String> keyBindId = new ConcurrentHashMap<>();
 
     public KeyBindManager() {
         super(List.of());
@@ -57,7 +58,7 @@ public final class KeyBindManager extends Manager {
         });
     }
 
-    public void registerKeybind(KeyBind toAdd) {
+    public void registerKeybind(KeyBind toAdd, Feature feature, String fieldName) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
@@ -67,6 +68,7 @@ public final class KeyBindManager extends Manager {
 
         synchronized (McUtils.options()) {
             keyBinds.add(toAdd);
+            keyBindId.put(toAdd, feature.getClass().getName() + "." + fieldName);
 
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -84,6 +86,7 @@ public final class KeyBindManager extends Manager {
 
     public void unregisterKeybind(KeyBind toRemove) {
         if (!keyBinds.remove(toRemove)) return;
+        keyBindId.remove(toRemove);
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
 
@@ -123,13 +126,10 @@ public final class KeyBindManager extends Manager {
             try {
                 checkKeybind.accept(keyBind);
             } catch (Throwable t) {
-                WynntilsMod.error("Exception when handling key bind " + keyBind, t);
-                WynntilsMod.warn("This key bind will be disabled");
-                McUtils.sendMessageToClient(
-                        Component.literal("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
-                                .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedKeyBinds.add(keyBind);
+
+                WynntilsMod.reportCrash(keyBindId.get(keyBind), keyBind.getName(), CrashType.KEYBIND, t);
             }
         }
 

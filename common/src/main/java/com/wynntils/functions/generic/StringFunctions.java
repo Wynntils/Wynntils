@@ -45,7 +45,8 @@ public class StringFunctions {
     public static class ConcatFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            List<String> values = arguments.getArgument("values").asList().getValues();
+            List<String> values =
+                    arguments.<String>getArgument("values").asList().getValues();
 
             return String.join("", values);
         }

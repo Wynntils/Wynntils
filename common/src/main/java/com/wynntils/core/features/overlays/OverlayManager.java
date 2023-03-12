@@ -11,6 +11,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -23,9 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class OverlayManager extends Manager {
@@ -129,13 +128,11 @@ public final class OverlayManager extends Manager {
                     }
                 }
             } catch (Throwable t) {
-                WynntilsMod.error("Exception when rendering overlay " + overlay.getTranslatedName(), t);
-                WynntilsMod.warn("This overlay will be disabled");
-                McUtils.sendMessageToClient(Component.literal("Wynntils error: Overlay '" + overlay.getTranslatedName()
-                                + "' has crashed and will be disabled")
-                        .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedOverlays.add(overlay);
+
+                WynntilsMod.reportCrash(
+                        overlay.getClass().getName(), overlay.getTranslatedName(), CrashType.OVERLAY, t);
             }
         }
 
