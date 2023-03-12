@@ -158,7 +158,7 @@ public final class ConfigManager extends Manager {
     }
 
     private static List<ConfigHolder> getConfigHolderList() {
-        // FIXME: This breaks the concept of "manager holds all config holders at all times". Instead we get the group
+        // This breaks the concept of "manager holds all config holders at all times". Instead we get the group
         // overlays' configs from the overlay instance itself, to save us some trouble.
 
         return Stream.concat(
