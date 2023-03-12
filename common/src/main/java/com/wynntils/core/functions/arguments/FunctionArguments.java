@@ -13,24 +13,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class FunctionArguments {
-    private final List<Argument> arguments;
-    private final Map<String, Argument> lookupMap;
+    private final List<Argument<?>> arguments;
+    private final Map<String, Argument<?>> lookupMap;
 
-    private FunctionArguments(List<Argument> arguments) {
+    private FunctionArguments(List<Argument<?>> arguments) {
         this.arguments = arguments;
 
         this.lookupMap =
                 this.arguments.stream().collect(Collectors.toMap(argument -> argument.name, argument -> argument));
     }
 
-    public Argument getArgument(String name) {
-        return this.lookupMap.get(name);
+    @SuppressWarnings("unchecked")
+    public <T> Argument<T> getArgument(String name) {
+        return (Argument<T>) this.lookupMap.get(name);
     }
 
     public abstract static class Builder {
-        protected List<Argument> arguments;
+        protected final List<Argument<?>> arguments;
 
-        protected Builder(List<Argument> arguments) {
+        protected Builder(List<Argument<?>> arguments) {
             this.arguments = arguments;
         }
 
@@ -52,7 +53,7 @@ public final class FunctionArguments {
             }
 
             for (int i = 0; i < this.arguments.size(); i++) {
-                Argument argument = this.arguments.get(i);
+                Argument<?> argument = this.arguments.get(i);
 
                 if (argument instanceof ListArgument<?> listArgument) {
                     List<Object> listValues = values.subList(i, values.size());
@@ -87,7 +88,7 @@ public final class FunctionArguments {
             return arguments.stream().map(Argument::getName).collect(Collectors.joining("; "));
         }
 
-        public List<Argument> getArguments() {
+        public List<Argument<?>> getArguments() {
             return Collections.unmodifiableList(arguments);
         }
 
@@ -100,7 +101,7 @@ public final class FunctionArguments {
     public static class RequiredArgumentBuilder extends Builder {
         public static final Builder EMPTY = new RequiredArgumentBuilder(List.of());
 
-        public RequiredArgumentBuilder(List<Argument> arguments) {
+        public RequiredArgumentBuilder(List<Argument<?>> arguments) {
             super(arguments);
         }
     }
@@ -109,7 +110,7 @@ public final class FunctionArguments {
     public static class OptionalArgumentBuilder extends Builder {
         public static final Builder EMPTY = new OptionalArgumentBuilder(List.of());
 
-        public OptionalArgumentBuilder(List<Argument> arguments) {
+        public OptionalArgumentBuilder(List<Argument<?>> arguments) {
             super(arguments);
 
             if (arguments.stream().anyMatch(argument -> argument instanceof ListArgument<?>)) {
@@ -142,6 +143,7 @@ public final class FunctionArguments {
             this.defaultValue = defaultValue;
         }
 
+        @SuppressWarnings("unchecked")
         public void setValue(Object value) {
             if (this.value != null) {
                 throw new IllegalStateException("Tried setting argument value twice.");
@@ -194,8 +196,8 @@ public final class FunctionArguments {
             return (String) this.getValue();
         }
 
-        public <U> ListArgument<U> asList() {
-            return (ListArgument<U>) this;
+        public ListArgument<T> asList() {
+            return (ListArgument<T>) this;
         }
     }
 
@@ -204,10 +206,12 @@ public final class FunctionArguments {
             super(name, type, null);
         }
 
+        @SuppressWarnings("unchecked")
         public void setValues(List<Object> values) {
             this.setValue(values.stream().map(value -> (T) value).collect(Collectors.toList()));
         }
 
+        @SuppressWarnings("unchecked")
         public List<T> getValues() {
             return (List<T>) this.getValue();
         }

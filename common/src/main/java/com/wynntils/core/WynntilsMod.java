@@ -14,20 +14,19 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.events.EventBusWrapper;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
@@ -85,58 +84,24 @@ public final class WynntilsMod {
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
         StackTraceElement[] stackTrace = t.getStackTrace();
-        String crashingFeatureName = null;
-        for (StackTraceElement line : stackTrace) {
-            if (line.getClassName().startsWith("com.wynntils.features.")) {
-                crashingFeatureName = line.getClassName();
-                break;
-            }
-        }
+
+        String crashingFeatureName = Arrays.stream(stackTrace)
+                .filter(line -> line.getClassName().startsWith("com.wynntils.features."))
+                .findFirst()
+                .map(StackTraceElement::getClassName)
+                .orElse(null);
 
         if (crashingFeatureName == null) {
             WynntilsMod.error("Exception in event listener not belonging to a feature", t);
             return;
         }
 
-        String featureClassName = crashingFeatureName.substring(crashingFeatureName.lastIndexOf('.') + 1);
         if (Managers.Feature == null) {
-            WynntilsMod.warn("Cannot lookup feature name: " + featureClassName, t);
+            WynntilsMod.warn("Cannot lookup feature name: " + crashingFeatureName, t);
             return;
         }
 
-        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureClassName);
-        if (featureOptional.isEmpty()) {
-            WynntilsMod.error(
-                    "Exception in event listener in feature that cannot be located: " + crashingFeatureName, t);
-            return;
-        }
-
-        // TODO: Look into the benefits of crashing non-user features
-        if (!(featureOptional.get() instanceof UserFeature feature)) {
-            WynntilsMod.error("Exception in event listener in non-user feature: " + crashingFeatureName, t);
-            return;
-        }
-
-        Managers.Feature.crashFeature(feature);
-
-        WynntilsMod.error("Exception in feature " + feature.getTranslatedName(), t);
-        WynntilsMod.warn("This feature will be disabled");
-
-        // FIXME: This is a temporary fix for a crash that occurs when an error happens in a client-side message
-        //       event, and we send a new message about disabling X feature,
-        //       causing a new exception in client-side message event.
-        if (!(event instanceof ClientsideMessageEvent)) {
-            MutableComponent enableMessage = Component.literal("Click here to enable it again.")
-                    .withStyle(ChatFormatting.UNDERLINE)
-                    .withStyle(ChatFormatting.RED)
-                    .withStyle(style -> style.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
-
-            McUtils.sendMessageToClient(Component.literal("Wynntils error: Feature '" + feature.getTranslatedName()
-                            + "' has crashed and will be disabled. ")
-                    .withStyle(ChatFormatting.RED)
-                    .append(enableMessage));
-        }
+        Managers.Feature.handleExceptionInEventListener(event, crashingFeatureName, t);
     }
 
     public static File getModJar() {
@@ -272,6 +237,30 @@ public final class WynntilsMod {
 
     private static void addCrashCallbacks() {
         Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
+    }
+
+    public static void reportCrash(String fullName, String niceName, CrashType type, Throwable throwable) {
+        reportCrash(fullName, niceName, type, throwable, true, true);
+    }
+
+    public static void reportCrash(
+            String fullName,
+            String niceName,
+            CrashType type,
+            Throwable throwable,
+            boolean shouldSendChat,
+            boolean isDisabled) {
+        WynntilsMod.warn("Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName);
+        WynntilsMod.error("Exception thrown by " + fullName, throwable);
+
+        if (shouldSendChat) {
+            MutableComponent component = Component.literal("Wynntils error: " + type.getName() + " '" + niceName
+                            + "' has crashed" + (isDisabled ? " and has been disabled" : ""))
+                    .withStyle(ChatFormatting.RED);
+            McUtils.sendMessageToClient(component);
+        }
+
+        postEvent(new WynntilsCrashEvent(fullName, type, throwable));
     }
 
     public enum ModLoader {

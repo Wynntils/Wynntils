@@ -11,6 +11,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -24,17 +25,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
     private final Set<KeyBind> enbaledKeyBinds = ConcurrentHashMap.newKeySet();
-    private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
+    private final Map<Feature, List<Pair<KeyBind, String>>> keyBinds = new ConcurrentHashMap<>();
 
     public KeyBindManager() {
         super(List.of());
@@ -47,7 +46,7 @@ public final class KeyBindManager extends Manager {
             try {
                 KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
                 keyBinds.putIfAbsent(feature, new LinkedList<>());
-                keyBinds.get(feature).add(keyBind);
+                keyBinds.get(feature).add(Pair.of(keyBind, f.getName()));
             } catch (Exception e) {
                 WynntilsMod.error(
                         "Failed to register KeyBind " + f.getName() + " in "
@@ -83,20 +82,20 @@ public final class KeyBindManager extends Manager {
     public void enableFeatureKeyBinds(Feature feature) {
         if (!keyBinds.containsKey(feature)) return;
 
-        for (KeyBind keyBind : keyBinds.get(feature)) {
-            registerKeybind(feature, keyBind);
+        for (Pair<KeyBind, String> keyBind : keyBinds.get(feature)) {
+            registerKeybind(feature, keyBind.key(), keyBind.value());
         }
     }
 
     public void disableFeatureKeyBinds(Feature feature) {
         if (!keyBinds.containsKey(feature)) return;
 
-        for (KeyBind keyBind : keyBinds.get(feature)) {
-            unregisterKeybind(feature, keyBind);
+        for (Pair<KeyBind, String> keyBind : keyBinds.get(feature)) {
+            unregisterKeybind(feature, keyBind.key());
         }
     }
 
-    private void registerKeybind(Feature parent, KeyBind toAdd) {
+    private void registerKeybind(Feature parent, KeyBind toAdd, String fieldName) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
@@ -159,17 +158,15 @@ public final class KeyBindManager extends Manager {
         List<Pair<Feature, KeyBind>> crashedKeyBinds = new LinkedList<>();
 
         for (Feature parent : keyBinds.keySet()) {
-            for (KeyBind keyBind : keyBinds.get(parent)) {
+            for (Pair<KeyBind, String> keyBind : keyBinds.get(parent)) {
                 try {
-                    checkKeybind.accept(keyBind);
+                    checkKeybind.accept(keyBind.key());
                 } catch (Throwable t) {
-                    WynntilsMod.error("Exception when handling key bind " + parent, t);
-                    WynntilsMod.warn("This key bind will be disabled");
-                    McUtils.sendMessageToClient(Component.literal(
-                                    "Wynntils error: Key bind " + parent + " has crashed and will be disabled")
-                            .withStyle(ChatFormatting.RED));
                     // We can't disable it right away since that will cause ConcurrentModificationException
-                    crashedKeyBinds.add(Pair.of(parent, keyBind));
+                    crashedKeyBinds.add(Pair.of(parent, keyBind.key()));
+
+                    WynntilsMod.reportCrash(
+                            parent.getClass().getName() + "." + keyBind.value(), keyBind.value(), CrashType.KEYBIND, t);
                 }
             }
         }

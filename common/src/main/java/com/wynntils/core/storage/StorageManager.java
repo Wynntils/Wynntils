@@ -34,8 +34,8 @@ public final class StorageManager extends Manager {
     private final File userStorageFile;
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    private final Map<String, Storage> storages = new TreeMap<>();
-    private final Map<Storage, Type> storageTypes = new HashMap<>();
+    private final Map<String, Storage<?>> storages = new TreeMap<>();
+    private final Map<Storage<?>, Type> storageTypes = new HashMap<>();
 
     private long lastPersisted;
     private boolean scheduledPersist;
@@ -61,7 +61,7 @@ public final class StorageManager extends Manager {
 
         for (Field storageField : storageFields) {
             try {
-                Storage storage = (Storage) FieldUtils.readField(storageField, storageable, true);
+                Storage<?> storage = (Storage<?>) FieldUtils.readField(storageField, storageable, true);
                 String jsonName = baseName + "." + storageField.getName();
                 storages.put(jsonName, storage);
 
@@ -85,7 +85,7 @@ public final class StorageManager extends Manager {
         writeToJson();
     }
 
-    void persist(Storage<?> storage) {
+    void persist() {
         if (scheduledPersist) return;
 
         long now = System.currentTimeMillis();
