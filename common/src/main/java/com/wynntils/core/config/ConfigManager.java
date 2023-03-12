@@ -75,13 +75,13 @@ public final class ConfigManager extends Manager {
     }
 
     public void registerFeature(Feature feature) {
+        registerConfigOptions(feature);
+
         for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
                 .filter(overlay -> !overlay.isDynamic())
                 .toList()) {
             registerConfigOptions(overlay);
         }
-
-        registerConfigOptions(feature);
     }
 
     private void registerConfigOptions(Configurable configurable) {
