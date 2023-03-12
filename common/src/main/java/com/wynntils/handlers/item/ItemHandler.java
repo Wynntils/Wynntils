@@ -6,6 +6,7 @@ package com.wynntils.handlers.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -190,6 +191,8 @@ public class ItemHandler extends Handler {
                         .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedAnnotators.add(annotator);
+
+                WynntilsMod.postEvent(new WynntilsCrashEvent(annotator.getClass().getName(), WynntilsCrashEvent.CrashType.ANNOTATOR, t));
             }
         }
 

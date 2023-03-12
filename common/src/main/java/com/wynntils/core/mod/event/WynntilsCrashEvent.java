@@ -30,6 +30,7 @@ public class WynntilsCrashEvent extends Event {
     }
 
     public enum CrashType {
+        ANNOTATOR,
         FUNCTION,
         FEATURE,
         OVERLAY,
