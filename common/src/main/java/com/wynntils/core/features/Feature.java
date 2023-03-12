@@ -31,7 +31,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
     /** Whether a feature is enabled */
     public final boolean isEnabled() {
-        return Managers.Feature.getFeatureState(this) == FeatureState.ENABLED;
+        return Managers.Feature.isEnabled(this);
     }
 
     /** Gets the name of a feature */

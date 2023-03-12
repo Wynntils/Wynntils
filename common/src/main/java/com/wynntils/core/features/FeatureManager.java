@@ -361,6 +361,10 @@ public final class FeatureManager extends Manager {
         return FEATURES.get(feature);
     }
 
+    public boolean isEnabled(Feature feature) {
+        return getFeatureState(feature) == FeatureState.ENABLED;
+    }
+
     public List<Feature> getFeatures() {
         return FEATURES.keySet().stream().toList();
     }
