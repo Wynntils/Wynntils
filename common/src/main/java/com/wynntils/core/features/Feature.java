@@ -18,6 +18,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.storage.Storageable;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,7 +37,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private ImmutableList<Condition> conditions;
     private boolean isListener = false;
-    private final List<KeyBind> keyBinds = new ArrayList<>();
+    private final List<Pair<String, KeyBind>> keyBinds = new ArrayList<>();
     private final Map<Overlay, OverlayInfo> overlays = new LinkedHashMap<>();
 
     private final List<OverlayGroupHolder> overlayGroups = new ArrayList<>();
@@ -132,8 +133,8 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
      * Adds a keyBind to the feature. Called from the registry.
      * @param keyBind KeyBind to add to the feature
      */
-    public final void setupKeyHolder(KeyBind keyBind) {
-        keyBinds.add(keyBind);
+    public final void setupKeyHolder(String fieldName, KeyBind keyBind) {
+        keyBinds.add(Pair.of(fieldName, keyBind));
     }
 
     public List<Overlay> getOverlays() {
@@ -203,8 +204,8 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
         enableOverlays();
 
-        for (KeyBind keyBind : keyBinds) {
-            Managers.KeyBind.registerKeybind(keyBind);
+        for (Pair<String, KeyBind> keyBind : keyBinds) {
+            Managers.KeyBind.registerKeybind(keyBind.value(), this, keyBind.key());
         }
 
         // Reload configs to load new keybinds
@@ -229,12 +230,12 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
             WynntilsMod.unregisterEventListener(this);
         }
         Managers.Overlay.disableOverlays(this.getOverlays());
-        for (KeyBind keyBind : keyBinds) {
-            Managers.KeyBind.unregisterKeybind(keyBind);
+        for (Pair<String, KeyBind> keyBind : keyBinds) {
+            Managers.KeyBind.unregisterKeybind(keyBind.value());
         }
     }
 
-    public final void crash() {
+    final void crash() {
         disable();
         state = FeatureState.CRASHED;
     }

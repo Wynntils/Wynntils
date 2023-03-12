@@ -1,6 +1,6 @@
 [
   {
-    "version": 6
+    "version": 7
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -14,6 +14,14 @@
       "key",
       "username",
       "version"
+    ]
+  },
+  {
+    "id": "apiAthenaTelemetryCrash",
+    "url": "https://athena.wynntils.com/crash/report",
+    "method": "post",
+    "arguments": [
+      "trace"
     ]
   },
   {
