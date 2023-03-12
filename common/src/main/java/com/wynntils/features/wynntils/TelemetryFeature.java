@@ -34,6 +34,9 @@ public class TelemetryFeature extends UserFeature {
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
         if (crashReports != ConfirmedBoolean.TRUE) return;
+        // Only send telemetry for released versions
+        if (WynntilsMod.isDevelopmentEnvironment()) return;
+        if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
 
         String title = "Crashed " + event.getType().toString().toLowerCase(Locale.ROOT) + ": " + event.getName() + "\n";
         String trace = ExceptionUtils.getStackTrace(event.getThrowable());
