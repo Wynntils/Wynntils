@@ -5,7 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.google.common.collect.Sets;
-import com.google.gson.reflect.TypeToken;
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -38,6 +38,7 @@ import org.lwjgl.glfw.GLFW;
 public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
 
+    // These should move to ChatTabManager, as Storage
     @Config(visible = false)
     public List<ChatTab> chatTabs = new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
@@ -57,24 +58,7 @@ public class ChatTabsFeature extends UserFeature {
         // We are already sending this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : chatTabs) {
-            if (!chatTab.isConsuming()) continue;
-
-            if (chatTab.matchMessageFromEvent(event)) {
-                Managers.ChatTab.addMessageToTab(chatTab, event.getMessage());
-                return;
-            }
-        }
-
-        // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : chatTabs) {
-            if (chatTab.isConsuming()) continue;
-
-            if (chatTab.matchMessageFromEvent(event)) {
-                Managers.ChatTab.addMessageToTab(chatTab, event.getMessage());
-            }
-        }
+        Managers.ChatTab.matchMessage(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -82,24 +66,7 @@ public class ChatTabsFeature extends UserFeature {
         // We've already sent this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : chatTabs) {
-            if (!chatTab.isConsuming()) continue;
-
-            if (chatTab.matchMessageFromEvent(event)) {
-                Managers.ChatTab.addMessageToTab(chatTab, event.getComponent());
-                return;
-            }
-        }
-
-        // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : chatTabs) {
-            if (chatTab.isConsuming()) continue;
-
-            if (chatTab.matchMessageFromEvent(event)) {
-                Managers.ChatTab.addMessageToTab(chatTab, event.getComponent());
-            }
-        }
+        Managers.ChatTab.matchMessage(event);
     }
 
     @SubscribeEvent
@@ -110,7 +77,7 @@ public class ChatTabsFeature extends UserFeature {
             chatScreen.addRenderableWidget(new ChatTabAddButton(xOffset + 2, chatScreen.height - 35, 12, 13));
             xOffset += 15;
 
-            for (ChatTab chatTab : chatTabs) {
+            for (ChatTab chatTab : Managers.ChatTab.getTabs().toList()) {
                 chatScreen.addRenderableWidget(new ChatTabButton(xOffset + 2, chatScreen.height - 35, 40, 13, chatTab));
                 xOffset += 43;
             }
@@ -119,12 +86,10 @@ public class ChatTabsFeature extends UserFeature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.WORLD
-                && !chatTabs.isEmpty()
-                && Managers.ChatTab.getFocusedTab() == null) {
-            // We joined wynn, time to override our focused tab.
-            Managers.ChatTab.setFocusedTab(chatTabs.get(0));
-        }
+        if (event.getNewState() != WorldState.WORLD) return;
+        if (Managers.ChatTab.getFocusedTab() != null) return;
+
+        Managers.ChatTab.resetFocusedTab();
     }
 
     @SubscribeEvent
@@ -144,22 +109,17 @@ public class ChatTabsFeature extends UserFeature {
         if (!KeyboardUtils.isShiftDown()) return;
 
         event.setCanceled(true);
-        Managers.ChatTab.setFocusedTab(
-                chatTabs.get((chatTabs.indexOf(Managers.ChatTab.getFocusedTab()) + 1) % chatTabs.size()));
+        Managers.ChatTab.setFocusedTab(Managers.ChatTab.getNextFocusedTab());
     }
 
     @Override
     protected void postEnable() {
-        if (chatTabs.isEmpty()) return;
-
-        Managers.ChatTab.setFocusedTab(chatTabs.get(0));
+        Managers.ChatTab.resetFocusedTab();
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        if (!chatTabs.isEmpty()) {
-            Managers.ChatTab.setFocusedTab(chatTabs.get(0));
-        }
+        Managers.ChatTab.resetFocusedTab();
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
             // Reload chat tab buttons

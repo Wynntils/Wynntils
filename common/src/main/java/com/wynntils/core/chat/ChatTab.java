@@ -4,9 +4,7 @@
  */
 package com.wynntils.core.chat;
 
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -35,28 +33,6 @@ public class ChatTab {
         this.customRegexString = customRegexString;
     }
 
-    public boolean matchMessageFromEvent(ChatMessageReceivedEvent event) {
-        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(event.getRecipientType())) {
-            return false;
-        }
-
-        return customRegexString == null
-                || customRegexString.isBlank()
-                || getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
-    }
-
-    public boolean matchMessageFromEvent(ClientsideMessageEvent event) {
-        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(RecipientType.CLIENTSIDE)) {
-            return false;
-        }
-
-        if (customRegexString == null) {
-            return true;
-        }
-
-        return getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
-    }
-
     public String getName() {
         return name;
     }
@@ -71,7 +47,7 @@ public class ChatTab {
 
     /** This is only allowed to be called if customRegexString != null.
      */
-    private Pattern getCustomRegex() {
+    Pattern getCustomRegex() {
         assert (customRegexString != null);
 
         if (customRegex == null) {
