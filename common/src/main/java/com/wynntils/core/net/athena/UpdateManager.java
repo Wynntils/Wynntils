@@ -20,6 +20,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public final class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
@@ -81,7 +84,7 @@ public final class UpdateManager extends Manager {
 
                     String latestDownload = json.getAsJsonPrimitive("url").getAsString();
 
-                    tryFetchNewUpdate(latestDownload, future);
+                    tryFetchNewUpdate(latestDownload, latestMd5, future);
                 },
                 onError -> {
                     WynntilsMod.error("Exception while trying to load new update.");
@@ -101,7 +104,7 @@ public final class UpdateManager extends Manager {
         return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
     }
 
-    private void tryFetchNewUpdate(String latestUrl, CompletableFuture<UpdateResult> future) {
+    private void tryFetchNewUpdate(String latestUrl, String latestMd5, CompletableFuture<UpdateResult> future) {
         File oldJar = WynntilsMod.getModJar();
         File newJar = getUpdateFile();
 
@@ -112,6 +115,15 @@ public final class UpdateManager extends Manager {
             FileUtils.createNewFile(newJar);
 
             Files.copy(in, newJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            String downloadedUpdateFileMd5 = FileUtils.getMd5(newJar);
+
+            if (!Objects.equals(downloadedUpdateFileMd5, latestMd5)) {
+                newJar.delete();
+                future.complete(UpdateResult.ERROR);
+                WynntilsMod.error("Downloaded update file is corrupted!");
+                return;
+            }
 
             future.complete(UpdateResult.SUCCESSFUL);
 
@@ -144,9 +156,22 @@ public final class UpdateManager extends Manager {
     }
 
     public enum UpdateResult {
-        SUCCESSFUL,
-        ALREADY_ON_LATEST,
-        UPDATE_PENDING,
-        ERROR
+        SUCCESSFUL(Component.translatable("feature.wynntils.updates.result.successful")
+                .withStyle(ChatFormatting.DARK_GREEN)),
+        ALREADY_ON_LATEST(
+                Component.translatable("feature.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
+        UPDATE_PENDING(Component.translatable("feature.wynntils.updates.result.pending")
+                .withStyle(ChatFormatting.YELLOW)),
+        ERROR(Component.translatable("feature.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
+
+        private final MutableComponent message;
+
+        UpdateResult(MutableComponent message) {
+            this.message = message;
+        }
+
+        public MutableComponent getMessage() {
+            return message;
+        }
     }
 }
