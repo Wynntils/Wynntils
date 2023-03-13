@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -24,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
     @ConfigInfo
-    public boolean renderDurabilityArcInventories = true;
+    public Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
 
     @ConfigInfo
-    public boolean renderDurabilityArcHotbar = true;
+    public Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {

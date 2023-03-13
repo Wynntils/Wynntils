@@ -6,6 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -21,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends UserFeature {
     @ConfigInfo
-    public boolean onlyOpenOnce = false;
+    public Config<Boolean> onlyOpenOnce = new Config<>(false);
 
     private boolean openedInThisCharacterSelectionState = false;
 

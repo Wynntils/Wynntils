@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -37,16 +38,16 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
 
     public static class PowderSpecialBarOverlay extends Overlay {
         @ConfigInfo
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         @ConfigInfo
-        public boolean flip = false;
+        public Config<Boolean> flip = new Config<>(false);
 
         @ConfigInfo
-        public boolean onlyIfWeaponHeld = true;
+        public Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
         @ConfigInfo
-        public boolean hideIfNoCharge = true;
+        public Config<Boolean> hideIfNoCharge = new Config<>(true);
 
         protected PowderSpecialBarOverlay() {
             super(

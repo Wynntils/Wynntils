@@ -6,6 +6,7 @@ package com.wynntils.features.tooltips;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -28,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
     @ConfigInfo
-    public boolean showGuessesPrice = true;
+    public Config<Boolean> showGuessesPrice = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

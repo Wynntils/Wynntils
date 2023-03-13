@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -61,43 +62,43 @@ public class MinimapFeature extends UserFeature {
         private static final int DEFAULT_SIZE = 150;
 
         @ConfigInfo
-        public float scale = 1f;
+        public Config<Float> scale = new Config<>(1f);
 
         @ConfigInfo
-        public float poiScale = 0.8f;
+        public Config<Float> poiScale = new Config<>(0.8f);
 
         @ConfigInfo
-        public float pointerScale = 1f;
+        public Config<Float> pointerScale = new Config<>(1f);
 
         @ConfigInfo
-        public boolean followPlayerRotation = true;
+        public Config<Boolean> followPlayerRotation = new Config<>(true);
 
         @ConfigInfo
-        public boolean renderUsingLinear = true;
+        public Config<Boolean> renderUsingLinear = new Config<>(true);
 
         @ConfigInfo
-        public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
+        public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
         @ConfigInfo
-        public MapMaskType maskType = MapMaskType.Circle;
+        public Config<MapMaskType> maskType = new Config<>(MapMaskType.Circle);
 
         @ConfigInfo
-        public MapBorderType borderType = MapBorderType.Wynn;
+        public Config<MapBorderType> borderType = new Config<>(MapBorderType.Wynn);
 
         @ConfigInfo
-        public PointerType pointerType = PointerType.Arrow;
+        public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
         @ConfigInfo
-        public CompassRenderType showCompass = CompassRenderType.All;
+        public Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
 
         @ConfigInfo(subcategory = "Remote Players")
-        public boolean renderRemoteFriendPlayers = true;
+        public Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
         @ConfigInfo(subcategory = "Remote Players")
-        public boolean renderRemotePartyPlayers = true;
+        public Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
         @ConfigInfo(subcategory = "Remote Players")
-        public float remotePlayersHeadScale = 0.6f;
+        public Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
 
         protected MinimapOverlay() {
             super(

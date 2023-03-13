@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -32,8 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends UserFeature {
     @ConfigInfo
-    public int bulkBuyAmount = 4;
-
+    public Config<Integer> bulkBuyAmount = new Config<>(4);
     // Test suite: https://regexr.com/7998g
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;

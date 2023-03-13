@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -48,7 +49,7 @@ public class StatusOverlayFeature extends UserFeature {
 
     public class StatusOverlay extends Overlay {
         @ConfigInfo
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private TextRenderSetting textRenderSetting;
 

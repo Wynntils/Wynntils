@@ -9,6 +9,7 @@ import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.AbstractConfigurable;
@@ -24,24 +25,23 @@ import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
     @ConfigInfo(key = "overlay.wynntils.overlay.position", visible = false)
-    protected OverlayPosition position;
+    protected Config<OverlayPosition> position = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.size", visible = false)
-    protected OverlaySize size;
+    protected Config<OverlaySize> size = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.userEnabled")
-    protected Boolean userEnabled = null;
-
+    protected Config<Boolean> userEnabled = new Config<>(null);
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @ConfigInfo(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    protected HorizontalAlignment horizontalAlignmentOverride = null;
+    protected Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    protected VerticalAlignment verticalAlignmentOverride = null;
+    protected Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position = position;

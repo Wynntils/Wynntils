@@ -10,6 +10,7 @@ import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -38,7 +39,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.PLAYERS)
 public class WynntilsCosmeticsFeature extends UserFeature {
     @ConfigInfo
-    public boolean renderOwnCape = true;
+    public Config<Boolean> renderOwnCape = new Config<>(true);
 
     @SubscribeEvent
     public void onLayerRegisteration(RenderLayerRegistrationEvent event) {

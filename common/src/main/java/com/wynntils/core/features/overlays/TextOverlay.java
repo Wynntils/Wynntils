@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -25,10 +26,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
  */
 public abstract class TextOverlay extends DynamicOverlay {
     @ConfigInfo(key = "overlay.wynntils.textOverlay.textShadow")
-    public TextShadow textShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
-    public float secondsPerRecalculation = 0.5f;
+    public Config<Float> secondsPerRecalculation = new Config<>(0.5f);
 
     protected String[] cachedLines;
     protected long lastUpdate = 0;

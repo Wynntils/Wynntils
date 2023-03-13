@@ -6,6 +6,7 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -24,10 +25,10 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ExtendedItemCountFeature extends UserFeature {
     @ConfigInfo
-    public boolean inventoryTextOverlayEnabled = true;
+    public Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean hotbarTextOverlayEnabled = true;
+    public Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;
 

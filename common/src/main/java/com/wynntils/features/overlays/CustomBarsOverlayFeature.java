@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -91,17 +92,17 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     public abstract static class BaseBarOverlay extends Overlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
-        public boolean flip = false;
+        public Config<Boolean> flip = new Config<>(false);
 
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
-        public boolean shouldDisplayOriginal = false;
+        public Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
         // hacky override of custom color
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public CustomColor textColor;
+        public Config<CustomColor> textColor = new Config<>(null);
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
@@ -191,7 +192,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     protected static class HealthBarOverlay extends BaseBarOverlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
-        public HealthTexture healthTexture = HealthTexture.a;
+        public Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
 
         protected HealthBarOverlay() {
             this(
@@ -341,7 +342,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     protected static class ManaBarOverlay extends BaseBarOverlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
-        public ManaTexture manaTexture = ManaTexture.a;
+        public Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
 
         protected ManaBarOverlay() {
             this(

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -38,10 +39,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
     @ConfigInfo
-    public boolean disableQuestTrackingOnScoreboard = true;
+    public Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
 
     @ConfigInfo
-    public boolean autoTrackQuestCoordinates = true;
+    public Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -66,7 +67,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     public static class QuestInfoOverlay extends Overlay {
         @ConfigInfo
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private static final List<CustomColor> TEXT_COLORS =
                 List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);

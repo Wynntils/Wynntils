@@ -7,6 +7,7 @@ package com.wynntils.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -27,25 +28,26 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.UNCATEGORIZED)
 public class TranslationFeature extends UserFeature {
     @ConfigInfo
-    public String languageName = "";
+    public Config<String> languageName = new Config<>("");
 
     @ConfigInfo
-    public boolean translateTrackedQuest = true;
+    public Config<Boolean> translateTrackedQuest = new Config<>(true);
 
     @ConfigInfo
-    public boolean translateNpc = true;
+    public Config<Boolean> translateNpc = new Config<>(true);
 
     @ConfigInfo
-    public boolean translateInfo = true;
+    public Config<Boolean> translateInfo = new Config<>(true);
 
     @ConfigInfo
-    public boolean translatePlayerChat = false;
+    public Config<Boolean> translatePlayerChat = new Config<>(false);
 
     @ConfigInfo
-    public boolean keepOriginal = true;
+    public Config<Boolean> keepOriginal = new Config<>(true);
 
     @ConfigInfo
-    public TranslationManager.TranslationServices translationService = TranslationManager.TranslationServices.GOOGLEAPI;
+    public Config<TranslationManager.TranslationServices> translationService =
+            new Config<>(TranslationManager.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {

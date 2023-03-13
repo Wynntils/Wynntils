@@ -7,6 +7,7 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -42,7 +43,7 @@ public class HorseMountFeature extends UserFeature {
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
     @ConfigInfo
-    public boolean guaranteedMount = true;
+    public Config<Boolean> guaranteedMount = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {

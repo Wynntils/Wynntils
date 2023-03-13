@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -30,7 +31,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
     @ConfigInfo
-    public boolean hideMaskTitles = true;
+    public Config<Boolean> hideMaskTitles = new Config<>(true);
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
@@ -43,7 +44,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
         private static final String TEMPLATE = "{shaman_mask} mask";
 
         @ConfigInfo
-        public boolean displayNone = false;
+        public Config<Boolean> displayNone = new Config<>(false);
 
         protected ShamanMaskOverlay() {
             super(

@@ -15,6 +15,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -47,10 +48,10 @@ public class AddCommandExpansionFeature extends UserFeature {
                     builder);
 
     @ConfigInfo
-    public boolean includeDeprecatedCommands = false;
+    public Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
     @ConfigInfo
-    public AliasCommandLevel includeAliases = AliasCommandLevel.SHORT_FORMS;
+    public Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent
     public void onCommandPacket(CommandsAddedEvent event) {

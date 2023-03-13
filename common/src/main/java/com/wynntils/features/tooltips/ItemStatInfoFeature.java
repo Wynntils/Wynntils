@@ -7,6 +7,7 @@ package com.wynntils.features.tooltips;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -43,40 +44,40 @@ public class ItemStatInfoFeature extends UserFeature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
     @ConfigInfo
-    public boolean showStars = true;
+    public Config<Boolean> showStars = new Config<>(true);
 
     @ConfigInfo
-    public boolean colorLerp = true;
+    public Config<Boolean> colorLerp = new Config<>(true);
 
     @ConfigInfo
-    public int decimalPlaces = 1;
+    public Config<Integer> decimalPlaces = new Config<>(1);
 
     @ConfigInfo
-    public boolean perfect = true;
+    public Config<Boolean> perfect = new Config<>(true);
 
     @ConfigInfo
-    public boolean defective = true;
+    public Config<Boolean> defective = new Config<>(true);
 
     @ConfigInfo
-    public float obfuscationChanceStart = 0.08f;
+    public Config<Float> obfuscationChanceStart = new Config<>(0.08f);
 
     @ConfigInfo
-    public float obfuscationChanceEnd = 0.04f;
+    public Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
 
     @ConfigInfo
-    public StatListOrdering identificationsOrdering = StatListOrdering.DEFAULT;
+    public Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
     @ConfigInfo
-    public boolean groupIdentifications = true;
+    public Config<Boolean> groupIdentifications = new Config<>(true);
 
     @ConfigInfo
-    public boolean identificationDecorations = true;
+    public Config<Boolean> identificationDecorations = new Config<>(true);
 
     @ConfigInfo
-    public boolean overallPercentageInName = true;
+    public Config<Boolean> overallPercentageInName = new Config<>(true);
 
     @ConfigInfo
-    public boolean showBestValueLastAlways = true;
+    public Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

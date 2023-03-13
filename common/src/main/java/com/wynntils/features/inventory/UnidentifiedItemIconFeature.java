@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -41,7 +42,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
             Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
 
     @ConfigInfo
-    public UnidentifiedItemTextures texture = UnidentifiedItemTextures.Wynn;
+    public Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.Wynn);
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {

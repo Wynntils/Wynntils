@@ -5,6 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -43,13 +44,13 @@ public class InfoMessageFilterFeature extends UserFeature {
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
     @ConfigInfo
-    private boolean hideWelcome = true;
+    private Config<Boolean> hideWelcome = new Config<>(true);
 
     @ConfigInfo
-    private boolean hideSystemInfo = true;
+    private Config<Boolean> hideSystemInfo = new Config<>(true);
 
     @ConfigInfo
-    private boolean hideLevelUp = false;
+    private Config<Boolean> hideLevelUp = new Config<>(false);
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {

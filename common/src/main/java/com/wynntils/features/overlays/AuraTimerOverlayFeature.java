@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -29,10 +30,10 @@ public class AuraTimerOverlayFeature extends UserFeature {
     private static final float MAX_INTENSITY = 0.4f;
 
     @ConfigInfo
-    public boolean vignetteOnAura = true;
+    public Config<Boolean> vignetteOnAura = new Config<>(true);
 
     @ConfigInfo
-    public CustomColor vignetteColor = CommonColors.ORANGE;
+    public Config<CustomColor> vignetteColor = new Config<>(CommonColors.ORANGE);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay auraTimerOverlay = new AuraTimerOverlay();
@@ -54,7 +55,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
                 "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
 
         @ConfigInfo
-        public CustomColor textColor = CommonColors.ORANGE;
+        public Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
 
         protected AuraTimerOverlay() {
             super(

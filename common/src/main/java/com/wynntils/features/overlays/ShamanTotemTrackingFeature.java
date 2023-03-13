@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -34,16 +35,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
 
     @ConfigInfo
-    public boolean highlightShamanTotems = true;
+    public Config<Boolean> highlightShamanTotems = new Config<>(true);
 
     @ConfigInfo
-    public CustomColor firstTotemColor = CommonColors.WHITE;
+    public Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
     @ConfigInfo
-    public CustomColor secondTotemColor = CommonColors.BLUE;
+    public Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
     @ConfigInfo
-    public CustomColor thirdTotemColor = CommonColors.RED;
+    public Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     private static final int ENTITY_GLOWING_FLAG = 6;
 
@@ -71,16 +72,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
         @ConfigInfo
-        public TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
+        public Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
         @ConfigInfo
-        public ChatFormatting firstTotemTextColor = ChatFormatting.WHITE;
+        public Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
 
         @ConfigInfo
-        public ChatFormatting secondTotemTextColor = ChatFormatting.BLUE;
+        public Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
 
         @ConfigInfo
-        public ChatFormatting thirdTotemTextColor = ChatFormatting.RED;
+        public Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {
             firstTotemTextColor, secondTotemTextColor, thirdTotemTextColor

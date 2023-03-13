@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -40,7 +41,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
     private static final float SPACE_BETWEEN = 10;
 
     @ConfigInfo
-    public boolean disableObjectiveTrackingOnScoreboard = true;
+    public Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -65,7 +66,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public CustomColor textColor = CommonColors.LIGHT_BLUE;
+        public Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected GuildObjectiveOverlay() {
             super(
@@ -153,7 +154,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public CustomColor textColor = CommonColors.GREEN;
+        public Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
         protected DailyObjectiveOverlay() {
             super(
@@ -249,16 +250,16 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
-        public boolean hideOnInactivity = false;
+        public Config<Boolean> hideOnInactivity = new Config<>(false);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
-        public boolean enableProgressBar = true;
+        public Config<Boolean> enableProgressBar = new Config<>(true);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
-        public ObjectivesTextures objectivesTexture = ObjectivesTextures.a;
+        public Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         protected ObjectiveOverlayBase(
                 OverlayPosition position,

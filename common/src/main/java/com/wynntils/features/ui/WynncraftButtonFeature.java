@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -39,7 +40,7 @@ public class WynncraftButtonFeature extends UserFeature {
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
 
     @ConfigInfo
-    public boolean connectToLobby = false;
+    public Config<Boolean> connectToLobby = new Config<>(false);
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {

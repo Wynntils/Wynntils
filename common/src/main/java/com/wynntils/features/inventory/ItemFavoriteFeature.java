@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -35,7 +36,7 @@ public class ItemFavoriteFeature extends UserFeature {
 
     // This should really move to FavoritesModel, but for now, models cannot have configs
     @ConfigInfo(visible = false)
-    public Set<String> favoriteItems = new TreeSet<>();
+    public Config<Set<String>> favoriteItems = new Config<>(new TreeSet<>());
 
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();

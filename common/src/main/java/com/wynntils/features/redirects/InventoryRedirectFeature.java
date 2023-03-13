@@ -6,6 +6,7 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -28,13 +29,13 @@ public class InventoryRedirectFeature extends UserFeature {
     private MessageContainer emeraldPouchMessage = null;
 
     @ConfigInfo
-    public boolean redirectIngredientPouch = true;
+    public Config<Boolean> redirectIngredientPouch = new Config<>(true);
 
     @ConfigInfo
-    public boolean redirectEmeraldPouch = true;
+    public Config<Boolean> redirectEmeraldPouch = new Config<>(true);
 
     @ConfigInfo
-    public boolean redirectPotionStack = true;
+    public Config<Boolean> redirectPotionStack = new Config<>(true);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

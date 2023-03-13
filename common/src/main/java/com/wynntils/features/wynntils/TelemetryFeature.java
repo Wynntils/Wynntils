@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -29,7 +30,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends UserFeature {
     @ConfigInfo
-    public ConfirmedBoolean crashReports = ConfirmedBoolean.UNCONFIRMED;
+    public Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {

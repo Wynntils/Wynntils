@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
 
@@ -12,7 +13,7 @@ import com.wynntils.core.config.ConfigInfo;
  */
 public abstract class UserFeature extends Feature {
     @ConfigInfo(key = "feature.wynntils.userFeature.userEnabled")
-    protected boolean userEnabled = true;
+    protected Config<Boolean> userEnabled = new Config<>(true);
 
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {

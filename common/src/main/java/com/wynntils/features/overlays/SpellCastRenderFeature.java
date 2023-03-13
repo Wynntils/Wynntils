@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -39,16 +40,16 @@ public class SpellCastRenderFeature extends UserFeature {
     public Overlay spellCastOverlay = new SpellCastOverlay();
 
     @ConfigInfo
-    public boolean renderVignette = true;
+    public Config<Boolean> renderVignette = new Config<>(true);
 
     @ConfigInfo
-    public int vignetteFadeTime = 12;
+    public Config<Integer> vignetteFadeTime = new Config<>(12);
 
     @ConfigInfo
-    public float vignetteIntensity = 0.75f;
+    public Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @ConfigInfo
-    public CustomColor vignetteColor = new CustomColor(0, 71, 201);
+    public Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int spellTimer;
     private String spellMessage;

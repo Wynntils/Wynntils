@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -24,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends UserFeature {
     @ConfigInfo
-    public boolean updateReminder = true;
+    public Config<Boolean> updateReminder = new Config<>(true);
 
     @ConfigInfo
-    public boolean autoUpdate = false;
+    public Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

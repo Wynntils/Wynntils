@@ -5,6 +5,7 @@
 package com.wynntils.features.commands;
 
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -17,40 +18,40 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends UserFeature {
     @ConfigInfo
-    private String keybindCommand1 = "";
+    private Config<String> keybindCommand1 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType1 = CommandType.EXECUTE;
+    private Config<CommandType> commandType1 = new Config<>(CommandType.EXECUTE);
 
     @ConfigInfo
-    private String keybindCommand2 = "";
+    private Config<String> keybindCommand2 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType2 = CommandType.EXECUTE;
+    private Config<CommandType> commandType2 = new Config<>(CommandType.EXECUTE);
 
     @ConfigInfo
-    private String keybindCommand3 = "";
+    private Config<String> keybindCommand3 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType3 = CommandType.EXECUTE;
+    private Config<CommandType> commandType3 = new Config<>(CommandType.EXECUTE);
 
     @ConfigInfo
-    private String keybindCommand4 = "";
+    private Config<String> keybindCommand4 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType4 = CommandType.EXECUTE;
+    private Config<CommandType> commandType4 = new Config<>(CommandType.EXECUTE);
 
     @ConfigInfo
-    private String keybindCommand5 = "";
+    private Config<String> keybindCommand5 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType5 = CommandType.EXECUTE;
+    private Config<CommandType> commandType5 = new Config<>(CommandType.EXECUTE);
 
     @ConfigInfo
-    private String keybindCommand6 = "";
+    private Config<String> keybindCommand6 = new Config<>("");
 
     @ConfigInfo
-    private CommandType commandType6 = CommandType.EXECUTE;
+    private Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
 
     @RegisterKeyBind
     private final KeyBind executeKeybind1 = new KeyBind(

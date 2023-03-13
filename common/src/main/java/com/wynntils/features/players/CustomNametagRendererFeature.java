@@ -6,6 +6,7 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -38,13 +39,13 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
 
     @ConfigInfo
-    public boolean hideAllNametags = false;
+    public Config<Boolean> hideAllNametags = new Config<>(false);
 
     @ConfigInfo
-    public boolean showGearOnHover = true;
+    public Config<Boolean> showGearOnHover = new Config<>(true);
 
     @ConfigInfo
-    public float customNametagScale = 0.5f;
+    public Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 

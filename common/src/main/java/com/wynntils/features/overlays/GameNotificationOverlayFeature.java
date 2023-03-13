@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -76,22 +77,22 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
     public static class GameNotificationOverlay extends Overlay {
         @ConfigInfo
-        public float messageTimeLimit = 10f;
+        public Config<Float> messageTimeLimit = new Config<>(10f);
 
         @ConfigInfo
-        public int messageLimit = 5;
+        public Config<Integer> messageLimit = new Config<>(5);
 
         @ConfigInfo
-        public boolean invertGrowth = true;
+        public Config<Boolean> invertGrowth = new Config<>(true);
 
         @ConfigInfo
-        public int messageMaxLength = 0;
+        public Config<Integer> messageMaxLength = new Config<>(0);
 
         @ConfigInfo
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         @ConfigInfo
-        public boolean overrideNewMessages = true;
+        public Config<Boolean> overrideNewMessages = new Config<>(true);
 
         private TextRenderSetting textRenderSetting;
 

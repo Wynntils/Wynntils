@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -67,13 +68,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private boolean isProtected;
 
     @ConfigInfo
-    public boolean autoProgress = false;
+    public Config<Boolean> autoProgress = new Config<>(false);
 
     @ConfigInfo
-    public int dialogAutoProgressDefaultTime = 1600; // Milliseconds
+    public Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
 
     @ConfigInfo
-    public int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
+    public Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
@@ -179,16 +180,16 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     public class NpcDialogueOverlay extends Overlay {
         @ConfigInfo
-        public TextShadow textShadow = TextShadow.NORMAL;
+        public Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
         @ConfigInfo
-        public float backgroundOpacity = 0.2f;
+        public Config<Float> backgroundOpacity = new Config<>(0.2f);
 
         @ConfigInfo
-        public boolean stripColors = false;
+        public Config<Boolean> stripColors = new Config<>(false);
 
         @ConfigInfo
-        public boolean showHelperTexts = true;
+        public Config<Boolean> showHelperTexts = new Config<>(true);
 
         private TextRenderSetting renderSetting;
 

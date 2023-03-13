@@ -6,6 +6,7 @@ package com.wynntils.features.combat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -16,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends UserFeature {
     @ConfigInfo
-    private float scale = 1.5f;
+    private Config<Float> scale = new Config<>(1.5f);
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.wynntils;
 
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.StateManagedFeature;
 
@@ -13,8 +14,8 @@ public class DataStorageFeature extends StateManagedFeature {
     public static DataStorageFeature INSTANCE;
 
     @ConfigInfo(visible = false)
-    public int dryCount = 0;
+    public Config<Integer> dryCount = new Config<>(0);
 
     @ConfigInfo(visible = false)
-    public int dryBoxes = 0;
+    public Config<Integer> dryBoxes = new Config<>(0);
 }

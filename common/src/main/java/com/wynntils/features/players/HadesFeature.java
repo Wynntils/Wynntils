@@ -6,6 +6,7 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -17,16 +18,16 @@ public class HadesFeature extends UserFeature {
     public static HadesFeature INSTANCE;
 
     @ConfigInfo
-    public boolean getOtherPlayerInfo = true;
+    public Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
     @ConfigInfo
-    public boolean shareWithParty = true;
+    public Config<Boolean> shareWithParty = new Config<>(true);
 
     @ConfigInfo
-    public boolean shareWithFriends = true;
+    public Config<Boolean> shareWithFriends = new Config<>(true);
 
     @ConfigInfo
-    public boolean shareWithGuild = true;
+    public Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {

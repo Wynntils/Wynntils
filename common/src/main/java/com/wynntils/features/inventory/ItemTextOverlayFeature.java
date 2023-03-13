@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -40,73 +41,73 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
     @ConfigInfo
-    public boolean amplifierTierEnabled = true;
+    public Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean amplifierTierRomanNumerals = true;
+    public Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow amplifierTierShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean dungeonKeyEnabled = true;
+    public Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow dungeonKeyShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean emeraldPouchTierEnabled = true;
+    public Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean emeraldPouchTierRomanNumerals = true;
+    public Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow emeraldPouchTierShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean gatheringToolTierEnabled = true;
+    public Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean gatheringToolTierRomanNumerals = true;
+    public Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow gatheringToolTierShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean horseTierEnabled = true;
+    public Config<Boolean> horseTierEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean horseTierRomanNumerals = true;
+    public Config<Boolean> horseTierRomanNumerals = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow horseTierShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean hotbarTextOverlayEnabled = true;
+    public Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean inventoryTextOverlayEnabled = true;
+    public Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean powderTierEnabled = true;
+    public Config<Boolean> powderTierEnabled = new Config<>(true);
 
     @ConfigInfo
-    public boolean powderTierRomanNumerals = true;
+    public Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow powderTierShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean skillIconEnabled = true;
+    public Config<Boolean> skillIconEnabled = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow skillIconShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo
-    public boolean teleportScrollEnabled = true;
+    public Config<Boolean> teleportScrollEnabled = new Config<>(true);
 
     @ConfigInfo
-    public TextShadow teleportScrollShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {

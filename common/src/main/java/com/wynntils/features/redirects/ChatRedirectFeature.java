@@ -6,6 +6,7 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -23,52 +24,52 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends UserFeature {
     @ConfigInfo
-    public RedirectAction craftedDurability = RedirectAction.REDIRECT;
+    public Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction friendJoin = RedirectAction.REDIRECT;
+    public Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction heal = RedirectAction.REDIRECT;
+    public Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction horse = RedirectAction.REDIRECT;
+    public Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction housingTeleport = RedirectAction.REDIRECT;
+    public Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
+    public Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
+    public Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction mageTeleport = RedirectAction.REDIRECT;
+    public Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
+    public Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction potion = RedirectAction.REDIRECT;
+    public Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
+    public Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction shaman = RedirectAction.REDIRECT;
+    public Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction soulPoint = RedirectAction.REDIRECT;
+    public Config<RedirectAction> soulPoint = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction speed = RedirectAction.REDIRECT;
+    public Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction toolDurability = RedirectAction.REDIRECT;
+    public Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
 
     @ConfigInfo
-    public RedirectAction unusedPoints = RedirectAction.REDIRECT;
+    public Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
     private final List<Redirector> redirectors = new ArrayList<>();
 

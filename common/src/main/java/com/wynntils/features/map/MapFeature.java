@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
@@ -46,76 +47,77 @@ public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 
     @ConfigInfo(visible = false)
-    public List<CustomPoi> customPois = new ArrayList<>();
+    public Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
     @ConfigInfo
-    public float poiFadeAdjustment = 0.4f;
+    public Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
     @ConfigInfo
-    public float combatPoiMinZoom = 0.166f;
+    public Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
     @ConfigInfo
-    public float cavePoiMinZoom = 0.28f;
+    public Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
     @ConfigInfo
-    public float servicePoiMinZoom = 0.8f;
+    public Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
     @ConfigInfo
-    public float fastTravelPoiMinZoom = 0.166f;
+    public Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
     @ConfigInfo
-    public float customPoiMinZoom = 0.28f;
+    public Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
     @ConfigInfo
-    public float lootChestTier1PoiMinZoom = 0.8f;
+    public Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
     @ConfigInfo
-    public float lootChestTier2PoiMinZoom = 0.8f;
+    public Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
     @ConfigInfo
-    public float lootChestTier3PoiMinZoom = 0.28f;
+    public Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
     @ConfigInfo
-    public float lootChestTier4PoiMinZoom = 0.28f;
+    public Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
     @ConfigInfo
-    public PointerType pointerType = PointerType.Arrow;
+    public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
     @ConfigInfo
-    public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
+    public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @ConfigInfo
-    public boolean renderUsingLinear = true;
+    public Config<Boolean> renderUsingLinear = new Config<>(true);
 
     @ConfigInfo
-    public float playerPointerScale = 1.5f;
+    public Config<Float> playerPointerScale = new Config<>(1.5f);
 
     @ConfigInfo
-    public float poiScale = 1f;
+    public Config<Float> poiScale = new Config<>(1f);
 
     @ConfigInfo
-    public boolean autoWaypointChests = true;
+    public Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @ConfigInfo
-    public ChestTier minTierForAutoWaypoint = ChestTier.TIER_3;
+    public Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
     @ConfigInfo(subcategory = "Remote Players")
-    public boolean renderRemoteFriendPlayers = true;
+    public Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
     @ConfigInfo(subcategory = "Remote Players")
-    public boolean renderRemotePartyPlayers = true;
+    public Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     //    @Config(subcategory = "Remote Players")
     //    public boolean renderRemoteGuildPlayers = true;
 
     @ConfigInfo(subcategory = "Remote Players")
-    public CustomBarsOverlayFeature.HealthTexture remotePlayerHealthTexture = CustomBarsOverlayFeature.HealthTexture.a;
+    public Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
+            new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
     @ConfigInfo(subcategory = "Remote Players")
-    public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
+    public Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;
 
