@@ -208,4 +208,25 @@ public final class MathFunctions {
             return List.of("int");
         }
     }
+
+    public static class RandomFunction extends GenericFunction<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            double min = arguments.getArgument("min").getIntegerValue();
+            double max = arguments.getArgument("max").getIntegerValue();
+            return (Math.random() * (max - min)) + min;
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("min", Number.class, null),
+                    new FunctionArguments.Argument<>("max", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("rand");
+        }
+    }
 }
