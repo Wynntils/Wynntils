@@ -11,6 +11,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -95,6 +96,11 @@ public final class ChatTabManager extends Manager {
                 || focusedTab.getAutoCommand().isEmpty()) return;
 
         replaceChatText(chatScreen, focusedTab.getAutoCommand());
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        chatTabData.values().forEach(c -> c.tick());
     }
 
     private void replaceChatText(ChatScreen chatScreen, String autoCommand) {
