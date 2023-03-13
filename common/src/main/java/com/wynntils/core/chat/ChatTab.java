@@ -7,6 +7,7 @@ package com.wynntils.core.chat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.chat.type.RecipientType;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -19,7 +20,7 @@ public class ChatTab {
     // Filters
     private final Set<RecipientType> filteredTypes;
     private final String customRegexString;
-    private final transient Pattern customRegex;
+    private transient Optional<Pattern> customRegex;
 
     public ChatTab(
             String name,
@@ -32,7 +33,6 @@ public class ChatTab {
         this.autoCommand = autoCommand;
         this.filteredTypes = filteredTypes;
         this.customRegexString = customRegexString;
-        this.customRegex = compileRegex(customRegexString);
     }
 
     public String getName() {
@@ -47,8 +47,11 @@ public class ChatTab {
         return autoCommand;
     }
 
-    /** Returns null if we have no regex */
-    public Pattern getCustomRegex() {
+    public Optional<Pattern> getCustomRegex() {
+        if (customRegex == null) {
+            customRegex = compileRegex(customRegexString);
+        }
+
         return customRegex;
     }
 
@@ -77,15 +80,15 @@ public class ChatTab {
         return Objects.hash(name, consuming, filteredTypes, customRegexString);
     }
 
-    private Pattern compileRegex(String customRegexString) {
+    private Optional<Pattern> compileRegex(String customRegexString) {
         if (customRegexString != null && !customRegexString.isBlank()) {
             try {
-                return Pattern.compile(customRegexString, Pattern.DOTALL);
+                return Optional.of(Pattern.compile(customRegexString, Pattern.DOTALL));
             } catch (PatternSyntaxException e) {
                 WynntilsMod.warn("Got a saved invalid chat tab regex: " + customRegexString);
-                return null;
+                return Optional.empty();
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

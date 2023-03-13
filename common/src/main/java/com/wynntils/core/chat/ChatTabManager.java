@@ -19,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -216,8 +217,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        Pattern regex = chatTab.getCustomRegex();
-        return regex == null || regex.matcher(event.getOriginalCodedMessage()).matches();
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        return regex.isEmpty()
+                || regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -227,9 +229,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        Pattern regex = chatTab.getCustomRegex();
-        if (regex == null) return true;
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        if (regex.isEmpty()) return true;
 
-        return regex.matcher(event.getOriginalCodedMessage()).matches();
+        return regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 }
