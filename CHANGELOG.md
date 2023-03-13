@@ -1,9 +1,21 @@
+## [0.0.2-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.335...v0.0.2-alpha.336) (2023-03-13)
+
+
+### New Features
+
+* Check Chat Tab regex for syntax errors ([#1326](https://github.com/Wynntils/Artemis/issues/1326)) ([32c13e4](https://github.com/Wynntils/Artemis/commit/32c13e446da968bce69d562e5a59c289a8b27dc8))
+
 ## [0.0.2-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.334...v0.0.2-alpha.335) (2023-03-13)
 
 
 ### Bug Fixes
 
 * Validate downloaded update hash before applying ([#1325](https://github.com/Wynntils/Artemis/issues/1325)) ([2dea196](https://github.com/Wynntils/Artemis/commit/2dea19616f8782d2560d2e86f4ca717f9c02d993))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.335 [skip ci] ([521d398](https://github.com/Wynntils/Artemis/commit/521d39869e1f6f57259e791a711b2dc9b80d74e6))
 
 ## [0.0.2-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.333...v0.0.2-alpha.334) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.332 [skip ci] ([98dcda9](https://github.com/Wynntils/Artemis/commit/98dcda946ba7719cf3ec3b5859bbb864e8b402df))
-
-## [0.0.2-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.330...v0.0.2-alpha.331) (2023-03-13)
-
-
-### Bug Fixes
-
-* NPE in maps due to compass provider returning null location ([#1322](https://github.com/Wynntils/Artemis/issues/1322)) ([5d864cf](https://github.com/Wynntils/Artemis/commit/5d864cfc8b1fe481d2cc2cd69776dd48b92066d3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.331 [skip ci] ([522eb96](https://github.com/Wynntils/Artemis/commit/522eb96ec1454a7c940125ea75e0114235b53ef1))
 
