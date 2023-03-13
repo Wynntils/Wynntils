@@ -6,9 +6,9 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.hades.protocol.enums.SocialType;
 
@@ -16,16 +16,16 @@ import com.wynntils.hades.protocol.enums.SocialType;
 public class HadesFeature extends UserFeature {
     public static HadesFeature INSTANCE;
 
-    @Config
+    @ConfigInfo
     public boolean getOtherPlayerInfo = true;
 
-    @Config
+    @ConfigInfo
     public boolean shareWithParty = true;
 
-    @Config
+    @ConfigInfo
     public boolean shareWithFriends = true;
 
-    @Config
+    @ConfigInfo
     public boolean shareWithGuild = true;
 
     @Override

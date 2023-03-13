@@ -6,8 +6,8 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -30,115 +30,115 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public boolean normalHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor normalHighlightColor = new CustomColor(255, 255, 255);
 
-    @Config
+    @ConfigInfo
     public boolean uniqueHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor uniqueHighlightColor = new CustomColor(255, 255, 0);
 
-    @Config
+    @ConfigInfo
     public boolean rareHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor rareHighlightColor = new CustomColor(255, 0, 255);
 
-    @Config
+    @ConfigInfo
     public boolean setHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor setHighlightColor = new CustomColor(0, 255, 0);
 
-    @Config
+    @ConfigInfo
     public boolean legendaryHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor legendaryHighlightColor = new CustomColor(0, 255, 255);
 
-    @Config
+    @ConfigInfo
     public boolean fabledHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor fabledHighlightColor = new CustomColor(255, 85, 85);
 
-    @Config
+    @ConfigInfo
     public boolean mythicHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor mythicHighlightColor = new CustomColor(76, 0, 76);
 
-    @Config
+    @ConfigInfo
     public boolean craftedHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
 
-    @Config
+    @ConfigInfo
     public boolean zeroStarIngredientHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor zeroStarIngredientHighlightColor = new CustomColor(102, 102, 102);
 
-    @Config
+    @ConfigInfo
     public boolean oneStarIngredientHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor oneStarIngredientHighlightColor = new CustomColor(255, 247, 153);
 
-    @Config
+    @ConfigInfo
     public boolean twoStarIngredientHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor twoStarIngredientHighlightColor = new CustomColor(255, 255, 0);
 
-    @Config
+    @ConfigInfo
     public boolean threeStarIngredientHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
 
-    @Config
+    @ConfigInfo
     public boolean oneStarMaterialHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor oneStarMaterialHighlightColor = new CustomColor(255, 247, 153);
 
-    @Config
+    @ConfigInfo
     public boolean twoStarMaterialHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor twoStarMaterialHighlightColor = new CustomColor(255, 255, 0);
 
-    @Config
+    @ConfigInfo
     public boolean threeStarMaterialHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor threeStarMaterialHighlightColor = new CustomColor(230, 77, 0);
 
-    @Config
+    @ConfigInfo
     public boolean cosmeticHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean powderHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean emeraldPouchHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean inventoryHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public float inventoryOpacity = 1f;
 
-    @Config
+    @ConfigInfo
     public boolean hotbarHighlightEnabled = true;
 
-    @Config
+    @ConfigInfo
     public float hotbarOpacity = .5f;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -9,9 +9,9 @@ import com.google.common.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -39,7 +39,7 @@ public class ChatTabsFeature extends UserFeature {
     public static ChatTabsFeature INSTANCE;
 
     // These should move to ChatTabManager, as Storage
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     public List<ChatTab> chatTabs = new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
             new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),

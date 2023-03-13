@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -39,73 +39,73 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public boolean amplifierTierEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean amplifierTierRomanNumerals = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow amplifierTierShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean dungeonKeyEnabled = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow dungeonKeyShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean emeraldPouchTierEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean emeraldPouchTierRomanNumerals = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow emeraldPouchTierShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean gatheringToolTierEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean gatheringToolTierRomanNumerals = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow gatheringToolTierShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean horseTierEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean horseTierRomanNumerals = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow horseTierShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean hotbarTextOverlayEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean inventoryTextOverlayEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean powderTierEnabled = true;
 
-    @Config
+    @ConfigInfo
     public boolean powderTierRomanNumerals = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow powderTierShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean skillIconEnabled = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow skillIconShadow = TextShadow.OUTLINE;
 
-    @Config
+    @ConfigInfo
     public boolean teleportScrollEnabled = true;
 
-    @Config
+    @ConfigInfo
     public TextShadow teleportScrollShadow = TextShadow.OUTLINE;
 
     @SubscribeEvent

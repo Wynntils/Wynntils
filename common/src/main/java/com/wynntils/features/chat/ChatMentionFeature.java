@@ -5,9 +5,9 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -25,16 +25,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public boolean markMention = true;
 
-    @Config
+    @ConfigInfo
     public boolean dingMention = true;
 
-    @Config
+    @ConfigInfo
     public ChatFormatting mentionColor = ChatFormatting.YELLOW;
 
-    @Config
+    @ConfigInfo
     public String aliases = "";
 
     private Pattern mentionPattern;

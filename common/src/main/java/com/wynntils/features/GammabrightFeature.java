@@ -6,9 +6,9 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -21,10 +21,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UNCATEGORIZED)
 public class GammabrightFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     private boolean gammabrightEnabled = false;
 
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     private double lastGamma = 1f;
 
     @RegisterKeyBind

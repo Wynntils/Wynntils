@@ -7,8 +7,8 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -23,10 +23,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public boolean updateReminder = true;
 
-    @Config
+    @ConfigInfo
     public boolean autoUpdate = false;
 
     @SubscribeEvent

@@ -7,8 +7,8 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -34,19 +34,19 @@ import org.lwjgl.glfw.GLFW;
 public class InventoryEmeraldCountFeature extends UserFeature {
     private static final int TEXTURE_SIZE = 28;
 
-    @Config
+    @ConfigInfo
     public EmeraldCountType emeraldCountType = EmeraldCountType.Texture;
 
-    @Config
+    @ConfigInfo
     public boolean showInventoryEmeraldCount = true;
 
-    @Config
+    @ConfigInfo
     public boolean showContainerEmeraldCount = true;
 
-    @Config
+    @ConfigInfo
     public boolean showZerosInEmeraldCount = false;
 
-    @Config
+    @ConfigInfo
     public boolean combineInventoryAndContainer = false;
 
     @SubscribeEvent

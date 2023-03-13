@@ -8,8 +8,8 @@ import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
@@ -45,76 +45,76 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     public List<CustomPoi> customPois = new ArrayList<>();
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
-    @Config
+    @ConfigInfo
     public float poiFadeAdjustment = 0.4f;
 
-    @Config
+    @ConfigInfo
     public float combatPoiMinZoom = 0.166f;
 
-    @Config
+    @ConfigInfo
     public float cavePoiMinZoom = 0.28f;
 
-    @Config
+    @ConfigInfo
     public float servicePoiMinZoom = 0.8f;
 
-    @Config
+    @ConfigInfo
     public float fastTravelPoiMinZoom = 0.166f;
 
-    @Config
+    @ConfigInfo
     public float customPoiMinZoom = 0.28f;
 
-    @Config
+    @ConfigInfo
     public float lootChestTier1PoiMinZoom = 0.8f;
 
-    @Config
+    @ConfigInfo
     public float lootChestTier2PoiMinZoom = 0.8f;
 
-    @Config
+    @ConfigInfo
     public float lootChestTier3PoiMinZoom = 0.28f;
 
-    @Config
+    @ConfigInfo
     public float lootChestTier4PoiMinZoom = 0.28f;
 
-    @Config
+    @ConfigInfo
     public PointerType pointerType = PointerType.Arrow;
 
-    @Config
+    @ConfigInfo
     public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
-    @Config
+    @ConfigInfo
     public boolean renderUsingLinear = true;
 
-    @Config
+    @ConfigInfo
     public float playerPointerScale = 1.5f;
 
-    @Config
+    @ConfigInfo
     public float poiScale = 1f;
 
-    @Config
+    @ConfigInfo
     public boolean autoWaypointChests = true;
 
-    @Config
+    @ConfigInfo
     public ChestTier minTierForAutoWaypoint = ChestTier.TIER_3;
 
-    @Config(subcategory = "Remote Players")
+    @ConfigInfo(subcategory = "Remote Players")
     public boolean renderRemoteFriendPlayers = true;
 
-    @Config(subcategory = "Remote Players")
+    @ConfigInfo(subcategory = "Remote Players")
     public boolean renderRemotePartyPlayers = true;
 
     //    @Config(subcategory = "Remote Players")
     //    public boolean renderRemoteGuildPlayers = true;
 
-    @Config(subcategory = "Remote Players")
+    @ConfigInfo(subcategory = "Remote Players")
     public CustomBarsOverlayFeature.HealthTexture remotePlayerHealthTexture = CustomBarsOverlayFeature.HealthTexture.a;
 
-    @Config(subcategory = "Remote Players")
+    @ConfigInfo(subcategory = "Remote Players")
     public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
 
     private BlockPos lastChestPos;

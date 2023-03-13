@@ -8,9 +8,9 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -36,7 +36,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final TerritoryAttackTimerOverlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
-    @Config
+    @ConfigInfo
     public boolean disableAttackTimersOnScoreboard = true;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -50,7 +50,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     }
 
     public static class TerritoryAttackTimerOverlay extends Overlay {
-        @Config
+        @ConfigInfo
         public TextShadow textShadow = TextShadow.OUTLINE;
 
         private TextRenderSetting textRenderSetting;

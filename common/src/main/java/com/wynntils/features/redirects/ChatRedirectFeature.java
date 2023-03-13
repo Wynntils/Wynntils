@@ -6,8 +6,8 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -22,52 +22,52 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public RedirectAction craftedDurability = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction friendJoin = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction heal = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction horse = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction housingTeleport = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction mageTeleport = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction potion = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction shaman = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction soulPoint = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction speed = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction toolDurability = RedirectAction.REDIRECT;
 
-    @Config
+    @ConfigInfo
     public RedirectAction unusedPoints = RedirectAction.REDIRECT;
 
     private final List<Redirector> redirectors = new ArrayList<>();

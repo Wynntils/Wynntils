@@ -6,8 +6,8 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -28,10 +28,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AuraTimerOverlayFeature extends UserFeature {
     private static final float MAX_INTENSITY = 0.4f;
 
-    @Config
+    @ConfigInfo
     public boolean vignetteOnAura = true;
 
-    @Config
+    @ConfigInfo
     public CustomColor vignetteColor = CommonColors.ORANGE;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -53,7 +53,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
         private static final String TEMPLATE =
                 "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
 
-        @Config
+        @ConfigInfo
         public CustomColor textColor = CommonColors.ORANGE;
 
         protected AuraTimerOverlay() {

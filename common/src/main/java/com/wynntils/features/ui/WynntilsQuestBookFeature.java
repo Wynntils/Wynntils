@@ -5,8 +5,8 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -35,10 +35,10 @@ public class WynntilsQuestBookFeature extends UserFeature {
             new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
                     .setScreen(WynntilsMenuScreen.create()));
 
-    @Config
+    @ConfigInfo
     public boolean replaceWynncraftQuestBook = true;
 
-    @Config
+    @ConfigInfo
     public boolean questBookShouldOpenWynntilsMenu = false;
 
     @SubscribeEvent

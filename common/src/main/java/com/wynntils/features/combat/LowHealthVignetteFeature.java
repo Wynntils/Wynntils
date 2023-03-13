@@ -6,8 +6,8 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -21,16 +21,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LowHealthVignetteFeature extends UserFeature {
     private static final float INTENSITY = 0.3f;
 
-    @Config
+    @ConfigInfo
     public int lowHealthPercentage = 25;
 
-    @Config
+    @ConfigInfo
     public float animationSpeed = 0.6f;
 
-    @Config
+    @ConfigInfo
     public HealthVignetteEffect healthVignetteEffect = HealthVignetteEffect.Pulse;
 
-    @Config
+    @ConfigInfo
     public CustomColor color = new CustomColor(255, 0, 0);
 
     private float animation = 10f;

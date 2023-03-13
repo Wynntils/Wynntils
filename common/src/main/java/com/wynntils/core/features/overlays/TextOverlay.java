@@ -8,8 +8,8 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -24,10 +24,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends DynamicOverlay {
-    @Config(key = "overlay.wynntils.textOverlay.textShadow")
+    @ConfigInfo(key = "overlay.wynntils.textOverlay.textShadow")
     public TextShadow textShadow = TextShadow.OUTLINE;
 
-    @Config(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
+    @ConfigInfo(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
     public float secondsPerRecalculation = 0.5f;
 
     protected String[] cachedLines;

@@ -9,9 +9,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -60,43 +60,43 @@ public class MinimapFeature extends UserFeature {
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
-        @Config
+        @ConfigInfo
         public float scale = 1f;
 
-        @Config
+        @ConfigInfo
         public float poiScale = 0.8f;
 
-        @Config
+        @ConfigInfo
         public float pointerScale = 1f;
 
-        @Config
+        @ConfigInfo
         public boolean followPlayerRotation = true;
 
-        @Config
+        @ConfigInfo
         public boolean renderUsingLinear = true;
 
-        @Config
+        @ConfigInfo
         public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
 
-        @Config
+        @ConfigInfo
         public MapMaskType maskType = MapMaskType.Circle;
 
-        @Config
+        @ConfigInfo
         public MapBorderType borderType = MapBorderType.Wynn;
 
-        @Config
+        @ConfigInfo
         public PointerType pointerType = PointerType.Arrow;
 
-        @Config
+        @ConfigInfo
         public CompassRenderType showCompass = CompassRenderType.All;
 
-        @Config(subcategory = "Remote Players")
+        @ConfigInfo(subcategory = "Remote Players")
         public boolean renderRemoteFriendPlayers = true;
 
-        @Config(subcategory = "Remote Players")
+        @ConfigInfo(subcategory = "Remote Players")
         public boolean renderRemotePartyPlayers = true;
 
-        @Config(subcategory = "Remote Players")
+        @ConfigInfo(subcategory = "Remote Players")
         public float remotePlayersHeadScale = 0.6f;
 
         protected MinimapOverlay() {

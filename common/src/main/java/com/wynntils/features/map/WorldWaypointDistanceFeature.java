@@ -10,9 +10,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
@@ -41,25 +41,25 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends UserFeature {
-    @Config
+    @ConfigInfo
     public CustomColor textColor = CommonColors.WHITE;
 
-    @Config
+    @ConfigInfo
     public float backgroundOpacity = 0.2f;
 
-    @Config
+    @ConfigInfo
     public TextShadow textShadow = TextShadow.NONE;
 
-    @Config
+    @ConfigInfo
     public float bottomBoundingDistance = 100f;
 
-    @Config
+    @ConfigInfo
     public float topBoundingDistance = 40f;
 
-    @Config
+    @ConfigInfo
     public float horizontalBoundingDistance = 30f;
 
-    @Config
+    @ConfigInfo
     public int maxWaypointTextDistance = 5000;
 
     private double distance;

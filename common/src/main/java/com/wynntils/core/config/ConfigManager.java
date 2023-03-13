@@ -229,8 +229,8 @@ public final class ConfigManager extends Manager {
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
-            Config metadata = configField.getAnnotation(Config.class);
+        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), ConfigInfo.class)) {
+            ConfigInfo metadata = configField.getAnnotation(ConfigInfo.class);
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 

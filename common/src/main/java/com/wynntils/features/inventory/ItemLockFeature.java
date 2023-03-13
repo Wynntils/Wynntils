@@ -9,8 +9,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
@@ -42,16 +42,16 @@ public class ItemLockFeature extends UserFeature {
     private final KeyBind lockSlotKeyBind =
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     private final Map<String, Set<Integer>> classSlotLockMap = new TreeMap<>();
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
-    @Config
+    @ConfigInfo
     public boolean blockAllActionsOnLockedItems = false;
 
-    @Config
+    @ConfigInfo
     public boolean allowClickOnEmeraldPouchInBlockingMode = true;
 
     @SubscribeEvent

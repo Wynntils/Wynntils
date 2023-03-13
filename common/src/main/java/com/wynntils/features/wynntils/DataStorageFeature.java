@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.wynntils;
 
-import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.StateManagedFeature;
 
 // FIXME: This feature is only needed because we do not have a way to save any data persistently.
@@ -12,9 +12,9 @@ import com.wynntils.core.features.StateManagedFeature;
 public class DataStorageFeature extends StateManagedFeature {
     public static DataStorageFeature INSTANCE;
 
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     public int dryCount = 0;
 
-    @Config(visible = false)
+    @ConfigInfo(visible = false)
     public int dryBoxes = 0;
 }

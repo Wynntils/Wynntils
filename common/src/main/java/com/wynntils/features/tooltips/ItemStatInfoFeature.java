@@ -7,8 +7,8 @@ package com.wynntils.features.tooltips;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
@@ -42,40 +42,40 @@ import org.lwjgl.glfw.GLFW;
 public class ItemStatInfoFeature extends UserFeature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
-    @Config
+    @ConfigInfo
     public boolean showStars = true;
 
-    @Config
+    @ConfigInfo
     public boolean colorLerp = true;
 
-    @Config
+    @ConfigInfo
     public int decimalPlaces = 1;
 
-    @Config
+    @ConfigInfo
     public boolean perfect = true;
 
-    @Config
+    @ConfigInfo
     public boolean defective = true;
 
-    @Config
+    @ConfigInfo
     public float obfuscationChanceStart = 0.08f;
 
-    @Config
+    @ConfigInfo
     public float obfuscationChanceEnd = 0.04f;
 
-    @Config
+    @ConfigInfo
     public StatListOrdering identificationsOrdering = StatListOrdering.DEFAULT;
 
-    @Config
+    @ConfigInfo
     public boolean groupIdentifications = true;
 
-    @Config
+    @ConfigInfo
     public boolean identificationDecorations = true;
 
-    @Config
+    @ConfigInfo
     public boolean overallPercentageInName = true;
 
-    @Config
+    @ConfigInfo
     public boolean showBestValueLastAlways = true;
 
     @SubscribeEvent

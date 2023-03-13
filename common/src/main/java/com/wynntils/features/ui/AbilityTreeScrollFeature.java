@@ -6,8 +6,8 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -22,7 +22,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
 
-    @Config
+    @ConfigInfo
     public boolean invertScroll = false;
 
     @SubscribeEvent

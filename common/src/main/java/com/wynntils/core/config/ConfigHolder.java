@@ -25,13 +25,13 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Field field;
     private final Type fieldType;
 
-    private final Config metadata;
+    private final ConfigInfo metadata;
 
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, Config metadata, Type typeOverride) {
+    public ConfigHolder(Configurable parent, Field field, ConfigInfo metadata, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
@@ -103,7 +103,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public Config getMetadata() {
+    public ConfigInfo getMetadata() {
         return metadata;
     }
 
