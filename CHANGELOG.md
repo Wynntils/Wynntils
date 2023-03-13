@@ -1,9 +1,21 @@
+## [0.0.2-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.336...v0.0.2-alpha.337) (2023-03-13)
+
+
+### Bug Fixes
+
+* Actually fix race in chat tabs ([#1329](https://github.com/Wynntils/Artemis/issues/1329)) ([0f08cf9](https://github.com/Wynntils/Artemis/commit/0f08cf9868891c469f8d422c62c3df312c81f179))
+
 ## [0.0.2-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.335...v0.0.2-alpha.336) (2023-03-13)
 
 
 ### New Features
 
 * Check Chat Tab regex for syntax errors ([#1326](https://github.com/Wynntils/Artemis/issues/1326)) ([32c13e4](https://github.com/Wynntils/Artemis/commit/32c13e446da968bce69d562e5a59c289a8b27dc8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.336 [skip ci] ([7e6a7cb](https://github.com/Wynntils/Artemis/commit/7e6a7cbb2b491f926d103d13d25770ddee01e20c))
 
 ## [0.0.2-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.334...v0.0.2-alpha.335) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.333 [skip ci] ([74c20e8](https://github.com/Wynntils/Artemis/commit/74c20e83607bcd0a96a8352f9d0af562c575d956))
-
-## [0.0.2-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.331...v0.0.2-alpha.332) (2023-03-13)
-
-
-### Bug Fixes
-
-* Fix update frequency in TextOverlay ([#1320](https://github.com/Wynntils/Artemis/issues/1320)) ([3aafc92](https://github.com/Wynntils/Artemis/commit/3aafc9287615e69c36cad2cd434930d9ca252701))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.332 [skip ci] ([98dcda9](https://github.com/Wynntils/Artemis/commit/98dcda946ba7719cf3ec3b5859bbb864e8b402df))
 
