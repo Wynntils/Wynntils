@@ -273,9 +273,9 @@ public final class FeatureManager extends Manager {
                 System.exit(1);
             }
         } catch (Throwable exception) {
-            // Log and fail gracefully, don't make other features fail to init
-            WynntilsMod.error(
-                    "Failed to initialize feature " + feature.getClass().getSimpleName(), exception);
+            // Log and handle gracefully, just disable this feature
+            feature.crash();
+            WynntilsMod.reportCrash(feature.getClass().getName() + ":initialize", feature.getClass().getSimpleName() + " during init", CrashType.FEATURE, exception, false, true);
         }
     }
 
