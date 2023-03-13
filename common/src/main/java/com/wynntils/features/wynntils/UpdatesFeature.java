@@ -63,22 +63,8 @@ public class UpdatesFeature extends UserFeature {
 
                         CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
-                        completableFuture.whenCompleteAsync((result, t) -> {
-                            switch (result) {
-                                case SUCCESSFUL -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.successful")
-                                                .withStyle(ChatFormatting.DARK_GREEN));
-                                case ERROR -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.error")
-                                                .withStyle(ChatFormatting.DARK_RED));
-                                case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.latest")
-                                                .withStyle(ChatFormatting.YELLOW));
-                                case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.pending")
-                                                .withStyle(ChatFormatting.YELLOW));
-                            }
-                        });
+                        completableFuture.whenCompleteAsync(
+                                (result, t) -> McUtils.sendMessageToClient(result.getMessage()));
                     }
                 })));
     }
