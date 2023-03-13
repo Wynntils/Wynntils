@@ -86,7 +86,7 @@ public final class CharacterModel extends Model {
     // This field is basically the slot id of the class,
     // meaning that if a class changes slots, the ID will not be persistent.
     // This was implemented the same way by legacy.
-    private String id;
+    private String id = "";
 
     private List<StatusEffect> statusEffects = new ArrayList<>();
 
