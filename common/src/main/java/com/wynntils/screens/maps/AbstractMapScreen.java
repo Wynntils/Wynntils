@@ -174,7 +174,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             // once that is fixed this can be removed
             if (location == null) continue;
 
-
             if (poi instanceof IconPoi iconPoi) {
                 // Check if the poi is visible
                 if (iconPoi.getIconAlpha(currentZoom) < 0.1f) {
@@ -193,8 +192,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiWidth = poi.getWidth(currentZoom, poiScale);
             float poiHeight = poi.getHeight(currentZoom, poiScale);
 
-            BoundingBox filterBox = BoundingBox.centered(
-                    location.getX(), location.getZ(), poiWidth, poiHeight);
+            BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
             if (filterBox.intersects(textureBoundingBox)) {
