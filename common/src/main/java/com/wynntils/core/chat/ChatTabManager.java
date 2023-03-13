@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -215,11 +216,8 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        return chatTab.getCustomRegexString() == null
-                || chatTab.getCustomRegexString().isBlank()
-                || chatTab.getCustomRegex()
-                        .matcher(event.getOriginalCodedMessage())
-                        .matches();
+        Pattern regex = chatTab.getCustomRegex();
+        return regex == null || regex.matcher(event.getOriginalCodedMessage()).matches();
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -229,10 +227,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        if (chatTab.getCustomRegexString() == null) {
-            return true;
-        }
+        Pattern regex = chatTab.getCustomRegex();
+        if (regex == null) return true;
 
-        return chatTab.getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
+        return regex.matcher(event.getOriginalCodedMessage()).matches();
     }
 }
