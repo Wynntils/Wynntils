@@ -21,6 +21,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.map.MapTexture;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.PlayerMiniMapPoi;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.WaypointPoi;
@@ -284,8 +285,11 @@ public class MinimapFeature extends UserFeature {
 
             WaypointPoi compass = compassOpt.get();
 
-            float compassOffsetX = (compass.getLocation().getX() - (float) playerX) / scale;
-            float compassOffsetZ = (compass.getLocation().getZ() - (float) playerZ) / scale;
+            PoiLocation compassLocation = compass.getLocation();
+            if (compassLocation == null) return;
+
+            float compassOffsetX = (compassLocation.getX() - (float) playerX) / scale;
+            float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / scale;
 
             if (followPlayerRotation) {
                 float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
