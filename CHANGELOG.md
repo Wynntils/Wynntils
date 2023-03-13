@@ -1,9 +1,21 @@
+## [0.0.2-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.334...v0.0.2-alpha.335) (2023-03-13)
+
+
+### Bug Fixes
+
+* Validate downloaded update hash before applying ([#1325](https://github.com/Wynntils/Artemis/issues/1325)) ([2dea196](https://github.com/Wynntils/Artemis/commit/2dea19616f8782d2560d2e86f4ca717f9c02d993))
+
 ## [0.0.2-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.333...v0.0.2-alpha.334) (2023-03-13)
 
 
 ### New Features
 
 * Random Function ([#1316](https://github.com/Wynntils/Artemis/issues/1316)) ([748be02](https://github.com/Wynntils/Artemis/commit/748be02770e8a225271f4749c42c3ce2cf7f6542))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.334 [skip ci] ([1f8ac82](https://github.com/Wynntils/Artemis/commit/1f8ac82eb947d270c46eb560ffddaaf7f751181a))
 
 ## [0.0.2-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.332...v0.0.2-alpha.333) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.331 [skip ci] ([522eb96](https://github.com/Wynntils/Artemis/commit/522eb96ec1454a7c940125ea75e0114235b53ef1))
-
-## [0.0.2-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.329...v0.0.2-alpha.330) (2023-03-13)
-
-
-### Bug Fixes
-
-* Propagate tick to vanilla ChatComponents ([#1323](https://github.com/Wynntils/Artemis/issues/1323)) ([b61b57e](https://github.com/Wynntils/Artemis/commit/b61b57ecea8ac7f84f741686649985b7160ead07))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.330 [skip ci] ([2233f72](https://github.com/Wynntils/Artemis/commit/2233f7227869e1b137bc68cd8fe1fea2ef40f685))
 
