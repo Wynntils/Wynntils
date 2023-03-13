@@ -106,7 +106,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     protected void updateCachedLines(String template) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation * 1000) {
             lastUpdate = System.currentTimeMillis();
             cachedLines = calculateTemplateValue(template);
         }
