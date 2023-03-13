@@ -1,9 +1,21 @@
+## [0.0.2-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.333...v0.0.2-alpha.334) (2023-03-13)
+
+
+### New Features
+
+* Random Function ([#1316](https://github.com/Wynntils/Artemis/issues/1316)) ([748be02](https://github.com/Wynntils/Artemis/commit/748be02770e8a225271f4749c42c3ce2cf7f6542))
+
 ## [0.0.2-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.332...v0.0.2-alpha.333) (2023-03-13)
 
 
 ### Bug Fixes
 
 * Fix NPE in ItemLockFeature ([#1321](https://github.com/Wynntils/Artemis/issues/1321)) ([3d3af36](https://github.com/Wynntils/Artemis/commit/3d3af36b53039d742ddcc74f3eabd350efdbac5a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.333 [skip ci] ([74c20e8](https://github.com/Wynntils/Artemis/commit/74c20e83607bcd0a96a8352f9d0af562c575d956))
 
 ## [0.0.2-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.331...v0.0.2-alpha.332) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.330 [skip ci] ([2233f72](https://github.com/Wynntils/Artemis/commit/2233f7227869e1b137bc68cd8fe1fea2ef40f685))
-
-## [0.0.2-alpha.329](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.328...v0.0.2-alpha.329) (2023-03-12)
-
-
-### Bug Fixes
-
-* Do not send crash telemetry during development ([#1319](https://github.com/Wynntils/Artemis/issues/1319)) ([2d83d16](https://github.com/Wynntils/Artemis/commit/2d83d16b8ad654a2c7b46ad9d2518435ad4b74c8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.329 [skip ci] ([94342eb](https://github.com/Wynntils/Artemis/commit/94342eb392d0124c183d76ddf6d0a01264a5f478))
 
