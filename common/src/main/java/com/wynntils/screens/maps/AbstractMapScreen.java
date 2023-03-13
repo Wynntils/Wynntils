@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.map.MapTexture;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.IconPoi;
 import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.Poi;
@@ -168,6 +169,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // Filter and find hovered
         for (int i = pois.size() - 1; i >= 0; i--) {
             Poi poi = pois.get(i);
+            PoiLocation location = poi.getLocation();
+            // This is due to bad design of the compass dynamic waypoint provider,
+            // once that is fixed this can be removed
+            if (location == null) continue;
+
 
             if (poi instanceof IconPoi iconPoi) {
                 // Check if the poi is visible
@@ -188,7 +194,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiHeight = poi.getHeight(currentZoom, poiScale);
 
             BoundingBox filterBox = BoundingBox.centered(
-                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+                    location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
             if (filterBox.intersects(textureBoundingBox)) {
