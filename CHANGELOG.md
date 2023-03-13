@@ -1,9 +1,21 @@
+## [0.0.2-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.331...v0.0.2-alpha.332) (2023-03-13)
+
+
+### Bug Fixes
+
+* Fix update frequency in TextOverlay ([#1320](https://github.com/Wynntils/Artemis/issues/1320)) ([3aafc92](https://github.com/Wynntils/Artemis/commit/3aafc9287615e69c36cad2cd434930d9ca252701))
+
 ## [0.0.2-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.330...v0.0.2-alpha.331) (2023-03-13)
 
 
 ### Bug Fixes
 
 * NPE in maps due to compass provider returning null location ([#1322](https://github.com/Wynntils/Artemis/issues/1322)) ([5d864cf](https://github.com/Wynntils/Artemis/commit/5d864cfc8b1fe481d2cc2cd69776dd48b92066d3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.331 [skip ci] ([522eb96](https://github.com/Wynntils/Artemis/commit/522eb96ec1454a7c940125ea75e0114235b53ef1))
 
 ## [0.0.2-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.329...v0.0.2-alpha.330) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.328 [skip ci] ([fd57296](https://github.com/Wynntils/Artemis/commit/fd57296f3ad8befb16eb21ad520bef8e7c4cad56))
-
-## [0.0.2-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.326...v0.0.2-alpha.327) (2023-03-12)
-
-
-### Code Refactoring
-
-* Spring cleaning ([#1309](https://github.com/Wynntils/Artemis/issues/1309)) ([da5f32f](https://github.com/Wynntils/Artemis/commit/da5f32f9938e2fa979dd4ee22015f4c391ca259b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.327 [skip ci] ([5a99a3a](https://github.com/Wynntils/Artemis/commit/5a99a3a5eb60f0a1c811c20adfec4e485fc128f3))
 
