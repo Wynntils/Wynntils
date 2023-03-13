@@ -12,7 +12,8 @@ public final class MathFunctions {
     public static class AddFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").asList().getValues();
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
 
             return values.stream().mapToDouble(Number::doubleValue).sum();
         }
@@ -20,7 +21,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument("values", Number.class)));
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 
@@ -47,7 +48,8 @@ public final class MathFunctions {
     public static class MultiplyFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").asList().getValues();
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
 
             return values.stream().mapToDouble(Number::doubleValue).reduce(1, (a, b) -> a * b);
         }
@@ -55,7 +57,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument("values", Number.class)));
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
 
         @Override

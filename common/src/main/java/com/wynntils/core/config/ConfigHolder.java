@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -177,7 +178,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
             if (wrapped.isEnum()) {
-                return Enum.valueOf((Class<? extends Enum>) wrapped, value);
+                return EnumUtils.getEnumIgnoreCase((Class<? extends Enum>) wrapped, value);
             }
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {

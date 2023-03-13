@@ -50,7 +50,6 @@ public class SpellFunctions {
     }
 
     public static class ShamanTotemStateFunction extends Function<String> {
-
         @Override
         public String getValue(FunctionArguments arguments) {
             int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
@@ -72,7 +71,6 @@ public class SpellFunctions {
     }
 
     public static class ShamanTotemLocationFunction extends Function<String> {
-
         @Override
         public String getValue(FunctionArguments arguments) {
             int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
@@ -94,7 +92,6 @@ public class SpellFunctions {
     }
 
     public static class ShamanTotemTimeLeftFunction extends Function<Integer> {
-
         @Override
         public Integer getValue(FunctionArguments arguments) {
             int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();

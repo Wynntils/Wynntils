@@ -14,6 +14,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
@@ -111,12 +112,19 @@ import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataStorageFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
+import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -183,6 +191,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HadesFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
+        registerFeature(new HorseMountFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
@@ -194,7 +203,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LobbyUptimeFeature());
@@ -219,6 +227,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TelemetryFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
@@ -298,7 +307,7 @@ public final class FeatureManager extends Manager {
 
             try {
                 KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
-                feature.setupKeyHolder(keyBind);
+                feature.setupKeyHolder(f.getName(), keyBind);
             } catch (Exception e) {
                 WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
             }
@@ -340,6 +349,37 @@ public final class FeatureManager extends Manager {
         return getFeatures().stream()
                 .filter(feature -> feature.getShortName().equals(featureName))
                 .findFirst();
+    }
+
+    public void handleExceptionInEventListener(Event event, String featureClassName, Throwable t) {
+        String featureName = featureClassName.substring(featureClassName.lastIndexOf('.') + 1);
+
+        Optional<Feature> featureOptional = getFeatureFromString(featureName);
+        if (featureOptional.isEmpty()) {
+            WynntilsMod.error("Exception in event listener in feature that cannot be located: " + featureClassName, t);
+            return;
+        }
+
+        Feature feature = featureOptional.get();
+
+        feature.crash();
+
+        // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
+        // we will cause a new exception and an endless recursion.
+        boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
+
+        WynntilsMod.reportCrash(
+                feature.getClass().getName(), feature.getTranslatedName(), CrashType.FEATURE, t, shouldSendChat, true);
+
+        if (shouldSendChat) {
+            MutableComponent enableMessage = Component.literal("Click here to enable it again.")
+                    .withStyle(ChatFormatting.UNDERLINE)
+                    .withStyle(ChatFormatting.RED)
+                    .withStyle(style -> style.withClickEvent(new ClickEvent(
+                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+
+            McUtils.sendMessageToClient(enableMessage);
+        }
     }
 
     private void addCrashCallbacks() {
