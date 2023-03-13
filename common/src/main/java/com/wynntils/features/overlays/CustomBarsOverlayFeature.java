@@ -225,12 +225,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
         public BossBarProgress progress() {
-            CappedValue health = Models.Character.getHealth();
+            CappedValue health = Models.CharacterStats.getHealth();
             return new BossBarProgress(health, (float) health.getProgress());
         }
 
@@ -365,7 +365,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public BossBarProgress progress() {
-            CappedValue mana = Models.Character.getMana();
+            CappedValue mana = Models.CharacterStats.getMana();
             return new BossBarProgress(mana, (float) mana.getProgress());
         }
 
@@ -381,7 +381,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
