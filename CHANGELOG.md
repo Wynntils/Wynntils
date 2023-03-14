@@ -1,9 +1,21 @@
+## [0.0.2-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.342...v0.0.2-alpha.343) (2023-03-14)
+
+
+### Code Refactoring
+
+* Remove UserFeature and StateManagedFeature ([#1333](https://github.com/Wynntils/Artemis/issues/1333)) ([a1f0486](https://github.com/Wynntils/Artemis/commit/a1f0486cc8dafcf47bbfa7c736c0c2892fcb89a8))
+
 ## [0.0.2-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.341...v0.0.2-alpha.342) (2023-03-14)
 
 
 ### Code Refactoring
 
 * Split CharacterModel into three parts ([#1327](https://github.com/Wynntils/Artemis/issues/1327)) ([5577c32](https://github.com/Wynntils/Artemis/commit/5577c326faae2a7d759b8084f740f6313b0adf02))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.342 [skip ci] ([45841d6](https://github.com/Wynntils/Artemis/commit/45841d6f5d2a19fd240586f9ad7c2e96974236ab))
 
 ## [0.0.2-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.340...v0.0.2-alpha.341) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.339 [skip ci] ([f94aed4](https://github.com/Wynntils/Artemis/commit/f94aed48edda5342c610bdfa69d801ebd1011d5a))
-
-## [0.0.2-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.337...v0.0.2-alpha.338) (2023-03-14)
-
-
-### Bug Fixes
-
-* Fix Telemetry command when using specific mods ([#1331](https://github.com/Wynntils/Artemis/issues/1331)) ([cd8f510](https://github.com/Wynntils/Artemis/commit/cd8f510e1dc1acb2dbf9f1fb3273396fdb1b52e4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.338 [skip ci] ([b04b94a](https://github.com/Wynntils/Artemis/commit/b04b94aa2f7106e3ef19b0259d31858f3406648b))
 
