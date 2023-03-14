@@ -41,8 +41,7 @@ public class HorseModel extends Model {
         return -1;
     }
 
-    public AbstractHorse searchForHorseNearby(int searchRadius) {
-        Player player = McUtils.player();
+    public AbstractHorse searchForHorseNearby(Player player, int searchRadius) {
         List<AbstractHorse> horses = McUtils.mc()
                 .level
                 .getEntitiesOfClass(
