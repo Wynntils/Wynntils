@@ -17,7 +17,4 @@ public @interface RegisterConfig {
 
     /** The subcategory this option belongs in within its container */
     String subcategory() default "";
-
-    /** Whether this option should be visible to users */
-    boolean visible() default true;
 }

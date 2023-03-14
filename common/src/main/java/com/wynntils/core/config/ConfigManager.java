@@ -250,12 +250,19 @@ public final class ConfigManager extends Manager {
             }
             String subcategory = configInfo.subcategory();
             String i18nKey = configInfo.key();
-            boolean visible = configInfo.visible();
+
+            Config configObj;
+            try {
+                configObj = (Config) FieldUtils.readField(configField, parent, true);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Cannot read Config field: " + configField);
+            }
+            boolean visible = !(configObj instanceof HiddenConfig<?>);
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder =
-                    new ConfigHolder(parent, configField, subcategory, i18nKey, visible, typeOverride);
+            ConfigHolder configHolder = new ConfigHolder(
+                    parent, configObj, configField.getName(), subcategory, i18nKey, visible, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
