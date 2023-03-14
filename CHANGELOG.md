@@ -1,9 +1,21 @@
+## [0.0.2-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.340...v0.0.2-alpha.341) (2023-03-14)
+
+
+### Bug Fixes
+
+* Report crash of features during initialization ([#1328](https://github.com/Wynntils/Artemis/issues/1328)) ([869fd0f](https://github.com/Wynntils/Artemis/commit/869fd0fae3b219603f5f0937784dfb207f8d3cd1))
+
 ## [0.0.2-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.339...v0.0.2-alpha.340) (2023-03-14)
 
 
 ### Code Refactoring
 
 * Sort out position <-> location ([#1332](https://github.com/Wynntils/Artemis/issues/1332)) ([1487894](https://github.com/Wynntils/Artemis/commit/14878946b1d9ed306a315da23d4558d19f2d20e1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.340 [skip ci] ([e4e43c4](https://github.com/Wynntils/Artemis/commit/e4e43c4767146cffd674cc2e7a3843121dd752e3))
 
 ## [0.0.2-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.338...v0.0.2-alpha.339) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.337 [skip ci] ([973a8ef](https://github.com/Wynntils/Artemis/commit/973a8efc55dcc83c09233a71e29c3f4b6f960d34))
-
-## [0.0.2-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.335...v0.0.2-alpha.336) (2023-03-13)
-
-
-### New Features
-
-* Check Chat Tab regex for syntax errors ([#1326](https://github.com/Wynntils/Artemis/issues/1326)) ([32c13e4](https://github.com/Wynntils/Artemis/commit/32c13e446da968bce69d562e5a59c289a8b27dc8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.336 [skip ci] ([7e6a7cb](https://github.com/Wynntils/Artemis/commit/7e6a7cbb2b491f926d103d13d25770ddee01e20c))
 
