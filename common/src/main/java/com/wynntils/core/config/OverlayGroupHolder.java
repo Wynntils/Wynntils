@@ -7,26 +7,35 @@ package com.wynntils.core.config;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.features.overlays.RenderState;
+import com.wynntils.mc.event.RenderEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class OverlayGroupHolder {
     private final Field field;
     private final Feature parent;
     private final int defaultCount;
+    private final RenderEvent.ElementType elementType;
+    private final RenderState renderState;
 
     private final Class<?> overlayClass;
 
-    public OverlayGroupHolder(Field field, Feature parent, int defaultCount) {
+    public OverlayGroupHolder(
+            Field field,
+            Feature parent,
+            RenderEvent.ElementType elementType,
+            RenderState renderState,
+            int defaultCount) {
         this.field = field;
         this.parent = parent;
+        this.elementType = elementType;
+        this.renderState = renderState;
         this.defaultCount = defaultCount;
 
         Type genericType = this.field.getGenericType();
@@ -59,6 +68,14 @@ public class OverlayGroupHolder {
         }
     }
 
+    public RenderEvent.ElementType getElementType() {
+        return elementType;
+    }
+
+    public RenderState getRenderState() {
+        return renderState;
+    }
+
     public int getDefaultCount() {
         return defaultCount;
     }
@@ -75,6 +92,7 @@ public class OverlayGroupHolder {
         return overlayClass;
     }
 
+    // Do not call this. Use OverlayManager instead.
     public void initGroup(List<Integer> ids) {
         try {
             List<Overlay> overlays = new ArrayList<>();
@@ -87,32 +105,5 @@ public class OverlayGroupHolder {
         } catch (Exception e) {
             WynntilsMod.error("Failed to initialize grouped overlay: " + field.getName(), e);
         }
-    }
-
-    public int extendGroup() {
-        List<Integer> ids = getOverlays().stream()
-                .map(overlay -> ((DynamicOverlay) overlay).getId())
-                .collect(Collectors.toList());
-
-        int newId = 1;
-        while (ids.contains(newId)) {
-            newId++;
-        }
-
-        ids.add(newId);
-
-        initGroup(ids);
-
-        return newId;
-    }
-
-    public void removeId(int id) {
-        List<Integer> ids = getOverlays().stream()
-                .map(overlay -> ((DynamicOverlay) overlay).getId())
-                .collect(Collectors.toList());
-
-        ids.remove((Integer) id);
-
-        initGroup(ids);
     }
 }

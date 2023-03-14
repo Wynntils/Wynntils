@@ -45,7 +45,7 @@ public class ConfigCommand extends Command {
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
                         return foundFeature
-                                .map(feature -> feature.getOverlays().stream()
+                                .map(feature -> Managers.Overlay.getFeatureOverlays(feature).stream()
                                         .map(Overlay::getConfigJsonName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
@@ -70,7 +70,8 @@ public class ConfigCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Managers.Feature.getFeatures().stream()
-                            .filter(feature -> !feature.getOverlayGroups().isEmpty())
+                            .filter(feature -> !Managers.Overlay.getFeatureOverlayGroups(feature)
+                                    .isEmpty())
                             .map(Feature::getShortName),
                     builder);
 
@@ -85,7 +86,7 @@ public class ConfigCommand extends Command {
                         if (featureOptional.isEmpty()) return Collections.emptyIterator();
 
                         Feature feature = featureOptional.get();
-                        Optional<Overlay> overlayOptional = feature.getOverlays().stream()
+                        Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
                                 .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                                 .findFirst();
 
@@ -105,7 +106,7 @@ public class ConfigCommand extends Command {
                         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
                         return featureOptional
-                                .map(feature -> feature.getOverlayGroups().stream()
+                                .map(feature -> Managers.Overlay.getFeatureOverlayGroups(feature).stream()
                                         .map(OverlayGroupHolder::getFieldName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
@@ -259,7 +260,7 @@ public class ConfigCommand extends Command {
 
         if (overlayGroupHolder == null) return 0;
 
-        int newId = overlayGroupHolder.extendGroup();
+        int newId = Managers.Overlay.extendOverlayGroup(overlayGroupHolder);
 
         Managers.Config.loadConfigOptions(true, false);
         Managers.Config.saveConfig();
@@ -290,7 +291,7 @@ public class ConfigCommand extends Command {
 
         int id = Integer.parseInt(idName);
 
-        overlayGroupHolder.removeId(id);
+        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, id);
 
         Managers.Config.loadConfigOptions(true, false);
         Managers.Config.saveConfig();
@@ -536,7 +537,7 @@ public class ConfigCommand extends Command {
                         .withStyle(ChatFormatting.YELLOW)
                         .append(Component.literal("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
 
-        for (Overlay overlay : feature.getOverlays()) {
+        for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
             MutableComponent current = getComponentForOverlay(overlay);
 
             current.withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -711,7 +712,7 @@ public class ConfigCommand extends Command {
             return null;
         }
 
-        Optional<Overlay> overlayOptional = feature.getOverlays().stream()
+        Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
                 .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                 .findFirst();
 
@@ -729,7 +730,7 @@ public class ConfigCommand extends Command {
         Feature feature = getFeatureFromArguments(context, featureName);
         if (feature == null) return null;
 
-        Optional<OverlayGroupHolder> group = feature.getOverlayGroups().stream()
+        Optional<OverlayGroupHolder> group = Managers.Overlay.getFeatureOverlayGroups(feature).stream()
                 .filter(overlayGroupHolder -> overlayGroupHolder.getFieldName().equalsIgnoreCase(overlayGroupName))
                 .findFirst();
 

@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.LootrunFeature;
@@ -107,7 +108,7 @@ public final class LootrunModel extends Model {
     }
 
     public void clearCurrentLootrun() {
-        LootrunFeature.INSTANCE.disable();
+        Managers.Feature.disableFeature(LootrunFeature.INSTANCE);
         state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
@@ -130,7 +131,7 @@ public final class LootrunModel extends Model {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new LootrunPath(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
-        LootrunFeature.INSTANCE.enable();
+        Managers.Feature.enableFeature(LootrunFeature.INSTANCE);
     }
 
     public List<LootrunInstance> getLootruns() {
@@ -168,7 +169,7 @@ public final class LootrunModel extends Model {
                 uncompiled = LootrunFileParser.readJson(lootrunFile, json);
                 lootrun = LootrunCompiler.compile(uncompiled, false);
                 state = LootrunState.LOADED;
-                LootrunFeature.INSTANCE.enable();
+                Managers.Feature.enableFeature(LootrunFeature.INSTANCE);
                 file.close();
                 return true;
             } catch (Exception e) {
