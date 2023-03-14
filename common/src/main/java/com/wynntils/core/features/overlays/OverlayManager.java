@@ -153,7 +153,6 @@ public final class OverlayManager extends Manager {
         List<Integer> ids = holder.getOverlays().stream()
                 .map(overlay -> ((DynamicOverlay) overlay).getId())
                 .collect(Collectors.toList());
-        ;
 
         int newId = 1;
         while (ids.contains(newId)) {
