@@ -227,10 +227,10 @@ public final class ConfigManager extends Manager {
             try {
                 Object fieldValue = FieldUtils.readField(field, parent, true);
                 if (!(fieldValue instanceof Config)) {
-                    throw new RuntimeException("A non-Config class was marked with @ConfigInfo annotation.");
+                    throw new RuntimeException("A non-Config class was marked with @ConfigInfo annotation: " + field);
                 }
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to read @ConfigInfo annotated field");
+                throw new RuntimeException("Failed to read @ConfigInfo annotated field: " + field);
             }
         }
 
@@ -244,9 +244,12 @@ public final class ConfigManager extends Manager {
                     .findFirst()
                     .map(f -> f.getAnnotation(ConfigInfo.class))
                     .orElse(null);
-            String subcategory = configInfo != null ? configInfo.subcategory() : "";
-            String i18nKey = configInfo != null ? configInfo.key() : "";
-            boolean visible = configInfo != null ? configInfo.visible() : true;
+            if (configInfo == null) {
+                throw new RuntimeException("A Config is missing @ConfigInfo annotation:" + configField);
+            }
+            String subcategory = configInfo.subcategory();
+            String i18nKey = configInfo.key();
+            boolean visible = configInfo.visible();
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
