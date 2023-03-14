@@ -227,7 +227,8 @@ public final class ConfigManager extends Manager {
             try {
                 Object fieldValue = FieldUtils.readField(field, parent, true);
                 if (!(fieldValue instanceof Config)) {
-                    throw new RuntimeException("A non-Config class was marked with @RegisterConfig annotation: " + field);
+                    throw new RuntimeException(
+                            "A non-Config class was marked with @RegisterConfig annotation: " + field);
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field);
