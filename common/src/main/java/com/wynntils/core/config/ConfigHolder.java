@@ -76,10 +76,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return TypeToken.get(this.getType()).getRawType();
     }
 
-    public Field getField() {
-        return field;
-    }
-
     public String getFieldName() {
         return field.getName();
     }
@@ -91,10 +87,10 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     public String getJsonName() {
         if (parent instanceof Overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + field.getName();
+            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
-        return parent.getConfigJsonName() + "." + field.getName();
+        return parent.getConfigJsonName() + "." + getFieldName();
     }
 
     private String getNameCamelCase() {
@@ -123,19 +119,23 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         if (!getI18nKey().isEmpty()) {
             return I18n.get(getI18nKey() + ".name");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".name");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".name");
     }
 
     public String getDescription() {
         if (!getI18nKey().isEmpty()) {
             return I18n.get(getI18nKey() + ".description");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".description");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".description");
     }
 
     public Object getValue() {
+        return getConfig().get();
+    }
+
+    private Config getConfig() {
         try {
-            return FieldUtils.readField(field, parent, true);
+            return (Config) FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
             WynntilsMod.error("Unable to get field " + getJsonName(), e);
             return null;
@@ -146,16 +146,10 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return defaultValue;
     }
 
-    public boolean setValue(Object value) {
-        try {
-            FieldUtils.writeField(field, parent, value, true);
-            parent.updateConfigOption(this);
-            userEdited = true;
-            return true;
-        } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName(), e);
-            return false;
-        }
+    public void setValue(Object value) {
+        getConfig().updateConfig(value);
+        parent.updateConfigOption(this);
+        userEdited = true;
     }
 
     public boolean valueChanged() {

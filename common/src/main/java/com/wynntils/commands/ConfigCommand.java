@@ -455,12 +455,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
+        config.setValue(parsedValue);
 
         Managers.Config.saveConfig();
 
@@ -580,12 +575,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
+        config.setValue(parsedValue);
 
         Managers.Config.saveConfig();
 
