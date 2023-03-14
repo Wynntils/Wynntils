@@ -16,7 +16,6 @@ import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
-import com.wynntils.core.features.overlays.sizes.RestrictedRangeOverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -25,9 +24,10 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
+    // These are needed for config type detection to work
     private static final OverlayPosition DUMMY_POSITION = new OverlayPosition(
-            5, 5, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft);
-    private static final OverlaySize DUMMY_SIZE = new RestrictedRangeOverlaySize();
+            0, 0, VerticalAlignment.Middle, HorizontalAlignment.Center, OverlayPosition.AnchorSection.Middle);
+    private static final OverlaySize DUMMY_SIZE = new GuiScaledOverlaySize();
 
     @ConfigInfo(key = "overlay.wynntils.overlay.position", visible = false)
     public final Config<OverlayPosition> position = new Config<>(DUMMY_POSITION);
