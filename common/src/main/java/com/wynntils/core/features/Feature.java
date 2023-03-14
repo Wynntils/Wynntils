@@ -62,6 +62,10 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     /** Used to react to config option updates */
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
+    public void onEnable() {}
+
+    public void onDisable() {}
+
     @Override
     public int compareTo(Feature other) {
         return ComparisonChain.start()

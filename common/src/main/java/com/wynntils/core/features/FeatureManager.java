@@ -9,7 +9,6 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.event.FeatureStateChangeEvent;
 import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBindManager;
@@ -319,7 +318,7 @@ public final class FeatureManager extends Manager {
 
         if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
 
-        WynntilsMod.postEvent(new FeatureStateChangeEvent.Enabled(feature));
+        feature.onEnable();
 
         FEATURES.put(feature, FeatureState.ENABLED);
 
@@ -339,7 +338,7 @@ public final class FeatureManager extends Manager {
 
         if (state != FeatureState.ENABLED) return;
 
-        WynntilsMod.postEvent(new FeatureStateChangeEvent.Disabled(feature));
+        feature.onDisable();
 
         FEATURES.put(feature, FeatureState.DISABLED);
 
@@ -354,9 +353,6 @@ public final class FeatureManager extends Manager {
         }
 
         disableFeature(feature);
-
-        // Sending both Crashed and Disabled events is intentional, as crashing disables the feature
-        WynntilsMod.postEvent(new FeatureStateChangeEvent.Crashed(feature));
 
         FEATURES.put(feature, FeatureState.CRASHED);
     }

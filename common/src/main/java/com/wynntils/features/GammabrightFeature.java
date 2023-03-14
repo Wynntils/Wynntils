@@ -10,7 +10,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.event.FeatureStateChangeEvent;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
@@ -53,19 +52,15 @@ public class GammabrightFeature extends UserFeature {
         }
     }
 
-    @SubscribeEvent
-    public void onEnable(FeatureStateChangeEvent.Enabled event) {
-        if (event.getFeature() != this) return;
-
+    @Override
+    public void onEnable() {
         if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
     }
 
-    @SubscribeEvent
-    public void onDisable(FeatureStateChangeEvent.Disabled event) {
-        if (event.getFeature() != this) return;
-
+    @Override
+    public void onDisable() {
         resetGamma();
     }
 
