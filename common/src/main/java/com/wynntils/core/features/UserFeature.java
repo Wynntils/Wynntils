@@ -7,13 +7,13 @@ package com.wynntils.core.features;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 
 /**
  * A feature that is enabled & disabled by the user.
  */
 public abstract class UserFeature extends Feature {
-    @ConfigInfo(key = "feature.wynntils.userFeature.userEnabled")
+    @RegisterConfig(key = "feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
 
     @Override

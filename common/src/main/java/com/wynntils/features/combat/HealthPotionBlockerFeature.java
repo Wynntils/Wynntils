@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class HealthPotionBlockerFeature extends UserFeature {
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Integer> threshold = new Config<>(95);
 
     @SubscribeEvent

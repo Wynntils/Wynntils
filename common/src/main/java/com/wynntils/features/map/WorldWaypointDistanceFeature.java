@@ -13,7 +13,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
@@ -42,25 +42,25 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends UserFeature {
-    @ConfigInfo
+    @RegisterConfig
     public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> topBoundingDistance = new Config<>(40f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     private double distance;

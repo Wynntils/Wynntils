@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.mc.event.ContainerCloseEvent;
@@ -35,7 +35,7 @@ public class ItemFavoriteFeature extends UserFeature {
     public static ItemFavoriteFeature INSTANCE;
 
     // This should really move to FavoritesModel, but for now, models cannot have configs
-    @ConfigInfo(visible = false)
+    @RegisterConfig(visible = false)
     public final Config<Set<String>> favoriteItems = new Config<>(new TreeSet<>());
 
     @TypeOverride

@@ -222,7 +222,7 @@ public final class ConfigManager extends Manager {
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), ConfigInfo.class);
+        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
         for (Field field : annotatedConfigs) {
             try {
                 Object fieldValue = FieldUtils.readField(field, parent, true);
@@ -239,10 +239,10 @@ public final class ConfigManager extends Manager {
                 fields.stream().filter(f -> f.getType().equals(Config.class)).toList();
 
         for (Field configField : configFields) {
-            ConfigInfo configInfo = Arrays.stream(annotatedConfigs)
+            RegisterConfig configInfo = Arrays.stream(annotatedConfigs)
                     .filter(f -> f.equals(configField))
                     .findFirst()
-                    .map(f -> f.getAnnotation(ConfigInfo.class))
+                    .map(f -> f.getAnnotation(RegisterConfig.class))
                     .orElse(null);
             if (configInfo == null) {
                 throw new RuntimeException("A Config is missing @ConfigInfo annotation:" + configField);

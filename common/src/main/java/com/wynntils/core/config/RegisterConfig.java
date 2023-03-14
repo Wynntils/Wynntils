@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConfigInfo {
+public @interface RegisterConfig {
     /** The base part of the translation key to use for this option */
     String key() default "";
 

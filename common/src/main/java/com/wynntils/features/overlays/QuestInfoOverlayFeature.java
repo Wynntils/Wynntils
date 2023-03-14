@@ -11,7 +11,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -38,10 +38,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -66,7 +66,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
-        @ConfigInfo
+        @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private static final List<CustomColor> TEXT_COLORS =

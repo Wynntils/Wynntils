@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -35,19 +35,19 @@ import org.lwjgl.glfw.GLFW;
 public class InventoryEmeraldCountFeature extends UserFeature {
     private static final int TEXTURE_SIZE = 28;
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.Texture);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> showZerosInEmeraldCount = new Config<>(false);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
 
     @SubscribeEvent

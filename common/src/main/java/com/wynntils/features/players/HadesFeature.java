@@ -9,7 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.hades.protocol.enums.SocialType;
 
@@ -17,16 +17,16 @@ import com.wynntils.hades.protocol.enums.SocialType;
 public class HadesFeature extends UserFeature {
     public static HadesFeature INSTANCE;
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> shareWithParty = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> shareWithFriends = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override

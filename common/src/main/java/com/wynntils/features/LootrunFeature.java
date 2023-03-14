@@ -7,7 +7,7 @@ package com.wynntils.features;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.StateManagedFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,22 +17,22 @@ import com.wynntils.utils.colors.CustomColor;
 public class LootrunFeature extends StateManagedFeature {
     public static LootrunFeature INSTANCE;
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<PathType> pathType = new Config<>(PathType.TEXTURED);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<CustomColor> activePathColor = new Config<>(CommonColors.LIGHT_BLUE);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<CustomColor> recordingPathColor = new Config<>(CommonColors.RED);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> rainbowLootRun = new Config<>(false);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Integer> cycleDistance = new Config<>(20); // TODO limit this later
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> showNotes = new Config<>(true);
 
     @Override

@@ -10,7 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
@@ -46,77 +46,77 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 
-    @ConfigInfo(visible = false)
+    @RegisterConfig(visible = false)
     public final Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Float> poiScale = new Config<>(1f);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
-    @ConfigInfo(subcategory = "Remote Players")
+    @RegisterConfig(subcategory = "Remote Players")
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @ConfigInfo(subcategory = "Remote Players")
+    @RegisterConfig(subcategory = "Remote Players")
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     //    @Config(subcategory = "Remote Players")
     //    public boolean renderRemoteGuildPlayers = true;
 
-    @ConfigInfo(subcategory = "Remote Players")
+    @RegisterConfig(subcategory = "Remote Players")
     public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
             new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
-    @ConfigInfo(subcategory = "Remote Players")
+    @RegisterConfig(subcategory = "Remote Players")
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;

@@ -11,7 +11,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -40,7 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ObjectivesOverlayFeature extends UserFeature {
     private static final float SPACE_BETWEEN = 10;
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -65,7 +65,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected GuildObjectiveOverlay() {
@@ -153,7 +153,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
         protected DailyObjectiveOverlay() {
@@ -249,16 +249,16 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public final Config<Boolean> hideOnInactivity = new Config<>(false);
 
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
         public final Config<Boolean> enableProgressBar = new Config<>(true);
 
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
         public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
-        @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
+        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         protected ObjectiveOverlayBase(

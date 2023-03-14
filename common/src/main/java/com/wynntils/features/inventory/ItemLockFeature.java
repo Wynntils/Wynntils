@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
@@ -43,16 +43,16 @@ public class ItemLockFeature extends UserFeature {
     private final KeyBind lockSlotKeyBind =
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
-    @ConfigInfo(visible = false)
+    @RegisterConfig(visible = false)
     public final Config<Map<String, Set<Integer>>> classSlotLockMap = new Config<>(new TreeMap<>());
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
 
-    @ConfigInfo
+    @RegisterConfig
     public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
 
     @SubscribeEvent
