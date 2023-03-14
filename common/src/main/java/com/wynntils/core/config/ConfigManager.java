@@ -23,6 +23,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -229,15 +230,28 @@ public final class ConfigManager extends Manager {
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), ConfigInfo.class)) {
-            ConfigInfo metadata = configField.getAnnotation(ConfigInfo.class);
+        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), ConfigInfo.class);
+
+        List<Field> fields = FieldUtils.getAllFieldsList(parent.getClass());
+        List<Field> configFields =
+                fields.stream().filter(f -> f.getType().equals(Config.class)).toList();
+
+        for (Field configField : configFields) {
+            ConfigInfo configInfo = Arrays.stream(annotatedConfigs)
+                    .filter(f -> f.equals(configField))
+                    .findFirst()
+                    .map(f -> f.getAnnotation(ConfigInfo.class))
+                    .orElse(null);
+            String subcategory = configInfo != null ? configInfo.subcategory() : "";
+            String i18nKey = configInfo != null ? configInfo.key() : "";
+            boolean visible = configInfo != null ? configInfo.visible() : true;
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder = new ConfigHolder(
-                    parent, configField, metadata.subcategory(), metadata.key(), metadata.visible(), typeOverride);
+            ConfigHolder configHolder =
+                    new ConfigHolder(parent, configField, subcategory, i18nKey, visible, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
-                if (metadata.visible()) {
+                if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
                         WynntilsMod.error("Config displayName i18n is missing for " + configHolder.getDisplayName());
                         throw new AssertionError("Missing i18n for " + configHolder.getDisplayName());
