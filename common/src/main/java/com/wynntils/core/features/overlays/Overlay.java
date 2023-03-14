@@ -21,7 +21,6 @@ import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.lang.reflect.Type;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
@@ -87,8 +86,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
             // This is done so all state checks run in order
-            Managers.Overlay.disableOverlays(List.of(this));
-            Managers.Overlay.enableOverlays(List.of(this), false);
+            Managers.Overlay.disableOverlay(this);
+            Managers.Overlay.enableOverlay(this);
         }
 
         onConfigUpdate(configHolder);
@@ -126,11 +125,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
+    public boolean isDynamic() {
+        return false;
+    }
+
     public Boolean isUserEnabled() {
         return userEnabled.get();
     }
 
-    public boolean isEnabled() {
+    public boolean shouldBeEnabled() {
         if (!isParentEnabled()) {
             return false;
         }
@@ -139,7 +142,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             return this.isUserEnabled();
         }
 
-        return Managers.Overlay.getOverlayParent(this).getOverlayInfo(this).enabled();
+        return Managers.Overlay.isEnabledByDefault(this);
     }
 
     public final boolean isParentEnabled() {

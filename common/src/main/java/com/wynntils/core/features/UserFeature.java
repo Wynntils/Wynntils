@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.ConfigInfo;
@@ -31,9 +32,9 @@ public abstract class UserFeature extends Feature {
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
     public final void tryUserToggle() {
         if (userEnabled.get()) {
-            enable();
+            Managers.Feature.enableFeature(this);
         } else {
-            disable();
+            Managers.Feature.disableFeature(this);
         }
     }
 

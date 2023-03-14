@@ -124,7 +124,7 @@ public class ChatTabsFeature extends UserFeature {
     }
 
     @Override
-    protected void postEnable() {
+    public void onEnable() {
         Managers.ChatTab.resetFocusedTab();
     }
 

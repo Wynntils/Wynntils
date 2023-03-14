@@ -43,7 +43,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (questInfoOverlay.isEnabled()
+        if (questInfoOverlay.shouldBeEnabled()
                 && disableQuestTrackingOnScoreboard.get()
                 && Models.Quest.isQuestSegment(event.getSegment())) {
             event.setCanceled(true);

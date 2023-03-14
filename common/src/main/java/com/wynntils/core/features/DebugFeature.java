@@ -4,20 +4,8 @@
  */
 package com.wynntils.core.features;
 
-import com.google.common.collect.ImmutableList;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.features.properties.StartDisabled;
 
 /** Feature for debugging */
-public abstract class DebugFeature extends UserFeature {
-    @Override
-    protected void onInit(ImmutableList.Builder<Condition> conditions) {
-        conditions.add(new DevelopmentCondition());
-    }
-
-    public static class DevelopmentCondition extends Condition {
-        @Override
-        public void init() {
-            setSatisfied(WynntilsMod.isDevelopmentEnvironment());
-        }
-    }
-}
+@StartDisabled
+public abstract class DebugFeature extends UserFeature {}

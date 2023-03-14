@@ -33,7 +33,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (hideMaskTitles.get() && shamanMaskOverlay.isEnabled()) {
+        if (hideMaskTitles.get() && shamanMaskOverlay.shouldBeEnabled()) {
             event.setCanceled(true);
         }
     }
