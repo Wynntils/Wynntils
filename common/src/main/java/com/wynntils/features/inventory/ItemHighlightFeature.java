@@ -144,7 +144,7 @@ public class ItemHighlightFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!inventoryHighlightEnabled) return;
+        if (!inventoryHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
@@ -152,7 +152,7 @@ public class ItemHighlightFeature extends UserFeature {
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(inventoryOpacity),
+                color.withAlpha(inventoryOpacity.get()),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 200,
@@ -164,12 +164,12 @@ public class ItemHighlightFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
-        if (!hotbarHighlightEnabled) return;
+        if (!hotbarHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
+        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity.get()), e.getX(), e.getY(), 0, 16, 16);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
@@ -224,7 +224,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return cosmeticHighlightEnabled;
+            return cosmeticHighlightEnabled.get();
         }
 
         @Override
@@ -243,28 +243,28 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightEnabled;
-                case UNIQUE -> uniqueHighlightEnabled;
-                case RARE -> rareHighlightEnabled;
-                case SET -> setHighlightEnabled;
-                case LEGENDARY -> legendaryHighlightEnabled;
-                case FABLED -> fabledHighlightEnabled;
-                case MYTHIC -> mythicHighlightEnabled;
-                case CRAFTED -> craftedHighlightEnabled;
+                case NORMAL -> normalHighlightEnabled.get();
+                case UNIQUE -> uniqueHighlightEnabled.get();
+                case RARE -> rareHighlightEnabled.get();
+                case SET -> setHighlightEnabled.get();
+                case LEGENDARY -> legendaryHighlightEnabled.get();
+                case FABLED -> fabledHighlightEnabled.get();
+                case MYTHIC -> mythicHighlightEnabled.get();
+                case CRAFTED -> craftedHighlightEnabled.get();
             };
         }
 
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightColor;
-                case UNIQUE -> uniqueHighlightColor;
-                case RARE -> rareHighlightColor;
-                case SET -> setHighlightColor;
-                case LEGENDARY -> legendaryHighlightColor;
-                case FABLED -> fabledHighlightColor;
-                case MYTHIC -> mythicHighlightColor;
-                case CRAFTED -> craftedHighlightColor;
+                case NORMAL -> normalHighlightColor.get();
+                case UNIQUE -> uniqueHighlightColor.get();
+                case RARE -> rareHighlightColor.get();
+                case SET -> setHighlightColor.get();
+                case LEGENDARY -> legendaryHighlightColor.get();
+                case FABLED -> fabledHighlightColor.get();
+                case MYTHIC -> mythicHighlightColor.get();
+                case CRAFTED -> craftedHighlightColor.get();
             };
         }
     }
@@ -279,10 +279,10 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 0 -> zeroStarIngredientHighlightColor;
-                case 1 -> oneStarIngredientHighlightColor;
-                case 2 -> twoStarIngredientHighlightColor;
-                case 3 -> threeStarIngredientHighlightColor;
+                case 0 -> zeroStarIngredientHighlightColor.get();
+                case 1 -> oneStarIngredientHighlightColor.get();
+                case 2 -> twoStarIngredientHighlightColor.get();
+                case 3 -> threeStarIngredientHighlightColor.get();
                 default -> CustomColor.NONE;
             };
         }
@@ -290,10 +290,10 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 0 -> zeroStarIngredientHighlightEnabled;
-                case 1 -> oneStarIngredientHighlightEnabled;
-                case 2 -> twoStarIngredientHighlightEnabled;
-                case 3 -> threeStarIngredientHighlightEnabled;
+                case 0 -> zeroStarIngredientHighlightEnabled.get();
+                case 1 -> oneStarIngredientHighlightEnabled.get();
+                case 2 -> twoStarIngredientHighlightEnabled.get();
+                case 3 -> threeStarIngredientHighlightEnabled.get();
                 default -> false;
             };
         }
@@ -309,9 +309,9 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 1 -> oneStarMaterialHighlightColor;
-                case 2 -> twoStarMaterialHighlightColor;
-                case 3 -> threeStarMaterialHighlightColor;
+                case 1 -> oneStarMaterialHighlightColor.get();
+                case 2 -> twoStarMaterialHighlightColor.get();
+                case 3 -> threeStarMaterialHighlightColor.get();
                 default -> CustomColor.NONE;
             };
         }
@@ -319,9 +319,9 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 1 -> oneStarMaterialHighlightEnabled;
-                case 2 -> twoStarMaterialHighlightEnabled;
-                case 3 -> threeStarMaterialHighlightEnabled;
+                case 1 -> oneStarMaterialHighlightEnabled.get();
+                case 2 -> twoStarMaterialHighlightEnabled.get();
+                case 3 -> threeStarMaterialHighlightEnabled.get();
                 default -> false; // should not happen
             };
         }
@@ -336,7 +336,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return powderHighlightEnabled;
+            return powderHighlightEnabled.get();
         }
 
         @Override
@@ -354,7 +354,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return emeraldPouchHighlightEnabled;
+            return emeraldPouchHighlightEnabled.get();
         }
 
         @Override

@@ -150,7 +150,7 @@ public class MapFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (!autoWaypointChests) return;
+        if (!autoWaypointChests.get()) return;
 
         BlockEntity blockEntity = McUtils.mc().level.getBlockEntity(event.getPos());
         if (blockEntity != null && blockEntity.getType() == BlockEntityType.CHEST) {
@@ -160,7 +160,7 @@ public class MapFeature extends UserFeature {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (!autoWaypointChests) return;
+        if (!autoWaypointChests.get()) return;
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
@@ -169,7 +169,7 @@ public class MapFeature extends UserFeature {
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));
 
-        if (tier.ordinal() < minTierForAutoWaypoint.ordinal()) return;
+        if (tier.ordinal() < minTierForAutoWaypoint.get().ordinal()) return;
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
@@ -179,8 +179,8 @@ public class MapFeature extends UserFeature {
                 tier.getWaypointTexture(),
                 CustomPoi.Visibility.DEFAULT);
 
-        if (customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
-            customPois.add(newPoi);
+        if (customPois.get().stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
+            customPois.get().add(newPoi);
 
             // TODO: Replace this notification with a popup
             Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())

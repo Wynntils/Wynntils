@@ -28,13 +28,13 @@ public class PlayerGhostTransparencyFeature extends UserFeature {
         if (!(e.getEntity() instanceof Player player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
-            e.setTranslucence(playerGhostTranslucenceLevel);
+            e.setTranslucence(playerGhostTranslucenceLevel.get());
         }
     }
 
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
-        if (!transparentPlayerGhostArmor) return;
+        if (!transparentPlayerGhostArmor.get()) return;
 
         if (Models.Player.isPlayerGhost(event.getPlayer())) {
             event.setCanceled(true);

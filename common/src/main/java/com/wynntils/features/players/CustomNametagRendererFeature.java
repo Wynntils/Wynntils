@@ -51,7 +51,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
-        if (hideAllNametags) {
+        if (hideAllNametags.get()) {
             event.setCanceled(true);
             return;
         }
@@ -64,7 +64,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         List<CustomNametag> nametags = new ArrayList<>();
 
-        if (showGearOnHover) {
+        if (showGearOnHover.get()) {
             addGearNametags(event, nametags);
         }
 
@@ -92,11 +92,11 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         ItemStack heldItem = hitPlayerCache.getMainHandItem();
         MutableComponent handComp = getItemComponent(heldItem);
-        if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale));
+        if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale.get()));
 
         for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
             MutableComponent armorComp = getItemComponent(armorStack);
-            if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale));
+            if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
         }
     }
 
@@ -120,7 +120,7 @@ public class CustomNametagRendererFeature extends UserFeature {
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
 
-        nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale * ACCOUNT_TYPE_MULTIPLIER));
+        nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
     }
 
     private void drawNametags(NametagRenderEvent event, List<CustomNametag> nametags) {

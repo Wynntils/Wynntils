@@ -30,7 +30,7 @@ public abstract class UserFeature extends Feature {
 
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
     public final void tryUserToggle() {
-        if (userEnabled) {
+        if (userEnabled.get()) {
             enable();
         } else {
             disable();
@@ -38,6 +38,6 @@ public abstract class UserFeature extends Feature {
     }
 
     public void setUserEnabled(boolean newState) {
-        this.userEnabled = newState;
+        this.userEnabled.updateConfig(newState);
     }
 }

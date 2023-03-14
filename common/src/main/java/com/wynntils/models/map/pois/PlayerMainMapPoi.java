@@ -73,7 +73,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 64);
 
         // health
-        CustomBarsOverlayFeature.HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
+        CustomBarsOverlayFeature.HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture.get();
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
                 bufferSource,
@@ -101,7 +101,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                         user.getRelationColor(),
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        MapFeature.INSTANCE.remotePlayerNameShadow,
+                        MapFeature.INSTANCE.remotePlayerNameShadow.get(),
                         1f);
 
         poseStack.popPose();

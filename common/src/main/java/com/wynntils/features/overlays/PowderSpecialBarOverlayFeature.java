@@ -65,9 +65,9 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             float powderSpecialCharge = Models.Character.getPowderSpecialCharge();
             Powder powderSpecialType = Models.Character.getPowderSpecialType();
-            if (this.onlyIfWeaponHeld
+            if (this.onlyIfWeaponHeld.get()
                     && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
-            if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
+            if (this.hideIfNoCharge.get() && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, bufferSource, powderSpecialCharge, powderSpecialType);
         }
@@ -118,7 +118,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                             0,
                             color,
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
 
             BufferedRenderUtils.drawColoredProgressBar(
                     poseStack,
@@ -133,7 +133,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                     0,
                     universalBarTexture.width(),
                     universalBarTexture.height(),
-                    (this.flip ? -1f : 1f) * powderSpecialCharge / 100f);
+                    (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
         }
     }
 }

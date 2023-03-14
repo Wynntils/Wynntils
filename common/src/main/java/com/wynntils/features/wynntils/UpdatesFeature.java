@@ -47,11 +47,11 @@ public class UpdatesFeature extends UserFeature {
                         return;
                     }
 
-                    if (updateReminder) {
+                    if (updateReminder.get()) {
                         remindToUpdateIfExists(version);
                     }
 
-                    if (autoUpdate) {
+                    if (autoUpdate.get()) {
                         if (WynntilsMod.isDevelopmentEnvironment()) {
                             WynntilsMod.info("Tried to auto-update, but we are in development environment.");
                             return;

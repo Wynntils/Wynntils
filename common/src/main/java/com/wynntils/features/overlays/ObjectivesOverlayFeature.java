@@ -45,7 +45,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableObjectiveTrackingOnScoreboard) {
+        if (disableObjectiveTrackingOnScoreboard.get()) {
             ScoreboardSegment segment = event.getSegment();
             if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
                 event.setCanceled(true);
@@ -90,14 +90,14 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 return;
             }
 
-            if (this.hideOnInactivity) {
+            if (this.hideOnInactivity.get()) {
                 final int maxInactivityMs = 3000;
                 if (guildObjective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
                     return;
                 }
             }
 
-            final int barHeight = this.enableProgressBar ? 5 : 0;
+            final int barHeight = this.enableProgressBar.get() ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeight = FontRenderer.getInstance()
@@ -121,9 +121,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY,
                             this.getWidth(),
-                            this.textColor,
+                            this.textColor.get(),
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
 
             float height = FontRenderer.getInstance().calculateRenderHeight(text, this.getWidth());
 
@@ -131,7 +131,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 renderY += height - 9;
             }
 
-            if (this.enableProgressBar) {
+            if (this.enableProgressBar.get()) {
                 BufferedRenderUtils.drawProgressBar(
                         poseStack,
                         bufferSource,
@@ -141,9 +141,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         this.getRenderX() + this.getWidth(),
                         renderY + SPACE_BETWEEN + actualBarHeight,
                         0,
-                        objectivesTexture.yOffset,
+                        objectivesTexture.get().yOffset,
                         barWidth,
-                        objectivesTexture.yOffset + 10,
+                        objectivesTexture.get().yOffset + 10,
                         guildObjective.getProgress());
             }
         }
@@ -174,7 +174,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
-            final int barHeight = this.enableProgressBar ? 5 : 0;
+            final int barHeight = this.enableProgressBar.get() ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeightWithoutTextHeight = SPACE_BETWEEN + actualBarHeight;
@@ -195,7 +195,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                     };
 
             for (WynnObjective objective : objectives) {
-                if (this.hideOnInactivity) {
+                if (this.hideOnInactivity.get()) {
                     final int maxInactivityMs = 3000;
                     if (objective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
                         continue;
@@ -214,9 +214,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 this.getRenderX() + this.getWidth(),
                                 renderY,
                                 this.getWidth(),
-                                this.textColor,
+                                this.textColor.get(),
                                 this.getRenderHorizontalAlignment(),
-                                this.textShadow);
+                                this.textShadow.get());
 
                 final float textHeight = FontRenderer.getInstance().calculateRenderHeight(text, (int) this.getWidth());
 
@@ -224,7 +224,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                     renderY += textHeight - 9;
                 }
 
-                if (this.enableProgressBar) {
+                if (this.enableProgressBar.get()) {
                     BufferedRenderUtils.drawProgressBar(
                             poseStack,
                             bufferSource,
@@ -234,9 +234,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY + SPACE_BETWEEN + actualBarHeight,
                             0,
-                            objectivesTexture.yOffset,
+                            objectivesTexture.get().yOffset,
                             barWidth,
-                            objectivesTexture.yOffset + 10,
+                            objectivesTexture.get().yOffset + 10,
                             objective.getProgress());
                 }
 

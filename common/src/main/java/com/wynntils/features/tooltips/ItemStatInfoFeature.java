@@ -98,9 +98,12 @@ public class ItemStatInfoFeature extends UserFeature {
                             () -> Models.GearTooltip.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
-            IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;
+            IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
             GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
-                    identificationsOrdering, groupIdentifications, showBestValueLastAlways, showStars);
+                    identificationsOrdering.get(),
+                    groupIdentifications.get(),
+                    showBestValueLastAlways.get(),
+                    showStars.get());
             LinkedList<Component> tooltips = new LinkedList<>(
                     builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
 
@@ -110,7 +113,7 @@ public class ItemStatInfoFeature extends UserFeature {
 
                 // Update name depending on overall percentage; this needs to be done every rendering
                 // for rainbow/defective effects
-                if (overallPercentageInName && gearInstance.hasOverallValue()) {
+                if (overallPercentageInName.get() && gearInstance.hasOverallValue()) {
                     updateItemName(gearInfo, gearInstance, tooltips);
                 }
             }
@@ -133,15 +136,15 @@ public class ItemStatInfoFeature extends UserFeature {
 
     private void updateItemName(GearInfo gearInfo, GearInstance gearInstance, LinkedList<Component> tooltips) {
         MutableComponent name;
-        if (perfect && gearInstance.isPerfect()) {
+        if (perfect.get() && gearInstance.isPerfect()) {
             name = ComponentUtils.makeRainbowStyle("Perfect " + gearInfo.name());
-        } else if (defective && gearInstance.isDefective()) {
+        } else if (defective.get() && gearInstance.isDefective()) {
             name = ComponentUtils.makeObfuscated(
-                    "Defective " + gearInfo.name(), obfuscationChanceStart, obfuscationChanceEnd);
+                    "Defective " + gearInfo.name(), obfuscationChanceStart.get(), obfuscationChanceEnd.get());
         } else {
             name = tooltips.getFirst().copy();
             name.append(ColorScaleUtils.getPercentageTextComponent(
-                    gearInstance.getOverallPercentage(), colorLerp, decimalPlaces));
+                    gearInstance.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
         }
         tooltips.removeFirst();
         tooltips.addFirst(name);
@@ -219,7 +222,7 @@ public class ItemStatInfoFeature extends UserFeature {
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
-                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
+                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp.get(), decimalPlaces.get());
 
             return percentageTextComponent;
         }

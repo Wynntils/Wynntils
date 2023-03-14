@@ -78,7 +78,7 @@ public class ItemGuessFeature extends UserFeature {
                     .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
                             .withStyle(ChatFormatting.GRAY)));
 
-            if (showGuessesPrice && level != -1) {
+            if (showGuessesPrice.get() && level != -1) {
                 guesses.append(Component.literal(" [")
                         .append(Component.literal((gearTier.getGearIdentificationCost(level) + " "
                                         + EmeraldUnits.EMERALD.getSymbol()))

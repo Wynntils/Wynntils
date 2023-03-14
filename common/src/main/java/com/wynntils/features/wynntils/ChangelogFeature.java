@@ -40,7 +40,7 @@ public class ChangelogFeature extends UserFeature {
 
         ApiResponse response = Managers.Net.callApi(
                 UrlId.API_ATHENA_UPDATE_CHANGELOG,
-                Map.of("old_version", lastShownVersion, "new_version", WynntilsMod.getVersion()));
+                Map.of("old_version", lastShownVersion.get(), "new_version", WynntilsMod.getVersion()));
 
         response.handleJsonObject(
                 jsonObject -> {
@@ -48,10 +48,10 @@ public class ChangelogFeature extends UserFeature {
 
                     String changelog = jsonObject.get("changelog").getAsString();
 
-                    lastShownVersion = WynntilsMod.getVersion();
+                    lastShownVersion.updateConfig(WynntilsMod.getVersion());
                     Managers.Config.saveConfig();
 
-                    if (autoClassMenu) {
+                    if (autoClassMenu.get()) {
                         McUtils.sendCommand("class");
                         waitForScreen = true;
                         changelogData = changelog;

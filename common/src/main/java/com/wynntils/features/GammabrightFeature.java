@@ -41,7 +41,7 @@ public class GammabrightFeature extends UserFeature {
 
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             resetGamma();
         }
     }
@@ -60,16 +60,16 @@ public class GammabrightFeature extends UserFeature {
 
     @Override
     protected void onEnable() {
-        if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
     }
 
     private void applyGammabright() {
         if (!isEnabled()) return;
-        if (gammabrightEnabled && McUtils.options().gamma().get() == 1000d) return;
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() == 1000d) return;
 
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             enableGammabright();
         } else {
             resetGamma();
@@ -77,18 +77,18 @@ public class GammabrightFeature extends UserFeature {
     }
 
     private void toggleGammaBright() {
-        gammabrightEnabled = !gammabrightEnabled;
+        gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
         applyGammabright();
 
         Managers.Config.saveConfig();
     }
 
     private void resetGamma() {
-        McUtils.options().gamma().value = lastGamma;
+        McUtils.options().gamma().value = lastGamma.get();
     }
 
     private void enableGammabright() {
-        lastGamma = McUtils.options().gamma().get();
+        lastGamma.updateConfig(McUtils.options().gamma().get());
         McUtils.options().gamma().value = 1000d;
     }
 }

@@ -72,7 +72,7 @@ public class BeaconBeamFeature extends UserFeature {
                 McUtils.player().level.getGameTime(),
                 0,
                 1024,
-                waypointBeamColor.asFloatArray(),
+                waypointBeamColor.get().asFloatArray(),
                 alpha,
                 0.166f,
                 0.33f);

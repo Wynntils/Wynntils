@@ -51,41 +51,41 @@ public class TranslationFeature extends UserFeature {
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
-        if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat) return;
-        if (e.getRecipientType() == RecipientType.INFO && !translateInfo) return;
+        if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
+        if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
         String origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
-        Managers.Translation.getTranslator(translationService)
-                .translate(List.of(wrapped), languageName, translatedMsgList -> {
+        Managers.Translation.getTranslator(translationService.get())
+                .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
                     String messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.get(0);
                         messageToSend = unwrapCoding(result);
                     } else {
-                        if (keepOriginal) return;
+                        if (keepOriginal.get()) return;
 
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
                     }
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(Component.literal(messageToSend)));
                 });
-        if (!keepOriginal) {
+        if (!keepOriginal.get()) {
             e.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialgue(NpcDialogEvent e) {
-        if (!translateNpc) return;
+        if (!translateNpc.get()) return;
         if (e instanceof TranslatedNpcDialogEvent) return;
 
         if (!e.getChatMessage().isEmpty()) {
             List<String> wrapped = e.getChatMessage().stream()
                     .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
                     .toList();
-            Managers.Translation.getTranslator(translationService)
-                    .translate(wrapped, languageName, translatedMsgList -> {
+            Managers.Translation.getTranslator(translationService.get())
+                    .translate(wrapped, languageName.get(), translatedMsgList -> {
                         List<String> unwrapped = translatedMsgList.stream()
                                 .map(this::unwrapCoding)
                                 .toList();
@@ -105,7 +105,7 @@ public class TranslationFeature extends UserFeature {
             NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
             WynntilsMod.postEvent(translatedEvent);
         }
-        if (!keepOriginal) {
+        if (!keepOriginal.get()) {
             e.setCanceled(true);
         }
     }

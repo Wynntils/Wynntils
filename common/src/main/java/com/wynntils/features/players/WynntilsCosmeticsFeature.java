@@ -67,7 +67,7 @@ public class WynntilsCosmeticsFeature extends UserFeature {
     private boolean shouldRenderCape(Player player, boolean elytra) {
         if (!isEnabled() || !Managers.Connection.onServer()) return false;
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
-        if (McUtils.player().is(player) && !renderOwnCape) return false;
+        if (McUtils.player().is(player) && !renderOwnCape.get()) return false;
 
         if (Models.Player.getUser(player.getUUID()) == null
                 || Models.Player.getUserCosmeticTexture(player.getUUID()) == null) return false;

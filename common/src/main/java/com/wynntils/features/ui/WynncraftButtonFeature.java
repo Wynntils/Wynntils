@@ -44,7 +44,8 @@ public class WynncraftButtonFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        ServerData wynncraftServer = new ServerData("Wynncraft", connectToLobby ? LOBBY_SERVER : GAME_SERVER, false);
+        ServerData wynncraftServer =
+                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
         TitleScreen titleScreen = e.getTitleScreen();

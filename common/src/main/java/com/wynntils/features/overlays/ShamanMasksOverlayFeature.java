@@ -35,7 +35,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (hideMaskTitles && shamanMaskOverlay.isEnabled()) {
+        if (hideMaskTitles.get() && shamanMaskOverlay.isEnabled()) {
             event.setCanceled(true);
         }
     }
@@ -64,7 +64,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
-            if (currentMaskType == ShamanMaskType.NONE && !displayNone) return;
+            if (currentMaskType == ShamanMaskType.NONE && !displayNone.get()) return;
 
             super.render(poseStack, bufferSource, partialTicks, window);
         }

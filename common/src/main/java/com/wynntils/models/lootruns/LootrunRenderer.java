@@ -83,7 +83,7 @@ public final class LootrunRenderer {
                     renderChests(poseStack, lootrun, color, chunkLong);
                 }
 
-                if (LootrunFeature.INSTANCE.showNotes && lootrun.notes().containsKey(chunkLong)) {
+                if (LootrunFeature.INSTANCE.showNotes.get() && lootrun.notes().containsKey(chunkLong)) {
                     renderNotes(poseStack, lootrun, color, chunkLong);
                 }
             }
@@ -137,7 +137,7 @@ public final class LootrunRenderer {
         Level level = McUtils.mc().level;
         if (level == null) return;
 
-        switch (LootrunFeature.INSTANCE.pathType) {
+        switch (LootrunFeature.INSTANCE.pathType.get()) {
             case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
             case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
         }

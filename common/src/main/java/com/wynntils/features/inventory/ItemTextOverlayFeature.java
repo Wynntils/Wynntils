@@ -111,14 +111,14 @@ public class ItemTextOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {
-        if (!inventoryTextOverlayEnabled) return;
+        if (!inventoryTextOverlayEnabled.get()) return;
 
         drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
-        if (!hotbarTextOverlayEnabled) return;
+        if (!hotbarTextOverlayEnabled.get()) return;
 
         drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
@@ -205,16 +205,17 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), amplifierTierRomanNumerals);
-            TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(HIGHLIGHT_COLOR).withTextShadow(amplifierTierShadow);
+            String text = valueToString(item.getTier(), amplifierTierRomanNumerals.get());
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(HIGHLIGHT_COLOR)
+                    .withTextShadow(amplifierTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return amplifierTierEnabled;
+            return amplifierTierEnabled.get();
         }
     }
 
@@ -234,14 +235,14 @@ public class ItemTextOverlayFeature extends UserFeature {
 
             String text = item.getDungeon();
             TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow);
+                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 1f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return dungeonKeyEnabled;
+            return dungeonKeyEnabled.get();
         }
     }
 
@@ -256,14 +257,15 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return emeraldPouchTierEnabled;
+            return emeraldPouchTierEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), emeraldPouchTierRomanNumerals);
-            TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(HIGHLIGHT_COLOR).withTextShadow(emeraldPouchTierShadow);
+            String text = valueToString(item.getTier(), emeraldPouchTierRomanNumerals.get());
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(HIGHLIGHT_COLOR)
+                    .withTextShadow(emeraldPouchTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
@@ -278,15 +280,15 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return gatheringToolTierEnabled;
+            return gatheringToolTierEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), gatheringToolTierRomanNumerals);
+            String text = valueToString(item.getTier(), gatheringToolTierRomanNumerals.get());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(gatheringToolTierShadow);
+                    .withTextShadow(gatheringToolTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
@@ -301,15 +303,15 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return horseTierEnabled;
+            return horseTierEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), horseTierRomanNumerals);
+            String text = valueToString(item.getTier(), horseTierRomanNumerals.get());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(horseTierShadow);
+                    .withTextShadow(horseTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
@@ -324,16 +326,16 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return powderTierEnabled;
+            return powderTierEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
             CustomColor highlightColor = item.getPowderProfile().element().getColor();
 
-            String text = valueToString(item.getTier(), powderTierRomanNumerals);
+            String text = valueToString(item.getTier(), powderTierRomanNumerals.get());
             TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(powderTierShadow);
+                    TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(powderTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
         }
@@ -350,14 +352,14 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return teleportScrollEnabled;
+            return teleportScrollEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
             String text = item.getShorthand();
             TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow);
+                    TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
         }
@@ -377,14 +379,14 @@ public class ItemTextOverlayFeature extends UserFeature {
             String text = skill.getSymbol();
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
-                    .withTextShadow(skillIconShadow);
+                    .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return skillIconEnabled;
+            return skillIconEnabled.get();
         }
     }
 
@@ -402,14 +404,14 @@ public class ItemTextOverlayFeature extends UserFeature {
             String text = skill.getSymbol();
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
-                    .withTextShadow(skillIconShadow);
+                    .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return skillIconEnabled;
+            return skillIconEnabled.get();
         }
     }
 
@@ -425,7 +427,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return teleportScrollEnabled;
+            return teleportScrollEnabled.get();
         }
 
         @Override
@@ -434,7 +436,7 @@ public class ItemTextOverlayFeature extends UserFeature {
 
             String text = item.getDestination();
             TextRenderSetting style =
-                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow);
+                    TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
         }

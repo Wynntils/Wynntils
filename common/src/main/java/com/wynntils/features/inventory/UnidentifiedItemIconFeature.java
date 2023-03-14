@@ -71,7 +71,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
                 12,
                 12,
                 textureX,
-                textureY + texture.getTextureYOffset(),
+                textureY + texture.get().getTextureYOffset(),
                 16,
                 16,
                 Texture.GEAR_ICONS.width(),

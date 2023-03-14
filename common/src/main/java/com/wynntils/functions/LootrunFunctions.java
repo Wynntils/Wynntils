@@ -13,7 +13,7 @@ public class LootrunFunctions {
     public static class DryStreakFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return DataStorageFeature.INSTANCE.dryCount;
+            return DataStorageFeature.INSTANCE.dryCount.get();
         }
 
         @Override
@@ -25,7 +25,7 @@ public class LootrunFunctions {
     public static class DryBoxesFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return DataStorageFeature.INSTANCE.dryBoxes;
+            return DataStorageFeature.INSTANCE.dryBoxes.get();
         }
 
         @Override

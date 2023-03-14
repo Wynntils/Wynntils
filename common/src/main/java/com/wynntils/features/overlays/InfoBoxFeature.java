@@ -31,7 +31,7 @@ public class InfoBoxFeature extends UserFeature {
 
         @Override
         public String getTemplate() {
-            return content;
+            return content.get();
         }
 
         @Override

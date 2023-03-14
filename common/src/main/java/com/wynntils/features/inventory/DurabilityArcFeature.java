@@ -32,13 +32,13 @@ public class DurabilityArcFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
-        if (!renderDurabilityArcHotbar) return;
+        if (!renderDurabilityArcHotbar.get()) return;
         drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!renderDurabilityArcInventories) return;
+        if (!renderDurabilityArcInventories.get()) return;
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 

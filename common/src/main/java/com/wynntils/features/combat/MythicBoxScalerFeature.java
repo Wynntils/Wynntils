@@ -32,7 +32,7 @@ public class MythicBoxScalerFeature extends UserFeature {
         // reapplying the transformation
         stack.translate(0f, -0.25f, 0f);
 
-        stack.scale(scale, scale, scale);
+        stack.scale(scale.get(), scale.get(), scale.get());
 
         stack.translate(0f, 0.25f, 0f);
     }

@@ -62,7 +62,7 @@ public class ItemLockFeature extends UserFeature {
         // Don't render lock on ability tree slots
         if (Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
 
-        for (Integer slotId : classSlotLockMap.getOrDefault(Models.Character.getId(), new TreeSet<>())) {
+        for (Integer slotId : classSlotLockMap.get().getOrDefault(Models.Character.getId(), new TreeSet<>())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
                     .filter(slot -> slot.container instanceof Inventory && slot.getContainerSlot() == slotId)
                     .findFirst();
@@ -80,7 +80,7 @@ public class ItemLockFeature extends UserFeature {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
-        if (!blockAllActionsOnLockedItems && event.getClickType() != ClickType.THROW) return;
+        if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
 
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
@@ -92,13 +92,14 @@ public class ItemLockFeature extends UserFeature {
         }
 
         // We want to allow opening emerald pouch even if locked
-        if (allowClickOnEmeraldPouchInBlockingMode
+        if (allowClickOnEmeraldPouchInBlockingMode.get()
                 && event.getClickType() == ClickType.PICKUP
                 && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }
 
         if (classSlotLockMap
+                .get()
                 .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(slotOptional.get().getContainerSlot())) {
             event.setCanceled(true);
@@ -114,6 +115,7 @@ public class ItemLockFeature extends UserFeature {
         if (heldItemSlot.isEmpty()) return;
 
         if (classSlotLockMap
+                .get()
                 .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(heldItemSlot.get().getContainerSlot())) {
             event.setCanceled(true);
@@ -136,9 +138,9 @@ public class ItemLockFeature extends UserFeature {
     private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
         if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
 
-        classSlotLockMap.putIfAbsent(Models.Character.getId(), new TreeSet<>());
+        classSlotLockMap.get().putIfAbsent(Models.Character.getId(), new TreeSet<>());
 
-        Set<Integer> classSet = classSlotLockMap.get(Models.Character.getId());
+        Set<Integer> classSet = classSlotLockMap.get().get(Models.Character.getId());
 
         if (classSet.contains(hoveredSlot.getContainerSlot())) {
             classSet.remove(hoveredSlot.getContainerSlot());

@@ -42,24 +42,24 @@ public class TooltipFittingFeature extends UserFeature {
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
-        if (wrapText) {
+        if (wrapText.get()) {
             // calculate optimal wrapping for scaled up tooltips
             int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
-                    e.getTooltips(), (int) (currentScreen.width / universalScale), (int)
-                            (e.getMouseX() / universalScale));
+                    e.getTooltips(), (int) (currentScreen.width / universalScale.get()), (int)
+                            (e.getMouseX() / universalScale.get()));
             List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
             e.setTooltips(Collections.unmodifiableList(wrappedTooltips));
         }
 
         // calculate scale factor
-        float scaleFactor = universalScale;
+        float scaleFactor = universalScale.get();
 
-        if (fitToScreen) {
+        if (fitToScreen.get()) {
             int lines = e.getTooltips().size();
             // this is technically slightly larger than the actual height, but due to the tooltip offset/border, it
             // works to create a nice buffer at the top/bottom of the screen
             float tooltipHeight = 22 + (lines - 1) * 10;
-            tooltipHeight *= universalScale;
+            tooltipHeight *= universalScale.get();
 
             if (tooltipHeight > currentScreen.height) scaleFactor *= (currentScreen.height / tooltipHeight);
         }

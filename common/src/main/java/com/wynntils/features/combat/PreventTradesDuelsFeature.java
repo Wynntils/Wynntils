@@ -41,16 +41,16 @@ public class PreventTradesDuelsFeature extends UserFeature {
     private void handlePlayerClick(Event event, Player player, ItemStack itemStack, Entity target) {
         int timeSinceLastFight =
                 (int) ((System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp()) / 1000);
-        if (onlyWhileFighting && timeSinceLastFight >= fightingTimeCutoff) return;
+        if (onlyWhileFighting.get() && timeSinceLastFight >= fightingTimeCutoff.get()) return;
 
         if (!shouldBlockClick(player, itemStack, target)) return;
 
         // stops interact packet from going out
         event.setCanceled(true);
 
-        if (onlyWhileFighting) {
+        if (onlyWhileFighting.get()) {
             Managers.Notification.queueMessage(
-                    "Trade/Duel blocked for " + (fightingTimeCutoff - timeSinceLastFight) + " s");
+                    "Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s");
         }
     }
 

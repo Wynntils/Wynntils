@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
     public PlayerMiniMapPoi(HadesUser user) {
-        super(user, MinimapFeature.INSTANCE.minimapOverlay.remotePlayersHeadScale);
+        super(user, MinimapFeature.INSTANCE.minimapOverlay.remotePlayersHeadScale.get());
     }
 
     @Override

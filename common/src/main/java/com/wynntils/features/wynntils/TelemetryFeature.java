@@ -34,7 +34,7 @@ public class TelemetryFeature extends UserFeature {
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
-        if (crashReports != ConfirmedBoolean.TRUE) return;
+        if (crashReports.get() != ConfirmedBoolean.TRUE) return;
         // Only send telemetry for released versions
         if (WynntilsMod.isDevelopmentEnvironment()) return;
         if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
@@ -59,7 +59,7 @@ public class TelemetryFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
-        if (crashReports != ConfirmedBoolean.UNCONFIRMED) return;
+        if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
         component.append(Component.literal("Wynntils can send telemetry data when a component fails.\n"

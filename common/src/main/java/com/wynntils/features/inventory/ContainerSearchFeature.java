@@ -85,7 +85,7 @@ public class ContainerSearchFeature extends UserFeature {
         Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
         if (result == null || !result) return;
 
-        RenderUtils.drawArc(e.getPoseStack(), highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
 
     @SubscribeEvent
@@ -147,19 +147,19 @@ public class ContainerSearchFeature extends UserFeature {
     private SearchableContainerType getCurrentSearchableContainerType(String title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
-        if (containerType == SearchableContainerType.BANK && filterInBank) {
+        if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
             return SearchableContainerType.BANK;
         }
 
-        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket) {
+        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
             return SearchableContainerType.MISC_BUCKET;
         }
 
-        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank) {
+        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank.get()) {
             return SearchableContainerType.GUILD_BANK;
         }
 
-        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList) {
+        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
             return SearchableContainerType.MEMBER_LIST;
         }
 

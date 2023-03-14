@@ -50,16 +50,16 @@ public class ShamanTotemTrackingFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTotemSummoned(TotemEvent.Summoned e) {
-        if (!highlightShamanTotems) return;
+        if (!highlightShamanTotems.get()) return;
 
         int totemNumber = e.getTotemNumber();
         ArmorStand totemAS = e.getTotemEntity();
 
         CustomColor color =
                 switch (totemNumber) {
-                    case 1 -> firstTotemColor;
-                    case 2 -> secondTotemColor;
-                    case 3 -> thirdTotemColor;
+                    case 1 -> firstTotemColor.get();
+                    case 2 -> secondTotemColor.get();
+                    case 3 -> thirdTotemColor.get();
                     default -> throw new IllegalArgumentException(
                             "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
@@ -84,7 +84,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
         public Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor, secondTotemTextColor, thirdTotemTextColor
+            firstTotemTextColor.get(), secondTotemTextColor.get(), thirdTotemTextColor.get()
         };
 
         protected ShamanTotemTimerOverlay() {
@@ -104,6 +104,7 @@ public class ShamanTotemTrackingFeature extends UserFeature {
                     .filter(Objects::nonNull)
                     .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
                             + totemTrackingDetail
+                                    .get()
                                     .getTemplate()
                                     .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
                     .collect(Collectors.joining("\n"));

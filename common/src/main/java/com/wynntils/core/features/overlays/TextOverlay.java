@@ -99,7 +99,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                             this.getRenderColor(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
-                            this.textShadow,
+                            this.textShadow.get(),
                             textScale);
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
@@ -107,7 +107,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     protected void updateCachedLines(String template) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation * 1000) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation.get() * 1000) {
             lastUpdate = System.currentTimeMillis();
             cachedLines = calculateTemplateValue(template);
         }

@@ -30,7 +30,7 @@ public class CombatXpGainMessageFeature extends UserFeature {
     @SubscribeEvent
     public void onExperienceGain(CombatXpGainEvent event) {
         if (!Models.WorldState.onWorld()) return;
-        if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay * 1000) return;
+        if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) return;
 
         String message =
                 String.format("§2+%.0f XP (§6%.2f%%§2)", event.getGainedXpRaw(), event.getGainedXpPercentage());

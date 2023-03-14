@@ -42,7 +42,7 @@ public class CommandAliasesFeature extends UserFeature {
     public void onCommandSent(CommandSentEvent e) {
         String message = e.getCommand();
 
-        for (CommandAlias commandAlias : aliases) {
+        for (CommandAlias commandAlias : aliases.get()) {
             if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
                 McUtils.sendCommand(commandAlias.getOriginalCommand());
@@ -55,7 +55,7 @@ public class CommandAliasesFeature extends UserFeature {
     public void onCommandsAdded(CommandsAddedEvent event) {
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
-        for (CommandAlias commandAlias : aliases) {
+        for (CommandAlias commandAlias : aliases.get()) {
             for (String alias : commandAlias.getAliases()) {
                 String[] parts = alias.split(" ");
                 LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(parts[0]);

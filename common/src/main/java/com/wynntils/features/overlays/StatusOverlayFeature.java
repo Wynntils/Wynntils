@@ -108,7 +108,7 @@ public class StatusOverlayFeature extends UserFeature {
             textRenderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withTextShadow(textShadow);
+                    .withTextShadow(textShadow.get());
         }
 
         public TextRenderSetting getTextRenderSetting() {

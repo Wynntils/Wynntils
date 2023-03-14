@@ -33,7 +33,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
         if (!Models.Container.isAbilityTreeScreen(gui)) return;
 
-        boolean up = event.isScrollingUp() ^ invertScroll;
+        boolean up = event.isScrollingUp() ^ invertScroll.get();
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
 
         ContainerUtils.clickOnSlot(

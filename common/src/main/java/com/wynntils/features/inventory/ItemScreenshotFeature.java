@@ -122,7 +122,7 @@ public class ItemScreenshotFeature extends UserFeature {
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
 
-        if (saveToDisk) {
+        if (saveToDisk.get()) {
             // First try to save it to disk
             String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
                             itemStack.getHoverName().getString()))

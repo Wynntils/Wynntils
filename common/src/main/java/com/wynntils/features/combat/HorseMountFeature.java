@@ -47,7 +47,7 @@ public class HorseMountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (!guaranteedMount) return;
+        if (!guaranteedMount.get()) return;
 
         ItemStack itemStack = McUtils.player().getMainHandItem();
         Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);

@@ -42,7 +42,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
             return;
         }
 
-        packHash = event.getHash();
+        packHash.updateConfig(event.getHash());
         Managers.Config.saveConfig();
     }
 
@@ -70,16 +70,16 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
-        if (packHash == null || packHash.isEmpty() || Objects.equals(appliedHash, packHash)) return;
+        if (packHash == null || packHash.get().isEmpty() || Objects.equals(appliedHash, packHash)) return;
 
         DownloadedPackSource downloadedPackSource = McUtils.mc().getDownloadedPackSource();
 
         File[] files = SERVER_RESOURCE_PACK_DIR.listFiles();
 
         for (File file : files != null ? files : new File[0]) {
-            if (downloadedPackSource.checkHash(packHash, file)) {
+            if (downloadedPackSource.checkHash(packHash.get(), file)) {
                 downloadedPackSource.setServerPack(file, PackSource.DEFAULT);
-                appliedHash = packHash;
+                appliedHash = packHash.get();
                 break;
             }
         }

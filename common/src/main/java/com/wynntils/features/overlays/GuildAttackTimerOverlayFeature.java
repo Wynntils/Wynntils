@@ -42,7 +42,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableAttackTimersOnScoreboard) {
+        if (disableAttackTimersOnScoreboard.get()) {
             if (Models.GuildAttackTimer.isGuildAttackSegment(event.getSegment())
                     && territoryAttackTimerOverlay.isEnabled()) {
                 event.setCanceled(true);
@@ -117,7 +117,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
             textRenderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withTextShadow(textShadow);
+                    .withTextShadow(textShadow.get());
         }
     }
 }

@@ -70,7 +70,7 @@ public class AddCommandExpansionFeature extends UserFeature {
         addPlayerCommandNodes(root);
         addToggleCommandNode(root);
 
-        if (includeDeprecatedCommands) {
+        if (includeDeprecatedCommands.get()) {
             addDeprecatedCommandNodes(root);
         }
     }
@@ -85,7 +85,7 @@ public class AddCommandExpansionFeature extends UserFeature {
             CommandNode<CommandSourceStack> originalNode,
             String aliasName,
             AliasCommandLevel level) {
-        if (includeAliases.ordinal() >= level.ordinal()) {
+        if (includeAliases.get().ordinal() >= level.ordinal()) {
             addNode(root, literal(aliasName).redirect(originalNode).build());
         }
     }

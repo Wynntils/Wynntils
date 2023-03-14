@@ -53,7 +53,7 @@ public class ChatMentionFeature extends UserFeature {
     private Pattern buildPattern() {
         return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
-                        + (!aliases.isEmpty() ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
+                        + (!aliases.get().isEmpty() ? "|" + aliases.get().replace(",", "|") : "") + ")\\b(?!:|])",
                 Pattern.CASE_INSENSITIVE);
     }
 
@@ -64,10 +64,10 @@ public class ChatMentionFeature extends UserFeature {
         Matcher looseMatcher = mentionPattern.matcher(ComponentUtils.getUnformatted(message));
 
         if (looseMatcher.find()) {
-            if (markMention) {
+            if (markMention.get()) {
                 e.setMessage(rewriteComponentTree(message));
             }
-            if (dingMention) {
+            if (dingMention.get()) {
                 McUtils.playSound(SoundEvents.NOTE_BLOCK_PLING.value());
             }
         }

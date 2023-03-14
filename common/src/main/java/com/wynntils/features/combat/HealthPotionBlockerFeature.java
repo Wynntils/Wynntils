@@ -52,7 +52,7 @@ public class HealthPotionBlockerFeature extends UserFeature {
         CappedValue health = Models.Character.getHealth();
         int percentage = health.getPercentageInt();
 
-        if (percentage >= threshold) {
+        if (percentage >= threshold.get()) {
             MutableComponent response = (percentage < 100)
                     ? Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", percentage)
                     : Component.translatable("feature.wynntils.healthPotionBlocker.healthFull");

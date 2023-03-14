@@ -40,13 +40,13 @@ public class AuraTimerOverlayFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (!vignetteOnAura || event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!vignetteOnAura.get() || event.getType() != RenderEvent.ElementType.GUI) return;
         long remainingTimeUntilAura = Models.TowerAuraTimer.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
                 event.getPoseStack(),
-                vignetteColor,
+                vignetteColor.get(),
                 MathUtils.map(remainingTimeUntilAura, Models.TowerAuraTimer.getAuraLength(), 0, 0, MAX_INTENSITY));
     }
 
@@ -72,7 +72,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
 
         @Override
         public CustomColor getRenderColor() {
-            return textColor;
+            return textColor.get();
         }
 
         @Override

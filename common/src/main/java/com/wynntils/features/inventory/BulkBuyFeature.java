@@ -47,7 +47,7 @@ public class BulkBuyFeature extends UserFeature {
         if (!isBulkBuyable(container, e.getItemStack())) return;
 
         if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left Click
-            for (int i = 1; i < bulkBuyAmount; i++) {
+            for (int i = 1; i < bulkBuyAmount.get(); i++) {
                 ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems());
             }
         }
@@ -84,7 +84,7 @@ public class BulkBuyFeature extends UserFeature {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
-        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount;
+        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
         String newLine = priceLine.replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
 

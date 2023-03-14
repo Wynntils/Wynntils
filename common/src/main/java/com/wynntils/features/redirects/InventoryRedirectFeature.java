@@ -45,14 +45,14 @@ public class InventoryRedirectFeature extends UserFeature {
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        if (!redirectEmeraldPouch && !redirectIngredientPouch && !redirectPotionStack) {
+        if (!redirectEmeraldPouch.get() && !redirectIngredientPouch.get() && !redirectPotionStack.get()) {
             return;
         }
 
         Component component = event.getComponent();
         String codedString = ComponentUtils.getCoded(component);
 
-        if (redirectIngredientPouch) {
+        if (redirectIngredientPouch.get()) {
             if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString).matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(codedString);
@@ -60,7 +60,7 @@ public class InventoryRedirectFeature extends UserFeature {
             }
         }
 
-        if (redirectEmeraldPouch) {
+        if (redirectEmeraldPouch.get()) {
             Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString);
             if (matcher.matches()) {
                 event.setCanceled(true);
@@ -81,7 +81,7 @@ public class InventoryRedirectFeature extends UserFeature {
             }
         }
 
-        if (redirectPotionStack) {
+        if (redirectPotionStack.get()) {
             Matcher matcher = POTION_STACK_PATTERN.matcher(codedString);
             if (matcher.matches()) {
                 event.setCanceled(true);

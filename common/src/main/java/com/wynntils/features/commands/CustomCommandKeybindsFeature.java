@@ -58,42 +58,42 @@ public class CustomCommandKeybindsFeature extends UserFeature {
             "Execute 1st Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand1, commandType1));
+            () -> this.executeKeybind(keybindCommand1.get(), commandType1.get()));
 
     @RegisterKeyBind
     private final KeyBind executeKeybind2 = new KeyBind(
             "Execute 2nd Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand2, commandType2));
+            () -> this.executeKeybind(keybindCommand2.get(), commandType2.get()));
 
     @RegisterKeyBind
     private final KeyBind executeKeybind3 = new KeyBind(
             "Execute 3rd Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand3, commandType3));
+            () -> this.executeKeybind(keybindCommand3.get(), commandType3.get()));
 
     @RegisterKeyBind
     private final KeyBind executeKeybind4 = new KeyBind(
             "Execute 4th Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand4, commandType4));
+            () -> this.executeKeybind(keybindCommand4.get(), commandType4.get()));
 
     @RegisterKeyBind
     private final KeyBind executeKeybind5 = new KeyBind(
             "Execute 5th Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand5, commandType5));
+            () -> this.executeKeybind(keybindCommand5.get(), commandType5.get()));
 
     @RegisterKeyBind
     private final KeyBind executeKeybind6 = new KeyBind(
             "Execute 6th Custom Command Keybind",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> this.executeKeybind(keybindCommand6, commandType6));
+            () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {

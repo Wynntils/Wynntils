@@ -23,14 +23,14 @@ public class TooltipVanillaHideFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent.Advanced event) {
-        if (!hideAdvanced) return;
+        if (!hideAdvanced.get()) return;
 
         event.setFlags(TooltipFlag.NORMAL);
     }
 
     @SubscribeEvent
     public void onTooltipFlagsMask(ItemTooltipFlagsEvent.Mask event) {
-        if (!hideAdditionalnfo) return;
+        if (!hideAdditionalnfo.get()) return;
 
         event.setMask(-1);
     }

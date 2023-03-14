@@ -37,8 +37,8 @@ public class PlayerArmorHidingFeature extends UserFeature {
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         switch (event.getSlot()) {
             case HEAD -> {
-                if (!hideHelmets) return;
-                if (!showCosmetics) { // helmet is hidden regardless, no extra logic needed
+                if (!hideHelmets.get()) return;
+                if (!showCosmetics.get()) { // helmet is hidden regardless, no extra logic needed
                     event.setCanceled(true);
                     return;
                 }
@@ -49,15 +49,15 @@ public class PlayerArmorHidingFeature extends UserFeature {
                 return;
             }
             case CHEST -> {
-                if (hideChestplates) event.setCanceled(true);
+                if (hideChestplates.get()) event.setCanceled(true);
                 return;
             }
             case LEGS -> {
-                if (hideLeggings) event.setCanceled(true);
+                if (hideLeggings.get()) event.setCanceled(true);
                 return;
             }
             case FEET -> {
-                if (hideBoots) event.setCanceled(true);
+                if (hideBoots.get()) event.setCanceled(true);
                 return;
             }
         }

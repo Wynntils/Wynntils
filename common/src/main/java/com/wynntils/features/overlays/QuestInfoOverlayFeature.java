@@ -47,7 +47,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.isEnabled()
-                && disableQuestTrackingOnScoreboard
+                && disableQuestTrackingOnScoreboard.get()
                 && Models.Quest.isQuestSegment(event.getSegment())) {
             event.setCanceled(true);
         }
@@ -55,7 +55,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (!autoTrackQuestCoordinates) return;
+        if (!autoTrackQuestCoordinates.get()) return;
         if (event.getQuestInfo() == null) return;
 
         // set if valid
@@ -112,7 +112,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))
                                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow)));
+                                .withTextShadow(this.textShadow.get())));
             }
             return renderTaskList;
         }
@@ -125,7 +125,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))
                                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow));
+                                .withTextShadow(this.textShadow.get()));
             }
         }
 

@@ -48,7 +48,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
         if (overlay == null) return;
 
-        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
+        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal.get()) {
             event.setCanceled(true);
         }
     }
@@ -106,7 +106,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
-            this.textColor = textColor;
+            this.textColor.updateConfig(textColor);
         }
 
         protected float textureHeight() {
@@ -134,7 +134,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
-            float progress = (flip ? -1 : 1) * barProgress.progress();
+            float progress = (flip.get() ? -1 : 1) * barProgress.progress();
             renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
         }
 
@@ -161,7 +161,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     poseStack,
                     bufferSource,
                     universalBarTexture,
-                    this.textColor,
+                    this.textColor.get(),
                     this.getRenderX(),
                     renderY,
                     this.getRenderX() + this.getWidth(),
@@ -184,9 +184,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY,
                             0,
-                            this.textColor,
+                            this.textColor.get(),
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
         }
     }
 
@@ -211,7 +211,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return healthTexture.getHeight();
+            return healthTexture.get().getHeight();
         }
 
         @Override
@@ -226,7 +226,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
@@ -245,8 +245,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = healthTexture.getTextureY1();
-                int textureY2 = healthTexture.getTextureY2();
+                int textureY1 = healthTexture.get().getTextureY1();
+                int textureY2 = healthTexture.get().getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
                 BufferedRenderUtils.drawProgressBarBackground(
@@ -300,9 +300,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     this.getRenderX() + this.getWidth(),
                     renderY + renderHeight,
                     0,
-                    healthTexture.getTextureY1(),
+                    healthTexture.get().getTextureY1(),
                     81,
-                    healthTexture.getTextureY2(),
+                    healthTexture.get().getTextureY2(),
                     progress);
         }
     }
@@ -361,7 +361,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return manaTexture.getHeight();
+            return manaTexture.get().getHeight();
         }
 
         @Override
@@ -382,7 +382,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
@@ -395,8 +395,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
             if (progress > 1) { // overflowing mana
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = manaTexture.getTextureY1();
-                int textureY2 = manaTexture.getTextureY2();
+                int textureY1 = manaTexture.get().getTextureY1();
+                int textureY2 = manaTexture.get().getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
                 BufferedRenderUtils.drawProgressBarBackground(
@@ -450,9 +450,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     this.getRenderX() + this.getWidth(),
                     renderY + renderHeight,
                     0,
-                    manaTexture.getTextureY1(),
+                    manaTexture.get().getTextureY1(),
                     81,
-                    manaTexture.getTextureY2(),
+                    manaTexture.get().getTextureY2(),
                     progress);
         }
     }

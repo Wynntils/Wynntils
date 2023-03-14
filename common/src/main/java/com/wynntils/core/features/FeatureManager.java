@@ -316,7 +316,7 @@ public final class FeatureManager extends Manager {
         // determine if feature should be enabled & set default enabled value for user features
         boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
         if (feature instanceof UserFeature userFeature) {
-            userFeature.userEnabled = !startDisabled;
+            userFeature.userEnabled.updateConfig(!startDisabled);
         }
 
         // init overlays before ConfigManager
@@ -333,7 +333,7 @@ public final class FeatureManager extends Manager {
         feature.init();
 
         if (feature instanceof UserFeature userFeature) {
-            if (!userFeature.userEnabled) return; // not enabled by user
+            if (!userFeature.userEnabled.get()) return; // not enabled by user
 
             userFeature.enable();
         } else if (!startDisabled) {

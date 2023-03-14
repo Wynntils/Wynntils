@@ -28,13 +28,13 @@ public class ChatTimestampFeature extends UserFeature {
     @ConfigInfo
     public Config<String> formatPattern = new Config<>("HH:mm:ss");
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern, Locale.ROOT);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         // Try to set the new format string and if it fails revert to the default
         try {
-            formatter = DateTimeFormatter.ofPattern(formatPattern, Locale.ROOT);
+            formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
         } catch (Exception e) {
             formatter = null;
 

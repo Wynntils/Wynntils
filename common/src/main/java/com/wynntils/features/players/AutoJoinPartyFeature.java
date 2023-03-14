@@ -23,7 +23,7 @@ public class AutoJoinPartyFeature extends UserFeature {
 
     @SubscribeEvent
     public void onPartyInvite(PartyEvent.Invited event) {
-        if (onlyFriends && !Models.Friends.isFriend(event.getPlayerName())) return;
+        if (onlyFriends.get() && !Models.Friends.isFriend(event.getPlayerName())) return;
         if (Models.Party.isInParty()) return;
 
         Managers.Notification.queueMessage("Auto-joined " + event.getPlayerName() + "'s party");

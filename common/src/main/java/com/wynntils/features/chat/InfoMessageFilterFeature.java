@@ -60,27 +60,27 @@ public class InfoMessageFilterFeature extends UserFeature {
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {
-            if (hideSystemInfo) {
+            if (hideSystemInfo.get()) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (WELCOME_1.matcher(msg).find() || WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
-            if (hideLevelUp) {
+            if (hideLevelUp.get()) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (PRE_WELCOME_1.matcher(msg).find()
                         || PRE_WELCOME_2.matcher(msg).find()
                         || PRE_WELCOME_3.matcher(msg).find()) {
@@ -89,14 +89,14 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
-            if (hideSystemInfo) {
+            if (hideSystemInfo.get()) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideLevelUp) {
+            if (hideLevelUp.get()) {
                 if (BACKGROUND_LEVEL_UP_1.matcher(msg).find()
                         || BACKGROUND_LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -104,7 +104,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (BACKGROUND_WELCOME_1.matcher(msg).find()
                         || BACKGROUND_WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);

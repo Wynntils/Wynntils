@@ -44,13 +44,13 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     protected Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
-        this.position = position;
-        this.size = new GuiScaledOverlaySize(width, height);
+        this.position = new Config<>(position);
+        this.size = new Config<>(new GuiScaledOverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {
-        this.position = position;
-        this.size = size;
+        this.position = new Config<>(position);
+        this.size = new Config<>(size);
     }
 
     protected Overlay(
@@ -58,10 +58,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        this.position = position;
-        this.size = size;
-        this.horizontalAlignmentOverride = horizontalAlignmentOverride;
-        this.verticalAlignmentOverride = verticalAlignmentOverride;
+        this.position = new Config<>(position);
+        this.size = new Config<>(size);
+        this.horizontalAlignmentOverride = new Config<>(horizontalAlignmentOverride);
+        this.verticalAlignmentOverride = new Config<>(verticalAlignmentOverride);
     }
 
     public abstract void render(
@@ -117,7 +117,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public Boolean isUserEnabled() {
-        return userEnabled;
+        return userEnabled.get();
     }
 
     public boolean isEnabled() {
@@ -137,33 +137,33 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public float getWidth() {
-        return this.size.getWidth();
+        return this.size.get().getWidth();
     }
 
     public float getHeight() {
-        return this.size.getHeight();
+        return this.size.get().getHeight();
     }
 
     public OverlaySize getSize() {
-        return size;
+        return size.get();
     }
 
     public OverlayPosition getPosition() {
-        return position;
+        return position.get();
     }
 
     public void setPosition(OverlayPosition position) {
-        this.position = position;
+        this.position.updateConfig(position);
     }
 
     // Return the X where the overlay should be rendered
     public float getRenderX() {
-        return getRenderX(this.position);
+        return getRenderX(this.position.get());
     }
 
     // Return the Y where the overlay should be rendered
     public float getRenderY() {
-        return getRenderY(this.position);
+        return getRenderY(this.position.get());
     }
 
     public float getRenderX(OverlayPosition position) {
@@ -185,11 +185,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public HorizontalAlignment getRenderHorizontalAlignment() {
-        return horizontalAlignmentOverride == null ? position.getHorizontalAlignment() : horizontalAlignmentOverride;
+        return horizontalAlignmentOverride == null
+                ? position.get().getHorizontalAlignment()
+                : horizontalAlignmentOverride.get();
     }
 
     public VerticalAlignment getRenderVerticalAlignment() {
-        return verticalAlignmentOverride == null ? position.getVerticalAlignment() : verticalAlignmentOverride;
+        return verticalAlignmentOverride == null
+                ? position.get().getVerticalAlignment()
+                : verticalAlignmentOverride.get();
     }
 
     public Vec2 getCornerPoints(Corner corner) {

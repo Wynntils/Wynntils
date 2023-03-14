@@ -70,7 +70,7 @@ public class SpellCastRenderFeature extends UserFeature {
 
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost = (float) manaCost / Models.Character.getMana().current();
-        intensity = vignetteIntensity * relativeCost;
+        intensity = vignetteIntensity.get() * relativeCost;
         spellTimer = SHOW_TICKS;
     }
 
@@ -90,13 +90,13 @@ public class SpellCastRenderFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRender(RenderEvent.Post event) {
-        if (!renderVignette || intensity <= 0f) return;
+        if (!renderVignette.get() || intensity <= 0f) return;
 
         int shownTicks = SHOW_TICKS - spellTimer;
-        int fade = vignetteFadeTime - shownTicks;
+        int fade = vignetteFadeTime.get() - shownTicks;
         if (fade > 0) {
-            float alpha = intensity * ((float) fade / vignetteFadeTime);
-            RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor, alpha);
+            float alpha = intensity * ((float) fade / vignetteFadeTime.get());
+            RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor.get(), alpha);
         }
     }
 

@@ -47,7 +47,7 @@ public class ArrowShieldTrackingFeature extends UserFeature {
 
         @Override
         public CustomColor getRenderColor() {
-            return textColor;
+            return textColor.get();
         }
 
         @Override

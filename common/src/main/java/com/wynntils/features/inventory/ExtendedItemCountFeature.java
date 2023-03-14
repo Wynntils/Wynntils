@@ -44,8 +44,8 @@ public class ExtendedItemCountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onItemCountOverlay(ItemCountOverlayRenderEvent event) {
-        if (isInventory && !inventoryTextOverlayEnabled) return;
-        if (!isInventory && !hotbarTextOverlayEnabled) return;
+        if (isInventory && !inventoryTextOverlayEnabled.get()) return;
+        if (!isInventory && !hotbarTextOverlayEnabled.get()) return;
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;

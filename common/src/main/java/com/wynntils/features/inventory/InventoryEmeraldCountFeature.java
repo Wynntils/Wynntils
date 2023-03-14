@@ -63,12 +63,12 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
         int topEmeralds;
         if (isInventory) {
-            if (!showInventoryEmeraldCount) return;
+            if (!showInventoryEmeraldCount.get()) return;
             topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount) topEmeralds += Models.Emerald.getAmountInContainer();
-            if (combineInventoryAndContainer && showInventoryEmeraldCount) {
+            if (showContainerEmeraldCount.get()) topEmeralds += Models.Emerald.getAmountInContainer();
+            if (combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
                 topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
@@ -76,20 +76,21 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         int x = containerScreen.leftPos;
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
-            switch (emeraldCountType) {
+            switch (emeraldCountType.get()) {
                 case Text -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
-                case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount);
+                case Texture -> renderTexturedCount(
+                        event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount.get());
             }
         }
 
-        if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
+        if (!isInventory && !combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
             int bottomEmeralds = Models.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
-                switch (emeraldCountType) {
+                switch (emeraldCountType.get()) {
                     case Text -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
                     case Texture -> renderTexturedCount(
-                            event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount);
+                            event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount.get());
                 }
             }
         }
@@ -103,7 +104,7 @@ public class InventoryEmeraldCountFeature extends UserFeature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
-            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount);
+            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount.get());
         }
 
         FontRenderer.getInstance()

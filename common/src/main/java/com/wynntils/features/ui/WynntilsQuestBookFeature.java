@@ -44,21 +44,21 @@ public class WynntilsQuestBookFeature extends UserFeature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.Interact event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
@@ -71,7 +71,7 @@ public class WynntilsQuestBookFeature extends UserFeature {
             event.setCanceled(true);
             McUtils.mc()
                     .setScreen(
-                            questBookShouldOpenWynntilsMenu
+                            questBookShouldOpenWynntilsMenu.get()
                                     ? WynntilsMenuScreen.create()
                                     : WynntilsQuestBookScreen.create());
         }

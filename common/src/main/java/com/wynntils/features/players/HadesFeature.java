@@ -33,21 +33,21 @@ public class HadesFeature extends UserFeature {
     protected void onConfigUpdate(ConfigHolder configHolder) {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
-                if (getOtherPlayerInfo) {
+                if (getOtherPlayerInfo.get()) {
                     Models.Hades.tryResendWorldData();
                 } else {
                     Models.Hades.resetHadesUsers();
                 }
             }
             case "shareWithParty" -> {
-                if (shareWithParty) {
+                if (shareWithParty.get()) {
                     Models.Party.requestData();
                 } else {
                     Models.Hades.resetSocialType(SocialType.PARTY);
                 }
             }
             case "shareWithFriends" -> {
-                if (shareWithFriends) {
+                if (shareWithFriends.get()) {
                     Models.Friends.requestData();
                 } else {
                     Models.Hades.resetSocialType(SocialType.FRIEND);
