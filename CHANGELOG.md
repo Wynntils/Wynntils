@@ -1,9 +1,21 @@
+## [0.0.2-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.337...v0.0.2-alpha.338) (2023-03-14)
+
+
+### Bug Fixes
+
+* Fix Telemetry command when using specific mods ([#1331](https://github.com/Wynntils/Artemis/issues/1331)) ([cd8f510](https://github.com/Wynntils/Artemis/commit/cd8f510e1dc1acb2dbf9f1fb3273396fdb1b52e4))
+
 ## [0.0.2-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.336...v0.0.2-alpha.337) (2023-03-13)
 
 
 ### Bug Fixes
 
 * Actually fix race in chat tabs ([#1329](https://github.com/Wynntils/Artemis/issues/1329)) ([0f08cf9](https://github.com/Wynntils/Artemis/commit/0f08cf9868891c469f8d422c62c3df312c81f179))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.337 [skip ci] ([973a8ef](https://github.com/Wynntils/Artemis/commit/973a8efc55dcc83c09233a71e29c3f4b6f960d34))
 
 ## [0.0.2-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.335...v0.0.2-alpha.336) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.334 [skip ci] ([1f8ac82](https://github.com/Wynntils/Artemis/commit/1f8ac82eb947d270c46eb560ffddaaf7f751181a))
-
-## [0.0.2-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.332...v0.0.2-alpha.333) (2023-03-13)
-
-
-### Bug Fixes
-
-* Fix NPE in ItemLockFeature ([#1321](https://github.com/Wynntils/Artemis/issues/1321)) ([3d3af36](https://github.com/Wynntils/Artemis/commit/3d3af36b53039d742ddcc74f3eabd350efdbac5a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.333 [skip ci] ([74c20e8](https://github.com/Wynntils/Artemis/commit/74c20e83607bcd0a96a8352f9d0af562c575d956))
 
