@@ -62,7 +62,7 @@ public abstract class DynamicOverlay extends Overlay {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean shouldBeEnabled() {
         if (!isParentEnabled()) {
             return false;
         }
@@ -77,6 +77,11 @@ public abstract class DynamicOverlay extends Overlay {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
     }
 
     @Override

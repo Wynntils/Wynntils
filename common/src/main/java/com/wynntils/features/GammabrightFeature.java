@@ -53,15 +53,15 @@ public class GammabrightFeature extends UserFeature {
     }
 
     @Override
-    protected void onDisable() {
-        resetGamma();
-    }
-
-    @Override
-    protected void onEnable() {
+    public void onEnable() {
         if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
+    }
+
+    @Override
+    public void onDisable() {
+        resetGamma();
     }
 
     private void applyGammabright() {

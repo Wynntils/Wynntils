@@ -13,9 +13,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.FeatureManager;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.annotations.OverlayGroup;
+import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -37,60 +37,50 @@ public final class ConfigManager extends Manager {
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
 
-    private static final List<ConfigHolder> OVERLAY_GROUP_CONFIG_HOLDERS = new ArrayList<>();
-    private static final List<OverlayGroupHolder> OVERLAY_GROUP_FIELDS = new ArrayList<>();
-
     private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(ConfigUpfixerManager configUpfixerManager, JsonManager jsonManager) {
-        super(List.of(configUpfixerManager, jsonManager));
+    public ConfigManager(
+            ConfigUpfixerManager configUpfixerManager,
+            JsonManager jsonManager,
+            FeatureManager feature,
+            OverlayManager overlay) {
+        super(List.of(configUpfixerManager, jsonManager, feature, overlay));
 
         userConfig = new File(CONFIGS, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+    }
 
+    public void init() {
         // First, we load the config file
         configObject = Managers.Json.loadPreciousJson(userConfig);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (configUpfixerManager.runUpfixers(configObject)) {
+        if (Managers.ConfigUpfixer.runUpfixers(configObject)) {
             Managers.Json.savePreciousJson(userConfig, configObject);
         }
+
+        // Register all features and overlays
+        Managers.Feature.getFeatures().forEach(this::registerFeature);
+
+        // Finish off the config init process
+
+        // Load configs for all features
+        Managers.Config.reloadConfiguration();
+
+        // Save config file after loading all configurables' options
+        Managers.Config.saveConfig();
+
+        // Create default config file containing all configurables' options
+        Managers.Config.saveDefaultConfig();
     }
 
     public void registerFeature(Feature feature) {
-        registerOverlayGroups(feature);
-
-        for (Overlay overlay : feature.getOverlays()) {
-            registerConfigOptions(overlay);
-        }
-
         registerConfigOptions(feature);
-    }
 
-    private void registerOverlayGroups(Feature feature) {
-        List<OverlayGroupHolder> holders = Stream.of(feature.getClass().getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(OverlayGroup.class))
-                .map(field -> new OverlayGroupHolder(
-                        field, feature, field.getAnnotation(OverlayGroup.class).instances()))
-                .toList();
-
-        if (holders.isEmpty()) return;
-
-        OVERLAY_GROUP_FIELDS.addAll(holders);
-        feature.addOverlayGroups(holders);
-
-        for (OverlayGroupHolder holder : holders) {
-            holder.initGroup(
-                    IntStream.rangeClosed(1, holder.getDefaultCount()).boxed().toList());
-
-            List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
-                    .map(this::getConfigOptions)
-                    .flatMap(List::stream)
-                    .toList();
-
-            holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
-
-            OVERLAY_GROUP_CONFIG_HOLDERS.addAll(overlayHolders);
+        for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
+                .filter(overlay -> !overlay.isDynamic())
+                .toList()) {
+            registerConfigOptions(overlay);
         }
     }
 
@@ -122,22 +112,20 @@ public final class ConfigManager extends Manager {
     //       this, for now.
     public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
         // We have to set up the overlay groups first, so that the overlays' configs can be loaded
-        List<ConfigHolder> oldOverlayHolders = new ArrayList<>(OVERLAY_GROUP_CONFIG_HOLDERS);
-        OVERLAY_GROUP_CONFIG_HOLDERS.clear();
-
         JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, OVERLAY_GROUPS_JSON_KEY);
 
-        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
+        for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
             if (initOverlayGroups) {
-                JsonArray ids = JsonUtils.getNullableJsonArray(overlayGroups, holder.getConfigKey());
+                if (overlayGroups.has(holder.getConfigKey())) {
+                    JsonArray ids = JsonUtils.getNullableJsonArray(overlayGroups, holder.getConfigKey());
 
-                List<Integer> idList = overlayGroups.has(holder.getConfigKey())
-                        ? ids.asList().stream().map(JsonElement::getAsInt).toList()
-                        : IntStream.rangeClosed(1, holder.getDefaultCount())
-                                .boxed()
-                                .toList();
+                    List<Integer> idList =
+                            ids.asList().stream().map(JsonElement::getAsInt).toList();
 
-                holder.initGroup(idList);
+                    Managers.Overlay.createOverlayGroupWithIds(holder, idList);
+                } else {
+                    Managers.Overlay.createOverlayGroupWithDefaults(holder);
+                }
             }
 
             List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
@@ -145,12 +133,7 @@ public final class ConfigManager extends Manager {
                     .flatMap(List::stream)
                     .toList();
 
-            holder.getOverlays().forEach(overlay -> overlay.removeConfigOptions(oldOverlayHolders));
             holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
-
-            holder.getParent().initOverlayGroups();
-
-            OVERLAY_GROUP_CONFIG_HOLDERS.addAll(overlayHolders);
         }
 
         for (ConfigHolder holder : getConfigHolderList()) {
@@ -169,13 +152,22 @@ public final class ConfigManager extends Manager {
         }
 
         // Newly created group overlays need to be enabled
-        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
-            holder.getParent().enableOverlays();
+        for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
+            Managers.Overlay.enableOverlays(holder.getParent());
         }
     }
 
     private static List<ConfigHolder> getConfigHolderList() {
-        return Stream.concat(CONFIG_HOLDERS.stream(), OVERLAY_GROUP_CONFIG_HOLDERS.stream())
+        // This breaks the concept of "manager holds all config holders at all times". Instead we get the group
+        // overlays' configs from the overlay instance itself, to save us some trouble.
+
+        return Stream.concat(
+                        CONFIG_HOLDERS.stream(),
+                        Managers.Overlay.getOverlayGroups().stream()
+                                .map(OverlayGroupHolder::getOverlays)
+                                .flatMap(List::stream)
+                                .map(Overlay::getConfigOptions)
+                                .flatMap(List::stream))
                 .toList();
     }
 
@@ -197,7 +189,7 @@ public final class ConfigManager extends Manager {
 
         // Save overlay groups
         JsonObject overlayGroups = new JsonObject();
-        for (OverlayGroupHolder holder : OVERLAY_GROUP_FIELDS) {
+        for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
             JsonArray ids = new JsonArray();
 
             holder.getOverlays().stream()
