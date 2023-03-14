@@ -5,20 +5,22 @@
 package com.wynntils.utils.mc.type;
 
 import com.wynntils.models.map.PoiLocation;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
-public class Location extends Vector3d implements Position {
-    public Location(double x, double y, double z) {
-        super(x, y, z);
-    }
+public class Location {
+    public final int x;
+    public final int y;
+    public final int z;
 
-    public Location(Entity entity) {
-        this(entity.getX(), entity.getY(), entity.getZ());
+    public Location(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public Location(BlockPos pos) {
@@ -29,68 +31,13 @@ public class Location extends Vector3d implements Position {
         this(location.getX(), location.getY().orElse(0), location.getZ());
     }
 
-    public Location(Position location) {
-        this(location.x(), location.y(), location.z());
+    public static Location containing(Position position) {
+        return new Location(
+                MathUtils.floor(position.x()), MathUtils.floor(position.y()), MathUtils.floor(position.z()));
     }
 
-    public Location add(double x, double y, double z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
-
-        return this;
-    }
-
-    // An egregious circumvention of the type system; Should have two signatures:
-    // public void subtract(Vector3d) and public Vector3d subtract(Point3d), but that would
-    // be confusing for method chaining, so just subtract *anything*, and this location might become
-    // a vector if we subtracted another location.
-    public Location subtract(Vector3d loc) {
-        x -= loc.x;
-        y -= loc.y;
-        z -= loc.z;
-
-        return this;
-    }
-
-    public Location subtract(double x, double y, double z) {
-        this.x -= x;
-        this.y -= y;
-        this.z -= z;
-
-        return this;
-    }
-
-    public Location subtract(double amount) {
-        this.x -= amount;
-        this.y -= amount;
-        this.z -= amount;
-
-        return this;
-    }
-
-    public Location multiply(Vector3d loc) {
-        x *= loc.x;
-        y *= loc.y;
-        z *= loc.z;
-
-        return this;
-    }
-
-    public Location multiply(double x, double y, double z) {
-        this.x *= x;
-        this.y *= y;
-        this.z *= z;
-
-        return this;
-    }
-
-    public Location multiply(double amount) {
-        this.x *= amount;
-        this.y *= amount;
-        this.z *= amount;
-
-        return this;
+    public static Location containing(double x, double y, double z) {
+        return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
     public BlockPos toBlockPos() {
@@ -99,12 +46,6 @@ public class Location extends Vector3d implements Position {
 
     public Vec3 toVec3() {
         return new Vec3(x, y, z);
-    }
-
-    @Override
-    public Location clone() throws CloneNotSupportedException {
-        super.clone();
-        return new Location(x, y, z);
     }
 
     @Override
@@ -117,27 +58,19 @@ public class Location extends Vector3d implements Position {
         return false;
     }
 
-    public boolean equals(Vector3d other) {
-        if (other == null) return false;
-        return x == other.x && y == other.y && z == other.z;
-    }
-
     public String toString() {
         return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
     }
 
-    @Override
-    public double x() {
+    public int x() {
         return x;
     }
 
-    @Override
-    public double y() {
+    public int y() {
         return y;
     }
 
-    @Override
-    public double z() {
+    public int z() {
         return z;
     }
 }

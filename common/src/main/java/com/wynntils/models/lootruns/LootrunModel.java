@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
@@ -244,7 +245,7 @@ public final class LootrunModel extends Model {
         return activeLootrun.notes();
     }
 
-    public Vec3 getStartingPoint() {
+    public Position getStartingPoint() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return null;
 

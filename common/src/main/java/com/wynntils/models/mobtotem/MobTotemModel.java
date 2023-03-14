@@ -10,7 +10,7 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +47,7 @@ public class MobTotemModel extends Model {
 
             if (mobTotems.containsKey(mobTotemId)) return; // If the totem is already in the list, don't add it again
 
-            mobTotems.put(mobTotemId, new MobTotem(new Location(as), nameMatcher.group(1)));
+            mobTotems.put(mobTotemId, new MobTotem(PosUtils.newPosition(as), nameMatcher.group(1)));
             return;
         }
 
@@ -57,9 +57,9 @@ public class MobTotemModel extends Model {
         mobTotems.values().stream()
                 .filter(
                         // Exact equality is fine here because the totem is stationary
-                        mobTotem -> as.getX() == mobTotem.getLocation().x()
-                                && as.getY() == (mobTotem.getLocation().y() + TOTEM_COORDINATE_DIFFERENCE)
-                                && as.getZ() == mobTotem.getLocation().z())
+                        mobTotem -> as.getX() == mobTotem.getPosition().x()
+                                && as.getY() == (mobTotem.getPosition().y() + TOTEM_COORDINATE_DIFFERENCE)
+                                && as.getZ() == mobTotem.getPosition().z())
                 .forEach(mobTotem -> mobTotem.setTimerString(timerMatcher.group(1)));
     }
 

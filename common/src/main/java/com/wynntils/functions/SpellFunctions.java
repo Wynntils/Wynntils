@@ -9,6 +9,8 @@ import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -81,7 +83,7 @@ public class SpellFunctions {
                 return "";
             }
 
-            return shamanTotem.getLocation().toString();
+            return Location.containing(shamanTotem.getPosition()).toString();
         }
 
         @Override
@@ -123,9 +125,7 @@ public class SpellFunctions {
                 return 0d;
             }
 
-            return McUtils.player()
-                    .position()
-                    .distanceTo(shamanTotem.getLocation().toVec3());
+            return McUtils.player().position().distanceTo(PosUtils.toVec3(shamanTotem.getPosition()));
         }
 
         @Override

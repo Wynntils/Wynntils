@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.models.lootruns.type.BlockValidness;
 import com.wynntils.models.lootruns.type.ColoredPath;
-import com.wynntils.models.lootruns.type.ColoredPoint;
+import com.wynntils.models.lootruns.type.ColoredPosition;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -28,12 +28,12 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -98,9 +98,9 @@ public final class LootrunRenderer {
         Font font = McUtils.mc().font;
 
         for (LootrunNote note : notes) {
-            Vec3 location = note.position();
+            Position position = note.position();
             poseStack.pushPose();
-            poseStack.translate(location.x, location.y + 2, location.z);
+            poseStack.translate(position.x(), position.y() + 2, position.z());
             poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
             poseStack.scale(-0.025f, -0.025f, 0.025f);
             Matrix4f pose = poseStack.last().pose();
@@ -155,8 +155,8 @@ public final class LootrunRenderer {
             boolean pauseDraw = false;
             BlockPos lastBlockPos = null;
 
-            for (ColoredPoint point : locationsInRoute.points()) {
-                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
+            for (ColoredPosition point : locationsInRoute.points()) {
+                BlockPos blockPos = PosUtils.newBlockPos(point.position());
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
                     if (!toRender.points().isEmpty()) {
@@ -208,20 +208,20 @@ public final class LootrunRenderer {
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
-            List<Pair<ColoredPoint, ColoredPoint>> toRender = new ArrayList<>();
+            List<Pair<ColoredPosition, ColoredPosition>> toRender = new ArrayList<>();
             boolean sourceBatchEnded = false;
             BlockPos lastBlockPos = null;
 
             boolean pauseDraw = false;
 
             for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
-                ColoredPoint point = locationsInRoute.points().get(i);
-                BlockPos blockPos = PosUtils.newBlockPos(point.vec3());
+                ColoredPosition point = locationsInRoute.points().get(i);
+                BlockPos blockPos = PosUtils.newBlockPos(point.position());
 
-                ColoredPoint end = locationsInRoute
+                ColoredPosition end = locationsInRoute
                         .points()
                         .get(Math.min(locationsInRoute.points().size() - 1, i + 1));
-                Pair<ColoredPoint, ColoredPoint> pointPair = new Pair<>(point, end);
+                Pair<ColoredPosition, ColoredPosition> pointPair = new Pair<>(point, end);
 
                 if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
                     if (!toRender.isEmpty()) {
@@ -266,38 +266,40 @@ public final class LootrunRenderer {
     }
 
     private static void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
-        for (ColoredPoint location : toRender.points()) {
-            renderPoint(consumer, lastMatrix, location);
+        for (ColoredPosition position : toRender.points()) {
+            renderPoint(consumer, lastMatrix, position);
         }
     }
 
-    private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPoint location) {
-        Vec3 rawLocation = location.vec3();
-        int pathColor = location.color();
-        consumer.vertex(lastMatrix, (float) rawLocation.x, (float) rawLocation.y, (float) rawLocation.z)
+    private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPosition coloredPosition) {
+        Position position = coloredPosition.position();
+        int pathColor = coloredPosition.color();
+        consumer.vertex(lastMatrix, (float) position.x(), (float) position.y(), (float) position.z())
                 .color(pathColor)
                 .normal(0, 0, 1)
                 .endVertex();
     }
 
     private static void renderTexturedQueuedPoints(
-            List<Pair<ColoredPoint, ColoredPoint>> pointPairList, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        for (Pair<ColoredPoint, ColoredPoint> pointPair : pointPairList) {
+            List<Pair<ColoredPosition, ColoredPosition>> pointPairList,
+            PoseStack poseStack,
+            VertexConsumer vertexConsumer) {
+        for (Pair<ColoredPosition, ColoredPosition> pointPair : pointPairList) {
             renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
         }
     }
 
     private static void renderTexturedPoint(
-            Pair<ColoredPoint, ColoredPoint> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
+            Pair<ColoredPosition, ColoredPosition> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
         renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
     }
 
     private static void renderTexturedPoint(
-            ColoredPoint start, ColoredPoint end, PoseStack poseStack, VertexConsumer vertexConsumer) {
+            ColoredPosition start, ColoredPosition end, PoseStack poseStack, VertexConsumer vertexConsumer) {
         Vector3f camPos =
                 McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
-        Vector3f startVec = start.vec3().toVector3f();
-        Vector3f endVec = end.vec3().toVector3f();
+        Vector3f startVec = start.position().toVector3f();
+        Vector3f endVec = end.position().toVector3f();
         int color = start.color();
 
         // vertex position delta to starting point

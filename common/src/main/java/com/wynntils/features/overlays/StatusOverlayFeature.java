@@ -18,7 +18,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.character.event.StatusEffectsChangedEvent;
+import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -42,7 +42,7 @@ public class StatusOverlayFeature extends UserFeature {
     }
 
     private void recalculateRenderCache() {
-        renderCache = Models.Character.getStatusEffects().stream()
+        renderCache = Models.StatusEffect.getStatusEffects().stream()
                 .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
                 .toList();
     }

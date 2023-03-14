@@ -108,8 +108,7 @@ public class QuestButton extends WynntilsButton {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             Optional<Location> nextLocation = this.questInfo.getNextLocation();
 
-            nextLocation.ifPresent(
-                    location -> McUtils.mc().setScreen(MainMapScreen.create((float) location.x, (float) location.z)));
+            nextLocation.ifPresent(location -> McUtils.mc().setScreen(MainMapScreen.create(location.x, location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             openQuestWiki();
         }
