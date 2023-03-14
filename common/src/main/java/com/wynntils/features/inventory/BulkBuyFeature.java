@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -30,7 +30,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class BulkBuyFeature extends UserFeature {
+public class BulkBuyFeature extends Feature {
     @Config
     public int bulkBuyAmount = 4;
 

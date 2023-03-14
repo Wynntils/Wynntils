@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -18,7 +18,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
-public class CosmeticsPreviewFeature extends UserFeature {
+public class CosmeticsPreviewFeature extends Feature {
     private static final String WEAPON_COSMETICS_TITLE = "Weapon Cosmetics";
     private static final String HELMET_COSMETICS_TITLE = "Helmet Cosmetics";
     private static final String GUILD_GEAR_MENU_TITLE = "Guild Cosmetics";

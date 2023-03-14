@@ -6,7 +6,7 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ArmSwingEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * casting spells just by dropping items from the inventory screen.
  */
 @ConfigCategory(Category.COMBAT)
-public class FixCastingSpellsFromInventoryFeature extends UserFeature {
+public class FixCastingSpellsFromInventoryFeature extends Feature {
     @SubscribeEvent
     public void onSetSlot(ArmSwingEvent event) {
         if (event.getActionContext() == ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN
