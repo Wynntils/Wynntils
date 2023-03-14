@@ -16,6 +16,7 @@ import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.features.overlays.sizes.RestrictedRangeOverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -24,24 +25,29 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
+    private static final OverlayPosition DUMMY_POSITION = new OverlayPosition(
+            5, 5, VerticalAlignment.Top, HorizontalAlignment.Left, OverlayPosition.AnchorSection.TopLeft);
+    private static final OverlaySize DUMMY_SIZE = new RestrictedRangeOverlaySize();
+
     @ConfigInfo(key = "overlay.wynntils.overlay.position", visible = false)
-    public final Config<OverlayPosition> position = new Config<>(null);
+    public final Config<OverlayPosition> position = new Config<>(DUMMY_POSITION);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.size", visible = false)
-    public final Config<OverlaySize> size = new Config<>(null);
+    public final Config<OverlaySize> size = new Config<>(DUMMY_SIZE);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.userEnabled")
-    public final Config<Boolean> userEnabled = new Config<>(null);
+    public final Config<Boolean> userEnabled = new Config<>(true);
+
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @ConfigInfo(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    public final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
+    public final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(HorizontalAlignment.Center);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    public final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+    public final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(VerticalAlignment.Middle);
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.updateConfig(position);

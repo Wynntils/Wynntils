@@ -102,7 +102,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         // hacky override of custom color
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public final Config<CustomColor> textColor = new Config<>(null);
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
