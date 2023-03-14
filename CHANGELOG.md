@@ -1,9 +1,21 @@
+## [0.0.2-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.339...v0.0.2-alpha.340) (2023-03-14)
+
+
+### Code Refactoring
+
+* Sort out position <-> location ([#1332](https://github.com/Wynntils/Artemis/issues/1332)) ([1487894](https://github.com/Wynntils/Artemis/commit/14878946b1d9ed306a315da23d4558d19f2d20e1))
+
 ## [0.0.2-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.338...v0.0.2-alpha.339) (2023-03-14)
 
 
 ### Code Refactoring
 
 * Clean up Feature, FeatureManager, related managers and overlay groups ([#1314](https://github.com/Wynntils/Artemis/issues/1314)) ([eb81e0d](https://github.com/Wynntils/Artemis/commit/eb81e0d014e1b504396cf9759ec6b70677c0236f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.339 [skip ci] ([f94aed4](https://github.com/Wynntils/Artemis/commit/f94aed48edda5342c610bdfa69d801ebd1011d5a))
 
 ## [0.0.2-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.337...v0.0.2-alpha.338) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.336 [skip ci] ([7e6a7cb](https://github.com/Wynntils/Artemis/commit/7e6a7cbb2b491f926d103d13d25770ddee01e20c))
-
-## [0.0.2-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.334...v0.0.2-alpha.335) (2023-03-13)
-
-
-### Bug Fixes
-
-* Validate downloaded update hash before applying ([#1325](https://github.com/Wynntils/Artemis/issues/1325)) ([2dea196](https://github.com/Wynntils/Artemis/commit/2dea19616f8782d2560d2e86f4ca717f9c02d993))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.335 [skip ci] ([521d398](https://github.com/Wynntils/Artemis/commit/521d39869e1f6f57259e791a711b2dc9b80d74e6))
 
