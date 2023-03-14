@@ -46,11 +46,11 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard) {
             ScoreboardSegment segment = event.getSegment();
-            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
                 return;
             }

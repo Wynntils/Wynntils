@@ -47,7 +47,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
         if (overlay == null) return;
 
-        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
+        if (overlay.shouldBeEnabled() && !overlay.shouldDisplayOriginal) {
             event.setCanceled(true);
         }
     }
@@ -225,7 +225,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
@@ -381,7 +381,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal);
         }
 
         @Override
