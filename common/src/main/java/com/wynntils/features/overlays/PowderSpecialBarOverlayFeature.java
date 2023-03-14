@@ -62,8 +62,8 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            float powderSpecialCharge = Models.Character.getPowderSpecialCharge();
-            Powder powderSpecialType = Models.Character.getPowderSpecialType();
+            float powderSpecialCharge = Models.CharacterStats.getPowderSpecialCharge();
+            Powder powderSpecialType = Models.CharacterStats.getPowderSpecialType();
             if (this.onlyIfWeaponHeld
                     && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
             if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;

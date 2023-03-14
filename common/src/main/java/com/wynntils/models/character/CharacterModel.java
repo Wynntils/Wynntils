@@ -5,33 +5,19 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
-import com.wynntils.models.character.actionbar.CoordinatesSegment;
-import com.wynntils.models.character.actionbar.HealthSegment;
-import com.wynntils.models.character.actionbar.ManaSegment;
-import com.wynntils.models.character.actionbar.PowderSpecialSegment;
-import com.wynntils.models.character.actionbar.SprintSegment;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.character.event.StatusEffectsChangedEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.character.type.StatusEffect;
-import com.wynntils.models.elements.type.Powder;
-import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,31 +37,6 @@ public final class CharacterModel extends Model {
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
 
-    /**
-     * CG1 is the color and symbol used for the effect, and the strength modifier string (e.g. "79%")
-     * NCG1 is for strength modifiers without a decimal, and the % sign
-     * NCG2 is the decimal point and second \d+ option for strength modifiers with a decimal
-     * CG2 is the actual name of the effect
-     * CG3 is the duration string (eg. "1:23")
-     * Note: Buffs like "+190 Main Attack Damage" will have the +190 be considered as part of the name.
-     * Buffs like "17% Frenzy" will have the 17% be considered as part of the prefix.
-     * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
-     * <p>
-     * https://regexr.com/7999h
-     *
-     * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
-     */
-    private static final Pattern STATUS_EFFECT_PATTERN =
-            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
-
-    private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
-
-    private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
-    private final HealthSegment healthSegment = new HealthSegment();
-    private final ManaSegment manaSegment = new ManaSegment();
-    private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
-    private final SprintSegment sprintSegment = new SprintSegment();
-
     private boolean inCharacterSelection;
     private boolean hasCharacter;
 
@@ -88,85 +49,8 @@ public final class CharacterModel extends Model {
     // This was implemented the same way by legacy.
     private String id = "-";
 
-    private List<StatusEffect> statusEffects = new ArrayList<>();
-
-    public CharacterModel(CombatXpModel combatXpModel) {
-        super(List.of(combatXpModel));
-
-        Handlers.ActionBar.registerSegment(coordinatesSegment);
-        Handlers.ActionBar.registerSegment(healthSegment);
-        Handlers.ActionBar.registerSegment(manaSegment);
-        Handlers.ActionBar.registerSegment(powderSpecialSegment);
-        Handlers.ActionBar.registerSegment(sprintSegment);
-    }
-
-    public List<StatusEffect> getStatusEffects() {
-        return statusEffects;
-    }
-
-    public CappedValue getHealth() {
-        return healthSegment.getHealth();
-    }
-
-    public CappedValue getMana() {
-        return manaSegment.getMana();
-    }
-
-    public float getPowderSpecialCharge() {
-        return powderSpecialSegment.getPowderSpecialCharge();
-    }
-
-    public Powder getPowderSpecialType() {
-        return powderSpecialSegment.getPowderSpecialType();
-    }
-
-    public void hideHealth(boolean shouldHide) {
-        healthSegment.setHidden(shouldHide);
-    }
-
-    public void hideMana(boolean shouldHide) {
-        manaSegment.setHidden(shouldHide);
-    }
-
-    /**
-     * Return the maximum number of soul points the character can currently have
-     */
-    private int getMaxSoulPoints() {
-        // FIXME: If player is veteran, we should always return 15
-        int maxIfNotVeteran =
-                10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
-        if (getCurrentSoulPoints() > maxIfNotVeteran) {
-            return 15;
-        }
-        return maxIfNotVeteran;
-    }
-
-    /**
-     * Return the current number of soul points of the character, or -1 if unable to determine
-     */
-    private int getCurrentSoulPoints() {
-        ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() != Items.NETHER_STAR) {
-            return -1;
-        }
-
-        return soulPoints.getCount();
-    }
-
-    public CappedValue getSoulPoints() {
-        // FIXME: We should be able to cache this
-        return new CappedValue(getCurrentSoulPoints(), getMaxSoulPoints());
-    }
-
-    /**
-     * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
-     *
-     * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
-     * in which case soul points are already full
-     */
-    public int getTicksToNextSoulPoint() {
-        if (McUtils.mc().level == null) return -1;
-        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
+    public CharacterModel() {
+        super(List.of());
     }
 
     public ClassType getClassType() {
@@ -222,42 +106,6 @@ public final class CharacterModel extends Model {
             // We need to parse the current character id from our inventory
             updateCharacterId();
         }
-    }
-
-    @SubscribeEvent
-    public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
-        String footer = event.getFooter();
-
-        if (footer.isEmpty()) {
-            if (!statusEffects.isEmpty()) {
-                statusEffects = new ArrayList<>(); // No timers, get rid of them
-                WynntilsMod.postEvent(new StatusEffectsChangedEvent());
-            }
-
-            return;
-        }
-
-        if (!footer.startsWith(STATUS_EFFECTS_TITLE)) return;
-
-        List<StatusEffect> newStatusEffects = new ArrayList<>();
-
-        String[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
-        for (String effect : effects) {
-            String trimmedEffect = effect.trim();
-            if (trimmedEffect.isEmpty()) continue;
-
-            Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect);
-            if (!m.find()) continue;
-
-            // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            String prefix = m.group(1);
-            String name = m.group(2);
-            String displayedTime = m.group(3);
-            newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
-        }
-
-        statusEffects = newStatusEffects;
-        WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
     private void scanCharacterInfoPage() {
@@ -339,10 +187,6 @@ public final class CharacterModel extends Model {
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
         }
-    }
-
-    private void centerSegmentCleared() {
-        powderSpecialSegment.replaced();
     }
 
     private void parseCharacter(ItemStack itemStack, int id) {

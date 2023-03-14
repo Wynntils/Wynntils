@@ -35,7 +35,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
         addon.add(Component.literal(" "));
 
-        int rawSecondsUntilSoulPoint = Models.Character.getTicksToNextSoulPoint() / 20;
+        int rawSecondsUntilSoulPoint = Models.CharacterStats.getTicksToNextSoulPoint() / 20;
         int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
         int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 
