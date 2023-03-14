@@ -70,7 +70,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
-        if (packHash == null || packHash.get().isEmpty() || Objects.equals(appliedHash, packHash)) return;
+        if (packHash.get() == null || packHash.get().isEmpty() || Objects.equals(appliedHash, packHash.get())) return;
 
         DownloadedPackSource downloadedPackSource = McUtils.mc().getDownloadedPackSource();
 
