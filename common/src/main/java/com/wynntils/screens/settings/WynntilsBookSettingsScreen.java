@@ -131,7 +131,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         String name = "";
         boolean enabled = false;
         if (selected instanceof Overlay selectedOverlay) {
-            enabled = selectedOverlay.isEnabled();
+            enabled = selectedOverlay.shouldBeEnabled();
             name = selectedOverlay.getTranslatedName();
         } else if (selected instanceof Feature selectedFeature) {
             enabled = selectedFeature.isEnabled();
@@ -339,7 +339,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         List<Feature> featureList = Managers.Feature.getFeatures().stream()
                 .filter(feature -> searchMatches(feature)
                         || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains)
-                        || feature.getOverlays().stream()
+                        || Managers.Overlay.getFeatureOverlays(feature).stream()
                                 .anyMatch(overlay -> searchMatches(feature)
                                         || overlay.getVisibleConfigOptions().stream()
                                                 .anyMatch(this::configOptionContains)))
@@ -361,7 +361,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
             configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, feature));
 
-            for (Overlay overlay : feature.getOverlays()) {
+            for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
                 offset++;
                 renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
                 configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
@@ -391,7 +391,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             Stream<Configurable> configurablesList = Stream.concat(
                     Managers.Feature.getFeatures().stream(),
                     Managers.Feature.getFeatures().stream()
-                            .map(Feature::getOverlays)
+                            .map(Managers.Overlay::getFeatureOverlays)
                             .flatMap(Collection::stream)
                             .map(overlay -> (Configurable) overlay));
 

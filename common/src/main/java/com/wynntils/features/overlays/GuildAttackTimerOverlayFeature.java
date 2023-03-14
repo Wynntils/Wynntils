@@ -43,7 +43,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableAttackTimersOnScoreboard) {
             if (Models.GuildAttackTimer.isGuildAttackSegment(event.getSegment())
-                    && territoryAttackTimerOverlay.isEnabled()) {
+                    && territoryAttackTimerOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
             }
         }

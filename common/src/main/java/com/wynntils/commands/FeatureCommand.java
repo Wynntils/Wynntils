@@ -220,7 +220,7 @@ public class FeatureCommand extends Command {
             return 1;
         }
 
-        feature.disable();
+        Managers.Feature.disableFeature(feature);
 
         if (feature.isEnabled()) {
             context.getSource()
@@ -229,7 +229,7 @@ public class FeatureCommand extends Command {
             return 1;
         }
 
-        feature.enable();
+        Managers.Feature.enableFeature(feature);
 
         if (!feature.isEnabled()) {
             context.getSource()
