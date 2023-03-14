@@ -792,7 +792,7 @@ public class ConfigCommand extends Command {
                 .append("\n");
         response.append(Component.literal("Subcategory: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(Component.literal(config.getMetadata().subcategory())))
+                        .append(Component.literal(config.getSubcategory())))
                 .append("\n");
         response.append(Component.literal("Description: ")
                         .withStyle(ChatFormatting.WHITE)

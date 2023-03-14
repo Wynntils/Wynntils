@@ -103,20 +103,28 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public ConfigInfo getMetadata() {
-        return metadata;
+    public String getSubcategory() {
+        return metadata.subcategory();
+    }
+
+    public String getI18nKey() {
+        return metadata.key();
+    }
+
+    public boolean isVisible() {
+        return metadata.visible();
     }
 
     public String getDisplayName() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".name");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".name");
         }
         return ((Translatable) parent).getTranslation(field.getName() + ".name");
     }
 
     public String getDescription() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".description");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".description");
         }
         return ((Translatable) parent).getTranslation(field.getName() + ".description");
     }
