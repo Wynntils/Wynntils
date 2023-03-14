@@ -40,6 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ObjectivesOverlayFeature extends UserFeature {
     private static final float SPACE_BETWEEN = 10;
 
+    @ConfigInfo
     public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

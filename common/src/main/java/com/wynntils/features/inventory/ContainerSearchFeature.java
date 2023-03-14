@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -38,14 +39,19 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends UserFeature {
+    @ConfigInfo
     public final Config<Boolean> filterInBank = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> filterInGuildBank = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
+    @ConfigInfo
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private SearchWidget lastSearchWidget;

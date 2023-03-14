@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
@@ -21,6 +22,7 @@ public class InfoBoxFeature extends UserFeature {
     private final List<InfoBoxOverlay> infoBoxOverlays = new ArrayList<>();
 
     public static class InfoBoxOverlay extends TextOverlay {
+        @ConfigInfo
         public final Config<String> content = new Config<>("");
 
         public InfoBoxOverlay(int id) {

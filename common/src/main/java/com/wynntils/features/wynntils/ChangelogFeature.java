@@ -27,6 +27,7 @@ public class ChangelogFeature extends UserFeature {
     @ConfigInfo(visible = false)
     public final Config<String> lastShownVersion = new Config<>("v0.0.2-alpha.2");
 
+    @ConfigInfo
     public final Config<Boolean> autoClassMenu = new Config<>(false);
 
     private boolean waitForScreen = false;

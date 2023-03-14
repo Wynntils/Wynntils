@@ -22,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UNCATEGORIZED)
 public class GammabrightFeature extends UserFeature {
+    @ConfigInfo
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     @ConfigInfo(visible = false)

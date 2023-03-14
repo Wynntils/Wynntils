@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -21,10 +22,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
+    @ConfigInfo
     public final Config<Float> universalScale = new Config<>(1f);
 
+    @ConfigInfo
     public final Config<Boolean> fitToScreen = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> wrapText = new Config<>(true);
 
     private boolean scaledLast = false;

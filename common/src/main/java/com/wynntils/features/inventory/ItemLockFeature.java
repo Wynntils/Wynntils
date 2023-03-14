@@ -49,8 +49,10 @@ public class ItemLockFeature extends UserFeature {
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
+    @ConfigInfo
     public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
 
+    @ConfigInfo
     public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
 
     @SubscribeEvent

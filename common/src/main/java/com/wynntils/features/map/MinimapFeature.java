@@ -61,24 +61,34 @@ public class MinimapFeature extends UserFeature {
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
+        @ConfigInfo
         public final Config<Float> scale = new Config<>(1f);
 
+        @ConfigInfo
         public final Config<Float> poiScale = new Config<>(0.8f);
 
+        @ConfigInfo
         public final Config<Float> pointerScale = new Config<>(1f);
 
+        @ConfigInfo
         public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
+        @ConfigInfo
         public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
+        @ConfigInfo
         public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
+        @ConfigInfo
         public final Config<MapMaskType> maskType = new Config<>(MapMaskType.Circle);
 
+        @ConfigInfo
         public final Config<MapBorderType> borderType = new Config<>(MapBorderType.Wynn);
 
+        @ConfigInfo
         public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
+        @ConfigInfo
         public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
 
         @ConfigInfo(subcategory = "Remote Players")

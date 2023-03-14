@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -39,50 +40,73 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
+    @ConfigInfo
     public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> horseTierEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> horseTierRomanNumerals = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> powderTierEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> skillIconEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
 
+    @ConfigInfo
     public final Config<Boolean> teleportScrollEnabled = new Config<>(true);
 
+    @ConfigInfo
     public final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent
