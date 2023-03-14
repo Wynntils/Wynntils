@@ -13,7 +13,6 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -67,13 +66,10 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
-    @ConfigInfo
     public Config<Boolean> autoProgress = new Config<>(false);
 
-    @ConfigInfo
     public Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
 
-    @ConfigInfo
     public Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
     @RegisterKeyBind
@@ -180,16 +176,12 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final Overlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     public class NpcDialogueOverlay extends Overlay {
-        @ConfigInfo
         public Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
-        @ConfigInfo
         public Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-        @ConfigInfo
         public Config<Boolean> stripColors = new Config<>(false);
 
-        @ConfigInfo
         public Config<Boolean> showHelperTexts = new Config<>(true);
 
         private TextRenderSetting renderSetting;

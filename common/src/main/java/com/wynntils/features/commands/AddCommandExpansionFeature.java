@@ -17,7 +17,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -47,10 +46,8 @@ public class AddCommandExpansionFeature extends UserFeature {
                             .filter(p -> !p.equals(McUtils.player().getName().getString())),
                     builder);
 
-    @ConfigInfo
     public Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
-    @ConfigInfo
     public Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent

@@ -10,7 +10,6 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -77,22 +76,16 @@ public class GameNotificationOverlayFeature extends UserFeature {
     }
 
     public static class GameNotificationOverlay extends Overlay {
-        @ConfigInfo
         public Config<Float> messageTimeLimit = new Config<>(10f);
 
-        @ConfigInfo
         public Config<Integer> messageLimit = new Config<>(5);
 
-        @ConfigInfo
         public Config<Boolean> invertGrowth = new Config<>(true);
 
-        @ConfigInfo
         public Config<Integer> messageMaxLength = new Config<>(0);
 
-        @ConfigInfo
         public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        @ConfigInfo
         public Config<Boolean> overrideNewMessages = new Config<>(true);
 
         private TextRenderSetting textRenderSetting;

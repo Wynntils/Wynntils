@@ -11,7 +11,6 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -37,16 +36,12 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     public static class PowderSpecialBarOverlay extends Overlay {
-        @ConfigInfo
         public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        @ConfigInfo
         public Config<Boolean> flip = new Config<>(false);
 
-        @ConfigInfo
         public Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
-        @ConfigInfo
         public Config<Boolean> hideIfNoCharge = new Config<>(true);
 
         protected PowderSpecialBarOverlay() {

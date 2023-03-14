@@ -12,7 +12,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.StringUtils;
@@ -39,7 +38,6 @@ public class WynncraftButtonFeature extends UserFeature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
 
-    @ConfigInfo
     public Config<Boolean> connectToLobby = new Config<>(false);
 
     @SubscribeEvent

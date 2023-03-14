@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -23,52 +22,36 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends UserFeature {
-    @ConfigInfo
     public Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> soulPoint = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
 
-    @ConfigInfo
     public Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
     private final List<Redirector> redirectors = new ArrayList<>();

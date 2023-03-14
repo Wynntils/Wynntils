@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
@@ -43,40 +42,28 @@ import org.lwjgl.glfw.GLFW;
 public class ItemStatInfoFeature extends UserFeature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
-    @ConfigInfo
     public Config<Boolean> showStars = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> colorLerp = new Config<>(true);
 
-    @ConfigInfo
     public Config<Integer> decimalPlaces = new Config<>(1);
 
-    @ConfigInfo
     public Config<Boolean> perfect = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> defective = new Config<>(true);
 
-    @ConfigInfo
     public Config<Float> obfuscationChanceStart = new Config<>(0.08f);
 
-    @ConfigInfo
     public Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
 
-    @ConfigInfo
     public Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
-    @ConfigInfo
     public Config<Boolean> groupIdentifications = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> identificationDecorations = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> overallPercentageInName = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @SubscribeEvent

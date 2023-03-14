@@ -10,7 +10,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -30,7 +29,6 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
-    @ConfigInfo
     public Config<Boolean> hideMaskTitles = new Config<>(true);
 
     @SubscribeEvent
@@ -43,7 +41,6 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     public static class ShamanMaskOverlay extends TextOverlay {
         private static final String TEMPLATE = "{shaman_mask} mask";
 
-        @ConfigInfo
         public Config<Boolean> displayNone = new Config<>(false);
 
         protected ShamanMaskOverlay() {

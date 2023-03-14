@@ -9,7 +9,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.net.translation.TranslationManager;
@@ -27,25 +26,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.UNCATEGORIZED)
 public class TranslationFeature extends UserFeature {
-    @ConfigInfo
     public Config<String> languageName = new Config<>("");
 
-    @ConfigInfo
     public Config<Boolean> translateTrackedQuest = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> translateNpc = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> translateInfo = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> translatePlayerChat = new Config<>(false);
 
-    @ConfigInfo
     public Config<Boolean> keepOriginal = new Config<>(true);
 
-    @ConfigInfo
     public Config<TranslationManager.TranslationServices> translationService =
             new Config<>(TranslationManager.TranslationServices.GOOGLEAPI);
 

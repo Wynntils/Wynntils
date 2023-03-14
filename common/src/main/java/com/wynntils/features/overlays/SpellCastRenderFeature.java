@@ -11,7 +11,6 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -39,16 +38,12 @@ public class SpellCastRenderFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public Overlay spellCastOverlay = new SpellCastOverlay();
 
-    @ConfigInfo
     public Config<Boolean> renderVignette = new Config<>(true);
 
-    @ConfigInfo
     public Config<Integer> vignetteFadeTime = new Config<>(12);
 
-    @ConfigInfo
     public Config<Float> vignetteIntensity = new Config<>(0.75f);
 
-    @ConfigInfo
     public Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int spellTimer;

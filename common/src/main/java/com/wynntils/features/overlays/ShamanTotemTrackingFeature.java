@@ -8,7 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
@@ -34,16 +33,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
 
-    @ConfigInfo
     public Config<Boolean> highlightShamanTotems = new Config<>(true);
 
-    @ConfigInfo
     public Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
-    @ConfigInfo
     public Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
-    @ConfigInfo
     public Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     private static final int ENTITY_GLOWING_FLAG = 6;
@@ -71,16 +66,12 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     }
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
-        @ConfigInfo
         public Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
-        @ConfigInfo
         public Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
 
-        @ConfigInfo
         public Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
 
-        @ConfigInfo
         public Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {

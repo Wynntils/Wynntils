@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -41,7 +40,6 @@ public class UnidentifiedItemIconFeature extends UserFeature {
             Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
             Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
 
-    @ConfigInfo
     public Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.Wynn);
 
     @SubscribeEvent

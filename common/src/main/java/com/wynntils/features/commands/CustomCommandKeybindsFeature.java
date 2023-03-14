@@ -7,7 +7,6 @@ package com.wynntils.features.commands;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -17,40 +16,28 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends UserFeature {
-    @ConfigInfo
     private Config<String> keybindCommand1 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType1 = new Config<>(CommandType.EXECUTE);
 
-    @ConfigInfo
     private Config<String> keybindCommand2 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType2 = new Config<>(CommandType.EXECUTE);
 
-    @ConfigInfo
     private Config<String> keybindCommand3 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType3 = new Config<>(CommandType.EXECUTE);
 
-    @ConfigInfo
     private Config<String> keybindCommand4 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType4 = new Config<>(CommandType.EXECUTE);
 
-    @ConfigInfo
     private Config<String> keybindCommand5 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType5 = new Config<>(CommandType.EXECUTE);
 
-    @ConfigInfo
     private Config<String> keybindCommand6 = new Config<>("");
 
-    @ConfigInfo
     private Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
 
     @RegisterKeyBind

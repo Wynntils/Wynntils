@@ -7,7 +7,6 @@ package com.wynntils.features.players;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
@@ -18,19 +17,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.PLAYERS)
 public class PlayerArmorHidingFeature extends UserFeature {
-    @ConfigInfo
     public Config<Boolean> hideHelmets = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> hideChestplates = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> hideLeggings = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> hideBoots = new Config<>(true);
 
-    @ConfigInfo
     public Config<Boolean> showCosmetics = new Config<>(true);
 
     @SubscribeEvent

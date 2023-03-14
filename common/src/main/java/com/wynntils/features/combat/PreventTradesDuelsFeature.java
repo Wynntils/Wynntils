@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigInfo;
 import com.wynntils.core.features.UserFeature;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -22,10 +21,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends UserFeature {
-    @ConfigInfo
     public Config<Boolean> onlyWhileFighting = new Config<>(true);
 
-    @ConfigInfo
     public Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
     @SubscribeEvent

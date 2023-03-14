@@ -52,55 +52,38 @@ public class MapFeature extends UserFeature {
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
-    @ConfigInfo
     public Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
-    @ConfigInfo
     public Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
-    @ConfigInfo
     public Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
     public Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
     public Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
-    @ConfigInfo
     public Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
     public Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
     public Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
-    @ConfigInfo
     public Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
     public Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
-    @ConfigInfo
     public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    @ConfigInfo
     public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @ConfigInfo
     public Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    @ConfigInfo
     public Config<Float> playerPointerScale = new Config<>(1.5f);
 
-    @ConfigInfo
     public Config<Float> poiScale = new Config<>(1f);
 
-    @ConfigInfo
     public Config<Boolean> autoWaypointChests = new Config<>(true);
 
-    @ConfigInfo
     public Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
     @ConfigInfo(subcategory = "Remote Players")
