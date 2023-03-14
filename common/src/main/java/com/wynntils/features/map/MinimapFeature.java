@@ -91,13 +91,13 @@ public class MinimapFeature extends Feature {
         @RegisterConfig
         public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
 
-        @RegisterConfig(subcategory = "Remote Players")
+        @RegisterConfig
         public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-        @RegisterConfig(subcategory = "Remote Players")
+        @RegisterConfig
         public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-        @RegisterConfig(subcategory = "Remote Players")
+        @RegisterConfig
         public final Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
 
         protected MinimapOverlay() {

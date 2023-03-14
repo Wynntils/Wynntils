@@ -21,7 +21,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Configurable parent;
     private final Config configObj;
     private final String fieldName;
-    private final String subcategory;
     private final String i18nKey;
     private final boolean visible;
 
@@ -34,14 +33,12 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             Configurable parent,
             Config configObj,
             String fieldName,
-            String subcategory,
             String i18nKey,
             boolean visible,
             Type typeOverride) {
         this.parent = parent;
         this.configObj = configObj;
         this.fieldName = fieldName;
-        this.subcategory = subcategory;
         this.i18nKey = i18nKey;
         this.visible = visible;
 
@@ -107,10 +104,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private String getDeclaringFeatureNameCamelCase() {
         String name = parent.getClass().getDeclaringClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
-
-    public String getSubcategory() {
-        return subcategory;
     }
 
     public String getI18nKey() {

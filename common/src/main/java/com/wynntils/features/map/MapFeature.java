@@ -104,20 +104,17 @@ public class MapFeature extends Feature {
     @RegisterConfig
     public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-    //    @Config(subcategory = "Remote Players")
-    //    public boolean renderRemoteGuildPlayers = true;
-
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
             new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;

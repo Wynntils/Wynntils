@@ -248,8 +248,7 @@ public final class ConfigManager extends Manager {
             if (configInfo == null) {
                 throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
             }
-            String subcategory = configInfo.subcategory();
-            String i18nKey = configInfo.key();
+            String i18nKey = configInfo.value();
 
             Config configObj;
             try {
@@ -261,8 +260,8 @@ public final class ConfigManager extends Manager {
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder = new ConfigHolder(
-                    parent, configObj, configField.getName(), subcategory, i18nKey, visible, typeOverride);
+            ConfigHolder configHolder =
+                    new ConfigHolder(parent, configObj, configField.getName(), i18nKey, visible, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {

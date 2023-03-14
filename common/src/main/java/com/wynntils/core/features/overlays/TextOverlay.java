@@ -25,10 +25,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends DynamicOverlay {
-    @RegisterConfig(key = "overlay.wynntils.textOverlay.textShadow")
+    @RegisterConfig("overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
+    @RegisterConfig("overlay.wynntils.textOverlay.secondsPerRecalculation")
     public final Config<Float> secondsPerRecalculation = new Config<>(0.5f);
 
     protected String[] cachedLines;
