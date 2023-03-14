@@ -264,7 +264,13 @@ public final class FeatureManager extends Manager {
         } catch (Throwable exception) {
             // Log and handle gracefully, just disable this feature
             crashFeature(feature);
-            WynntilsMod.reportCrash(feature.getClass().getName() + ":initialize", feature.getClass().getSimpleName() + " during init", CrashType.FEATURE, exception, false, true);
+            WynntilsMod.reportCrash(
+                    feature.getClass().getName() + ":initialize",
+                    feature.getClass().getSimpleName() + " during init",
+                    CrashType.FEATURE,
+                    exception,
+                    false,
+                    true);
         }
     }
 
