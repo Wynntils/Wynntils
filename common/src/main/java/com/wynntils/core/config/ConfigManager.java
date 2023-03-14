@@ -227,10 +227,10 @@ public final class ConfigManager extends Manager {
             try {
                 Object fieldValue = FieldUtils.readField(field, parent, true);
                 if (!(fieldValue instanceof Config)) {
-                    throw new RuntimeException("A non-Config class was marked with @ConfigInfo annotation: " + field);
+                    throw new RuntimeException("A non-Config class was marked with @RegisterConfig annotation: " + field);
                 }
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to read @ConfigInfo annotated field: " + field);
+                throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field);
             }
         }
 
@@ -245,7 +245,7 @@ public final class ConfigManager extends Manager {
                     .map(f -> f.getAnnotation(RegisterConfig.class))
                     .orElse(null);
             if (configInfo == null) {
-                throw new RuntimeException("A Config is missing @ConfigInfo annotation:" + configField);
+                throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
             }
             String subcategory = configInfo.subcategory();
             String i18nKey = configInfo.key();
