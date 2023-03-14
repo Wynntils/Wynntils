@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
@@ -26,11 +27,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
-    @RegisterConfig(key = "overlay.wynntils.overlay.position", visible = false)
-    protected final Config<OverlayPosition> position = new Config<>(null);
+    @RegisterConfig(key = "overlay.wynntils.overlay.position")
+    protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
 
-    @RegisterConfig(key = "overlay.wynntils.overlay.size", visible = false)
-    protected final Config<OverlaySize> size = new Config<>(null);
+    @RegisterConfig(key = "overlay.wynntils.overlay.size")
+    protected final HiddenConfig<OverlaySize> size = new HiddenConfig<>(null);
 
     @RegisterConfig(key = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
@@ -40,14 +41,14 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @RegisterConfig(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    protected final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
+    @RegisterConfig(key = "overlay.wynntils.overlay.horizontalAlignmentOverride")
+    protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
 
     @TypeOverride
     private final Type horizontalAlignmentOverrideType = new TypeToken<HorizontalAlignment>() {}.getType();
 
-    @RegisterConfig(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+    @RegisterConfig(key = "overlay.wynntils.overlay.verticalAlignmentOverride")
+    protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
 
     @TypeOverride
     private final Type verticalAlignmentOverrideType = new TypeToken<VerticalAlignment>() {}.getType();
