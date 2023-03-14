@@ -27,16 +27,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
-    // These are needed for config type detection to work
-    private static final OverlayPosition DUMMY_POSITION = new OverlayPosition(
-            0, 0, VerticalAlignment.Middle, HorizontalAlignment.Center, OverlayPosition.AnchorSection.Middle);
-    private static final OverlaySize DUMMY_SIZE = new GuiScaledOverlaySize();
-
     @ConfigInfo(key = "overlay.wynntils.overlay.position", visible = false)
-    public final Config<OverlayPosition> position = new Config<>(DUMMY_POSITION);
+    public final Config<OverlayPosition> position = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.size", visible = false)
-    public final Config<OverlaySize> size = new Config<>(DUMMY_SIZE);
+    public final Config<OverlaySize> size = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
