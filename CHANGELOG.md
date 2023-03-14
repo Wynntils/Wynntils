@@ -1,9 +1,21 @@
+## [0.0.2-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.338...v0.0.2-alpha.339) (2023-03-14)
+
+
+### Code Refactoring
+
+* Clean up Feature, FeatureManager, related managers and overlay groups ([#1314](https://github.com/Wynntils/Artemis/issues/1314)) ([eb81e0d](https://github.com/Wynntils/Artemis/commit/eb81e0d014e1b504396cf9759ec6b70677c0236f))
+
 ## [0.0.2-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.337...v0.0.2-alpha.338) (2023-03-14)
 
 
 ### Bug Fixes
 
 * Fix Telemetry command when using specific mods ([#1331](https://github.com/Wynntils/Artemis/issues/1331)) ([cd8f510](https://github.com/Wynntils/Artemis/commit/cd8f510e1dc1acb2dbf9f1fb3273396fdb1b52e4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.338 [skip ci] ([b04b94a](https://github.com/Wynntils/Artemis/commit/b04b94aa2f7106e3ef19b0259d31858f3406648b))
 
 ## [0.0.2-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.336...v0.0.2-alpha.337) (2023-03-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.335 [skip ci] ([521d398](https://github.com/Wynntils/Artemis/commit/521d39869e1f6f57259e791a711b2dc9b80d74e6))
-
-## [0.0.2-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.333...v0.0.2-alpha.334) (2023-03-13)
-
-
-### New Features
-
-* Random Function ([#1316](https://github.com/Wynntils/Artemis/issues/1316)) ([748be02](https://github.com/Wynntils/Artemis/commit/748be02770e8a225271f4749c42c3ce2cf7f6542))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.334 [skip ci] ([1f8ac82](https://github.com/Wynntils/Artemis/commit/1f8ac82eb947d270c46eb560ffddaaf7f751181a))
 
