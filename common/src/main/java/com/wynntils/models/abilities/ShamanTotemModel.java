@@ -19,13 +19,13 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
@@ -88,12 +88,7 @@ public class ShamanTotemModel extends Model {
                     WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, totemAS));
 
                     ShamanTotem newTotem = new ShamanTotem(
-                            totemNumber,
-                            -1,
-                            totemAS.getId(),
-                            -1,
-                            ShamanTotem.TotemState.SUMMONED,
-                            new Location(totemAS.position().x, totemAS.position().y, totemAS.position().z));
+                            totemNumber, -1, totemAS.getId(), -1, ShamanTotem.TotemState.SUMMONED, totemAS.position());
 
                     totems[totemNumber - 1] = newTotem;
                     pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
@@ -132,19 +127,18 @@ public class ShamanTotemModel extends Model {
                                 possibleTimer.position().z + TOTEM_SEARCH_RADIUS));
 
         for (ArmorStand armorStand : toCheck) {
-            // Recreate location for each ArmorStand checked for most accurate coordinates
-            Location parsedLocation =
-                    new Location(armorStand.position().x, armorStand.position().y, armorStand.position().z);
+            // Recreate position for each ArmorStand checked for most accurate coordinates
+            Position position = armorStand.position();
 
             for (int i = 0; i < pendingTotemVisibleIds.length; i++) {
                 if (pendingTotemVisibleIds[i] != null && armorStand.getId() == pendingTotemVisibleIds[i]) {
                     ShamanTotem totem = totems[i];
 
                     totem.setTimerEntityId(entityId);
-                    totem.setLocation(parsedLocation);
+                    totem.setPosition(position);
                     totem.setState(ShamanTotem.TotemState.ACTIVE);
 
-                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), parsedLocation));
+                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), position));
 
                     pendingTotemVisibleIds[i] = null;
 
@@ -168,7 +162,7 @@ public class ShamanTotemModel extends Model {
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));
-        Location parsedLocation = new Location(entity.position().x, entity.position().y, entity.position().z);
+        Position position = entity.position();
 
         int entityId = entity.getId();
         if (getBoundTotem(entityId) == null) return;
@@ -180,9 +174,9 @@ public class ShamanTotemModel extends Model {
         for (ShamanTotem totem : totems) {
             if (boundTotem == totem) {
                 totem.setTime(parsedTime);
-                totem.setLocation(parsedLocation);
+                totem.setPosition(position);
 
-                WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, parsedLocation));
+                WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, position));
 
                 break;
             }

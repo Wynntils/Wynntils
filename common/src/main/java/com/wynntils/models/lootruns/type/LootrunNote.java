@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.lootruns.type;
 
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
 
-public record LootrunNote(Vec3 position, Component component) {}
+public record LootrunNote(Position position, Component component) {}

@@ -30,12 +30,12 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 
 public class LootrunCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> LOOTRUN_SUGGESTION_PROVIDER =
@@ -105,7 +105,7 @@ public class LootrunCommand extends Command {
         String fileName = StringArgumentType.getString(context, "lootrun");
 
         boolean successful = Models.Lootrun.loadFile(fileName);
-        Vec3 startingPoint = Models.Lootrun.getStartingPoint();
+        Position startingPoint = Models.Lootrun.getStartingPoint();
 
         if (!successful || startingPoint == null) {
             context.getSource()
