@@ -16,13 +16,13 @@ import com.wynntils.hades.protocol.enums.SocialType;
 public class HadesFeature extends UserFeature {
     public static HadesFeature INSTANCE;
 
-    public Config<Boolean> getOtherPlayerInfo = new Config<>(true);
+    public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
-    public Config<Boolean> shareWithParty = new Config<>(true);
+    public final Config<Boolean> shareWithParty = new Config<>(true);
 
-    public Config<Boolean> shareWithFriends = new Config<>(true);
+    public final Config<Boolean> shareWithFriends = new Config<>(true);
 
-    public Config<Boolean> shareWithGuild = new Config<>(true);
+    public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {

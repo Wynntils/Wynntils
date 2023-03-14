@@ -39,51 +39,51 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends UserFeature {
-    public Config<Boolean> amplifierTierEnabled = new Config<>(true);
+    public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
-    public Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
-    public Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> dungeonKeyEnabled = new Config<>(true);
+    public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
-    public Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
+    public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
-    public Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
 
-    public Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
+    public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
-    public Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
 
-    public Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> horseTierEnabled = new Config<>(true);
+    public final Config<Boolean> horseTierEnabled = new Config<>(true);
 
-    public Config<Boolean> horseTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> horseTierRomanNumerals = new Config<>(true);
 
-    public Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
+    public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
-    public Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
+    public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    public Config<Boolean> powderTierEnabled = new Config<>(true);
+    public final Config<Boolean> powderTierEnabled = new Config<>(true);
 
-    public Config<Boolean> powderTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
-    public Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> skillIconEnabled = new Config<>(true);
+    public final Config<Boolean> skillIconEnabled = new Config<>(true);
 
-    public Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
 
-    public Config<Boolean> teleportScrollEnabled = new Config<>(true);
+    public final Config<Boolean> teleportScrollEnabled = new Config<>(true);
 
-    public Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {

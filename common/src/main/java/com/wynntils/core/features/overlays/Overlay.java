@@ -25,32 +25,32 @@ import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
     @ConfigInfo(key = "overlay.wynntils.overlay.position", visible = false)
-    protected Config<OverlayPosition> position = new Config<>(null);
+    public final Config<OverlayPosition> position = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.size", visible = false)
-    protected Config<OverlaySize> size = new Config<>(null);
+    public final Config<OverlaySize> size = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.userEnabled")
-    protected Config<Boolean> userEnabled = new Config<>(null);
+    public final Config<Boolean> userEnabled = new Config<>(null);
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @ConfigInfo(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    protected Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
+    public final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
 
     @ConfigInfo(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    protected Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+    public final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
-        this.position = new Config<>(position);
-        this.size = new Config<>(new GuiScaledOverlaySize(width, height));
+        this.position.updateConfig(position);
+        this.size.updateConfig(new GuiScaledOverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {
-        this.position = new Config<>(position);
-        this.size = new Config<>(size);
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
     }
 
     protected Overlay(
@@ -58,10 +58,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        this.position = new Config<>(position);
-        this.size = new Config<>(size);
-        this.horizontalAlignmentOverride = new Config<>(horizontalAlignmentOverride);
-        this.verticalAlignmentOverride = new Config<>(verticalAlignmentOverride);
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
+        this.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride);
+        this.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride);
     }
 
     public abstract void render(

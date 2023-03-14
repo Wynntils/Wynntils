@@ -20,11 +20,11 @@ import org.lwjgl.glfw.GLFW;
 public class GuildMapFeature extends UserFeature {
     public static GuildMapFeature INSTANCE;
 
-    public Config<Boolean> renderUsingLinear = new Config<>(true);
+    public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
+    public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @RegisterKeyBind
     public final KeyBind openGuildMapKeybind =

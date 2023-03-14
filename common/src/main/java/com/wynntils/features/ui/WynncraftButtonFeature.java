@@ -38,7 +38,7 @@ public class WynncraftButtonFeature extends UserFeature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
 
-    public Config<Boolean> connectToLobby = new Config<>(false);
+    public final Config<Boolean> connectToLobby = new Config<>(false);
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {

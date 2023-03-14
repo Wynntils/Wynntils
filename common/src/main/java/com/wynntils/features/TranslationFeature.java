@@ -26,19 +26,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.UNCATEGORIZED)
 public class TranslationFeature extends UserFeature {
-    public Config<String> languageName = new Config<>("");
+    public final Config<String> languageName = new Config<>("");
 
-    public Config<Boolean> translateTrackedQuest = new Config<>(true);
+    public final Config<Boolean> translateTrackedQuest = new Config<>(true);
 
-    public Config<Boolean> translateNpc = new Config<>(true);
+    public final Config<Boolean> translateNpc = new Config<>(true);
 
-    public Config<Boolean> translateInfo = new Config<>(true);
+    public final Config<Boolean> translateInfo = new Config<>(true);
 
-    public Config<Boolean> translatePlayerChat = new Config<>(false);
+    public final Config<Boolean> translatePlayerChat = new Config<>(false);
 
-    public Config<Boolean> keepOriginal = new Config<>(true);
+    public final Config<Boolean> keepOriginal = new Config<>(true);
 
-    public Config<TranslationManager.TranslationServices> translationService =
+    public final Config<TranslationManager.TranslationServices> translationService =
             new Config<>(TranslationManager.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent

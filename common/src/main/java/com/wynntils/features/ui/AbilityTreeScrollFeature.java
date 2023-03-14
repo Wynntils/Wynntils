@@ -22,7 +22,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
 
-    public Config<Boolean> invertScroll = new Config<>(false);
+    public final Config<Boolean> invertScroll = new Config<>(false);
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {

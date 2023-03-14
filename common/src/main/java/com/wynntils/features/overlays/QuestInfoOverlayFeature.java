@@ -37,9 +37,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class QuestInfoOverlayFeature extends UserFeature {
-    public Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
+    public final Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
 
-    public Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
+    public final Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -63,7 +63,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private static final List<CustomColor> TEXT_COLORS =
                 List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);

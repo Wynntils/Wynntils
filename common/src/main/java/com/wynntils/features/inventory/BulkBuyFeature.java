@@ -31,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends UserFeature {
-    public Config<Integer> bulkBuyAmount = new Config<>(4);
+    public final Config<Integer> bulkBuyAmount = new Config<>(4);
     // Test suite: https://regexr.com/7998g
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;

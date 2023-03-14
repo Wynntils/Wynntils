@@ -14,8 +14,8 @@ public class DataStorageFeature extends StateManagedFeature {
     public static DataStorageFeature INSTANCE;
 
     @ConfigInfo(visible = false)
-    public Config<Integer> dryCount = new Config<>(0);
+    public final Config<Integer> dryCount = new Config<>(0);
 
     @ConfigInfo(visible = false)
-    public Config<Integer> dryBoxes = new Config<>(0);
+    public final Config<Integer> dryBoxes = new Config<>(0);
 }

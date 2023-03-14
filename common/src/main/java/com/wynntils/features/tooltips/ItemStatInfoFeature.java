@@ -42,29 +42,29 @@ import org.lwjgl.glfw.GLFW;
 public class ItemStatInfoFeature extends UserFeature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
-    public Config<Boolean> showStars = new Config<>(true);
+    public final Config<Boolean> showStars = new Config<>(true);
 
-    public Config<Boolean> colorLerp = new Config<>(true);
+    public final Config<Boolean> colorLerp = new Config<>(true);
 
-    public Config<Integer> decimalPlaces = new Config<>(1);
+    public final Config<Integer> decimalPlaces = new Config<>(1);
 
-    public Config<Boolean> perfect = new Config<>(true);
+    public final Config<Boolean> perfect = new Config<>(true);
 
-    public Config<Boolean> defective = new Config<>(true);
+    public final Config<Boolean> defective = new Config<>(true);
 
-    public Config<Float> obfuscationChanceStart = new Config<>(0.08f);
+    public final Config<Float> obfuscationChanceStart = new Config<>(0.08f);
 
-    public Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
+    public final Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
 
-    public Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
+    public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
-    public Config<Boolean> groupIdentifications = new Config<>(true);
+    public final Config<Boolean> groupIdentifications = new Config<>(true);
 
-    public Config<Boolean> identificationDecorations = new Config<>(true);
+    public final Config<Boolean> identificationDecorations = new Config<>(true);
 
-    public Config<Boolean> overallPercentageInName = new Config<>(true);
+    public final Config<Boolean> overallPercentageInName = new Config<>(true);
 
-    public Config<Boolean> showBestValueLastAlways = new Config<>(true);
+    public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

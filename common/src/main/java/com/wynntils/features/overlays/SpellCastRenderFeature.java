@@ -38,13 +38,13 @@ public class SpellCastRenderFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public Overlay spellCastOverlay = new SpellCastOverlay();
 
-    public Config<Boolean> renderVignette = new Config<>(true);
+    public final Config<Boolean> renderVignette = new Config<>(true);
 
-    public Config<Integer> vignetteFadeTime = new Config<>(12);
+    public final Config<Integer> vignetteFadeTime = new Config<>(12);
 
-    public Config<Float> vignetteIntensity = new Config<>(0.75f);
+    public final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
-    public Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
+    public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int spellTimer;
     private String spellMessage;

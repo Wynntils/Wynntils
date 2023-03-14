@@ -38,15 +38,15 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends UserFeature {
-    public Config<Boolean> filterInBank = new Config<>(true);
+    public final Config<Boolean> filterInBank = new Config<>(true);
 
-    public Config<Boolean> filterInMiscBucket = new Config<>(true);
+    public final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
-    public Config<Boolean> filterInGuildBank = new Config<>(true);
+    public final Config<Boolean> filterInGuildBank = new Config<>(true);
 
-    public Config<Boolean> filterInGuildMemberList = new Config<>(true);
+    public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
-    public Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+    public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;

@@ -36,13 +36,13 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     public static class PowderSpecialBarOverlay extends Overlay {
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        public Config<Boolean> flip = new Config<>(false);
+        public final Config<Boolean> flip = new Config<>(false);
 
-        public Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
+        public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
-        public Config<Boolean> hideIfNoCharge = new Config<>(true);
+        public final Config<Boolean> hideIfNoCharge = new Config<>(true);
 
         protected PowderSpecialBarOverlay() {
             super(

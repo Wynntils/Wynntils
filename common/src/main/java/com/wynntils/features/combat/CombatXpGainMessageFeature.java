@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class CombatXpGainMessageFeature extends UserFeature {
-    public Config<Float> secondDelay = new Config<>(0.5f);
+    public final Config<Float> secondDelay = new Config<>(0.5f);
 
     private long lastXpDisplayTime = 0;
 

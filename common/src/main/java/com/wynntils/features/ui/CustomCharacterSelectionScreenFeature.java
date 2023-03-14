@@ -20,7 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends UserFeature {
-    public Config<Boolean> onlyOpenOnce = new Config<>(false);
+    public final Config<Boolean> onlyOpenOnce = new Config<>(false);
 
     private boolean openedInThisCharacterSelectionState = false;
 

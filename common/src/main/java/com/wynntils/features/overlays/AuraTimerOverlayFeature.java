@@ -28,9 +28,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AuraTimerOverlayFeature extends UserFeature {
     private static final float MAX_INTENSITY = 0.4f;
 
-    public Config<Boolean> vignetteOnAura = new Config<>(true);
+    public final Config<Boolean> vignetteOnAura = new Config<>(true);
 
-    public Config<CustomColor> vignetteColor = new Config<>(CommonColors.ORANGE);
+    public final Config<CustomColor> vignetteColor = new Config<>(CommonColors.ORANGE);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay auraTimerOverlay = new AuraTimerOverlay();
@@ -51,7 +51,7 @@ public class AuraTimerOverlayFeature extends UserFeature {
         private static final String TEMPLATE =
                 "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
 
-        public Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
 
         protected AuraTimerOverlay() {
             super(

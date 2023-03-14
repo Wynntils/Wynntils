@@ -31,7 +31,7 @@ public class AutoApplyResourcePackFeature extends UserFeature {
     private static final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
 
     @ConfigInfo(visible = false)
-    private Config<String> packHash = new Config<>("");
+    public final Config<String> packHash = new Config<>("");
 
     private String appliedHash = "";
 

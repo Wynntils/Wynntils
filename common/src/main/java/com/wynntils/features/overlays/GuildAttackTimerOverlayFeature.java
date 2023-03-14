@@ -36,7 +36,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final TerritoryAttackTimerOverlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
-    public Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
+    public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -49,7 +49,7 @@ public class GuildAttackTimerOverlayFeature extends UserFeature {
     }
 
     public static class TerritoryAttackTimerOverlay extends Overlay {
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private TextRenderSetting textRenderSetting;
 

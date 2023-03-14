@@ -42,11 +42,11 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_LEVEL_UP_2 =
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
-    private Config<Boolean> hideWelcome = new Config<>(true);
+    public final Config<Boolean> hideWelcome = new Config<>(true);
 
-    private Config<Boolean> hideSystemInfo = new Config<>(true);
+    public final Config<Boolean> hideSystemInfo = new Config<>(true);
 
-    private Config<Boolean> hideLevelUp = new Config<>(false);
+    public final Config<Boolean> hideLevelUp = new Config<>(false);
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {

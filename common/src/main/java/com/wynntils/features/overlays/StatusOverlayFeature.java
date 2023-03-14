@@ -47,7 +47,7 @@ public class StatusOverlayFeature extends UserFeature {
     }
 
     public class StatusOverlay extends Overlay {
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private TextRenderSetting textRenderSetting;
 

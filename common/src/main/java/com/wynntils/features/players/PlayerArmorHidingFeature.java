@@ -17,15 +17,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.PLAYERS)
 public class PlayerArmorHidingFeature extends UserFeature {
-    public Config<Boolean> hideHelmets = new Config<>(true);
+    public final Config<Boolean> hideHelmets = new Config<>(true);
 
-    public Config<Boolean> hideChestplates = new Config<>(true);
+    public final Config<Boolean> hideChestplates = new Config<>(true);
 
-    public Config<Boolean> hideLeggings = new Config<>(true);
+    public final Config<Boolean> hideLeggings = new Config<>(true);
 
-    public Config<Boolean> hideBoots = new Config<>(true);
+    public final Config<Boolean> hideBoots = new Config<>(true);
 
-    public Config<Boolean> showCosmetics = new Config<>(true);
+    public final Config<Boolean> showCosmetics = new Config<>(true);
 
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {

@@ -23,9 +23,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends UserFeature {
-    public Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
+    public final Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
 
-    public Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
+    public final Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {

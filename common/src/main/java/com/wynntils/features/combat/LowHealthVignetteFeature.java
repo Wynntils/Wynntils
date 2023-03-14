@@ -21,13 +21,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LowHealthVignetteFeature extends UserFeature {
     private static final float INTENSITY = 0.3f;
 
-    public Config<Integer> lowHealthPercentage = new Config<>(25);
+    public final Config<Integer> lowHealthPercentage = new Config<>(25);
 
-    public Config<Float> animationSpeed = new Config<>(0.6f);
+    public final Config<Float> animationSpeed = new Config<>(0.6f);
 
-    public Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.Pulse);
+    public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.Pulse);
 
-    public Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
+    public final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
 
     private float animation = 10f;
     private float value = INTENSITY;

@@ -16,17 +16,17 @@ import com.wynntils.utils.colors.CustomColor;
 public class LootrunFeature extends StateManagedFeature {
     public static LootrunFeature INSTANCE;
 
-    public Config<PathType> pathType = new Config<>(PathType.TEXTURED);
+    public final Config<PathType> pathType = new Config<>(PathType.TEXTURED);
 
-    public Config<CustomColor> activePathColor = new Config<>(CommonColors.LIGHT_BLUE);
+    public final Config<CustomColor> activePathColor = new Config<>(CommonColors.LIGHT_BLUE);
 
-    public Config<CustomColor> recordingPathColor = new Config<>(CommonColors.RED);
+    public final Config<CustomColor> recordingPathColor = new Config<>(CommonColors.RED);
 
-    public Config<Boolean> rainbowLootRun = new Config<>(false);
+    public final Config<Boolean> rainbowLootRun = new Config<>(false);
 
-    public Config<Integer> cycleDistance = new Config<>(20); // TODO limit this later
+    public final Config<Integer> cycleDistance = new Config<>(20); // TODO limit this later
 
-    public Config<Boolean> showNotes = new Config<>(true);
+    public final Config<Boolean> showNotes = new Config<>(true);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {

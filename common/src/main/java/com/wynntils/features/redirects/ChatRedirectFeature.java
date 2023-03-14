@@ -22,37 +22,37 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends UserFeature {
-    public Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> soulPoint = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> soulPoint = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
 
-    public Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
+    public final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
     private final List<Redirector> redirectors = new ArrayList<>();
 

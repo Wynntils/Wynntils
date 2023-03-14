@@ -47,60 +47,60 @@ public class MapFeature extends UserFeature {
     public static MapFeature INSTANCE;
 
     @ConfigInfo(visible = false)
-    public Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
+    public final Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
-    public Config<Float> poiFadeAdjustment = new Config<>(0.4f);
+    public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
-    public Config<Float> combatPoiMinZoom = new Config<>(0.166f);
+    public final Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
-    public Config<Float> cavePoiMinZoom = new Config<>(0.28f);
+    public final Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
-    public Config<Float> servicePoiMinZoom = new Config<>(0.8f);
+    public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
-    public Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
+    public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
-    public Config<Float> customPoiMinZoom = new Config<>(0.28f);
+    public final Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
-    public Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
+    public final Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
-    public Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
+    public final Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
-    public Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
+    public final Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
-    public Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
+    public final Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
-    public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
+    public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    public Config<Boolean> renderUsingLinear = new Config<>(true);
+    public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    public Config<Float> playerPointerScale = new Config<>(1.5f);
+    public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
-    public Config<Float> poiScale = new Config<>(1f);
+    public final Config<Float> poiScale = new Config<>(1f);
 
-    public Config<Boolean> autoWaypointChests = new Config<>(true);
+    public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
-    public Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
-
-    @ConfigInfo(subcategory = "Remote Players")
-    public Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+    public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
     @ConfigInfo(subcategory = "Remote Players")
-    public Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+
+    @ConfigInfo(subcategory = "Remote Players")
+    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     //    @Config(subcategory = "Remote Players")
     //    public boolean renderRemoteGuildPlayers = true;
 
     @ConfigInfo(subcategory = "Remote Players")
-    public Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
+    public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
             new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
     @ConfigInfo(subcategory = "Remote Players")
-    public Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;
 

@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
 public class BeaconBeamFeature extends UserFeature {
-    public Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
+    public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {

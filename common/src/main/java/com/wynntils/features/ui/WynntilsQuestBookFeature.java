@@ -35,9 +35,9 @@ public class WynntilsQuestBookFeature extends UserFeature {
             new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
                     .setScreen(WynntilsMenuScreen.create()));
 
-    public Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
+    public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
 
-    public Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
+    public final Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {

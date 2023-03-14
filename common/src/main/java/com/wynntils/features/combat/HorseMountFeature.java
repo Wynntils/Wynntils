@@ -41,7 +41,7 @@ public class HorseMountFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    public Config<Boolean> guaranteedMount = new Config<>(true);
+    public final Config<Boolean> guaranteedMount = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {

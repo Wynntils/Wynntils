@@ -46,9 +46,9 @@ public class AddCommandExpansionFeature extends UserFeature {
                             .filter(p -> !p.equals(McUtils.player().getName().getString())),
                     builder);
 
-    public Config<Boolean> includeDeprecatedCommands = new Config<>(false);
+    public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
-    public Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
+    public final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent
     public void onCommandPacket(CommandsAddedEvent event) {

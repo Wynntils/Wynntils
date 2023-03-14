@@ -14,9 +14,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipVanillaHideFeature extends UserFeature {
-    public Config<Boolean> hideAdvanced = new Config<>(true);
+    public final Config<Boolean> hideAdvanced = new Config<>(true);
 
-    public Config<Boolean> hideAdditionalnfo = new Config<>(true);
+    public final Config<Boolean> hideAdditionalnfo = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent.Advanced event) {

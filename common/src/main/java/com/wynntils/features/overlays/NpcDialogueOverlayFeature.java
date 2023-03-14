@@ -66,11 +66,11 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
-    public Config<Boolean> autoProgress = new Config<>(false);
+    public final Config<Boolean> autoProgress = new Config<>(false);
 
-    public Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
+    public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
 
-    public Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
+    public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
@@ -176,13 +176,13 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final Overlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     public class NpcDialogueOverlay extends Overlay {
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
-        public Config<Float> backgroundOpacity = new Config<>(0.2f);
+        public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-        public Config<Boolean> stripColors = new Config<>(false);
+        public final Config<Boolean> stripColors = new Config<>(false);
 
-        public Config<Boolean> showHelperTexts = new Config<>(true);
+        public final Config<Boolean> showHelperTexts = new Config<>(true);
 
         private TextRenderSetting renderSetting;
 

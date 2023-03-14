@@ -23,9 +23,9 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ExtendedItemCountFeature extends UserFeature {
-    public Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
+    public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    public Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
+    public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;
 

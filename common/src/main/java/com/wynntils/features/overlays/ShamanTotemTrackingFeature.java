@@ -33,13 +33,13 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
 
-    public Config<Boolean> highlightShamanTotems = new Config<>(true);
+    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
-    public Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
+    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
-    public Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
+    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
-    public Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
+    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     private static final int ENTITY_GLOWING_FLAG = 6;
 
@@ -66,13 +66,13 @@ public class ShamanTotemTrackingFeature extends UserFeature {
     }
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
-        public Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
+        public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
-        public Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
+        public final Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
 
-        public Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
+        public final Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
 
-        public Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
+        public final Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {
             firstTotemTextColor.get(), secondTotemTextColor.get(), thirdTotemTextColor.get()

@@ -29,7 +29,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
-    public Config<Boolean> hideMaskTitles = new Config<>(true);
+    public final Config<Boolean> hideMaskTitles = new Config<>(true);
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
@@ -41,7 +41,7 @@ public class ShamanMasksOverlayFeature extends UserFeature {
     public static class ShamanMaskOverlay extends TextOverlay {
         private static final String TEMPLATE = "{shaman_mask} mask";
 
-        public Config<Boolean> displayNone = new Config<>(false);
+        public final Config<Boolean> displayNone = new Config<>(false);
 
         protected ShamanMaskOverlay() {
             super(

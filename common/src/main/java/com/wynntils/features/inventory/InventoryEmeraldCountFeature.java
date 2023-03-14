@@ -34,15 +34,15 @@ import org.lwjgl.glfw.GLFW;
 public class InventoryEmeraldCountFeature extends UserFeature {
     private static final int TEXTURE_SIZE = 28;
 
-    public Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.Texture);
+    public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.Texture);
 
-    public Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
+    public final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
 
-    public Config<Boolean> showContainerEmeraldCount = new Config<>(true);
+    public final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
 
-    public Config<Boolean> showZerosInEmeraldCount = new Config<>(false);
+    public final Config<Boolean> showZerosInEmeraldCount = new Config<>(false);
 
-    public Config<Boolean> combineInventoryAndContainer = new Config<>(false);
+    public final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

@@ -16,9 +16,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class PlayerGhostTransparencyFeature extends UserFeature {
-    public Config<Float> playerGhostTranslucenceLevel = new Config<>(0.75f);
+    public final Config<Float> playerGhostTranslucenceLevel = new Config<>(0.75f);
 
-    public Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
+    public final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
 
     @SubscribeEvent
     public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {

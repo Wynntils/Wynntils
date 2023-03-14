@@ -21,9 +21,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends UserFeature {
-    public Config<Boolean> onlyWhileFighting = new Config<>(true);
+    public final Config<Boolean> onlyWhileFighting = new Config<>(true);
 
-    public Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
+    public final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {

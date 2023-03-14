@@ -27,11 +27,11 @@ public class InventoryRedirectFeature extends UserFeature {
     private long lastEmeraldPouchPickup = 0;
     private MessageContainer emeraldPouchMessage = null;
 
-    public Config<Boolean> redirectIngredientPouch = new Config<>(true);
+    public final Config<Boolean> redirectIngredientPouch = new Config<>(true);
 
-    public Config<Boolean> redirectEmeraldPouch = new Config<>(true);
+    public final Config<Boolean> redirectEmeraldPouch = new Config<>(true);
 
-    public Config<Boolean> redirectPotionStack = new Config<>(true);
+    public final Config<Boolean> redirectPotionStack = new Config<>(true);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

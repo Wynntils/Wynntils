@@ -76,17 +76,17 @@ public class GameNotificationOverlayFeature extends UserFeature {
     }
 
     public static class GameNotificationOverlay extends Overlay {
-        public Config<Float> messageTimeLimit = new Config<>(10f);
+        public final Config<Float> messageTimeLimit = new Config<>(10f);
 
-        public Config<Integer> messageLimit = new Config<>(5);
+        public final Config<Integer> messageLimit = new Config<>(5);
 
-        public Config<Boolean> invertGrowth = new Config<>(true);
+        public final Config<Boolean> invertGrowth = new Config<>(true);
 
-        public Config<Integer> messageMaxLength = new Config<>(0);
+        public final Config<Integer> messageMaxLength = new Config<>(0);
 
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        public Config<Boolean> overrideNewMessages = new Config<>(true);
+        public final Config<Boolean> overrideNewMessages = new Config<>(true);
 
         private TextRenderSetting textRenderSetting;
 

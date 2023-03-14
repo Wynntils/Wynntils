@@ -16,29 +16,29 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends UserFeature {
-    private Config<String> keybindCommand1 = new Config<>("");
+    public final Config<String> keybindCommand1 = new Config<>("");
 
-    private Config<CommandType> commandType1 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType1 = new Config<>(CommandType.EXECUTE);
 
-    private Config<String> keybindCommand2 = new Config<>("");
+    public final Config<String> keybindCommand2 = new Config<>("");
 
-    private Config<CommandType> commandType2 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType2 = new Config<>(CommandType.EXECUTE);
 
-    private Config<String> keybindCommand3 = new Config<>("");
+    public final Config<String> keybindCommand3 = new Config<>("");
 
-    private Config<CommandType> commandType3 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType3 = new Config<>(CommandType.EXECUTE);
 
-    private Config<String> keybindCommand4 = new Config<>("");
+    public final Config<String> keybindCommand4 = new Config<>("");
 
-    private Config<CommandType> commandType4 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType4 = new Config<>(CommandType.EXECUTE);
 
-    private Config<String> keybindCommand5 = new Config<>("");
+    public final Config<String> keybindCommand5 = new Config<>("");
 
-    private Config<CommandType> commandType5 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType5 = new Config<>(CommandType.EXECUTE);
 
-    private Config<String> keybindCommand6 = new Config<>("");
+    public final Config<String> keybindCommand6 = new Config<>("");
 
-    private Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
+    public final Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
 
     @RegisterKeyBind
     private final KeyBind executeKeybind1 = new KeyBind(

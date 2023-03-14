@@ -41,19 +41,19 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends UserFeature {
-    public Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
-    public Config<Float> backgroundOpacity = new Config<>(0.2f);
+    public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    public Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    public Config<Float> bottomBoundingDistance = new Config<>(100f);
+    public final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
-    public Config<Float> topBoundingDistance = new Config<>(40f);
+    public final Config<Float> topBoundingDistance = new Config<>(40f);
 
-    public Config<Float> horizontalBoundingDistance = new Config<>(30f);
+    public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
-    public Config<Integer> maxWaypointTextDistance = new Config<>(5000);
+    public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     private double distance;
 

@@ -21,7 +21,7 @@ public class InfoBoxFeature extends UserFeature {
     private final List<InfoBoxOverlay> infoBoxOverlays = new ArrayList<>();
 
     public static class InfoBoxOverlay extends TextOverlay {
-        public Config<String> content = new Config<>("");
+        public final Config<String> content = new Config<>("");
 
         public InfoBoxOverlay(int id) {
             super(id);

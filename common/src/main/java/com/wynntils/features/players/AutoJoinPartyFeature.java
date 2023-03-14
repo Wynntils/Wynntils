@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class AutoJoinPartyFeature extends UserFeature {
-    public Config<Boolean> onlyFriends = new Config<>(true);
+    public final Config<Boolean> onlyFriends = new Config<>(true);
 
     @SubscribeEvent
     public void onPartyInvite(PartyEvent.Invited event) {

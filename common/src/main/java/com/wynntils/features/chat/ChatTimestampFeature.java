@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatTimestampFeature extends UserFeature {
-    public Config<String> formatPattern = new Config<>("HH:mm:ss");
+    public final Config<String> formatPattern = new Config<>("HH:mm:ss");
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
 

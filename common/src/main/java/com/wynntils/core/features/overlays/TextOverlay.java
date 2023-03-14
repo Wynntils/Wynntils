@@ -26,10 +26,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
  */
 public abstract class TextOverlay extends DynamicOverlay {
     @ConfigInfo(key = "overlay.wynntils.textOverlay.textShadow")
-    public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @ConfigInfo(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
-    public Config<Float> secondsPerRecalculation = new Config<>(0.5f);
+    public final Config<Float> secondsPerRecalculation = new Config<>(0.5f);
 
     protected String[] cachedLines;
     protected long lastUpdate = 0;

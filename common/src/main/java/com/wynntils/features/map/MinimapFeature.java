@@ -61,34 +61,34 @@ public class MinimapFeature extends UserFeature {
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 150;
 
-        public Config<Float> scale = new Config<>(1f);
+        public final Config<Float> scale = new Config<>(1f);
 
-        public Config<Float> poiScale = new Config<>(0.8f);
+        public final Config<Float> poiScale = new Config<>(0.8f);
 
-        public Config<Float> pointerScale = new Config<>(1f);
+        public final Config<Float> pointerScale = new Config<>(1f);
 
-        public Config<Boolean> followPlayerRotation = new Config<>(true);
+        public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
-        public Config<Boolean> renderUsingLinear = new Config<>(true);
+        public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-        public Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
+        public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-        public Config<MapMaskType> maskType = new Config<>(MapMaskType.Circle);
+        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.Circle);
 
-        public Config<MapBorderType> borderType = new Config<>(MapBorderType.Wynn);
+        public final Config<MapBorderType> borderType = new Config<>(MapBorderType.Wynn);
 
-        public Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+        public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-        public Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
-
-        @ConfigInfo(subcategory = "Remote Players")
-        public Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+        public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
 
         @ConfigInfo(subcategory = "Remote Players")
-        public Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+        public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
         @ConfigInfo(subcategory = "Remote Players")
-        public Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
+        public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+
+        @ConfigInfo(subcategory = "Remote Players")
+        public final Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
 
         protected MinimapOverlay() {
             super(

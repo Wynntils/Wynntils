@@ -23,9 +23,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends UserFeature {
-    public Config<Boolean> updateReminder = new Config<>(true);
+    public final Config<Boolean> updateReminder = new Config<>(true);
 
-    public Config<Boolean> autoUpdate = new Config<>(false);
+    public final Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

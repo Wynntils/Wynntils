@@ -44,14 +44,14 @@ public class ItemLockFeature extends UserFeature {
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
     @ConfigInfo(visible = false)
-    private Config<Map<String, Set<Integer>>> classSlotLockMap = new Config<>(new TreeMap<>());
+    public final Config<Map<String, Set<Integer>>> classSlotLockMap = new Config<>(new TreeMap<>());
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
-    public Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
+    public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
 
-    public Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
+    public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

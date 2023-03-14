@@ -40,7 +40,7 @@ public class UnidentifiedItemIconFeature extends UserFeature {
             Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
             Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
 
-    public Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.Wynn);
+    public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.Wynn);
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {

@@ -37,7 +37,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class WynntilsCosmeticsFeature extends UserFeature {
-    public Config<Boolean> renderOwnCape = new Config<>(true);
+    public final Config<Boolean> renderOwnCape = new Config<>(true);
 
     @SubscribeEvent
     public void onLayerRegisteration(RenderLayerRegistrationEvent event) {

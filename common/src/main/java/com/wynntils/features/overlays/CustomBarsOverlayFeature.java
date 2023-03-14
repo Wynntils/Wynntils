@@ -92,17 +92,17 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     public abstract static class BaseBarOverlay extends Overlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
-        public Config<Boolean> flip = new Config<>(false);
+        public final Config<Boolean> flip = new Config<>(false);
 
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
-        public Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+        public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
         // hacky override of custom color
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public Config<CustomColor> textColor = new Config<>(null);
+        public final Config<CustomColor> textColor = new Config<>(null);
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
@@ -192,7 +192,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     protected static class HealthBarOverlay extends BaseBarOverlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
-        public Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
 
         protected HealthBarOverlay() {
             this(
@@ -342,7 +342,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
     protected static class ManaBarOverlay extends BaseBarOverlay {
         @ConfigInfo(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
-        public Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
 
         protected ManaBarOverlay() {
             this(

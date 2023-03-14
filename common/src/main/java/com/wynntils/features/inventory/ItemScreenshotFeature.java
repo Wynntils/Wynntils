@@ -52,7 +52,7 @@ public class ItemScreenshotFeature extends UserFeature {
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
-    public Config<Boolean> saveToDisk = new Config<>(false);
+    public final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;
 

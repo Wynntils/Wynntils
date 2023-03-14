@@ -37,11 +37,11 @@ public class CustomNametagRendererFeature extends UserFeature {
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
 
-    public Config<Boolean> hideAllNametags = new Config<>(false);
+    public final Config<Boolean> hideAllNametags = new Config<>(false);
 
-    public Config<Boolean> showGearOnHover = new Config<>(true);
+    public final Config<Boolean> showGearOnHover = new Config<>(true);
 
-    public Config<Float> customNametagScale = new Config<>(0.5f);
+    public final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 

@@ -41,7 +41,7 @@ public class ChatTabsFeature extends UserFeature {
 
     // These should move to ChatTabManager, as Storage
     @ConfigInfo(visible = false)
-    public Config<List<ChatTab>> chatTabs = new Config<>(new ArrayList<>(List.of(
+    public final Config<List<ChatTab>> chatTabs = new Config<>(new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
             new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),

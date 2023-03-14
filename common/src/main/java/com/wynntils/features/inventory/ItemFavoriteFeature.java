@@ -36,7 +36,7 @@ public class ItemFavoriteFeature extends UserFeature {
 
     // This should really move to FavoritesModel, but for now, models cannot have configs
     @ConfigInfo(visible = false)
-    public Config<Set<String>> favoriteItems = new Config<>(new TreeSet<>());
+    public final Config<Set<String>> favoriteItems = new Config<>(new TreeSet<>());
 
     @TypeOverride
     private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();

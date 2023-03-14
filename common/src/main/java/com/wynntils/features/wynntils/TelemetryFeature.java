@@ -28,7 +28,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends UserFeature {
-    public Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+    public final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {

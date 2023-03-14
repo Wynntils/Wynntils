@@ -22,10 +22,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UNCATEGORIZED)
 public class GammabrightFeature extends UserFeature {
-    private Config<Boolean> gammabrightEnabled = new Config<>(false);
+    public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     @ConfigInfo(visible = false)
-    private Config<Double> lastGamma = new Config<>(1.0);
+    public final Config<Double> lastGamma = new Config<>(1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =

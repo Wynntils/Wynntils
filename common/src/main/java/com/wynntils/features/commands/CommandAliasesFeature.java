@@ -30,7 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends UserFeature {
     @ConfigInfo(visible = false)
-    private Config<List<CommandAlias>> aliases = new Config<>(new ArrayList<>(List.of(
+    public final Config<List<CommandAlias>> aliases = new Config<>(new ArrayList<>(List.of(
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")))));

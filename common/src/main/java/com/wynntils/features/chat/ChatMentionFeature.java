@@ -25,13 +25,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends UserFeature {
-    public Config<Boolean> markMention = new Config<>(true);
+    public final Config<Boolean> markMention = new Config<>(true);
 
-    public Config<Boolean> dingMention = new Config<>(true);
+    public final Config<Boolean> dingMention = new Config<>(true);
 
-    public Config<ChatFormatting> mentionColor = new Config<>(ChatFormatting.YELLOW);
+    public final Config<ChatFormatting> mentionColor = new Config<>(ChatFormatting.YELLOW);
 
-    public Config<String> aliases = new Config<>("");
+    public final Config<String> aliases = new Config<>("");
 
     private Pattern mentionPattern;
 

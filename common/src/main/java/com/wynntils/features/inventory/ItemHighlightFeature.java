@@ -30,79 +30,79 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends UserFeature {
-    public Config<Boolean> normalHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> normalHighlightColor = new Config<>(new CustomColor(255, 255, 255));
+    public final Config<CustomColor> normalHighlightColor = new Config<>(new CustomColor(255, 255, 255));
 
-    public Config<Boolean> uniqueHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> uniqueHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> uniqueHighlightColor = new Config<>(new CustomColor(255, 255, 0));
+    public final Config<CustomColor> uniqueHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    public Config<Boolean> rareHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> rareHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
+    public final Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
 
-    public Config<Boolean> setHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> setHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
+    public final Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
 
-    public Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> legendaryHighlightColor = new Config<>(new CustomColor(0, 255, 255));
+    public final Config<CustomColor> legendaryHighlightColor = new Config<>(new CustomColor(0, 255, 255));
 
-    public Config<Boolean> fabledHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> fabledHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> fabledHighlightColor = new Config<>(new CustomColor(255, 85, 85));
+    public final Config<CustomColor> fabledHighlightColor = new Config<>(new CustomColor(255, 85, 85));
 
-    public Config<Boolean> mythicHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> mythicHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> mythicHighlightColor = new Config<>(new CustomColor(76, 0, 76));
+    public final Config<CustomColor> mythicHighlightColor = new Config<>(new CustomColor(76, 0, 76));
 
-    public Config<Boolean> craftedHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> craftedHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> craftedHighlightColor = new Config<>(new CustomColor(0, 138, 138));
+    public final Config<CustomColor> craftedHighlightColor = new Config<>(new CustomColor(0, 138, 138));
 
-    public Config<Boolean> zeroStarIngredientHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> zeroStarIngredientHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> zeroStarIngredientHighlightColor = new Config<>(new CustomColor(102, 102, 102));
+    public final Config<CustomColor> zeroStarIngredientHighlightColor = new Config<>(new CustomColor(102, 102, 102));
 
-    public Config<Boolean> oneStarIngredientHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> oneStarIngredientHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> oneStarIngredientHighlightColor = new Config<>(new CustomColor(255, 247, 153));
+    public final Config<CustomColor> oneStarIngredientHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    public Config<Boolean> twoStarIngredientHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> twoStarIngredientHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> twoStarIngredientHighlightColor = new Config<>(new CustomColor(255, 255, 0));
+    public final Config<CustomColor> twoStarIngredientHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    public Config<Boolean> threeStarIngredientHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> threeStarIngredientHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> threeStarIngredientHighlightColor = new Config<>(new CustomColor(230, 77, 0));
+    public final Config<CustomColor> threeStarIngredientHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    public Config<Boolean> oneStarMaterialHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> oneStarMaterialHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> oneStarMaterialHighlightColor = new Config<>(new CustomColor(255, 247, 153));
+    public final Config<CustomColor> oneStarMaterialHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    public Config<Boolean> twoStarMaterialHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> twoStarMaterialHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> twoStarMaterialHighlightColor = new Config<>(new CustomColor(255, 255, 0));
+    public final Config<CustomColor> twoStarMaterialHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    public Config<Boolean> threeStarMaterialHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> threeStarMaterialHighlightEnabled = new Config<>(true);
 
-    public Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
+    public final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    public Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
 
-    public Config<Boolean> powderHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> powderHighlightEnabled = new Config<>(true);
 
-    public Config<Boolean> emeraldPouchHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> emeraldPouchHighlightEnabled = new Config<>(true);
 
-    public Config<Boolean> inventoryHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> inventoryHighlightEnabled = new Config<>(true);
 
-    public Config<Float> inventoryOpacity = new Config<>(1f);
+    public final Config<Float> inventoryOpacity = new Config<>(1f);
 
-    public Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
 
-    public Config<Float> hotbarOpacity = new Config<>(.5f);
+    public final Config<Float> hotbarOpacity = new Config<>(.5f);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {

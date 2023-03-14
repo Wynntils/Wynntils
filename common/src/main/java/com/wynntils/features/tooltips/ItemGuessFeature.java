@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends UserFeature {
-    public Config<Boolean> showGuessesPrice = new Config<>(true);
+    public final Config<Boolean> showGuessesPrice = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

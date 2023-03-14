@@ -30,7 +30,7 @@ public class ArrowShieldTrackingFeature extends UserFeature {
                 "{IF_STRING(GT(ARROW_SHIELD_COUNT; 0); CONCAT(\"Arrow Shield: \"; REPEAT(\"%s\"; ARROW_SHIELD_COUNT)); \"\")}"
                         .formatted(ARROW_SYMBOL);
 
-        public Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected ArrowShieldTrackerOverlay() {
             super(

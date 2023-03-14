@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class HealthPotionBlockerFeature extends UserFeature {
-    public Config<Integer> threshold = new Config<>(95);
+    public final Config<Integer> threshold = new Config<>(95);
 
     @SubscribeEvent
     public void onPotionUse(UseItemEvent event) {

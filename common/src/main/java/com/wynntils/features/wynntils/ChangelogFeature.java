@@ -25,9 +25,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ChangelogFeature extends UserFeature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
     @ConfigInfo(visible = false)
-    public Config<String> lastShownVersion = new Config<>("v0.0.2-alpha.2");
+    public final Config<String> lastShownVersion = new Config<>("v0.0.2-alpha.2");
 
-    public Config<Boolean> autoClassMenu = new Config<>(false);
+    public final Config<Boolean> autoClassMenu = new Config<>(false);
 
     private boolean waitForScreen = false;
     private String changelogData = "";

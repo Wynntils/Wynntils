@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends UserFeature {
-    private Config<Float> scale = new Config<>(1.5f);
+    public final Config<Float> scale = new Config<>(1.5f);
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {

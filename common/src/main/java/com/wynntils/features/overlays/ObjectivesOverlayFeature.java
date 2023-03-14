@@ -40,7 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ObjectivesOverlayFeature extends UserFeature {
     private static final float SPACE_BETWEEN = 10;
 
-    public Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
@@ -65,7 +65,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected GuildObjectiveOverlay() {
             super(
@@ -153,7 +153,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
         protected DailyObjectiveOverlay() {
             super(
@@ -249,16 +249,16 @@ public class ObjectivesOverlayFeature extends UserFeature {
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
-        public Config<Boolean> hideOnInactivity = new Config<>(false);
+        public final Config<Boolean> hideOnInactivity = new Config<>(false);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
-        public Config<Boolean> enableProgressBar = new Config<>(true);
+        public final Config<Boolean> enableProgressBar = new Config<>(true);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
-        public Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
         @ConfigInfo(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
-        public Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         protected ObjectiveOverlayBase(
                 OverlayPosition position,

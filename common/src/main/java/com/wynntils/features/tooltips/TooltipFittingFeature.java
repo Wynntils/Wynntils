@@ -21,11 +21,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipFittingFeature extends UserFeature {
-    public Config<Float> universalScale = new Config<>(1f);
+    public final Config<Float> universalScale = new Config<>(1f);
 
-    public Config<Boolean> fitToScreen = new Config<>(true);
+    public final Config<Boolean> fitToScreen = new Config<>(true);
 
-    public Config<Boolean> wrapText = new Config<>(true);
+    public final Config<Boolean> wrapText = new Config<>(true);
 
     private boolean scaledLast = false;
     private Screen currentScreen = null;
