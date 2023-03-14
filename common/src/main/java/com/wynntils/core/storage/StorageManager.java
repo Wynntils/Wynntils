@@ -49,7 +49,7 @@ public final class StorageManager extends Manager {
         // Register all storageables
         Managers.Feature.getFeatures().forEach(this::registerStorageable);
 
-        restorePersisted();
+        readFromJson();
     }
 
     public void registerStorageable(Storageable storageable) {
@@ -73,10 +73,6 @@ public final class StorageManager extends Manager {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public void restorePersisted() {
-        readFromJson();
     }
 
     @SubscribeEvent
