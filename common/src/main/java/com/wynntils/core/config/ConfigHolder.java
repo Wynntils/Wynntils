@@ -25,20 +25,24 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Field field;
     private final Type fieldType;
 
-    private final ConfigInfo metadata;
-
     private final Object defaultValue;
+    private final String subcategory;
+    private final String i18nKey;
+    private final boolean visible;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, ConfigInfo metadata, Type typeOverride) {
+    public ConfigHolder(
+            Configurable parent, Field field, String subcategory, String i18nKey, boolean visible, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
 
         this.parent = parent;
         this.field = field;
-        this.metadata = metadata;
+        this.subcategory = subcategory;
+        this.i18nKey = i18nKey;
+        this.visible = visible;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
@@ -104,15 +108,15 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public String getSubcategory() {
-        return metadata.subcategory();
+        return subcategory;
     }
 
     public String getI18nKey() {
-        return metadata.key();
+        return i18nKey;
     }
 
     public boolean isVisible() {
-        return metadata.visible();
+        return visible;
     }
 
     public String getDisplayName() {

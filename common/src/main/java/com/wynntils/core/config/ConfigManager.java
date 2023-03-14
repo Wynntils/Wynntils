@@ -234,7 +234,8 @@ public final class ConfigManager extends Manager {
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
+            ConfigHolder configHolder = new ConfigHolder(
+                    parent, configField, metadata.subcategory(), metadata.key(), metadata.visible(), typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (metadata.visible()) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
