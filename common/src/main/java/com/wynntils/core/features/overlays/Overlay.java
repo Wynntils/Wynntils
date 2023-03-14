@@ -123,7 +123,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return userEnabled;
     }
 
-    public boolean isEnabled() {
+    public boolean shouldBeEnabled() {
         if (!isParentEnabled()) {
             return false;
         }

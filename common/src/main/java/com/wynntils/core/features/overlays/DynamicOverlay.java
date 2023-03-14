@@ -62,7 +62,7 @@ public abstract class DynamicOverlay extends Overlay {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean shouldBeEnabled() {
         if (!isParentEnabled()) {
             return false;
         }

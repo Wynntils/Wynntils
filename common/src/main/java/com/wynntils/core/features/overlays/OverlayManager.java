@@ -22,7 +22,6 @@ import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -77,7 +76,7 @@ public final class OverlayManager extends Manager {
     }
 
     public void disableOverlays(Feature parent) {
-        overlayParentMap.getOrDefault(parent, Collections.emptyList()).forEach(this::disableOverlay);
+        overlayParentMap.getOrDefault(parent, List.of()).forEach(this::disableOverlay);
     }
 
     public void disableOverlay(Overlay disabled) {
@@ -88,11 +87,11 @@ public final class OverlayManager extends Manager {
     }
 
     public void enableOverlays(Feature parent) {
-        overlayParentMap.getOrDefault(parent, Collections.emptyList()).forEach(this::enableOverlay);
+        overlayParentMap.getOrDefault(parent, List.of()).forEach(this::enableOverlay);
     }
 
     public void enableOverlay(Overlay enableOverlay) {
-        if (!enableOverlay.isEnabled()) return;
+        if (!enableOverlay.shouldBeEnabled()) return;
 
         this.enabledOverlays.add(enableOverlay);
 
@@ -362,11 +361,11 @@ public final class OverlayManager extends Manager {
     }
 
     public List<Overlay> getFeatureOverlays(Feature feature) {
-        return overlayParentMap.getOrDefault(feature, Collections.emptyList());
+        return overlayParentMap.getOrDefault(feature, List.of());
     }
 
     public List<OverlayGroupHolder> getFeatureOverlayGroups(Feature feature) {
-        return overlayGroupMap.getOrDefault(feature, Collections.emptyList());
+        return overlayGroupMap.getOrDefault(feature, List.of());
     }
 
     private record OverlayInfoContainer(
