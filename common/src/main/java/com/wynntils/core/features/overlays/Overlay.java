@@ -6,50 +6,60 @@ package com.wynntils.core.features.overlays;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.lang.reflect.Type;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
-    @Config(key = "overlay.wynntils.overlay.position", visible = false)
-    protected OverlayPosition position;
+    @RegisterConfig(key = "overlay.wynntils.overlay.position", visible = false)
+    protected final Config<OverlayPosition> position = new Config<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.size", visible = false)
-    protected OverlaySize size;
+    @RegisterConfig(key = "overlay.wynntils.overlay.size", visible = false)
+    protected final Config<OverlaySize> size = new Config<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.userEnabled")
-    protected Boolean userEnabled = null;
+    @RegisterConfig(key = "overlay.wynntils.overlay.userEnabled")
+    protected final Config<Boolean> userEnabled = new Config<>(true);
 
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @Config(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    protected HorizontalAlignment horizontalAlignmentOverride = null;
+    @RegisterConfig(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
+    protected final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    protected VerticalAlignment verticalAlignmentOverride = null;
+    @TypeOverride
+    private final Type horizontalAlignmentOverrideType = new TypeToken<HorizontalAlignment>() {}.getType();
+
+    @RegisterConfig(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
+    protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+
+    @TypeOverride
+    private final Type verticalAlignmentOverrideType = new TypeToken<VerticalAlignment>() {}.getType();
 
     protected Overlay(OverlayPosition position, float width, float height) {
-        this.position = position;
-        this.size = new GuiScaledOverlaySize(width, height);
+        this.position.updateConfig(position);
+        this.size.updateConfig(new GuiScaledOverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {
-        this.position = position;
-        this.size = size;
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
     }
 
     protected Overlay(
@@ -57,10 +67,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        this.position = position;
-        this.size = size;
-        this.horizontalAlignmentOverride = horizontalAlignmentOverride;
-        this.verticalAlignmentOverride = verticalAlignmentOverride;
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
+        this.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride);
+        this.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride);
     }
 
     public abstract void render(
@@ -120,7 +130,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public Boolean isUserEnabled() {
-        return userEnabled;
+        return userEnabled.get();
     }
 
     public boolean shouldBeEnabled() {
@@ -140,33 +150,33 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public float getWidth() {
-        return this.size.getWidth();
+        return this.size.get().getWidth();
     }
 
     public float getHeight() {
-        return this.size.getHeight();
+        return this.size.get().getHeight();
     }
 
     public OverlaySize getSize() {
-        return size;
+        return size.get();
     }
 
     public OverlayPosition getPosition() {
-        return position;
+        return position.get();
     }
 
     public void setPosition(OverlayPosition position) {
-        this.position = position;
+        this.position.updateConfig(position);
     }
 
     // Return the X where the overlay should be rendered
     public float getRenderX() {
-        return getRenderX(this.position);
+        return getRenderX(this.position.get());
     }
 
     // Return the Y where the overlay should be rendered
     public float getRenderY() {
-        return getRenderY(this.position);
+        return getRenderY(this.position.get());
     }
 
     public float getRenderX(OverlayPosition position) {
@@ -188,11 +198,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public HorizontalAlignment getRenderHorizontalAlignment() {
-        return horizontalAlignmentOverride == null ? position.getHorizontalAlignment() : horizontalAlignmentOverride;
+        return horizontalAlignmentOverride.get() == null
+                ? position.get().getHorizontalAlignment()
+                : horizontalAlignmentOverride.get();
     }
 
     public VerticalAlignment getRenderVerticalAlignment() {
-        return verticalAlignmentOverride == null ? position.getVerticalAlignment() : verticalAlignmentOverride;
+        return verticalAlignmentOverride.get() == null
+                ? position.get().getVerticalAlignment()
+                : verticalAlignmentOverride.get();
     }
 
     public Vec2 getCornerPoints(Corner corner) {

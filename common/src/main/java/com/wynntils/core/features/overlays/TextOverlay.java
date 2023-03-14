@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -24,11 +25,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends DynamicOverlay {
-    @Config(key = "overlay.wynntils.textOverlay.textShadow")
-    public TextShadow textShadow = TextShadow.OUTLINE;
+    @RegisterConfig(key = "overlay.wynntils.textOverlay.textShadow")
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @Config(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
-    public float secondsPerRecalculation = 0.5f;
+    @RegisterConfig(key = "overlay.wynntils.textOverlay.secondsPerRecalculation")
+    public final Config<Float> secondsPerRecalculation = new Config<>(0.5f);
 
     protected String[] cachedLines;
     protected long lastUpdate = 0;
@@ -98,7 +99,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                             this.getRenderColor(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment(),
-                            this.textShadow,
+                            this.textShadow.get(),
                             textScale);
 
             renderY += FontRenderer.getInstance().getFont().lineHeight;
@@ -106,7 +107,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     protected void updateCachedLines(String template) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation * 1000) {
+        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation.get() * 1000) {
             lastUpdate = System.currentTimeMillis();
             cachedLines = calculateTemplateValue(template);
         }

@@ -32,7 +32,7 @@ public final class LootChestModel extends Model {
         if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
-            DataStorageFeature.INSTANCE.dryCount++;
+            DataStorageFeature.INSTANCE.dryCount.updateConfig(DataStorageFeature.INSTANCE.dryCount.get() + 1);
             Managers.Config.saveConfig();
         }
     }
@@ -49,10 +49,10 @@ public final class LootChestModel extends Model {
         GearTier gearTier = GearTier.fromComponent(itemStack.getHoverName());
 
         if (gearTier == GearTier.MYTHIC) {
-            DataStorageFeature.INSTANCE.dryBoxes = 0;
-            DataStorageFeature.INSTANCE.dryCount = 0;
+            DataStorageFeature.INSTANCE.dryBoxes.updateConfig(0);
+            DataStorageFeature.INSTANCE.dryCount.updateConfig(0);
         } else {
-            DataStorageFeature.INSTANCE.dryBoxes += 1;
+            DataStorageFeature.INSTANCE.dryBoxes.updateConfig(DataStorageFeature.INSTANCE.dryBoxes.get() + 1);
         }
 
         Managers.Config.saveConfig();

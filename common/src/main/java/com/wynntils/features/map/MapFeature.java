@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
@@ -45,77 +46,78 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends Feature {
     public static MapFeature INSTANCE;
 
-    @Config(visible = false)
-    public List<CustomPoi> customPois = new ArrayList<>();
+    @RegisterConfig(visible = false)
+    public final Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
-    @Config
-    public float poiFadeAdjustment = 0.4f;
+    @RegisterConfig
+    public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
-    @Config
-    public float combatPoiMinZoom = 0.166f;
+    @RegisterConfig
+    public final Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
-    @Config
-    public float cavePoiMinZoom = 0.28f;
+    @RegisterConfig
+    public final Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
-    @Config
-    public float servicePoiMinZoom = 0.8f;
+    @RegisterConfig
+    public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
-    @Config
-    public float fastTravelPoiMinZoom = 0.166f;
+    @RegisterConfig
+    public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
-    @Config
-    public float customPoiMinZoom = 0.28f;
+    @RegisterConfig
+    public final Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
-    @Config
-    public float lootChestTier1PoiMinZoom = 0.8f;
+    @RegisterConfig
+    public final Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
-    @Config
-    public float lootChestTier2PoiMinZoom = 0.8f;
+    @RegisterConfig
+    public final Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
-    @Config
-    public float lootChestTier3PoiMinZoom = 0.28f;
+    @RegisterConfig
+    public final Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
-    @Config
-    public float lootChestTier4PoiMinZoom = 0.28f;
+    @RegisterConfig
+    public final Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
-    @Config
-    public PointerType pointerType = PointerType.Arrow;
+    @RegisterConfig
+    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    @Config
-    public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
+    @RegisterConfig
+    public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @Config
-    public boolean renderUsingLinear = true;
+    @RegisterConfig
+    public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    @Config
-    public float playerPointerScale = 1.5f;
+    @RegisterConfig
+    public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
-    @Config
-    public float poiScale = 1f;
+    @RegisterConfig
+    public final Config<Float> poiScale = new Config<>(1f);
 
-    @Config
-    public boolean autoWaypointChests = true;
+    @RegisterConfig
+    public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
-    @Config
-    public ChestTier minTierForAutoWaypoint = ChestTier.TIER_3;
+    @RegisterConfig
+    public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
-    @Config(subcategory = "Remote Players")
-    public boolean renderRemoteFriendPlayers = true;
+    @RegisterConfig(subcategory = "Remote Players")
+    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @Config(subcategory = "Remote Players")
-    public boolean renderRemotePartyPlayers = true;
+    @RegisterConfig(subcategory = "Remote Players")
+    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     //    @Config(subcategory = "Remote Players")
     //    public boolean renderRemoteGuildPlayers = true;
 
-    @Config(subcategory = "Remote Players")
-    public CustomBarsOverlayFeature.HealthTexture remotePlayerHealthTexture = CustomBarsOverlayFeature.HealthTexture.a;
+    @RegisterConfig(subcategory = "Remote Players")
+    public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
+            new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
-    @Config(subcategory = "Remote Players")
-    public TextShadow remotePlayerNameShadow = TextShadow.OUTLINE;
+    @RegisterConfig(subcategory = "Remote Players")
+    public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;
 
@@ -148,7 +150,7 @@ public class MapFeature extends Feature {
 
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (!autoWaypointChests) return;
+        if (!autoWaypointChests.get()) return;
 
         BlockEntity blockEntity = McUtils.mc().level.getBlockEntity(event.getPos());
         if (blockEntity != null && blockEntity.getType() == BlockEntityType.CHEST) {
@@ -158,7 +160,7 @@ public class MapFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (!autoWaypointChests) return;
+        if (!autoWaypointChests.get()) return;
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
@@ -167,7 +169,7 @@ public class MapFeature extends Feature {
 
         ChestTier tier = ChestTier.fromString(matcher.group(1));
 
-        if (tier.ordinal() < minTierForAutoWaypoint.ordinal()) return;
+        if (tier.ordinal() < minTierForAutoWaypoint.get().ordinal()) return;
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
@@ -177,8 +179,8 @@ public class MapFeature extends Feature {
                 tier.getWaypointTexture(),
                 CustomPoi.Visibility.DEFAULT);
 
-        if (customPois.stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
-            customPois.add(newPoi);
+        if (customPois.get().stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
+            customPois.get().add(newPoi);
 
             // TODO: Replace this notification with a popup
             Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())

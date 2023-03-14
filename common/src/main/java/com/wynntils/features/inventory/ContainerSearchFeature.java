@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -38,20 +39,20 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
-    @Config
-    public boolean filterInBank = true;
+    @RegisterConfig
+    public final Config<Boolean> filterInBank = new Config<>(true);
 
-    @Config
-    public boolean filterInMiscBucket = true;
+    @RegisterConfig
+    public final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
-    @Config
-    public boolean filterInGuildBank = true;
+    @RegisterConfig
+    public final Config<Boolean> filterInGuildBank = new Config<>(true);
 
-    @Config
-    public boolean filterInGuildMemberList = true;
+    @RegisterConfig
+    public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
-    @Config
-    public CustomColor highlightColor = CommonColors.MAGENTA;
+    @RegisterConfig
+    public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;
@@ -84,7 +85,7 @@ public class ContainerSearchFeature extends Feature {
         Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
         if (result == null || !result) return;
 
-        RenderUtils.drawArc(e.getPoseStack(), highlightColor, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
     }
 
     @SubscribeEvent
@@ -146,19 +147,19 @@ public class ContainerSearchFeature extends Feature {
     private SearchableContainerType getCurrentSearchableContainerType(String title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
-        if (containerType == SearchableContainerType.BANK && filterInBank) {
+        if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
             return SearchableContainerType.BANK;
         }
 
-        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket) {
+        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
             return SearchableContainerType.MISC_BUCKET;
         }
 
-        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank) {
+        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank.get()) {
             return SearchableContainerType.GUILD_BANK;
         }
 
-        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList) {
+        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
             return SearchableContainerType.MEMBER_LIST;
         }
 

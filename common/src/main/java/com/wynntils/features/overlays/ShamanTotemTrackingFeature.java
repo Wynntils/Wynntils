@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
@@ -33,32 +34,32 @@ public class ShamanTotemTrackingFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
 
-    @Config
-    public boolean highlightShamanTotems = true;
+    @RegisterConfig
+    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
-    @Config
-    public CustomColor firstTotemColor = CommonColors.WHITE;
+    @RegisterConfig
+    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
-    @Config
-    public CustomColor secondTotemColor = CommonColors.BLUE;
+    @RegisterConfig
+    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
-    @Config
-    public CustomColor thirdTotemColor = CommonColors.RED;
+    @RegisterConfig
+    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     private static final int ENTITY_GLOWING_FLAG = 6;
 
     @SubscribeEvent
     public void onTotemSummoned(TotemEvent.Summoned e) {
-        if (!highlightShamanTotems) return;
+        if (!highlightShamanTotems.get()) return;
 
         int totemNumber = e.getTotemNumber();
         ArmorStand totemAS = e.getTotemEntity();
 
         CustomColor color =
                 switch (totemNumber) {
-                    case 1 -> firstTotemColor;
-                    case 2 -> secondTotemColor;
-                    case 3 -> thirdTotemColor;
+                    case 1 -> firstTotemColor.get();
+                    case 2 -> secondTotemColor.get();
+                    case 3 -> thirdTotemColor.get();
                     default -> throw new IllegalArgumentException(
                             "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
@@ -70,20 +71,20 @@ public class ShamanTotemTrackingFeature extends Feature {
     }
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
-        @Config
-        public TotemTrackingDetail totemTrackingDetail = TotemTrackingDetail.COORDS;
+        @RegisterConfig
+        public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
-        @Config
-        public ChatFormatting firstTotemTextColor = ChatFormatting.WHITE;
+        @RegisterConfig
+        public final Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
 
-        @Config
-        public ChatFormatting secondTotemTextColor = ChatFormatting.BLUE;
+        @RegisterConfig
+        public final Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
 
-        @Config
-        public ChatFormatting thirdTotemTextColor = ChatFormatting.RED;
+        @RegisterConfig
+        public final Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor, secondTotemTextColor, thirdTotemTextColor
+            firstTotemTextColor.get(), secondTotemTextColor.get(), thirdTotemTextColor.get()
         };
 
         protected ShamanTotemTimerOverlay() {
@@ -103,6 +104,7 @@ public class ShamanTotemTrackingFeature extends Feature {
                     .filter(Objects::nonNull)
                     .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
                             + totemTrackingDetail
+                                    .get()
                                     .getTemplate()
                                     .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
                     .collect(Collectors.joining("\n"));

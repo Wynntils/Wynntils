@@ -9,6 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.hades.protocol.enums.SocialType;
 
@@ -16,37 +17,37 @@ import com.wynntils.hades.protocol.enums.SocialType;
 public class HadesFeature extends Feature {
     public static HadesFeature INSTANCE;
 
-    @Config
-    public boolean getOtherPlayerInfo = true;
+    @RegisterConfig
+    public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
-    @Config
-    public boolean shareWithParty = true;
+    @RegisterConfig
+    public final Config<Boolean> shareWithParty = new Config<>(true);
 
-    @Config
-    public boolean shareWithFriends = true;
+    @RegisterConfig
+    public final Config<Boolean> shareWithFriends = new Config<>(true);
 
-    @Config
-    public boolean shareWithGuild = true;
+    @RegisterConfig
+    public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
-                if (getOtherPlayerInfo) {
+                if (getOtherPlayerInfo.get()) {
                     Models.Hades.tryResendWorldData();
                 } else {
                     Models.Hades.resetHadesUsers();
                 }
             }
             case "shareWithParty" -> {
-                if (shareWithParty) {
+                if (shareWithParty.get()) {
                     Models.Party.requestData();
                 } else {
                     Models.Hades.resetSocialType(SocialType.PARTY);
                 }
             }
             case "shareWithFriends" -> {
-                if (shareWithFriends) {
+                if (shareWithFriends.get()) {
                     Models.Friends.requestData();
                 } else {
                     Models.Hades.resetSocialType(SocialType.FRIEND);

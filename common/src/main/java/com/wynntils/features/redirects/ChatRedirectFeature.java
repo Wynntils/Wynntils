@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -22,53 +23,53 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
-    @Config
-    public RedirectAction craftedDurability = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction friendJoin = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction heal = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction horse = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction housingTeleport = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction ingredientPouch = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction loginAnnouncements = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction mageTeleport = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction notEnoughMana = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction potion = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction scrollTeleport = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction shaman = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction soulPoint = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> soulPoint = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction speed = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction toolDurability = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
 
-    @Config
-    public RedirectAction unusedPoints = RedirectAction.REDIRECT;
+    @RegisterConfig
+    public final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
     private final List<Redirector> redirectors = new ArrayList<>();
 
@@ -187,7 +188,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return craftedDurability;
+            return craftedDurability.get();
         }
 
         @Override
@@ -214,7 +215,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return friendJoin;
+            return friendJoin.get();
         }
 
         @Override
@@ -246,7 +247,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return friendJoin;
+            return friendJoin.get();
         }
 
         @Override
@@ -267,7 +268,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return heal;
+            return heal.get();
         }
 
         @Override
@@ -294,7 +295,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return heal;
+            return heal.get();
         }
 
         @Override
@@ -316,7 +317,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return horse;
+            return horse.get();
         }
 
         @Override
@@ -336,7 +337,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return horse;
+            return horse.get();
         }
 
         @Override
@@ -355,7 +356,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return horse;
+            return horse.get();
         }
 
         @Override
@@ -374,7 +375,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return housingTeleport;
+            return housingTeleport.get();
         }
 
         @Override
@@ -394,7 +395,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return housingTeleport;
+            return housingTeleport.get();
         }
 
         @Override
@@ -414,7 +415,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return housingTeleport;
+            return housingTeleport.get();
         }
 
         @Override
@@ -434,7 +435,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return housingTeleport;
+            return housingTeleport.get();
         }
 
         @Override
@@ -454,7 +455,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return ingredientPouch;
+            return ingredientPouch.get();
         }
 
         @Override
@@ -486,7 +487,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return loginAnnouncements;
+            return loginAnnouncements.get();
         }
 
         @Override
@@ -509,7 +510,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return mageTeleport;
+            return mageTeleport.get();
         }
 
         @Override
@@ -529,7 +530,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return notEnoughMana;
+            return notEnoughMana.get();
         }
 
         @Override
@@ -548,7 +549,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return shaman;
+            return shaman.get();
         }
 
         @Override
@@ -567,7 +568,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return potion;
+            return potion.get();
         }
 
         @Override
@@ -587,7 +588,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return potion;
+            return potion.get();
         }
 
         @Override
@@ -607,7 +608,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return potion;
+            return potion.get();
         }
 
         @Override
@@ -627,7 +628,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return potion;
+            return potion.get();
         }
 
         @Override
@@ -647,7 +648,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return scrollTeleport;
+            return scrollTeleport.get();
         }
 
         @Override
@@ -666,7 +667,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return scrollTeleport;
+            return scrollTeleport.get();
         }
 
         @Override
@@ -691,7 +692,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return soulPoint;
+            return soulPoint.get();
         }
 
         @Override
@@ -718,7 +719,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return soulPoint;
+            return soulPoint.get();
         }
 
         @Override
@@ -739,7 +740,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return soulPoint;
+            return soulPoint.get();
         }
 
         @Override
@@ -766,7 +767,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return speed;
+            return speed.get();
         }
 
         @Override
@@ -787,7 +788,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return toolDurability;
+            return toolDurability.get();
         }
 
         @Override
@@ -807,7 +808,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return unusedPoints;
+            return unusedPoints.get();
         }
 
         @Override
@@ -838,7 +839,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return unusedPoints;
+            return unusedPoints.get();
         }
 
         @Override
@@ -863,7 +864,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return unusedPoints;
+            return unusedPoints.get();
         }
 
         @Override

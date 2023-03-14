@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.utils.MathUtils;
@@ -25,8 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
 public class BeaconBeamFeature extends Feature {
-    @Config
-    public CustomColor waypointBeamColor = CommonColors.RED;
+    @RegisterConfig
+    public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
@@ -71,7 +72,7 @@ public class BeaconBeamFeature extends Feature {
                 McUtils.player().level.getGameTime(),
                 0,
                 1024,
-                waypointBeamColor.asFloatArray(),
+                waypointBeamColor.get().asFloatArray(),
                 alpha,
                 0.166f,
                 0.33f);

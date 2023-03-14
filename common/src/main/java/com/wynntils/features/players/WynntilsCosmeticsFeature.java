@@ -12,6 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
@@ -37,8 +38,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class WynntilsCosmeticsFeature extends Feature {
-    @Config
-    public boolean renderOwnCape = true;
+    @RegisterConfig
+    public final Config<Boolean> renderOwnCape = new Config<>(true);
 
     @SubscribeEvent
     public void onLayerRegisteration(RenderLayerRegistrationEvent event) {
@@ -66,7 +67,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     private boolean shouldRenderCape(Player player, boolean elytra) {
         if (!isEnabled() || !Managers.Connection.onServer()) return false;
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
-        if (McUtils.player().is(player) && !renderOwnCape) return false;
+        if (McUtils.player().is(player) && !renderOwnCape.get()) return false;
 
         if (Models.Player.getUser(player.getUUID()) == null
                 || Models.Player.getUserCosmeticTexture(player.getUUID()) == null) return false;

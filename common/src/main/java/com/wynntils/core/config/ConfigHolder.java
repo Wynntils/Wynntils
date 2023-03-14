@@ -25,20 +25,24 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Field field;
     private final Type fieldType;
 
-    private final Config metadata;
-
     private final Object defaultValue;
+    private final String subcategory;
+    private final String i18nKey;
+    private final boolean visible;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, Config metadata, Type typeOverride) {
+    public ConfigHolder(
+            Configurable parent, Field field, String subcategory, String i18nKey, boolean visible, Type typeOverride) {
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
 
         this.parent = parent;
         this.field = field;
-        this.metadata = metadata;
+        this.subcategory = subcategory;
+        this.i18nKey = i18nKey;
+        this.visible = visible;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
@@ -61,7 +65,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             return value.getClass();
         }
 
-        return field.getType();
+        throw new RuntimeException("Config must either have a non-null default value or a @TypeOverride: " + field);
     }
 
     public Type getType() {
@@ -70,10 +74,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
     public Class<?> getClassOfConfigField() {
         return TypeToken.get(this.getType()).getRawType();
-    }
-
-    public Field getField() {
-        return field;
     }
 
     public String getFieldName() {
@@ -87,10 +87,10 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     public String getJsonName() {
         if (parent instanceof Overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + field.getName();
+            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
-        return parent.getConfigJsonName() + "." + field.getName();
+        return parent.getConfigJsonName() + "." + getFieldName();
     }
 
     private String getNameCamelCase() {
@@ -103,27 +103,39 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public Config getMetadata() {
-        return metadata;
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+    public String getI18nKey() {
+        return i18nKey;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public String getDisplayName() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".name");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".name");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".name");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".name");
     }
 
     public String getDescription() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".description");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".description");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".description");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".description");
     }
 
     public Object getValue() {
+        return getConfig().get();
+    }
+
+    private Config getConfig() {
         try {
-            return FieldUtils.readField(field, parent, true);
+            return (Config) FieldUtils.readField(field, parent, true);
         } catch (IllegalAccessException e) {
             WynntilsMod.error("Unable to get field " + getJsonName(), e);
             return null;
@@ -134,16 +146,10 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return defaultValue;
     }
 
-    public boolean setValue(Object value) {
-        try {
-            FieldUtils.writeField(field, parent, value, true);
-            parent.updateConfigOption(this);
-            userEdited = true;
-            return true;
-        } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName(), e);
-            return false;
-        }
+    public void setValue(Object value) {
+        getConfig().updateConfig(value);
+        parent.updateConfigOption(this);
+        userEdited = true;
     }
 
     public boolean valueChanged() {

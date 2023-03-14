@@ -188,7 +188,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack, MapFeature.INSTANCE.renderUsingLinear);
+        renderMap(poseStack, MapFeature.INSTANCE.renderUsingLinear.get());
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -199,9 +199,9 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Cursor
         renderCursor(
                 poseStack,
-                MapFeature.INSTANCE.playerPointerScale,
-                MapFeature.INSTANCE.pointerColor,
-                MapFeature.INSTANCE.pointerType);
+                MapFeature.INSTANCE.playerPointerScale.get(),
+                MapFeature.INSTANCE.pointerColor.get(),
+                MapFeature.INSTANCE.pointerType.get());
 
         RenderSystem.disableScissor();
 
@@ -217,14 +217,16 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
         pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
-        pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
+        pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.get().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
                 Models.Hades.getHadesUsers()
                         .filter(
-                                hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
+                                hadesUser -> (hadesUser.isPartyMember()
+                                                && MapFeature.INSTANCE.renderRemotePartyPlayers.get())
+                                        || (hadesUser.isMutualFriend()
+                                                && MapFeature.INSTANCE.renderRemoteFriendPlayers.get())
                                 /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
@@ -236,7 +238,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 pois.collect(Collectors.toList()),
                 poseStack,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                MapFeature.INSTANCE.poiScale,
+                MapFeature.INSTANCE.poiScale.get(),
                 mouseX,
                 mouseY);
     }
@@ -297,7 +299,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    MapFeature.INSTANCE.customPois.remove(customPoi);
+                    MapFeature.INSTANCE.customPois.get().remove(customPoi);
                     Managers.Config.saveConfig();
                 }
             } else {

@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 
 // FIXME: This feature is only needed because we do not have a way to save any data persistently.
@@ -12,9 +13,9 @@ import com.wynntils.core.features.Feature;
 public class DataStorageFeature extends Feature {
     public static DataStorageFeature INSTANCE;
 
-    @Config(visible = false)
-    public int dryCount = 0;
+    @RegisterConfig(visible = false)
+    public final Config<Integer> dryCount = new Config<>(0);
 
-    @Config(visible = false)
-    public int dryBoxes = 0;
+    @RegisterConfig(visible = false)
+    public final Config<Integer> dryBoxes = new Config<>(0);
 }

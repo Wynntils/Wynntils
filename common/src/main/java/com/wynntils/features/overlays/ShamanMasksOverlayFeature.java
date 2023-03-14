@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -29,12 +30,12 @@ public class ShamanMasksOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
-    @Config
-    public boolean hideMaskTitles = true;
+    @RegisterConfig
+    public final Config<Boolean> hideMaskTitles = new Config<>(true);
 
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (hideMaskTitles && shamanMaskOverlay.shouldBeEnabled()) {
+        if (hideMaskTitles.get() && shamanMaskOverlay.shouldBeEnabled()) {
             event.setCanceled(true);
         }
     }
@@ -42,8 +43,8 @@ public class ShamanMasksOverlayFeature extends Feature {
     public static class ShamanMaskOverlay extends TextOverlay {
         private static final String TEMPLATE = "{shaman_mask} mask";
 
-        @Config
-        public boolean displayNone = false;
+        @RegisterConfig
+        public final Config<Boolean> displayNone = new Config<>(false);
 
         protected ShamanMaskOverlay() {
             super(
@@ -63,7 +64,7 @@ public class ShamanMasksOverlayFeature extends Feature {
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
-            if (currentMaskType == ShamanMaskType.NONE && !displayNone) return;
+            if (currentMaskType == ShamanMaskType.NONE && !displayNone.get()) return;
 
             super.render(poseStack, bufferSource, partialTicks, window);
         }

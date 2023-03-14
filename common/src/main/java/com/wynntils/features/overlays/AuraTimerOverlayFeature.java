@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
@@ -28,24 +29,24 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AuraTimerOverlayFeature extends Feature {
     private static final float MAX_INTENSITY = 0.4f;
 
-    @Config
-    public boolean vignetteOnAura = true;
+    @RegisterConfig
+    public final Config<Boolean> vignetteOnAura = new Config<>(true);
 
-    @Config
-    public CustomColor vignetteColor = CommonColors.ORANGE;
+    @RegisterConfig
+    public final Config<CustomColor> vignetteColor = new Config<>(CommonColors.ORANGE);
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay auraTimerOverlay = new AuraTimerOverlay();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (!vignetteOnAura || event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!vignetteOnAura.get() || event.getType() != RenderEvent.ElementType.GUI) return;
         long remainingTimeUntilAura = Models.TowerAuraTimer.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
                 event.getPoseStack(),
-                vignetteColor,
+                vignetteColor.get(),
                 MathUtils.map(remainingTimeUntilAura, Models.TowerAuraTimer.getAuraLength(), 0, 0, MAX_INTENSITY));
     }
 
@@ -53,8 +54,8 @@ public class AuraTimerOverlayFeature extends Feature {
         private static final String TEMPLATE =
                 "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
 
-        @Config
-        public CustomColor textColor = CommonColors.ORANGE;
+        @RegisterConfig
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
 
         protected AuraTimerOverlay() {
             super(
@@ -71,7 +72,7 @@ public class AuraTimerOverlayFeature extends Feature {
 
         @Override
         public CustomColor getRenderColor() {
-            return textColor;
+            return textColor.get();
         }
 
         @Override
