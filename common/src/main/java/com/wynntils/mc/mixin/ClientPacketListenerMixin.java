@@ -43,6 +43,7 @@ import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.PositionImpl;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
@@ -73,7 +74,6 @@ import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -218,7 +218,7 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
         if (!packet.getRelativeArguments().isEmpty()) return;
 
-        MixinHelper.post(new PlayerTeleportEvent(new Vec3(packet.getX(), packet.getY(), packet.getZ())));
+        MixinHelper.post(new PlayerTeleportEvent(new PositionImpl(packet.getX(), packet.getY(), packet.getZ())));
     }
 
     @Inject(

@@ -15,7 +15,7 @@ public enum BlockValidness {
     HAS_BARRIER,
     INVALID;
 
-    public static BlockValidness checkBlockValidness(Level level, ColoredPoint point) {
+    public static BlockValidness checkBlockValidness(Level level, ColoredPosition point) {
         BlockValidness state = INVALID;
         Iterable<BlockPos> blocks = getBlocksForPoint(point);
 
@@ -32,9 +32,15 @@ public enum BlockValidness {
         return state;
     }
 
-    private static Iterable<BlockPos> getBlocksForPoint(ColoredPoint loc) {
-        BlockPos minPos = PosUtils.newBlockPos(loc.vec3().x - 0.3D, loc.vec3().y - 1D, loc.vec3().z - 0.3D);
-        BlockPos maxPos = PosUtils.newBlockPos(loc.vec3().x + 0.3D, loc.vec3().y - 1D, loc.vec3().z + 0.3D);
+    private static Iterable<BlockPos> getBlocksForPoint(ColoredPosition loc) {
+        BlockPos minPos = PosUtils.newBlockPos(
+                loc.position().x() - 0.3D,
+                loc.position().y() - 1D,
+                loc.position().z() - 0.3D);
+        BlockPos maxPos = PosUtils.newBlockPos(
+                loc.position().x() + 0.3D,
+                loc.position().y() - 1D,
+                loc.position().z() + 0.3D);
 
         return BlockPos.betweenClosed(minPos, maxPos);
     }

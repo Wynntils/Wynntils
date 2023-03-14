@@ -6,4 +6,4 @@ package com.wynntils.models.lootruns.type;
 
 import java.util.List;
 
-public record ColoredPath(List<ColoredPoint> points) {}
+public record ColoredPath(List<ColoredPosition> points) {}

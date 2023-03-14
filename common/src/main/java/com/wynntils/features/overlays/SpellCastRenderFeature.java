@@ -68,7 +68,7 @@ public class SpellCastRenderFeature extends Feature {
         spellMessage = "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]";
 
         // An relativeCost of 1.0 means we just used all mana we have left
-        float relativeCost = (float) manaCost / Models.Character.getMana().current();
+        float relativeCost = (float) manaCost / Models.CharacterStats.getMana().current();
         intensity = vignetteIntensity * relativeCost;
         spellTimer = SHOW_TICKS;
     }

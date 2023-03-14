@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -74,7 +75,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         Location location = Models.Compass.getCompassLocation().get();
         Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
         Camera camera = event.getCamera();
-        Vec3 cameraPos = camera.getPosition();
+        Position cameraPos = camera.getPosition();
 
         // apply camera rotation
         Vector3f xp = new Vector3f(1, 0, 0);
@@ -85,9 +86,9 @@ public class WorldWaypointDistanceFeature extends Feature {
         projection.mul(new Matrix4f().rotation(yRotation));
 
         // offset to put text to the center of the block
-        float dx = (float) (location.x + 0.5 - cameraPos.x);
-        float dy = (float) (location.y + 0.5 - cameraPos.y);
-        float dz = (float) (location.z + 0.5 - cameraPos.z);
+        float dx = (float) (location.x + 0.5 - cameraPos.x());
+        float dy = (float) (location.y + 0.5 - cameraPos.y());
+        float dz = (float) (location.z + 0.5 - cameraPos.z());
 
         if (location.y <= 0 || location.y > 255) {
             dy = 0;
@@ -278,12 +279,12 @@ public class WorldWaypointDistanceFeature extends Feature {
                 (float) (centerRelativePosition.x + centerPoint.x), (float) (centerRelativePosition.y + centerPoint.y));
     }
 
-    private boolean isInBound(Vec3 position, Window window) {
-        return position.x > 0
-                && position.x < window.getGuiScaledWidth()
-                && position.y > 0
-                && position.y < window.getGuiScaledHeight()
-                && position.z < 1;
+    private boolean isInBound(Position position, Window window) {
+        return position.x() > 0
+                && position.x() < window.getGuiScaledWidth()
+                && position.y() > 0
+                && position.y() < window.getGuiScaledHeight()
+                && position.z() < 1;
     }
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint

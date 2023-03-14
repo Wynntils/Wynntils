@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
+import net.minecraft.core.PositionImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
@@ -32,11 +34,11 @@ public final class LootrunFileParser {
         LootrunPath pointsList = new LootrunPath(new ArrayList<>());
         for (JsonElement element : points) {
             JsonObject pointJson = element.getAsJsonObject();
-            Vec3 location = new Vec3(
+            Vec3 position = new Vec3(
                     pointJson.get("x").getAsDouble(),
                     pointJson.get("y").getAsDouble(),
                     pointJson.get("z").getAsDouble());
-            pointsList.points().add(location);
+            pointsList.points().add(position);
         }
         JsonArray chestsJson = json.getAsJsonArray("chests");
         Set<BlockPos> chests = new HashSet<>();
@@ -63,7 +65,7 @@ public final class LootrunFileParser {
                     positionJson = noteJson.getAsJsonObject("location");
                 }
 
-                Vec3 position = new Vec3(
+                Position position = new PositionImpl(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
                         positionJson.get("z").getAsDouble());
@@ -85,11 +87,11 @@ public final class LootrunFileParser {
 
             JsonObject json = new JsonObject();
             JsonArray points = new JsonArray();
-            for (Vec3 point : activeLootrun.path().points()) {
+            for (Position point : activeLootrun.path().points()) {
                 JsonObject pointJson = new JsonObject();
-                pointJson.addProperty("x", point.x);
-                pointJson.addProperty("y", point.y);
-                pointJson.addProperty("z", point.z);
+                pointJson.addProperty("x", point.x());
+                pointJson.addProperty("y", point.y());
+                pointJson.addProperty("z", point.z());
                 points.add(pointJson);
             }
             json.add("points", points);
@@ -109,10 +111,10 @@ public final class LootrunFileParser {
                 JsonObject noteJson = new JsonObject();
                 JsonObject locationJson = new JsonObject();
 
-                Vec3 location = note.position();
-                locationJson.addProperty("x", location.x);
-                locationJson.addProperty("y", location.y);
-                locationJson.addProperty("z", location.z);
+                Position position = note.position();
+                locationJson.addProperty("x", position.x());
+                locationJson.addProperty("y", position.y());
+                locationJson.addProperty("z", position.z());
                 noteJson.add("location", locationJson);
 
                 noteJson.add("note", Component.Serializer.toJsonTree(note.component()));

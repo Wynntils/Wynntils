@@ -6,4 +6,4 @@ package com.wynntils.models.lootruns.type;
 
 import net.minecraft.world.phys.Vec3;
 
-public record ColoredPoint(Vec3 vec3, int color) {}
+public record ColoredPosition(Vec3 position, int color) {}

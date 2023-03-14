@@ -52,7 +52,7 @@ public class PoiLocation {
     public static PoiLocation fromLocation(Location location) {
         if (location == null) return null;
 
-        return new PoiLocation((int) location.x, (int) location.y, (int) location.z);
+        return new PoiLocation(location.x, location.y, location.z);
     }
 
     @Override
