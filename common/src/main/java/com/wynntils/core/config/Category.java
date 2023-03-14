@@ -12,6 +12,7 @@ public enum Category {
     CHAT,
     COMBAT,
     COMMANDS,
+    DEBUG,
     INVENTORY,
     MAP,
     OVERLAYS,

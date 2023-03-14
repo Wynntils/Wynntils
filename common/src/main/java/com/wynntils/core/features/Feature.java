@@ -8,6 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.storage.Storageable;
 import net.minecraft.client.resources.language.I18n;
@@ -15,11 +16,12 @@ import net.minecraft.client.resources.language.I18n;
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
  * should never be a dependency for anything else.
- *
- * <p>Ex: Soul Point Timer
  */
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private Category category = Category.UNCATEGORIZED;
+
+    @Config(key = "feature.wynntils.userFeature.userEnabled")
+    public boolean userEnabled = true;
 
     public Category getCategory() {
         return category;
@@ -27,11 +29,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    /** Whether a feature is enabled */
-    public final boolean isEnabled() {
-        return Managers.Feature.isEnabled(this);
     }
 
     /** Gets the name of a feature */
@@ -65,6 +62,38 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     public void onEnable() {}
 
     public void onDisable() {}
+
+    /** Whether a feature is enabled */
+    public final boolean isEnabled() {
+        return Managers.Feature.isEnabled(this);
+    }
+
+    public void setUserEnabled(boolean newState) {
+        this.userEnabled = newState;
+        tryUserToggle();
+    }
+
+    @Override
+    public final void updateConfigOption(ConfigHolder configHolder) {
+        // if user toggle was changed, enable/disable feature accordingly
+        if (configHolder.getFieldName().equals("userEnabled")) {
+            // Toggling before init does not do anything, so we don't worry about it for now
+            tryUserToggle();
+            return;
+        }
+
+        // otherwise, trigger regular config update
+        onConfigUpdate(configHolder);
+    }
+
+    /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
+    private void tryUserToggle() {
+        if (userEnabled) {
+            Managers.Feature.enableFeature(this);
+        } else {
+            Managers.Feature.disableFeature(this);
+        }
+    }
 
     @Override
     public int compareTo(Feature other) {

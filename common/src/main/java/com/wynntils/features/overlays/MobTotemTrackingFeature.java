@@ -7,7 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @ConfigCategory(Category.OVERLAYS)
-public class MobTotemTrackingFeature extends UserFeature {
+public class MobTotemTrackingFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final MobTotemTimerOverlay mobTotemTimerOverlay = new MobTotemTimerOverlay();
 

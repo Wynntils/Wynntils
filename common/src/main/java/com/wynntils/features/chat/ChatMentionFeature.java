@@ -8,7 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.CHAT)
-public class ChatMentionFeature extends UserFeature {
+public class ChatMentionFeature extends Feature {
     @Config
     public boolean markMention = true;
 

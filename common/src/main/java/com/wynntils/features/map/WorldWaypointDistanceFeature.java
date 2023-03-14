@@ -13,7 +13,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.map.pois.WaypointPoi;
@@ -41,7 +41,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
-public class WorldWaypointDistanceFeature extends UserFeature {
+public class WorldWaypointDistanceFeature extends Feature {
     @Config
     public CustomColor textColor = CommonColors.WHITE;
 
